@@ -1,0 +1,41 @@
+version: '3'
+services:
+    web:
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile
+        ports:
+            - "80"
+        volumes:
+            - /host_mnt/c/Users/florian/PycharmProjects/php-dev-ffast/nginx.conf:/etc/nginx/conf.d/nginx.conf
+            - /host_mnt/c/Users/florian/PycharmProjects/php-dev-ffast/app/:/app
+        container_name: ffast-web
+        networks:
+             - ffast_network
+    php:
+        build:
+            context: ./php
+            dockerfile: Dockerfile
+        volumes:
+            - /host_mnt/c/Users/florian/PycharmProjects/php-dev-ffast/app:/app
+        networks:
+             - ffast_network
+        container_name: ffast-php
+    db:
+        image: mariadb:10.8.3
+        environment:
+          MYSQL_ROOT_PASSWORD: 'secret'
+          MYSQL_USER: 'ffast'
+          MYSQL_PASSWORD: 'ffast'
+          MYSQL_DATABASE: 'ffastdb'
+        volumes:
+            - /host_mnt/c/Users/florian/PycharmProjects/php-dev-ffast/Docker/initsql/:/docker-entrypoint-initdb.d
+            - mysqldata:/var/lib/mysql
+        networks:
+             - ffast_network
+        container_name: ffast-db
+volumes:
+    mysqldata: {}
+networks:
+  ffast_network:
+    driver: bridge
