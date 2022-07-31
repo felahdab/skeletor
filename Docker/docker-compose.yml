@@ -21,6 +21,8 @@ services:
         networks:
              - ffast_network
         container_name: ffast-php
+        ports:
+            - "8000"
     db:
         image: mariadb:10.8.3
         environment:
