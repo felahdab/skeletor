@@ -34,33 +34,31 @@
                         <span class="text-danger text-left">{{ $errors->first('email') }}</span>
                     @endif
                 </div>
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input value="{{ $user->username }}"
-                        type="text" 
-                        class="form-control" 
-                        name="username" 
-                        placeholder="Username" required>
-                    @if ($errors->has('username'))
-                        <span class="text-danger text-left">{{ $errors->first('username') }}</span>
-                    @endif
-                </div>
-                <div class="mb-3">
-                    <label for="role" class="form-label">Role</label>
-                    <select class="form-control" 
-                        name="role" required>
-                        <option value="">Select role</option>
-                        @foreach($roles as $role)
-                            <option value="{{ $role->id }}"
+
+                
+                <label for="roles" class="form-label">Assign roles</label>
+
+                <table class="table table-striped">
+                    <thead>
+                        <th scope="col" width="1%"><input type="checkbox" name="all_roles"></th>
+                        <th scope="col" width="20%">Nom</th>
+                    </thead>
+
+                    @foreach($roles as $role)
+                        <tr>
+                            <td>
+                                <input type="checkbox" 
+                                name="role[{{ $role->name }}]"
+                                value="{{ $role->name }}"
+                                class='role'
                                 {{ in_array($role->name, $userRole) 
-                                    ? 'selected'
-                                    : '' }}>{{ $role->name }}</option>
-                        @endforeach
-                    </select>
-                    @if ($errors->has('role'))
-                        <span class="text-danger text-left">{{ $errors->first('role') }}</span>
-                    @endif
-                </div>
+                                    ? 'checked'
+                                    : '' }}>
+                            </td>
+                            <td>{{ $role->name }}</td>
+                        </tr>
+                    @endforeach
+                </table>
 
                 <button type="submit" class="btn btn-primary">Update user</button>
                 <a href="{{ route('users.index') }}" class="btn btn-default">Cancel</button>
