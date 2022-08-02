@@ -14,9 +14,6 @@
             <div>
                 Email: {{ $user->email }}
             </div>
-            <div>
-                Username: {{ $user->username }}
-            </div>
         </div>
 
     </div>
