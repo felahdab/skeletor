@@ -14,10 +14,17 @@
       </ul>
 
       @auth
-            {{auth()->user()->name}}
-            <div class="text-end">
-                <a href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2">Logout</a>
-            </div>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{auth()->user()->name}}
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          @if (count(auth()->user()->roles) > 1 )
+            <a class="dropdown-item" href="{{ route('currentrole.show') }}">Changer de role</a>
+          @endif
+            <a class="dropdown-item" href="#">Changer de mot de passe</a>
+            <a class="dropdown-item" href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2">Logout</a>
+          </div>
         </div>
       @endauth
 
