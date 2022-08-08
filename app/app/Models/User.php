@@ -27,8 +27,20 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'prenom',
         'email',
         'password',
+		'matricule',
+		'date_embarq',
+		'date_debarq',
+		'photo',
+		'grade_id',
+		'specialite_id',
+		'diplome_id',
+		'secteur_id',
+		'unite_id',
+		'unite_destination_id',
+		'user_comment',
     ];
 
     /**
@@ -60,4 +72,9 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($value);
     }
+	
+	public function displayString()
+	{
+		return $this->name . " " . $this->prenom;
+	}
 }

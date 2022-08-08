@@ -24,6 +24,14 @@
                     @endif
                 </div>
                 <div class="mb-3">
+                    <label for="prenom" class="form-label">Prenom</label>
+                    <input value="{{ $user->prenom }}" 
+                        type="text" 
+                        class="form-control" 
+                        name="prenom" 
+                        placeholder="Prenom" required>
+                </div>
+                <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input value="{{ $user->email }}"
                         type="email" 
@@ -34,9 +42,24 @@
                         <span class="text-danger text-left">{{ $errors->first('email') }}</span>
                     @endif
                 </div>
-
+                <div class="mb-3">
+                    <label for="matricule" class="form-label">Matricule</label>
+                    <input value="{{ $user->matricule }}" 
+                        type="text" 
+                        class="form-control" 
+                        name="matricule" 
+                        placeholder="Matricule" required>
+                </div>
+                <div class="mb-3">
+                    <label for="date_embarq" class="form-label">Date d'embarquement</label>
+                    <input value="{{ $user->date_embarq }}" 
+                        type="date" 
+                        class="form-control" 
+                        name="date_embarq" 
+                        placeholder="Date d'embarquement" required>
+                </div>
                 
-                <label for="roles" class="form-label">Assign roles</label>
+                <label for="roles" class="form-label">Attribuer des roles</label>
 
                 <table class="table table-striped">
                     <thead>
