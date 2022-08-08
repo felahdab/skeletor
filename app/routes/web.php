@@ -54,6 +54,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::delete('/{user}/delete', 'UsersController@destroy')->name('users.destroy');
             Route::get('/currentrole', 'ChangeUserCurrentRole@index')->name('currentrole.show');
             Route::post('/currentrole', 'ChangeUserCurrentRole@store')->name('currentrole.store');
+            Route::get('/{user}/changepasswd', 'ChangeUserPassword@index')->name('changepasswd.show');
+            Route::post('/{user}/changepasswd', 'ChangeUserPassword@store')->name('changepasswd.store');
         });
 
         Route::resource('roles', RolesController::class);

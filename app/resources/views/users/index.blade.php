@@ -2,7 +2,6 @@
 
 @section('content')
     
-    <h1 class="mb-3">Laravel 8 User Roles and Permissions Step by Step Tutorial - codeanddeploy.com</h1>
 
     <div class="bg-light p-4 rounded">
         <h1>Users</h1>
@@ -43,6 +42,9 @@
                             {!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}
                             {!! Form::close() !!}
                         </td>
+						@can('changepasswd.allusers')
+						<td><a href="{{ route('changepasswd.show', $user->id) }}" class="btn btn-secondary btn-sm">Changer le mot de passe</a></td>
+						@endcan
                     </tr>
                 @endforeach
             </tbody>
