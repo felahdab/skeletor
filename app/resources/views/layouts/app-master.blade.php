@@ -35,7 +35,7 @@
         @yield('content')
     </main>
 
-    <script src="{!! url('assets/bootstrap/js/bootstrap.bundle.min.js') !!}"></script>
+    <script src="{!! url('assets/bootstrap/js/bootstrap.bundle.js') !!}"></script>
       
   </body>
 </html>
