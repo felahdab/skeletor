@@ -37,7 +37,10 @@ class LoginController extends Controller
         $user = Auth::getProvider()->retrieveByCredentials($credentials);
 
         Auth::login($user);
-
+        
+        $userRole = $user->roles[0];
+        $request->session()->put('current_role', $userRole->id);
+        $request->session()->save();
         return $this->authenticated($request, $user);
     }
 
