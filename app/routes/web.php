@@ -52,6 +52,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::get('/{user}/edit', 'UsersController@edit')->name('users.edit');
             Route::patch('/{user}/update', 'UsersController@update')->name('users.update');
             Route::delete('/{user}/delete', 'UsersController@destroy')->name('users.destroy');
+            Route::get('/currentrole', 'ChangeUserCurrentRole@index')->name('currentrole.show');
+            Route::post('/currentrole', 'ChangeUserCurrentRole@store')->name('currentrole.store');
         });
 
         Route::resource('roles', RolesController::class);
