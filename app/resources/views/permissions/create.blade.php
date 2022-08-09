@@ -2,9 +2,9 @@
 
 @section('content')
     <div class="bg-light p-4 rounded">
-        <h2>Add new permission</h2>
+        <h2>Ajouter une nouvelle permission</h2>
         <div class="lead">
-            Add new permission.
+            Nouvelle permission.
         </div>
 
         <div class="container mt-4">

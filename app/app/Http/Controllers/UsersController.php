@@ -8,6 +8,12 @@ use Spatie\Permission\Models\Role;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 
+use App\Models\Secteur;
+use App\Models\Specialite;
+use App\Models\Diplome;
+use App\Models\Grade;
+use App\Models\Unite;
+
 class UsersController extends Controller
 {
     /**
@@ -29,7 +35,14 @@ class UsersController extends Controller
      */
     public function create() 
     {
-        return view('users.create');
+        return view('users.create', [
+            'roles' => Role::latest()->get(),
+			'grades' => Grade::orderBy('ordre_classmt', 'desc')->get(),
+			'specialites' => Specialite::latest()->get(),
+			'diplomes' => Diplome::latest()->get(),
+			'secteurs' => Secteur::latest()->get(),
+			'unites' => Unite::latest()->get()
+        ]);
     }
 
     /**
@@ -78,7 +91,12 @@ class UsersController extends Controller
         return view('users.edit', [
             'user' => $user,
             'userRole' => $user->roles->pluck('name')->toArray(),
-            'roles' => Role::latest()->get()
+            'roles' => Role::latest()->get(),
+			'grades' => Grade::orderBy('ordre_classmt', 'desc')->get(),
+			'specialites' => Specialite::latest()->get(),
+			'diplomes' => Diplome::latest()->get(),
+			'secteurs' => Secteur::latest()->get(),
+			'unites' => Unite::latest()->get()
         ]);
     }
 
@@ -95,9 +113,26 @@ class UsersController extends Controller
         $user->update($request->validated());
 
         $user->syncRoles($request->get('role'));
+		
+		$grade = Grade::where('id',intval($request->get('grade')))->first();
+		$user->grade()->associate($grade);
+
+		$specialite = Specialite::where('id',intval($request->get('specialite')))->first();
+		$user->specialite()->associate($specialite);
+
+		$diplome = Diplome::where('id',intval($request->get('diplome')))->first();
+		$user->diplome()->associate($diplome);
+
+		$unite_destination = Unite::where('id',intval($request->get('unite_destination')))->first();
+		$user->unite_destination()->associate($unite_destination);
+
+		$secteur = Secteur::where('id',intval($request->get('secteur')))->first();
+		$user->secteur()->associate($secteur);
+		
+		$user->save();
 
         return redirect()->route('users.index')
-            ->withSuccess(__('User updated successfully.'));
+            ->withSuccess(__('Utilisateur mis a jour avec succes.'));
     }
 
     /**

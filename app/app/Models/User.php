@@ -27,8 +27,20 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'prenom',
         'email',
         'password',
+		'matricule',
+		'date_embarq',
+		'date_debarq',
+		'photo',
+		'grade_id',
+		'specialite_id',
+		'diplome_id',
+		'secteur_id',
+		'unite_id',
+		'unite_destination_id',
+		'user_comment',
     ];
 
     /**
@@ -60,4 +72,49 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($value);
     }
+	
+	public function displayString()
+	{
+		return $this->name . " " . $this->prenom;
+	}
+	
+	public function grade()
+	{
+		return $this->belongsTo(Grade::class);
+	}
+	
+	public function specialite()
+	{
+		return $this->belongsTo(Specialite::class);
+	}
+	
+	public function diplome()
+	{
+		return $this->belongsTo(Diplome::class);
+	}
+	
+	public function secteur()
+	{
+		return $this->belongsTo(Secteur::class);
+	}
+	
+	public function service()
+	{
+		return $this->secteur()->service();
+	}
+	
+	public function groupement()
+	{
+		return $this->secteur()->service()->groupement();
+	}
+	
+	public function unite()
+	{
+		return $this->belongsTo(Unite::class);
+	}
+	
+	public function unite_destination()
+	{
+		return $this->belongsTo(Unite::class, 'unite_destination_id');
+	}
 }
