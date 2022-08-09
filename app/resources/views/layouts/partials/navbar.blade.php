@@ -6,12 +6,60 @@
       </a>
 
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="/" class="nav-link px-2 text-white">Home</a></li>
-        <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
-        <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
-        <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-        <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+        <li><a href="/" class="nav-link px-2 text-white">Accueil</a></li>
+		@auth
+		@can('users.index')
+		<div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Personnel
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="{{ route('users.index') }}">Utilisateurs</a>
+            <a class="dropdown-item" href="{{ route('roles.index')}}">Roles</a>
+			<a class="dropdown-item" href="{{ route('permissions.index')}}">Permissions</a>
+          </div>
+        </div>
+		@endcan
+		<div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Fonctions
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Fonctions</a>
+            <a class="dropdown-item" href="#">Compagnonages</a>
+			<a class="dropdown-item" href="#">Taches</a>
+			<a class="dropdown-item" href="#">Objectifs</a>
+          </div>
+        </div>
+		<div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Transformation
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Livret</a>
+            <a class="dropdown-item" href="#">Fiche bilan</a>
+			<a class="dropdown-item" href="#">Progression</a>
+          </div>
+        </div>
+		<div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Stages
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Stages</a>
+          </div>
+        </div>
+		<div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Statistiques
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Statistiques</a>
+          </div>
+        </div>
+		@endauth
       </ul>
+	  
 
       @auth
         <div class="dropdown">

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreUserRequest extends FormRequest
+class StoreGradeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,23 +13,18 @@ class StoreUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function rules()
     {
         return [
-            'name' => 'required',
-            'email' => 'required|email:rfc,dns|unique:users,email',
-            'prenom' => 'required',
-            'matricule' => 'required',
-            'date_embarq' => 'required|date',
-			'grade' => 'required'
+            //
         ];
     }
 }

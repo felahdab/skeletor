@@ -32,6 +32,7 @@ class UpdateUserRequest extends FormRequest
             'email' => 'required|email:rfc,dns|unique:users,email,'.$user->id,
             'matricule' => 'required',
             'date_embarq' => 'required|date',
+			'grade' => 'required'
         ];
     }
 }
