@@ -8,18 +8,12 @@
         </div>
 
         <div class="container mt-4">
-            <form method="post" action="{{ route('users.update', $user->id) }}">
-                @method('patch')
-                @csrf
+			{!! Form::open(['method' => 'PATCH','route' => ['users.update', $user->id]]) !!}
 				<div class="row">
 					<div class="col">
 						<div class="mb-3">
 							<label for="email" class="form-label">Email</label>
-							<input value="{{ $user->email }}"
-								type="email" 
-								class="form-control" 
-								name="email" 
-								placeholder="Email address" required>
+							{!!Form::email('email', $user->email , ['class' => 'form-control', 'placeholder'=> "Adresse email", 'required']) !!}
 							@if ($errors->has('email'))
 								<span class="text-danger text-left">{{ $errors->first('email') }}</span>
 							@endif
@@ -41,6 +35,9 @@
 											: '' }}  </option>
 								@endforeach
 							</select>
+							@if ($errors->has('grade'))
+								<span class="text-danger text-left">{{ $errors->first('grade') }}</span>
+							@endif
 						</div>
 					</div>
 				</div>
@@ -48,12 +45,7 @@
 					<div class="col">
 						<div class="mb-3">
 							<label for="name" class="form-label">Nom</label>
-							<input value="{{ $user->name }}" 
-								type="text" 
-								class="form-control" 
-								name="name" 
-								placeholder="Name" required>
-
+							{!!Form::text('name', $user->name , ['class' => 'form-control', 'placeholder'=> "Nom", 'required']) !!}
 							@if ($errors->has('name'))
 								<span class="text-danger text-left">{{ $errors->first('name') }}</span>
 							@endif
@@ -75,6 +67,9 @@
 											: '' }}  </option>
 								@endforeach
 							</select>
+							@if ($errors->has('specialite'))
+								<span class="text-danger text-left">{{ $errors->first('specialite') }}</span>
+							@endif
 						</div>
 					</div>
 				</div>
@@ -82,11 +77,10 @@
 					<div class="col">
 						<div class="mb-3">
 							<label for="prenom" class="form-label">Prenom</label>
-							<input value="{{ $user->prenom }}" 
-								type="text" 
-								class="form-control" 
-								name="prenom" 
-								placeholder="Prenom" required>
+							{!!Form::text('prenom', $user->prenom , ['class' => 'form-control', 'placeholder'=> "Prénom", 'required']) !!}
+							@if ($errors->has('prenom'))
+								<span class="text-danger text-left">{{ $errors->first('prenom') }}</span>
+							@endif
 						</div>
 					</div>
 					<div class="col">
@@ -105,6 +99,9 @@
 											: '' }}  </option>
 								@endforeach
 							</select>
+							@if ($errors->has('secteur'))
+								<span class="text-danger text-left">{{ $errors->first('secteur') }}</span>
+							@endif
 						</div>
 					</div>
 				</div>
@@ -112,11 +109,10 @@
 					<div class="col">
 						<div class="mb-3">
 							<label for="matricule" class="form-label">Matricule</label>
-							<input value="{{ $user->matricule }}" 
-								type="text" 
-								class="form-control" 
-								name="matricule" 
-								placeholder="Matricule" required>
+							{!!Form::text('matricule', $user->matricule , ['class' => 'form-control', 'placeholder'=> "Matricule", 'required']) !!}
+							@if ($errors->has('matricule'))
+								<span class="text-danger text-left">{{ $errors->first(matricule) }}</span>
+							@endif
 						</div>
 					</div>
 					<div class="col">
@@ -135,6 +131,9 @@
 											: '' }}  </option>
 								@endforeach
 							</select>
+							@if ($errors->has('specialite'))
+								<span class="text-danger text-left">{{ $errors->first(specialite) }}</span>
+							@endif
 						</div>
 					</div>
 				</div>
@@ -142,21 +141,19 @@
 					<div class="col">
 						<div class="mb-3">
 							<label for="date_embarq" class="form-label">Date d'embarquement</label>
-							<input value="{{ $user->date_embarq }}" 
-								type="date" 
-								class="form-control" 
-								name="date_embarq" 
-								placeholder="Date d'embarquement" required>
+							{!!Form::date('date_embarq', $user->date_embarq , ['class' => 'form-control', 'placeholder'=> 'Date d\'embarquement', 'required']) !!}
+							@if ($errors->has('date_embarq'))
+								<span class="text-danger text-left">{{ $errors->first(date_embarq) }}</span>
+							@endif
 						</div>
 					</div>
 					<div class="col">
 						<div class="mb-3">
 							<label for="date_debarq" class="form-label">Date de debarquement</label>
-							<input value="{{ $user->date_debarq }}" 
-								type="date" 
-								class="form-control" 
-								name="date_debarq" 
-								placeholder="Date de debarquement">
+							{!!Form::date('date_debarq', $user->date_debarq , ['class' => 'form-control', 'placeholder'=> 'Date de debarquement', 'required']) !!}
+							@if ($errors->has('date_debarq'))
+								<span class="text-danger text-left">{{ $errors->first(date_debarq) }}</span>
+							@endif
 						</div>
 					</div>
 				</div>
@@ -176,6 +173,9 @@
 									: '' }}  </option>
 						@endforeach
 					</select>
+					@if ($errors->has('unite_destination'))
+						<span class="text-danger text-left">{{ $errors->first(unite_destination) }}</span>
+					@endif
 				</div>
 				
                 <label for="roles" class="form-label">Attribuer des roles</label>
@@ -201,10 +201,13 @@
                         </tr>
                     @endforeach
                 </table>
+				@if ($errors->has('role'))
+					<span class="text-danger text-left">{{ $errors->first(role) }}</span>
+				@endif
 
-                <button type="submit" class="btn btn-primary">Update user</button>
-                <a href="{{ route('users.index') }}" class="btn btn-default">Cancel</button>
-            </form>
+                {!! Form::button('Mettre à jour', ['class'=>'btn btn-primary']) !!}
+				{!! link_to_route('users.index', 'Annuler', [], ['class' => 'btn btn-default']) !!}
+            {!! Form::close() !!}
         </div>
 
     </div>

@@ -58,7 +58,17 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::post('/{user}/changepasswd', 'ChangeUserPassword@store')->name('changepasswd.store');
         });
 
-        Route::resource('roles', RolesController::class);
-        Route::resource('permissions', PermissionsController::class);
+        Route::resource('roles',          RolesController::class);
+        Route::resource('permissions',    PermissionsController::class);
+		
+		Route::resource('sous-objectifs', SousObjectifController::class);
+		Route::post('sous-objectifs/multipleupdate', 'SousObjectifController@multipleupdate')->name('sousobjectifs.multipleupdate');
+		
+		Route::resource('objectifs', ObjectifController::class);
+		Route::resource('compagnonages',  CompagnonageController::class);
+		Route::resource('taches',         TacheController::class);
+		Route::resource('fonctions',      FonctionController::class);
+		Route::resource('stages',         StageController::class);
+		
     });
 });

@@ -5,8 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Lieu extends Model
+class TypeFonction extends Model
 {
     use HasFactory;
-	protected $table = 'lieux';
+	
+	public function fonctions()
+	{
+		return $this->hasMany(Fonction::class);
+	}
 }
