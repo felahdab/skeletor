@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Tache;
+use App\Models\Fonction;
+
 class Compagnonage extends Model
 {
     use HasFactory;

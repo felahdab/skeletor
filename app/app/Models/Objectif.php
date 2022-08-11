@@ -9,6 +9,10 @@ class Objectif extends Model
 {
     use HasFactory;
 	
+	 protected $fillable = [
+        'id'
+	];
+	
 	public function sous_objectifs()
 	{
 		return $this->hasMany(SousObjectif::class);

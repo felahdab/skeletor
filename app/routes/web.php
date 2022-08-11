@@ -66,12 +66,20 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
 		
 		Route::resource('objectifs', ObjectifController::class);
 		Route::resource('compagnonages',  CompagnonageController::class);
+		Route::get('compagnonages/{compagnonage}/ajoutetache', 'CompagnonageController@choisirtache')->name('compagnonages.choisirtache');
+		Route::post('compagnonages/{compagnonage}/ajoutetache', 'CompagnonageController@ajoutertache')->name('compagnonages.ajoutertache');
+		Route::post('compagnonages/{compagnonage}/removetache', 'CompagnonageController@removetache')->name('compagnonages.removetache');
+		
 		Route::resource('taches',         TacheController::class);
 		Route::get('taches/{tach}/ajouteobjectif', 'TacheController@choisirobjectif')->name('taches.choisirobjectif');
 		Route::post('taches/{tach}/ajouteobjectif', 'TacheController@ajouterobjectif')->name('taches.ajouterobjectif');
 		Route::post('taches/{tach}/removeobjectif', 'TacheController@removeobjectif')->name('taches.removeobjectif');
 		
 		Route::resource('fonctions',      FonctionController::class);
+		Route::get('fonctions/{fonction}/ajoutecompagnonage', 'FonctionController@choisircompagnonage')->name('fonctions.choisircompagnonage');
+		Route::post('fonctions/{fonctions}/ajoutecompagnonage', 'FonctionController@ajoutercompagnonage')->name('fonctions.ajoutercompagnonage');
+		Route::post('fonctions/{fonctions}/removecompagnonage', 'FonctionController@removecompagnonage')->name('fonctions.removecompagnonage');
+		
 		Route::resource('stages',         StageController::class);
 		
     });

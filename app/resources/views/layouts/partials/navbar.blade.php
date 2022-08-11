@@ -25,9 +25,9 @@
           Fonctions
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Fonctions</a>
-            <a class="dropdown-item" href="#">Compagnonages</a>
-			<a class="dropdown-item" href="#">Taches</a>
+            <a class="dropdown-item" href="{{ route('fonctions.index')}}">Fonctions</a>
+            <a class="dropdown-item" href="{{ route('compagnonages.index')}}">Compagnonages</a>
+			<a class="dropdown-item" href="{{ route('taches.index')}}">Taches</a>
 			<a class="dropdown-item" href="{{ route('objectifs.index')}}">Objectifs</a>
           </div>
         </div>

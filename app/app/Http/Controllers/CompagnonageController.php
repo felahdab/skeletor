@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCompagnonageRequest;
 use App\Http\Requests\UpdateCompagnonageRequest;
 use App\Models\Compagnonage;
+use App\Models\Tache;
+
+use Illuminate\Http\Request;
 
 class CompagnonageController extends Controller
 {
@@ -13,9 +16,17 @@ class CompagnonageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->has('filter') )
+		{
+			$filter = $request->input('filter');
+			$comps = Compagnonage::where('comp_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('comp_libcourt')->paginate(10);
+		} else {
+			$comps = Compagnonage::orderBy('comp_libcourt')->paginate(10);
+		}
+        
+        return view('compagnonages.index', ['compagnonages' => $comps ] );
     }
 
     /**
@@ -58,8 +69,54 @@ class CompagnonageController extends Controller
      */
     public function edit(Compagnonage $compagnonage)
     {
-        //
+        $comps = Compagnonage::orderBy('comp_libcourt')->get();
+        return view('compagnonages.edit', ['compagnonage'   => $compagnonage, 
+											'compagnonages' => $comps] );
     }
+	public function choisirtache(Request $request, Compagnonage $compagnonage)
+	{
+		if ($request->has('filter') )
+		{
+			$filter = $request->input('filter');
+			$taches = Tache::where('tache_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('tache_libcourt')->get()	;
+		} 
+		else 
+		{
+			$filter='';
+			$taches = Tache::orderBy('tache_libcourt')->get();
+		}
+		$taches = $taches->diff($compagnonage->taches()->get());
+		
+		return view('compagnonages.choisirtache', [ 'compagnonage' => $compagnonage,
+												'taches' => $taches,
+												'filter'    => $filter]);
+	}
+	
+	public function ajoutertache(Request $request, Compagnonage $compagnonage)
+	{
+		$tache_id = intval($request->input('tache_id', 0));
+		$query = Tache::where('id', $tache_id)->get();
+		if ($query->count() == 1)
+		{
+			$tache = $query->first();
+			$compagnonage->taches()->attach($tache);
+		}
+		return redirect()->route('compagnonages.edit', ['compagnonage'   => $compagnonage]);
+		// return view('compagnonages.edit', ['compagnonage'   => $compagnonage] );
+	}
+	
+	public function removetache(Request $request, Compagnonage $compagnonage)
+	{
+		$tache_id = intval($request->input('tache_id', 0));
+		$query = Tache::where('id', $tache_id)->get();
+		if ($query->count() == 1)
+		{
+			$tache = $query->first();
+			$compagnonage->taches()->detach($tache);
+		}
+		return redirect()->route('compagnonages.edit', ['compagnonage'   => $compagnonage]);
+		// return view('compagnonages.edit', ['compagnonage'   => $compagnonage] );
+	}
 
     /**
      * Update the specified resource in storage.

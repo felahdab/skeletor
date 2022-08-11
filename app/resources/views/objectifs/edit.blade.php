@@ -12,17 +12,18 @@
 		<div class='card-header' >Modification objectif </div>
 		<div style='text-align:right;'>* champs obligatoires </div>
 		{!! Form::open(['method' => 'PATCH','route' => ['objectifs.update', $objectif->id] ]) !!}
+			<input type='hidden' id='objectif[id]' name='objectif[id]' value='{{ $objectif->id }}'>
 			<div style='padding-left: 15px;'>
 				<div class='form-group row' >
 					<label for='libelle_court_objectif' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
 					<div class='col-sm-5'>
-						<input type='text' class='form-control'  name='libelle_court_objectif' id='libelle_court_objectif' placeholder='Libell&eacute; court' value="{{ $objectif->objectif_libcourt }}" >
+						<input type='text' class='form-control'  name='objectif[objectif_libcourt]' id='objectif[objectif_libcourt]' placeholder='Libell&eacute; court' value="{{ $objectif->objectif_libcourt }}" >
 					</div>
 				</div>
 				<div class='form-group row' >
 					<label for='libelle_long_objectif' class='col-sm-5 col-form-label'>Libell&eacute; long</label>
 					<div class='col-sm-5'>
-						<input type='text' class='form-control' name='libelle_long_objectif' id='libelle_long_objectif' placeholder='Libell&eacute; long' value="{{ $objectif->objectif_liblong }}" >
+						<input type='text' class='form-control' name='objectif[objectif_liblong]' id='objectif[objectif_liblong]' placeholder='Libell&eacute; long' value="{{ $objectif->objectif_liblong }}" >
 					</div>
 				</div>
 				<div style='text-align:right;'>

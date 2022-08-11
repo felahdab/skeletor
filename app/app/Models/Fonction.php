@@ -16,6 +16,6 @@ class Fonction extends Model
 	
 	public function type_fonction()
 	{
-		return $this->belongsTo(TypeFonction::class);
+		return $this->belongsTo(TypeFonction::class, 'typefonction_id');
 	}
 }

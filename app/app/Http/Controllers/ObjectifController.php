@@ -86,7 +86,16 @@ class ObjectifController extends Controller
      */
     public function update(UpdateObjectifRequest $request, Objectif $objectif)
     {
-        var_dump($request->input());
+        $objectif_id= intval($request->input('objectif')['id']);
+		$query=Objectif::where('id', $objectif_id);
+		if ( $query->count() == 1)
+		{
+			$objectif = $query->first();
+			$objectif->objectif_libcourt=$request->objectif['objectif_libcourt'];
+			$objectif->objectif_liblong=$request->objectif['objectif_liblong'];
+			$objectif->save();
+		}
+		return redirect()->route('objectifs.edit', $objectif);
     }
 
     /**

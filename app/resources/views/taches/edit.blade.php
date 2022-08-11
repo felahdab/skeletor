@@ -9,20 +9,21 @@
         </div>
     </div>
 	<div id='divmodifobj' class='card bg-light ml-3 w-100' >
-		<div class='card-header' >Modification tacbe </div>
+		<div class='card-header' >Modification tache </div>
 		<div style='text-align:right;'>* champs obligatoires </div>
 		{!! Form::open(['method' => 'PATCH','route' => ['taches.update', $tache->id] ]) !!}
+			<input type='hidden' id='tache[id]' name='tache[id]' value='{{ $tache->id }}'>
 			<div style='padding-left: 15px;'>
 				<div class='form-group row' >
 					<label for='libelle_court_objectif' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
 					<div class='col-sm-5'>
-						<input type='text' class='form-control'  name='libelle_court_objectif' id='libelle_court_objectif' placeholder='Libell&eacute; court' value="{{ $tache->tache_libcourt }}" >
+						<input type='text' class='form-control'  name='tache[tache_libcourt]' id='tache[tache_libcourt]' placeholder='Libell&eacute; court' value="{{ $tache->tache_libcourt }}" >
 					</div>
 				</div>
 				<div class='form-group row' >
 					<label for='libelle_long_objectif' class='col-sm-5 col-form-label'>Libell&eacute; long</label>
 					<div class='col-sm-5'>
-						<input type='text' class='form-control' name='libelle_long_objectif' id='libelle_long_objectif' placeholder='Libell&eacute; long' value="{{ $tache->tache_liblong }}" >
+						<input type='text' class='form-control' name='tache[tache_liblong]' id='tache[tache_liblong]' placeholder='Libell&eacute; long' value="{{ $tache->tache_liblong }}" >
 					</div>
 				</div>
 				<div style='text-align:right;'>
@@ -64,10 +65,7 @@
 			@php $count = $count +1 @endphp
 			@endforeach
 			
-			<div>
-				<button class='btn btn-primary w-100 mt-4' type='submit' id='btnmodifobjssobj' name='btnmodifobjssobj'>Enregistrer les sous objectifs associ&eacute;s</button>
-			</div>
-			
+		
 			<div style='text-align: center;'>
 				{!! Form::open(['method' => 'GET','route' => ['taches.choisirobjectif', $tache->id],'style'=>'display:inline']) !!}
 				{!! Form::submit('Ajouter un nouvel objectif', ['class' => 'btn btn-primary btn-sm']) !!}

@@ -127,7 +127,16 @@ class TacheController extends Controller
      */
     public function update(UpdateTacheRequest $request, Tache $tache)
     {
-        //
+        $tache_id= intval($request->input('tache')['id']);
+		$query=Tache::where('id', $tache_id);
+		if ( $query->count() == 1)
+		{
+			$tache = $query->first();
+			$tache->tache_libcourt=$request->tache['tache_libcourt'];
+			$tache->tache_liblong=$request->tache['tache_liblong'];
+			$tache->save();
+		}
+		return redirect()->route('taches.edit', $tache);
     }
 
     /**
