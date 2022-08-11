@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTacheRequest;
 use App\Http\Requests\UpdateTacheRequest;
 use App\Models\Tache;
+use App\Models\Objectif;
+
+use Illuminate\Http\Request;
 
 class TacheController extends Controller
 {
@@ -13,9 +16,17 @@ class TacheController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->has('filter') )
+		{
+			$filter = $request->input('filter');
+			$taches = Tache::where('tache_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('tache_libcourt')->paginate(10);
+		} else {
+			$taches = Tache::orderBy('tache_libcourt')->paginate(10);
+		}
+        
+        return view('taches.index', ['taches' => $taches ] );
     }
 
     /**
@@ -56,10 +67,56 @@ class TacheController extends Controller
      * @param  \App\Models\Tache  $tache
      * @return \Illuminate\Http\Response
      */
-    public function edit(Tache $tache)
+    public function edit(Tache $tach)
     {
-        //
+        $taches = Tache::orderBy('tache_libcourt')->get();
+        return view('taches.edit', ['tache'   => $tach, 
+									'taches' => $taches] );
     }
+	
+	public function choisirobjectif(Request $request, Tache $tach)
+	{
+		if ($request->has('filter') )
+		{
+			$filter = $request->input('filter');
+			$objectifs = Objectif::where('objectif_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('objectif_libcourt')->get()	;
+		} 
+		else 
+		{
+			$filter='';
+			$objectifs = Objectif::orderBy('objectif_libcourt')->get();
+		}
+		$objectifs = $objectifs->diff($tach->objectifs()->get());
+		
+		return view('taches.choisirobjectif', [ 'tache'     => $tach,
+												'objectifs' => $objectifs,
+												'filter'    => $filter]);
+	}
+	
+	public function ajouterobjectif(Request $request, Tache $tach)
+	{
+		$objectif_id = intval($request->input('objectif_id', 0));
+		$query = Objectif::where('id', $objectif_id)->get();
+		if ($query->count() == 1)
+		{
+			$objectif = $query->first();
+			$tach->objectifs()->attach($objectif);
+		}
+		return view('taches.edit', ['tache'   => $tach] );
+	}
+	
+	public function removeobjectif(Request $request, Tache $tach)
+	{
+		$objectif_id = intval($request->input('objectif_id', 0));
+		$query = Objectif::where('id', $objectif_id)->get();
+		if ($query->count() == 1)
+		{
+			$objectif = $query->first();
+			$tach->objectifs()->detach($objectif);
+		}
+		
+		return view('taches.edit', ['tache'   => $tach] );
+	}
 
     /**
      * Update the specified resource in storage.

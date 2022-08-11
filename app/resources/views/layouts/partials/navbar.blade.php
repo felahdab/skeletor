@@ -28,7 +28,7 @@
             <a class="dropdown-item" href="#">Fonctions</a>
             <a class="dropdown-item" href="#">Compagnonages</a>
 			<a class="dropdown-item" href="#">Taches</a>
-			<a class="dropdown-item" href="#">Objectifs</a>
+			<a class="dropdown-item" href="{{ route('objectifs.index')}}">Objectifs</a>
           </div>
         </div>
 		<div class="dropdown">

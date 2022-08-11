@@ -67,6 +67,10 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
 		Route::resource('objectifs', ObjectifController::class);
 		Route::resource('compagnonages',  CompagnonageController::class);
 		Route::resource('taches',         TacheController::class);
+		Route::get('taches/{tach}/ajouteobjectif', 'TacheController@choisirobjectif')->name('taches.choisirobjectif');
+		Route::post('taches/{tach}/ajouteobjectif', 'TacheController@ajouterobjectif')->name('taches.ajouterobjectif');
+		Route::post('taches/{tach}/removeobjectif', 'TacheController@removeobjectif')->name('taches.removeobjectif');
+		
 		Route::resource('fonctions',      FonctionController::class);
 		Route::resource('stages',         StageController::class);
 		

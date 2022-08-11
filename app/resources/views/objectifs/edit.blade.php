@@ -4,10 +4,6 @@
 
     <div class="bg-light p-4 rounded">
         <h2>Objectifs</h2>
-        <div class="lead">
-            Gérer les objectifs.
-        </div>
-        
         <div class="mt-2">
             @include('layouts.partials.messages')
         </div>
@@ -16,18 +12,6 @@
 		<div class='card-header' >Modification objectif </div>
 		<div style='text-align:right;'>* champs obligatoires </div>
 		{!! Form::open(['method' => 'PATCH','route' => ['objectifs.update', $objectif->id] ]) !!}
-			<div style='padding-left: 15px;'>
-				<div class='form-group row' >
-					<label for ='objectif_actuel' class='col-sm-5 col-form-label'> Objectif </label>
-					<select name='objectif_actuel' id='objectif_actuel' class='custom-select  w-50' onchange='modifparam("param2","objectif_actuel");'>
-							@foreach ($objectifs as $obj)
-								<option value="{{$obj->id}}" {{ $objectif->id == $obj->id
-														? ' selected'
-														: '' }} > {{ $obj->objectif_liblong }} </option>
-							@endforeach
-					</select>
-				</div>
-			</div>
 			<div style='padding-left: 15px;'>
 				<div class='form-group row' >
 					<label for='libelle_court_objectif' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
@@ -95,10 +79,12 @@
 					</select>
 				</div>
 			</div>
+			@can("sousobjectifs.destroy")
 			{!! Form::open(['method' => 'DELETE','route' => ['sous-objectifs.destroy', $ssobj ],'style'=>'display:inline']) !!}
 			<input type='hidden' name='objectif_id' id='objectif_id'  value='{{ $objectif->id }}'>
 			{!! Form::submit('Supprimer ce sous objectif', ['class' => 'btn btn-danger btn-sm']) !!}
 			{!! Form::close() !!}
+			@endcan
 			</div>
 			@php $count = $count +1 @endphp
 			@endforeach

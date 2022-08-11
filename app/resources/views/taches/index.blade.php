@@ -3,10 +3,9 @@
 @section('content')
 
     <div class="bg-light p-4 rounded">
-        <h2>Objectifs</h2>
+        <h2>Taches</h2>
         <div class="lead">
-            Gérer les objectifs.
-        </div>
+            Gérer les taches   </div>
         
         <div class="mt-2">
             @include('layouts.partials.messages')
@@ -19,9 +18,8 @@
 			{!! Form::submit('Filtrer', ['class' => 'btn btn-primary btn-sm']) !!}
 			{!! Form::close() !!}
 	
-			{{ $objectifs->count() }} objectifs
-	
-	        <table class="table table-striped">
+			{{ $taches->count() }} taches
+			<table class="table table-striped">
             <thead>
             <tr>
                 <th scope="col" width="1%">#</th>
@@ -31,15 +29,15 @@
             </tr>
             </thead>
             <tbody>
-                @foreach($objectifs as $objectif)
+                @foreach($taches as $tache)
                     <tr>
-                        <th scope="row">{{ $objectif->id }}</th>
-                        <td>{{ $objectif->objectif_libcourt }}</td>
-                        <td>{{ $objectif->objectif_liblong }}</td>
-                        <td><a href="{{ route('objectifs.edit', $objectif->id) }}" class="btn btn-info btn-sm">Editer</a></td>
-						@can('objectifs.destroy')
+                        <th scope="row">{{ $tache->id }}</th>
+                        <td>{{ $tache->tache_libcourt }}</td>
+                        <td>{{ $tache->tache_liblong }}</td>
+                        <td><a href="{{ route('taches.edit', $tache->id) }}" class="btn btn-info btn-sm">Editer</a></td>
+						@can('taches.destroy')
                         <td>
-                            {!! Form::open(['method' => 'DELETE','route' => ['objectifs.destroy', $objectif->id],'style'=>'display:inline']) !!}
+                            {!! Form::open(['method' => 'DELETE','route' => ['taches.destroy', $tache->id],'style'=>'display:inline']) !!}
                             {!! Form::submit('Supprimer', ['class' => 'btn btn-danger btn-sm']) !!}
                             {!! Form::close() !!}
                         </td>
@@ -50,7 +48,7 @@
         </table>
 
         <div class="d-flex">
-            {!! $objectifs->withQueryString()->links() !!}
+            {!! $taches->withQueryString()->links() !!}
         </div>
 
 @endsection

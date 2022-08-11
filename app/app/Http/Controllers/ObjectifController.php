@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreObjectifRequest;
 use App\Http\Requests\UpdateObjectifRequest;
+
+use Illuminate\Http\Request;
+
 use App\Models\Objectif;
 use App\Models\Lieu;
 
@@ -14,9 +17,16 @@ class ObjectifController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $objectifs = Objectif::orderBy('objectif_libcourt')->get();
+		if ($request->has('filter') )
+		{
+			$filter = $request->input('filter');
+			$objectifs = Objectif::where('objectif_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('objectif_libcourt')->paginate(10);
+		} else {
+			$objectifs = Objectif::orderBy('objectif_libcourt')->paginate(10);
+		}
+        
         return view('objectifs.index', ['objectifs' => $objectifs ] );
     }
 
