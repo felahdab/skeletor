@@ -17,7 +17,7 @@ class SousObjectifController extends Controller
      */
     public function index()
     {
-		$sousobjectifs = SousObjectif::orderBy('ssobj_lib')->get();
+        $sousobjectifs = SousObjectif::orderBy('ssobj_lib')->get();
         return view('sousobjectifs.index', compact('sousobjectifs'));
     }
 
@@ -39,13 +39,13 @@ class SousObjectifController extends Controller
      */
     public function store(StoreSousObjectifRequest $request)
     {
-		$ssobj = new SousObjectif;
-		$ssobj->objectif_id = intval($request['objectif_id']);
-		$ssobj->ssobj_lib = 'Nouveau sous objectif a configurer';
-		$ssobj->lieu_id = 3;
-		
-		$ssobj->save();
-		return redirect()->route('objectifs.edit', $request['objectif_id']);
+        $ssobj = new SousObjectif;
+        $ssobj->objectif_id = intval($request['objectif_id']);
+        $ssobj->ssobj_lib = 'Nouveau sous objectif a configurer';
+        $ssobj->lieu_id = 3; // par défaut...
+        
+        $ssobj->save();
+        return redirect()->route('objectifs.edit', $request['objectif_id']);
     }
 
     /**
@@ -81,15 +81,15 @@ class SousObjectifController extends Controller
     {
         //
     }
-	
-	public function multipleupdate(Request $request)
+    
+    public function multipleupdate(Request $request)
     {
-		foreach ($request->sous_objectifs as $ssobj)
-		{
-			$current_ssobj = SousObjectif::where('id', $ssobj['id']);
-			$current_ssobj->update($ssobj);
-		}
-		return redirect()->route('objectifs.edit', $request['objectif_id']);
+        foreach ($request->sous_objectifs as $ssobj)
+        {
+            $current_ssobj = SousObjectif::where('id', $ssobj['id']);
+            $current_ssobj->update($ssobj);
+        }
+        return redirect()->route('objectifs.edit', $request['objectif_id']);
     }
 
 
@@ -102,6 +102,6 @@ class SousObjectifController extends Controller
     public function destroy(Request $request, SousObjectif $sousObjectif)
     {
         $sousObjectif->delete();
-		return redirect()->route('objectifs.edit', $request['objectif_id']);
+        return redirect()->route('objectifs.edit', $request['objectif_id']);
     }
 }

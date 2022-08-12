@@ -10,17 +10,18 @@
     <div id='divmodifobj' class='card bg-light ml-3 w-100' >
         <div class='card-header' >Modification compagnonage </div>
         {!! Form::open(['method' => 'PATCH','route' => ['compagnonages.update', $compagnonage->id] ]) !!}
+            <input type='hidden' id='comp[id]' name='comp[id]' value='{{ $compagnonage->id }}'>
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
-                    <label for='libelle_court_compagnonage' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
+                    <label for='comp[comp_libcourt]' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control'  name='libelle_court_compagnonage' id='libelle_court_compagnonage' placeholder='Libell&eacute; court' value="{{ $compagnonage->comp_libcourt }}" >
+                        <input type='text' class='form-control'  name='comp[comp_libcourt]' id='comp[comp_libcourt]' placeholder='Libell&eacute; court' value="{{ $compagnonage->comp_libcourt }}" >
                     </div>
                 </div>
                 <div class='form-group row' >
-                    <label for='libelle_long_compagnonage' class='col-sm-5 col-form-label'>Libell&eacute; long</label>
+                    <label for='comp[comp_liblong]' class='col-sm-5 col-form-label'>Libell&eacute; long</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control' name='libelle_long_compagnonage' id='libelle_long_compagnonage' placeholder='Libell&eacute; long' value="{{ $compagnonage->comp_liblong }}" >
+                        <input type='text' class='form-control' name='comp[comp_liblong]' id='comp[comp_liblong]' placeholder='Libell&eacute; long' value="{{ $compagnonage->comp_liblong }}" >
                     </div>
                 </div>
                 <div style='text-align:right;'>
@@ -28,10 +29,10 @@
                         <li class='dropdown'>
                             <a href='#' class='dropdown-toogle' data-bs-toggle='dropdown'>Fonction(s) associée(s)</a>
                             <div class='dropdown-menu'>
-								@foreach ($compagnonage->fonctions()->get() as $fonction)
-									<a class="dropdown-item" href="#">{{ $fonction->fonction_libcourt }}</a>
-								@endforeach
-							</div>
+                                @foreach ($compagnonage->fonctions()->get() as $fonction)
+                                    <a class="dropdown-item" href="#">{{ $fonction->fonction_libcourt }}</a>
+                                @endforeach
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -64,7 +65,7 @@
                     <input type='text' class='form-control' name='taches[{{$count}}][tache_liblong]' id='taches[{{$count}}][tache_liblong]' placeholder='Libelle long' value='{{ $tache->tache_liblong }}'>
                 </div>
             </div>
-            @can("taches.destroy")
+            @can("compagnonages.removetache")
             {!! Form::open(['method' => 'POST','route' => ['compagnonages.removetache', $compagnonage ],'style'=>'display:inline']) !!}
             <input type='hidden' name='tache_id' id='tache_id'  value='{{ $tache->id }}'>
             {!! Form::submit('Retirer cette tache', ['class' => 'btn btn-danger btn-sm']) !!}
@@ -74,12 +75,13 @@
             @php $count = $count +1 @endphp
             @endforeach
             
-        
+            @can("compagnonages.choisirtache")
             <div style='text-align: center;'>
                 {!! Form::open(['method' => 'GET','route' => ['compagnonages.choisirtache', $compagnonage->id],'style'=>'display:inline']) !!}
                 {!! Form::submit('Ajouter une nouvelle tache', ['class' => 'btn btn-primary btn-sm']) !!}
                 {!! Form::close() !!}
             </div>
+            @endcan
         </div>
     </div>
 @endsection

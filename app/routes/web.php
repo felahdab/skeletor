@@ -62,7 +62,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::resource('permissions',    PermissionsController::class);
 		
 		Route::resource('sous-objectifs', SousObjectifController::class);
-		Route::post('sous-objectifs/multipleupdate', 'SousObjectifController@multipleupdate')->name('sousobjectifs.multipleupdate');
+		Route::post('sous-objectifs/multipleupdate', 'SousObjectifController@multipleupdate')->name('sous-objectifs.multipleupdate');
 		
 		Route::resource('objectifs', ObjectifController::class);
 		Route::resource('compagnonages',  CompagnonageController::class);
@@ -77,8 +77,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
 		
 		Route::resource('fonctions',      FonctionController::class);
 		Route::get('fonctions/{fonction}/ajoutecompagnonage', 'FonctionController@choisircompagnonage')->name('fonctions.choisircompagnonage');
-		Route::post('fonctions/{fonctions}/ajoutecompagnonage', 'FonctionController@ajoutercompagnonage')->name('fonctions.ajoutercompagnonage');
-		Route::post('fonctions/{fonctions}/removecompagnonage', 'FonctionController@removecompagnonage')->name('fonctions.removecompagnonage');
+		Route::post('fonctions/{fonction}/ajoutecompagnonage', 'FonctionController@ajoutercompagnonage')->name('fonctions.ajoutercompagnonage');
+		Route::post('fonctions/{fonction}/removecompagnonage', 'FonctionController@removecompagnonage')->name('fonctions.removecompagnonage');
 		
 		Route::resource('stages',         StageController::class);
 		

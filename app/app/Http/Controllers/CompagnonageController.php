@@ -127,7 +127,16 @@ class CompagnonageController extends Controller
      */
     public function update(UpdateCompagnonageRequest $request, Compagnonage $compagnonage)
     {
-        //
+        $comp_id= intval($request->input('comp')['id']);
+        $query=Compagnonage::where('id', $comp_id);
+        if ( $query->count() == 1)
+        {
+            $comp = $query->first();
+            $comp->comp_libcourt=$request->comp['comp_libcourt'];
+            $comp->comp_liblong=$request->comp['comp_liblong'];
+            $comp->save();
+        }
+        return redirect()->route('compagnonages.edit', $compagnonage);
     }
 
     /**

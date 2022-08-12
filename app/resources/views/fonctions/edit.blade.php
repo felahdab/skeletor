@@ -10,23 +10,24 @@
     <div id='divmodifobj' class='card bg-light ml-3 w-100' >
         <div class='card-header' >Modification fonction </div>
         {!! Form::open(['method' => 'PATCH','route' => ['fonctions.update', $fonction->id] ]) !!}
+			<input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
-                    <label for='libelle_court_fonction' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
+                    <label for='fonction[fonction_libcourt]' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control'  name='fonction_libcourt' id='fonction_libcourt' placeholder='Libell&eacute; court' value="{{ $fonction->fonction_libcourt }}" >
+                        <input type='text' class='form-control'  name='fonction[fonction_libcourt]' id='fonction[fonction_libcourt]' placeholder='Libell&eacute; court' value="{{ $fonction->fonction_libcourt }}" >
                     </div>
                 </div>
                 <div class='form-group row' >
-                    <label for='libelle_long_fonction' class='col-sm-5 col-form-label'>Libell&eacute; long</label>
+                    <label for='fonction[fonction_liblong]' class='col-sm-5 col-form-label'>Libell&eacute; long</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control' name='fonction_liblong' id='fonction_liblong' placeholder='Libell&eacute; long' value="{{ $fonction->fonction_liblong }}" >
+                        <input type='text' class='form-control' name='fonction[fonction_liblong]' id='fonction[fonction_liblong]' placeholder='Libell&eacute; long' value="{{ $fonction->fonction_liblong }}" >
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="typefonction_id" class="form-label">Type de fonction</label>
                     <select class="form-control" 
-                        name="typefonction_id" required>
+                        name="fonction[typefonction_id]" required>
                         <option value="0">Type de fonction</option>
                         @foreach($typefonctions as $typefonction)
                             <option value="{{ $typefonction->id }}" {{ $fonction->typefonction_id == $typefonction->id
@@ -45,7 +46,7 @@
                 <div class='form-group row' >
                     <label for='fonction_lache' class='col-sm-5 col-form-label'>Lacher</label>
                     <div class='col-sm-5'>
-                        <input type='checkbox'name='fonction_lache' id='fonction_lache' {{ $fonction->fonction_lache
+                        <input type='checkbox'name='fonction[fonction_lache]' id='fonction[fonction_lache]' {{ $fonction->fonction_lache
                                             ? ' checked'
                                             : '' }}> 
                     </div>
@@ -53,7 +54,7 @@
                 <div class='form-group row' >
                     <label for='fonction_double' class='col-sm-5 col-form-label'>Double</label>
                     <div class='col-sm-5'>
-                        <input type='checkbox'name='fonction_double' id='fonction_double' {{ $fonction->fonction_double
+                        <input type='checkbox'name='fonction[fonction_double]' id='fonction[fonction_double]' {{ $fonction->fonction_double
                                             ? ' checked'
                                             : '' }}> 
                     </div>
@@ -87,7 +88,7 @@
                     <input type='text' class='form-control' name='compagnonages[{{$count}}][comp_libclong]' id='compagnonages[{{$count}}][comp_libclong]' placeholder='Libelle long' value='{{ $compagnonage->comp_liblong }}'>
                 </div>
             </div>
-            @can("taches.destroy")
+            @can("fonctions.removecompagnonage")
             {!! Form::open(['method' => 'POST','route' => ['fonctions.removecompagnonage', $fonction ],'style'=>'display:inline']) !!}
             <input type='hidden' name='compagnonage_id' id='compagnonage_id'  value='{{ $compagnonage->id }}'>
             {!! Form::submit('Retirer cette tache', ['class' => 'btn btn-danger btn-sm']) !!}
@@ -97,12 +98,13 @@
             @php $count = $count +1 @endphp
             @endforeach
             
-        
+			@can("fonctions.choisircompagnonage")
             <div style='text-align: center;'>
                 {!! Form::open(['method' => 'GET','route' => ['fonctions.choisircompagnonage', $fonction->id],'style'=>'display:inline']) !!}
                 {!! Form::submit('Ajouter un nouveau compagnonage', ['class' => 'btn btn-primary btn-sm']) !!}
                 {!! Form::close() !!}
             </div>
+			@endcan
         </div>
     </div>
 @endsection
