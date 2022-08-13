@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateFonctionRequest;
 use App\Models\Fonction;
 use App\Models\TypeFonction;
 use App\Models\Compagnonage;
+use App\Models\Stage;
 
 use Illuminate\Http\Request;
 
@@ -24,10 +25,12 @@ class FonctionController extends Controller
             $filter = $request->input('filter');
             $fonctions = Fonction::where('fonction_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('fonction_libcourt')->paginate(10);
         } else {
+            $filter="";
             $fonctions = Fonction::orderBy('fonction_libcourt')->paginate(10);
         }
         
-        return view('fonctions.index', ['fonctions' => $fonctions ] );
+        return view('fonctions.index', ['fonctions' => $fonctions ,
+                                        'filter'    => $filter] );
     }
 
     /**
@@ -74,10 +77,8 @@ class FonctionController extends Controller
      */
     public function edit(Fonction $fonction)
     {
-        $fonctions = Fonction::orderBy('fonction_libcourt')->get();
         $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
         return view('fonctions.edit', ['fonction'       => $fonction, 
-                                        'fonctions'     => $fonctions,
                                         'typefonctions' => $typefonctions] );
     }
     
@@ -109,7 +110,9 @@ class FonctionController extends Controller
             $compagnonage = $query->first();
             $fonction->compagnonages()->attach($compagnonage);
         }
-        return redirect()->route('fonctions.edit', ['fonction'   => $fonction]);
+        $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
+        return redirect()->route('fonctions.edit', ['fonction'   => $fonction,
+                                                    'typefonctions' => $typefonctions]);
     }
     
     public function removecompagnonage(Request $request, Fonction $fonction)
@@ -123,6 +126,52 @@ class FonctionController extends Controller
         }
         return redirect()->route('fonctions.edit', ['fonction'   => $fonction]);
     }
+
+    public function choisirstage(Request $request, Fonction $fonction)
+    {
+        if ($request->has('filter') )
+        {
+            $filter = $request->input('filter');
+            $stages = Stage::where('stage_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('stage_libcourt')->get()    ;
+        } 
+        else 
+        {
+            $filter='';
+            $stages = Stage::orderBy('stage_libcourt')->get()    ;
+        }
+        $stages = $stages->diff($fonction->stages()->get());
+        
+        return view('fonctions.choisirstage', [ 'fonction' => $fonction,
+                                                'stages' => $stages,
+                                                'filter'    => $filter]);
+    }
+    
+    public function ajouterstage(Request $request, Fonction $fonction)
+    {
+        $stage_id = intval($request->input('stage_id', 0));
+        $query = Stage::where('id', $stage_id)->get();
+        if ($query->count() == 1)
+        {
+            $stage = $query->first();
+            $fonction->stages()->attach($stage);
+        }
+		$typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
+        return redirect()->route('fonctions.edit', ['fonction'   => $fonction,
+                                                    'typefonctions' => $typefonctions]);
+    }
+    
+    public function removestage(Request $request, Fonction $fonction)
+    {
+        $stage_id = intval($request->input('stage_id', 0));
+        $query = Stage::where('id', $stage_id)->get();
+        if ($query->count() == 1)
+        {
+            $stage = $query->first();
+            $fonction->stages()->detach($stage);
+        }
+		$typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
+        return redirect()->route('fonctions.edit', ['fonction'   => $fonction,
+                                                    'typefonctions' => $typefonctions]);    }
 
     /**
      * Update the specified resource in storage.

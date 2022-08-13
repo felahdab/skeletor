@@ -10,7 +10,7 @@
     <div id='divmodifobj' class='card bg-light ml-3 w-100' >
         <div class='card-header' >Modification fonction </div>
         {!! Form::open(['method' => 'PATCH','route' => ['fonctions.update', $fonction->id] ]) !!}
-			<input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
+            <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
                     <label for='fonction[fonction_libcourt]' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
@@ -98,13 +98,53 @@
             @php $count = $count +1 @endphp
             @endforeach
             
-			@can("fonctions.choisircompagnonage")
+            @can("fonctions.choisircompagnonage")
             <div style='text-align: center;'>
                 {!! Form::open(['method' => 'GET','route' => ['fonctions.choisircompagnonage', $fonction->id],'style'=>'display:inline']) !!}
                 {!! Form::submit('Ajouter un nouveau compagnonage', ['class' => 'btn btn-primary btn-sm']) !!}
                 {!! Form::close() !!}
             </div>
-			@endcan
+            @endcan
+        </div>
+        <div style='padding-left: 15px;'>
+            <div class='card-header ml-n3 mr-n4 mb-3' >Stage(s) associ&eacute;s</div>
+            <input type='hidden' name='fonction_id' id='fonction_id'  value='{{ $fonction->id }}'>
+            
+            @php $count = 1 @endphp
+            @foreach ($fonction->stages()->get() as $stage)
+            <div class='cadressobj'>
+            <div class='form-group row' >
+                <label class='col-sm-5 col-form-label '>Stage </label>
+            </div>
+            <div class='form-group row' >
+                <label class='col-sm-5 col-form-label '>Libelle court</label>
+                <div class='col-sm-5'>
+                    <input type='text' class='form-control' name='stages[{{$count}}][stage_libcourt]' id='stages[{{$count}}][stage_libcourt]' placeholder='Libelle court' value='{{ $stage->stage_libcourt }}'>
+                </div>
+            </div>
+            <div class='form-group row' >
+                <label class='col-sm-5 col-form-label '>Libelle long</label>
+                <div class='col-sm-5'>
+                    <input type='text' class='form-control' name='stages[{{$count}}][stage_liblong]' id='stages[{{$count}}][stage_liblong]' placeholder='Libelle long' value='{{ $stage->stage_liblong }}'>
+                </div>
+            </div>
+            @can("fonctions.removestage")
+            {!! Form::open(['method' => 'POST','route' => ['fonctions.removestage', $fonction ],'style'=>'display:inline']) !!}
+            <input type='hidden' name='stage_id' id='stage_id'  value='{{ $stage->id }}'>
+            {!! Form::submit('Retirer ce stage', ['class' => 'btn btn-danger btn-sm']) !!}
+            {!! Form::close() !!}
+            @endcan
+            </div>
+            @php $count = $count +1 @endphp
+            @endforeach
+            
+            @can("fonctions.choisirstage")
+            <div style='text-align: center;'>
+                {!! Form::open(['method' => 'GET','route' => ['fonctions.choisirstage', $fonction->id],'style'=>'display:inline']) !!}
+                {!! Form::submit('Ajouter un nouveau stage', ['class' => 'btn btn-primary btn-sm']) !!}
+                {!! Form::close() !!}
+            </div>
+            @endcan
         </div>
     </div>
 @endsection

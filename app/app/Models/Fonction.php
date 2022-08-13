@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Compagnonage;
 use App\Models\TypeFonction;
+use App\Models\Stage;
 
 class Fonction extends Model
 {
@@ -20,5 +21,10 @@ class Fonction extends Model
     public function type_fonction()
     {
         return $this->belongsTo(TypeFonction::class, 'typefonction_id');
+    }
+    
+    public function stages()
+    {
+        return $this->belongsToMany(Stage::class, 'fonction_stage')->withTimeStamps();
     }
 }

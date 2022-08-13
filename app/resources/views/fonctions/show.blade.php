@@ -72,5 +72,32 @@
             @php $count = $count +1 @endphp
             @endforeach
         </div>
+		
+		<div style='padding-left: 15px;'>
+            <div class='card-header ml-n3 mr-n4 mb-3' >Stage(s) associ&eacute;s</div>
+            <input type='hidden' name='fonction_id' id='fonction_id'  value='{{ $fonction->id }}'>
+            
+            @php $count = 1 @endphp
+            @foreach ($fonction->stages()->get() as $stage)
+            <div class='cadressobj'>
+            <div class='form-group row' >
+                <label class='col-sm-5 col-form-label '>Stage </label>
+            </div>
+            <div class='form-group row' >
+                <label class='col-sm-5 col-form-label '>Libelle court</label>
+                <div class='col-sm-5'>
+                    <input type='text' class='form-control' name='stages[{{$count}}][stage_libcourt]' id='stages[{{$count}}][stage_libcourt]' placeholder='Libelle court' value='{{ $stage->stage_libcourt }}'>
+                </div>
+            </div>
+            <div class='form-group row' >
+                <label class='col-sm-5 col-form-label '>Libelle long</label>
+                <div class='col-sm-5'>
+                    <input type='text' class='form-control' name='stages[{{$count}}][stage_liblong]' id='stages[{{$count}}][stage_liblong]' placeholder='Libelle long' value='{{ $stage->stage_liblong }}'>
+                </div>
+            </div>
+            </div>
+            @php $count = $count +1 @endphp
+            @endforeach
+        </div>
     </div>
 @endsection

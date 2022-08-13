@@ -3,9 +3,9 @@
 @section('content')
 
     <div class="bg-light p-4 rounded">
-        <h2>Fonctions</h2>
+        <h2>Stages</h2>
         <div class="lead">
-            Gérer les fonctions   
+            Gérer les stages
 		</div>
         <div class="mt-2">
             @include('layouts.partials.messages')
@@ -17,7 +17,7 @@
 			{!! Form::submit('Filtrer', ['class' => 'btn btn-primary btn-sm']) !!}
 			{!! Form::close() !!}
 	
-			{{ $fonctions->count() }} taches
+			{{ $stages->count() }} stages
 			<table class="table table-striped">
             <thead>
             <tr>
@@ -28,16 +28,16 @@
             </tr>
             </thead>
             <tbody>
-                @foreach($fonctions as $fonction)
+                @foreach($stages as $stage)
                     <tr>
-                        <th scope="row">{{ $fonction->id }}</th>
-                        <td>{{ $fonction->fonction_libcourt }}</td>
-                        <td>{{ $fonction->fonction_liblong }}</td>
-						<td><a href="{{ route('fonctions.show', $fonction->id) }}" class="btn btn-primary btn-sm">Consulter</a></td>
-                        <td><a href="{{ route('fonctions.edit', $fonction->id) }}" class="btn btn-info btn-sm">Editer</a></td>
-						@can('fonctions.destroy')
+                        <th scope="row">{{ $stage->id }}</th>
+                        <td>{{ $stage->stage_libcourt }}</td>
+                        <td>{{ $stage->stage_liblong }}</td>
+						<td><a href="{{ route('stages.show', $stage->id) }}" class="btn btn-primary btn-sm">Consulter</a></td>
+                        <td><a href="{{ route('stages.edit', $stage->id) }}" class="btn btn-info btn-sm">Editer</a></td>
+						@can('stage.destroy')
                         <td>
-                            {!! Form::open(['method' => 'DELETE','route' => ['fonctions.destroy', $fonction->id],'style'=>'display:inline']) !!}
+                            {!! Form::open(['method' => 'DELETE','route' => ['stages.destroy', $stage->id],'style'=>'display:inline']) !!}
                             {!! Form::submit('Supprimer', ['class' => 'btn btn-danger btn-sm']) !!}
                             {!! Form::close() !!}
                         </td>
@@ -48,7 +48,7 @@
         </table>
 
         <div class="d-flex">
-            {!! $fonctions->withQueryString()->links() !!}
+            {!! $stages->withQueryString()->links() !!}
         </div>
 
 @endsection

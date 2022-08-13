@@ -34,6 +34,14 @@
         </div>
 		<div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Stages
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="{{ route('stages.index')}}">Stages</a>
+          </div>
+        </div>
+		<div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Transformation
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -44,10 +52,12 @@
         </div>
 		<div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Stages
+          Ma transformation
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Stages</a>
+            <a class="dropdown-item" href="#">Livret</a>
+            <a class="dropdown-item" href="#">Fiche bilan</a>
+			<a class="dropdown-item" href="#">Progression</a>
           </div>
         </div>
 		<div class="dropdown">

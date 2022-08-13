@@ -15,7 +15,7 @@
     </div>
 	
 			{!! Form::open(['method' => 'GET','route' => request()->route()->getName()]) !!}
-			{!! Form::text('filter') !!}
+			{!! Form::text('filter', $filter) !!}
 			{!! Form::submit('Filtrer', ['class' => 'btn btn-primary btn-sm']) !!}
 			{!! Form::close() !!}
 	
