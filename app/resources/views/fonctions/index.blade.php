@@ -33,6 +33,7 @@
                         <th scope="row">{{ $fonction->id }}</th>
                         <td>{{ $fonction->fonction_libcourt }}</td>
                         <td>{{ $fonction->fonction_liblong }}</td>
+						<td><a href="{{ route('fonctions.show', $fonction->id) }}" class="btn btn-primary btn-sm">Consulter</a></td>
                         <td><a href="{{ route('fonctions.edit', $fonction->id) }}" class="btn btn-info btn-sm">Editer</a></td>
 						@can('fonctions.destroy')
                         <td>

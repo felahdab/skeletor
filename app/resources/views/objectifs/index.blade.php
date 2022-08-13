@@ -36,6 +36,7 @@
                         <th scope="row">{{ $objectif->id }}</th>
                         <td>{{ $objectif->objectif_libcourt }}</td>
                         <td>{{ $objectif->objectif_liblong }}</td>
+						<td><a href="{{ route('objectifs.show', $objectif->id) }}" class="btn btn-primary btn-sm">Consulter</a></td>
                         <td><a href="{{ route('objectifs.edit', $objectif->id) }}" class="btn btn-info btn-sm">Editer</a></td>
 						@can('objectifs.destroy')
                         <td>

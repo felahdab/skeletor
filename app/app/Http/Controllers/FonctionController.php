@@ -59,7 +59,11 @@ class FonctionController extends Controller
      */
     public function show(Fonction $fonction)
     {
-        //
+        $fonctions = Fonction::orderBy('fonction_libcourt')->get();
+        $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
+        return view('fonctions.show', ['fonction'       => $fonction, 
+                                        'fonctions'     => $fonctions,
+                                        'typefonctions' => $typefonctions] );
     }
 
     /**

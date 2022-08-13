@@ -59,7 +59,9 @@ class ObjectifController extends Controller
      */
     public function show(Objectif $objectif)
     {
-        //
+		$lieux = Lieu::orderBy('lieu_liblong')->get();
+        return view('objectifs.show',   ['objectif'   => $objectif,
+										'lieux'     => $lieux] );
     }
 
     /**

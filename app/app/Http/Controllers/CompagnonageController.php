@@ -58,7 +58,8 @@ class CompagnonageController extends Controller
      */
     public function show(Compagnonage $compagnonage)
     {
-        //
+       
+        return view('compagnonages.show', ['compagnonage'   => $compagnonage] );
     }
 
     /**
@@ -69,9 +70,7 @@ class CompagnonageController extends Controller
      */
     public function edit(Compagnonage $compagnonage)
     {
-        $comps = Compagnonage::orderBy('comp_libcourt')->get();
-        return view('compagnonages.edit', ['compagnonage'   => $compagnonage, 
-											'compagnonages' => $comps] );
+        return view('compagnonages.edit', ['compagnonage'   => $compagnonage] );
     }
 	public function choisirtache(Request $request, Compagnonage $compagnonage)
 	{

@@ -33,6 +33,7 @@
                         <th scope="row">{{ $compagnonage->id }}</th>
                         <td>{{ $compagnonage->comp_libcourt }}</td>
                         <td>{{ $compagnonage->comp_liblong }}</td>
+						<td><a href="{{ route('compagnonages.show', $compagnonage->id) }}" class="btn btn-primary btn-sm">Consulter</a></td>
                         <td><a href="{{ route('compagnonages.edit', $compagnonage->id) }}" class="btn btn-info btn-sm">Editer</a></td>
 						@can('compagnonages.destroy')
                         <td>

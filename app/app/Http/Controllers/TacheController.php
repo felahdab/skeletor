@@ -56,9 +56,9 @@ class TacheController extends Controller
      * @param  \App\Models\Tache  $tache
      * @return \Illuminate\Http\Response
      */
-    public function show(Tache $tache)
+    public function show(Tache $tach)
     {
-        //
+        return view('taches.show',   ['tache'   => $tach ]  );
     }
 
     /**
@@ -69,9 +69,7 @@ class TacheController extends Controller
      */
     public function edit(Tache $tach)
     {
-        $taches = Tache::orderBy('tache_libcourt')->get();
-        return view('taches.edit', ['tache'   => $tach, 
-                                    'taches' => $taches] );
+        return view('taches.edit', ['tache'   => $tach] );
     }
     
     public function choisirobjectif(Request $request, Tache $tach)

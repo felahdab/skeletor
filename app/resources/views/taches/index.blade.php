@@ -34,7 +34,8 @@
                         <th scope="row">{{ $tache->id }}</th>
                         <td>{{ $tache->tache_libcourt }}</td>
                         <td>{{ $tache->tache_liblong }}</td>
-                        <td><a href="{{ route('taches.edit', $tache->id) }}" class="btn btn-info btn-sm">Editer</a></td>
+                        <td><a href="{{ route('taches.show', $tache->id) }}" class="btn btn-primary btn-sm">Consulter</a></td>
+						<td><a href="{{ route('taches.edit', $tache->id) }}" class="btn btn-info btn-sm">Editer</a></td>
 						@can('taches.destroy')
                         <td>
                             {!! Form::open(['method' => 'DELETE','route' => ['taches.destroy', $tache->id],'style'=>'display:inline']) !!}
