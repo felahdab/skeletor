@@ -30,7 +30,7 @@
                             <a href='#' class='dropdown-toogle' data-bs-toggle='dropdown'>Fonction(s) associée(s)</a>
                             <div class='dropdown-menu'>
                                 @foreach ($compagnonage->fonctions()->get() as $fonction)
-                                    <a class="dropdown-item" href="#">{{ $fonction->fonction_libcourt }}</a>
+                                    <a class="dropdown-item" href="{{ route('fonctions.show', $fonction->id) }}">{{ $fonction->fonction_libcourt }}</a>
                                 @endforeach
                             </div>
                         </li>

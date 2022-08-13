@@ -28,9 +28,13 @@
                 </div>
                 <div style='text-align:right;'>
                     <ul  class='navbar-nav mr-auto' >
-                        <li class='nav-item dropdown'>
-                            <a href='#' class='nav-link dropdown-toogle' data-toggle='dropdown'>T&acirc;che(s) associée(s)</a>
-                            <ul class='dropdown-menu dropdown-menu-right'></ul>
+                        <li class='dropdown'>
+                            <a href='#' class='dropdown-toogle' data-bs-toggle='dropdown'>Tache(s) associée(s)</a>
+                            <div class='dropdown-menu'>
+                                @foreach ($objectif->taches()->get() as $tache)
+                                    <a class="dropdown-item" href="{{ route('taches.show', $tache->id) }}">{{ $tache->tache_libcourt }}</a>
+                                @endforeach
+                            </div>
                         </li>
                     </ul>
                 </div>

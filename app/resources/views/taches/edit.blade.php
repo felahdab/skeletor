@@ -26,14 +26,18 @@
 						<input type='text' class='form-control' name='tache[tache_liblong]' id='tache[tache_liblong]' placeholder='Libell&eacute; long' value="{{ $tache->tache_liblong }}" >
 					</div>
 				</div>
-				<div style='text-align:right;'>
-					<ul  class='navbar-nav mr-auto' >
-						<li class='nav-item dropdown'>
-							<a href='#' class='nav-link dropdown-toogle' data-toggle='dropdown'>Compagnonnage(s) associée(s)</a>
-							<ul class='dropdown-menu dropdown-menu-right'></ul>
-						</li>
-					</ul>
-				</div>
+				<<div style='text-align:right;'>
+                    <ul  class='navbar-nav mr-auto' >
+                        <li class='dropdown'>
+                            <a href='#' class='dropdown-toogle' data-bs-toggle='dropdown'>Compagnonage(s) associé(s)</a>
+                            <div class='dropdown-menu'>
+                                @foreach ($tache->compagnonages()->get() as $comp)
+                                    <a class="dropdown-item" href="{{ route('compagnonages.show', $comp->id) }}">{{ $comp->comp_libcourt }}</a>
+                                @endforeach
+                            </div>
+                        </li>
+                    </ul>
+                </div>
 				<div>
 					<button class='btn btn-primary w-100 mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Modifier</button>
 					<br>&nbsp;
