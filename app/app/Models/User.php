@@ -100,7 +100,7 @@ class User extends Authenticatable
 	
 	public function service()
 	{
-		return $this->secteur()->service();
+		return $this->secteur()->first()->service()->take(1);
 	}
 	
 	public function groupement()

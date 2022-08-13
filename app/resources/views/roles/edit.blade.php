@@ -20,16 +20,12 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('roles.update', $role->id) }}">
-                @method('patch')
-                @csrf
+			{!! Form::open(['method' => 'PATCH','route' => ['roles.update', $role->id]]) !!}
+				
                 <div class="mb-3">
-                    <label for="name" class="form-label">Name</label>
-                    <input value="{{ $role->name }}" 
-                        type="text" 
-                        class="form-control" 
-                        name="name" 
-                        placeholder="Name" required>
+					<label for="name" class="form-label">Name</label>
+					{!!Form::text('name', $role->name , ['class' => 'form-control', 'placeholder'=> "Name"]) !!}
+                    
                 </div>
                 
                 <label for="permissions" class="form-label">Assign Permissions</label>
@@ -60,7 +56,7 @@
 
                 <button type="submit" class="btn btn-primary">Save changes</button>
                 <a href="{{ route('roles.index') }}" class="btn btn-default">Back</a>
-            </form>
+			{!! Form::close() !!}
         </div>
 
     </div>
