@@ -40,7 +40,7 @@ class FonctionController extends Controller
      */
     public function create()
     {
-        //
+        return view('fonctions.create' );
     }
 
     /**
@@ -51,7 +51,12 @@ class FonctionController extends Controller
      */
     public function store(StoreFonctionRequest $request)
     {
-        //
+        $fonction=new Fonction;
+        $fonction->fonction_libcourt = $request->fonction['fonction_libcourt'];
+        $fonction->fonction_liblong = $request->fonction['fonction_liblong'];
+        $fonction->typefonction_id = 0;
+        $fonction->save();
+        return redirect()->route('fonctions.edit', $fonction);
     }
 
     /**
@@ -62,10 +67,8 @@ class FonctionController extends Controller
      */
     public function show(Fonction $fonction)
     {
-        $fonctions = Fonction::orderBy('fonction_libcourt')->get();
         $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
         return view('fonctions.show', ['fonction'       => $fonction, 
-                                        'fonctions'     => $fonctions,
                                         'typefonctions' => $typefonctions] );
     }
 
@@ -155,7 +158,7 @@ class FonctionController extends Controller
             $stage = $query->first();
             $fonction->stages()->attach($stage);
         }
-		$typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
+        $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
         return redirect()->route('fonctions.edit', ['fonction'   => $fonction,
                                                     'typefonctions' => $typefonctions]);
     }
@@ -169,7 +172,7 @@ class FonctionController extends Controller
             $stage = $query->first();
             $fonction->stages()->detach($stage);
         }
-		$typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
+        $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
         return redirect()->route('fonctions.edit', ['fonction'   => $fonction,
                                                     'typefonctions' => $typefonctions]);    }
 
@@ -207,6 +210,7 @@ class FonctionController extends Controller
      */
     public function destroy(Fonction $fonction)
     {
-        //
+        $fonction->delete();
+        return redirect()->route('fonctions.index');
     }
 }
