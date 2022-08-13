@@ -38,7 +38,7 @@ class CompagnonageController extends Controller
      */
     public function create()
     {
-        //
+        return view('compagnonages.create' );
     }
 
     /**
@@ -49,7 +49,11 @@ class CompagnonageController extends Controller
      */
     public function store(StoreCompagnonageRequest $request)
     {
-        //
+        $comp=new Compagnonage;
+        $comp->comp_libcourt = $request->comp['comp_libcourt'];
+        $comp->comp_liblong = $request->comp['comp_liblong'];
+        $comp->save();
+        return redirect()->route('compagnonages.edit', $comp);
     }
 
     /**
@@ -148,6 +152,7 @@ class CompagnonageController extends Controller
      */
     public function destroy(Compagnonage $compagnonage)
     {
-        //
+        $compagnonage->delete();
+        return redirect()->route('compagnonages.index');
     }
 }
