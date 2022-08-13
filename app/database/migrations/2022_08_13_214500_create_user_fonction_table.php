@@ -18,13 +18,13 @@ return new class extends Migration
             $table->timestamps();
 			$table->foreignId('user_id');
 			$table->foreignId('fonction_id');
-			$table->date('date_lache');
-			$table->string('valideur_lache',255);
-			$table->string('commentaire_lache', 255);
-			$table->date('date_double');
-			$table->string('valideur_double',255);
-			$table->string('commentaire_double', 255);
-			$table->date('validation');
+			$table->date('date_lache')->nullable(true)->default(null);
+			$table->string('valideur_lache',255)->nullable(true)->default(null);
+			$table->string('commentaire_lache', 255)->nullable(true)->default(null);
+			$table->date('date_double')->nullable(true)->default(null);
+			$table->string('valideur_double',255)->nullable(true)->default(null);
+			$table->string('commentaire_double', 255)->nullable(true)->default(null);
+			$table->date('validation')->nullable(true)->default(null);
         });
     }
 

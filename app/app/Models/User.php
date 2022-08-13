@@ -30,17 +30,17 @@ class User extends Authenticatable
         'prenom',
         'email',
         'password',
-		'matricule',
-		'date_embarq',
-		'date_debarq',
-		'photo',
-		'grade_id',
-		'specialite_id',
-		'diplome_id',
-		'secteur_id',
-		'unite_id',
-		'unite_destination_id',
-		'user_comment',
+        'matricule',
+        'date_embarq',
+        'date_debarq',
+        'photo',
+        'grade_id',
+        'specialite_id',
+        'diplome_id',
+        'secteur_id',
+        'unite_id',
+        'unite_destination_id',
+        'user_comment',
     ];
 
     /**
@@ -72,49 +72,65 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($value);
     }
-	
-	public function displayString()
-	{
-		return $this->name . " " . $this->prenom;
-	}
-	
-	public function grade()
-	{
-		return $this->belongsTo(Grade::class);
-	}
-	
-	public function specialite()
-	{
-		return $this->belongsTo(Specialite::class);
-	}
-	
-	public function diplome()
-	{
-		return $this->belongsTo(Diplome::class);
-	}
-	
-	public function secteur()
-	{
-		return $this->belongsTo(Secteur::class);
-	}
-	
-	public function service()
-	{
-		return $this->secteur()->first()->service()->take(1);
-	}
-	
-	public function groupement()
-	{
-		return $this->secteur()->service()->groupement();
-	}
-	
-	public function unite()
-	{
-		return $this->belongsTo(Unite::class);
-	}
-	
-	public function unite_destination()
-	{
-		return $this->belongsTo(Unite::class, 'unite_destination_id');
-	}
+    
+    public function displayString()
+    {
+        return $this->name . " " . $this->prenom;
+    }
+    
+    public function grade()
+    {
+        return $this->belongsTo(Grade::class);
+    }
+    
+    public function specialite()
+    {
+        return $this->belongsTo(Specialite::class);
+    }
+    
+    public function diplome()
+    {
+        return $this->belongsTo(Diplome::class);
+    }
+    
+    public function secteur()
+    {
+        return $this->belongsTo(Secteur::class);
+    }
+    
+    public function service()
+    {
+        return $this->secteur()->first()->service()->take(1);
+    }
+    
+    public function groupement()
+    {
+        return $this->secteur()->service()->groupement();
+    }
+    
+    public function unite()
+    {
+        return $this->belongsTo(Unite::class);
+    }
+    
+    public function unite_destination()
+    {
+        return $this->belongsTo(Unite::class, 'unite_destination_id');
+    }
+    
+    public function fonctions()
+    {
+        return $this->belongsToMany(Fonction::class, 'user_fonction')
+            ->withTimeStamps()
+            ->withPivot('date_lache','valideur_lache','commentaire_lache',
+                    'date_double','valideur_double','commentaire_double',
+                    'validation');
+    }
+    
+    public function stages()
+    {
+        return $this->belongsToMany(Stage::class, 'user_stage')
+            ->withTimeStamps()
+            ->withPivot('commentaire', 'date_validation');
+    }
 }

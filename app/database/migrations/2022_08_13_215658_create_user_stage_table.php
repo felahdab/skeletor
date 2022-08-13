@@ -18,8 +18,8 @@ return new class extends Migration
             $table->timestamps();
 			$table->foreignId('user_id');
 			$table->foreignId('stage_id');
-			$table->string('commentaire', 250);
-			$table->date('date_validation');
+			$table->string('commentaire', 250)->nullable(true)->default(null);
+			$table->date('date_validation')->nullable(true)->default(null);
         });
     }
 
