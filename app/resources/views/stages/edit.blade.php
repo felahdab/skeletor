@@ -10,7 +10,7 @@
     <div id='divmodifobj' class='card bg-light ml-3 w-100' >
         <div class='card-header' >Modification d'un stage </div>
         {!! Form::open(['method' => 'PATCH','route' => ['stages.update', $stage->id] ]) !!}
-			<input type='hidden' id='stage[id]' name='stage[id]' value='{{ $stage->id }}'>
+            <input type='hidden' id='stage[id]' name='stage[id]' value='{{ $stage->id }}'>
             <div style='padding-left: 15px;'>
                                 <div class='form-group row' >
                     <label for='stage[stage_libcourt]' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
@@ -24,7 +24,7 @@
                         <input type='text' class='form-control' name='stage[stage_liblong]' id='stage[stage_liblong]' placeholder='Libell&eacute; long' value="{{ $stage->stage_liblong }}" >
                     </div>
                 </div>
-				<div class='form-group row' >
+                <div class='form-group row' >
                     <label for='stage[transverse]' class='col-sm-5 col-form-label'>Transverse</label>
                     <div class='col-sm-5'>
                         <input type='checkbox'name='stage[transverse]' id='stage[transverse]' {{ $stage->transverse

@@ -72,8 +72,8 @@
             @php $count = $count +1 @endphp
             @endforeach
         </div>
-		
-		<div style='padding-left: 15px;'>
+        
+        <div style='padding-left: 15px;'>
             <div class='card-header ml-n3 mr-n4 mb-3' >Stage(s) associ&eacute;s</div>
             <input type='hidden' name='fonction_id' id='fonction_id'  value='{{ $fonction->id }}'>
             

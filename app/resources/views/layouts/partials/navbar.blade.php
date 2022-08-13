@@ -7,32 +7,32 @@
 
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
         <li><a href="/" class="nav-link px-2 text-white">Accueil</a></li>
-		@auth
-		@can('users.index')
-		<div class="dropdown">
+        @auth
+        @can('users.index')
+        <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Personnel
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="{{ route('users.index') }}">Utilisateurs</a>
             <a class="dropdown-item" href="{{ route('roles.index')}}">Roles</a>
-			<a class="dropdown-item" href="{{ route('permissions.index')}}">Permissions</a>
+            <a class="dropdown-item" href="{{ route('permissions.index')}}">Permissions</a>
           </div>
         </div>
-		@endcan
-		<div class="dropdown">
+        @endcan
+        <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Fonctions
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="{{ route('fonctions.index')}}">Fonctions</a>
             <a class="dropdown-item" href="{{ route('compagnonages.index')}}">Compagnonages</a>
-			<a class="dropdown-item" href="{{ route('taches.index')}}">Taches</a>
-			<a class="dropdown-item" href="{{ route('objectifs.index')}}">Objectifs</a>
-			<a class="dropdown-item" href="{{ route('sous-objectifs.index')}}">Sous-Objectifs</a>
+            <a class="dropdown-item" href="{{ route('taches.index')}}">Taches</a>
+            <a class="dropdown-item" href="{{ route('objectifs.index')}}">Objectifs</a>
+            <a class="dropdown-item" href="{{ route('sous-objectifs.index')}}">Sous-Objectifs</a>
           </div>
         </div>
-		<div class="dropdown">
+        <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Stages
           </button>
@@ -40,27 +40,27 @@
             <a class="dropdown-item" href="{{ route('stages.index')}}">Stages</a>
           </div>
         </div>
-		<div class="dropdown">
+        <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Transformation
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="#">Livret</a>
             <a class="dropdown-item" href="#">Fiche bilan</a>
-			<a class="dropdown-item" href="#">Progression</a>
+            <a class="dropdown-item" href="#">Progression</a>
           </div>
         </div>
-		<div class="dropdown">
+        <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Ma transformation
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="#">Livret</a>
             <a class="dropdown-item" href="#">Fiche bilan</a>
-			<a class="dropdown-item" href="#">Progression</a>
+            <a class="dropdown-item" href="#">Progression</a>
           </div>
         </div>
-		<div class="dropdown">
+        <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Statistiques
           </button>
@@ -68,9 +68,9 @@
             <a class="dropdown-item" href="#">Statistiques</a>
           </div>
         </div>
-		@endauth
+        @endauth
       </ul>
-	  
+      
 
       @auth
         <div class="dropdown">

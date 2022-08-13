@@ -16,9 +16,9 @@ class Stage extends Model
     {
         return $this->belongsTo(TypeLicence::class, 'typelicence_id');
     }
-	
-	public function fonctions()
-	{
-		return $this->belongsToMany(Fonction::class, 'fonction_stage');
-	}
+    
+    public function fonctions()
+    {
+        return $this->belongsToMany(Fonction::class, 'fonction_stage');
+    }
 }

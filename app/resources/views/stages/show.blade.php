@@ -22,7 +22,7 @@
                         <input type='text' class='form-control' name='stage[stage_liblong]' id='stage[stage_liblong]' placeholder='Libell&eacute; long' value="{{ $stage->stage_liblong }}" >
                     </div>
                 </div>
-				<div class='form-group row' >
+                <div class='form-group row' >
                     <label for='stage[transverse]' class='col-sm-5 col-form-label'>Transverse</label>
                     <div class='col-sm-5'>
                         <input type='checkbox'name='stage[transverse]' id='stage[transverse]' {{ $stage->transverse
