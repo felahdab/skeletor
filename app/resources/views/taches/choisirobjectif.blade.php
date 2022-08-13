@@ -8,7 +8,7 @@
             @include('layouts.partials.messages')
         </div>
     </div>
-	{!! Form::open(['method' => 'GET','route' => ['taches.choisirobjectif', $tache->id]]) !!}
+	{!! Form::open(['method' => 'GET','route' => [request()->route()->getName(), $tache->id]]) !!}
 	{!! Form::text('filter', $filter) !!}
 	{!! Form::submit('Filtrer', ['class' => 'btn btn-primary btn-sm']) !!}
 	{!! Form::close() !!}

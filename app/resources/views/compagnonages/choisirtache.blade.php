@@ -9,7 +9,7 @@
             @include('layouts.partials.messages')
         </div>
     </div>
-	{!! Form::open(['method' => 'GET','route' => ['compagnonages.choisirtache', $compagnonage->id]]) !!}
+	{!! Form::open(['method' => 'GET','route' => [request()->route()->getName(), $compagnonage->id]]) !!}
 	{!! Form::text('filter', $filter) !!}
 	{!! Form::submit('Filtrer', ['class' => 'btn btn-primary btn-sm']) !!}
 	{!! Form::close() !!}

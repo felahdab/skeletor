@@ -29,6 +29,7 @@
             <a class="dropdown-item" href="{{ route('compagnonages.index')}}">Compagnonages</a>
 			<a class="dropdown-item" href="{{ route('taches.index')}}">Taches</a>
 			<a class="dropdown-item" href="{{ route('objectifs.index')}}">Objectifs</a>
+			<a class="dropdown-item" href="{{ route('sous-objectifs.index')}}">Sous-Objectifs</a>
           </div>
         </div>
 		<div class="dropdown">

@@ -22,7 +22,7 @@
                         <input type='text' class='form-control' name='fonction[fonction_liblong]' id='fonction[fonction_liblong]' placeholder='Libell&eacute; long' value="{{ $fonction->fonction_liblong }}" >
                     </div>
                 </div>
-				<div class='form-group row' >
+                <div class='form-group row' >
                     <label for='fonction[typefonction_id]' class='col-sm-5 col-form-label'>Type de fonction</label>
                     <div class='col-sm-5'>
                         <input type='text' class='form-control' name='fonction[typefonction_id]' id='fonction[typefonction_id]' placeholder='Type de fonction' value="{{ $fonction->type_fonction()->get()->first()->typfonction_libcourt }}" >

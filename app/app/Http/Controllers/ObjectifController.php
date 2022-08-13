@@ -19,13 +19,13 @@ class ObjectifController extends Controller
      */
     public function index(Request $request)
     {
-		if ($request->has('filter') )
-		{
-			$filter = $request->input('filter');
-			$objectifs = Objectif::where('objectif_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('objectif_libcourt')->paginate(10);
-		} else {
-			$objectifs = Objectif::orderBy('objectif_libcourt')->paginate(10);
-		}
+        if ($request->has('filter') )
+        {
+            $filter = $request->input('filter');
+            $objectifs = Objectif::where('objectif_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('objectif_libcourt')->paginate(10);
+        } else {
+            $objectifs = Objectif::orderBy('objectif_libcourt')->paginate(10);
+        }
         
         return view('objectifs.index', ['objectifs' => $objectifs ] );
     }
@@ -59,9 +59,9 @@ class ObjectifController extends Controller
      */
     public function show(Objectif $objectif)
     {
-		$lieux = Lieu::orderBy('lieu_liblong')->get();
+        $lieux = Lieu::orderBy('lieu_liblong')->get();
         return view('objectifs.show',   ['objectif'   => $objectif,
-										'lieux'     => $lieux] );
+                                        'lieux'     => $lieux] );
     }
 
     /**
@@ -73,10 +73,10 @@ class ObjectifController extends Controller
     public function edit(Objectif $objectif)
     {
         $objectifs = Objectif::orderBy('objectif_libcourt')->get();
-		$lieux = Lieu::orderBy('lieu_liblong')->get();
+        $lieux = Lieu::orderBy('lieu_liblong')->get();
         return view('objectifs.edit', ['objectif'   => $objectif, 
-										'objectifs' => $objectifs,
-										'lieux'     => $lieux] );
+                                        'objectifs' => $objectifs,
+                                        'lieux'     => $lieux] );
     }
 
     /**
@@ -89,15 +89,15 @@ class ObjectifController extends Controller
     public function update(UpdateObjectifRequest $request, Objectif $objectif)
     {
         $objectif_id= intval($request->input('objectif')['id']);
-		$query=Objectif::where('id', $objectif_id);
-		if ( $query->count() == 1)
-		{
-			$objectif = $query->first();
-			$objectif->objectif_libcourt=$request->objectif['objectif_libcourt'];
-			$objectif->objectif_liblong=$request->objectif['objectif_liblong'];
-			$objectif->save();
-		}
-		return redirect()->route('objectifs.edit', $objectif);
+        $query=Objectif::where('id', $objectif_id);
+        if ( $query->count() == 1)
+        {
+            $objectif = $query->first();
+            $objectif->objectif_libcourt=$request->objectif['objectif_libcourt'];
+            $objectif->objectif_liblong=$request->objectif['objectif_liblong'];
+            $objectif->save();
+        }
+        return redirect()->route('objectifs.edit', $objectif);
     }
 
     /**

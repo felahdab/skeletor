@@ -15,10 +15,22 @@ class SousObjectifController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $sousobjectifs = SousObjectif::orderBy('ssobj_lib')->get();
-        return view('sousobjectifs.index', compact('sousobjectifs'));
+        // $sousobjectifs = SousObjectif::orderBy('ssobj_lib')->get();
+        // return view('sousobjectifs.index', compact('sousobjectifs'));
+		
+		if ($request->has('filter') )
+		{
+			$filter = $request->input('filter');
+			$sousobjectifs = SousObjectif::where('ssobj_lib', 'LIKE', '%'.$filter.'%')->orderBy('ssobj_lib')->paginate(10);
+		} else {
+			$filter = "";
+			$sousobjectifs = SousObjectif::orderBy('ssobj_lib')->paginate(10);
+		}
+        
+        return view('sousobjectifs.index', ['sousobjectifs' => $sousobjectifs ,
+											'filter'        => $filter] );
     }
 
     /**
