@@ -19,7 +19,7 @@
             <tr>
                 <th scope="col" width="1%">#</th>
                 <th scope="col" width="8%">Nom</th>
-				<th scope="col" width="8%">Prénom</th>
+                <th scope="col" width="8%">Prénom</th>
                 <th scope="col">Email</th>
                 <th scope="col" width="10%">Roles</th>
                 <th scope="col" width="1%" colspan="3"></th>    
@@ -30,7 +30,7 @@
                     <tr>
                         <th scope="row">{{ $user->id }}</th>
                         <td>{{ $user->name }}</td>
-						<td>{{ $user->prenom }}</td>
+                        <td>{{ $user->prenom }}</td>
                         <td>{{ $user->email }}</td>
                         <td>
                             @foreach($user->roles as $role)
@@ -44,9 +44,9 @@
                             {!! Form::submit('Supprimer', ['class' => 'btn btn-danger btn-sm']) !!}
                             {!! Form::close() !!}
                         </td>
-						@can('changepasswd.allusers')
-						<td><a href="{{ route('changepasswd.show', $user->id) }}" class="btn btn-secondary btn-sm">Changer le mot de passe</a></td>
-						@endcan
+                        @can('changepasswd.allusers')
+                        <td><a href="{{ route('changepasswd.show', $user->id) }}" class="btn btn-secondary btn-sm">Changer le mot de passe</a></td>
+                        @endcan
                     </tr>
                 @endforeach
             </tbody>

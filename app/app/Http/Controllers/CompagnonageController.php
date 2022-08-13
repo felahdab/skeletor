@@ -19,14 +19,16 @@ class CompagnonageController extends Controller
     public function index(Request $request)
     {
         if ($request->has('filter') )
-		{
-			$filter = $request->input('filter');
-			$comps = Compagnonage::where('comp_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('comp_libcourt')->paginate(10);
-		} else {
-			$comps = Compagnonage::orderBy('comp_libcourt')->paginate(10);
-		}
+        {
+            $filter = $request->input('filter');
+            $comps = Compagnonage::where('comp_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('comp_libcourt')->paginate(10);
+        } else {
+            $filter = "";
+            $comps = Compagnonage::orderBy('comp_libcourt')->paginate(10);
+        }
         
-        return view('compagnonages.index', ['compagnonages' => $comps ] );
+        return view('compagnonages.index', ['compagnonages' => $comps ,
+                                            'filter'        => $filter] );
     }
 
     /**
@@ -72,50 +74,50 @@ class CompagnonageController extends Controller
     {
         return view('compagnonages.edit', ['compagnonage'   => $compagnonage] );
     }
-	public function choisirtache(Request $request, Compagnonage $compagnonage)
-	{
-		if ($request->has('filter') )
-		{
-			$filter = $request->input('filter');
-			$taches = Tache::where('tache_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('tache_libcourt')->get()	;
-		} 
-		else 
-		{
-			$filter='';
-			$taches = Tache::orderBy('tache_libcourt')->get();
-		}
-		$taches = $taches->diff($compagnonage->taches()->get());
-		
-		return view('compagnonages.choisirtache', [ 'compagnonage' => $compagnonage,
-												'taches' => $taches,
-												'filter'    => $filter]);
-	}
-	
-	public function ajoutertache(Request $request, Compagnonage $compagnonage)
-	{
-		$tache_id = intval($request->input('tache_id', 0));
-		$query = Tache::where('id', $tache_id)->get();
-		if ($query->count() == 1)
-		{
-			$tache = $query->first();
-			$compagnonage->taches()->attach($tache);
-		}
-		return redirect()->route('compagnonages.edit', ['compagnonage'   => $compagnonage]);
-		// return view('compagnonages.edit', ['compagnonage'   => $compagnonage] );
-	}
-	
-	public function removetache(Request $request, Compagnonage $compagnonage)
-	{
-		$tache_id = intval($request->input('tache_id', 0));
-		$query = Tache::where('id', $tache_id)->get();
-		if ($query->count() == 1)
-		{
-			$tache = $query->first();
-			$compagnonage->taches()->detach($tache);
-		}
-		return redirect()->route('compagnonages.edit', ['compagnonage'   => $compagnonage]);
-		// return view('compagnonages.edit', ['compagnonage'   => $compagnonage] );
-	}
+    public function choisirtache(Request $request, Compagnonage $compagnonage)
+    {
+        if ($request->has('filter') )
+        {
+            $filter = $request->input('filter');
+            $taches = Tache::where('tache_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('tache_libcourt')->get()    ;
+        } 
+        else 
+        {
+            $filter='';
+            $taches = Tache::orderBy('tache_libcourt')->get();
+        }
+        $taches = $taches->diff($compagnonage->taches()->get());
+        
+        return view('compagnonages.choisirtache', [ 'compagnonage' => $compagnonage,
+                                                'taches' => $taches,
+                                                'filter'    => $filter]);
+    }
+    
+    public function ajoutertache(Request $request, Compagnonage $compagnonage)
+    {
+        $tache_id = intval($request->input('tache_id', 0));
+        $query = Tache::where('id', $tache_id)->get();
+        if ($query->count() == 1)
+        {
+            $tache = $query->first();
+            $compagnonage->taches()->attach($tache);
+        }
+        return redirect()->route('compagnonages.edit', ['compagnonage'   => $compagnonage]);
+        // return view('compagnonages.edit', ['compagnonage'   => $compagnonage] );
+    }
+    
+    public function removetache(Request $request, Compagnonage $compagnonage)
+    {
+        $tache_id = intval($request->input('tache_id', 0));
+        $query = Tache::where('id', $tache_id)->get();
+        if ($query->count() == 1)
+        {
+            $tache = $query->first();
+            $compagnonage->taches()->detach($tache);
+        }
+        return redirect()->route('compagnonages.edit', ['compagnonage'   => $compagnonage]);
+        // return view('compagnonages.edit', ['compagnonage'   => $compagnonage] );
+    }
 
     /**
      * Update the specified resource in storage.

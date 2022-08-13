@@ -23,10 +23,12 @@ class TacheController extends Controller
             $filter = $request->input('filter');
             $taches = Tache::where('tache_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('tache_libcourt')->paginate(10);
         } else {
+            $filter = "";
             $taches = Tache::orderBy('tache_libcourt')->paginate(10);
         }
         
-        return view('taches.index', ['taches' => $taches ] );
+        return view('taches.index', ['taches' => $taches,
+                                     'filter' => $filter] );
     }
 
     /**

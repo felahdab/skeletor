@@ -24,10 +24,12 @@ class ObjectifController extends Controller
             $filter = $request->input('filter');
             $objectifs = Objectif::where('objectif_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('objectif_libcourt')->paginate(10);
         } else {
+            $filter='';
             $objectifs = Objectif::orderBy('objectif_libcourt')->paginate(10);
         }
         
-        return view('objectifs.index', ['objectifs' => $objectifs ] );
+        return view('objectifs.index', ['objectifs' => $objectifs,
+                                        'filter'    => $filter] );
     }
 
     /**
