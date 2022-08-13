@@ -38,7 +38,7 @@ class StageController extends Controller
      */
     public function create()
     {
-        //
+        return view('stages.create');
     }
 
     /**
@@ -49,7 +49,12 @@ class StageController extends Controller
      */
     public function store(StoreStageRequest $request)
     {
-        //
+        $stage=new Stage;
+        $stage->stage_libcourt = $request->stage['stage_libcourt'];
+        $stage->stage_liblong = $request->stage['stage_liblong'];
+        $stage->typelicence_id=4;
+        $stage->save();
+        return redirect()->route('stages.edit', $stage);
     }
 
     /**
@@ -114,6 +119,7 @@ class StageController extends Controller
      */
     public function destroy(Stage $stage)
     {
-        //
+        $stage->delete();
+        return redirect()->route('stages.index');
     }
 }
