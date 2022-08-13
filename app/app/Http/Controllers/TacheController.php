@@ -38,7 +38,7 @@ class TacheController extends Controller
      */
     public function create()
     {
-        //
+        return view('taches.create');
     }
 
     /**
@@ -49,7 +49,11 @@ class TacheController extends Controller
      */
     public function store(StoreTacheRequest $request)
     {
-        //
+        $tache=new Tache;
+        $tache->tache_libcourt = $request->tache['tache_libcourt'];
+        $tache->tache_liblong = $request->tache['tache_liblong'];
+        $tache->save();
+        return redirect()->route('taches.edit', $tache);
     }
 
     /**
@@ -148,6 +152,7 @@ class TacheController extends Controller
      */
     public function destroy(Tache $tache)
     {
-        //
+        $tache->delete();
+        return redirect()->route('taches.index');
     }
 }

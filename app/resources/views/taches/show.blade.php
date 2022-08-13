@@ -23,7 +23,7 @@
                         <input type='text' class='form-control' name='tache[tache_liblong]' id='tache[tache_liblong]' placeholder='Libell&eacute; long' value="{{ $tache->tache_liblong }}" >
                     </div>
                 </div>
-                <<div style='text-align:right;'>
+                <div style='text-align:right;'>
                     <ul  class='navbar-nav mr-auto' >
                         <li class='dropdown'>
                             <a href='#' class='dropdown-toogle' data-bs-toggle='dropdown'>Compagnonage(s) associé(s)</a>
