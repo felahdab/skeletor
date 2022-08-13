@@ -39,7 +39,7 @@ class ObjectifController extends Controller
      */
     public function create()
     {
-        //
+        return view('objectifs.create');
     }
 
     /**
@@ -50,7 +50,11 @@ class ObjectifController extends Controller
      */
     public function store(StoreObjectifRequest $request)
     {
-        //
+        $objectif=new Objectif;
+        $objectif->objectif_libcourt = $request->objectif['objectif_libcourt'];
+        $objectif->objectif_liblong = $request->objectif['objectif_liblong'];
+        $objectif->save();
+        return redirect()->route('objectifs.edit', $objectif);
     }
 
     /**
@@ -110,6 +114,7 @@ class ObjectifController extends Controller
      */
     public function destroy(Objectif $objectif)
     {
-        //
+        $objectif->delete();
+		return redirect()->route('objectifs.index');
     }
 }
