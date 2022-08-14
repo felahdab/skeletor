@@ -35,7 +35,7 @@ class TransformationController extends Controller
      */
     public function livret(User $user) 
     {
-        return "ici " . $user->id;
+        return view('transformation.livret', ['user' => $user]);
     }
 
     /**

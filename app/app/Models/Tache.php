@@ -21,4 +21,14 @@ class Tache extends Model
 	{
 		return $this->belongsToMany(Compagnonage::class, 'compagnonage_tache')->withTimestamps();
 	}
+	
+	public function nb_ssobj()
+	{
+		$count=0;
+		foreach($this->objectifs()->get() as $objectif)
+		{
+			$count = $count + $objectif->sous_objectifs()->get()->count();
+		}
+		return $count;
+	}
 }
