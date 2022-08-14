@@ -24,7 +24,7 @@ class TransformationController extends Controller
      */
     public function index() 
     {
-		$users = User::paginate(10);
+        $users = User::paginate(10);
         return view('transformation.index', ['users' => $users]);
     }
 
@@ -36,6 +36,12 @@ class TransformationController extends Controller
     public function livret(User $user) 
     {
         return view('transformation.livret', ['user' => $user]);
+    }
+    
+    public function updatelivret(Request $request, User $user)
+    {
+        // var_dump($request->input());
+        var_dump($request);
     }
 
     /**
@@ -84,8 +90,8 @@ class TransformationController extends Controller
     {
 
     }
-	
-	public function retirerfonction(Request $request, User $user)
+    
+    public function retirerfonction(Request $request, User $user)
     {
 
     }

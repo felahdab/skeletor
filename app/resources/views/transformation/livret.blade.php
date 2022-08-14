@@ -1,8 +1,6 @@
 @extends('layouts.app-master')
 
 @section('content')
-    
-
     <div class="bg-light p-4 rounded">
         <h1>Transformation</h1>
         <div class="lead">
@@ -12,7 +10,7 @@
         <div class="mt-2">
             @include('layouts.partials.messages')
         </div>
-
+        
         <div id='livret' class='div-table-contrat-compagnonnage table'>
             <div class='text-center'>
                 <button type='button' class='btn btn-primary w-25 mr-5 mb-2' onclick='affichage("divvalid");'>Enregistrer les validations</button>
@@ -48,11 +46,34 @@
             </div>
             
             @foreach ($user->fonctions()->get() as $fonction)
+            {!! Form::open(['method' => 'POST','route' => ['transformation.livret', $user->id]]) !!}
+            <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
             <table class='table'>
-            <tr class='lignecomp div-table-contrat-compagnonnage'>
-                <th colspan='7'>{{$fonction->fonction_liblong }}</th>
-            </tr>
+                <tr class='lignecomp div-table-contrat-compagnonnage'>
+                    <th colspan='3'>{{$fonction->fonction_liblong }}</th>
+                </tr>
+                <tr  class='lignecomp'>
+                    <td>DOUBLE</td>
+                    <td>
+                        <button type="submit" class="btn btn-primary" name="validation_double">Valider</button>
+                    </td>
+                    <td>Bord</td>
+                </tr>
+                <tr  class='lignecomp'>
+                    <td>L&Acirc;CHER</td>
+                    <td>
+                        <button type="submit" class="btn btn-primary" name="validation_lache">Valider</button>
+                    </td>
+                    <td>Bord</td>
+                </tr>
+                
+            </table>
+            {!! Form::close() !!}
+            
+            {!! Form::open(['method' => 'POST','route' => ['transformation.livret', $user->id]]) !!}
+            <table class='table'>
                 @foreach($fonction->compagnonages()->get() as $compagnonage)
+
                     <tr class='lignecomp div-table-contrat-compagnonnage'>
                         <th colspan='7'>{{$compagnonage->comp_liblong }}</th>
                     </tr>
@@ -68,7 +89,10 @@
                     @foreach($compagnonage->taches()->get() as $tache)
                     <tr class='ligneTache'>
                     <td rowspan='{{$tache->nb_ssobj()}}'>
-                    <input type='checkbox' id='tacheid={{$tache->id}}' name='tacheid={{$tache->id}}' value='tacheid={{$tache->id}}'> {{$tache->tache_liblong }}
+                    <input type='checkbox' 
+                        id='tacheid[{{$tache->id}}]' 
+                        name='tacheid[{{$tache->id}}]' 
+                        value='tacheid[{{$tache->id}}]'> {{$tache->tache_liblong }}
                     </td>
                         @foreach($tache->objectifs()->get() as $objectif)
                         <td rowspan='{{$objectif->sous_objectifs()->get()->count()}}'> {{$objectif->objectif_liblong }} </td>
@@ -76,34 +100,32 @@
                                 <td>{{$sous_objectif->ssobj_lib}}</td>
                                 <td>{{$sous_objectif->ssobj_duree}}</td>
                                 <td title=''>
-                                    <input type='checkbox' id='ssobjid={{$sous_objectif->id}}' name='ssobjid={{$sous_objectif->id}}' value='ssobjid={{$sous_objectif->id}}'>
+                                    <input type='checkbox' 
+                                    id='ssobjid[{{$sous_objectif->id}}]' 
+                                    name='ssobjid[{{$sous_objectif->id}}]' 
+                                    value='ssobjid[{{$sous_objectif->id}}]'>
                                 </td>
                                 <td></td>
                                 <td>{{$sous_objectif->lieu()->get()->first()->lieu_libcourt}}</td>
                                 </tr>
                             @endforeach
                         @endforeach
+                    
                     @endforeach
                     </tr>
-                @endforeach
-                <tr  class='double'>
-                    <td>DOUBLE</td>
-                    <td colspan='3'></td>
-                    <td><input type='button' class='btn btn-primary' id='double=82' name='double=82' value='Valider' onclick=''>
-                    <input type='hidden' id='cache' name='cache' value=''></td>
-                    <td></td>
-                    <td>Bord</td>
-                </tr>
-                <tr  class='double'>
-                    <td>L&Acirc;CHER</td>
-                    <td colspan='3'></td>
-                    <td></td>
-                    <td></td>
-                    <td>Bord</td>
-                </tr>
-            </table>
-            @endforeach
-        </div>
+                    <tr  class='lignecomp'>
+                        <td colspan='7'>
+                            <button type="submit" 
+                            class="btn btn-primary" 
+                            name="validation_lache">Valider</button>
+                        </td>
+                    </tr>
 
+                @endforeach
+            </table>
+            {!! Form::close() !!}
+            @endforeach
+        </div> 
     </div>
+    
 @endsection
