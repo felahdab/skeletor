@@ -56,8 +56,6 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::post('/currentrole', 'ChangeUserCurrentRole@store')->name('currentrole.store');
             Route::get('/{user}/changepasswd', 'ChangeUserPassword@index')->name('changepasswd.show');
             Route::post('/{user}/changepasswd', 'ChangeUserPassword@store')->name('changepasswd.store');
-			Route::get('/{user}/choisirfonction', 'UsersController@choisirfonction')->name('users.choisirfonction');
-			Route::post('/{user}/choisirfonction', 'UsersController@attribuerfonction')->name('users.attribuerfonction');
         });
 
         Route::resource('roles',          RolesController::class);
@@ -87,5 +85,12 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         
         Route::resource('stages',         StageController::class);
         
+		Route::group(['prefix' => 'transformation'], function() {
+			Route::get('/', 'TransformationController@index')->name('transformation.index');
+			Route::get('/{user}/livret', 'TransformationController@livret')->name('transformation.livret');
+			Route::get('/{user}/choisirfonction', 'UsersController@choisirfonction')->name('users.choisirfonction');
+			Route::post('/{user}/choisirfonction', 'UsersController@attribuerfonction')->name('users.attribuerfonction');
+			Route::post('/{user}/retirerfonction', 'UsersController@retirerfonction')->name('users.retirerfonction');
+		});
     });
 });
