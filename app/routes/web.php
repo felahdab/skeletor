@@ -56,6 +56,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::post('/currentrole', 'ChangeUserCurrentRole@store')->name('currentrole.store');
             Route::get('/{user}/changepasswd', 'ChangeUserPassword@index')->name('changepasswd.show');
             Route::post('/{user}/changepasswd', 'ChangeUserPassword@store')->name('changepasswd.store');
+			Route::get('/{user}/choisirfonction', 'UsersController@choisirfonction')->name('users.choisirfonction');
+			Route::post('/{user}/choisirfonction', 'UsersController@attribuerfonction')->name('users.attribuerfonction');
         });
 
         Route::resource('roles',          RolesController::class);
