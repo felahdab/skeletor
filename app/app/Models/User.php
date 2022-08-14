@@ -117,7 +117,7 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Unite::class, 'unite_destination_id');
     }
-    
+    // Cette partie concerne le suivi de la transformation.
     public function fonctions()
     {
         return $this->belongsToMany(Fonction::class, 'user_fonction')
@@ -132,5 +132,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Stage::class, 'user_stage')
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation');
+    }
+    
+    public function sous_objectifs()
+    {
+        return $this->belongsToMany(SousObjectif::class, 'user_sous_objectif')
+            ->withTimeStamps()
+            ->withPivot('commentaire', 'date_validation', 'valideur');
     }
 }
