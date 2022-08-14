@@ -107,50 +107,62 @@ class UsersController extends Controller
     {
         $fonctions=Fonction::orderBy('fonction_libcourt')->get();
         return view('users.choisirfonction', ['user' => $user,
-                                               'fonctions' => $fonctions]);
+                                              'fonctions' => $fonctions]);
     }
-	
+    
     public function attribuerfonction(Request $request, User $user)
     {
         $fonction_id = $request->fonction_id;
-		$fonction = Fonction::where('id', $fonction_id)->get()->first();
-		
-		$fmerid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'mer')->get()->first()->id;
-		$fquaiid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'quai')->get()->first()->id;
-		$fmetierid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'metier')->get()->first()->id;
-		
-		if ($fonction->typefonction_id == $fmerid)
-		{
-			$fonctionsmer = $user->fonctions()->where('typefonction_id', $fmerid)->get();
-			if ($fonctionsmer->count() > 0)
-			{
-				foreach ($fonctionsmer as $fmer)
-				{
-					$user->fonctions()->detach($fmer);
-				}
-			}
-			$user->fonctions()->attach($fonction);
-		}
-		elseif ($fonction->typefonction_id == $fquaiid)
-		{
-			$fonctionsquai = $user->fonctions()->where('typefonction_id', $fquaiid)->get();
-			if ($fonctionsquai->count() > 0)
-			{
-				foreach ($fonctionsquai as $fquai)
-				{
-					$user->fonctions()->detach($fquai);
-				}
-			}
-			$user->fonctions()->attach($fonction);
-		}
-		elseif ($fonction->typefonction_id == $fmetierid)
-		{
-			$user->fonctions()->attach($fonction);
-		}
-		
-		$fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
+        $fonction = Fonction::where('id', $fonction_id)->get()->first();
+        
+        $fmerid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'mer')->get()->first()->id;
+        $fquaiid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'quai')->get()->first()->id;
+        $fmetierid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'metier')->get()->first()->id;
+        
+        if ($fonction->typefonction_id == $fmerid)
+        {
+            $fonctionsmer = $user->fonctions()->where('typefonction_id', $fmerid)->get();
+            if ($fonctionsmer->count() > 0)
+            {
+                foreach ($fonctionsmer as $fmer)
+                {
+                    $user->fonctions()->detach($fmer);
+                }
+            }
+            $user->fonctions()->attach($fonction);
+        }
+        elseif ($fonction->typefonction_id == $fquaiid)
+        {
+            $fonctionsquai = $user->fonctions()->where('typefonction_id', $fquaiid)->get();
+            if ($fonctionsquai->count() > 0)
+            {
+                foreach ($fonctionsquai as $fquai)
+                {
+                    $user->fonctions()->detach($fquai);
+                }
+            }
+            $user->fonctions()->attach($fonction);
+        }
+        elseif ($fonction->typefonction_id == $fmetierid)
+        {
+            $user->fonctions()->attach($fonction);
+        }
+        
+        $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
         return redirect()->route('users.choisirfonction', ['user' => $user,
-                                               'fonctions' => $fonctions]);
+                                                           'fonctions' => $fonctions]);
+    }
+	
+	public function retirerfonction(Request $request, User $user)
+    {
+        $fonction_id = $request->fonction_id;
+        $fonction = Fonction::where('id', $fonction_id)->get()->first();
+        
+        $user->fonctions()->detach($fonction);
+        
+        $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
+        return redirect()->route('users.choisirfonction', ['user' => $user,
+                                                           'fonctions' => $fonctions]);
     }
 
     /**

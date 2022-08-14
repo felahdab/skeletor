@@ -45,6 +45,7 @@
           Transformation
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="{{route('transformation.index')}}">Attribution des fonctions</a>
             <a class="dropdown-item" href="#">Livret</a>
             <a class="dropdown-item" href="#">Fiche bilan</a>
             <a class="dropdown-item" href="#">Progression</a>
