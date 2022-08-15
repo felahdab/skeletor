@@ -63,12 +63,17 @@
                     <td>DOUBLE</td>
                     <td>
                     @if ($fonction->pivot->date_double != null)
-                        {{ $fonction->pivot->date_double }}
+                        <button class='btn btn-success' type='button' disabled>
+                            VALIDE {{ $fonction->pivot->date_double }}
+                        </button>
                     @endif
                     </td>
                     <td>
                     @if ($fonction->pivot->valideur_double != null)
                         {{ $fonction->pivot->valideur_double }}
+                        <button type="submit" 
+                        class="btn btn-danger" 
+                        name="annulation_double">Annuler</button>
                     @else
                     <button type="submit" 
                         class="btn btn-primary" 
@@ -83,13 +88,17 @@
                     <td>LACHER</td>
                     <td>
                     @if ($fonction->pivot->date_lache != null)
-                        {{ $fonction->pivot->date_lache }}
+                        <button class='btn btn-success' type='button' disabled>
+                            VALIDE {{ $fonction->pivot->date_lache }}
+                        </button>
                     @endif
-
                     </td>
                     <td>
                     @if ($fonction->pivot->valideur_lache != null)
                         {{ $fonction->pivot->valideur_lache }}
+                        <button type="submit" 
+                        class="btn btn-danger" 
+                        name="annulation_lache">Annuler</button>
                     @else
                     <button type="submit" 
                         class="btn btn-primary" 
@@ -107,6 +116,7 @@
             @endif
             
             {!! Form::open(['method' => 'POST','route' => ['transformation.livret', $user->id]]) !!}
+            <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
             <table class='table'>
                 @foreach($fonction->compagnonages()->get() as $compagnonage)
 
@@ -128,7 +138,10 @@
                     <input type='checkbox' 
                         id='tacheid[{{$tache->id}}]' 
                         name='tacheid[{{$tache->id}}]' 
-                        value='tacheid[{{$tache->id}}]'> {{$tache->tache_liblong }}
+                        value='tacheid[{{$tache->id}}]'> {{$tache->tache_liblong }} 
+                    @if ($user->aValideLaTache($tache))
+                        <button class='btn btn-success' type='button' disabled>VALIDEE</button>
+                    @endif
                     </td>
                         @foreach($tache->objectifs()->get() as $objectif)
                         <td rowspan='{{$objectif->sous_objectifs()->get()->count()}}'> {{$objectif->objectif_liblong }} </td>
@@ -140,8 +153,17 @@
                                     id='ssobjid[{{$sous_objectif->id}}]' 
                                     name='ssobjid[{{$sous_objectif->id}}]' 
                                     value='ssobjid[{{$sous_objectif->id}}]'>
+                                    @if ($user->aValideLeSousObjectif($sous_objectif))
+                                        <button class='btn btn-success' type='button' disabled>
+                                        VALIDE {{ $user->sous_objectifs()->find($sous_objectif)->pivot->date_validation }}
+                                        </button>
+                                    @endif
                                 </td>
-                                <td></td>
+                                <td>
+                                    @if ($user->aValideLeSousObjectif($sous_objectif))
+                                        {{ $user->sous_objectifs()->find($sous_objectif)->pivot->valideur }}
+                                    @endif
+                                </td>
                                 <td>{{$sous_objectif->lieu()->get()->first()->lieu_libcourt}}</td>
                                 </tr>
                             @endforeach

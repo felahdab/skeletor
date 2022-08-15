@@ -141,4 +141,32 @@ class User extends Authenticatable
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation', 'valideur');
     }
+    
+    // Cette partie contient des fonctions d'aide pour le suivi de la transformation
+    public function aValideLeSousObjectif($sousobjectif)
+    {
+        $ssobj = $this->sous_objectifs()->find($sousobjectif);
+        if ($ssobj == null)
+            return false;
+        if ($ssobj->pivot->date_validation == null)
+            return false;
+        return true;
+    }
+    
+    public function aValideLaTache($tache)
+    {
+        foreach ($tache->objectifs()->get() as $objectif)
+        {
+            foreach($objectif->sous_objectifs()->get() as $sous_objectif)
+            {
+                $workitem = $this->sous_objectifs()->find($sous_objectif);
+                if ($workitem == null)
+                    return false;
+                $workitem = $workitem->pivot;
+                if ($workitem->date_validation == null)
+                    return false;
+            }
+        }
+        return true;
+    }
 }

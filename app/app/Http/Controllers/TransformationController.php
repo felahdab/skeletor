@@ -11,7 +11,9 @@ use App\Models\Diplome;
 use App\Models\Grade;
 use App\Models\Unite;
 
+use App\Models\Tache;
 use App\Models\Fonction;
+use App\Models\SousObjectif;
 use App\Models\TypeFonction;
 
 
@@ -40,29 +42,107 @@ class TransformationController extends Controller
     
     public function updatelivret(Request $request, User $user)
     {
-        // var_dump($request->input());
-        var_dump($request);
-    }
+        if ($request->has("validation"))
+        {
+            if ($request->has('ssobjid'))
+            {
+                $sous_objectifs_a_valider = $request['ssobjid'];
+                foreach ($sous_objectifs_a_valider as $key => $value){
+                    $sousobjectif = SousObjectif::find($key);
+                    $user->sous_objectifs()->attach($sousobjectif);
+                    $workitem = $user->sous_objectifs()->find($sousobjectif)->pivot;
+                    $workitem->valideur=auth()->user()->displayString();
+                    $workitem->commentaire="test";
+                    $workitem->save();
+                    $workitem->date_validation = $workitem->updated_at;
+                    $workitem->save();
+                }
+            }
+            if ($request->has('tacheid'))
+            {
+                $taches_a_valider = $request['tacheid'];
+                foreach ($taches_a_valider as $key => $value){
+                    $tache = Tache::find($key);
+                    foreach ($tache->objectifs()->get() as $objectif)
+                    {
+                        foreach($objectif->sous_objectifs()->get() as $sous_objectif)
+                        {
+                            $user->sous_objectifs()->attach($sous_objectif);
+                            $workitem = $user->sous_objectifs()->find($sous_objectif)->pivot;
+                            $workitem->valideur=auth()->user()->displayString();
+                            $workitem->commentaire="test";
+                            $workitem->save();
+                            $workitem->date_validation = $workitem->updated_at;
+                            $workitem->save();
+                        }
+                    }
+                }
+            }
+        }
+        elseif ($request->has("annulation_validation"))
+        {
+            if ($request->has('ssobjid'))
+            {
+                $sous_objectifs_a_valider = $request['ssobjid'];
+                foreach ($sous_objectifs_a_valider as $key => $value){
+                    $sousobjectif = SousObjectif::find($key);
+                    $user->sous_objectifs()->detach($sousobjectif);
+                }
+            }
+            if ($request->has('tacheid'))
+            {
+                $taches_a_valider = $request['tacheid'];
+                foreach ($taches_a_valider as $key => $value){
+                    $tache = Tache::find($key);
+                    foreach ($tache->objectifs()->get() as $objectif)
+                    {
+                        foreach($objectif->sous_objectifs()->get() as $sous_objectif)
+                        {
+                            $user->sous_objectifs()->detach($sous_objectif);
+                        }
+                    }
+                }
+            }
+        }
+        return redirect()->route('transformation.livret', ['user' => $user]);
+     }
 
     public function validerlacheoudouble(Request $request, User $user, Fonction $fonction)
     {
+        $userfonc = $user->fonctions->find($fonction);
         if ($request->has('validation_lache'))
         {
-            $user->fonctions->find($fonction)->pivot->commentaire_lache="test";
-            $user->fonctions->find($fonction)->pivot->valideur_lache=auth()->user()->displayString();
+            // L'utilisateur a cliqué sur un bouton de validation du lache
+            $userfonc->pivot->commentaire_lache="test";
+            $userfonc->pivot->valideur_lache=auth()->user()->displayString();
+            $userfonc->pivot->save();
             
-            $user->fonctions->find($fonction)->pivot->save();
-            $user->fonctions->find($fonction)->pivot->date_lache = $user->fonctions->find($fonction)->pivot->updated_at;
-            $user->fonctions->find($fonction)->pivot->save();
+            $userfonc->pivot->date_lache = $user->fonctions->find($fonction)->pivot->updated_at;
+            $userfonc->pivot->save();
         }
         elseif ($request->has('validation_double'))
         {
-            $user->fonctions->find($fonction)->pivot->commentaire_double="test";
-            $user->fonctions->find($fonction)->pivot->valideur_double=auth()->user()->displayString();
+            // L'utilisateur a cliqué sur un bouton de validation du double
+            $userfonc->pivot->commentaire_double="test";
+            $userfonc->pivot->valideur_double=auth()->user()->displayString();
+            $userfonc->pivot->save();
             
-            $user->fonctions->find($fonction)->pivot->save();
-            $user->fonctions->find($fonction)->pivot->date_double = $user->fonctions->find($fonction)->pivot->updated_at;
-            $user->fonctions->find($fonction)->pivot->save();
+            $userfonc->pivot->date_double = $userfonc->pivot->updated_at;
+            $userfonc->pivot->save();
+        }
+        elseif ($request->has('annulation_double'))
+        {
+            $userfonc->pivot->commentaire_double=null;
+            $userfonc->pivot->valideur_double=null;
+            $userfonc->pivot->date_double = null;
+            $userfonc->pivot->save();
+        }
+        elseif ($request->has('annulation_lache'))
+        {
+            $userfonc->pivot->commentaire_lache=null;
+            $userfonc->pivot->valideur_lache=null;
+            $userfonc->pivot->date_lache = null;
+            $userfonc->pivot->save();
         }
         return redirect()->route('transformation.livret', ['user' => $user]);
     }
