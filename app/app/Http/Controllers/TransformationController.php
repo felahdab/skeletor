@@ -42,7 +42,11 @@ class TransformationController extends Controller
     
     public function updatelivret(Request $request, User $user)
     {
-        if ($request->has("validation"))
+        $valideur = $request->input('valideur');
+        $commentaire = $request->input('commentaire');
+        $date_validation = $request->input('date_validation');
+        
+        if ($request->input("buttonid") == "validation")
         {
             if ($request->has('ssobjid'))
             {
@@ -51,10 +55,9 @@ class TransformationController extends Controller
                     $sousobjectif = SousObjectif::find($key);
                     $user->sous_objectifs()->attach($sousobjectif);
                     $workitem = $user->sous_objectifs()->find($sousobjectif)->pivot;
-                    $workitem->valideur=auth()->user()->displayString();
-                    $workitem->commentaire="test";
-                    $workitem->save();
-                    $workitem->date_validation = $workitem->updated_at;
+                    $workitem->valideur=$valideur;
+                    $workitem->commentaire=$commentaire;
+                    $workitem->date_validation = $date_validation;
                     $workitem->save();
                 }
             }
@@ -69,10 +72,9 @@ class TransformationController extends Controller
                         {
                             $user->sous_objectifs()->attach($sous_objectif);
                             $workitem = $user->sous_objectifs()->find($sous_objectif)->pivot;
-                            $workitem->valideur=auth()->user()->displayString();
-                            $workitem->commentaire="test";
-                            $workitem->save();
-                            $workitem->date_validation = $workitem->updated_at;
+                            $workitem->valideur=$valideur;
+                            $workitem->commentaire=$commentaire;
+                            $workitem->date_validation = $date_validation;
                             $workitem->save();
                         }
                     }
@@ -109,25 +111,25 @@ class TransformationController extends Controller
 
     public function validerlacheoudouble(Request $request, User $user, Fonction $fonction)
     {
+        $valideur = $request->input('valideur');
+        $commentaire = $request->input('commentaire');
+        $date_validation = $request->input('date_validation');
+        
         $userfonc = $user->fonctions->find($fonction);
-        if ($request->has('validation_lache'))
+        if ($request->input("buttonid") == "validation_lache")
         {
             // L'utilisateur a cliqué sur un bouton de validation du lache
-            $userfonc->pivot->commentaire_lache="test";
-            $userfonc->pivot->valideur_lache=auth()->user()->displayString();
-            $userfonc->pivot->save();
-            
-            $userfonc->pivot->date_lache = $user->fonctions->find($fonction)->pivot->updated_at;
+            $userfonc->pivot->commentaire_lache=$commentaire;
+            $userfonc->pivot->valideur_lache=$valideur;
+            $userfonc->pivot->date_lache = $date_validation;
             $userfonc->pivot->save();
         }
-        elseif ($request->has('validation_double'))
+        elseif ($request->input("buttonid") == "validation_double")
         {
             // L'utilisateur a cliqué sur un bouton de validation du double
-            $userfonc->pivot->commentaire_double="test";
-            $userfonc->pivot->valideur_double=auth()->user()->displayString();
-            $userfonc->pivot->save();
-            
-            $userfonc->pivot->date_double = $userfonc->pivot->updated_at;
+            $userfonc->pivot->commentaire_double=$commentaire;
+            $userfonc->pivot->valideur_double=$valideur;
+            $userfonc->pivot->date_double = $date_validation;
             $userfonc->pivot->save();
         }
         elseif ($request->has('annulation_double'))

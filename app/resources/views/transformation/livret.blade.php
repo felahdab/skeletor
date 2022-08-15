@@ -21,10 +21,11 @@
                 <div class='titrenavbarvert'>
                     <h5>Validation</h5>
                 </div>
+                <input type='hidden' id='formtosubmit' name='formtosubmit' value=''>
                 <div class='form-group row pl-3 mt-2' >
                     <label for='datvalid' class='col-sm-5 col-form-label '>Date validation</label>
                     <div class='col-sm-5'>
-                    <input type='date' class='form-control'name='dat_valid' id='dat_valid' value='2022-08-14'>
+                    <input type='date' class='form-control'name='date_validation' id='date_validation' value='2022-08-14'>
                     </div>
                 </div>
                 <div class='form-group row  pl-3' >
@@ -36,18 +37,33 @@
                 <div class='form-group row  pl-3' >
                     <label for='comment' class='col-sm-5 col-form-label '>Commentaire</label>
                     <div class='col-sm-5'>
-                        <textarea cols='40' rows='4' name='comment' id='comment' placeholder='Commentaire'></textarea>
+                        <textarea cols='40' rows='4' name='commentaire' id='commentaire' placeholder='Commentaire'></textarea>
                     </div>
                 </div>
                 <div class='text-center'>
-                    <button class='btn btn-primary w-25 mt-4 mr-2 mb-2' type='submit' form='formlivret' id='btnvalidobj' name='btnvalidobj'>Valider</button>
+                    <button class='btn btn-primary w-25 mt-4 mr-2 mb-2' 
+                    id='btnvalidobj' 
+                    name='btnvalidobj'
+                    onclick='divvalid = getElementById("divvalid");
+                            formtosubmitid=divvalid.querySelector("#formtosubmit").value;
+                            formtosubmit = getElementById(formtosubmitid);
+                            formtosubmit.querySelector("#commentaire").value = divvalid.querySelector("#commentaire").value;
+                            formtosubmit.querySelector("#date_validation").value = divvalid.querySelector("#date_validation").value;
+                            formtosubmit.querySelector("#valideur").value = divvalid.querySelector("#valideur").value;
+                            formtosubmit.submit();'
+                                >Valider</button>
                     <button class='btn btn-primary w-25 mt-4 mb-2' type='reset' form='formlivret' id='btnresetobj' name='btnresetobj' onclick='annuler("divvalid");'>Annuler</button>
                 </div>
             </div>
             
             @foreach ($user->fonctions()->orderBy('typefonction_id')->get() as $fonction)
-            {!! Form::open(['method' => 'POST','route' => ['transformation.validerlacheoudouble', $user->id, $fonction->id]]) !!}
+            {!! Form::open(['method' => 'POST','id'=> 'fonction[' . $fonction->id .']' , 'route' => ['transformation.validerlacheoudouble', $user->id, $fonction->id]]) !!}
             <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
+            <input type='hidden' id='date_validation' name='date_validation' value=''>
+            <input type='hidden' id='commentaire' name='commentaire' value=''>
+            <input type='hidden' id='valideur' name='valideur' value=''>
+            <input type='hidden' id='buttonid' name='buttonid' value=''>
+            
             <table class='table'>
                 <tr class='lignecomp div-table-contrat-compagnonnage'>
                     <th colspan='4'>{{$fonction->fonction_liblong }}</th>
@@ -73,11 +89,18 @@
                         {{ $fonction->pivot->valideur_double }}
                         <button type="submit" 
                         class="btn btn-danger" 
-                        name="annulation_double">Annuler</button>
+                        name="annulation_double">
+                        Annuler</button>
                     @else
                     <button type="submit" 
                         class="btn btn-primary" 
-                        name="validation_double">Valider</button>
+                        name="validation_double"
+                        onclick='divvalid = getElementById("divvalid");
+                                parentForm = jQuery(this).closest("form");
+                                parentForm[0].querySelector("#buttonid").value="validation_double";
+                                divvalid.querySelector("#formtosubmit").value=parentForm[0].id;
+                                affichage("divvalid");
+                                return false;'>Valider</button>
                     @endif
                     </td>
                     <td>Bord</td>
@@ -102,7 +125,13 @@
                     @else
                     <button type="submit" 
                         class="btn btn-primary" 
-                        name="validation_lache">Valider</button>
+                        name="validation_lache"
+                        onclick='divvalid = getElementById("divvalid");
+                                parentForm = jQuery(this).closest("form");
+                                parentForm[0].querySelector("#buttonid").value="validation_lache";
+                                divvalid.querySelector("#formtosubmit").value=parentForm[0].id;
+                                affichage("divvalid");
+                                return false;'>Valider</button>
                     @endif
                     </td>
                     <td>Bord</td>
@@ -115,8 +144,13 @@
             Compagnonages liés à la fonction {{ $fonction->fonction_liblong }}
             @endif
             
-            {!! Form::open(['method' => 'POST','route' => ['transformation.livret', $user->id]]) !!}
+            {!! Form::open(['method' => 'POST','id'=> 'ssobjs[' . $fonction->id .']' ,'route' => ['transformation.livret', $user->id]]) !!}
             <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
+            <input type='hidden' id='date_validation' name='date_validation' value=''>
+            <input type='hidden' id='commentaire' name='commentaire' value=''>
+            <input type='hidden' id='valideur' name='valideur' value=''>
+            <input type='hidden' id='buttonid' name='buttonid' value=''>
+            
             <table class='table'>
                 @foreach($fonction->compagnonages()->get() as $compagnonage)
 
@@ -175,7 +209,13 @@
                         <td colspan='7'>
                             <button type="submit" 
                             class="btn btn-primary" 
-                            name="validation">Valider les éléments cochés</button>
+                            name="validation"
+                            onclick='divvalid = getElementById("divvalid");
+                                parentForm = jQuery(this).closest("form");
+                                parentForm[0].querySelector("#buttonid").value="validation";
+                                divvalid.querySelector("#formtosubmit").value=parentForm[0].id;
+                                affichage("divvalid");
+                                return false;'>Valider les éléments cochés</button>
                             <button type="submit" 
                             class="btn btn-danger" 
                             name="annulation_validation">Annuler la validation des éléments cochés</button>
