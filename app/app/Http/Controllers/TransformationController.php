@@ -44,6 +44,29 @@ class TransformationController extends Controller
         var_dump($request);
     }
 
+    public function validerlacheoudouble(Request $request, User $user, Fonction $fonction)
+    {
+        if ($request->has('validation_lache'))
+        {
+            $user->fonctions->find($fonction)->pivot->commentaire_lache="test";
+            $user->fonctions->find($fonction)->pivot->valideur_lache=auth()->user()->displayString();
+            
+            $user->fonctions->find($fonction)->pivot->save();
+            $user->fonctions->find($fonction)->pivot->date_lache = $user->fonctions->find($fonction)->pivot->updated_at;
+            $user->fonctions->find($fonction)->pivot->save();
+        }
+        elseif ($request->has('validation_double'))
+        {
+            $user->fonctions->find($fonction)->pivot->commentaire_double="test";
+            $user->fonctions->find($fonction)->pivot->valideur_double=auth()->user()->displayString();
+            
+            $user->fonctions->find($fonction)->pivot->save();
+            $user->fonctions->find($fonction)->pivot->date_double = $user->fonctions->find($fonction)->pivot->updated_at;
+            $user->fonctions->find($fonction)->pivot->save();
+        }
+        return redirect()->route('transformation.livret', ['user' => $user]);
+    }
+
     /**
      * Store a newly created user
      * 

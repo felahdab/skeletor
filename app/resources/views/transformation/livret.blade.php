@@ -45,30 +45,66 @@
                 </div>
             </div>
             
-            @foreach ($user->fonctions()->get() as $fonction)
-            {!! Form::open(['method' => 'POST','route' => ['transformation.livret', $user->id]]) !!}
+            @foreach ($user->fonctions()->orderBy('typefonction_id')->get() as $fonction)
+            {!! Form::open(['method' => 'POST','route' => ['transformation.validerlacheoudouble', $user->id, $fonction->id]]) !!}
             <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
             <table class='table'>
                 <tr class='lignecomp div-table-contrat-compagnonnage'>
-                    <th colspan='3'>{{$fonction->fonction_liblong }}</th>
+                    <th colspan='4'>{{$fonction->fonction_liblong }}</th>
                 </tr>
+                <tr class='lignecomp'>
+                        <td style='width:75%;'>Activité liée à la fonction</td>
+                        <td style='width:10%;'>Date de Visa</td>
+                        <td style='width:10%;'>Viseur</td>
+                        <td style='width:5%;'>Lieu de formation</td>
+                    </tr>
+                @if ($fonction->fonction_lache)
                 <tr  class='lignecomp'>
                     <td>DOUBLE</td>
                     <td>
-                        <button type="submit" class="btn btn-primary" name="validation_double">Valider</button>
+                    @if ($fonction->pivot->date_double != null)
+                        {{ $fonction->pivot->date_double }}
+                    @endif
                     </td>
-                    <td>Bord</td>
-                </tr>
-                <tr  class='lignecomp'>
-                    <td>L&Acirc;CHER</td>
                     <td>
-                        <button type="submit" class="btn btn-primary" name="validation_lache">Valider</button>
+                    @if ($fonction->pivot->valideur_double != null)
+                        {{ $fonction->pivot->valideur_double }}
+                    @else
+                    <button type="submit" 
+                        class="btn btn-primary" 
+                        name="validation_double">Valider</button>
+                    @endif
                     </td>
                     <td>Bord</td>
                 </tr>
-                
+                @endif
+                @if ($fonction->fonction_double)
+                <tr  class='lignecomp'>
+                    <td>LACHER</td>
+                    <td>
+                    @if ($fonction->pivot->date_lache != null)
+                        {{ $fonction->pivot->date_lache }}
+                    @endif
+
+                    </td>
+                    <td>
+                    @if ($fonction->pivot->valideur_lache != null)
+                        {{ $fonction->pivot->valideur_lache }}
+                    @else
+                    <button type="submit" 
+                        class="btn btn-primary" 
+                        name="validation_lache">Valider</button>
+                    @endif
+                    </td>
+                    <td>Bord</td>
+                </tr>
+                @endif
             </table>
             {!! Form::close() !!}
+            
+            @if ($fonction->compagnonages()->get()->count() > 0)
+            Compagnonages liés à la fonction {{ $fonction->fonction_liblong }}
+            @endif
             
             {!! Form::open(['method' => 'POST','route' => ['transformation.livret', $user->id]]) !!}
             <table class='table'>
@@ -117,7 +153,10 @@
                         <td colspan='7'>
                             <button type="submit" 
                             class="btn btn-primary" 
-                            name="validation_lache">Valider</button>
+                            name="validation">Valider les éléments cochés</button>
+                            <button type="submit" 
+                            class="btn btn-danger" 
+                            name="annulation_validation">Annuler la validation des éléments cochés</button>
                         </td>
                     </tr>
 
