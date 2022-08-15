@@ -11,49 +11,49 @@
             @include('layouts.partials.messages')
         </div>
         
+        <div id='divvalid' class='popupvalidcontrat' style='display:none;'>
+            <div class='titrenavbarvert'>
+                <h5>Validation</h5>
+            </div>
+            <input type='hidden' id='formtosubmit' name='formtosubmit' value=''>
+            <div class='form-group row pl-3 mt-2' >
+                <label for='datvalid' class='col-sm-5 col-form-label '>Date validation</label>
+                <div class='col-sm-5'>
+                <input type='date' class='form-control'name='date_validation' id='date_validation' value='2022-08-14'>
+                </div>
+            </div>
+            <div class='form-group row  pl-3' >
+                <label for='valideur' class='col-sm-5 col-form-label '>Valideur</label>
+                <div class='col-sm-5'>
+                    <input type='text' class='form-control' name='valideur' id='valideur' placeholder=' Valideur' value='{{auth()->user()->displayString()}}'>
+                </div>
+            </div>
+            <div class='form-group row  pl-3' >
+                <label for='comment' class='col-sm-5 col-form-label '>Commentaire</label>
+                <div class='col-sm-5'>
+                    <textarea cols='40' rows='4' name='commentaire' id='commentaire' placeholder='Commentaire'></textarea>
+                </div>
+            </div>
+            <div class='text-center'>
+                <button class='btn btn-primary w-25 mt-4 mr-2 mb-2' 
+                id='btnvalidobj' 
+                name='btnvalidobj'
+                onclick='divvalid = getElementById("divvalid");
+                        formtosubmitid=divvalid.querySelector("#formtosubmit").value;
+                        formtosubmit = getElementById(formtosubmitid);
+                        formtosubmit.querySelector("#commentaire").value = divvalid.querySelector("#commentaire").value;
+                        formtosubmit.querySelector("#date_validation").value = divvalid.querySelector("#date_validation").value;
+                        formtosubmit.querySelector("#valideur").value = divvalid.querySelector("#valideur").value;
+                        formtosubmit.submit();'
+                            >Valider</button>
+                <button class='btn btn-primary w-25 mt-4 mb-2' type='reset' form='formlivret' id='btnresetobj' name='btnresetobj' onclick='annuler("divvalid");'>Annuler</button>
+            </div>
+        </div>
+        
         <div id='livret' class='div-table-contrat-compagnonnage table'>
             <div class='text-center'>
                 <button type='button' class='btn btn-primary w-25 mr-5 mb-2' onclick='affichage("divvalid");'>Enregistrer les validations</button>
                 <button type='submit' class='btn btn-primary w-25 ml-5 mb-2' id='btnimp' name='btnimp' form='formlivret'>Imprimer</button>
-            </div>
-            
-            <div id='divvalid' class='popupvalidcontrat' style='display:none;'>
-                <div class='titrenavbarvert'>
-                    <h5>Validation</h5>
-                </div>
-                <input type='hidden' id='formtosubmit' name='formtosubmit' value=''>
-                <div class='form-group row pl-3 mt-2' >
-                    <label for='datvalid' class='col-sm-5 col-form-label '>Date validation</label>
-                    <div class='col-sm-5'>
-                    <input type='date' class='form-control'name='date_validation' id='date_validation' value='2022-08-14'>
-                    </div>
-                </div>
-                <div class='form-group row  pl-3' >
-                    <label for='valideur' class='col-sm-5 col-form-label '>Valideur</label>
-                    <div class='col-sm-5'>
-                        <input type='text' class='form-control' name='valideur' id='valideur' placeholder=' Valideur' value='{{auth()->user()->displayString()}}'>
-                    </div>
-                </div>
-                <div class='form-group row  pl-3' >
-                    <label for='comment' class='col-sm-5 col-form-label '>Commentaire</label>
-                    <div class='col-sm-5'>
-                        <textarea cols='40' rows='4' name='commentaire' id='commentaire' placeholder='Commentaire'></textarea>
-                    </div>
-                </div>
-                <div class='text-center'>
-                    <button class='btn btn-primary w-25 mt-4 mr-2 mb-2' 
-                    id='btnvalidobj' 
-                    name='btnvalidobj'
-                    onclick='divvalid = getElementById("divvalid");
-                            formtosubmitid=divvalid.querySelector("#formtosubmit").value;
-                            formtosubmit = getElementById(formtosubmitid);
-                            formtosubmit.querySelector("#commentaire").value = divvalid.querySelector("#commentaire").value;
-                            formtosubmit.querySelector("#date_validation").value = divvalid.querySelector("#date_validation").value;
-                            formtosubmit.querySelector("#valideur").value = divvalid.querySelector("#valideur").value;
-                            formtosubmit.submit();'
-                                >Valider</button>
-                    <button class='btn btn-primary w-25 mt-4 mb-2' type='reset' form='formlivret' id='btnresetobj' name='btnresetobj' onclick='annuler("divvalid");'>Annuler</button>
-                </div>
             </div>
             
             @foreach ($user->fonctions()->orderBy('typefonction_id')->get() as $fonction)
