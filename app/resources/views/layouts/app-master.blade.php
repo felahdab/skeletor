@@ -10,6 +10,7 @@
     <!-- Bootstrap core CSS -->
     <link href="{!! url('assets/css/feuilleDeStyle.css') !!}" rel="stylesheet">
     <link href="{!! url('assets/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
+    <script src="{!! url('assets/js/jscharts.js') !!}"></script>
     
 
     <style>
@@ -38,6 +39,7 @@
     </main>
 
     <script src="{!! url('assets/js/jsfile.js') !!}"></script>
+    
     <script src="{!! url('assets/jquery/jquery-3.6.0.min.js') !!}"></script>
     <script src="{!! url('assets/bootstrap/js/bootstrap.bundle.js') !!}"></script>
     @yield("scripts")

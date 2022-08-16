@@ -23,4 +23,11 @@ class SousObjectif extends Model
 	{
 		return $this->belongsTo(Lieu::class);
 	}
+    
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_sous_objectif')
+            ->withTimeStamps()
+            ->withPivot('commentaire', 'date_validation', 'valideur');
+    }
 }

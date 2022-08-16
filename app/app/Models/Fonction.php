@@ -37,4 +37,27 @@ class Fonction extends Model
                     'date_double','valideur_double','commentaire_double',
                     'validation');
     }
+    
+    public function nbObjectifsAValider()
+    {
+        $count = 0;
+        foreach ($this->compagnonages()->get() as $compagnonage)
+        {
+            foreach ($compagnonage->taches()->get() as $tache)
+            {
+                $count = $count + $tache->objectifs()->get()->count();
+            }
+        }
+        return $count;
+    }
+    
+    public function coll_sous_objectifs()
+    {
+        $coll = collect([]);
+        foreach ($this->compagnonages()->get() as $compagnonage)
+        {
+            $coll = $coll->concat($compagnonage->coll_sous_objectifs());
+        }
+        return $coll;
+    }
 }

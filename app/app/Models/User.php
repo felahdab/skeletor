@@ -143,30 +143,167 @@ class User extends Authenticatable
     }
     
     // Cette partie contient des fonctions d'aide pour le suivi de la transformation
-    public function aValideLeSousObjectif($sousobjectif)
+    public function aValideLaFonction(Fonction $fonction)
     {
-        $ssobj = $this->sous_objectifs()->find($sousobjectif);
-        if ($ssobj == null)
+        foreach ($fonction->$compagnonages->get() as $compagnonage)
+        {
+            if ($this->aValideLeCompagnonage($compagnonage) == false)
+                return $false;
+        }
+        $userfonction=$user->fonctions()->find($fonction);
+        if ($fonction->fonction_double)
+        {
+            if ($userfonction->pivot->date_double == null)
+                return false;
+        }
+        if ($fonction->fonction_lache)
+        {
+            if ($userfonction->pivot->date_lache == null)
+                return false;
+        }
+        return true;
+    }
+    
+    public function aValideLeCompagnonage(Compagnonage $compagnonage)
+    {
+        foreach ($compagnonage->$taches->get() as $tache)
+        {
+            if ($this->aValideLaTache($tache) == false)
+                return $false;
+        }
+        return true;
+    }
+
+    public function aValideLaTache(Tache $tache)
+    {
+        foreach ($tache->objectifs()->get() as $objectif)
+        {
+            if ($this->aValideLObjectif($objectif) == false)
+                return false;
+        }
+        return true;
+    }
+    
+    public function aValideLObjectif(Objectif $objectif)
+    {
+        foreach ($objectif->sous_objectifs()->get() as $sous_objectif)
+        {
+            if ($this->aValideLeSousObjectif($sous_objectif) == false)
+                return false;
+        }
+        return true;
+    }
+    
+    public function aValideLeSousObjectif(SousObjectif $sous_objectif)
+    {
+        $workitem = $this->sous_objectifs()->find($sous_objectif);
+        if ($workitem == null)
             return false;
-        if ($ssobj->pivot->date_validation == null)
+        $workitem = $workitem->pivot;
+        if ($workitem->date_validation == null)
             return false;
         return true;
     }
     
-    public function aValideLaTache($tache)
+    public function nbSousObjectifsAValider(Fonction $fonction=null)
     {
-        foreach ($tache->objectifs()->get() as $objectif)
+        if ($fonction != null)
         {
-            foreach($objectif->sous_objectifs()->get() as $sous_objectif)
-            {
-                $workitem = $this->sous_objectifs()->find($sous_objectif);
-                if ($workitem == null)
-                    return false;
-                $workitem = $workitem->pivot;
-                if ($workitem->date_validation == null)
-                    return false;
-            }
+            return $fonction->coll_sous_objectifs()->count();
         }
-        return true;
+        else{
+            return $this->coll_sous_objectifs()->count();
+        }
     }
+    
+    public function nbSousObjectifsValides(Objectif $objectif)
+    {
+        $count=0;
+        foreach($objectif->sous_objectifs()->get() as $sous_objectif){
+            if ($sous_objectif->users()->find($this) == $this)
+                $count = $count + 1;
+        }
+        return $count;
+    }
+    
+    public function coll_sous_objectifs(Fonction $fonction=null)
+    {
+        if ($fonction != null)
+        {
+            return $fonction->coll_sous_objectifs();
+        }
+        
+        $coll = collect([]);
+        foreach ($this->fonctions()->get() as $fonction)
+        {
+            $coll = $coll->concat($fonction->coll_sous_objectifs());
+        }
+        return $coll;
+    }
+    
+    public function historique_validation_sous_objectifs(Fonction $fonction=null)
+    {
+        if ($fonction == null)
+        {
+            $sous_objectifs_valides = $this->sous_objectifs()->orderBy('pivot_date_validation')->get();
+        }
+        else
+        {
+            $sous_objectifs_valides = $this->sous_objectifs()->orderBy('pivot_date_validation')->get();
+            $sous_objectifs_valides = $sous_objectifs_valides->only($fonction->coll_sous_objectifs())->get();
+        }
+        $liste_des_dates_de_validation = $sous_objectifs_valides->pluck('pivot.date_validation');
+        $nb_validation_par_date = array_count_values($liste_des_dates_de_validation->all());
+        
+        return $nb_validation_par_date;
+    }
+    
+    public function historique_validation_sous_objectifs_cumulatif()
+    {
+        $nb_validation_par_date = $this->historique_validation_sous_objectifs();
+        $total = 0;
+        foreach ($nb_validation_par_date as $key => $value)
+        {
+            $total = $total + $value;
+            $nb_validation_par_date[$key] = $total;
+        }
+        return $nb_validation_par_date;
+    }
+    
+    public function pourcentage_valides_pour_fonction(Fonction $fonction)
+    {
+        // return 100.0 * $this->sous_objectifs()->get()->only($fonction->coll_sous_objectifs())->count() / $fonction->coll_sous_objectifs()->count() ;
+        
+        // seconde version qui contourne le probleme de array_flip
+        $tempcoll = $this->sous_objectifs()->get();
+        
+        $workcoll = collect([]);
+        foreach ($fonction->coll_sous_objectifs() as $sous_obj_a_garder)
+        {
+            $trouve = $tempcoll->find($sous_obj_a_garder);
+            if ($trouve != null)
+                $workcoll = $workcoll->concat(collect([$trouve]));
+        }
+        
+        return 100.0 * $workcoll->count() / $fonction->coll_sous_objectifs()->count();
+    }
+    
+    public function pourcentage_valides_pour_comp(Compagnonage $comp)
+    {
+        // return 100.0 * $this->sous_objectifs()->get()->only($fonction->coll_sous_objectifs())->count() / $fonction->coll_sous_objectifs()->count() ;
+        
+        // seconde version qui contourne le probleme de array_flip
+        $tempcoll = $this->sous_objectifs()->get();
+        
+        $workcoll = collect([]);
+        foreach ($comp->coll_sous_objectifs() as $sous_obj_a_garder)
+        {
+            $trouve = $tempcoll->find($sous_obj_a_garder);
+            if ($trouve != null)
+                $workcoll = $workcoll->concat(collect([$trouve]));
+        }
+        
+        return 100.0 * $workcoll->count() / $comp->coll_sous_objectifs()->count();
+    }
+    
 }

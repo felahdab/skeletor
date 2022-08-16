@@ -40,6 +40,11 @@ class TransformationController extends Controller
         return view('transformation.livret', ['user' => $user]);
     }
     
+    public function progression(User $user)
+    {
+        return view('transformation.progression', ['user' => $user]);
+    }
+    
     public function updatelivret(Request $request, User $user)
     {
         $valideur = $request->input('valideur');

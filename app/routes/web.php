@@ -85,14 +85,15 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         
         Route::resource('stages',         StageController::class);
         
-		Route::group(['prefix' => 'transformation'], function() {
-			Route::get('/', 'TransformationController@index')->name('transformation.index');
-			Route::get('/{user}/livret', 'TransformationController@livret')->name('transformation.livret');
-			Route::post('/{user}/livret', 'TransformationController@updatelivret')->name('transformation.livret');
-			Route::post('/{user}/validerlacheoudouble/{fonction}', 'TransformationController@validerlacheoudouble')->name('transformation.validerlacheoudouble');
-			Route::get('/{user}/choisirfonction', 'UsersController@choisirfonction')->name('users.choisirfonction');
-			Route::post('/{user}/choisirfonction', 'UsersController@attribuerfonction')->name('users.attribuerfonction');
-			Route::post('/{user}/retirerfonction', 'UsersController@retirerfonction')->name('users.retirerfonction');
-		});
+        Route::group(['prefix' => 'transformation'], function() {
+            Route::get('/', 'TransformationController@index')->name('transformation.index');
+            Route::get('/{user}/choisirfonction', 'UsersController@choisirfonction')->name('users.choisirfonction');
+            Route::post('/{user}/choisirfonction', 'UsersController@attribuerfonction')->name('users.attribuerfonction');
+            Route::post('/{user}/retirerfonction', 'UsersController@retirerfonction')->name('users.retirerfonction');
+            Route::get('/{user}/livret', 'TransformationController@livret')->name('transformation.livret');
+            Route::post('/{user}/livret', 'TransformationController@updatelivret')->name('transformation.livret');
+            Route::post('/{user}/validerlacheoudouble/{fonction}', 'TransformationController@validerlacheoudouble')->name('transformation.validerlacheoudouble');
+            Route::get('/{user}/progression', 'TransformationController@progression')->name('transformation.progression');
+        });
     });
 });
