@@ -205,7 +205,7 @@
                     <span class="text-danger text-left">{{ $errors->first(role) }}</span>
                 @endif
 
-                {!! Form::button('Mettre à jour', ['class'=>'btn btn-primary']) !!}
+                {!! Form::button('Mettre à jour', ['class'=>'btn btn-primary', 'type'=>'submit']) !!}
                 {!! link_to_route('users.index', 'Annuler', [], ['class' => 'btn btn-default']) !!}
             {!! Form::close() !!}
         </div>

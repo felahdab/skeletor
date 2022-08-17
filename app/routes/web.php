@@ -94,6 +94,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::post('/{user}/livret', 'TransformationController@updatelivret')->name('transformation.livret');
             Route::post('/{user}/validerlacheoudouble/{fonction}', 'TransformationController@validerlacheoudouble')->name('transformation.validerlacheoudouble');
             Route::get('/{user}/progression', 'TransformationController@progression')->name('transformation.progression');
+            Route::get('/{user}/fichebilan', 'TransformationController@fichebilan')->name('transformation.fichebilan');
         });
     });
 });

@@ -31,9 +31,12 @@
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->prenom }}</td>
                         <td>{{ $user->email }}</td>
-                        <td><a href="{{ route('transformation.livret', $user->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
-                        <a href="{{ route('transformation.progression', $user->id) }}" class="btn btn-primary btn-sm">Progression</a>
-                        <a href="{{ route('users.choisirfonction', $user->id) }}" class="btn btn-info btn-sm">Attribuer des fonctions</a></td>
+                        <td>
+                            <a href="{{ route('users.choisirfonction', $user->id) }}" class="btn btn-info btn-sm">Attribuer des fonctions</a>
+                            <a href="{{ route('transformation.livret', $user->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
+                            <a href="{{ route('transformation.progression', $user->id) }}" class="btn btn-primary btn-sm">Progression</a>
+                            <a href="{{ route('transformation.fichebilan', $user->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
