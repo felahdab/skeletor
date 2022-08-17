@@ -45,7 +45,7 @@
                             });
                         </script>
                         <div style='position: absolute; width: 100%; height: 35px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </div>
-                        @php $pourcentage = 100.0* $user->sous_objectifs()->get()->count() / $user->coll_sous_objectifs()->count(); @endphp
+                        @php $pourcentage = substr(100.0* $user->sous_objectifs()->get()->count() / $user->coll_sous_objectifs()->count(), 0, 4); @endphp
                         <div style='position: absolute; width: {{$pourcentage}}%; height: 35px; background-color: red; margin-top: 1%; border: 1px solid black;'>
                             <h3>{{$pourcentage}}%</h3>
                         </div>
@@ -65,17 +65,19 @@
                                     <span style='width:25%; background-color: transparent; margin-top: 5px;'>
                                         <span style='display:flex; width: 100%; position: relative; '>
                                             <span style='position: absolute; width: 100%; height: 20px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </span>
-                                            @php $pourcentage = $user->pourcentage_valides_pour_comp($compagnonage) @endphp
+                                            @php $pourcentage = $user->pourcentage_valides_pour_comp($compagnonage);
+                                                 $pourcentagestr = substr($pourcentage, 0, 4);
+                                            @endphp
                                             @if ($pourcentage == 100)
-                                                <span style='position: absolute; width: {{$pourcentage}}%; height: 20px; background-color: green; margin-top: 1%; border: 1px solid black;'></span>
+                                                <span style='position: absolute; width: {{$pourcentagestr}}%; height: 20px; background-color: green; margin-top: 1%; border: 1px solid black;'></span>
                                             @elseif ($pourcentage >= 70 and $pourcentage < 100)
-                                                <span style='position: absolute; width: {{$pourcentage}}%; height: 20px; background-color: gold; margin-top: 1%; border: 1px solid black;'></span>
+                                                <span style='position: absolute; width: {{$pourcentagestr}}%; height: 20px; background-color: gold; margin-top: 1%; border: 1px solid black;'></span>
                                             @elseif ($pourcentage >= 30 and $pourcentage < 70)
-                                                <span style='position: absolute; width: {{$pourcentage}}%; height: 20px; background-color: orange; margin-top: 1%; border: 1px solid black;'></span>
+                                                <span style='position: absolute; width: {{$pourcentagestr}}%; height: 20px; background-color: orange; margin-top: 1%; border: 1px solid black;'></span>
                                             @else
-                                                <span style='position: absolute; width: {{$pourcentage}}%; height: 20px; background-color: red; margin-top: 1%; border: 1px solid black;'></span>
+                                                <span style='position: absolute; width: {{$pourcentagestr}}%; height: 20px; background-color: red; margin-top: 1%; border: 1px solid black;'></span>
                                             @endif
-                                            <span style='position: absolute; margin-left: 5px;'><b>{{$pourcentage}}%</b></span>
+                                            <span style='position: absolute; margin-left: 5px;'><b>{{$pourcentagestr}}%</b></span>
                                         </span>
                                     </span>
                                 </p>
@@ -123,17 +125,19 @@
                         </script>
                             <div style='position: absolute; width: 100%; height: 35px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </div>
                             @if ($fonction->coll_sous_objectifs()->count()!=0 ) 
-                            @php $pourcentage = $user->pourcentage_valides_pour_fonction($fonction) @endphp
+                            @php $pourcentage = $user->pourcentage_valides_pour_fonction($fonction);
+                                 $pourcentagestr = substr($pourcentage, 0, 4);
+                            @endphp
                             @if ($pourcentage == 100)
-                                <div style='position: absolute; width: {{$pourcentage}}%; height: 35px; background-color: green; margin-top: 1%; border: 1px solid black;'></div>
+                                <div style='position: absolute; width: {{$pourcentagestr}}%; height: 35px; background-color: green; margin-top: 1%; border: 1px solid black;'>
                             @elseif ($pourcentage >= 70 and $pourcentage < 100)
-                                <div style='position: absolute; width: {{$pourcentage}}%; height: 35px; background-color: gold; margin-top: 1%; border: 1px solid black;'></div>
+                                <div style='position: absolute; width: {{$pourcentagestr}}%; height: 35px; background-color: gold; margin-top: 1%; border: 1px solid black;'>
                             @elseif ($pourcentage >= 30 and $pourcentage < 70)
-                                <div style='position: absolute; width: {{$pourcentage}}%; height: 35px; background-color: orange; margin-top: 1%; border: 1px solid black;'></div>
+                                <div style='position: absolute; width: {{$pourcentagestr}}%; height: 35px; background-color: orange; margin-top: 1%; border: 1px solid black;'>
                             @else
-                                <div style='position: absolute; width: {{$pourcentage}}%; height: 35px; background-color: red; margin-top: 1%; border: 1px solid black;'></div>
+                                <div style='position: absolute; width: {{$pourcentagestr}}%; height: 35px; background-color: red; margin-top: 1%; border: 1px solid black;'>
                             @endif
-                                <h3>{{$pourcentage}}%</h3>
+                                <h3>{{$pourcentagestr}}%</h3></div>
                             @endif
                     </div>
                     <div style='display: flex; width: 48%; background-color: transparent; margin-top: 2%;'>
@@ -168,17 +172,19 @@
                                     <span style='width:25%; background-color: transparent; margin-top: 5px;'>
                                         <span style='display:flex; width: 100%; position: relative; '>
                                             <span style='position: absolute; width: 100%; height: 20px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </span>
-                                            @php $pourcentage = $user->pourcentage_valides_pour_comp($compagnonage) @endphp
+                                            @php $pourcentage = $user->pourcentage_valides_pour_comp($compagnonage);
+                                                 $pourcentagestr = substr($pourcentage, 0, 4);
+                                            @endphp
                                             @if ($pourcentage == 100)
-                                                <span style='position: absolute; width: {{$pourcentage}}%; height: 20px; background-color: green; margin-top: 1%; border: 1px solid black;'></span>
+                                                <span style='position: absolute; width: {{$pourcentagestr}}%; height: 20px; background-color: green; margin-top: 1%; border: 1px solid black;'></span>
                                             @elseif ($pourcentage >= 70 and $pourcentage < 100)
-                                                <span style='position: absolute; width: {{$pourcentage}}%; height: 20px; background-color: gold; margin-top: 1%; border: 1px solid black;'></span>
+                                                <span style='position: absolute; width: {{$pourcentagestr}}%; height: 20px; background-color: gold; margin-top: 1%; border: 1px solid black;'></span>
                                             @elseif ($pourcentage >= 30 and $pourcentage < 70)
-                                                <span style='position: absolute; width: {{$pourcentage}}%; height: 20px; background-color: orange; margin-top: 1%; border: 1px solid black;'></span>
+                                                <span style='position: absolute; width: {{$pourcentagestr}}%; height: 20px; background-color: orange; margin-top: 1%; border: 1px solid black;'></span>
                                             @else
-                                                <span style='position: absolute; width: {{$pourcentage}}%; height: 20px; background-color: red; margin-top: 1%; border: 1px solid black;'></span>
+                                                <span style='position: absolute; width: {{$pourcentagestr}}%; height: 20px; background-color: red; margin-top: 1%; border: 1px solid black;'></span>
                                             @endif
-                                            <span style='position: absolute; margin-left: 5px;'><b>{{$pourcentage}}%</b></span>
+                                            <span style='position: absolute; margin-left: 5px;'><b>{{$pourcentagestr}}%</b></span>
                                         </span>
                                     </span>
                                 </p>

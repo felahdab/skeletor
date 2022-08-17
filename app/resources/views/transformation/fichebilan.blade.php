@@ -45,7 +45,7 @@
                     <tr class='enTeteFicheSynthese'>
                         <!-- Pourcentage transformation -->
                         <td colspan='2' class='text-right'>Transformé à :</td>
-                        <td id='tdTauxTransformation' class='text-left'>{{100.0* $user->sous_objectifs()->get()->count() / $user->coll_sous_objectifs()->count()}}%</td>
+                        <td id='tdTauxTransformation' class='text-left'>{{substr(100.0* $user->sous_objectifs()->get()->count() / $user->coll_sous_objectifs()->count(), 0, 4)}}%</td>
                     </tr>
                     <tr class='enTeteFicheSynthese'>
                         <!-- Fonction de service à quai -->
@@ -73,15 +73,17 @@
                         @foreach($fonction->compagnonages()->get() as $comp)
                         <tr>
                             <td style='width:25%;'>{{$comp->comp_libcourt}}</td>
-                            @php $pourcentage = $user->pourcentage_valides_pour_comp($comp) @endphp
+                            @php $pourcentage = $user->pourcentage_valides_pour_comp($comp);
+                                $pourcentagestr = substr($pourcentage, 0,4);
+                            @endphp
                             @if ($pourcentage == 100)
-                                <td style='width:25%; background-color:green;'>{{$pourcentage}}%</td>
+                                <td style='width:25%; background-color:green;'>{{$pourcentagestr}}%</td>
                             @elseif ($pourcentage >= 70 and $pourcentage < 100)
-                                <td style='width:25%; background-color:gold;'>{{$pourcentage}}%</td>
+                                <td style='width:25%; background-color:gold;'>{{$pourcentagestr}}%</td>
                             @elseif ($pourcentage >= 30 and $pourcentage < 70)
-                                <td style='width:25%; background-color:orange;'>{{$pourcentage}}%</td>
+                                <td style='width:25%; background-color:orange;'>{{$pourcentagestr}}%</td>
                             @else
-                                <td style='width:25%; background-color:red;'>{{$pourcentage}}%</td>
+                                <td style='width:25%; background-color:red;'>{{$pourcentagestr}}%</td>
                             @endif
                             <td style='width:25%;'></td>
                             <td style='width:25%; background-color:;'></td>
@@ -91,186 +93,4 @@
                 </tbody>
             </table>
         </div>
-        
-        
-        <div id='progression' style='width:100%;display:none'>
-            <div>
-                <div style='display: flex; padding: 2%; background-color: transparent; justify-content: space-evenly;'>
-                    <div style=' width: 48%; background-color: transparent; position: relative; '>
-                        <div class='flex' style='background-color: transparent; justify-content: center;'>
-                            <h1>Taux de transformation global</h1>
-                        </div>
-                        <div class='flex'><canvas id='global_canvas' style='width:100%;'></canvas></div>
-                        <script>
-                            var ctx = document.getElementById('global_canvas');
-                            var chart = new Chart(ctx, {
-                                type: 'line',
-                                data: {
-                                    labels: {!! '["'. implode('","', array_keys($user->historique_validation_sous_objectifs_cumulatif())) .'"]' !!},
-                                    datasets: [{
-                                        label: ' Nb sous-objectifs réalisés',
-                                        backgroundColor: 'rgba(50,108,172,0.4)',
-                                        borderColor: 'rgb(242,223,205)',
-                                        data: {{ "[". implode(",", array_values($user->historique_validation_sous_objectifs_cumulatif())) ."]"}}
-                                    }]
-                                },
-                                options: {
-                                    responsive: true,
-                                    scales: {
-                                        yAxes: [{
-                                            ticks: {
-                                                max: {{ $user->nbSousObjectifsAValider() }},
-                                            }
-                                        }]
-                                    },
-                                }
-                            });
-                        </script>
-                        <div style='position: absolute; width: 100%; height: 35px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </div>
-                        @php $pourcentage = 100.0* $user->sous_objectifs()->get()->count() / $user->coll_sous_objectifs()->count(); @endphp
-                        <div style='position: absolute; width: {{$pourcentage}}%; height: 35px; background-color: red; margin-top: 1%; border: 1px solid black;'>
-                            <h3>{{$pourcentage}}%</h3>
-                        </div>
-                    </div>
-                    <div style='display: flex; width: 48%; background-color: transparent; margin-top: 2%;'>
-                        <div class='card border-primary mb-3' style='width:50%;'>
-                            <div class='card-header text-primary'>Stages</div>
-                            <div class='card-body '></div>
-                        </div>
-                        <div class='card border-primary mb-3' style='width:50%;padding-bottom: 20px;'>
-                            <div class='card-header text-primary'>Compagnonnages</div>
-                            <div class='card-body'>
-                            @foreach($user->fonctions()->get() as $fonction)
-                                @foreach($fonction->compagnonages()->get() as $compagnonage)
-                                <p class='card-text' style='margin-bottom: 25px;'>
-                                    <span style='width:25%;'>{{$compagnonage->comp_libcourt}}</span>
-                                    <span style='width:25%; background-color: transparent; margin-top: 5px;'>
-                                        <span style='display:flex; width: 100%; position: relative; '>
-                                            <span style='position: absolute; width: 100%; height: 20px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </span>
-                                            @php $pourcentage = $user->pourcentage_valides_pour_comp($compagnonage) @endphp
-                                            @if ($pourcentage == 100)
-                                                <span style='position: absolute; width: {{$pourcentage}}%; height: 20px; background-color: green; margin-top: 1%; border: 1px solid black;'></span>
-                                            @elseif ($pourcentage >= 70 and $pourcentage < 100)
-                                                <span style='position: absolute; width: {{$pourcentage}}%; height: 20px; background-color: gold; margin-top: 1%; border: 1px solid black;'></span>
-                                            @elseif ($pourcentage >= 30 and $pourcentage < 70)
-                                                <span style='position: absolute; width: {{$pourcentage}}%; height: 20px; background-color: orange; margin-top: 1%; border: 1px solid black;'></span>
-                                            @else
-                                                <span style='position: absolute; width: {{$pourcentage}}%; height: 20px; background-color: red; margin-top: 1%; border: 1px solid black;'></span>
-                                            @endif
-                                            <span style='position: absolute; margin-left: 5px;'><b>{{$pourcentage}}%</b></span>
-                                        </span>
-                                    </span>
-                                </p>
-                                @endforeach
-                            @endforeach
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @foreach($user->fonctions()->get() as $fonction)
-            <div>
-                <div style='display: flex; padding: 2%; background-color: transparent; justify-content: space-evenly;'>
-                    <div style=' width: 48%; background-color: transparent; position: relative; '>
-                        <div class='flex' style='background-color: transparent; justify-content: center;'>
-                            <h1>{{$fonction->fonction_libcourt}}</h1>
-                        </div>
-                        <div class='flex'>
-                        <canvas id='fonc{{$fonction->id}}' 
-                        style='width:100%; display:{{ $fonction->coll_sous_objectifs()->count()==0 ? "none" : ""}}'></canvas></div>
-                        <script>
-                            var ctx = document.getElementById('fonc{!!$fonction->id!!}');
-                            var chart = new Chart(ctx, {
-                                type: 'line',
-                                data: {
-                                    labels: {!! '["'. implode('","', array_keys($user->historique_validation_sous_objectifs_cumulatif($fonction))) .'"]' !!},
-                                    datasets: [{
-                                        label: ' Nb sous-objectifs réalisés',
-                                        backgroundColor: 'rgba(50,108,172,0.4)',
-                                        borderColor: 'rgb(242,223,205)',
-                                        data: {{ "[". implode(",", array_values($user->historique_validation_sous_objectifs_cumulatif())) ."]"}}
-                                    }]
-                                },
-                                options: {
-                                    responsive: true,
-                                    scales: {
-                                        yAxes: [{
-                                            ticks: {
-                                                max: {{ $fonction->coll_sous_objectifs()->count() }},
-                                            }
-                                        }]
-                                    },
-                                }
-                            });
-                        </script>
-                            <div style='position: absolute; width: 100%; height: 35px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </div>
-                            @if ($fonction->coll_sous_objectifs()->count()!=0 ) 
-                            @php $pourcentage = $user->pourcentage_valides_pour_fonction($fonction) @endphp
-                            @if ($pourcentage == 100)
-                                <div style='position: absolute; width: {{$pourcentage}}%; height: 35px; background-color: green; margin-top: 1%; border: 1px solid black;'></div>
-                            @elseif ($pourcentage >= 70 and $pourcentage < 100)
-                                <div style='position: absolute; width: {{$pourcentage}}%; height: 35px; background-color: gold; margin-top: 1%; border: 1px solid black;'></div>
-                            @elseif ($pourcentage >= 30 and $pourcentage < 70)
-                                <div style='position: absolute; width: {{$pourcentage}}%; height: 35px; background-color: orange; margin-top: 1%; border: 1px solid black;'></div>
-                            @else
-                                <div style='position: absolute; width: {{$pourcentage}}%; height: 35px; background-color: red; margin-top: 1%; border: 1px solid black;'></div>
-                            @endif
-                                <h3>{{$pourcentage}}%</h3>
-                            @endif
-                    </div>
-                    <div style='display: flex; width: 48%; background-color: transparent; margin-top: 2%;'>
-                        <div class='card border-primary mb-3' style='width:50%;'>
-                            <div class='card-header text-primary'>Stages</div>
-                            <div class='card-body '>
-                            @foreach($fonction->stages()->get() as $stage)
-                                <p class='card-text' style='margin-bottom: 25px;'>
-                                    <span style='width:25%;'>{{$stage->stage_libcourt}}</span>
-                                    <span style='width:25%; background-color: transparent; margin-top: 5px;'>
-                                        <span style='display:flex; width: 100%; position: relative; '>
-                                            <span style='position: absolute; width: 100%; height: 20px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </span>
-                                            @if ($user->stages()->get()->find($stage))
-                                            <span style='position: absolute; width: 100%; height: 20px; background-color: green; margin-top: 1%; border: 1px solid black;'></span>
-                                            <span style='position: absolute; margin-left: 5px;'><b>100%</b></span>
-                                            @else
-                                            <span style='position: absolute; width: 0%; height: 20px; background-color: red; margin-top: 1%; border: 1px solid black;'></span>
-                                            <span style='position: absolute; margin-left: 5px;'><b>0%</b></span>
-                                            @endif
-                                        </span>
-                                    </span>
-                                </p>
-                                @endforeach
-                            </div>
-                        </div>
-                        <div class='card border-primary mb-3' style='width:50%;padding-bottom: 20px;'>
-                            <div class='card-header text-primary'>Compagnonnages</div>
-                            <div class='card-body'>
-                                @foreach($fonction->compagnonages()->get() as $compagnonage)
-                                <p class='card-text' style='margin-bottom: 25px;'>
-                                    <span style='width:25%;'>{{$compagnonage->comp_libcourt}}</span>
-                                    <span style='width:25%; background-color: transparent; margin-top: 5px;'>
-                                        <span style='display:flex; width: 100%; position: relative; '>
-                                            <span style='position: absolute; width: 100%; height: 20px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </span>
-                                            @php $pourcentage = $user->pourcentage_valides_pour_comp($compagnonage) @endphp
-                                            @if ($pourcentage == 100)
-                                                <span style='position: absolute; width: {{$pourcentage}}%; height: 20px; background-color: green; margin-top: 1%; border: 1px solid black;'></span>
-                                            @elseif ($pourcentage >= 70 and $pourcentage < 100)
-                                                <span style='position: absolute; width: {{$pourcentage}}%; height: 20px; background-color: gold; margin-top: 1%; border: 1px solid black;'></span>
-                                            @elseif ($pourcentage >= 30 and $pourcentage < 70)
-                                                <span style='position: absolute; width: {{$pourcentage}}%; height: 20px; background-color: orange; margin-top: 1%; border: 1px solid black;'></span>
-                                            @else
-                                                <span style='position: absolute; width: {{$pourcentage}}%; height: 20px; background-color: red; margin-top: 1%; border: 1px solid black;'></span>
-                                            @endif
-                                            <span style='position: absolute; margin-left: 5px;'><b>{{$pourcentage}}%</b></span>
-                                        </span>
-                                    </span>
-                                </p>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
-    
 @endsection
