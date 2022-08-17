@@ -11,14 +11,24 @@ use App\Models\Fonction;
 class Compagnonage extends Model
 {
     use HasFactory;
-	
-	public function taches()
-	{
-		return $this->belongsToMany(Tache::class, 'compagnonage_tache')->withTimestamps();
-	}
-	
-	public function fonctions()
-	{
-		return $this->belongsToMany(Fonction::class, 'compagnonage_fonction')->withTimestamps();
-	}
+    
+    public function taches()
+    {
+        return $this->belongsToMany(Tache::class, 'compagnonage_tache')->withTimestamps();
+    }
+    
+    public function fonctions()
+    {
+        return $this->belongsToMany(Fonction::class, 'compagnonage_fonction')->withTimestamps();
+    }
+    
+    public function coll_sous_objectifs()
+    {
+        $coll = collect([]);
+        foreach ($this->taches()->get() as $tache)
+        {
+            $coll = $coll->concat($tache->coll_sous_objectifs());
+        }
+        return $coll;
+    }
 }

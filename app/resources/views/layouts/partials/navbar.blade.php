@@ -45,9 +45,10 @@
           Transformation
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Livret</a>
-            <a class="dropdown-item" href="#">Fiche bilan</a>
-            <a class="dropdown-item" href="#">Progression</a>
+            <a class="dropdown-item" href="{{route('transformation.index')}}">Suivi de la transformation par marin</a>
+            <a class="dropdown-item" href="#">Autre1</a>
+            <a class="dropdown-item" href="#">Autre2</a>
+            <a class="dropdown-item" href="#">Autre3</a>
           </div>
         </div>
         <div class="dropdown">
@@ -55,9 +56,8 @@
           Ma transformation
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Livret</a>
-            <a class="dropdown-item" href="#">Fiche bilan</a>
-            <a class="dropdown-item" href="#">Progression</a>
+            <a class="dropdown-item" href="{{route('transformation.fichebilan', auth()->user()->id )}}">Fiche bilan</a>
+            <a class="dropdown-item" href="{{route('transformation.progression', auth()->user()->id )}}">Progression</a>
           </div>
         </div>
         <div class="dropdown">

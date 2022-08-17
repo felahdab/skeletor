@@ -14,6 +14,9 @@ use App\Models\Diplome;
 use App\Models\Grade;
 use App\Models\Unite;
 
+use App\Models\Fonction;
+use App\Models\TypeFonction;
+
 class UsersController extends Controller
 {
     /**
@@ -37,11 +40,11 @@ class UsersController extends Controller
     {
         return view('users.create', [
             'roles' => Role::latest()->get(),
-			'grades' => Grade::orderBy('ordre_classmt', 'desc')->get(),
-			'specialites' => Specialite::latest()->get(),
-			'diplomes' => Diplome::latest()->get(),
-			'secteurs' => Secteur::latest()->get(),
-			'unites' => Unite::latest()->get()
+            'grades' => Grade::orderBy('ordre_classmt', 'desc')->get(),
+            'specialites' => Specialite::latest()->get(),
+            'diplomes' => Diplome::latest()->get(),
+            'secteurs' => Secteur::latest()->get(),
+            'unites' => Unite::latest()->get()
         ]);
     }
 
@@ -92,12 +95,74 @@ class UsersController extends Controller
             'user' => $user,
             'userRole' => $user->roles->pluck('name')->toArray(),
             'roles' => Role::latest()->get(),
-			'grades' => Grade::orderBy('ordre_classmt', 'desc')->get(),
-			'specialites' => Specialite::latest()->get(),
-			'diplomes' => Diplome::latest()->get(),
-			'secteurs' => Secteur::latest()->get(),
-			'unites' => Unite::latest()->get()
+            'grades' => Grade::orderBy('ordre_classmt', 'desc')->get(),
+            'specialites' => Specialite::latest()->get(),
+            'diplomes' => Diplome::latest()->get(),
+            'secteurs' => Secteur::latest()->get(),
+            'unites' => Unite::latest()->get()
         ]);
+    }
+    
+    public function choisirfonction(User $user)
+    {
+        $fonctions=Fonction::orderBy('fonction_libcourt')->get();
+        return view('users.choisirfonction', ['user' => $user,
+                                              'fonctions' => $fonctions]);
+    }
+    
+    public function attribuerfonction(Request $request, User $user)
+    {
+        $fonction_id = $request->fonction_id;
+        $fonction = Fonction::where('id', $fonction_id)->get()->first();
+        
+        $fmerid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'mer')->get()->first()->id;
+        $fquaiid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'quai')->get()->first()->id;
+        $fmetierid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'metier')->get()->first()->id;
+        
+        if ($fonction->typefonction_id == $fmerid)
+        {
+            $fonctionsmer = $user->fonctions()->where('typefonction_id', $fmerid)->get();
+            if ($fonctionsmer->count() > 0)
+            {
+                foreach ($fonctionsmer as $fmer)
+                {
+                    $user->fonctions()->detach($fmer);
+                }
+            }
+            $user->fonctions()->attach($fonction);
+        }
+        elseif ($fonction->typefonction_id == $fquaiid)
+        {
+            $fonctionsquai = $user->fonctions()->where('typefonction_id', $fquaiid)->get();
+            if ($fonctionsquai->count() > 0)
+            {
+                foreach ($fonctionsquai as $fquai)
+                {
+                    $user->fonctions()->detach($fquai);
+                }
+            }
+            $user->fonctions()->attach($fonction);
+        }
+        elseif ($fonction->typefonction_id == $fmetierid)
+        {
+            $user->fonctions()->attach($fonction);
+        }
+        
+        $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
+        return redirect()->route('users.choisirfonction', ['user' => $user,
+                                                           'fonctions' => $fonctions]);
+    }
+	
+	public function retirerfonction(Request $request, User $user)
+    {
+        $fonction_id = $request->fonction_id;
+        $fonction = Fonction::where('id', $fonction_id)->get()->first();
+        
+        $user->fonctions()->detach($fonction);
+        
+        $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
+        return redirect()->route('users.choisirfonction', ['user' => $user,
+                                                           'fonctions' => $fonctions]);
     }
 
     /**
@@ -113,23 +178,23 @@ class UsersController extends Controller
         $user->update($request->validated());
 
         $user->syncRoles($request->get('role'));
-		
-		$grade = Grade::where('id',intval($request->get('grade')))->first();
-		$user->grade()->associate($grade);
+        
+        $grade = Grade::where('id',intval($request->get('grade')))->first();
+        $user->grade()->associate($grade);
 
-		$specialite = Specialite::where('id',intval($request->get('specialite')))->first();
-		$user->specialite()->associate($specialite);
+        $specialite = Specialite::where('id',intval($request->get('specialite')))->first();
+        $user->specialite()->associate($specialite);
 
-		$diplome = Diplome::where('id',intval($request->get('diplome')))->first();
-		$user->diplome()->associate($diplome);
+        $diplome = Diplome::where('id',intval($request->get('diplome')))->first();
+        $user->diplome()->associate($diplome);
 
-		$unite_destination = Unite::where('id',intval($request->get('unite_destination')))->first();
-		$user->unite_destination()->associate($unite_destination);
+        $unite_destination = Unite::where('id',intval($request->get('unite_destination')))->first();
+        $user->unite_destination()->associate($unite_destination);
 
-		$secteur = Secteur::where('id',intval($request->get('secteur')))->first();
-		$user->secteur()->associate($secteur);
-		
-		$user->save();
+        $secteur = Secteur::where('id',intval($request->get('secteur')))->first();
+        $user->secteur()->associate($secteur);
+        
+        $user->save();
 
         return redirect()->route('users.index')
             ->withSuccess(__('Utilisateur mis a jour avec succes.'));
