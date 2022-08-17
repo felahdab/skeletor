@@ -75,7 +75,11 @@ class User extends Authenticatable
     
     public function displayString()
     {
-        $grade = $this->grade()->get()->first()->grade_libcourt;
+        $gradecoll= $grade = $this->grade()->get();
+        if ($gradecoll->count() == 1)
+            $grade = $gradecoll->first()->grade_libcourt;
+        else
+            $grade = "";
         return $grade . " " . $this->name . " " . $this->prenom;
     }
     
