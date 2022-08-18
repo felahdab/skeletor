@@ -7,8 +7,8 @@ services:
         ports:
             - "80"
         volumes:
-            - /host_mnt/c/Users/florian/PycharmProjects/php-dev-ffast/nginx.conf:/etc/nginx/conf.d/nginx.conf
-            - /host_mnt/c/Users/florian/PycharmProjects/php-dev-ffast/app/:/app
+            - ../nginx.conf:/etc/nginx/conf.d/nginx.conf
+            - ../app/:/app
         container_name: ffast-web
         networks:
              - ffast_network
@@ -17,7 +17,7 @@ services:
             context: ./php
             dockerfile: Dockerfile
         volumes:
-            - /host_mnt/c/Users/florian/PycharmProjects/php-dev-ffast/app:/app
+            - ../app:/app
         networks:
              - ffast_network
         container_name: ffast-php
@@ -31,7 +31,7 @@ services:
           MYSQL_PASSWORD: 'ffast'
           MYSQL_DATABASE: 'ffastdb'
         volumes:
-            - /host_mnt/c/Users/florian/PycharmProjects/php-dev-ffast/Docker/initsql/:/docker-entrypoint-initdb.d
+            - ../Docker/initsql/:/docker-entrypoint-initdb.d
             - mysqldata:/var/lib/mysql
         networks:
              - ffast_network
