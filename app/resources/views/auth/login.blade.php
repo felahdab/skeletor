@@ -3,7 +3,7 @@
 
 @section('content')
     <div>
-        <img src='{!! url("assets/images/insigneEscouade.jpg") !!}' alt="Logo de l'escouade" style="height:450px; display: block; margin-left:auto; margin-right: auto; ">
+        <img src='{!! url("assets/images/InsigneEscouade.jpg") !!}' alt="Logo de l'escouade" style="height:450px; display: block; margin-left:auto; margin-right: auto; ">
     </div>
     <div class="bg-light p-4 rounded" style="max-width: 400px; margin-left:auto; margin-right: auto;">
     <form method="post" action="{{ route('login.perform') }}">
