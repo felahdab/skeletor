@@ -23,7 +23,7 @@
                         <td></td>
                         <td rowspan='4 '>&nbsp;
                             <img style='width: 70%;' 
-                            src='../storage/photos/70.jpg' 
+                            src='#' 
                             alt='photo '/>
                         </td>
                     </tr>
