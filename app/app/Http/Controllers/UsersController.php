@@ -41,13 +41,16 @@ class UsersController extends Controller
         return view('users.create', [
             'roles' => Role::latest()->get(),
             'grades' => Grade::orderBy('ordre_classmt', 'desc')->get(),
-            'specialites' => Specialite::latest()->get(),
+            'specialites' => Specialite::orderBy('specialite_libcourt', 'asc')->get(),
             'diplomes' => Diplome::latest()->get(),
-            'secteurs' => Secteur::latest()->get(),
-            'unites' => Unite::latest()->get()
+            'secteurs' => Secteur::orderBy('secteur_libcourt', 'asc')->get(),
+            'unites' => Unite::orderBy('unite_libcourt', 'asc')->get()
         ]);
     }
 
+    function generateRandomString($length = 10) {
+        return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
+    }
     /**
      * Store a newly created user
      * 
@@ -58,14 +61,14 @@ class UsersController extends Controller
      */
     public function store(User $user, StoreUserRequest $request) 
     {
-        //For demo purposes only. When creating user or inviting a user
-        // you should create a generated random password and email it to the user
-        $user->create(array_merge($request->validated(), [
-            'password' => 'test' 
-        ]));
+        $user = $user->create(array_merge($request->input(), [ "password"=>$this->generateRandomString() ]));
+        
+        $roletransfo = Role::where("name", "transfo")->get()->first();
+        $user->roles()->attach($roletransfo);
+        
 
         return redirect()->route('users.index')
-            ->withSuccess(__('User created successfully.'));
+            ->withSuccess(__('Utilisateur créé avec succès. Vous devez changer son mot de passe.'));
     }
 
     /**
@@ -96,10 +99,10 @@ class UsersController extends Controller
             'userRole' => $user->roles->pluck('name')->toArray(),
             'roles' => Role::latest()->get(),
             'grades' => Grade::orderBy('ordre_classmt', 'desc')->get(),
-            'specialites' => Specialite::latest()->get(),
+            'specialites' => Specialite::orderBy('specialite_libcourt', 'asc')->get(),
             'diplomes' => Diplome::latest()->get(),
-            'secteurs' => Secteur::latest()->get(),
-            'unites' => Unite::latest()->get()
+            'secteurs' => Secteur::orderBy('secteur_libcourt', 'asc')->get(),
+            'unites' => Unite::orderBy('unite_libcourt', 'asc')->get()
         ]);
     }
     
@@ -179,20 +182,20 @@ class UsersController extends Controller
 
         $user->syncRoles($request->get('role'));
         
-        $grade = Grade::where('id',intval($request->get('grade')))->first();
-        $user->grade()->associate($grade);
+        // $grade = Grade::where('id',intval($request->get('grade')))->first();
+        // $user->grade()->associate($grade);
 
-        $specialite = Specialite::where('id',intval($request->get('specialite')))->first();
-        $user->specialite()->associate($specialite);
+        // $specialite = Specialite::where('id',intval($request->get('specialite')))->first();
+        // $user->specialite()->associate($specialite);
 
-        $diplome = Diplome::where('id',intval($request->get('diplome')))->first();
-        $user->diplome()->associate($diplome);
+        // $diplome = Diplome::where('id',intval($request->get('diplome')))->first();
+        // $user->diplome()->associate($diplome);
 
-        $unite_destination = Unite::where('id',intval($request->get('unite_destination')))->first();
-        $user->unite_destination()->associate($unite_destination);
+        // $unite_destination = Unite::where('id',intval($request->get('unite_destination')))->first();
+        // $user->unite_destination()->associate($unite_destination);
 
-        $secteur = Secteur::where('id',intval($request->get('secteur')))->first();
-        $user->secteur()->associate($secteur);
+        // $secteur = Secteur::where('id',intval($request->get('secteur')))->first();
+        // $user->secteur()->associate($secteur);
         
         $user->save();
 
