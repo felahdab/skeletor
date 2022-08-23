@@ -1,0 +1,268 @@
+    <style type='text/css'>
+        .tableacueil{
+            text-align: center;
+            width: 210mm;
+            color: #737175;
+        
+        }
+        .titrelivret{
+            font-size : 40pt;
+            height:30mm;
+        }
+        .nom{
+            height:30mm;
+            font-size:25pt;
+            color:black;
+        }
+        .datedit{
+            text-align:right;
+            font-size:8pt;
+            height:15mm;
+        }
+        /* table recapitulative page 2 */
+        .tablerecap{
+            text-align: center;
+            width: 210mm;
+            color: #737175;
+        }
+        .titrerecap
+        {
+            font-size:25pt;
+            height:30mm;
+            color:black;
+        }
+        .titrefonction{
+            text-align: center;
+            font-size:18pt;
+            height:20mm;
+            color : #0062cc;
+        }
+        .tabcompstage{
+            width : 100% ;
+            border-collapse: collapse;
+            border: solid 1px black
+        }
+        .titrelach{
+            background-color : #0062cc;
+            color : white;
+        }
+        .titrecompstage{
+            background-color:whitesmoke;
+        }
+        .colcompstage{
+            border-right: solid;
+        }
+        /* tableau des compagnonnages d'une fonction */
+        .tablecomp{
+            text-align: center;
+            width: 210mm;
+            vertical-align: middle;
+            border-collapse: collapse;
+        }
+        .tablecomp td, tr{
+            border: solid 1px black;
+            font-size: 10pt
+        }
+        .tdcomp{
+            text-align: center;
+            background-color : #0062cc;
+            color : white;
+            /*background-color: #F2DCDB;  */    
+            height:30px;
+        }
+        .trlache{
+            background-color: whitesmoke;
+        }
+        /* hauteur de ligne*/
+        .h-10{height:10mm;}
+        .h-20{height:20mm;}
+        .h-25{height:25mm;}
+        .h-30{height:30mm;}
+        .h-80{height:80mm;}
+        .h-200{height:200mm;}
+        .h-test{height:200mm;}
+        /*font-size*/
+        .fz-18{font-size:18pt;}
+        /*align*/
+        .ta-l{text-align:left;}
+        .ta-r{text-align:right;}
+        .va-t{vertical-align: top;}
+        .va-b{vertical-align: bottom;}
+        /*width*/
+        .w-5{width: 5%;}
+        .w-15{width: 15%;}
+        .w-25{width: 25%;}
+        .w-35{width: 35%;}
+        .w-50{width: 50%;}
+        .tablenote{
+            text-align: center;
+            width: 210mm;
+            height: 250mm;
+            /*border-collapse: collapse;*/
+        }
+        .titrenote
+        {
+            font-size:25pt;
+            height:30mm;
+        }
+        .notedate{
+            width: 15%;
+            border-right: solid;
+            border-bottom: solid;
+        }
+        .notebat{
+            width: 25%;
+            border-right: solid;
+            border-bottom: solid;
+        }
+        .notecomment{
+            width: 60%;
+            border-bottom: solid;
+        }
+        .br-1{
+            border-right: solid;
+        }
+    </style>
+
+@php
+        use App\Models\TypeFonction;
+        $fmerid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'mer')->get()->first()->id;
+        $fquaiid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'quai')->get()->first()->id;
+        $fmetierid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'metier')->get()->first()->id;
+@endphp
+
+<page>
+    <bookmark content='Accueil' level='0' />
+    <table class='tableacueil '>
+        <tr>
+            <td>&nbsp;</td>
+            <td class='datedit'>&Eacute;dit&eacute; le  : {{date('Y-m-d') }}</td>
+        </tr>
+        <tr>
+            <td class='h-80'><img src='{{$pathbrest}}' alt='logo gtr brest'></td>
+            <td><img src='{{$pathtln}}' alt='logo gtr toulon'></td>
+        </tr>
+        <tr>
+            <td colspan='2' class='titrelivret'>LIVRET DE<br>TRANSFORMATION</td>
+        </tr>
+        <tr>
+            <td colspan='2' class='nom'>{{$user->displayString()}}</td>
+        </tr>
+        <tr class='h-20'>
+            <td>Sp&eacute;cialit&eacute; : {{$user->specialite()->get()->first()->specialite_libcourt}}</td>
+            <td>Service/Secteur : {{$user->displayServiceSecteur()}}</td>
+        </tr>
+        <tr class='h-20'>
+            <td>Date embarquement : {{$user->date_embarq}}</td>
+            <td>Brevet : {{$user->diplome()->get()->first()->diplome_libcourt}}</td>
+        </tr>
+        <tr>
+            <td  class='ta-r va-b h-25 fz-18'>Fonction de service &agrave; quai : </td>
+            <td class='ta-l va-b fz-18'>{{ $user->fonctions()->where('typefonction_id', $fquaiid)->get()->first()->fonction_libcourt }}</td>
+        </tr>
+        <tr>
+            <td class='ta-r h-25 fz-18'>Fonction de service en mer : </td>
+            <td class='ta-l fz-18'>{{ $user->fonctions()->where('typefonction_id', $fmerid)->get()->first()->fonction_libcourt }}</td>
+        </tr>
+        <tr>
+            <td class='ta-r va-t h-25 fz-18'>Fonction(s) m&eacute;tier : </td>
+            <td class='ta-l va-t fz-18'>
+                @foreach($user->fonctions()->where('typefonction_id', $fmetierid)->get() as $foncmet)
+                    {{$foncmet->fonction_libcourt}}<br><br>
+                @endforeach
+                
+            </td>
+        </tr>
+    </table>
+    <pagebreak>
+
+
+@foreach ($user->fonctions()->get() as $fonction)
+
+    <bookmark content='{{$fonction->fonction_libcourt}}'  level='0' />
+    <table class='tablecomp'>
+    @foreach ($fonction->compagnonages()->get() as $comp)
+
+        <bookmark content='{{$comp->comp_libcourt}}'  level='1' />
+        <tr>
+            <td colspan='6' class='tdcomp'><strong>{{$comp->comp_libcourt}}</strong></td>
+        </tr>
+        <tr>
+            <td class='tdcomp w-15' >Tâche</td>
+            <td class='tdcomp w-25'>Objectif</td>
+            <td class='tdcomp w-35'>Détail du compagnonnage</td>
+            <td class='tdcomp w-5'>Durée (j)</td>
+            <td class='tdcomp w-15'>Date <br>Valideur</td>
+            <td class='tdcomp w-5'>Lieu form.</td>
+        </tr>
+        @foreach ($comp->taches()->get() as $tache)
+            @php
+            $nbssobjtach=$tache->nb_ssobj();
+            @endphp
+            <tr>
+                <td rowspan='{{$nbssobjtach}}' class='ta-l va-t'> {{$tache->tache_libcourt}}</td>
+            @php
+            $cpt=0;
+            @endphp
+            @foreach ($tache->objectifs()->get() as $objectif)
+                @php
+                $cpt++;
+                @endphp
+                @if ($cpt>1)
+                    <tr>
+                @endif
+                <td rowspan='{{$objectif->sous_objectifs()->get()->count()}}' class='ta-l va-t'>{{$objectif->objectif_libcourt}}</td>
+                @php $i=0;
+                @endphp
+                @foreach ($objectif->sous_objectifs()->get() as $ssobj)
+                    @php
+                    $i++;
+                    @endphp
+                    @if ($i>1)
+                        <tr>
+                    @endif
+                    <td class='ta-l va-t h-20'>{{$ssobj->ssobj_lib}} (coef :{{$ssobj->ssobj_coeff}})</td>
+                        <td>{{$ssobj->ssobj_duree}}</td>
+                        <td>toto <br>ata</td>
+                        <td>titi</td>
+                    </tr>
+                @endforeach
+            @endforeach
+        @endforeach
+    @endforeach
+    @if ($fonction->fonction_double)
+            <tr class='trlache'>
+            <td class='h-30'>DOUBLE</td>
+            <td colspan='3' class='va-t ta-l'>toto</td>
+            <td>titi<br>tata</td>
+            <td>Bord</td>
+            </tr>
+    @endif
+    @if ($fonction->fonction_lache)
+            <tr class='trlache'>
+            <td class='h-30'>L&Acirc;CHER</td>
+            <td colspan='3' class='va-t ta-l'>toto</td>
+            <td>titi<br>tata</td>
+            <td>Bord</td>
+            </tr>
+    @endif
+    </table><br>
+@endforeach
+
+
+<pagebreak>
+    <bookmark content='Notes' level='0' />
+    <table class='tablenote'>
+        <tr><td colspan='3' class='titrenote'>P&eacute;riodes embarqu&eacute;es : MPE, renfort, service ...</td></tr>
+        <tr>
+            <th class='notedate h-20'>Dates</th>
+            <th class='notebat'>B&acirc;timent</th>
+            <th class='notecomment'>Commentaires</th>
+        </tr>
+        <tr>
+            <td class='br-1 h-200'>&nbsp;</td>
+            <td class='br-1'>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+</page>
