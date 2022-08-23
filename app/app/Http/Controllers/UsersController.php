@@ -63,7 +63,7 @@ class UsersController extends Controller
     {
         $user = $user->create(array_merge($request->input(), [ "password"=>$this->generateRandomString() ]));
         
-        $roletransfo = Role::where("name", "transfo")->get()->first();
+        $roletransfo = Role::where("name", "user")->get()->first();
         $user->roles()->attach($roletransfo);
         
 
