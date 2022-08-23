@@ -20,6 +20,7 @@
           </div>
         </div>
         @endcan
+        @hasrole('2ps')
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Fonctions
@@ -40,6 +41,8 @@
             <a class="dropdown-item" href="{{ route('stages.index')}}">Stages</a>
           </div>
         </div>
+        @endrole
+        @hasrole('tuteur')
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Transformation
@@ -51,6 +54,8 @@
             <a class="dropdown-item" href="#">Autre3</a>
           </div>
         </div>
+        @endrole
+        @if(auth()->user()->fonctions()->get()->count() != 0)
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Ma transformation
@@ -60,6 +65,8 @@
             <a class="dropdown-item" href="{{route('transformation.progression', auth()->user()->id )}}">Progression</a>
           </div>
         </div>
+        @endif
+        @can('statistiques.index')
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Statistiques
@@ -68,6 +75,7 @@
             <a class="dropdown-item" href="#">Statistiques</a>
           </div>
         </div>
+        @endcan
         @endauth
       </ul>
       
