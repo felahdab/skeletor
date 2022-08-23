@@ -4,7 +4,7 @@
     <div class="bg-light p-4 rounded">
         <h1>Transformation</h1>
         <div class="lead">
-            Livret de transformation de {{$user->prenom}} {{$user->name}}
+            Livret de transformation de {{$user->displayString()}}
         </div>
         
         <div class="mt-2">
@@ -52,8 +52,7 @@
         
         <div id='livret' class='div-table-contrat-compagnonnage table'>
             <div class='text-center'>
-                <button type='button' class='btn btn-primary w-25 mr-5 mb-2' onclick='affichage("divvalid");'>Enregistrer les validations</button>
-                <button type='submit' class='btn btn-primary w-25 ml-5 mb-2' id='btnimp' name='btnimp' form='formlivret'>Imprimer</button>
+                <a href="{{ route('transformation.livretpdf', $user->id) }}" class="btn btn-primary w-25 ml-5 mb-2">Imprimer</a>
             </div>
             
             @foreach ($user->fonctions()->orderBy('typefonction_id')->get() as $fonction)
