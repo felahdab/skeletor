@@ -83,6 +83,18 @@ class User extends Authenticatable
         return $grade . " " . $this->name . " " . $this->prenom;
     }
     
+    public function displayServiceSecteur()
+    {
+        $secteur= $this->secteur()->get();
+        if ($secteur->count() == 1)
+            $secteur = $secteur->first();
+        else
+            return "NON RENSEIGNE";
+        $service = $secteur->service()->get()->first();
+        
+        return $service->service_libcourt . "/" . $secteur->secteur_libcourt;
+    }
+    
     public function grade()
     {
         return $this->belongsTo(Grade::class);
@@ -254,7 +266,16 @@ class User extends Authenticatable
         else
         {
             $sous_objectifs_valides = $this->sous_objectifs()->orderBy('pivot_date_validation')->get();
-            $sous_objectifs_valides = $sous_objectifs_valides->only($fonction->coll_sous_objectifs())->get();
+            $sous_objectifs_a_garder = $fonction->coll_sous_objectifs();
+            
+            $workcoll = collect([]);
+            foreach ($sous_objectifs_a_garder as $sous_obj_a_garder)
+            {
+                $trouve = $sous_objectifs_valides->find($sous_obj_a_garder);
+                if ($trouve != null)
+                    $workcoll = $workcoll->concat(collect([$trouve]));
+            }
+            $sous_objectifs_valides = $workcoll;
         }
         $liste_des_dates_de_validation = $sous_objectifs_valides->pluck('pivot.date_validation');
         $nb_validation_par_date = array_count_values($liste_des_dates_de_validation->all());
@@ -262,9 +283,9 @@ class User extends Authenticatable
         return $nb_validation_par_date;
     }
     
-    public function historique_validation_sous_objectifs_cumulatif()
+    public function historique_validation_sous_objectifs_cumulatif(Fonction $fonction=null)
     {
-        $nb_validation_par_date = $this->historique_validation_sous_objectifs();
+        $nb_validation_par_date = $this->historique_validation_sous_objectifs($fonction);
         $total = 0;
         foreach ($nb_validation_par_date as $key => $value)
         {
@@ -294,7 +315,7 @@ class User extends Authenticatable
     
     public function pourcentage_valides_pour_comp(Compagnonage $comp)
     {
-        // return 100.0 * $this->sous_objectifs()->get()->only($fonction->coll_sous_objectifs())->count() / $fonction->coll_sous_objectifs()->count() ;
+        // return 100.0 * $this->sous_objectifs()->get()->only($comp->coll_sous_objectifs())->count() / $fonction->coll_sous_objectifs()->count() ;
         
         // seconde version qui contourne le probleme de array_flip
         $tempcoll = $this->sous_objectifs()->get();
