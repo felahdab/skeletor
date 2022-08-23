@@ -16,6 +16,7 @@ use App\Models\Fonction;
 use App\Models\SousObjectif;
 use App\Models\TypeFonction;
 
+use Illuminate\Support\Facades\Storage;
 
 class TransformationController extends Controller
 {
@@ -38,6 +39,33 @@ class TransformationController extends Controller
     public function livret(User $user) 
     {
         return view('transformation.livret', ['user' => $user]);
+    }
+    
+    public function livretpdf(User $user)
+    {
+        $pathbrest = Storage::path('livret-gtr-brest.jpg');
+        $pathtln = Storage::path('livret-gtr-toulon.jpg');
+        
+        $html = view('transformation.livretpdf', ['user' => $user,
+            'pathbrest' => $pathbrest,
+            'pathtln'   => $pathtln])->render();
+
+        $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 
+                            'format' => 'A4',
+                            'margin_left' => 10,
+                            'margin_right' => 10,
+                            'margin_top' => 15,
+                            'margin_bottom' => 15
+                            ]);
+        // $mpdf->showImageErrors = true;
+        $mpdf->debug = true;
+        $mpdf->SetTitle('Livret de transformation');
+        $mpdf->setFooter('{PAGENO}/{nb}');
+        $mpdf->WriteHTML($html);
+        // $nomfic=$nom."_".$prenom."_".$grade."_".$specialite."_".$datembarq.".pdf";
+        $nomfic="livret.pdf";
+        $mpdf->Output($nomfic,'D');
+        ddd($html);
     }
     
     public function progression(User $user)
