@@ -83,6 +83,18 @@ class User extends Authenticatable
         return $grade . " " . $this->name . " " . $this->prenom;
     }
     
+    public function displayServiceSecteur()
+    {
+        $secteur= $this->secteur()->get();
+        if ($secteur->count() == 1)
+            $secteur = $secteur->first();
+        else
+            return "NON RENSEIGNE";
+        $service = $secteur->service()->get()->first();
+        
+        return $service->service_libcourt . "/" . $secteur->secteur_libcourt;
+    }
+    
     public function grade()
     {
         return $this->belongsTo(Grade::class);
