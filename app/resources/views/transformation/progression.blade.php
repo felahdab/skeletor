@@ -53,7 +53,27 @@
                     <div style='display: flex; width: 48%; background-color: transparent; margin-top: 2%;'>
                         <div class='card border-primary mb-3' style='width:50%;'>
                             <div class='card-header text-primary'>Stages</div>
-                            <div class='card-body '></div>
+                            <div class='card-body '>
+                            @foreach($user->fonctions()->get() as $fonction)
+                                @foreach($fonction->stages()->get() as $stage)
+                                <p class='card-text' style='margin-bottom: 25px;'>
+                                    <span style='width:25%;'>{{$stage->stage_libcourt}}</span>
+                                    <span style='width:25%; background-color: transparent; margin-top: 5px;'>
+                                        <span style='display:flex; width: 100%; position: relative; '>
+                                            <span style='position: absolute; width: 100%; height: 20px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </span>
+                                            @if ($user->stages()->get()->find($stage))
+                                            <span style='position: absolute; width: 100%; height: 20px; background-color: green; margin-top: 1%; border: 1px solid black;'></span>
+                                            <span style='position: absolute; margin-left: 5px;'><b>100%</b></span>
+                                            @else
+                                            <span style='position: absolute; width: 0%; height: 20px; background-color: red; margin-top: 1%; border: 1px solid black;'></span>
+                                            <span style='position: absolute; margin-left: 5px;'><b>0%</b></span>
+                                            @endif
+                                        </span>
+                                    </span>
+                                </p>
+                                @endforeach
+                                @endforeach
+                            </div>
                         </div>
                         <div class='card border-primary mb-3' style='width:50%;padding-bottom: 20px;'>
                             <div class='card-header text-primary'>Compagnonnages</div>
@@ -108,7 +128,7 @@
                                         label: ' Nb sous-objectifs réalisés',
                                         backgroundColor: 'rgba(50,108,172,0.4)',
                                         borderColor: 'rgb(242,223,205)',
-                                        data: {{ "[". implode(",", array_values($user->historique_validation_sous_objectifs_cumulatif())) ."]"}}
+                                        data: {{ "[". implode(",", array_values($user->historique_validation_sous_objectifs_cumulatif($fonction))) ."]"}}
                                     }]
                                 },
                                 options: {
