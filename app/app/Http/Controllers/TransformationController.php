@@ -15,6 +15,7 @@ use App\Models\Tache;
 use App\Models\Fonction;
 use App\Models\SousObjectif;
 use App\Models\TypeFonction;
+use App\Models\Stage;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -119,6 +120,18 @@ class TransformationController extends Controller
                     }
                 }
             }
+            if ($request->has('stageid'))
+            {
+                $stages_a_valider = $request['stageid'];
+                foreach ($stages_a_valider as $key => $value){
+                    $stage = Stage::find($key);
+                    $user->stages()->attach($stage);
+                    $workitem = $user->stages()->find($stage)->pivot;
+                    $workitem->commentaire=$commentaire;
+                    $workitem->date_validation = $date_validation;
+                    $workitem->save();
+                }
+            }
         }
         elseif ($request->has("annulation_validation"))
         {
@@ -144,6 +157,14 @@ class TransformationController extends Controller
                     }
                 }
             }
+            if ($request->has('stageid'))
+            {
+                $stages_a_valider = $request['stageid'];
+                foreach ($stages_a_valider as $key => $value){
+                    $stage = Stage::find($key);
+                    $user->stages()->detach($stage);
+                }
+            }
         }
         return redirect()->route('transformation.livret', ['user' => $user]);
      }
@@ -158,10 +179,18 @@ class TransformationController extends Controller
         if ($request->input("buttonid") == "validation_lache")
         {
             // L'utilisateur a cliqué sur un bouton de validation du lache
-            $userfonc->pivot->commentaire_lache=$commentaire;
-            $userfonc->pivot->valideur_lache=$valideur;
-            $userfonc->pivot->date_lache = $date_validation;
-            $userfonc->pivot->save();
+            // Si la fonction necessite un double, il faut que le double soit valide avant le lache
+            if ($userfonc->pivot->date_double != null or !$fonction->fonction_double) 
+            {
+                $userfonc->pivot->commentaire_lache=$commentaire;
+                $userfonc->pivot->valideur_lache=$valideur;
+                $userfonc->pivot->date_lache = $date_validation;
+                $userfonc->pivot->save();
+            }
+            else
+            {
+                return redirect()->route('transformation.livret', ['user' => $user])->withErrors('Si une fonction necessite un tour en double valide, ce dernier doit etre valide avant le lache');
+            }
         }
         elseif ($request->input("buttonid") == "validation_double")
         {
@@ -185,7 +214,7 @@ class TransformationController extends Controller
             $userfonc->pivot->date_lache = null;
             $userfonc->pivot->save();
         }
-        return redirect()->route('transformation.livret', ['user' => $user]);
+        return redirect()->route('transformation.livret', ['user' => $user])->withSuccess('Mise a jour reussie.');
     }
 
     /**

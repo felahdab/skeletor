@@ -49,8 +49,8 @@
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="{{route('transformation.index')}}">Suivi de la transformation par marin</a>
-            <a class="dropdown-item" href="#">Autre1</a>
-            <a class="dropdown-item" href="#">Autre2</a>
+            <a class="dropdown-item" href="#">Validation de taches par groupe</a>
+            <a class="dropdown-item" href="#">Validation de stage par groupe</a>
             <a class="dropdown-item" href="#">Autre3</a>
           </div>
         </div>

@@ -221,6 +221,17 @@ class User extends Authenticatable
         return true;
     }
     
+    public function aValideLeStage(Stage $stage)
+    {
+        $workitem = $this->stages()->find($stage);
+        if ($workitem == null)
+            return false;
+        $workitem = $workitem->pivot;
+        if ($workitem->date_validation == null)
+            return false;
+        return true;
+    }
+    
     public function nbSousObjectifsAValider(Fonction $fonction=null)
     {
         if ($fonction != null)
