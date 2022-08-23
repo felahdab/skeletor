@@ -149,38 +149,105 @@
             <td colspan='2' class='nom'>{{$user->displayString()}}</td>
         </tr>
         <tr class='h-20'>
-            <td>Sp&eacute;cialit&eacute; : {{$user->specialite()->get()->first()->specialite_libcourt}}</td>
+            <td>Sp&eacute;cialit&eacute; : @if ($user->specialite()->get()->count() != 0) {{$user->specialite()->get()->first()->specialite_libcourt}} @endif</td>
             <td>Service/Secteur : {{$user->displayServiceSecteur()}}</td>
         </tr>
         <tr class='h-20'>
             <td>Date embarquement : {{$user->date_embarq}}</td>
-            <td>Brevet : {{$user->diplome()->get()->first()->diplome_libcourt}}</td>
+            <td>Brevet : @if ($user->diplome()->get()->count() != 0) {{$user->diplome()->get()->first()->diplome_libcourt}} @endif</td>
         </tr>
+        @if ($user->fonctions()->where('typefonction_id', $fquaiid)->get()->count() != 0 )
         <tr>
             <td  class='ta-r va-b h-25 fz-18'>Fonction de service &agrave; quai : </td>
             <td class='ta-l va-b fz-18'>{{ $user->fonctions()->where('typefonction_id', $fquaiid)->get()->first()->fonction_libcourt }}</td>
         </tr>
+        @endif
+        @if ($user->fonctions()->where('typefonction_id', $fmerid)->get()->count() != 0 )
         <tr>
             <td class='ta-r h-25 fz-18'>Fonction de service en mer : </td>
             <td class='ta-l fz-18'>{{ $user->fonctions()->where('typefonction_id', $fmerid)->get()->first()->fonction_libcourt }}</td>
         </tr>
+        @endif
+        @if ($user->fonctions()->where('typefonction_id', $fmetierid)->get()->count() != 0 )
         <tr>
             <td class='ta-r va-t h-25 fz-18'>Fonction(s) m&eacute;tier : </td>
             <td class='ta-l va-t fz-18'>
                 @foreach($user->fonctions()->where('typefonction_id', $fmetierid)->get() as $foncmet)
                     {{$foncmet->fonction_libcourt}}<br><br>
-                @endforeach
-                
+                @endforeach 
             </td>
         </tr>
+        @endif
     </table>
-    <pagebreak>
+<pagebreak>
 
+<bookmark content='Récapitulatif parcours' level='0' />
+    <table class='tablerecap '>
+        <tr><td class='titrerecap'>R&eacute;capitulatif du parcours de transformation</td></tr>
+        @foreach ($user->fonctions()->get() as $fonction)
+            @php
+            $listcomp=$fonction->compagnonages()->get()->pluck('comp_libcourt')->all();
+            $liststage=$fonction->stages()->get()->pluck('stage_libcourt')->all();
+            $nbcomp=count($listcomp);
+            $nbstage=count($liststage);
+            
+            if ($nbcomp == $nbstage)
+                ;
+            elseif ($nbcomp > $nbstage)
+            {
+                $complement = array_fill(0, $nbcomp - $nbstage, '');
+                $liststage = array_merge($liststage, $complement);
+            }
+            elseif ($nbcomp < $nbstage)
+            {
+                $complement = array_fill(0, $nbstage - $nbcomp, '');
+                $listcomp = array_merge($listcomp, $complement);
+            }
+            
+            $tableauaffichage = array_combine($listcomp, $liststage);
+            @endphp
+            <tr><td class='titrefonction'>{{$fonction->fonction_libcourt}}</td></tr>
+            <tr><td class='ta-c'>
+                    <table class='tabcompstage'>
+                        <tr>
+                            <th class='titrecompstage w-50 colcompstage'>Compagnonnage(s)</th>
+                            <th class='titrecompstage'>Stage(s)</th>
+                        </tr>
+                        @foreach($tableauaffichage as $libcomp => $libstage)
+                            <tr>
+                                <td class='colcompstage'>{{$libcomp}}</td>
+                                <td>{{$libstage}}</td>
+                            </tr>
+                        @endforeach
+                    </table>
+                </td>
+            </tr>
+            @php
+                $liblach="";
+                if ($fonction->fonction_double)
+                {
+                    $liblach.="DOUBLE + ";
+                }
+                if ($fonction->fonction_lache)
+                {
+                    $liblach.="LACHER";
+                }
+            @endphp
+            @if ($liblach!="")
+            <tr>
+                <td class='titrelach'>{{$liblach}}</td>
+            </tr>
+            @endif
+        @endforeach
+</table>
 
+<pagebreak>
 @foreach ($user->fonctions()->get() as $fonction)
-
     <bookmark content='{{$fonction->fonction_libcourt}}'  level='0' />
     <table class='tablecomp'>
+        <tr>
+            <td colspan='6' class='titrefonction'>{{$fonction->fonction_libcourt}}</td>
+        </tr>
     @foreach ($fonction->compagnonages()->get() as $comp)
 
         <bookmark content='{{$comp->comp_libcourt}}'  level='1' />
@@ -223,8 +290,15 @@
                     @endif
                     <td class='ta-l va-t h-20'>{{$ssobj->ssobj_lib}} (coef :{{$ssobj->ssobj_coeff}})</td>
                         <td>{{$ssobj->ssobj_duree}}</td>
-                        <td>toto <br>ata</td>
-                        <td>titi</td>
+                        <td>
+                        @if ($user->aValideLeSousObjectif($ssobj))
+                            {{ $user->sous_objectifs()->find($ssobj)->pivot->date_validation }}
+                        @endif 
+                        <br>
+                        @if ($user->aValideLeSousObjectif($ssobj))
+                            {{ $user->sous_objectifs()->find($ssobj)->pivot->valideur }}
+                        @endif</td>
+                        <td>{{$ssobj->lieu()->get()->first()->lieu_libcourt}}</td>
                     </tr>
                 @endforeach
             @endforeach
@@ -233,24 +307,40 @@
     @if ($fonction->fonction_double)
             <tr class='trlache'>
             <td class='h-30'>DOUBLE</td>
-            <td colspan='3' class='va-t ta-l'>toto</td>
-            <td>titi<br>tata</td>
+            <td colspan='3'>
+            @if($fonction->pivot->date_double != null)
+                {{ $fonction->pivot->date_double }}
+            @endif
+            </td>
+            <td>
+            @if($fonction->pivot->date_double != null)
+                {{ $fonction->pivot->valideur_double }}
+            @endif
+            </td>
             <td>Bord</td>
             </tr>
     @endif
     @if ($fonction->fonction_lache)
             <tr class='trlache'>
             <td class='h-30'>L&Acirc;CHER</td>
-            <td colspan='3' class='va-t ta-l'>toto</td>
-            <td>titi<br>tata</td>
+            <td colspan='3'>
+            @if($fonction->pivot->date_lache != null)
+                {{ $fonction->pivot->date_lache }}
+            @endif
+            </td>
+            <td>
+            @if($fonction->pivot->date_lache != null)
+                {{ $fonction->pivot->valideur_lache }}
+            @endif
+            </td>
             <td>Bord</td>
             </tr>
     @endif
-    </table><br>
+    </table>
+    <br>
+    <pagebreak>
 @endforeach
 
-
-<pagebreak>
     <bookmark content='Notes' level='0' />
     <table class='tablenote'>
         <tr><td colspan='3' class='titrenote'>P&eacute;riodes embarqu&eacute;es : MPE, renfort, service ...</td></tr>

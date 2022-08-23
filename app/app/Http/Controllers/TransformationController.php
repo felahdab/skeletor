@@ -43,12 +43,14 @@ class TransformationController extends Controller
     
     public function livretpdf(User $user)
     {
-        $pathbrest = Storage::path('livret-gtr-brest.jpg');
-        $pathtln = Storage::path('livret-gtr-toulon.jpg');
+        $pathbrest = Storage::path('public/livret-gtr-brest.jpg');
+        $pathtln = Storage::path('public/livret-gtr-toulon.jpg');
         
         $html = view('transformation.livretpdf', ['user' => $user,
             'pathbrest' => $pathbrest,
             'pathtln'   => $pathtln])->render();
+
+        // ddd($html);
 
         $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 
                             'format' => 'A4',
@@ -57,13 +59,12 @@ class TransformationController extends Controller
                             'margin_top' => 15,
                             'margin_bottom' => 15
                             ]);
-        // $mpdf->showImageErrors = true;
-        $mpdf->debug = true;
+
         $mpdf->SetTitle('Livret de transformation');
         $mpdf->setFooter('{PAGENO}/{nb}');
         $mpdf->WriteHTML($html);
-        // $nomfic=$nom."_".$prenom."_".$grade."_".$specialite."_".$datembarq.".pdf";
-        $nomfic="livret.pdf";
+        $nomfic=date('Ymd')."_Livret de transformation de ".$user->name."_".$user->prenom.".pdf";
+        // $nomfic="livret.pdf";
         $mpdf->Output($nomfic,'D');
         ddd($html);
     }
