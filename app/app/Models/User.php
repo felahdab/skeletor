@@ -95,6 +95,67 @@ class User extends Authenticatable
         return $service->service_libcourt . "/" . $secteur->secteur_libcourt;
     }
     
+    public function displayGrade()
+    {
+        $grade = $this->grade()->get();
+        if ($grade->count() != 0)
+        {
+            $grade = $grade->first();
+            return $grade->grade_libcourt;
+        }
+        return "";
+    }
+    
+    public function displayDiplome()
+    {
+        $diplome = $this->diplome()->get();
+        if ($diplome->count() != 0)
+        {
+            $diplome = $diplome->first();
+            return $diplome->diplome_libcourt;
+        }
+        return "";
+    }
+    
+    public function displaySpecialite()
+    {
+        $specialite = $this->specialite()->get();
+        if ($specialite->count() != 0)
+        {
+            $specialite = $specialite->first();
+            return $specialite->specialite_libcourt;
+        }
+        return "";
+    }
+    
+    public function displaySecteur()
+    {
+        $secteur = $this->secteur()->get();
+        if ($secteur->count() != 0)
+        {
+            $secteur = $secteur->first();
+            return $secteur->secteur_libcourt;
+        }
+        return "";
+    }
+    
+    public function displayDestination()
+    {
+        $unite_destination = $this->unite_destination()->get();
+        if ($unite_destination->count() != 0)
+        {
+            $unite_destination = $unite_destination->first();
+            return $unite_destination->unite_libcourt;
+        }
+        return "";
+    }
+    public function displayDateDebarquement()
+    {
+        if ($this->date_debarq == null)
+            return null;
+        return $this->date_debarq;
+    }
+    
     public function grade()
     {
         return $this->belongsTo(Grade::class);

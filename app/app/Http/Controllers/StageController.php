@@ -6,6 +6,7 @@ use App\Http\Requests\StoreStageRequest;
 use App\Http\Requests\UpdateStageRequest;
 use App\Models\Stage;
 use App\Models\TypeLicence;
+use App\Models\User;
 
 use Illuminate\Http\Request;
 
@@ -63,13 +64,27 @@ class StageController extends Controller
      * @param  \App\Models\Stage  $stage
      * @return \Illuminate\Http\Response
      */
-    public function show(Stage $stage)
+    public function show(Request $request, Stage $stage)
     {
+        
+        if ($request->has("stage"))
+        {
+            return redirect()->route('stages.show', intval($request["stage"]));
+        }
+        $marin = null;
+        if ($request->has("marin"))
+        {
+            $marin = User::find(intval($request["marin"]));
+        }
+        
         $stages = Stage::orderBy('stage_libcourt')->get();
         $typelicences = TypeLicence::orderBy('typlicense_libcourt')->get();
-        return view('stages.show', ['stage'       => $stage, 
-                                    'stages'     => $stages,
-                                    'typelicences' => $typelicences] );
+        $users = User::orderBy('name')->get();
+        return view('stages.show', ['stage'        => $stage, 
+                                    'stages'       => $stages,
+                                    'typelicences' => $typelicences,
+                                    'users'        => $users,
+                                    'marin'        => $marin] );
     }
 
     /**
@@ -121,5 +136,50 @@ class StageController extends Controller
     {
         $stage->delete();
         return redirect()->route('stages.index');
+    }
+    
+    public function attribuerstage(Request $request, Stage $stage)
+    {
+        if ($request->has('user_id'))
+        {
+            $user = User::find(intval($request['user_id']));
+            $user->stages()->attach($stage);
+        }
+        return redirect()->route('stages.choixmarins', ['stage'=>$stage]);
+    }
+    
+    public function choixmarins(Stage $stage)
+    {
+        $users = User::orderBy('name')->get();
+        return view('stages.choisirmarins', ['stage'=>$stage ,
+                                             'users' => $users]);
+    }
+    
+    public function validermarins(Request $request, Stage $stage)
+    {
+        // ddd($request->input());
+        // ddd($stage);
+        // ddd($request["date_validation"]);
+        
+        if ($request->has('user')){
+            $userlist = $request['user'];
+            foreach (array_keys($userlist) as $userid)
+            {
+                $user = User::find($userid);
+                $workitem = $user->stages()->find($stage)->pivot;
+                $workitem->date_validation = $request["date_validation"];
+                $workitem->commentaire = $request["commentaire"];
+                $workitem->save();
+            }
+            
+        }
+        
+        return redirect()->route('stages.choixmarins', ['stage'=>$stage]);
+    }
+
+    public function consulter(Request $request)
+    {
+        return "ici";
+        ddd($request);
     }
 }
