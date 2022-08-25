@@ -39,7 +39,6 @@
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="{{ route('stages.index')}}">Stages</a>
-            <a class="dropdown-item" href="{{ route('stages.consulter')}}">Consulter</a>
           </div>
         </div>
         @endrole
@@ -50,9 +49,8 @@
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="{{route('transformation.index')}}">Suivi de la transformation par marin</a>
-            <a class="dropdown-item" href="#">Validation de taches par groupe</a>
-            <a class="dropdown-item" href="#">Validation de stage par groupe</a>
-            <a class="dropdown-item" href="#">Autre3</a>
+            <a class="dropdown-item" href="{{route('transformation.indexparfonction')}}">Suivi de la transformation par fonction</a>
+            <a class="dropdown-item" href="{{route('transformation.indexparstage')}}">Suivi de la transformation par stage</a>
           </div>
         </div>
         @endrole

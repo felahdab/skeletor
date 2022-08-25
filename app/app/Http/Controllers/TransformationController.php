@@ -31,6 +31,34 @@ class TransformationController extends Controller
         $users = User::paginate(10);
         return view('transformation.index', ['users' => $users]);
     }
+    
+    public function indexparfonction(Request $request) 
+    {
+       if ($request->has('filter') )
+        {
+            $filter = $request->input('filter');
+            $fonctions = Fonction::where('fonction_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('fonction_libcourt')->paginate(10);
+        } else {
+            $filter="";
+            $fonctions = Fonction::orderBy('fonction_libcourt')->paginate(10);
+        }
+        return view('transformation.indexparfonction', ['fonctions' => $fonctions,
+                                                           'filter' => $filter]);
+    }
+    
+    public function indexparstage(Request $request) 
+    {
+        if ($request->has('filter') )
+        {
+            $filter = $request->input('filter');
+            $stages = Stage::where('stage_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('stage_libcourt')->paginate(10);
+        } else {
+            $filter="";
+            $stages = Stage::orderBy('stage_libcourt')->paginate(10);
+        }
+        return view('transformation.indexparstage', ['stages' => $stages,
+                                                     'filter' => $filter]);
+    }
 
     /**
      * Show form for creating user
@@ -218,82 +246,5 @@ class TransformationController extends Controller
             $userfonc->pivot->save();
         }
         return redirect()->route('transformation.livret', ['user' => $user])->withSuccess('Mise a jour reussie.');
-    }
-
-    /**
-     * Store a newly created user
-     * 
-     * @param User $user
-     * @param StoreUserRequest $request
-     * 
-     * @return \Illuminate\Http\Response
-     */
-    public function store(User $user, StoreUserRequest $request) 
-    {
-        
-    }
-
-    /**
-     * Show user data
-     * 
-     * @param User $user
-     * 
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user) 
-    {
-
-    }
-
-    /**
-     * Edit user data
-     * 
-     * @param User $user
-     * 
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $user) 
-    {
-
-    }
-    
-    public function choisirfonction(User $user)
-    {
-
-    }
-    
-    public function attribuerfonction(Request $request, User $user)
-    {
-
-    }
-    
-    public function retirerfonction(Request $request, User $user)
-    {
-
-    }
-
-    /**
-     * Update user data
-     * 
-     * @param User $user
-     * @param UpdateUserRequest $request
-     * 
-     * @return \Illuminate\Http\Response
-     */
-    public function update(User $user, UpdateUserRequest $request) 
-    {
-
-    }
-
-    /**
-     * Delete user data
-     * 
-     * @param User $user
-     * 
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(User $user) 
-    {
-        
     }
 }
