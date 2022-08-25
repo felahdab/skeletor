@@ -179,7 +179,30 @@ class StageController extends Controller
 
     public function consulter(Request $request)
     {
-        $stage = Stage::first();
-        return redirect()->route("stages.show", $stage->id);
+        $stage = null;
+        $marin = null;
+        
+        if ($request->has("stage"))
+        {
+            $stage = Stage::find(intval($request["stage"]));
+        }
+        if ($request->has("marin"))
+        {
+            $marin = User::find(intval($request["marin"]));
+        }
+        
+        if ($stage and $marin)
+            $marin = null;
+        
+        $stages = Stage::orderBy('stage_libcourt')->get();
+        $typelicences = TypeLicence::orderBy('typlicense_libcourt')->get();
+        $users = User::orderBy('name')->get();
+        
+        return view('stages.show', ['stage'        => $stage, 
+                                    'marin'        => $marin,
+                                    'stages'       => $stages,
+                                    'typelicences' => $typelicences,
+                                    'users'        => $users,
+                                    ]);
     }
 }
