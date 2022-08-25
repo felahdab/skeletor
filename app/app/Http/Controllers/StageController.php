@@ -176,6 +176,23 @@ class StageController extends Controller
         
         return redirect()->route('stages.choixmarins', ['stage'=>$stage]);
     }
+    
+     public function annulermarins(Request $request, Stage $stage)
+    {
+        if ($request->has('usercancel')){
+            $userlist = $request['usercancel'];
+            foreach (array_keys($userlist) as $userid)
+            {
+                $user = User::find($userid);
+                $workitem = $user->stages()->find($stage)->pivot;
+                $workitem->date_validation = null;
+                $workitem->commentaire = null;
+                $workitem->save();
+            }
+        }
+        
+        return redirect()->route('stages.choixmarins', ['stage'=>$stage]);
+    }
 
     public function consulter(Request $request)
     {
