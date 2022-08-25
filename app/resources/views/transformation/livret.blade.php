@@ -10,6 +10,8 @@
         <div class="mt-2">
             @include('layouts.partials.messages')
         </div>
+                            <a href="{{ route('transformation.progression', $user->id) }}" class="btn btn-primary btn-sm">Progression</a>
+                            <a href="{{ route('transformation.fichebilan', $user->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
         
         <div id='divvalid' class='popupvalidcontrat' style='display:none;'>
             <div class='titrenavbarvert'>
