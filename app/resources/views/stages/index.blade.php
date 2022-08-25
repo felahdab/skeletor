@@ -35,7 +35,6 @@
                         <td>{{ $stage->stage_liblong }}</td>
                         <td><a href="{{ route('stages.consulter', ['stage' => $stage->id] ) }}" class="btn btn-primary btn-sm">Consulter</a></td>
                         <td><a href="{{ route('stages.edit', $stage->id) }}" class="btn btn-info btn-sm">Editer</a></td>
-                        <td><a href="{{ route('stages.validermarins', $stage->id) }}" class="btn btn-info btn-sm">Validation de stage</a></td>
                         @can('stage.destroy')
                         <td>
                             {!! Form::open(['method' => 'DELETE','route' => ['stages.destroy', $stage->id],'style'=>'display:inline']) !!}

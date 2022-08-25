@@ -41,7 +41,6 @@
         </div>
         
         @if ($stage != null and $marin == null)
-        <a href="{{ route('stages.choixmarins', ['stage' => $stage->id]) }}" class="btn btn-info w-50">Validation de groupe</a>
         <div  class='card border-primary mb-3 w-50'>
                 <div class='card-header text-primary'>Liste des marins ayant valid&eacute; le stage {{$stage->stage_libcourt}}</div>
                 <div class='card-body'>
