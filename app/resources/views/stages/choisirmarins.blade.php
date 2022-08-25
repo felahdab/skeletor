@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="bg-light p-4 rounded">
-        <h2>Stages</h2>
+        <h2>Stages - Validation du stage {{$stage->stage_libcourt}} par groupe</h2>
         <div class="mt-2">
             @include('layouts.partials.messages')
         </div>
