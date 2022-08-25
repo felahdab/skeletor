@@ -168,6 +168,10 @@ class UsersController extends Controller
                                                            'fonctions' => $fonctions]);
     }
 
+    public function attribuerstage(Request $request, User $user)
+    {
+        
+    }
     /**
      * Update user data
      * 

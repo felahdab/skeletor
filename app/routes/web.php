@@ -83,7 +83,13 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::post('fonctions/{fonction}/ajoutestage', 'FonctionController@ajouterstage')->name('fonctions.ajouterstage');
         Route::post('fonctions/{fonction}/removestage', 'FonctionController@removestage')->name('fonctions.removestage');
         
+        Route::get('stages/consulter', 'StageController@consulter')->name('stages.consulter');
         Route::resource('stages',         StageController::class);
+        Route::get('stages/{stage}/validergroupe', 'StageController@choixmarins')->name('stages.choixmarins');
+        Route::post('stages/{stage}/validergroupe', 'StageController@validermarins')->name('stages.validermarins');
+        Route::post('stages/{stage}/attribuerstage', 'StageController@attribuerstage')->name('stages.attribuerstage');
+        Route::post('stages/{stage}/retirerstage', 'StageController@annulermarins')->name('stages.annulermarins');
+        
         
         Route::group(['prefix' => 'transformation'], function() {
             Route::get('/', 'TransformationController@index')->name('transformation.index');

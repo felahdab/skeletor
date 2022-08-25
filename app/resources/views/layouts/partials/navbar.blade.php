@@ -39,6 +39,7 @@
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="{{ route('stages.index')}}">Stages</a>
+            <a class="dropdown-item" href="{{ route('stages.consulter')}}">Consulter</a>
           </div>
         </div>
         @endrole

@@ -2,41 +2,134 @@
 
 @section('content')
     <div class="bg-light p-4 rounded">
-        <h2>Stages</h2>
+        <h2>Stages - Visualisation des stages et des marins concernés</h2>
         <div class="mt-2">
             @include('layouts.partials.messages')
         </div>
     </div>
-    <div id='divmodifobj' class='card bg-light ml-3 w-100' >
-        <div class='card-header' >Consulter stage </div>
-            <div style='padding-left: 15px;'>
-                <div class='form-group row' >
-                    <label for='stage[stage_libcourt]' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
-                    <div class='col-sm-5'>
-                        <input type='text' class='form-control'  name='stage[stage_libcourt]' id='stage[stage_libcourt]' placeholder='Libell&eacute; court' value="{{ $stage->stage_libcourt }}" >
-                    </div>
+    
+    <div id='divconsultstage' class='card bg-light ml-3 w-100'>
+        <div class='card-header'>Consultation 
+            @if(! is_null($stage) and is_null($marin) ) 
+                {{$stage->stage_libcourt}}
+            @elseif( ! is_null($marin) and is_null($stage) ) 
+                {{$marin->displayString()}}
+            @endif
+        </div>
+        
+        <div style='padding-left: 15px;'>
+            <div class='flex' style='justify-content: start;'>
+                <div class='form-group row w-50 mt-3'>
+                    <label for='liststages' class='col-sm-5 col-form-label'> Stage </label>
+                    <select name='liststageconsult' id='liststageconsult' class='custom-select  w-50' onchange=' modifdeuxparam("stage","liststageconsult","marin");'>
+                        <option value ='0' >S&eacute;lectionner le stage</option>
+                        @foreach($stages as $stageexistant)
+                        <option value ='{{$stageexistant->id}}'>{{$stageexistant->stage_libcourt}}</option>
+                        @endforeach
+                    </select>
                 </div>
-                <div class='form-group row' >
-                    <label for='stage[stage_liblong]' class='col-sm-5 col-form-label'>Libell&eacute; long</label>
-                    <div class='col-sm-5'>
-                        <input type='text' class='form-control' name='stage[stage_liblong]' id='stage[stage_liblong]' placeholder='Libell&eacute; long' value="{{ $stage->stage_liblong }}" >
-                    </div>
-                </div>
-                <div class='form-group row' >
-                    <label for='stage[transverse]' class='col-sm-5 col-form-label'>Transverse</label>
-                    <div class='col-sm-5'>
-                        <input type='checkbox'name='stage[transverse]' id='stage[transverse]' {{ $stage->transverse
-                                            ? ' checked'
-                                            : '' }}> 
-                    </div>
-                </div>
-                <div class='form-group row' >
-                    <label for='stage[typelicence]' class='col-sm-5 col-form-label'>Type de licence</label>
-                    <div class='col-sm-5'>
-                        <input type='text' class='form-control' name='stage[typelicence]' id='stage[typelicence]' placeholder='Type de licence' value="{{ $stage->type_licence()->get()->first()->typlicense_libcourt }}" >
-                    </div>
+                <div class='form-group row w-50 mt-3' >
+                    <label for='listmarins' class='col-sm-5 col-form-label'> Marin </label>
+                    <select name='listmarins' id='listmarins' class='custom-select  w-50' onchange='modifdeuxparam("marin","listmarins","stage");'>
+                        <option value ='0' >S&eacute;lectionner le marin</option>
+                        @foreach($users as $userexistant)
+                        <option value ='{{$userexistant->id}}'>{{$userexistant->displayString()}}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
         </div>
+        
+        @if ($stage != null and $marin == null)
+        <a href="{{ route('stages.choixmarins', ['stage' => $stage->id]) }}" class="btn btn-info w-50">Validation de groupe</a>
+        <div  class='card border-primary mb-3 w-50'>
+                <div class='card-header text-primary'>Liste des marins ayant valid&eacute; le stage {{$stage->stage_libcourt}}</div>
+                <div class='card-body'>
+                    <table class='table-hover' style='width:100%;'>
+                        <tr style='background-color:#DCDCDC; font-weight: bold;'>
+                            <td style='height:40px;'>Grd</td>
+                            <td>Bvt</td>
+                            <td>Sp&eacute;</td>
+                            <td>Nom</td>
+                            <td>Pr&eacute;nom</td>
+                            <td>Mat</td>
+                            <td>Secteur</td>
+                            <td>Date valid</td>
+                        </tr>
+                        @foreach($stage->users()->get() as $user)
+                            @if ($user->pivot->date_validation != null)
+                            <tr title='' style='color:black; '>
+                                <td style='height:40px;'>{{$user->displayGrade()}}   </td>
+                                <td>{{$user->displayDiplome()}} </td>
+                                <td>{{$user->displaySpecialite()}} </td>
+                                <td><a href='{{ route("stages.consulter", [ "marin" => $user->id]) }}'>{{$user->name}} </a></td>
+                                <td>{{$user->prenom}} </td>
+                                <td>{{$user->matricule}}</td>
+                                <td>{{$user->displaySecteur()}} </td>
+                                <td>{{$user->pivot->date_validation}}</td>
+                            </tr>
+                            @endif
+                        @endforeach
+                    </table>
+                </div>
+        </div>
+        <div class='card border-primary mb-3 w-50'>
+            <div class='card-header text-primary'>Liste des marins en attente du stage {{$stage->stage_libcourt}}</div>
+            <div class='card-body'>
+                <table class='table-hover' style='width:100%;'>
+                    <tr style='background-color:#DCDCDC; font-weight: bold;'>
+                        <td style='height:40px;'>Grd</td>
+                        <td>Bvt</td>
+                        <td>Sp&eacute;</td>
+                        <td>Nom</td>
+                        <td>Pr&eacute;nom</td>
+                        <td>Mat</td>
+                        <td>Secteur</td>
+                        <td>Dest</td>
+                        <td>Date mut</td>
+                    </tr>
+                    @foreach($stage->users()->get() as $user)
+                        @if ($user->pivot->date_validation == null)
+                        <tr title='' style='color:black; '>
+                    
+                            <td style='height:40px;'>{{$user->displayGrade()}} </td>
+                            <td>{{$user->displayDiplome()}} </td>
+                            <td>{{$user->displaySpecialite()}} </td>
+                            <td><a href='{{ route("stages.consulter", ["stage" => $stage->id] ) }}'>{{$user->name}} </a></td>
+                            <td>{{$user->prenom}} </td>
+                            <td>{{$user->matricule}}</td>
+                            <td>{{$user->displaySecteur()}} </td>
+                            <td>{{$user->displayDestination()}}</td>
+                            <td>{{$user->displayDateDebarquement()}}</td>
+                        </tr>
+                        @endif
+                    @endforeach
+                </table>
+            </div>
+        </div>
+        @elseif ($stage == null and $marin != null)
+        <div class='mt-2 mb-2' style='margin-left:50%; text-align: center;'> </div>
+        <div class='mt-2 mb-2' style='margin-left:50%; text-align: center;'> </div>
+        <div class='card border-primary mb-3 w-50' style='margin-left:50%;'>
+            <div class='card-header text-primary'>Liste des stages valid&eacute;s pour {{$marin->displayString()}}</div>
+            <div class='card-body'>
+                @foreach ($marin->stages()->get() as $stageenattente)
+                @if ($stageenattente->pivot->date_validation != null)
+                <div class='mt-3'><a href='{{route("stages.consulter", ["stage" => $stageenattente->id])}}'>{{ $stageenattente->stage_libcourt }}</a></div>
+                @endif
+                @endforeach
+            </div>
+        </div>
+        <div class='card border-primary mb-3 w-50' style='margin-left:50%;'>
+            <div class='card-header text-primary'>Liste des stages en attente pour le {{$marin->displayString()}}</div>
+            <div class='card-body'>
+                @foreach ($marin->stages()->get() as $stageenattente)
+                @if ($stageenattente->pivot->date_validation == null)
+                <div class='mt-3'><a href='{{route("stages.consulter", ["stage" => $stageenattente->id])}}'>{{ $stageenattente->stage_libcourt }}</a></div>
+                @endif
+                @endforeach
+            </div>
+        </div>
+        @endif
     </div>
 @endsection
