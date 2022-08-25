@@ -40,7 +40,8 @@
             </div>
         </div>
 
-        <div class="container mt-4">
+    <div class='flex' style='justify-content: start;'>
+        <div class="container mt-4 w-50">
             <div>
                 {!! Form::open(['method' => 'POST','route' => ['stages.validermarins', $stage->id], 'id' => 'form']) !!}
                 <input type='hidden' id='date_validation' name='date_validation' value=''>
@@ -98,7 +99,7 @@
             {!! Form::close() !!}
         </div>
         
-        <div class="container mt-4">
+        <div class="container mt-4  w-50">
             {!! Form::open(['method' => 'POST','route' => ['stages.annulermarins', $stage->id], 'id' => 'form']) !!}
             <input type='hidden' id='date_validation' name='date_validation' value=''>
             <input type='hidden' id='commentaire' name='commentaire' value=''>
@@ -130,8 +131,10 @@
             <button type="submit" 
                 class="btn btn-primary" 
                 name="validation_double">Valider</button>
+            {!! link_to_route('stages.index', 'Annuler', [], ['class' => 'btn btn-default']) !!}
             {!! Form::close() !!}
         </div>
+    </div>
     </div>
 @endsection
 
