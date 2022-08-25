@@ -179,7 +179,7 @@ class StageController extends Controller
 
     public function consulter(Request $request)
     {
-        return "ici";
-        ddd($request);
+        $stage = Stage::first();
+        return redirect()->route("stages.show", $stage->id);
     }
 }
