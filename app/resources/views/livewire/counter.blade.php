@@ -1,3 +1,4 @@
 <div>
-    {{-- Success is as dangerous as failure. --}}
+    <input wire:model="name" type="text">
+    Hello {{$name}}
 </div>
