@@ -21,7 +21,7 @@
             <div class='form-group row pl-3 mt-2' >
                 <label for='datvalid' class='col-sm-5 col-form-label '>Date validation</label>
                 <div class='col-sm-5'>
-                <input type='date' class='form-control'name='date_validation' id='date_validation' value='2022-08-14'>
+                <input type='date' class='form-control'name='date_validation' id='date_validation' value='{{date("Y-m-d")}}'>
                 </div>
             </div>
             <div class='form-group row  pl-3' >
