@@ -108,5 +108,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::get('/{user}/progression', 'TransformationController@progression')->name('transformation.progression');
             Route::get('/{user}/fichebilan', 'TransformationController@fichebilan')->name('transformation.fichebilan');
         });
+        
+        Route::get('/test', 'TestController@test')->name('test.test');
     });
 });
