@@ -19,28 +19,28 @@ class CreateAdminUserSeeder extends Seeder
         $user = User::create([
             'name' => 'Admin', 
             'prenom' => 'Admin', 
-            'date_embarq' => '01-01-2022', 
+            'date_embarq' => '2022-01-01', 
             'matricule' => '000000000', 
             'email' => 'admin@intradef.gouv.fr',
             'password' => 'admin123',
             'grade_id' => 20,
         ]);
     
-        $roles = Role::where('name', 'admin')->orWhere('name', 'user')->get()->pluck('name')->all();
+        $roles = Role::all()->pluck('name')->all();
      
         $user->syncRoles($roles);
         
         $user = User::create([
             'name' => 'ZA', 
             'prenom' => 'SA', 
-            'date_embarq' => '01-01-2022', 
+            'date_embarq' => '2022-01-01', 
             'matricule' => '000000000', 
             'email' => 'sza@intradef.gouv.fr',
             'password' => 'sza',
             'grade_id' => 20,
         ]);
     
-        $roles = Role::where('name', 'admin')->orWhere('name', 'user')->get()->pluck('name')->all();
+        $roles = Role::all()->pluck('name')->all();
      
         $user->syncRoles($roles);
     }
