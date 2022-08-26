@@ -23,7 +23,7 @@
                 <th scope="col" width="1%">#</th>
                 <th scope="col" width="8%">Libelle court</th>
                 <th scope="col">Libelle long</th>
-                <th scope="col" width="1%" colspan="4"></th>    
+                <th scope="col" width="35%" >Actions</th>    
             </tr>
             </thead>
             <tbody>
@@ -32,9 +32,10 @@
                         <th scope="row">{{ $stage->id }}</th>
                         <td>{{ $stage->stage_libcourt }}</td>
                         <td>{{ $stage->stage_liblong }}</td>
-                        <td colspan="2"><a href="{{ route('stages.choixmarins', ['stage' => $stage->id] ) }}" class="btn btn-primary btn-sm">Validation ou annulation collective</a></td>
-                        <td></td>
-                        <td></td>
+                        <td colspan="2">
+                            <a href="{{ route('stages.consulter', ['stage' => $stage->id] ) }}" class="btn btn-info btn-sm">Consulter</a>
+                            <a href="{{ route('stages.choixmarins', ['stage' => $stage->id] ) }}" class="btn btn-primary btn-sm">Validation ou annulation collective</a>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
