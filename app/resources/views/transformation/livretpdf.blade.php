@@ -206,7 +206,7 @@
             
             $tableauaffichage = array_combine($listcomp, $liststage);
             @endphp
-            <tr><td class='titrefonction'>{{$fonction->fonction_libcourt}}</td></tr>
+            <tr><td class='titrecompstage'>{{$fonction->fonction_libcourt}}</td></tr>
             <tr><td class='ta-c'>
                     <table class='tabcompstage'>
                         <tr>
@@ -243,15 +243,26 @@
 <pagebreak>
 
 <bookmark content='Stages' level='0' />
-    <table class='tablerecap '>
-        <tr><td class='titrerecap'>Situation des stages</td></tr>
-        @foreach ($user->stages()->get() as $stage)
-            <tr><td class='titrefonction'>{{$stage->stage_libcourt}}</td></tr>
-            <tr><td class='ta-c'>
-                   Toto
-                </td>
-            </tr>
-        @endforeach
+    <table class='tablerecap'>
+        <tr><td class='titrerecap' colspan="3">Situation des stages</td></tr>
+        <tr>
+            <td class='ta-c'>
+            <table class='tabcompstage'>
+                <tr>
+                    <th class='titrecompstage w-50 colcompstage'>Stage</td>
+                    <th class='titrecompstage w-25 colcompstage'>Etat de validation</td>
+                    <th class='titrecompstage w-25 colcompstage'>Date de validation</td>
+                </tr>
+                @foreach ($user->stages()->get() as $stage)
+                    <tr>
+                        <td class='colcompstage'>{{$stage->stage_libcourt}}</td>
+                        <td class='colcompstage'>{{$stage->pivot->date_validation == null ? "NON VALIDE" : "VALIDE"}}</td>
+                        <td class='colcompstage'>{{$stage->pivot->date_validation == null ? "" : $stage->pivot->date_validation}}</td>
+                    </tr>
+                @endforeach
+            </table>
+            </td>
+        </td>
 </table>
 
 <pagebreak>
