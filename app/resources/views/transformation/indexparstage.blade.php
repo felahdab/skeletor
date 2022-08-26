@@ -2,10 +2,9 @@
 
 @section('content')
     <div class="bg-light p-4 rounded">
-        <h2>Stages</h2>
+        <h2>Transformation - Stages</h2>
         <div class="lead">
-            Gérer les stages
-            <a href="{{ route('stages.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un stage</a>
+            Gérer la transformation par les stages
         </div>
         <div class="mt-2">
             @include('layouts.partials.messages')
@@ -33,15 +32,9 @@
                         <th scope="row">{{ $stage->id }}</th>
                         <td>{{ $stage->stage_libcourt }}</td>
                         <td>{{ $stage->stage_liblong }}</td>
-                        <td><a href="{{ route('stages.consulter', ['stage' => $stage->id] ) }}" class="btn btn-primary btn-sm">Consulter</a></td>
-                        <td><a href="{{ route('stages.edit', $stage->id) }}" class="btn btn-info btn-sm">Editer</a></td>
-                        @can('stage.destroy')
-                        <td>
-                            {!! Form::open(['method' => 'DELETE','route' => ['stages.destroy', $stage->id],'style'=>'display:inline']) !!}
-                            {!! Form::submit('Supprimer', ['class' => 'btn btn-danger btn-sm']) !!}
-                            {!! Form::close() !!}
-                        </td>
-                        @endcan
+                        <td colspan="2"><a href="{{ route('stages.choixmarins', ['stage' => $stage->id] ) }}" class="btn btn-primary btn-sm">Validation ou annulation collective</a></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 @endforeach
             </tbody>

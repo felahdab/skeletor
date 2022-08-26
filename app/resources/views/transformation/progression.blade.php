@@ -10,7 +10,8 @@
         <div class="mt-2">
             @include('layouts.partials.messages')
         </div>
-        
+                            <a href="{{ route('transformation.livret', $user->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
+                            <a href="{{ route('transformation.fichebilan', $user->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
         <div id='progression' style='width:100%;'>
             <div>
                 <div style='display: flex; padding: 2%; background-color: transparent; justify-content: space-evenly;'>

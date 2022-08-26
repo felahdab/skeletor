@@ -10,6 +10,8 @@
         <div class="mt-2">
             @include('layouts.partials.messages')
         </div>
+                            <a href="{{ route('transformation.progression', $user->id) }}" class="btn btn-primary btn-sm">Progression</a>
+                            <a href="{{ route('transformation.fichebilan', $user->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
         
         <div id='divvalid' class='popupvalidcontrat' style='display:none;'>
             <div class='titrenavbarvert'>
@@ -19,7 +21,7 @@
             <div class='form-group row pl-3 mt-2' >
                 <label for='datvalid' class='col-sm-5 col-form-label '>Date validation</label>
                 <div class='col-sm-5'>
-                <input type='date' class='form-control'name='date_validation' id='date_validation' value='2022-08-14'>
+                <input type='date' class='form-control'name='date_validation' id='date_validation' value='{{date("Y-m-d")}}'>
                 </div>
             </div>
             <div class='form-group row  pl-3' >
@@ -73,7 +75,7 @@
                         <td style='width:10%;'>Viseur</td>
                         <td style='width:5%;'>Lieu de formation</td>
                     </tr>
-                @if ($fonction->fonction_lache)
+                @if ($fonction->fonction_double)
                 <tr  class='lignecomp'>
                     <td>DOUBLE</td>
                     <td>
@@ -105,7 +107,7 @@
                     <td>Bord</td>
                 </tr>
                 @endif
-                @if ($fonction->fonction_double)
+                @if ($fonction->fonction_lache)
                 <tr  class='lignecomp'>
                     <td>LACHER</td>
                     <td>
@@ -141,7 +143,6 @@
             
             @if ($fonction->compagnonages()->get()->count() > 0)
             Compagnonages liés à la fonction {{ $fonction->fonction_liblong }}
-            @endif
             
             {!! Form::open(['method' => 'POST','id'=> 'ssobjs[' . $fonction->id .']' ,'route' => ['transformation.livret', $user->id]]) !!}
             <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
@@ -199,10 +200,10 @@
                                 </td>
                                 <td>{{$sous_objectif->lieu()->get()->first()->lieu_libcourt}}</td>
                                 </tr>
-                            @endforeach
-                        @endforeach
+                            @endforeach <!-- foreach sous objectif -->
+                        @endforeach <!-- foreach objectif -->
                     
-                    @endforeach
+                    @endforeach <!-- foreach tache -->
                     </tr>
                     <tr  class='lignecomp'>
                         <td colspan='7'>
@@ -221,10 +222,70 @@
                         </td>
                     </tr>
 
-                @endforeach
+                @endforeach <!-- foreach compagnonage -->
             </table>
             {!! Form::close() !!}
-            @endforeach
+            @endif
+            
+            @if ($fonction->stages()->get()->count() > 0)
+            Stages liés à la fonction {{ $fonction->fonction_liblong }}
+            
+            {!! Form::open(['method' => 'POST','id'=> 'stages[' . $fonction->id .']' ,'route' => ['transformation.livret', $user->id]]) !!}
+            <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
+            <input type='hidden' id='date_validation' name='date_validation' value=''>
+            <input type='hidden' id='commentaire' name='commentaire' value=''>
+            <input type='hidden' id='valideur' name='valideur' value=''>
+            <input type='hidden' id='buttonid' name='buttonid' value=''>
+            
+            <table class='table'>
+                @foreach($fonction->stages()->get() as $stage)
+
+                <tr class='lignecomp div-table-contrat-compagnonnage'>
+                    <th colspan='3'>{{$stage->stage_libcourt }}</th>
+                </tr>
+                <tr class='lignecomp'>
+                    <td style='width:30%;'>Libelle long</td>
+                    <td style='width:25%;'>Date de Visa</td>
+                    <td style='width:25%;'>Viseur</td>
+                </tr>
+                <tr class='ligneTache'>
+                    <td>{{$stage->stage_long}}</td>
+                    <td>
+                        @if ($user->aValideLeStage($stage))
+                            <button class='btn btn-success' type='button' disabled>
+                            VALIDE {{ $user->stages()->find($stage)->pivot->date_validation }}
+                            </button>
+                        @endif</td>
+                    <td>
+                        <input type='checkbox' 
+                            id='stageid[{{$stage->id}}]' 
+                            name='stageid[{{$stage->id}}]' 
+                            value='stageid[{{$stage->id}}]'>
+                    </td>
+                </tr>
+                @endforeach <!-- foreach stage -->
+                    
+                <tr  class='lignecomp'>
+                    <td colspan='3'>
+                        <button type="submit" 
+                        class="btn btn-primary" 
+                        name="validation"
+                        onclick='divvalid = getElementById("divvalid");
+                            parentForm = jQuery(this).closest("form");
+                            parentForm[0].querySelector("#buttonid").value="validation";
+                            divvalid.querySelector("#formtosubmit").value=parentForm[0].id;
+                            affichage("divvalid");
+                            return false;'>Valider les éléments cochés</button>
+                        <button type="submit" 
+                        class="btn btn-danger" 
+                        name="annulation_validation">Annuler la validation des éléments cochés</button>
+                    </td>
+                </tr>
+            </table>
+            {!! Form::close() !!}
+            
+            @endif
+            @endforeach   <!-- foreach fonction -->
         </div> 
     </div>
     

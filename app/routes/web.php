@@ -82,11 +82,22 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::get('fonctions/{fonction}/ajoutestage', 'FonctionController@choisirstage')->name('fonctions.choisirstage');
         Route::post('fonctions/{fonction}/ajoutestage', 'FonctionController@ajouterstage')->name('fonctions.ajouterstage');
         Route::post('fonctions/{fonction}/removestage', 'FonctionController@removestage')->name('fonctions.removestage');
+        Route::get('fonctions/{fonction}/validergroupe', 'FonctionController@choixmarins')->name('fonctions.choixmarins');
+        Route::post('fonctions/{fonction}/validergroupe', 'FonctionController@validermarins')->name('fonctions.validermarins');
+
         
+        Route::get('stages/consulter', 'StageController@consulter')->name('stages.consulter');
         Route::resource('stages',         StageController::class);
+        Route::get('stages/{stage}/validergroupe', 'StageController@choixmarins')->name('stages.choixmarins');
+        Route::post('stages/{stage}/validergroupe', 'StageController@validermarins')->name('stages.validermarins');
+        Route::post('stages/{stage}/attribuerstage', 'StageController@attribuerstage')->name('stages.attribuerstage');
+        Route::post('stages/{stage}/retirerstage', 'StageController@annulermarins')->name('stages.annulermarins');
+        
         
         Route::group(['prefix' => 'transformation'], function() {
             Route::get('/', 'TransformationController@index')->name('transformation.index');
+            Route::get('/parfonction', 'TransformationController@indexparfonction')->name('transformation.indexparfonction');
+            Route::get('/parstage', 'TransformationController@indexparstage')->name('transformation.indexparstage');
             Route::get('/{user}/choisirfonction', 'UsersController@choisirfonction')->name('users.choisirfonction');
             Route::post('/{user}/choisirfonction', 'UsersController@attribuerfonction')->name('users.attribuerfonction');
             Route::post('/{user}/retirerfonction', 'UsersController@retirerfonction')->name('users.retirerfonction');

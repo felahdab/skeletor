@@ -37,9 +37,8 @@
     <main class="container">
         @yield('content')
     </main>
-
-    <script src="{!! url('assets/js/jsfile.js') !!}"></script>
     
+    <script src="{!! url('assets/js/jsfile.js') !!}"></script>
     <script src="{!! url('assets/jquery/jquery-3.6.0.min.js') !!}"></script>
     <script src="{!! url('assets/bootstrap/js/bootstrap.bundle.js') !!}"></script>
     @yield("scripts")

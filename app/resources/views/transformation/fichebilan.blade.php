@@ -10,7 +10,8 @@
         <div class="mt-2">
             @include('layouts.partials.messages')
         </div>
-        
+                            <a href="{{ route('transformation.livret', $user->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
+                            <a href="{{ route('transformation.progression', $user->id) }}" class="btn btn-primary btn-sm">Progression</a>
         <div id='fiche' 
             style='width:100%; display:""; '>
             <table class='fiche-de-synthese mb-2 ' 
@@ -18,25 +19,20 @@
             style='width: 100%; height: 95%; '>
                 <thead style='border: 1px solid #C3C3C3; '>
                     <tr class='enTeteFicheSynthese'>
-                        <td> <h1>&nbsp;&nbsp;{{$user->name . " " . $user->prenom}}</h1></td>
+                        <td colspan='2'><h1>{{$user->displayString()}}</h1></td>
                         <td></td>
-                        <td></td>
-                        <td rowspan='4 '>&nbsp;
-                            <img style='width: 70%;' 
-                            src='#' 
-                            alt='photo '/>
-                        </td>
+                        <td rowspan='4 '></td>
                     </tr>
                     <tr class='enTeteFicheSynthese '>
                         <td colspan='2 ' 
                         class='text-right'>Grade :</td>
-                        <td>{{ $user->grade()->get()->first()->grade_libcourt }}</td>
+                        <td>{{ $user->displayGrade() }}</td>
                     </tr>
 
                     <tr class='enTeteFicheSynthese '>
                         <td colspan='2 ' 
                         class='text-right'>Sp&eacute;cialit&eacute; :</td>
-                        <td>{{$user->specialite()->get()->first()->specialite_libcourt}}</td>
+                        <td>{{$user->displaySpecialite()}}</td>
                     </tr>
                     <tr class='enTeteFicheSynthese '> <!-- Date d'embarquement -->
                         <td colspan='2' class='text-right'>Embarqué le :</td>
