@@ -240,6 +240,19 @@
             @endif
         @endforeach
 </table>
+<pagebreak>
+
+<bookmark content='Stages' level='0' />
+    <table class='tablerecap '>
+        <tr><td class='titrerecap'>Situation des stages</td></tr>
+        @foreach ($user->stages()->get() as $stage)
+            <tr><td class='titrefonction'>{{$stage->stage_libcourt}}</td></tr>
+            <tr><td class='ta-c'>
+                   Toto
+                </td>
+            </tr>
+        @endforeach
+</table>
 
 <pagebreak>
 @foreach ($user->fonctions()->get() as $fonction)
