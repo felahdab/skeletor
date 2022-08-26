@@ -149,12 +149,12 @@
             <td colspan='2' class='nom'>{{$user->displayString()}}</td>
         </tr>
         <tr class='h-20'>
-            <td>Sp&eacute;cialit&eacute; : @if ($user->specialite()->get()->count() != 0) {{$user->displaySpecialite()}} @endif</td>
+            <td>Sp&eacute;cialit&eacute; : {{ $user->displaySpecialite() }}</td>
             <td>Service/Secteur : {{$user->displayServiceSecteur()}}</td>
         </tr>
         <tr class='h-20'>
             <td>Date embarquement : {{$user->date_embarq}}</td>
-            <td>Brevet : @if ($user->diplome()->get()->count() != 0) {{$user->diplome()->get()->first()->diplome_libcourt}} @endif</td>
+            <td>Brevet : {{$user->displayDiplome()}} </td>
         </tr>
         @if ($user->fonctions()->where('typefonction_id', $fquaiid)->get()->count() != 0 )
         <tr>
