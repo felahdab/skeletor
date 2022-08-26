@@ -157,10 +157,6 @@ class StageController extends Controller
     
     public function validermarins(Request $request, Stage $stage)
     {
-        // ddd($request->input());
-        // ddd($stage);
-        // ddd($request["date_validation"]);
-        
         if ($request->has('user')){
             $userlist = $request['user'];
             foreach (array_keys($userlist) as $userid)
@@ -171,9 +167,7 @@ class StageController extends Controller
                 $workitem->commentaire = $request["commentaire"];
                 $workitem->save();
             }
-            
         }
-        
         return redirect()->route('stages.choixmarins', ['stage'=>$stage]);
     }
     
@@ -190,7 +184,6 @@ class StageController extends Controller
                 $workitem->save();
             }
         }
-        
         return redirect()->route('stages.choixmarins', ['stage'=>$stage]);
     }
 

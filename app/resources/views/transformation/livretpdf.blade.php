@@ -149,12 +149,12 @@
             <td colspan='2' class='nom'>{{$user->displayString()}}</td>
         </tr>
         <tr class='h-20'>
-            <td>Sp&eacute;cialit&eacute; : @if ($user->specialite()->get()->count() != 0) {{$user->specialite()->get()->first()->specialite_libcourt}} @endif</td>
+            <td>Sp&eacute;cialit&eacute; : {{ $user->displaySpecialite() }}</td>
             <td>Service/Secteur : {{$user->displayServiceSecteur()}}</td>
         </tr>
         <tr class='h-20'>
             <td>Date embarquement : {{$user->date_embarq}}</td>
-            <td>Brevet : @if ($user->diplome()->get()->count() != 0) {{$user->diplome()->get()->first()->diplome_libcourt}} @endif</td>
+            <td>Brevet : {{$user->displayDiplome()}} </td>
         </tr>
         @if ($user->fonctions()->where('typefonction_id', $fquaiid)->get()->count() != 0 )
         <tr>
@@ -206,7 +206,7 @@
             
             $tableauaffichage = array_combine($listcomp, $liststage);
             @endphp
-            <tr><td class='titrefonction'>{{$fonction->fonction_libcourt}}</td></tr>
+            <tr><td class='titrecompstage'>{{$fonction->fonction_libcourt}}</td></tr>
             <tr><td class='ta-c'>
                     <table class='tabcompstage'>
                         <tr>
@@ -239,6 +239,30 @@
             </tr>
             @endif
         @endforeach
+</table>
+<pagebreak>
+
+<bookmark content='Stages' level='0' />
+    <table class='tablerecap'>
+        <tr><td class='titrerecap' colspan="3">Situation des stages</td></tr>
+        <tr>
+            <td class='ta-c'>
+            <table class='tabcompstage'>
+                <tr>
+                    <th class='titrecompstage w-50 colcompstage'>Stage</td>
+                    <th class='titrecompstage w-25 colcompstage'>Etat de validation</td>
+                    <th class='titrecompstage w-25 colcompstage'>Date de validation</td>
+                </tr>
+                @foreach ($user->stages()->get() as $stage)
+                    <tr>
+                        <td class='colcompstage'>{{$stage->stage_libcourt}}</td>
+                        <td class='colcompstage'>{{$stage->pivot->date_validation == null ? "NON VALIDE" : "VALIDE"}}</td>
+                        <td class='colcompstage'>{{$stage->pivot->date_validation == null ? "" : $stage->pivot->date_validation}}</td>
+                    </tr>
+                @endforeach
+            </table>
+            </td>
+        </td>
 </table>
 
 <pagebreak>

@@ -7,7 +7,10 @@ use App\Http\Requests\UpdateFonctionRequest;
 use App\Models\Fonction;
 use App\Models\TypeFonction;
 use App\Models\Compagnonage;
+use App\Models\Tache;
+use App\Models\SousObjectif;
 use App\Models\Stage;
+use App\Models\User;
 
 use Illuminate\Http\Request;
 
@@ -212,5 +215,62 @@ class FonctionController extends Controller
     {
         $fonction->delete();
         return redirect()->route('fonctions.index');
+    }
+    
+    public function choixmarins(Fonction $fonction)
+    {
+        $users = User::orderBy('name')->get();
+        return view('transformation.livretmultiple', ['fonction' => $fonction,
+                                                      'users'    => $users]);
+    }
+    
+    public function validermarins(Request $request, Fonction $fonction)
+    {
+        // ddd($request->input());
+        $valideur = $request->input('valideur');
+        $commentaire = $request->input('commentaire');
+        $date_validation = $request->input('date_validation');
+        
+        if ($request->has('marinsfonc'))
+        {
+            $marinsid = $request['marinsfonc'];
+            foreach ($marinsid as $key => $marinid)
+            {
+                $marin = User::find(intval($marinid));
+                
+                if ($request->has('ssobjid'))
+                {
+                    $sous_objectifs_a_valider = $request['ssobjid'];
+                    foreach ($sous_objectifs_a_valider as $key => $value){
+                        $sousobjectif = SousObjectif::find($key);
+                        $marin->sous_objectifs()->detach($sousobjectif);
+                        $marin->sous_objectifs()->attach($sousobjectif);
+                        $workitem = $marin->sous_objectifs()->find($sousobjectif)->pivot;
+                        $workitem->valideur=$valideur;
+                        $workitem->commentaire=$commentaire;
+                        $workitem->date_validation = $date_validation;
+                        $workitem->save();
+                    }
+                }
+                if ($request->has('tacheid'))
+                {
+                    $taches_a_valider = $request['tacheid'];
+                    foreach ($taches_a_valider as $key => $value){
+                        $tache = Tache::find($key);
+                        foreach ($tache->coll_sous_objectifs() as $sousobjectif)
+                        {
+                            $marin->sous_objectifs()->detach($sousobjectif);
+                            $marin->sous_objectifs()->attach($sousobjectif);
+                            $workitem = $marin->sous_objectifs()->find($sousobjectif)->pivot;
+                            $workitem->valideur=$valideur;
+                            $workitem->commentaire=$commentaire;
+                            $workitem->date_validation = $date_validation;
+                            $workitem->save();
+                        }
+                    }
+                }
+            }
+        }
+        return redirect()->route('fonctions.choixmarins', ['fonction' => $fonction]);
     }
 }

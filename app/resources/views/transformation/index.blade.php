@@ -4,9 +4,9 @@
     
 
     <div class="bg-light p-4 rounded">
-        <h1>Transformation</h1>
+        <h2>Transformation - Marins</h2>
         <div class="lead">
-            Liste des utilisateurs
+            Liste des marins
         </div>
         
         <div class="mt-2">

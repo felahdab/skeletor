@@ -10,6 +10,8 @@
         <div class="mt-2">
             @include('layouts.partials.messages')
         </div>
+                            <a href="{{ route('transformation.progression', $user->id) }}" class="btn btn-primary btn-sm">Progression</a>
+                            <a href="{{ route('transformation.fichebilan', $user->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
         
         <div id='divvalid' class='popupvalidcontrat' style='display:none;'>
             <div class='titrenavbarvert'>
@@ -19,7 +21,7 @@
             <div class='form-group row pl-3 mt-2' >
                 <label for='datvalid' class='col-sm-5 col-form-label '>Date validation</label>
                 <div class='col-sm-5'>
-                <input type='date' class='form-control'name='date_validation' id='date_validation' value='2022-08-14'>
+                <input type='date' class='form-control'name='date_validation' id='date_validation' value='{{date("Y-m-d")}}'>
                 </div>
             </div>
             <div class='form-group row  pl-3' >

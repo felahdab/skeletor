@@ -1,16 +1,14 @@
-<header class="p-3 bg-dark text-white">
-  <div class="container">
-    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-        <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
-      </a>
-
-      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="/" class="nav-link px-2 text-white">Accueil</a></li>
+<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon bg-light"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <ul class="navbar-nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 mr-auto mt-2 mt-lg-0">
+        <li><a href="/" class="nav-link nav-item text-white">Accueil</a></li>
         @auth
         @can('users.index')
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="dropdown nav-item" >
+          <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           Personnel
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -21,8 +19,8 @@
         </div>
         @endcan
         @hasrole('2ps')
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="dropdown" >
+          <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Fonctions
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -33,32 +31,30 @@
             <a class="dropdown-item" href="{{ route('sous-objectifs.index')}}">Sous-Objectifs</a>
           </div>
         </div>
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="dropdown" >
+          <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Stages
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="{{ route('stages.index')}}">Stages</a>
-            <a class="dropdown-item" href="{{ route('stages.consulter')}}">Consulter</a>
           </div>
         </div>
         @endrole
         @hasrole('tuteur')
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="dropdown" >
+          <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Transformation
           </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
             <a class="dropdown-item" href="{{route('transformation.index')}}">Suivi de la transformation par marin</a>
-            <a class="dropdown-item" href="#">Validation de taches par groupe</a>
-            <a class="dropdown-item" href="#">Validation de stage par groupe</a>
-            <a class="dropdown-item" href="#">Autre3</a>
+            <a class="dropdown-item" href="{{route('transformation.indexparfonction')}}">Suivi de la transformation par fonction</a>
+            <a class="dropdown-item" href="{{route('transformation.indexparstage')}}">Suivi de la transformation par stage</a>
           </div>
         </div>
         @endrole
         @if(auth()->user()->fonctions()->get()->count() != 0)
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="dropdown" >
+          <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Ma transformation
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -68,8 +64,8 @@
         </div>
         @endif
         @can('statistiques.index')
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="dropdown" >
+          <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Statistiques
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -83,7 +79,7 @@
 
       @auth
         <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{ auth()->user()->displayString() }}
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -101,6 +97,7 @@
           <a href="{{ route('login.perform') }}" class="btn btn-outline-light me-2">Login</a>
         </div>
       @endguest
+      </ul>
     </div>
   </div>
-</header>
+</nav>
