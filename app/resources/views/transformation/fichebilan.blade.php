@@ -26,7 +26,7 @@
                     <tr class='enTeteFicheSynthese '>
                         <td colspan='2 ' 
                         class='text-right'>Grade :</td>
-                        <td>{{ $user->grade()->get()->first()->grade_libcourt }}</td>
+                        <td>{{ $user->displayGrade() }}</td>
                     </tr>
 
                     <tr class='enTeteFicheSynthese '>
