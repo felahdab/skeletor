@@ -149,7 +149,7 @@
             <td colspan='2' class='nom'>{{$user->displayString()}}</td>
         </tr>
         <tr class='h-20'>
-            <td>Sp&eacute;cialit&eacute; : @if ($user->specialite()->get()->count() != 0) {{$user->specialite()->get()->first()->specialite_libcourt}} @endif</td>
+            <td>Sp&eacute;cialit&eacute; : @if ($user->specialite()->get()->count() != 0) {{$user->displaySpecialite()}} @endif</td>
             <td>Service/Secteur : {{$user->displayServiceSecteur()}}</td>
         </tr>
         <tr class='h-20'>

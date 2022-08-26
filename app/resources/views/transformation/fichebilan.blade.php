@@ -32,7 +32,7 @@
                     <tr class='enTeteFicheSynthese '>
                         <td colspan='2 ' 
                         class='text-right'>Sp&eacute;cialit&eacute; :</td>
-                        <td>{{$user->specialite()->get()->first()->specialite_libcourt}}</td>
+                        <td>{{$user->displaySpecialite()}}</td>
                     </tr>
                     <tr class='enTeteFicheSynthese '> <!-- Date d'embarquement -->
                         <td colspan='2' class='text-right'>Embarqué le :</td>
