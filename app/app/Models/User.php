@@ -62,6 +62,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function scopeLocal($query)
+    {
+        $currentuser = auth()->user();
+        if ($currentuser != null)
+        {
+            $localunit = $currentuser->unite_id;
+            $query->where('unite_id', $localunit);
+        }
+    }
+
     /**
      * Always encrypt password when it is updated.
      *
