@@ -212,3 +212,23 @@
 
     </div>
 @endsection
+
+@section('scripts')
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('[name="all_roles"]').on('click', function() {
+
+                if($(this).is(':checked')) {
+                    $.each($('.role'), function() {
+                        $(this).prop('checked',true);
+                    });
+                } else {
+                    $.each($('.role'), function() {
+                        $(this).prop('checked',false);
+                    });
+                }
+                
+            });
+        });
+    </script>
+@endsection
