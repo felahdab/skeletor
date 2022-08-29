@@ -67,8 +67,11 @@ class User extends Authenticatable
         $currentuser = auth()->user();
         if ($currentuser != null)
         {
+            if ($currentuser->hasRole("admin"))
+                return;
             $localunit = $currentuser->unite_id;
-            $query->where('unite_id', $localunit);
+            if ($localunit != null)
+                $query->where('unite_id', $localunit);
         }
     }
 
