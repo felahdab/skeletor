@@ -27,6 +27,7 @@ class SousObjectif extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_sous_objectif')
+            ->local()
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation', 'valideur');
     }
