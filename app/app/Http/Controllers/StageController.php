@@ -79,12 +79,16 @@ class StageController extends Controller
         
         $stages = Stage::orderBy('stage_libcourt')->get();
         $typelicences = TypeLicence::orderBy('typlicense_libcourt')->get();
-        $users = User::orderBy('name')->get();
+        $users = User::local()->orderBy('name')->get();
+        
+        $usersdustage = $stage->users()->get();
+        
         return view('stages.show', ['stage'        => $stage, 
                                     'stages'       => $stages,
                                     'typelicences' => $typelicences,
                                     'users'        => $users,
-                                    'marin'        => $marin] );
+                                    'marin'        => $marin,
+                                    'usersdustage' => $usersdustage] );
     }
 
     /**
@@ -150,9 +154,13 @@ class StageController extends Controller
     
     public function choixmarins(Stage $stage)
     {
-        $users = User::orderBy('name')->get();
+        $users = User::local()->orderBy('name')->get();
+        
+        $usersdustage = $stage->users()->get();
+        
         return view('stages.choisirmarins', ['stage'=>$stage ,
-                                             'users' => $users]);
+                                             'users' => $users,
+                                             'usersdustage' => $usersdustage]);
     }
     
     public function validermarins(Request $request, Stage $stage)
@@ -206,13 +214,15 @@ class StageController extends Controller
         
         $stages = Stage::orderBy('stage_libcourt')->get();
         $typelicences = TypeLicence::orderBy('typlicense_libcourt')->get();
-        $users = User::orderBy('name')->get();
+        $users = User::local()->orderBy('name')->get();
+
+        $usersdustage = $stage->users()->get();
         
         return view('stages.show', ['stage'        => $stage, 
                                     'marin'        => $marin,
                                     'stages'       => $stages,
                                     'typelicences' => $typelicences,
                                     'users'        => $users,
-                                    ]);
+                                    'usersdustage' => $usersdustage]);
     }
 }
