@@ -55,7 +55,7 @@
                             <td>Secteur</td>
                             <td>Date valid</td>
                         </tr>
-                        @foreach($stage->users()->get() as $user)
+                        @foreach($usersdustage as $user)
                             @if ($user->pivot->date_validation != null)
                             <tr title='' style='color:black; '>
                                 <td style='height:40px;'>{{$user->displayGrade()}}   </td>
@@ -87,7 +87,7 @@
                         <td>Dest</td>
                         <td>Date mut</td>
                     </tr>
-                    @foreach($stage->users()->get() as $user)
+                    @foreach($usersdustage as $user)
                         @if ($user->pivot->date_validation == null)
                         <tr title='' style='color:black; '>
                     

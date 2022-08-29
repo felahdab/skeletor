@@ -38,7 +38,7 @@
                 <label for='marinsfonc' class='col-sm-5 col-form-label '>S&eacute;lectionnez les marins à valider</label>
                 <div class='col-sm-5'>
                     <select multiple name='marinsfonc[]' id='marinsfonc[]'>
-                    @foreach($fonction->users()->get() as $user)
+                    @foreach($usersfonction as $user)
                         <option value ='{{$user->id}}'>{{$user->displayString()}}</option>
                     @endforeach
                     </select>

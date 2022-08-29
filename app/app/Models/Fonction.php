@@ -32,6 +32,7 @@ class Fonction extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_fonction')
+        ->local()
         ->withTimeStamps()
         ->withPivot('date_lache','valideur_lache','commentaire_lache',
                     'date_double','valideur_double','commentaire_double',

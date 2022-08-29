@@ -26,7 +26,7 @@ class UsersController extends Controller
      */
     public function index() 
     {
-        $users = User::latest()->paginate(10);
+        $users = User::local()->orderBy('name')->paginate(10);
 
         return view('users.index', compact('users'));
     }
@@ -61,7 +61,8 @@ class UsersController extends Controller
      */
     public function store(User $user, StoreUserRequest $request) 
     {
-        $user = $user->create(array_merge($request->input(), [ "password"=>$this->generateRandomString() ]));
+        $user = $user->create(array_merge($request->input(), [ "password" =>$this->generateRandomString(),
+                                                               "unite_id" => auth()->user()->unite_id]));
         
         $roletransfo = Role::where("name", "user")->get()->first();
         $user->roles()->attach($roletransfo);

@@ -26,6 +26,7 @@ class Stage extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_stage')
+            ->local()
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation');
     }
