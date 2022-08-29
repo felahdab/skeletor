@@ -69,7 +69,7 @@
           Statistiques
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Statistiques</a>
+            <a class="dropdown-item" href="{{route('statistiques.index')}}">Statistiques</a>
           </div>
         </div>
         @endcan

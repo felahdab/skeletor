@@ -6,8 +6,14 @@ use Illuminate\Http\Request;
 
 class StatistiqueController extends Controller
 {
-    public function index() 
+    public function index(Request $request) 
     {
-        return "ici";
+        
+        if ($request->has("month"))
+            $month = $request["month"];
+        else
+            $month = date("Y-m-1");
+        ddd($month);
+        return view('statistiques.index', ['month' => $month]);
     }
 }
