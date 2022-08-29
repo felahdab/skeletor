@@ -158,15 +158,30 @@
                     </div>
                 </div>
                 
+                @if (auth()->user()->hasRole("admin"))
+                <div class="mb-3">
+                    <label for="unite_affectation" class="form-label">Unité d'affectation</label>
+                    <select class="form-control" 
+                        name="unite_id" required>
+                        <option value="0">Unité d'affectation</option>
+                        @foreach($unites as $unite)
+                            <option value="{{ $unite->id }}" @selected($user->unite_id == $unite->id)>
+                                {{ $unite->unite_liblong }}
+                                {{ $user->unite_destination_id == $unite->id
+                                    ? ' (unite actuelle)'
+                                    : '' }}  </option>
+                        @endforeach
+                    </select>
+                </div>
+                @endif
+                
                 <div class="mb-3">
                     <label for="unite_destination" class="form-label">Unité destination</label>
                     <select class="form-control" 
                         name="unite_destination_id" required>
                         <option value="0">Unité destination</option>
                         @foreach($unites as $unite)
-                            <option value="{{ $unite->id }}" {{ $user->unite_destination_id == $unite->id
-                                    ? ' selected'
-                                    : '' }}>
+                            <option value="{{ $unite->id }}" @selected($user->unite_destination_id == $unite->id)>
                                 {{ $unite->unite_liblong }}
                                 {{ $user->unite_destination_id == $unite->id
                                     ? ' (unite actuelle)'
