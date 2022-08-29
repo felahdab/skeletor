@@ -61,8 +61,7 @@ class UsersController extends Controller
      */
     public function store(User $user, StoreUserRequest $request) 
     {
-        $user = $user->create(array_merge($request->input(), [ "password" =>$this->generateRandomString(),
-                                                               "unite_id" => auth()->user()->unite_id]));
+        $user = $user->create(array_merge($request->input(), [ "password" =>$this->generateRandomString()]));
         
         $roletransfo = Role::where("name", "user")->get()->first();
         $user->roles()->attach($roletransfo);
