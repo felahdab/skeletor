@@ -141,6 +141,21 @@
                     </div>
                 </div>
                 
+                @if (auth()->user()->hasRole("admin"))
+                <div class="mb-3">
+                    <label for="unite_destination_id" class="form-label">Unité d'affectation</label>
+                    <select class="form-control" 
+                        name="unite_id" >
+                        <option value="0">Unité d'affectation</option>
+                        @foreach($unites as $unite)
+                            <option value="{{ $unite->id }}" @selected($unite->id == auth()->user()->unite_id)>
+                                {{ $unite->unite_liblong }}
+                                </option>
+                        @endforeach
+                    </select>
+                </div>
+                @endif
+                
                 <div class="mb-3">
                     <label for="unite_destination_id" class="form-label">Unité destination</label>
                     <select class="form-control" 
