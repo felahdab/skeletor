@@ -216,7 +216,9 @@ class StageController extends Controller
         $typelicences = TypeLicence::orderBy('typlicense_libcourt')->get();
         $users = User::local()->orderBy('name')->get();
 
-        $usersdustage = $stage->users()->get();
+        $usersdustage =null;
+        if ($stage != null)
+            $usersdustage = $stage->users()->get();
         
         return view('stages.show', ['stage'        => $stage, 
                                     'marin'        => $marin,
