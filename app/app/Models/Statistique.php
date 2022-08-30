@@ -5,13 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Support\Carbon;
+
 use App\Models\Unite;
+use DateTime;
 
 class Statistique extends Model
 {
     use HasFactory;
     
     protected $table="statistiques";
+    
+    protected $casts = [
+        'date_stat' => 'date'
+        ];
     
     protected $fillable = [
         'date_stat' ,
@@ -36,5 +43,13 @@ class Statistique extends Model
     public function unite()
     {
         return $this->belongsTo(Unite::class, 'unite_id');
+    }
+    
+    public function getPeriodeAttribute()
+    {
+        $date_stat = new DateTime($this->date_stat);
+        $month = $date_stat->format("n");
+        $year = $date_stat->format("Y");
+        return $year . "/" . $month;
     }
 }
