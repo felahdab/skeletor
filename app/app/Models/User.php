@@ -152,6 +152,17 @@ class User extends Authenticatable
         return "";
     }
     
+    public function displayService()
+    {
+        $secteur= $this->secteur()->get();
+        if ($secteur->count() == 1)
+            $secteur = $secteur->first();
+        else
+            return "NON RENSEIGNE";
+        $service = $secteur->service()->get()->first()->service_libcourt;
+        return $service;
+    }
+    
     public function displayDestination()
     {
         $unite_destination = $this->unite_destination()->get();
@@ -196,7 +207,7 @@ class User extends Authenticatable
     
     public function groupement()
     {
-        return $this->secteur()->service()->groupement();
+        return $this->secteur()->first()->service()->first()->groupement()->first();
     }
     
     public function unite()
@@ -325,6 +336,33 @@ class User extends Authenticatable
                 $count = $count + 1;
         }
         return $count;
+    }
+    
+    public function fonctionAQuai()
+    {
+        $fonction = $this->fonctions()->where('typefonction_id', 2);
+        if ($fonction->count() == 1){
+            return $fonction->get()->first();
+        }
+        return null;
+    }
+    
+    public function fonctionAMer()
+    {
+        $fonction = $this->fonctions()->where('typefonction_id', 1);
+        if ($fonction->count() == 1){
+            return $fonction->get()->first();
+        }
+        return null;
+    }
+    
+    public function fonctionsMetier()
+    {
+        $fonctions = $this->fonctions()->where('typefonction_id', 3);
+        if ($fonctions->count() > 0){
+            return $fonctions;
+        }
+        return null;
     }
     
     public function coll_sous_objectifs(Fonction $fonction=null)
