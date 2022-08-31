@@ -41,7 +41,7 @@
                     <tr class='enTeteFicheSynthese'>
                         <!-- Pourcentage transformation -->
                         <td colspan='2' class='text-right'>Transformé à :</td>
-                        <td id='tdTauxTransformation' class='text-left'>{{substr(100.0* $user->sous_objectifs()->get()->count() / $user->coll_sous_objectifs()->count(), 0, 4)}}%</td>
+                        <td id='tdTauxTransformation' class='text-left'>{{substr($user->taux_de_transformation(), 0, 4)}}%</td>
                     </tr>
                     <tr class='enTeteFicheSynthese'>
                         <!-- Fonction de service à quai -->

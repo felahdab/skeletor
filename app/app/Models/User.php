@@ -359,6 +359,7 @@ class User extends Authenticatable
     public function fonctionsMetier()
     {
         $fonctions = $this->fonctions()->where('typefonction_id', 3);
+        return $fonctions;
         if ($fonctions->count() > 0){
             return $fonctions;
         }
@@ -432,8 +433,17 @@ class User extends Authenticatable
             if ($trouve != null)
                 $workcoll = $workcoll->concat(collect([$trouve]));
         }
-        
+        if ($fonction->coll_sous_objectifs()->count()==0)
+            return 0;
         return 100.0 * $workcoll->count() / $fonction->coll_sous_objectifs()->count();
+    }
+    
+    public function taux_de_transformation()
+    {
+        if ($this->coll_sous_objectifs()->count()==0)
+            return 0;
+        $taux = 100.0* $this->sous_objectifs()->get()->count() / $this->coll_sous_objectifs()->count();
+        return $taux;
     }
     
     public function pourcentage_valides_pour_comp(Compagnonage $comp)
@@ -454,4 +464,26 @@ class User extends Authenticatable
         return 100.0 * $workcoll->count() / $comp->coll_sous_objectifs()->count();
     }
     
+    public function getFonctionHtmlAttribute(Fonction $fonction)
+    {
+        
+        $taux = $this->pourcentage_valides_pour_fonction($fonction);
+        
+        if ($taux == 100)
+            $couleur="green";
+        elseif($taux >= 70)
+            $couleur="gold";
+        elseif($taux >= 30)
+            $couleur = "orange";
+        else
+            $couleur = "red";
+        
+        $stylepart = "color:". $couleur . "'>";
+        
+        $libelle = $fonction->fonction_libcourt . 
+                    "<br>(" . substr($taux,0,4) ."%)" ;
+        
+        $result = $stylepart . $libelle;
+        return $result;
+    }
 }
