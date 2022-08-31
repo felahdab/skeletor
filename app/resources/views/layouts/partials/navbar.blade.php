@@ -63,16 +63,20 @@
           </div>
         </div>
         @endif
-        @can('statistiques.index')
+        
         <div class="dropdown" >
           <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Statistiques
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="{{route('statistiques.index')}}">Statistiques</a>
+            @can('statistiques.index')<a class="dropdown-item" href="{{route('statistiques.index')}}">Statistiques</a>@endcan
+            @can('statistiques.pourtuteurs')<a class="dropdown-item" href="{{route('statistiques.pourtuteurs')}}">Bilan pour tuteurs</a>@endcan
+            @can('statistiques.pour2ps')<a class="dropdown-item" href="{{route('statistiques.pour2ps')}}">Bilan pour 2PS</a>@endcan
+            @can('statistiques.pourem')<a class="dropdown-item" href="{{route('statistiques.pourem')}}">Bilan pour EM</a>@endcan
+            
           </div>
         </div>
-        @endcan
+        
         @endauth
       </ul>
       
