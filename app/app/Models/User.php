@@ -61,6 +61,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    
+    protected $appends = ['en_transformation'];
 
     public function scopeLocal($query)
     {
@@ -485,5 +487,10 @@ class User extends Authenticatable
         
         $result = $stylepart . $libelle;
         return $result;
+    }
+    
+    public function getEnTransformationAttribute()
+    {
+        return $this->fonctions()->count() > 0;
     }
 }
