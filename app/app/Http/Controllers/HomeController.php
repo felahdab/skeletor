@@ -4,17 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Stage;
-use App\Models\User;
-
 class HomeController extends Controller
 {
     public function index() 
     {
-        $stages = Stage::all();
-        $users = User::local()->get();
-        
-        return view('home.index', ['stages' => $stages,
-                                   'users'  => $users]);
+        if(auth()->user())
+        {
+            $user=auth()->user();
+            if ($user->hasRole("2ps"))
+                return redirect()->route("statistiques.pour2ps");
+            elseif ($user->hasRole("tuteur"))
+                return redirect()->route("statistiques.pourtuteurs");
+            elseif ($user->hasRole("em"))
+                return redirect()->route("statistiques.pourem");
+        }
+                
+        return view('home.index');
     }
 }
