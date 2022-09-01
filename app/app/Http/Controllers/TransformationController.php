@@ -67,7 +67,17 @@ class TransformationController extends Controller
      */
     public function livret(User $user) 
     {
-        return view('transformation.livret', ['user' => $user]);
+        $readwrite=true;
+        return view('transformation.livret', ['user'     => $user,
+                                              'readwrite' => $readwrite]);
+    }
+    
+    public function monlivret() 
+    {
+        $user = auth()->user();
+        $readwrite=false;
+        return view('transformation.livret', ['user' => $user,
+                                              'readwrite' => $readwrite]);
     }
     
     public function livretpdf(User $user)
@@ -100,12 +110,32 @@ class TransformationController extends Controller
     
     public function progression(User $user)
     {
-        return view('transformation.progression', ['user' => $user]);
+        $readwrite=true;
+        return view('transformation.progression', ['user' => $user,
+                                                    'readwrite' => $readwrite]);
+    }
+    
+    public function maprogression()
+    {
+        $user = auth()->user();
+        $readwrite=false;
+        return view('transformation.progression', ['user' => $user,
+                                                   'readwrite' => $readwrite]);
     }
     
     public function fichebilan(User $user)
     {
-        return view('transformation.fichebilan', ['user' => $user]);
+        $readwrite=true;
+        return view('transformation.fichebilan', ['user' => $user,
+                                                  'readwrite' => $readwrite]);
+    }
+    
+    public function mafichebilan()
+    {
+        $user = auth()->user();
+        $readwrite=false;
+        return view('transformation.fichebilan', ['user' => $user,
+                                                  'readwrite' => $readwrite]);
     }
     
     public function updatelivret(Request $request, User $user)

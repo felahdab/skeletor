@@ -10,9 +10,14 @@
         <div class="mt-2">
             @include('layouts.partials.messages')
         </div>
-                            <a href="{{ route('transformation.progression', $user->id) }}" class="btn btn-primary btn-sm">Progression</a>
-                            <a href="{{ route('transformation.fichebilan', $user->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
-        
+        @if($readwrite)
+            <a href="{{ route('transformation.progression', $user->id) }}" class="btn btn-primary btn-sm">Progression</a>
+            <a href="{{ route('transformation.fichebilan', $user->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
+        @else
+            <a href="{{ route('transformation.maprogression') }}" class="btn btn-primary btn-sm">Ma progression</a>
+            <a href="{{ route('transformation.mafichebilan') }}" class="btn btn-secondary btn-sm">Ma fiche bilan</a>
+        @endif
+        @if($readwrite)
         <div id='divvalid' class='popupvalidcontrat' style='display:none;'>
             <div class='titrenavbarvert'>
                 <h5>Validation</h5>
@@ -51,6 +56,7 @@
                 <button class='btn btn-primary w-25 mt-4 mb-2' type='reset' form='formlivret' id='btnresetobj' name='btnresetobj' onclick='annuler("divvalid");'>Annuler</button>
             </div>
         </div>
+        @endif
         
         <div id='livret' class='div-table-contrat-compagnonnage table'>
             <div class='text-center'>
@@ -58,12 +64,12 @@
             </div>
             
             @foreach ($user->fonctions()->orderBy('typefonction_id')->get() as $fonction)
-            {!! Form::open(['method' => 'POST','id'=> 'fonction[' . $fonction->id .']' , 'route' => ['transformation.validerlacheoudouble', $user->id, $fonction->id]]) !!}
+            @if($readwrite){!! Form::open(['method' => 'POST','id'=> 'fonction[' . $fonction->id .']' , 'route' => ['transformation.validerlacheoudouble', $user->id, $fonction->id]]) !!}
             <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
             <input type='hidden' id='date_validation' name='date_validation' value=''>
             <input type='hidden' id='commentaire' name='commentaire' value=''>
             <input type='hidden' id='valideur' name='valideur' value=''>
-            <input type='hidden' id='buttonid' name='buttonid' value=''>
+            <input type='hidden' id='buttonid' name='buttonid' value=''>@endif
             
             <table class='table'>
                 <tr class='lignecomp div-table-contrat-compagnonnage'>
@@ -86,13 +92,13 @@
                     @endif
                     </td>
                     <td>
-                    @if ($fonction->pivot->valideur_double != null)
+                    @if ($fonction->pivot->valideur_double != null and $readwrite)
                         {{ $fonction->pivot->valideur_double }}
                         <button type="submit" 
                         class="btn btn-danger" 
                         name="annulation_double">
                         Annuler</button>
-                    @else
+                    @elseif ($readwrite)
                     <button type="submit" 
                         class="btn btn-primary" 
                         name="validation_double"
@@ -118,12 +124,12 @@
                     @endif
                     </td>
                     <td>
-                    @if ($fonction->pivot->valideur_lache != null)
+                    @if ($fonction->pivot->valideur_lache != null and $readwrite)
                         {{ $fonction->pivot->valideur_lache }}
                         <button type="submit" 
                         class="btn btn-danger" 
                         name="annulation_lache">Annuler</button>
-                    @else
+                    @elseif($readwrite)
                     <button type="submit" 
                         class="btn btn-primary" 
                         name="validation_lache"
@@ -139,12 +145,12 @@
                 </tr>
                 @endif
             </table>
-            {!! Form::close() !!}
+            @if($readwrite){!! Form::close() !!} @endif
             
             @if ($fonction->compagnonages()->get()->count() > 0)
             Compagnonages liés à la fonction {{ $fonction->fonction_liblong }}
             
-            {!! Form::open(['method' => 'POST','id'=> 'ssobjs[' . $fonction->id .']' ,'route' => ['transformation.livret', $user->id]]) !!}
+            @if($readwrite){!! Form::open(['method' => 'POST','id'=> 'ssobjs[' . $fonction->id .']' ,'route' => ['transformation.livret', $user->id]]) !!}@endif
             <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
             <input type='hidden' id='date_validation' name='date_validation' value=''>
             <input type='hidden' id='commentaire' name='commentaire' value=''>
@@ -169,10 +175,11 @@
                     @foreach($compagnonage->taches()->get() as $tache)
                     <tr class='ligneTache'>
                     <td rowspan='{{$tache->nb_ssobj()}}'>
+                    @if($readwrite)
                     <input type='checkbox' 
                         id='tacheid[{{$tache->id}}]' 
                         name='tacheid[{{$tache->id}}]' 
-                        value='tacheid[{{$tache->id}}]'> {{$tache->tache_liblong }} 
+                        value='tacheid[{{$tache->id}}]'>@endif {{$tache->tache_liblong }} 
                     @if ($user->aValideLaTache($tache))
                         <button class='btn btn-success' type='button' disabled>VALIDEE</button>
                     @endif
@@ -183,10 +190,10 @@
                                 <td>{{$sous_objectif->ssobj_lib}}</td>
                                 <td>{{$sous_objectif->ssobj_duree}}</td>
                                 <td title=''>
-                                    <input type='checkbox' 
+                                    @if($readwrite)<input type='checkbox' 
                                     id='ssobjid[{{$sous_objectif->id}}]' 
                                     name='ssobjid[{{$sous_objectif->id}}]' 
-                                    value='ssobjid[{{$sous_objectif->id}}]'>
+                                    value='ssobjid[{{$sous_objectif->id}}]'>@endif
                                     @if ($user->aValideLeSousObjectif($sous_objectif))
                                         <button class='btn btn-success' type='button' disabled>
                                         VALIDE {{ $user->sous_objectifs()->find($sous_objectif)->pivot->date_validation }}
@@ -205,7 +212,7 @@
                     
                     @endforeach <!-- foreach tache -->
                     </tr>
-                    <tr  class='lignecomp'>
+                    @if($readwrite)<tr  class='lignecomp'>
                         <td colspan='7'>
                             <button type="submit" 
                             class="btn btn-primary" 
@@ -220,11 +227,11 @@
                             class="btn btn-danger" 
                             name="annulation_validation">Annuler la validation des éléments cochés</button>
                         </td>
-                    </tr>
+                    </tr>@endif
 
                 @endforeach <!-- foreach compagnonage -->
             </table>
-            {!! Form::close() !!}
+            @if($readwrite){!! Form::close() !!}@endif
             @endif
             
             @if ($fonction->stages()->get()->count() > 0)
