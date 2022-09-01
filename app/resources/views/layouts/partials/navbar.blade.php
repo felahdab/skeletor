@@ -52,14 +52,15 @@
           </div>
         </div>
         @endrole
-        @if(auth()->user()->fonctions()->get()->count() != 0)
+        @if(auth()->user()->en_transformation)
         <div class="dropdown" >
           <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Ma transformation
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="{{route('transformation.fichebilan', auth()->user()->id )}}">Fiche bilan</a>
-            <a class="dropdown-item" href="{{route('transformation.progression', auth()->user()->id )}}">Progression</a>
+            <a class="dropdown-item" href="{{route('transformation.monlivret')}}">Mon livret</a>
+            <a class="dropdown-item" href="{{route('transformation.mafichebilan')}}">Ma fiche bilan</a>
+            <a class="dropdown-item" href="{{route('transformation.maprogression')}}">Ma progression</a>
           </div>
         </div>
         @endif
