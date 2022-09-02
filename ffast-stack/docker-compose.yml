@@ -1,28 +1,21 @@
 version: '3'
 services:
     web:
-        build:
-            context: ./nginx
-            dockerfile: Dockerfile
-        ports:
-            - "80"
+        image: ffast-web 
         volumes:
             - ../nginx.conf:/etc/nginx/conf.d/nginx.conf
             - ../app/:/app
         container_name: ffast-web
         networks:
-             - ffast_network
+             - frontend
+             - backend
     php:
-        build:
-            context: ./php
-            dockerfile: Dockerfile
+        image: ffast-php
         volumes:
             - ../app:/app
         networks:
-             - ffast_network
+             - backend
         container_name: ffast-php
-        ports:
-            - "8000"
     db:
         image: mariadb:10.8.3
         environment:
@@ -31,13 +24,15 @@ services:
           MYSQL_PASSWORD: 'ffast'
           MYSQL_DATABASE: 'ffastdb'
         volumes:
-            - ../Docker/initsql/:/docker-entrypoint-initdb.d
             - mysqldata:/var/lib/mysql
         networks:
-             - ffast_network
+             - backend
         container_name: ffast-db
 volumes:
     mysqldata: {}
 networks:
-  ffast_network:
+  frontend:
+    external: true
+    name: mynetwork
+  backend:
     driver: bridge
