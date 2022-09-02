@@ -292,24 +292,13 @@
             @endphp
             <tr>
                 <td rowspan='{{$nbssobjtach}}' class='ta-l va-t'> {{$tache->tache_libcourt}}</td>
-            @php
-            $cpt=0;
-            @endphp
             @foreach ($tache->objectifs()->get() as $objectif)
-                @php
-                $cpt++;
-                @endphp
-                @if ($cpt>1)
+                @if ( !$loop->first)
                     <tr>
                 @endif
                 <td rowspan='{{$objectif->sous_objectifs()->get()->count()}}' class='ta-l va-t'>{{$objectif->objectif_libcourt}}</td>
-                @php $i=0;
-                @endphp
                 @foreach ($objectif->sous_objectifs()->get() as $ssobj)
-                    @php
-                    $i++;
-                    @endphp
-                    @if ($i>1)
+                    @if ( !$loop->first)
                         <tr>
                     @endif
                     <td class='ta-l va-t h-20'>{{$ssobj->ssobj_lib}} (coef :{{$ssobj->ssobj_coeff}})</td>
