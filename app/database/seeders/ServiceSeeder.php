@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-use App\Models\Service;
+use Illuminate\Support\Facades\DB;
 
 class ServiceSeeder extends Seeder
 {

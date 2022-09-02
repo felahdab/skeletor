@@ -869,7 +869,7 @@ class ObjectifSeeder extends Seeder
             [896, 'METTRE EN SERVICE LES DC ACSSI, CLES ET CODES', 'METTRE EN SERVICE LES DC ACSSI, CLES ET CODES'],
             [897, 'DETRUIRE LES DC ACSSI, CLES ET CODES', 'DETRUIRE LES DC ACSSI, CLES ET CODES'],
             [898, 'FCM [S1] - Identifier les termes anglais nécessaires ', 'FCM [S1] - Identifier les termes anglais nécessaires dans le cadre de la conduite des opérations'],
-            [899, 'FCM [S1] Appréhender la notion de \"spécialiste des opérations \"en tant qu\'OQO de petit bâtiment', 'FCM [S1] Appréhender la notion de \"spécialiste des opérations \"en tant qu\'OQO de petit bâtiment'];
+            [899, 'FCM [S1] Appréhender la notion de \"spécialiste des opérations \"en tant qu\'OQO de petit bâtiment', 'FCM [S1] Appréhender la notion de \"spécialiste des opérations \"en tant qu\'OQO de petit bâtiment']
 
         ];
         foreach ($records as $record){
