@@ -87,7 +87,7 @@
           <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{ auth()->user()->displayString() }}
           </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <div class="dropdown-menu" style="position:absolute;left:-90px" aria-labelledby="dropdownMenuButton">
           @if (count(auth()->user()->roles) > 1 )
             <a class="dropdown-item" href="{{ route('currentrole.show') }}">Changer de role</a>
           @endif
