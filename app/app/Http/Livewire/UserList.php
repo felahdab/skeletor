@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Http\Livewire;
+
+use Livewire\Component;
+use Livewire\WithPagination;
+
+use App\Models\User;
+
+class UserList extends Component
+{
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
+    
+    public $filter="";
+    
+    public function render()
+    {
+    
+        return view('livewire.user-list', [
+            'users' => User::local()->where('name', 'like', '%'. $this->filter . '%')->paginate(10),
+        ]);
+    }
+}
