@@ -15,6 +15,11 @@ class StageList extends Component
     public $filter="";
     public $mode="gestion";
     
+    public function updatingFilter()
+    {
+        $this->resetPage();
+    }
+    
     public function render()
     {
         return view('livewire.stage-list', [
