@@ -11,6 +11,6 @@
             @include('layouts.partials.messages')
         </div>
         
-        @livewire('stage-list')
+        @livewire('stage-list', ['mode' => "gestion"])
     </div>
 @endsection
