@@ -117,5 +117,10 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::get('statistiques/pourtuteurs', 'StatistiqueController@pourtuteurs')->name('statistiques.pourtuteurs');
         Route::get('statistiques/pourem', 'StatistiqueController@pourem')->name('statistiques.pourem');
         Route::get('statistiques/pour2ps', 'StatistiqueController@pour2ps')->name('statistiques.pour2ps');
+
+        if (env('APP_ENV') == "local")
+        {
+            Route::get('/test', 'TestController@test')->name('test.test');
+        }
     });
 });
