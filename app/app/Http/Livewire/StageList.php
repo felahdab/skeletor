@@ -13,6 +13,7 @@ class StageList extends Component
     protected $paginationTheme = 'bootstrap';
     
     public $filter="";
+    public $mode="gestion";
     
     public function render()
     {
