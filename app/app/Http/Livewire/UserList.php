@@ -18,7 +18,9 @@ class UserList extends Component
     {
     
         return view('livewire.user-list', [
-            'users' => User::local()->where('name', 'like', '%'. $this->filter . '%')->paginate(10),
+            'users' => User::local()->where('name', 'like', '%'. $this->filter . '%')
+                                    ->orWhere('prenom', 'like', '%'. $this->filter . '%')
+                                    ->paginate(10),
         ]);
     }
 }
