@@ -10,8 +10,14 @@
         <div class="mt-2">
             @include('layouts.partials.messages')
         </div>
-                            <a href="{{ route('transformation.livret', $user->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
-                            <a href="{{ route('transformation.progression', $user->id) }}" class="btn btn-primary btn-sm">Progression</a>
+        @if($readwrite)
+            <a href="{{ route('transformation.livret', $user->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
+            <a href="{{ route('transformation.progression', $user->id) }}" class="btn btn-primary btn-sm">Progression</a>
+        @else
+            <a href="{{ route('transformation.monlivret') }}" class="btn btn-warning btn-sm">Mon livret de transformation</a>
+            <a href="{{ route('transformation.maprogression') }}" class="btn btn-primary btn-sm">Ma progression</a>
+        @endif
+        
         <div id='fiche' 
             style='width:100%; display:""; '>
             <table class='fiche-de-synthese mb-2 ' 
@@ -41,19 +47,19 @@
                     <tr class='enTeteFicheSynthese'>
                         <!-- Pourcentage transformation -->
                         <td colspan='2' class='text-right'>Transformé à :</td>
-                        <td id='tdTauxTransformation' class='text-left'>{{substr(100.0* $user->sous_objectifs()->get()->count() / $user->coll_sous_objectifs()->count(), 0, 4)}}%</td>
+                        <td id='tdTauxTransformation' class='text-left'>{{substr($user->taux_de_transformation(), 0, 4)}}%</td>
                     </tr>
                     <tr class='enTeteFicheSynthese'>
                         <!-- Fonction de service à quai -->
                         <td colspan='2' class='text-right'>Fonction de service à quai :</td>
-                        <td id='tdFonctionServiceQuai' class='text-left'>{{$user->fonctions()->where('typefonction_id', 2)->get()->first()->fonction_libcourt}}</td>
-                        <td id='tdFonctionServiceQuaiLache'>{{ $user->fonctions()->where('typefonction_id', 2)->get()->first()->date_lache ? 'LACHE' : 'NON LACHE'}}</td>
+                        <td id='tdFonctionServiceQuai' class='text-left'>{{$user->fonctionAQuai()->fonction_libcourt}}</td>
+                        <td id='tdFonctionServiceQuaiLache'>{{ $user->fonctionAQuai()->pivot->date_lache ? 'LACHE' : 'NON LACHE'}}</td>
                     </tr>
                     <tr class='enTeteFicheSynthese'>
                         <!-- Fonction de quart à la mer -->
                         <td colspan='2' class='text-right'>Fonction de quart à la mer :</td>
-                        <td id='tdFonctionQuartMer' class='text-left'>{{$user->fonctions()->where('typefonction_id', 1)->get()->first()->fonction_libcourt}}</td>
-                        <td id='tdFonctionQuartMerLache'>{{ $user->fonctions()->where('typefonction_id', 1)->get()->first()->date_lache ? 'LACHE' : 'NON LACHE'}}</td>
+                        <td id='tdFonctionQuartMer' class='text-left'>{{$user->fonctionAMer()->fonction_libcourt}}</td>
+                        <td id='tdFonctionQuartMerLache'>{{ $user->fonctionAMer()->pivot->date_lache ? 'LACHE' : 'NON LACHE'}}</td>
                     </tr>
                     <tr>
                         <td colspan='4'>&nbsp;</td>

@@ -219,9 +219,14 @@ class FonctionController extends Controller
     
     public function choixmarins(Fonction $fonction)
     {
-        $users = User::orderBy('name')->get();
+        $users = User::local()->orderBy('name')->get();
+        
+        // $usersfonction = $fonction->users()->whereIn('user_id', $users->pluck('id')->all())->get();
+        $usersfonction = $fonction->users()->get();
+        
         return view('transformation.livretmultiple', ['fonction' => $fonction,
-                                                      'users'    => $users]);
+                                                      'users'    => $users,
+                                                      'usersfonction' => $usersfonction]);
     }
     
     public function validermarins(Request $request, Fonction $fonction)

@@ -52,27 +52,32 @@
           </div>
         </div>
         @endrole
-        @if(auth()->user()->fonctions()->get()->count() != 0)
+        @if(auth()->user()->en_transformation)
         <div class="dropdown" >
           <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Ma transformation
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="{{route('transformation.fichebilan', auth()->user()->id )}}">Fiche bilan</a>
-            <a class="dropdown-item" href="{{route('transformation.progression', auth()->user()->id )}}">Progression</a>
+            <a class="dropdown-item" href="{{route('transformation.monlivret')}}">Mon livret</a>
+            <a class="dropdown-item" href="{{route('transformation.mafichebilan')}}">Ma fiche bilan</a>
+            <a class="dropdown-item" href="{{route('transformation.maprogression')}}">Ma progression</a>
           </div>
         </div>
         @endif
-        @can('statistiques.index')
+        
         <div class="dropdown" >
           <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Statistiques
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Statistiques</a>
+            @can('statistiques.index')<a class="dropdown-item" href="{{route('statistiques.index')}}">Statistiques</a>@endcan
+            @can('statistiques.pourtuteurs')<a class="dropdown-item" href="{{route('statistiques.pourtuteurs')}}">Bilan pour tuteurs</a>@endcan
+            @can('statistiques.pour2ps')<a class="dropdown-item" href="{{route('statistiques.pour2ps')}}">Bilan pour 2PS</a>@endcan
+            @can('statistiques.pourem')<a class="dropdown-item" href="{{route('statistiques.pourem')}}">Bilan pour EM</a>@endcan
+            
           </div>
         </div>
-        @endcan
+        
         @endauth
       </ul>
       
@@ -82,7 +87,7 @@
           <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{ auth()->user()->displayString() }}
           </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <div class="dropdown-menu" style="position:absolute;left:-90px" aria-labelledby="dropdownMenuButton">
           @if (count(auth()->user()->roles) > 1 )
             <a class="dropdown-item" href="{{ route('currentrole.show') }}">Changer de role</a>
           @endif

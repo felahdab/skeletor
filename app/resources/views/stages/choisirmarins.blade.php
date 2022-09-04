@@ -55,7 +55,7 @@
                         <th scope="col" width="1%"><input type="checkbox" name="all_users"></th>
                         <th scope="col" width="20%">Nom</th>
                     </thead>
-                    @foreach($stage->users()->get() as $user)
+                    @foreach($usersdustage as $user)
                             @if ($user->stages()->find($stage) != null and $user->stages()->find($stage)->pivot->date_validation == null)
                             <tr>
                                 <td>
@@ -113,7 +113,7 @@
                     <th scope="col" width="20%">Nom</th>
                     <th scope="col" width="20%">Date de validation</th>
                 </thead>
-                @foreach($stage->users()->get() as $user)
+                @foreach($usersdustage as $user)
                         @if ($user->stages()->find($stage) != null and $user->stages()->find($stage)->pivot->date_validation != null)
                         <tr>
                             <td>

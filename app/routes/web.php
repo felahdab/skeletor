@@ -107,8 +107,19 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::post('/{user}/validerlacheoudouble/{fonction}', 'TransformationController@validerlacheoudouble')->name('transformation.validerlacheoudouble');
             Route::get('/{user}/progression', 'TransformationController@progression')->name('transformation.progression');
             Route::get('/{user}/fichebilan', 'TransformationController@fichebilan')->name('transformation.fichebilan');
+            
+            Route::get('/mafichebilan', 'TransformationController@mafichebilan')->name('transformation.mafichebilan');
+            Route::get('/monlivret', 'TransformationController@monlivret')->name('transformation.monlivret');
+            Route::get('/maprogression', 'TransformationController@maprogression')->name('transformation.maprogression');
         });
         
+
         Route::get('/test', 'TestController@test')->name('test.test');
+
+        Route::get('statistiques/', 'StatistiqueController@index')->name('statistiques.index');
+        Route::get('statistiques/pourtuteurs', 'StatistiqueController@pourtuteurs')->name('statistiques.pourtuteurs');
+        Route::get('statistiques/pourem', 'StatistiqueController@pourem')->name('statistiques.pourem');
+        Route::get('statistiques/pour2ps', 'StatistiqueController@pour2ps')->name('statistiques.pour2ps');
+
     });
 });
