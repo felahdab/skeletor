@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,11 +14,33 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/auth/redirect', function(){
+	return Socialite::driver('keycloak')->stateless()->redirect();
+})->name('keycloak.login.redirect');
+
+
+/*function(){
+	$MCuser = Socialite::driver('keycloak')->stateless()->user();
+	$user = User::updateOrCreate([
+            'email' => $MCuser->email,
+        ], [
+          'name' => $MCuser->user['usual_name'],
+          'prenom' => $MCuser->user['usual_forename'],
+          'password' => 'toto',
+        ]);
+	Auth::login($user);
+	return redirect('/');
+	
+});*/
+
+
 Route::group(['namespace' => 'App\Http\Controllers'], function()
 {   
     /**
      * Home Routes
      */
+    Route::get('/auth/callback', 'LoginController@login')->name('keycloak.login.perform');
+    
     Route::get('/', 'HomeController@index')->name('home.index');
 
     Route::group(['middleware' => ['guest']], function() {
