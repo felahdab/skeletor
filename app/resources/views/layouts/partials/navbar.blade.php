@@ -65,6 +65,7 @@
         </div>
         @endif
         
+		@if ($user->can('statistiques.index') or $user->can('statistiques.pourtuteurs') or $user->can('statistiques.pour2ps') or $user->can('statistiques.pourem')
         <div class="dropdown" >
           <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Statistiques
@@ -77,6 +78,7 @@
             
           </div>
         </div>
+		@endif
         
         @endauth
       </ul>
