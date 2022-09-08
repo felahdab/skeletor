@@ -6,6 +6,8 @@
     <meta name="description" content="">
     <meta name="author" content="Contributors from the GTR/T">
     <title>FFAST</title>
+	<link rel="icon" type="image/png" sizes="32x32" href="{!! url('assets/images/favicon-32x32.png') !!}">
+	<link rel="icon" type="image/png" sizes="16x16" href="{!! url('assets/images/favicon-16x16.png') !!}">
 
     <!-- Bootstrap core CSS -->
     @livewireStyles
