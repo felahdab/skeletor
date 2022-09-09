@@ -10,15 +10,13 @@ use Doctrine\DBAL\Logging\SQLLogger;
 use Doctrine\Deprecations\Deprecation;
 use Psr\Cache\CacheItemPoolInterface;
 
-use function func_num_args;
-
 /**
  * Configuration container for the Doctrine DBAL.
  */
 class Configuration
 {
     /** @var Middleware[] */
-    private array $middlewares = [];
+    private $middlewares = [];
 
     /**
      * The SQL logger in use. If null, SQL logging is disabled.
@@ -29,8 +27,10 @@ class Configuration
 
     /**
      * The cache driver implementation that is used for query result caching.
+     *
+     * @var CacheItemPoolInterface|null
      */
-    private ?CacheItemPoolInterface $resultCache = null;
+    private $resultCache;
 
     /**
      * The cache driver implementation that is used for query result caching.
@@ -55,44 +55,19 @@ class Configuration
      */
     protected $autoCommit = true;
 
-    public function __construct()
-    {
-        $this->schemaAssetsFilter = static function (): bool {
-            return true;
-        };
-    }
-
     /**
      * Sets the SQL logger to use. Defaults to NULL which means SQL logging is disabled.
-     *
-     * @deprecated Use {@see setMiddlewares()} and {@see \Doctrine\DBAL\Logging\Middleware} instead.
      */
     public function setSQLLogger(?SQLLogger $logger = null): void
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4967',
-            '%s is deprecated, use setMiddlewares() and Logging\\Middleware instead.',
-            __METHOD__,
-        );
-
         $this->sqlLogger = $logger;
     }
 
     /**
      * Gets the SQL logger that is used.
-     *
-     * @deprecated
      */
     public function getSQLLogger(): ?SQLLogger
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4967',
-            '%s is deprecated.',
-            __METHOD__,
-        );
-
         return $this->sqlLogger;
     }
 
@@ -115,7 +90,7 @@ class Configuration
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/pull/4620',
             '%s is deprecated, call getResultCache() instead.',
-            __METHOD__,
+            __METHOD__
         );
 
         return $this->resultCacheImpl;
@@ -141,7 +116,7 @@ class Configuration
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/pull/4620',
             '%s is deprecated, call setResultCache() instead.',
-            __METHOD__,
+            __METHOD__
         );
 
         $this->resultCacheImpl = $cacheImpl;
@@ -153,22 +128,6 @@ class Configuration
      */
     public function setSchemaAssetsFilter(?callable $callable = null): void
     {
-        if (func_num_args() < 1) {
-            Deprecation::trigger(
-                'doctrine/dbal',
-                'https://github.com/doctrine/dbal/pull/5483',
-                'Not passing an argument to %s is deprecated.',
-                __METHOD__,
-            );
-        } elseif ($callable === null) {
-            Deprecation::trigger(
-                'doctrine/dbal',
-                'https://github.com/doctrine/dbal/pull/5483',
-                'Using NULL as a schema asset filter is deprecated.'
-                    . ' Use a callable that always returns true instead.',
-            );
-        }
-
         $this->schemaAssetsFilter = $callable;
     }
 
@@ -220,7 +179,9 @@ class Configuration
         return $this;
     }
 
-    /** @return Middleware[] */
+    /**
+     * @return Middleware[]
+     */
     public function getMiddlewares(): array
     {
         return $this->middlewares;

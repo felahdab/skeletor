@@ -182,7 +182,6 @@ final class Style
             '/bin\/pest/',
             '/vendor\/pestphp\/pest/',
             '/vendor\/phpspec\/prophecy-phpunit/',
-            '/vendor\/phpspec\/prophecy/',
             '/vendor\/phpunit\/phpunit\/src/',
             '/vendor\/mockery\/mockery/',
             '/vendor\/laravel\/dusk/',

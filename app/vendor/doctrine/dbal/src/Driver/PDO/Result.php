@@ -11,9 +11,12 @@ use PDOStatement;
 
 final class Result implements ResultInterface
 {
-    private PDOStatement $statement;
+    /** @var PDOStatement */
+    private $statement;
 
-    /** @internal The result can be only instantiated by its driver connection or statement. */
+    /**
+     * @internal The result can be only instantiated by its driver connection or statement.
+     */
     public function __construct(PDOStatement $statement)
     {
         $this->statement = $statement;

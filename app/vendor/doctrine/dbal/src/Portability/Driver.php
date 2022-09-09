@@ -15,9 +15,11 @@ use const CASE_UPPER;
 
 final class Driver extends AbstractDriverMiddleware
 {
-    private int $mode;
+    /** @var int */
+    private $mode;
 
-    private int $case;
+    /** @var int */
+    private $case;
 
     public function __construct(DriverInterface $driver, int $mode, int $case)
     {
@@ -36,7 +38,7 @@ final class Driver extends AbstractDriverMiddleware
 
         $portability = (new OptimizeFlags())(
             $this->getDatabasePlatform(),
-            $this->mode,
+            $this->mode
         );
 
         $case = null;
@@ -67,7 +69,7 @@ final class Driver extends AbstractDriverMiddleware
 
         return new Connection(
             $connection,
-            new Converter($convertEmptyStringToNull, $rightTrimString, $case),
+            new Converter($convertEmptyStringToNull, $rightTrimString, $case)
         );
     }
 }

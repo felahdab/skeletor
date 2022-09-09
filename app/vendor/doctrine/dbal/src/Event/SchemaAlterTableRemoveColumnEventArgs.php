@@ -15,12 +15,17 @@ use function is_array;
  */
 class SchemaAlterTableRemoveColumnEventArgs extends SchemaEventArgs
 {
-    private Column $column;
-    private TableDiff $tableDiff;
-    private AbstractPlatform $platform;
+    /** @var Column */
+    private $column;
+
+    /** @var TableDiff */
+    private $tableDiff;
+
+    /** @var AbstractPlatform */
+    private $platform;
 
     /** @var string[] */
-    private array $sql = [];
+    private $sql = [];
 
     public function __construct(Column $column, TableDiff $tableDiff, AbstractPlatform $platform)
     {
@@ -29,19 +34,25 @@ class SchemaAlterTableRemoveColumnEventArgs extends SchemaEventArgs
         $this->platform  = $platform;
     }
 
-    /** @return Column */
+    /**
+     * @return Column
+     */
     public function getColumn()
     {
         return $this->column;
     }
 
-    /** @return TableDiff */
+    /**
+     * @return TableDiff
+     */
     public function getTableDiff()
     {
         return $this->tableDiff;
     }
 
-    /** @return AbstractPlatform */
+    /**
+     * @return AbstractPlatform
+     */
     public function getPlatform()
     {
         return $this->platform;
@@ -61,7 +72,9 @@ class SchemaAlterTableRemoveColumnEventArgs extends SchemaEventArgs
         return $this;
     }
 
-    /** @return string[] */
+    /**
+     * @return string[]
+     */
     public function getSql()
     {
         return $this->sql;

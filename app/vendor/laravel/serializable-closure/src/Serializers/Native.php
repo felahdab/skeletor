@@ -3,7 +3,6 @@
 namespace Laravel\SerializableClosure\Serializers;
 
 use Closure;
-use DateTimeInterface;
 use Laravel\SerializableClosure\Contracts\Serializable;
 use Laravel\SerializableClosure\SerializableClosure;
 use Laravel\SerializableClosure\Support\ClosureScope;
@@ -460,12 +459,6 @@ class Native implements Serializable
             }
 
             $instance = $data;
-
-            if ($data instanceof DateTimeInterface) {
-                $this->scope[$instance] = $data;
-
-                return;
-            }
 
             if ($data instanceof UnitEnum) {
                 $this->scope[$instance] = $data;

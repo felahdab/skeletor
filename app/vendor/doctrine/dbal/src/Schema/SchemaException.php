@@ -7,7 +7,9 @@ use Doctrine\DBAL\Exception;
 use function implode;
 use function sprintf;
 
-/** @psalm-immutable */
+/**
+ * @psalm-immutable
+ */
 class SchemaException extends Exception
 {
     public const TABLE_DOESNT_EXIST       = 10;
@@ -42,7 +44,7 @@ class SchemaException extends Exception
     {
         return new self(
             sprintf('Invalid index-name %s given, has to be [a-zA-Z0-9_]', $indexName),
-            self::INDEX_INVALID_NAME,
+            self::INDEX_INVALID_NAME
         );
     }
 
@@ -56,7 +58,7 @@ class SchemaException extends Exception
     {
         return new self(
             sprintf("Index '%s' does not exist on table '%s'.", $indexName, $table),
-            self::INDEX_DOESNT_EXIST,
+            self::INDEX_DOESNT_EXIST
         );
     }
 
@@ -70,7 +72,7 @@ class SchemaException extends Exception
     {
         return new self(
             sprintf("An index with name '%s' was already defined on table '%s'.", $indexName, $table),
-            self::INDEX_ALREADY_EXISTS,
+            self::INDEX_ALREADY_EXISTS
         );
     }
 
@@ -84,7 +86,7 @@ class SchemaException extends Exception
     {
         return new self(
             sprintf("There is no column with name '%s' on table '%s'.", $columnName, $table),
-            self::COLUMN_DOESNT_EXIST,
+            self::COLUMN_DOESNT_EXIST
         );
     }
 
@@ -97,7 +99,7 @@ class SchemaException extends Exception
     {
         return new self(
             sprintf("The namespace with name '%s' already exists.", $namespaceName),
-            self::NAMESPACE_ALREADY_EXISTS,
+            self::NAMESPACE_ALREADY_EXISTS
         );
     }
 
@@ -121,7 +123,7 @@ class SchemaException extends Exception
     {
         return new self(
             "The column '" . $columnName . "' on table '" . $tableName . "' already exists.",
-            self::COLUMN_ALREADY_EXISTS,
+            self::COLUMN_ALREADY_EXISTS
         );
     }
 
@@ -155,7 +157,7 @@ class SchemaException extends Exception
     {
         return new self(
             sprintf('There exists no unique constraint with the name "%s" on table "%s".', $constraintName, $table),
-            self::CONSTRAINT_DOESNT_EXIST,
+            self::CONSTRAINT_DOESNT_EXIST
         );
     }
 
@@ -169,18 +171,20 @@ class SchemaException extends Exception
     {
         return new self(
             sprintf("There exists no foreign key with the name '%s' on table '%s'.", $fkName, $table),
-            self::FOREIGNKEY_DOESNT_EXIST,
+            self::FOREIGNKEY_DOESNT_EXIST
         );
     }
 
-    /** @return SchemaException */
+    /**
+     * @return SchemaException
+     */
     public static function namedForeignKeyRequired(Table $localTable, ForeignKeyConstraint $foreignKey)
     {
         return new self(
             'The performed schema operation on ' . $localTable->getName() . ' requires a named foreign key, ' .
             'but the given foreign key from (' . implode(', ', $foreignKey->getColumns()) . ') onto foreign table ' .
             "'" . $foreignKey->getForeignTableName() . "' (" . implode(', ', $foreignKey->getForeignColumns()) . ')' .
-            ' is currently unnamed.',
+            ' is currently unnamed.'
         );
     }
 
@@ -192,7 +196,7 @@ class SchemaException extends Exception
     public static function alterTableChangeNotSupported($changeName)
     {
         return new self(
-            sprintf("Alter table change not supported, given '%s'", $changeName),
+            sprintf("Alter table change not supported, given '%s'", $changeName)
         );
     }
 }

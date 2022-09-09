@@ -9,14 +9,15 @@
  */
 namespace SebastianBergmann\CodeCoverage\StaticAnalysis;
 
+use function assert;
+use function crc32;
 use function file_get_contents;
 use function file_put_contents;
-use function implode;
 use function is_file;
-use function md5;
 use function serialize;
+use GlobIterator;
 use SebastianBergmann\CodeCoverage\Util\Filesystem;
-use SebastianBergmann\FileIterator\Facade as FileIteratorFacade;
+use SplFileInfo;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for phpunit/php-code-coverage
@@ -49,6 +50,10 @@ final class CachingFileAnalyser implements FileAnalyser
 
         $this->analyser  = $analyser;
         $this->directory = $directory;
+
+        if (self::$cacheVersion === null) {
+            $this->calculateCacheVersion();
+        }
     }
 
     public function classesIn(string $filename): array
@@ -160,24 +165,19 @@ final class CachingFileAnalyser implements FileAnalyser
 
     private function cacheFile(string $filename): string
     {
-        return $this->directory . DIRECTORY_SEPARATOR . md5($filename . "\0" . file_get_contents($filename) . "\0" . self::cacheVersion());
+        return $this->directory . DIRECTORY_SEPARATOR . hash('sha256', $filename . crc32(file_get_contents($filename)) . self::$cacheVersion);
     }
 
-    private static function cacheVersion(): string
+    private function calculateCacheVersion(): void
     {
-        if (self::$cacheVersion !== null) {
-            return self::$cacheVersion;
+        $buffer = '';
+
+        foreach (new GlobIterator(__DIR__ . '/*.php') as $file) {
+            assert($file instanceof SplFileInfo);
+
+            $buffer .= file_get_contents($file->getPathname());
         }
 
-        $buffer = [];
-
-        foreach ((new FileIteratorFacade)->getFilesAsArray(__DIR__, '.php') as $file) {
-            $buffer[] = $file;
-            $buffer[] = file_get_contents($file);
-        }
-
-        self::$cacheVersion = md5(implode("\0", $buffer));
-
-        return self::$cacheVersion;
+        self::$cacheVersion = (string) crc32($buffer);
     }
 }

@@ -5,7 +5,7 @@ namespace Illuminate\Console\View\Components\Mutators;
 class EnsureDynamicContentIsHighlighted
 {
     /**
-     * Highlight dynamic content within the given string.
+     * Highligths dynamic content within the given string.
      *
      * @param  string  $string
      * @return string

@@ -4,7 +4,6 @@ namespace Doctrine\DBAL\Types;
 
 use DateTimeImmutable;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\Deprecations\Deprecation;
 
 /**
  * Immutable type of {@see TimeType}.
@@ -35,7 +34,7 @@ class TimeImmutableType extends TimeType
         throw ConversionException::conversionFailedInvalidType(
             $value,
             $this->getName(),
-            ['null', DateTimeImmutable::class],
+            ['null', DateTimeImmutable::class]
         );
     }
 
@@ -54,7 +53,7 @@ class TimeImmutableType extends TimeType
             throw ConversionException::conversionFailedFormat(
                 $value,
                 $this->getName(),
-                $platform->getTimeFormatString(),
+                $platform->getTimeFormatString()
             );
         }
 
@@ -63,18 +62,9 @@ class TimeImmutableType extends TimeType
 
     /**
      * {@inheritdoc}
-     *
-     * @deprecated
      */
     public function requiresSQLCommentHint(AbstractPlatform $platform)
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/5509',
-            '%s is deprecated.',
-            __METHOD__,
-        );
-
         return true;
     }
 }

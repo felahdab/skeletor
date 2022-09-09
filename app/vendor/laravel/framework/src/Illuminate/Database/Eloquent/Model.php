@@ -448,7 +448,9 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      */
     public function forceFill(array $attributes)
     {
-        return static::unguarded(fn () => $this->fill($attributes));
+        return static::unguarded(function () use ($attributes) {
+            return $this->fill($attributes);
+        });
     }
 
     /**
@@ -549,7 +551,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
     /**
      * Begin querying the model on the write connection.
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return \Illuminate\Database\Query\Builder
      */
     public static function onWriteConnection()
     {
@@ -985,7 +987,9 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      */
     public function saveQuietly(array $options = [])
     {
-        return static::withoutEvents(fn () => $this->save($options));
+        return static::withoutEvents(function () use ($options) {
+            return $this->save($options);
+        });
     }
 
     /**
@@ -1295,16 +1299,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
         $this->fireModelEvent('deleted', false);
 
         return true;
-    }
-
-    /**
-     * Delete the model from the database without raising any events.
-     *
-     * @return bool
-     */
-    public function deleteQuietly()
-    {
-        return static::withoutEvents(fn () => $this->delete());
     }
 
     /**
@@ -1633,7 +1627,9 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      */
     public function replicateQuietly(array $except = null)
     {
-        return static::withoutEvents(fn () => $this->replicate($except));
+        return static::withoutEvents(function () use ($except) {
+            return $this->replicate($except);
+        });
     }
 
     /**
@@ -1980,7 +1976,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      */
     protected function resolveChildRouteBindingQuery($childType, $value, $field)
     {
-        $relationship = $this->{$this->childRouteBindingRelationshipName($childType)}();
+        $relationship = $this->{Str::plural(Str::camel($childType))}();
 
         $field = $field ?: $relationship->getRelated()->getRouteKeyName();
 
@@ -1992,17 +1988,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
         return $relationship instanceof Model
                 ? $relationship->resolveRouteBindingQuery($relationship, $value, $field)
                 : $relationship->getRelated()->resolveRouteBindingQuery($relationship, $value, $field);
-    }
-
-    /**
-     * Retrieve the child route model binding relationship name for the given child type.
-     *
-     * @param  string  $childType
-     * @return string
-     */
-    protected function childRouteBindingRelationshipName($childType)
-    {
-        return Str::plural(Str::camel($childType));
     }
 
     /**

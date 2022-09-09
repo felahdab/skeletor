@@ -18,15 +18,12 @@ use function array_intersect_key;
  */
 class Comparator extends BaseComparator
 {
-    /** @var CollationMetadataProvider */
-    private $collationMetadataProvider;
-
-    /** @internal The comparator can be only instantiated by a schema manager. */
-    public function __construct(AbstractMySQLPlatform $platform, CollationMetadataProvider $collationMetadataProvider)
+    /**
+     * @internal The comparator can be only instantiated by a schema manager.
+     */
+    public function __construct(AbstractMySQLPlatform $platform)
     {
         parent::__construct($platform);
-
-        $this->collationMetadataProvider = $collationMetadataProvider;
     }
 
     /**
@@ -36,50 +33,34 @@ class Comparator extends BaseComparator
     {
         return parent::diffTable(
             $this->normalizeColumns($fromTable),
-            $this->normalizeColumns($toTable),
+            $this->normalizeColumns($toTable)
         );
     }
 
     private function normalizeColumns(Table $table): Table
     {
-        $tableOptions = array_intersect_key($table->getOptions(), [
+        $defaults = array_intersect_key($table->getOptions(), [
             'charset'   => null,
             'collation' => null,
         ]);
 
+        if ($defaults === []) {
+            return $table;
+        }
+
         $table = clone $table;
 
         foreach ($table->getColumns() as $column) {
-            $originalOptions   = $column->getPlatformOptions();
-            $normalizedOptions = $this->normalizeOptions($originalOptions);
+            $options = $column->getPlatformOptions();
+            $diff    = array_diff_assoc($options, $defaults);
 
-            $overrideOptions = array_diff_assoc($normalizedOptions, $tableOptions);
-
-            if ($overrideOptions === $originalOptions) {
+            if ($diff === $options) {
                 continue;
             }
 
-            $column->setPlatformOptions($overrideOptions);
+            $column->setPlatformOptions($diff);
         }
 
         return $table;
-    }
-
-    /**
-     * @param array<string,string> $options
-     *
-     * @return array<string,string>
-     */
-    private function normalizeOptions(array $options): array
-    {
-        if (isset($options['collation']) && ! isset($options['charset'])) {
-            $charset = $this->collationMetadataProvider->getCollationCharset($options['collation']);
-
-            if ($charset !== null) {
-                $options['charset'] = $charset;
-            }
-        }
-
-        return $options;
     }
 }

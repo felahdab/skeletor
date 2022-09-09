@@ -356,7 +356,7 @@ class MailMessage extends SimpleMessage implements Renderable
     /**
      * Render the mail notification message into an HTML string.
      *
-     * @return \Illuminate\Support\HtmlString
+     * @return string
      */
     public function render()
     {

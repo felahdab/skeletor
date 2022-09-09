@@ -2,10 +2,8 @@
 
 namespace Doctrine\DBAL\Platforms;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\ColumnDiff;
-use Doctrine\DBAL\Schema\DB2SchemaManager;
 use Doctrine\DBAL\Schema\Identifier;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\TableDiff;
@@ -25,51 +23,24 @@ use function strpos;
 
 class DB2Platform extends AbstractPlatform
 {
-    /**
-     * {@inheritdoc}
-     *
-     * @deprecated
-     */
     public function getCharMaxLength(): int
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/3263',
-            'DB2Platform::getCharMaxLength() is deprecated.',
-        );
-
         return 254;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @deprecated
      */
     public function getBinaryMaxLength()
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/3263',
-            'DB2Platform::getBinaryMaxLength() is deprecated.',
-        );
-
         return 32704;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @deprecated
      */
     public function getBinaryDefaultLength()
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/3263',
-            'Relying on the default binary column length is deprecated, specify the length explicitly.',
-        );
-
         return 1;
     }
 
@@ -128,7 +99,7 @@ class DB2Platform extends AbstractPlatform
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/pull/5058',
             '%s is deprecated and will be removed in Doctrine DBAL 4.0. Use Type::requiresSQLCommentHint() instead.',
-            __METHOD__,
+            __METHOD__
         );
 
         if ($doctrineType->getName() === Types::BOOLEAN) {
@@ -143,17 +114,8 @@ class DB2Platform extends AbstractPlatform
     /**
      * {@inheritDoc}
      */
-    protected function getVarcharTypeDeclarationSQLSnippet($length, $fixed/*, $lengthOmitted = false*/)
+    protected function getVarcharTypeDeclarationSQLSnippet($length, $fixed)
     {
-        if ($length <= 0 || (func_num_args() > 2 && func_get_arg(2))) {
-            Deprecation::trigger(
-                'doctrine/dbal',
-                'https://github.com/doctrine/dbal/issues/3263',
-                'Relying on the default string column length on IBM DB2 is deprecated'
-                    . ', specify the length explicitly.',
-            );
-        }
-
         return $fixed ? ($length > 0 ? 'CHAR(' . $length . ')' : 'CHAR(254)')
                 : ($length > 0 ? 'VARCHAR(' . $length . ')' : 'VARCHAR(255)');
     }
@@ -161,17 +123,8 @@ class DB2Platform extends AbstractPlatform
     /**
      * {@inheritdoc}
      */
-    protected function getBinaryTypeDeclarationSQLSnippet($length, $fixed/*, $lengthOmitted = false*/)
+    protected function getBinaryTypeDeclarationSQLSnippet($length, $fixed)
     {
-        if ($length <= 0 || (func_num_args() > 2 && func_get_arg(2))) {
-            Deprecation::trigger(
-                'doctrine/dbal',
-                'https://github.com/doctrine/dbal/issues/3263',
-                'Relying on the default binary column length on IBM DB2 is deprecated'
-                . ', specify the length explicitly.',
-            );
-        }
-
         return $this->getVarcharTypeDeclarationSQLSnippet($length, $fixed) . ' FOR BIT DATA';
     }
 
@@ -192,7 +145,7 @@ class DB2Platform extends AbstractPlatform
         Deprecation::triggerIfCalledFromOutside(
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/issues/4749',
-            'DB2Platform::getName() is deprecated. Identify platforms by their class.',
+            'DB2Platform::getName() is deprecated. Identify platforms by their class.'
         );
 
         return 'db2';
@@ -326,8 +279,6 @@ class DB2Platform extends AbstractPlatform
     }
 
     /**
-     * @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon.
-     *
      * This code fragment is originally from the Zend_Db_Adapter_Db2 class, but has been edited.
      *
      * @param string $table
@@ -385,19 +336,15 @@ class DB2Platform extends AbstractPlatform
     }
 
     /**
-     * @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon.
-     *
      * {@inheritDoc}
      */
     public function getListTablesSQL()
     {
-        return "SELECT NAME FROM SYSIBM.SYSTABLES WHERE TYPE = 'T' AND CREATOR = CURRENT_USER";
+        return "SELECT NAME FROM SYSIBM.SYSTABLES WHERE TYPE = 'T'";
     }
 
     /**
      * {@inheritDoc}
-     *
-     * @internal The method should be only used from within the {@see AbstractSchemaManager} class hierarchy.
      */
     public function getListViewsSQL($database)
     {
@@ -405,8 +352,6 @@ class DB2Platform extends AbstractPlatform
     }
 
     /**
-     * @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon.
-     *
      * {@inheritDoc}
      */
     public function getListTableIndexesSQL($table, $database = null)
@@ -431,8 +376,6 @@ class DB2Platform extends AbstractPlatform
     }
 
     /**
-     * @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon.
-     *
      * {@inheritDoc}
      */
     public function getListTableForeignKeysSQL($table)
@@ -468,25 +411,14 @@ class DB2Platform extends AbstractPlatform
 
     /**
      * {@inheritDoc}
-     *
-     * @deprecated
      */
     public function supportsCreateDropDatabase()
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/5513',
-            '%s is deprecated.',
-            __METHOD__,
-        );
-
         return false;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @internal The method should be only used from within the {@see AbstractPlatform} class hierarchy.
      */
     public function supportsCommentOnStatement()
     {
@@ -519,8 +451,6 @@ class DB2Platform extends AbstractPlatform
 
     /**
      * {@inheritDoc}
-     *
-     * @internal The method should be only used from within the {@see AbstractPlatform} class hierarchy.
      */
     public function getIndexDeclarationSQL($name, Index $index)
     {
@@ -587,7 +517,7 @@ class DB2Platform extends AbstractPlatform
             $commentsSQL[] = $this->getCommentOnColumnSQL(
                 $diff->getName($this)->getQuotedName($this),
                 $column->getQuotedName($this),
-                $comment,
+                $comment
             );
         }
 
@@ -608,7 +538,7 @@ class DB2Platform extends AbstractPlatform
                 $commentsSQL[] = $this->getCommentOnColumnSQL(
                     $diff->getName($this)->getQuotedName($this),
                     $columnDiff->column->getQuotedName($this),
-                    $this->getColumnComment($columnDiff->column),
+                    $this->getColumnComment($columnDiff->column)
                 );
 
                 if (count($columnDiff->changedProperties) === 1) {
@@ -650,14 +580,14 @@ class DB2Platform extends AbstractPlatform
                 $sql[] = sprintf(
                     'RENAME TABLE %s TO %s',
                     $diff->getName($this)->getQuotedName($this),
-                    $newName->getQuotedName($this),
+                    $newName->getQuotedName($this)
                 );
             }
 
             $sql = array_merge(
                 $this->getPreAlterTableIndexForeignKeySQL($diff),
                 $sql,
-                $this->getPostAlterTableIndexForeignKeySQL($diff),
+                $this->getPostAlterTableIndexForeignKeySQL($diff)
             );
         }
 
@@ -795,8 +725,6 @@ class DB2Platform extends AbstractPlatform
 
     /**
      * {@inheritDoc}
-     *
-     * @internal The method should be only used from within the {@see AbstractPlatform} class hierarchy.
      */
     public function getDefaultValueDeclarationSQL($column)
     {
@@ -860,7 +788,7 @@ class DB2Platform extends AbstractPlatform
         return sprintf(
             'SELECT db22.* FROM (SELECT db21.*, ROW_NUMBER() OVER() AS DC_ROWNUM FROM (%s) db21) db22 WHERE %s',
             $query,
-            implode(' AND ', $where),
+            implode(' AND ', $where)
         );
     }
 
@@ -919,7 +847,7 @@ class DB2Platform extends AbstractPlatform
         Deprecation::trigger(
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/pulls/1519',
-            'DB2Platform::prefersIdentityColumns() is deprecated.',
+            'DB2Platform::prefersIdentityColumns() is deprecated.'
         );
 
         return true;
@@ -966,13 +894,12 @@ class DB2Platform extends AbstractPlatform
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/issues/4510',
             'DB2Platform::getReservedKeywordsClass() is deprecated,'
-                . ' use DB2Platform::createReservedKeywordsList() instead.',
+                . ' use DB2Platform::createReservedKeywordsList() instead.'
         );
 
         return Keywords\DB2Keywords::class;
     }
 
-    /** @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon. */
     public function getListTableCommentsSQL(string $table): string
     {
         return sprintf(
@@ -982,12 +909,7 @@ SELECT REMARKS
   WHERE NAME = UPPER( %s )
 SQL
             ,
-            $this->quoteStringLiteral($table),
+            $this->quoteStringLiteral($table)
         );
-    }
-
-    public function createSchemaManager(Connection $connection): DB2SchemaManager
-    {
-        return new DB2SchemaManager($connection, $this);
     }
 }

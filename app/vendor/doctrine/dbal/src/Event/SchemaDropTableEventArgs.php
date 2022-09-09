@@ -14,7 +14,8 @@ class SchemaDropTableEventArgs extends SchemaEventArgs
     /** @var string|Table */
     private $table;
 
-    private AbstractPlatform $platform;
+    /** @var AbstractPlatform */
+    private $platform;
 
     /** @var string|null */
     private $sql;
@@ -30,13 +31,17 @@ class SchemaDropTableEventArgs extends SchemaEventArgs
         $this->platform = $platform;
     }
 
-    /** @return string|Table */
+    /**
+     * @return string|Table
+     */
     public function getTable()
     {
         return $this->table;
     }
 
-    /** @return AbstractPlatform */
+    /**
+     * @return AbstractPlatform
+     */
     public function getPlatform()
     {
         return $this->platform;
@@ -54,7 +59,9 @@ class SchemaDropTableEventArgs extends SchemaEventArgs
         return $this;
     }
 
-    /** @return string|null */
+    /**
+     * @return string|null
+     */
     public function getSql()
     {
         return $this->sql;

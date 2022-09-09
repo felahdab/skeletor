@@ -9,7 +9,8 @@ use Doctrine\DBAL\Connection;
 
 abstract class TransactionEventArgs extends EventArgs
 {
-    private Connection $connection;
+    /** @var Connection */
+    private $connection;
 
     public function __construct(Connection $connection)
     {

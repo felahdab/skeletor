@@ -2,12 +2,10 @@
 
 namespace Doctrine\DBAL\Platforms;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\ForeignKeyConstraint;
 use Doctrine\DBAL\Schema\Identifier;
 use Doctrine\DBAL\Schema\Index;
-use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\TableDiff;
 use Doctrine\DBAL\TransactionIsolationLevel;
@@ -21,16 +19,13 @@ use function array_merge;
 use function array_unique;
 use function array_values;
 use function count;
-use function func_get_arg;
 use function func_get_args;
-use function func_num_args;
 use function implode;
 use function in_array;
 use function is_numeric;
 use function is_string;
 use function sprintf;
 use function str_replace;
-use function strcasecmp;
 use function strtoupper;
 use function trim;
 
@@ -68,17 +63,9 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
 
     /**
      * {@inheritDoc}
-     *
-     * @deprecated Use {@see quoteIdentifier()} to quote identifiers instead.
      */
     public function getIdentifierQuoteCharacter()
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/5388',
-            'AbstractMySQLPlatform::getIdentifierQuoteCharacter() is deprecated. Use quoteIdentifier() instead.',
-        );
-
         return '`';
     }
 
@@ -143,8 +130,6 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
 
     /**
      * {@inheritDoc}
-     *
-     * @internal The method should be only used from within the {@see AbstractSchemaManager} class hierarchy.
      */
     public function getListDatabasesSQL()
     {
@@ -152,8 +137,6 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
     }
 
     /**
-     * @deprecated
-     *
      * {@inheritDoc}
      */
     public function getListTableConstraintsSQL($table)
@@ -162,8 +145,6 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
     }
 
     /**
-     * @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon.
-     *
      * {@inheritDoc}
      *
      * Two approaches to listing the table indexes. The information_schema is
@@ -184,8 +165,6 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
 
     /**
      * {@inheritDoc}
-     *
-     * @internal The method should be only used from within the {@see AbstractSchemaManager} class hierarchy.
      */
     public function getListViewsSQL($database)
     {
@@ -193,8 +172,6 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
     }
 
     /**
-     * @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon.
-     *
      * @param string      $table
      * @param string|null $database
      *
@@ -220,17 +197,8 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
     /**
      * {@inheritDoc}
      */
-    protected function getVarcharTypeDeclarationSQLSnippet($length, $fixed/*, $lengthOmitted = false*/)
+    protected function getVarcharTypeDeclarationSQLSnippet($length, $fixed)
     {
-        if ($length <= 0 || (func_num_args() > 2 && func_get_arg(2))) {
-            Deprecation::trigger(
-                'doctrine/dbal',
-                'https://github.com/doctrine/dbal/issues/3263',
-                'Relying on the default string column length on MySQL is deprecated'
-                    . ', specify the length explicitly.',
-            );
-        }
-
         return $fixed ? ($length > 0 ? 'CHAR(' . $length . ')' : 'CHAR(255)')
                 : ($length > 0 ? 'VARCHAR(' . $length . ')' : 'VARCHAR(255)');
     }
@@ -238,17 +206,8 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
     /**
      * {@inheritdoc}
      */
-    protected function getBinaryTypeDeclarationSQLSnippet($length, $fixed/*, $lengthOmitted = false*/)
+    protected function getBinaryTypeDeclarationSQLSnippet($length, $fixed)
     {
-        if ($length <= 0 || (func_num_args() > 2 && func_get_arg(2))) {
-            Deprecation::trigger(
-                'doctrine/dbal',
-                'https://github.com/doctrine/dbal/issues/3263',
-                'Relying on the default binary column length on MySQL is deprecated'
-                . ', specify the length explicitly.',
-            );
-        }
-
         return $fixed
             ? 'BINARY(' . ($length > 0 ? $length : 255) . ')'
             : 'VARBINARY(' . ($length > 0 ? $length : 255) . ')';
@@ -333,7 +292,7 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
         Deprecation::trigger(
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/pulls/1519',
-            'AbstractMySQLPlatform::prefersIdentityColumns() is deprecated.',
+            'AbstractMySQLPlatform::prefersIdentityColumns() is deprecated.'
         );
 
         return true;
@@ -351,8 +310,6 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
 
     /**
      * {@inheritDoc}
-     *
-     * @internal The method should be only used from within the {@see AbstractPlatform} class hierarchy.
      */
     public function supportsInlineColumnComments()
     {
@@ -361,8 +318,6 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
 
     /**
      * {@inheritDoc}
-     *
-     * @internal The method should be only used from within the {@see AbstractPlatform} class hierarchy.
      */
     public function supportsColumnCollation()
     {
@@ -370,8 +325,6 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
     }
 
     /**
-     * @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon.
-     *
      * {@inheritDoc}
      */
     public function getListTablesSQL()
@@ -380,8 +333,6 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
     }
 
     /**
-     * @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon.
-     *
      * {@inheritDoc}
      */
     public function getListTableColumnsSQL($table, $database = null)
@@ -394,7 +345,6 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
                ' ORDER BY ORDINAL_POSITION ASC';
     }
 
-    /** @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon. */
     public function getListTableMetadataSQL(string $table, ?string $database = null): string
     {
         return sprintf(
@@ -412,41 +362,8 @@ WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA = %s AND TABLE_NAME = %s
 SQL
             ,
             $this->getDatabaseNameSQL($database),
-            $this->quoteStringLiteral($table),
+            $this->quoteStringLiteral($table)
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getCreateTablesSQL(array $tables): array
-    {
-        $sql = [];
-
-        foreach ($tables as $table) {
-            $sql = array_merge($sql, $this->getCreateTableWithoutForeignKeysSQL($table));
-        }
-
-        foreach ($tables as $table) {
-            if (! $table->hasOption('engine') || $this->engineSupportsForeignKeys($table->getOption('engine'))) {
-                foreach ($table->getForeignKeys() as $foreignKey) {
-                    $sql[] = $this->getCreateForeignKeySQL(
-                        $foreignKey,
-                        $table->getQuotedName($this),
-                    );
-                }
-            } elseif (count($table->getForeignKeys()) > 0) {
-                Deprecation::trigger(
-                    'doctrine/dbal',
-                    'https://github.com/doctrine/dbal/pull/5414',
-                    'Relying on the DBAL not generating DDL for foreign keys on MySQL engines'
-                        . ' other than InnoDB is deprecated.'
-                        . ' Define foreign key constraints only if they are necessary.',
-                );
-            }
-        }
-
-        return $sql;
     }
 
     /**
@@ -485,22 +402,17 @@ SQL
         $query .= $this->buildTableOptions($options);
         $query .= $this->buildPartitionOptions($options);
 
-        $sql = [$query];
+        $sql    = [$query];
+        $engine = 'INNODB';
+
+        if (isset($options['engine'])) {
+            $engine = strtoupper(trim($options['engine']));
+        }
 
         // Propagate foreign key constraints only for InnoDB.
-        if (isset($options['foreignKeys'])) {
-            if (! isset($options['engine']) || $this->engineSupportsForeignKeys($options['engine'])) {
-                foreach ($options['foreignKeys'] as $definition) {
-                    $sql[] = $this->getCreateForeignKeySQL($definition, $name);
-                }
-            } elseif (count($options['foreignKeys']) > 0) {
-                Deprecation::trigger(
-                    'doctrine/dbal',
-                    'https://github.com/doctrine/dbal/pull/5414',
-                    'Relying on the DBAL not generating DDL for foreign keys on MySQL engines'
-                    . ' other than InnoDB is deprecated.'
-                    . ' Define foreign key constraints only if they are necessary.',
-                );
+        if (isset($options['foreignKeys']) && $engine === 'INNODB') {
+            foreach ((array) $options['foreignKeys'] as $definition) {
+                $sql[] = $this->getCreateForeignKeySQL($definition, $name);
             }
         }
 
@@ -509,8 +421,6 @@ SQL
 
     /**
      * {@inheritdoc}
-     *
-     * @internal The method should be only used from within the {@see AbstractPlatform} class hierarchy.
      */
     public function getDefaultValueDeclarationSQL($column)
     {
@@ -543,11 +453,6 @@ SQL
         $tableOptions[] = sprintf('DEFAULT CHARACTER SET %s', $options['charset']);
 
         if (isset($options['collate'])) {
-            Deprecation::trigger(
-                'doctrine/dbal',
-                'https://github.com/doctrine/dbal/issues/5214',
-                'The "collate" option is deprecated in favor of "collation" and will be removed in 4.0.',
-            );
             $options['collation'] = $options['collate'];
         }
 
@@ -595,11 +500,6 @@ SQL
             : '';
     }
 
-    private function engineSupportsForeignKeys(string $engine): bool
-    {
-        return strcasecmp(trim($engine), 'InnoDB') === 0;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -640,6 +540,15 @@ SQL
 
             $column      = $columnDiff->column;
             $columnArray = $column->toArray();
+
+            // Don't propagate default value changes for unsupported column types.
+            if (
+                $columnDiff->hasChanged('default') &&
+                count($columnDiff->changedProperties) === 1 &&
+                ($columnArray['type'] instanceof TextType || $columnArray['type'] instanceof BlobType)
+            ) {
+                continue;
+            }
 
             $columnArray['comment'] = $this->getColumnComment($column);
             $queryParts[]           =  'CHANGE ' . ($columnDiff->getOldColumnName()->getQuotedName($this)) . ' '
@@ -687,7 +596,7 @@ SQL
             $sql = array_merge(
                 $this->getPreAlterTableIndexForeignKeySQL($diff),
                 $sql,
-                $this->getPostAlterTableIndexForeignKeySQL($diff),
+                $this->getPostAlterTableIndexForeignKeySQL($diff)
             );
         }
 
@@ -751,7 +660,7 @@ SQL
             $sql,
             $this->getPreAlterTableAlterIndexForeignKeySQL($diff),
             parent::getPreAlterTableIndexForeignKeySQL($diff),
-            $this->getPreAlterTableRenameIndexForeignKeySQL($diff),
+            $this->getPreAlterTableRenameIndexForeignKeySQL($diff)
         );
 
         return $sql;
@@ -851,7 +760,7 @@ SQL
                 continue;
             }
 
-            $sql[] = $this->getDropForeignKeySQL($foreignKey->getQuotedName($this), $tableName);
+            $sql[] = $this->getDropForeignKeySQL($foreignKey, $tableName);
         }
 
         return $sql;
@@ -877,7 +786,7 @@ SQL
         /** @var ForeignKeyConstraint[] $remainingForeignKeys */
         $remainingForeignKeys = array_diff_key(
             $diff->fromTable->getForeignKeys(),
-            $diff->removedForeignKeys,
+            $diff->removedForeignKeys
         );
 
         foreach ($remainingForeignKeys as $foreignKey) {
@@ -900,7 +809,7 @@ SQL
     {
         return array_merge(
             parent::getPostAlterTableIndexForeignKeySQL($diff),
-            $this->getPostAlterTableRenameIndexForeignKeySQL($diff),
+            $this->getPostAlterTableRenameIndexForeignKeySQL($diff)
         );
     }
 
@@ -1013,8 +922,6 @@ SQL
 
     /**
      * {@inheritDoc}
-     *
-     * @internal The method should be only used from within the {@see AbstractPlatform} class hierarchy.
      */
     public function getColumnCharsetDeclarationSQL($charset)
     {
@@ -1023,8 +930,6 @@ SQL
 
     /**
      * {@inheritDoc}
-     *
-     * @internal The method should be only used from within the {@see AbstractPlatform} class hierarchy.
      */
     public function getColumnCollationDeclarationSQL($collation)
     {
@@ -1033,8 +938,6 @@ SQL
 
     /**
      * {@inheritDoc}
-     *
-     * @internal The method should be only used from within the {@see AbstractPlatform} class hierarchy.
      */
     public function getAdvancedForeignKeyOptionsSQL(ForeignKeyConstraint $foreignKey)
     {
@@ -1054,34 +957,20 @@ SQL
     public function getDropIndexSQL($index, $table = null)
     {
         if ($index instanceof Index) {
-            Deprecation::trigger(
-                'doctrine/dbal',
-                'https://github.com/doctrine/dbal/issues/4798',
-                'Passing $index as an Index object to %s is deprecated. Pass it as a quoted name instead.',
-                __METHOD__,
-            );
-
             $indexName = $index->getQuotedName($this);
         } elseif (is_string($index)) {
             $indexName = $index;
         } else {
             throw new InvalidArgumentException(
-                __METHOD__ . '() expects $index parameter to be string or ' . Index::class . '.',
+                __METHOD__ . '() expects $index parameter to be string or ' . Index::class . '.'
             );
         }
 
         if ($table instanceof Table) {
-            Deprecation::trigger(
-                'doctrine/dbal',
-                'https://github.com/doctrine/dbal/issues/4798',
-                'Passing $table as a Table object to %s is deprecated. Pass it as a quoted name instead.',
-                __METHOD__,
-            );
-
             $table = $table->getQuotedName($this);
         } elseif (! is_string($table)) {
             throw new InvalidArgumentException(
-                __METHOD__ . '() expects $table parameter to be string or ' . Table::class . '.',
+                __METHOD__ . '() expects $table parameter to be string or ' . Table::class . '.'
             );
         }
 
@@ -1130,7 +1019,7 @@ SQL
         Deprecation::triggerIfCalledFromOutside(
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/issues/4749',
-            'AbstractMySQLPlatform::getName() is deprecated. Identify platforms by their class.',
+            'AbstractMySQLPlatform::getName() is deprecated. Identify platforms by their class.'
         );
 
         return 'mysql';
@@ -1185,33 +1074,17 @@ SQL
 
     /**
      * {@inheritDoc}
-     *
-     * @deprecated
      */
     public function getVarcharMaxLength()
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/3263',
-            'AbstractMySQLPlatform::getVarcharMaxLength() is deprecated.',
-        );
-
         return 65535;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @deprecated
      */
     public function getBinaryMaxLength()
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/3263',
-            'AbstractMySQLPlatform::getBinaryMaxLength() is deprecated.',
-        );
-
         return 65535;
     }
 
@@ -1226,7 +1099,7 @@ SQL
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/issues/4510',
             'AbstractMySQLPlatform::getReservedKeywordsClass() is deprecated,'
-                . ' use AbstractMySQLPlatform::createReservedKeywordsList() instead.',
+                . ' use AbstractMySQLPlatform::createReservedKeywordsList() instead.'
         );
 
         return Keywords\MySQLKeywords::class;
@@ -1241,17 +1114,10 @@ SQL
     public function getDropTemporaryTableSQL($table)
     {
         if ($table instanceof Table) {
-            Deprecation::trigger(
-                'doctrine/dbal',
-                'https://github.com/doctrine/dbal/issues/4798',
-                'Passing $table as a Table object to %s is deprecated. Pass it as a quoted name instead.',
-                __METHOD__,
-            );
-
             $table = $table->getQuotedName($this);
         } elseif (! is_string($table)) {
             throw new InvalidArgumentException(
-                __METHOD__ . '() expects $table parameter to be string or ' . Table::class . '.',
+                __METHOD__ . '() expects $table parameter to be string or ' . Table::class . '.'
             );
         }
 
@@ -1293,7 +1159,7 @@ SQL
      */
     public function quoteStringLiteral($str)
     {
-        $str = str_replace('\\', '\\\\', $str); // MySQL requires backslashes to be escaped
+        $str = str_replace('\\', '\\\\', $str); // MySQL requires backslashes to be escaped aswell.
 
         return parent::quoteStringLiteral($str);
     }
@@ -1318,10 +1184,5 @@ SQL
         }
 
         return $this->getCurrentDatabaseExpression();
-    }
-
-    public function createSchemaManager(Connection $connection): MySQLSchemaManager
-    {
-        return new MySQLSchemaManager($connection, $this);
     }
 }

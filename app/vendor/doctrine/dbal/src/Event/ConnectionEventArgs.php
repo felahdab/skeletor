@@ -10,14 +10,17 @@ use Doctrine\DBAL\Connection;
  */
 class ConnectionEventArgs extends EventArgs
 {
-    private Connection $connection;
+    /** @var Connection */
+    private $connection;
 
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
     }
 
-    /** @return Connection */
+    /**
+     * @return Connection
+     */
     public function getConnection()
     {
         return $this->connection;
