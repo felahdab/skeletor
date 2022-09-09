@@ -95,7 +95,9 @@ class SchemaDiff
         return $this->_toSql($platform, true);
     }
 
-    /** @return string[] */
+    /**
+     * @return string[]
+     */
     public function toSql(AbstractPlatform $platform)
     {
         return $this->_toSql($platform, false);
@@ -138,10 +140,28 @@ class SchemaDiff
             }
         }
 
-        $sql = array_merge($sql, $platform->getCreateTablesSQL($this->newTables));
+        $foreignKeySql = [];
+        foreach ($this->newTables as $table) {
+            $sql = array_merge(
+                $sql,
+                $platform->getCreateTableSQL($table, AbstractPlatform::CREATE_INDEXES)
+            );
+
+            if (! $platform->supportsForeignKeyConstraints()) {
+                continue;
+            }
+
+            foreach ($table->getForeignKeys() as $foreignKey) {
+                $foreignKeySql[] = $platform->getCreateForeignKeySQL($foreignKey, $table);
+            }
+        }
+
+        $sql = array_merge($sql, $foreignKeySql);
 
         if ($saveMode === false) {
-            $sql = array_merge($sql, $platform->getDropTablesSQL($this->removedTables));
+            foreach ($this->removedTables as $table) {
+                $sql[] = $platform->getDropTableSQL($table);
+            }
         }
 
         foreach ($this->changedTables as $tableDiff) {

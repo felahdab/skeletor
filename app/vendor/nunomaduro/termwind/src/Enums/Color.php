@@ -10,8 +10,6 @@ final class Color
 
     public const WHITE = 'white';
 
-    public const BRIGHTWHITE = 'bright-white';
-
     public const SLATE_50 = '#f8fafc';
 
     public const SLATE_100 = '#f1f5f9';
@@ -116,8 +114,6 @@ final class Color
 
     public const RED = 'red';
 
-    public const BRIGHTRED = 'bright-red';
-
     public const RED_50 = '#fef2f2';
 
     public const RED_100 = '#fee2e2';
@@ -138,7 +134,7 @@ final class Color
 
     public const RED_900 = '#7f1d1d';
 
-    public const ORANGE = '#f97316';
+    public const ORANGE = 'orange';
 
     public const ORANGE_50 = '#fff7ed';
 
@@ -182,8 +178,6 @@ final class Color
 
     public const YELLOW = 'yellow';
 
-    public const BRIGHTYELLOW = 'bright-yellow';
-
     public const YELLOW_50 = '#fefce8';
 
     public const YELLOW_100 = '#fef9c3';
@@ -225,8 +219,6 @@ final class Color
     public const LIME_900 = '#365314';
 
     public const GREEN = 'green';
-
-    public const BRIGHTGREEN = 'bright-green';
 
     public const GREEN_50 = '#f0fdf4';
 
@@ -290,8 +282,6 @@ final class Color
 
     public const CYAN = 'cyan';
 
-    public const BRIGHTCYAN = 'bright-cyan';
-
     public const CYAN_50 = '#ecfeff';
 
     public const CYAN_100 = '#cffafe';
@@ -333,8 +323,6 @@ final class Color
     public const SKY_900 = '#0c4a6e';
 
     public const BLUE = 'blue';
-
-    public const BRIGHTBLUE = 'bright-blue';
 
     public const BLUE_50 = '#eff6ff';
 
@@ -477,6 +465,4 @@ final class Color
     public const ROSE_900 = '#881337';
 
     public const MAGENTA = 'magenta';
-
-    public const BRIGHTMAGENTA = 'bright-magenta';
 }

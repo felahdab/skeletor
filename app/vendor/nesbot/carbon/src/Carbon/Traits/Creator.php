@@ -148,7 +148,7 @@ trait Creator
 
         $instance = new static($date->format('Y-m-d H:i:s.u'), $date->getTimezone());
 
-        if ($date instanceof CarbonInterface) {
+        if ($date instanceof CarbonInterface || $date instanceof Options) {
             $settings = $date->getSettings();
 
             if (!$date->hasLocalTranslator()) {
@@ -921,20 +921,13 @@ trait Creator
     /**
      * Set last errors.
      *
-     * @param array|bool $lastErrors
+     * @param array $lastErrors
      *
      * @return void
      */
-    private static function setLastErrors($lastErrors)
+    private static function setLastErrors(array $lastErrors)
     {
-        if (\is_array($lastErrors) || $lastErrors === false) {
-            static::$lastErrors = \is_array($lastErrors) ? $lastErrors : [
-                'warning_count' => 0,
-                'warnings' => [],
-                'error_count' => 0,
-                'errors' => [],
-            ];
-        }
+        static::$lastErrors = $lastErrors;
     }
 
     /**

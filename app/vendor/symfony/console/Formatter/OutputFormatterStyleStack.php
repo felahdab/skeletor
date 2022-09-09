@@ -77,7 +77,7 @@ class OutputFormatterStyleStack implements ResetInterface
     /**
      * Computes current style with stacks top codes.
      */
-    public function getCurrent(): OutputFormatterStyleInterface
+    public function getCurrent(): OutputFormatterStyle
     {
         if (empty($this->styles)) {
             return $this->emptyStyle;

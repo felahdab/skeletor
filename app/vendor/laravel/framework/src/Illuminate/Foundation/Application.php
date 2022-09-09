@@ -35,7 +35,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
      *
      * @var string
      */
-    const VERSION = '9.27.0';
+    const VERSION = '9.22.1';
 
     /**
      * The base path for the Laravel installation.
@@ -696,8 +696,6 @@ class Application extends Container implements ApplicationContract, CachesConfig
 
         if (property_exists($provider, 'singletons')) {
             foreach ($provider->singletons as $key => $value) {
-                $key = is_int($key) ? $value : $key;
-
                 $this->singleton($key, $value);
             }
         }

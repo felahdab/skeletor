@@ -10,7 +10,6 @@ use Doctrine\DBAL\Driver\API\OCI;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\OraclePlatform;
 use Doctrine\DBAL\Schema\OracleSchemaManager;
-use Doctrine\Deprecations\Deprecation;
 
 use function assert;
 
@@ -29,18 +28,9 @@ abstract class AbstractOracleDriver implements Driver
 
     /**
      * {@inheritdoc}
-     *
-     * @deprecated Use {@link OraclePlatform::createSchemaManager()} instead.
      */
     public function getSchemaManager(Connection $conn, AbstractPlatform $platform)
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/5458',
-            'AbstractOracleDriver::getSchemaManager() is deprecated.'
-                . ' Use OraclePlatform::createSchemaManager() instead.',
-        );
-
         assert($platform instanceof OraclePlatform);
 
         return new OracleSchemaManager($conn, $platform);

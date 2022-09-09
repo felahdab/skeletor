@@ -77,7 +77,7 @@ final class CodeCoverage
     private $ignoreDeprecatedCode = false;
 
     /**
-     * @var null|PhptTestCase|string|TestCase
+     * @var PhptTestCase|string|TestCase
      */
     private $currentId;
 

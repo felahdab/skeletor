@@ -132,7 +132,7 @@ class BladeSourceMapCompiler
         while (true) {
             if ($lineNumberToCheck < $compiledLineNumber - $maxDistance) {
                 // Something wrong. Return the $compiledLineNumber (unless it's out of range)
-                return min($compiledLineNumber, count($map));
+                return $compiledLineNumber > count($map) ? count($map) : $compiledLineNumber;
             }
 
             if (preg_match($pattern, $map[$lineNumberToCheck] ?? '', $matches)) {

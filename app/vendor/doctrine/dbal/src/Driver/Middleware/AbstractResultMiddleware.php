@@ -6,7 +6,8 @@ use Doctrine\DBAL\Driver\Result;
 
 abstract class AbstractResultMiddleware implements Result
 {
-    private Result $wrappedResult;
+    /** @var Result */
+    private $wrappedResult;
 
     public function __construct(Result $result)
     {

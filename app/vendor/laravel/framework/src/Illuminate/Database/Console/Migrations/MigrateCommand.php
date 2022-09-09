@@ -7,7 +7,6 @@ use Illuminate\Console\View\Components\Task;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\Events\SchemaLoaded;
 use Illuminate\Database\Migrations\Migrator;
-use Illuminate\Database\SQLiteDatabaseDoesNotExistException;
 use Illuminate\Database\SqlServerConnection;
 
 class MigrateCommand extends BaseCommand
@@ -92,6 +91,10 @@ class MigrateCommand extends BaseCommand
             // seed task to re-populate the database, which is convenient when adding
             // a migration and a seed at the same time, as it is only this command.
             if ($this->option('seed') && ! $this->option('pretend')) {
+                if (! empty($migrations)) {
+                    $this->newLine();
+                }
+
                 $this->call('db:seed', [
                     '--class' => $this->option('seeder') ?: 'Database\\Seeders\\DatabaseSeeder',
                     '--force' => true,
@@ -109,7 +112,7 @@ class MigrateCommand extends BaseCommand
      */
     protected function prepareDatabase()
     {
-        if (! $this->repositoryExists()) {
+        if (! $this->migrator->repositoryExists()) {
             $this->components->info('Preparing database.');
 
             $this->components->task('Creating migration table', function () {
@@ -124,36 +127,6 @@ class MigrateCommand extends BaseCommand
         if (! $this->migrator->hasRunAnyMigrations() && ! $this->option('pretend')) {
             $this->loadSchemaState();
         }
-    }
-
-    /**
-     * Determine if the migrator repository exists.
-     *
-     * @return bool
-     */
-    protected function repositoryExists()
-    {
-        return retry(2, fn () => $this->migrator->repositoryExists(), 0, function ($e) {
-            if (! $e->getPrevious() instanceof SQLiteDatabaseDoesNotExistException) {
-                return false;
-            }
-
-            if ($this->option('force')) {
-                return touch($e->getPrevious()->path);
-            }
-
-            if ($this->option('no-interaction')) {
-                return false;
-            }
-
-            $this->components->warn('The SQLite database does not exist: '.$e->getPrevious()->path);
-
-            if (! $this->components->confirm('Would you like to create it?')) {
-                return false;
-            }
-
-            return touch($e->getPrevious()->path);
-        });
     }
 
     /**

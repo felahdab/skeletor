@@ -757,9 +757,7 @@ final class TestResult implements Countable
                     $e->getMessage(),
                     $frame['file'] ?? $e->getFile(),
                     $frame['line'] ?? $e->getLine()
-                ),
-                0,
-                $e
+                )
             );
         } catch (Warning $e) {
             $warning = true;

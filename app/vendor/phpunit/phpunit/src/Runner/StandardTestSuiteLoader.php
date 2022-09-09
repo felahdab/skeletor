@@ -52,12 +52,11 @@ final class StandardTestSuiteLoader implements TestSuiteLoader
         }
 
         if (!class_exists($suiteClassName, false)) {
+            // this block will handle namespaced classes
             $offset = 0 - strlen($suiteClassName);
 
             foreach ($loadedClasses as $loadedClass) {
-                // @see https://github.com/sebastianbergmann/phpunit/issues/5020
-                if (stripos(substr($loadedClass, $offset - 1), '\\' . $suiteClassName) === 0 ||
-                    stripos(substr($loadedClass, $offset - 1), '_' . $suiteClassName) === 0) {
+                if (stripos(substr($loadedClass, $offset - 1), '\\' . $suiteClassName) === 0) {
                     $suiteClassName = $loadedClass;
 
                     break;

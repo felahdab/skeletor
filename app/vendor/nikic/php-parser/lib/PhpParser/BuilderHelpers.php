@@ -178,20 +178,7 @@ final class BuilderHelpers
         }
 
         $builtinTypes = [
-            'array',
-            'callable',
-            'bool',
-            'int',
-            'float',
-            'string',
-            'iterable',
-            'void',
-            'object',
-            'null',
-            'false',
-            'mixed',
-            'never',
-            'true',
+            'array', 'callable', 'string', 'int', 'float', 'bool', 'iterable', 'void', 'object', 'mixed', 'never',
         ];
 
         $lowerType = strtolower($type);

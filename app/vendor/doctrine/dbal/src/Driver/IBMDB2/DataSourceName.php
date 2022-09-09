@@ -13,7 +13,8 @@ use function strpos;
  */
 final class DataSourceName
 {
-    private string $string;
+    /** @var string */
+    private $string;
 
     private function __construct(string $string)
     {

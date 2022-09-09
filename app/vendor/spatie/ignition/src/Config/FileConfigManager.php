@@ -73,8 +73,7 @@ class FileConfigManager implements ConfigManager
         return $this->readFromFile();
     }
 
-    /** @return array<string, mixed> */
-    protected function readFromFile(): array
+    protected function readFromFile()
     {
         if (! $this->isValidFile()) {
             return [];
@@ -121,11 +120,6 @@ class FileConfigManager implements ConfigManager
         return (file_put_contents($this->file, '') !== false);
     }
 
-    /**
-     * @param array<string, mixed> $options
-     *
-     * @return bool
-     */
     protected function saveToFile(array $options): bool
     {
         try {

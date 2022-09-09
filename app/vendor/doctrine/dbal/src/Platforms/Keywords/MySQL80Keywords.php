@@ -2,8 +2,6 @@
 
 namespace Doctrine\DBAL\Platforms\Keywords;
 
-use Doctrine\Deprecations\Deprecation;
-
 use function array_merge;
 
 /**
@@ -13,17 +11,9 @@ class MySQL80Keywords extends MySQL57Keywords
 {
     /**
      * {@inheritdoc}
-     *
-     * @deprecated
      */
     public function getName()
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/5433',
-            'MySQL80Keywords::getName() is deprecated.',
-        );
-
         return 'MySQL80';
     }
 
