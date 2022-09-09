@@ -93,7 +93,6 @@
           @if (count(auth()->user()->roles) > 1 )
             <a class="dropdown-item" href="{{ route('currentrole.show') }}">Changer de role</a>
           @endif
-            <a class="dropdown-item" href="{{ route('changepasswd.show', auth()->user()->id) }}">Changer de mot de passe</a>
             <a class="dropdown-item" href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2">Logout</a>
           </div>
         </div>
@@ -101,7 +100,7 @@
 
       @guest
         <div class="text-end">
-          <a href="{{ route('login.perform') }}" class="btn btn-outline-light me-2">Login</a>
+          <a href="{{ route('keycloak.login.redirect') }}" class="btn btn-outline-light me-2">Login</a>
         </div>
       @endguest
       </ul>
