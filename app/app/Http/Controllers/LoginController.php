@@ -33,6 +33,8 @@ class LoginController extends Controller
     {
 	$MCuser = Socialite::driver('keycloak')->stateless()->user();
 
+	ddd($MCuser);
+
 	$user = User::updateOrCreate([
             'email' => $MCuser->email,
         ], [
