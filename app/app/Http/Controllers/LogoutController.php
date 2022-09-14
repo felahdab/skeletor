@@ -23,7 +23,7 @@ class LogoutController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-	$redirectUri = URL::to(route('home.index'));
+        $redirectUri = URL::to(route('home.index'));
 
         return redirect(env('KEYCLOAK_LOGOUT_URL') . $redirectUri ); 
    }
