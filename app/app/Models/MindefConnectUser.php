@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class MindefConnectUser extends Model
 {
     use HasFactory;
-<<<<<<< HEAD
     
     protected $fillable = [
         'email',
@@ -20,6 +19,4 @@ class MindefConnectUser extends Model
         'short_rank',
         'display_name',
         ];
-=======
->>>>>>> b073ccc53f20ae7f0ef168fa08dee6090f81d3ed
 }
