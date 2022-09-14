@@ -4,7 +4,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
       <ul class="navbar-nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 mr-auto mt-2 mt-lg-0">
-        <li><a href="/" class="nav-link nav-item text-white">Accueil</a></li>
+        <li><a href="{{ route('home.index') }}" class="nav-link nav-item text-white">Accueil</a></li>
         @auth
         @can('users.index')
         <div class="dropdown nav-item" >
@@ -12,6 +12,7 @@
           Personnel
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="{{ route('mindefconnect.index') }}">Demandes Mindef Connect</a>
             <a class="dropdown-item" href="{{ route('users.index') }}">Utilisateurs</a>
             <a class="dropdown-item" href="{{ route('roles.index')}}">Roles</a>
             <a class="dropdown-item" href="{{ route('permissions.index')}}">Permissions</a>

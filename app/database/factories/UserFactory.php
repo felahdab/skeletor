@@ -32,7 +32,7 @@ class UserFactory extends Factory
         
         $lastname = strtolower($this->faker->lastName());
         $firstname = strtolower($this->faker->firstName());
-        $email = $firstname . "." . $lastname . ".@intradef.gouv.fr";
+        $email = $firstname . "." . $lastname . "@intradef.gouv.fr";
         
         return [
             'name'       => $lastname,
