@@ -17,6 +17,7 @@ use App\Models\Unite;
 use App\Models\Fonction;
 use App\Models\TypeFonction;
 
+
 class MindefConnectUserController extends Controller
 {
     /**
@@ -29,6 +30,7 @@ class MindefConnectUserController extends Controller
         $mcusers = MindefConnectUser::paginate(10);
         
         return view('mindefconnect.index', ['mcusers' => $mcusers]);
+
     }
 
     /**
@@ -148,9 +150,15 @@ class MindefConnectUserController extends Controller
      * @param  \App\Models\MindefConnectUser  $mindefConnectUser
      * @return \Illuminate\Http\Response
      */
+<<<<<<< HEAD
     public function destroy(MindefConnectUser $user)
     {
         $user->delete();
         return redirect()->route('mindefconnect.index');
+=======
+    public function destroy(MindefConnectUser $mindefConnectUser)
+    {
+        //
+>>>>>>> b073ccc53f20ae7f0ef168fa08dee6090f81d3ed
     }
 }

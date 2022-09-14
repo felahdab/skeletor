@@ -60,7 +60,6 @@ class LoginController extends Controller
             
         return view('auth.comebacklater');
     
-        
 
         $defaultRole = Role::find(2);
         $user->roles()->detach($defaultRole);
