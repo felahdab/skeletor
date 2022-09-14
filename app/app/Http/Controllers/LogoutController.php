@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Session;
 
 use Illuminate\Support\Facades\URL;
 
+use Laravel\Socialite\Facades\Socialite;
+
 class LogoutController extends Controller
 {
     /**
@@ -24,7 +26,8 @@ class LogoutController extends Controller
         $request->session()->regenerateToken();
 
         $redirectUri = URL::to(route('home.index'));
+        $logoutUrl = Socialite::driver('keycloak')->getLogoutUrl($redirectUri);
 
-        return redirect(env('KEYCLOAK_LOGOUT_URL') . $redirectUri ); 
+        return redirect($logoutUrl);
    }
 }
