@@ -25,18 +25,14 @@ class UniteSeeder extends Seeder
             [6, 'PCE_B', 'PROVENCE B'],
             [7, 'LGC_A', 'LANGUEDOC A'],
             [8, 'LGC_B', 'LANGUEDOC B'],
-            [9, 'AVG_A', 'AUVERGNE A'],
-            [10, 'AVG_B', 'AUVERGNE B'],
-            [11, 'BTE_A', 'BRETAGNE A'],
-            [12, 'BTE_B', 'BRETAGNE B'],
-            [13, 'NMD_A', 'NORMANDIE A'],
-            [14, 'NMD_B', 'NORMANDIE B'],
-            [15, 'ALS_A', 'ALSACE A'],
-            [16, 'ALS_B', 'ALSACE B'],
-            [17, 'LRN_A', 'LORRAINE A'],
-            [18, 'LRN_B', 'LORRAINE B'],
-            [19, 'HE', 'HORS ESCOUADE'],
-            [20, 'FCM', 'Formation Continue Modularisée']
+            [9, 'AVG', 'AUVERGNE'],
+            [10, 'BTE_A', 'BRETAGNE A'],
+            [11, 'BTE_B', 'BRETAGNE B'],
+            [12, 'NMD', 'NORMANDIE'],
+            [13, 'ALS', 'ALSACE'],
+            [14, 'LRN', 'LORRAINE'],
+            [15, 'HE', 'HORS ESCOUADE'],
+            [16, 'FCM', 'Formation Continue Modularisée']
             ];
         foreach ($records as $record){
             DB::insert('insert into unites (id, unite_libcourt, unite_liblong) values (?, ?, ?)', $record);
