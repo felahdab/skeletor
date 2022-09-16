@@ -1,6 +1,7 @@
 #!/bin/bash
 
 chown -R :ffastdev *
+chown -R :ffastdev .*
 chmod -R g+rwx .
 chmod -R o+rx .
 chmod -R o+rwx storage/logs
