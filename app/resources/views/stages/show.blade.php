@@ -51,7 +51,7 @@
                             <td>Sp&eacute;</td>
                             <td>Nom</td>
                             <td>Pr&eacute;nom</td>
-                            <td>Mat</td>
+                            @if(false)<td>Mat</td>@endif
                             <td>Secteur</td>
                             <td>Date valid</td>
                         </tr>
@@ -63,7 +63,7 @@
                                 <td>{{$user->displaySpecialite()}} </td>
                                 <td><a href='{{ route("stages.consulter", [ "marin" => $user->id]) }}'>{{$user->name}} </a></td>
                                 <td>{{$user->prenom}} </td>
-                                <td>{{$user->matricule}}</td>
+                                @if(false)<td>{{$user->matricule}}</td>@endif
                                 <td>{{$user->displaySecteur()}} </td>
                                 <td>{{$user->pivot->date_validation}}</td>
                             </tr>
@@ -82,7 +82,7 @@
                         <td>Sp&eacute;</td>
                         <td>Nom</td>
                         <td>Pr&eacute;nom</td>
-                        <td>Mat</td>
+                        @if(false)<td>Mat</td>@endif
                         <td>Secteur</td>
                         <td>Dest</td>
                         <td>Date mut</td>
@@ -96,7 +96,7 @@
                             <td>{{$user->displaySpecialite()}} </td>
                             <td><a href='{{ route("stages.consulter", ["stage" => $stage->id] ) }}'>{{$user->name}} </a></td>
                             <td>{{$user->prenom}} </td>
-                            <td>{{$user->matricule}}</td>
+                            @if(false)<td>{{$user->matricule}}</td>@endif
                             <td>{{$user->displaySecteur()}} </td>
                             <td>{{$user->displayDestination()}}</td>
                             <td>{{$user->displayDateDebarquement()}}</td>

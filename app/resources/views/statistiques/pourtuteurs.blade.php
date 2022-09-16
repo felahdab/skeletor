@@ -19,7 +19,7 @@
                             </thead>
                             <tbody>
                                 @foreach($users->get()->where('secteur_id', auth()->user()->secteur_id) as $marin)
-                                <tr title='{{$marin->matricule}}'>
+                                <tr title=''>
                                     <td>{{$marin->displayString()}}</td>
                                     <td>{{$marin->displayDiplome() . " " . $marin->displaySpecialite()}}</td>
                                     <td style='@if($marin->fonctionAQuai() != null){!! $marin->getFonctionHtmlAttribute($marin->fonctionAQuai()) !!}@else'@endif

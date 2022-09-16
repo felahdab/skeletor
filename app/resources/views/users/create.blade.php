@@ -95,12 +95,14 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
+                            @if (false)
                             <label for="matricule" class="form-label">Matricule</label>
                             <input value="" 
                                 type="text" 
                                 class="form-control" 
                                 name="matricule" 
                                 placeholder="Matricule" required>
+                            @endif
                         </div>
                     </div>
                     <div class="col">
