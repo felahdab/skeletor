@@ -5,7 +5,6 @@ services:
         volumes:
             - ../nginx.conf:/etc/nginx/conf.d/nginx.conf
             - ../app/:/app
-        container_name: ffast-web
         networks:
              - frontend
              - backend
@@ -15,7 +14,6 @@ services:
             - ../app:/app
         networks:
              - backend
-        container_name: ffast-php
     db:
         image: mariadb:10.8.3
         environment:
@@ -27,7 +25,6 @@ services:
             - mysqldata:/var/lib/mysql
         networks:
              - backend
-        container_name: ffast-db
 volumes:
     mysqldata: {}
 networks:
