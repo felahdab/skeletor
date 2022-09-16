@@ -30,7 +30,7 @@ class StoreUserRequest extends FormRequest
             'name' => 'required',
             'prenom' => 'required',
             'email' =>  [ 'required', 'email:rfc,dns', 'unique:users,email', new IntradefEmailValidation],
-            'matricule' => 'required',
+            // 'matricule' => 'required',
             'date_embarq' => 'required|date', 
             'date_debarq' => 'date|nullable',
             'grade_id' => 'required|numeric',

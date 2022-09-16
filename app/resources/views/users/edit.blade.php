@@ -108,11 +108,13 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
+                        @if (false)
                             <label for="matricule" class="form-label">Matricule</label>
                             {!!Form::text('matricule', $user->matricule , ['class' => 'form-control', 'placeholder'=> "Matricule", 'required']) !!}
                             @if ($errors->has('matricule'))
                                 <span class="text-danger text-left">{{ $errors->first(matricule) }}</span>
                             @endif
+                        @endif
                         </div>
                     </div>
                     <div class="col">

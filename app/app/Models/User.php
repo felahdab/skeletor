@@ -30,7 +30,7 @@ class User extends Authenticatable
         'prenom',
         'email',
         'password',
-        'matricule',
+        // 'matricule',
         'date_embarq',
         'date_debarq',
         'photo',
