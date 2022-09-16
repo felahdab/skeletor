@@ -6,14 +6,14 @@
     <meta name="description" content="">
     <meta name="author" content="Contributors from the GTR/T">
     <title>FFAST</title>
-	<link rel="icon" type="image/png" sizes="32x32" href="{!! url('assets/images/favicon-32x32.png') !!}">
-	<link rel="icon" type="image/png" sizes="16x16" href="{!! url('assets/images/favicon-16x16.png') !!}">
+	<link rel="icon" type="image/png" sizes="32x32" href="{!! asset('assets/images/favicon-32x32.png') !!}">
+	<link rel="icon" type="image/png" sizes="16x16" href="{!! asset('assets/images/favicon-16x16.png') !!}">
 
     <!-- Bootstrap core CSS -->
     @livewireStyles
-    <link href="{!! url('assets/css/feuilleDeStyle.css') !!}" rel="stylesheet">
-    <link href="{!! url('assets/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
-    <script src="{!! url('assets/js/jscharts.js') !!}"></script>
+    <link href="{!! asset('assets/css/feuilleDeStyle.css') !!}" rel="stylesheet">
+    <link href="{!! asset('assets/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
+    <script src="{!! asset('assets/js/jscharts.js') !!}"></script>
     
 
     <style>
@@ -42,9 +42,9 @@
     </main>
     
     @livewireScripts
-    <script src="{!! url('assets/js/jsfile.js') !!}"></script>
-    <script src="{!! url('assets/jquery/jquery-3.6.0.min.js') !!}"></script>
-    <script src="{!! url('assets/bootstrap/js/bootstrap.bundle.js') !!}"></script>
+    <script src="{!! asset('assets/js/jsfile.js') !!}"></script>
+    <script src="{!! asset('assets/jquery/jquery-3.6.0.min.js') !!}"></script>
+    <script src="{!! asset('assets/bootstrap/js/bootstrap.bundle.js') !!}"></script>
     @yield("scripts")
       
   </body>
