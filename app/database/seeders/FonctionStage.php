@@ -326,7 +326,7 @@ class FonctionStage extends Seeder
             [379,'2022-09-15 14:29:34','2022-09-15 14:29:34',104,52,NULL]
         ];
         foreach ($records as $record){
-            DB::insert('insert into fonction_stage (id, created_at, updated_at, fonction_id, stage_id) values (?, ?, ?, ?, ?)', $record);
+            DB::insert('insert into fonction_stage (id, created_at, updated_at, fonction_id, stage_id, date_previsionnelle) values (?, ?, ?, ?, ?, ?)', $record);
         }
     }
 }

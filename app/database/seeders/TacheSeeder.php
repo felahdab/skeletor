@@ -488,7 +488,7 @@ class TacheSeeder extends Seeder
             [493,'2022-09-15 07:02:35','2022-09-15 07:02:35','ASA 20 TO - EFFECTUER LES OPERATIONS APRES TIR 20 MM TO','ASA 20 TO - EFFECTUER LES OPERATIONS APRES TIR 20 MM TO'],
             [494,'2022-09-15 07:04:35','2022-09-15 07:04:35','ASA 20 TO - CONNAITRE LES RISQUES ASSOCIES A LA FONCTION','ASA 20 TO - CONNAITRE LES RISQUES ASSOCIES A LA FONCTION, AU METIER ET A L\'ENVIRONNEMENT PHYSIQUE FREMM'],
             [495,'2022-09-15 14:12:06','2022-09-15 14:12:06','FCM - C1','FCM - CI -'],
-            [496,'2022-09-15 14:21:18','2022-09-15 14:21:18','test3','test3'];
+            [496,'2022-09-15 14:21:18','2022-09-15 14:21:18','test3','test3']
         ];
         foreach ($records as $record){
             DB::insert('insert into taches (id, created_at, updated_at, tache_libcourt, tache_liblong) values (?, ?, ?, ?, ?)', $record);
