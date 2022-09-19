@@ -6,7 +6,6 @@ services:
             - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
             - ../app/:/app
         networks:
-             - frontend
              - backend
     php:
         image: ffast-php
@@ -28,8 +27,6 @@ services:
 volumes:
     mysqldata: {}
 networks:
-  frontend:
-    external: true
-    name: mynetwork
   backend:
-    driver: bridge
+    external: true
+    name: backend

@@ -1,19 +1,12 @@
 #!/bin/bash
+SCRIPTDIRECTORY="$(dirname "$0")"
+BASEDIRECTORY=$(realpath $SCRIPTDIRECTORY)
+cd $BASEDIRECTORY
 
-pushd $(pwd)
-cd app
-./adjust_permissions.sh
+STACKNAME=$(basename $(pwd))
+echo $BASEDIRECTORY
+echo $STACKNAME
 
-popd
-
-pushd $(pwd)
-cd ffast-stack
-./up.sh
-
-popd
-
-pushd $(pwd)
-cd app
-./adjust_permissions.sh
-
-popd
+$BASEDIRECTORY/app/adjust_permissions.sh
+$BASEDIRECTORY/ffast-stack/up.sh
+$BASEDIRECTORY/app/adjust_permissions.sh
