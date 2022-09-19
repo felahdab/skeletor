@@ -13,6 +13,9 @@ echo $STACKNAME
 APP_PREFIX=$1
 
 SED_CMD='s/APP_PREFIX=.*/APP_PREFIX='$1'/g'
-
 sed -i $SED_CMD .env
+
+SED_CMD='s/DB_HOST=.*/DB_HOST='$1'-db-1/g'
+sed -i $SED_CMD .env
+
 mv public/assets public/assets$APP_PREFIX
