@@ -17,6 +17,7 @@
             <a href="{{ route('transformation.monlivret') }}" class="btn btn-warning btn-sm">Mon livret de transformation</a>
             <a href="{{ route('transformation.mafichebilan') }}" class="btn btn-secondary btn-sm">Ma fiche bilan</a>
         @endif
+        @if ($user->en_transformation)
         <div id='progression' style='width:100%;'>
             <div>
                 <div style='display: flex; padding: 2%; background-color: transparent; justify-content: space-evenly;'>
@@ -222,5 +223,6 @@
             </div>
             @endforeach
         </div>
+        @endif
     
 @endsection
