@@ -30,7 +30,6 @@ volumes:
 networks:
   private:
     driver: bridge
-    internal: true
   backend:
     external: true
     name: backend
