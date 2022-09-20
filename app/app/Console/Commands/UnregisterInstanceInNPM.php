@@ -11,7 +11,9 @@ class UnregisterInstanceInNPM extends Command
      *
      * @var string
      */
-    protected $signature = 'ffast:unregisterinstance';
+    protected $signature = 'ffast:unregisterinstance
+                              {domain  : le domaine dans lequel cette instance doit etre servie.},
+                              {subpath : le prefixe sous lequel on veut avoir cette instance.}';
 
     /**
      * The console command description.
