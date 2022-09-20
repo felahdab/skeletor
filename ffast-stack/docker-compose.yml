@@ -7,12 +7,13 @@ services:
             - ../app/:/app
         networks:
              - backend
+             - private
     php:
         image: ffast-php
         volumes:
             - ../app:/app
         networks:
-             - backend
+             - private
     db:
         image: mariadb:10.8.3
         environment:
@@ -23,10 +24,12 @@ services:
         volumes:
             - mysqldata:/var/lib/mysql
         networks:
-             - backend
+             - private
 volumes:
     mysqldata: {}
 networks:
+  private:
+    driver: bridge
   backend:
     external: true
     name: backend
