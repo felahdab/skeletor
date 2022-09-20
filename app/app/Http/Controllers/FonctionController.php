@@ -90,21 +90,11 @@ class FonctionController extends Controller
     
     public function choisircompagnonage(Request $request, Fonction $fonction)
     {
-        if ($request->has('filter') )
-        {
-            $filter = $request->input('filter');
-            $compagnonages = Compagnonage::where('comp_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('comp_libcourt')->get()    ;
-        } 
-        else 
-        {
-            $filter='';
-            $compagnonages = Compagnonage::orderBy('comp_libcourt')->get();
-        }
+        $compagnonages = Compagnonage::orderBy('comp_libcourt')->get();
         $compagnonages = $compagnonages->diff($fonction->compagnonages()->get());
         
         return view('fonctions.choisircompagnonage', [ 'fonction' => $fonction,
-                                                       'compagnonages' => $compagnonages,
-                                                       'filter'    => $filter]);
+                                                       'compagnonages' => $compagnonages]);
     }
     
     public function ajoutercompagnonage(Request $request, Fonction $fonction)
