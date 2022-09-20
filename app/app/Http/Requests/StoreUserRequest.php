@@ -38,6 +38,7 @@ class StoreUserRequest extends FormRequest
             'diplome_id' => 'required|numeric',
             'secteur_id' => 'required|numeric',
             'unite_destination_id' => 'required|numeric',
+            'user_comment' => 'nullable',
         ];
     }
     
