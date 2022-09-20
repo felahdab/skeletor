@@ -63,9 +63,17 @@ class UsersController extends Controller
     {
         $user = $user->create(array_merge($request->validated(), [ "password" =>$this->generateRandomString()]));
         
-        $roletransfo = Role::where("name", "user")->get()->first();
-        $user->roles()->attach($roletransfo);
+        $user->name = strtoupper($user->name);
+        $user->prenom = ucfirst(strtolower($user->prenom));
+        $user->save();
         
+        $user->syncRoles($request->get('role'));
+        
+        if (is_null($request->get('role')) or ! in_array("user", $request->get('role')))
+        {
+            $roletransfo = Role::where("name", "user")->get()->first();
+            $user->roles()->attach($roletransfo);
+        }
 
         return redirect()->route('users.index')
             ->withSuccess(__('Utilisateur a été créé avec succès. Vous devez changer son mot de passe.'));
@@ -108,7 +116,7 @@ class UsersController extends Controller
     
     public function choisirfonction(User $user)
     {
-        $fonctions=Fonction::orderBy('fonction_libcourt')->get();
+        $fonctions=Fonction::orderBy('fonction_liblong')->get();
         return view('users.choisirfonction', ['user' => $user,
                                               'fonctions' => $fonctions]);
     }
@@ -183,23 +191,11 @@ class UsersController extends Controller
     public function update(User $user, UpdateUserRequest $request) 
     {
         $user->update($request->validated());
+        $user->name = strtoupper($user->name);
+        $user->prenom = ucfirst(strtolower($user->prenom));
+        $user->save();
 
         $user->syncRoles($request->get('role'));
-        
-        // $grade = Grade::where('id',intval($request->get('grade')))->first();
-        // $user->grade()->associate($grade);
-
-        // $specialite = Specialite::where('id',intval($request->get('specialite')))->first();
-        // $user->specialite()->associate($specialite);
-
-        // $diplome = Diplome::where('id',intval($request->get('diplome')))->first();
-        // $user->diplome()->associate($diplome);
-
-        // $unite_destination = Unite::where('id',intval($request->get('unite_destination')))->first();
-        // $user->unite_destination()->associate($unite_destination);
-
-        // $secteur = Secteur::where('id',intval($request->get('secteur')))->first();
-        // $user->secteur()->associate($secteur);
         
         $user->save();
 

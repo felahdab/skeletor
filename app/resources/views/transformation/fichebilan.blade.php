@@ -41,14 +41,15 @@
                         <td>{{$user->displaySpecialite()}}</td>
                     </tr>
                     <tr class='enTeteFicheSynthese '> <!-- Date d'embarquement -->
-                        <td colspan='2' class='text-right'>Embarqué le :</td>
+                        <td colspan='2' class='text-right'>Date d'embarquement :</td>
                         <td id='tdDateEmbarquement'>{{$user->date_embarq}}</td>
                     </tr>
                     <tr class='enTeteFicheSynthese'>
                         <!-- Pourcentage transformation -->
-                        <td colspan='2' class='text-right'>Transformé à :</td>
+                        <td colspan='2' class='text-right'>Taux de transformation :</td>
                         <td id='tdTauxTransformation' class='text-left'>{{substr($user->taux_de_transformation(), 0, 4)}}%</td>
                     </tr>
+                    @if ($user->fonctionAQuai() != null)
                     <tr class='enTeteFicheSynthese'>
                         <!-- Fonction de service à quai -->
                         <td colspan='2' class='text-right'>Fonction de service à quai :</td>
@@ -58,6 +59,8 @@
                         <td id='tdFonctionServiceQuai' class='text-left'>{{$user->fonctionAQuai()->fonction_libcourt}}</td>
                         <td id='tdFonctionServiceQuaiLache'>{{ $user->fonctionAQuai()->pivot->date_lache ? 'LACHE' : 'NON LACHE'}}</td>
                     </tr>
+                    @endif
+                    @if ($user->fonctionAMer() != null)
                     <tr class='enTeteFicheSynthese'>
                         <!-- Fonction de quart à la mer -->
                         <td colspan='2' class='text-right'>Fonction de quart à la mer :</td>
@@ -67,6 +70,7 @@
                         <td id='tdFonctionQuartMer' class='text-left'>{{$user->fonctionAMer()->fonction_libcourt}}</td>
                         <td id='tdFonctionQuartMerLache'>{{ $user->fonctionAMer()->pivot->date_lache ? 'LACHE' : 'NON LACHE'}}</td>
                     </tr>
+                    @endif
                     <tr>
                         <td colspan='4'>&nbsp;</td>
                     </tr>

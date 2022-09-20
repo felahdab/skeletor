@@ -80,21 +80,12 @@ class CompagnonageController extends Controller
     }
     public function choisirtache(Request $request, Compagnonage $compagnonage)
     {
-        if ($request->has('filter') )
-        {
-            $filter = $request->input('filter');
-            $taches = Tache::where('tache_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('tache_libcourt')->get()    ;
-        } 
-        else 
-        {
-            $filter='';
-            $taches = Tache::orderBy('tache_libcourt')->get();
-        }
+        
+        $taches = Tache::orderBy('tache_libcourt')->get();
         $taches = $taches->diff($compagnonage->taches()->get());
         
         return view('compagnonages.choisirtache', [ 'compagnonage' => $compagnonage,
-                                                'taches' => $taches,
-                                                'filter'    => $filter]);
+                                                'taches' => $taches]);
     }
     
     public function ajoutertache(Request $request, Compagnonage $compagnonage)

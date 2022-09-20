@@ -14,6 +14,7 @@ class TacheList extends Component
     
     public $filter="";
     public $mode="gestion";
+    public $compagnonage=null;
     
     public function updatingFilter()
     {
@@ -26,6 +27,8 @@ class TacheList extends Component
             'taches' => Tache::where('tache_libcourt', 'like', '%'. $this->filter . '%')
                     ->orWhere('tache_liblong', 'like', '%'. $this->filter . '%')
                     ->paginate(10),
+            'mode' => $this->mode,
+            'compagnonage' => $this->compagnonage
         ]);
     }
 }

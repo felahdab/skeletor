@@ -21,15 +21,26 @@
                         <th scope="row">{{ $tache->id }}</th>
                         <td>{{ $tache->tache_libcourt }}</td>
                         <td>{{ $tache->tache_liblong }}</td>
-                        <td><a href="{{ route('taches.show', $tache->id) }}" class="btn btn-primary btn-sm">Consulter</a></td>
-                        <td><a href="{{ route('taches.edit', $tache->id) }}" class="btn btn-info btn-sm">Editer</a></td>
-                        @can('taches.destroy')
-                        <td>
-                            {!! Form::open(['method' => 'DELETE','route' => ['taches.destroy', $tache->id],'style'=>'display:inline']) !!}
-                            {!! Form::submit('Supprimer', ['class' => 'btn btn-danger btn-sm']) !!}
-                            {!! Form::close() !!}
-                        </td>
-                        @endcan
+                        @if ($mode == "gestion")
+                            <td><a href="{{ route('taches.show', $tache->id) }}" class="btn btn-primary btn-sm">Consulter</a></td>
+                            <td><a href="{{ route('taches.edit', $tache->id) }}" class="btn btn-info btn-sm">Editer</a></td>
+                            @can('taches.destroy')
+                            <td>
+                                {!! Form::open(['method' => 'DELETE','route' => ['taches.destroy', $tache->id],'style'=>'display:inline']) !!}
+                                {!! Form::submit('Supprimer', ['class' => 'btn btn-danger btn-sm']) !!}
+                                {!! Form::close() !!}
+                            </td>
+                            @endcan
+                        @elseif ($mode == "selection")
+                            <td>
+                                {!! Form::open(['method' => 'POST','route' => ['compagnonages.ajoutertache', $compagnonage->id] ]) !!}
+                                <input type='hidden' id='tache_id' name='tache_id' value='{{ $tache->id }}'>
+                                <button type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
+                                {!! Form::close() !!}
+                                </td>
+                            <td></td>
+                            <td></td>
+                        @endif
                     </tr>
                 @endforeach
             </tbody>

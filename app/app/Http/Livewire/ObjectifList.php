@@ -14,6 +14,7 @@ class ObjectifList extends Component
     
     public $filter="";
     public $mode="gestion";
+    public $tache=null;
     
     public function updatingFilter()
     {
@@ -26,6 +27,8 @@ class ObjectifList extends Component
             'objectifs' => Objectif::where('objectif_libcourt', 'like', '%'. $this->filter . '%')
                     ->orWhere('objectif_liblong', 'like', '%'. $this->filter . '%')
                     ->paginate(10),
+            'mode' => $this->mode,
+            'tache' => $this->tache
         ]);
     }
 }

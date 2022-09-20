@@ -80,21 +80,11 @@ class TacheController extends Controller
     
     public function choisirobjectif(Request $request, Tache $tach)
     {
-        if ($request->has('filter') )
-        {
-            $filter = $request->input('filter');
-            $objectifs = Objectif::where('objectif_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('objectif_libcourt')->get()    ;
-        } 
-        else 
-        {
-            $filter='';
-            $objectifs = Objectif::orderBy('objectif_libcourt')->get();
-        }
+        $objectifs = Objectif::orderBy('objectif_libcourt')->get();
         $objectifs = $objectifs->diff($tach->objectifs()->get());
         
         return view('taches.choisirobjectif', [ 'tache'     => $tach,
-                                                'objectifs' => $objectifs,
-                                                'filter'    => $filter]);
+                                                'objectifs' => $objectifs]);
     }
     
     public function ajouterobjectif(Request $request, Tache $tach)
