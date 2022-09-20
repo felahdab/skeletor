@@ -29,7 +29,7 @@ class FonctionController extends Controller
             $fonctions = Fonction::where('fonction_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('fonction_libcourt')->paginate(10);
         } else {
             $filter="";
-            $fonctions = Fonction::orderBy('fonction_libcourt')->paginate(10);
+            $fonctions = Fonction::with('type_fonction')->orderBy('fonction_libcourt')->paginate(10);
         }
         
         return view('fonctions.index', ['fonctions' => $fonctions ,
@@ -43,7 +43,8 @@ class FonctionController extends Controller
      */
     public function create()
     {
-        return view('fonctions.create' );
+        $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
+        return view('fonctions.create' , ['typefonctions' => $typefonctions]);
     }
 
     /**
@@ -54,10 +55,13 @@ class FonctionController extends Controller
      */
     public function store(StoreFonctionRequest $request)
     {
+        // ddd($request);
         $fonction=new Fonction;
         $fonction->fonction_libcourt = $request->fonction['fonction_libcourt'];
         $fonction->fonction_liblong = $request->fonction['fonction_liblong'];
-        $fonction->typefonction_id = 0;
+        $fonction->typefonction_id = $request->fonction['typefonction_id'];
+        $fonction->fonction_lache = array_key_exists('fonction_lache', $request->fonction);
+        $fonction->fonction_double = array_key_exists('fonction_double', $request->fonction) ;
         $fonction->save();
         return redirect()->route('fonctions.edit', $fonction);
     }
