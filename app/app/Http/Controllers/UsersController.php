@@ -63,6 +63,9 @@ class UsersController extends Controller
     {
         $user = $user->create(array_merge($request->input(), [ "password" =>$this->generateRandomString()]));
         
+        $user->name = strtoupper($user->name);
+        $user->prenom = ucfirst(strtolower($user->prenom));
+        $user->save();
         $roletransfo = Role::where("name", "user")->get()->first();
         $user->roles()->attach($roletransfo);
         
@@ -183,6 +186,9 @@ class UsersController extends Controller
     public function update(User $user, UpdateUserRequest $request) 
     {
         $user->update($request->validated());
+        $user->name = strtoupper($user->name);
+        $user->prenom = ucfirst(strtolower($user->prenom));
+        $user->save();
 
         $user->syncRoles($request->get('role'));
         
