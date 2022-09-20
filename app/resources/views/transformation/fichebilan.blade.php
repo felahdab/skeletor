@@ -41,12 +41,12 @@
                         <td>{{$user->displaySpecialite()}}</td>
                     </tr>
                     <tr class='enTeteFicheSynthese '> <!-- Date d'embarquement -->
-                        <td colspan='2' class='text-right'>Embarqué le :</td>
+                        <td colspan='2' class='text-right'>Date d'embarquement :</td>
                         <td id='tdDateEmbarquement'>{{$user->date_embarq}}</td>
                     </tr>
                     <tr class='enTeteFicheSynthese'>
                         <!-- Pourcentage transformation -->
-                        <td colspan='2' class='text-right'>Transformé à :</td>
+                        <td colspan='2' class='text-right'>Taux de transformation :</td>
                         <td id='tdTauxTransformation' class='text-left'>{{substr($user->taux_de_transformation(), 0, 4)}}%</td>
                     </tr>
                     @if ($user->fonctionAQuai() != null)
