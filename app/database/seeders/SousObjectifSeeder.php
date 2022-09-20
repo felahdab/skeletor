@@ -2588,7 +2588,7 @@ class SousObjectifSeeder extends Seeder
             [2624,'2022-09-15 14:18:28','2022-09-15 14:26:57','FCM - ACTIVITE N°2',1.00,0.00,1334,3]
             ];
         foreach ($records as $record){
-            DB::insert('insert into sous_objectifs (id, created_at, updated_at, ssobj_lib, objectif_id, ssobj_coeff, ssobj_duree, lieu_id) values (?, ?, ?, ?, ?, ?, ?, ?)', $record);
+            DB::insert('insert into sous_objectifs (id, created_at, updated_at, ssobj_lib, ssobj_coeff, ssobj_duree, objectif_id, lieu_id) values (?, ?, ?, ?, ?, ?, ?, ?)', $record);
         }
     }
 }
