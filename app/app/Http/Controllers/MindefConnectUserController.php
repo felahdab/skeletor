@@ -58,6 +58,13 @@ class MindefConnectUserController extends Controller
     {
         $newUser = User::create(array_merge($request->input(), [ "password" =>$this->generateRandomString()]));
         $newUser->syncRoles($request->get('role'));
+        
+        if (is_null($request->get('role')) or ! in_array("user", $request->get('role')))
+        {
+            $roletransfo = Role::where("name", "user")->get()->first();
+            $newUser->roles()->attach($roletransfo);
+        }
+        
         $user->delete();
         
         return redirect()->route('mindefconnect.index');
