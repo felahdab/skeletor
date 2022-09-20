@@ -108,7 +108,7 @@ class UsersController extends Controller
     
     public function choisirfonction(User $user)
     {
-        $fonctions=Fonction::orderBy('fonction_libcourt')->get();
+        $fonctions=Fonction::orderBy('fonction_liblong')->get();
         return view('users.choisirfonction', ['user' => $user,
                                               'fonctions' => $fonctions]);
     }
