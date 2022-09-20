@@ -5,8 +5,8 @@ cd $BASEDIRECTORY
 
 PARENTDIR=$(dirname $BASEDIRECTORY)
 STACKNAME=$(basename $PARENTDIR)
-echo $BASEDIRECTORY
-echo $STACKNAME
+# echo $BASEDIRECTORY
+# echo $STACKNAME
 
 ./reset_app_prefix.sh
 
