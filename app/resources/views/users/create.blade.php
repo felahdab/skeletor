@@ -124,7 +124,7 @@
                     <div class="col">
                         <div class="mb-3">
                             <label for="date_embarq" class="form-label">Date d'embarquement</label>
-                            <input value="" 
+                            <input value="{{ date('Y-m-d') }}" 
                                 type="date" 
                                 class="form-control" 
                                 name="date_embarq" 
