@@ -61,14 +61,14 @@ class UsersController extends Controller
      */
     public function store(User $user, StoreUserRequest $request) 
     {
-        $user = $user->create(array_merge($request->input(), [ "password" =>$this->generateRandomString()]));
+        $user = $user->create(array_merge($request->validated(), [ "password" =>$this->generateRandomString()]));
         
         $roletransfo = Role::where("name", "user")->get()->first();
         $user->roles()->attach($roletransfo);
         
 
         return redirect()->route('users.index')
-            ->withSuccess(__('Utilisateur créé avec succès. Vous devez changer son mot de passe.'));
+            ->withSuccess(__('Utilisateur a été créé avec succès. Vous devez changer son mot de passe.'));
     }
 
     /**
