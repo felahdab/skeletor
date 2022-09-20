@@ -11,7 +11,7 @@
         <div class='card-header' >Consulter fonction </div>
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
-                    <label for='fonction[fonction_libcourt]' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
+                    <label for='fonction[fonction_libcourt]' class='col-sm-5 col-form-label'> Libell&eacute; court</label>
                     <div class='col-sm-5'>
                         <input type='text' class='form-control'  name='fonction[fonction_libcourt]' id='fonction[fonction_libcourt]' placeholder='Libell&eacute; court' value="{{ $fonction->fonction_libcourt }}" >
                     </div>
@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <div class='form-group row' >
-                    <label for='fonction_lache' class='col-sm-5 col-form-label'>Lacher</label>
+                    <label for='fonction_lache' class='col-sm-5 col-form-label'>Lâcher</label>
                     <div class='col-sm-5'>
                         <input type='checkbox'name='fonction[fonction_lache]' id='fonction[fonction_lache]' {{ $fonction->fonction_lache
                                             ? ' checked'
@@ -47,25 +47,25 @@
             </div>
 
         <div style='padding-left: 15px;'>
-            <div class='card-header ml-n3 mr-n4 mb-3' >Compagnonage(s) associ&eacute;s</div>
+            <div class='card-header ml-n3 mr-n4 mb-3' >Compagnonnage(s) associ&eacute;(s)</div>
             <input type='hidden' name='fonction_id' id='fonction_id'  value='{{ $fonction->id }}'>
             
             @php $count = 1 @endphp
             @foreach ($fonction->compagnonages()->get() as $compagnonage)
             <div class='cadressobj'>
             <div class='form-group row' >
-                <label class='col-sm-5 col-form-label '>Compagnonage </label>
+                <label class='col-sm-5 col-form-label '>Compagnonnage </label>
             </div>
             <div class='form-group row' >
-                <label class='col-sm-5 col-form-label '>Libelle court</label>
+                <label class='col-sm-5 col-form-label '>Libellé court</label>
                 <div class='col-sm-5'>
-                    <input type='text' class='form-control' name='compagnonages[{{$count}}][comp_libcourt]' id='compagnonages[{{$count}}][comp_libcourt]' placeholder='Libelle court' value='{{ $compagnonage->comp_libcourt }}'>
+                    <input type='text' class='form-control' name='compagnonages[{{$count}}][comp_libcourt]' id='compagnonages[{{$count}}][comp_libcourt]' placeholder='Libellé court' value='{{ $compagnonage->comp_libcourt }}'>
                 </div>
             </div>
             <div class='form-group row' >
-                <label class='col-sm-5 col-form-label '>Libelle long</label>
+                <label class='col-sm-5 col-form-label '>Libellé long</label>
                 <div class='col-sm-5'>
-                    <input type='text' class='form-control' name='compagnonages[{{$count}}][comp_libclong]' id='compagnonages[{{$count}}][comp_libclong]' placeholder='Libelle long' value='{{ $compagnonage->comp_liblong }}'>
+                    <input type='text' class='form-control' name='compagnonages[{{$count}}][comp_libclong]' id='compagnonages[{{$count}}][comp_libclong]' placeholder='Libellé long' value='{{ $compagnonage->comp_liblong }}'>
                 </div>
             </div>
             </div>
@@ -74,7 +74,7 @@
         </div>
         
         <div style='padding-left: 15px;'>
-            <div class='card-header ml-n3 mr-n4 mb-3' >Stage(s) associ&eacute;s</div>
+            <div class='card-header ml-n3 mr-n4 mb-3' >Stage(s) associ&eacute;(s)</div>
             <input type='hidden' name='fonction_id' id='fonction_id'  value='{{ $fonction->id }}'>
             
             @php $count = 1 @endphp
@@ -84,15 +84,15 @@
                 <label class='col-sm-5 col-form-label '>Stage </label>
             </div>
             <div class='form-group row' >
-                <label class='col-sm-5 col-form-label '>Libelle court</label>
+                <label class='col-sm-5 col-form-label '>Libellé court</label>
                 <div class='col-sm-5'>
-                    <input type='text' class='form-control' name='stages[{{$count}}][stage_libcourt]' id='stages[{{$count}}][stage_libcourt]' placeholder='Libelle court' value='{{ $stage->stage_libcourt }}'>
+                    <input type='text' class='form-control' name='stages[{{$count}}][stage_libcourt]' id='stages[{{$count}}][stage_libcourt]' placeholder='Libellé court' value='{{ $stage->stage_libcourt }}'>
                 </div>
             </div>
             <div class='form-group row' >
-                <label class='col-sm-5 col-form-label '>Libelle long</label>
+                <label class='col-sm-5 col-form-label '>Libellé long</label>
                 <div class='col-sm-5'>
-                    <input type='text' class='form-control' name='stages[{{$count}}][stage_liblong]' id='stages[{{$count}}][stage_liblong]' placeholder='Libelle long' value='{{ $stage->stage_liblong }}'>
+                    <input type='text' class='form-control' name='stages[{{$count}}][stage_liblong]' id='stages[{{$count}}][stage_liblong]' placeholder='Libellé long' value='{{ $stage->stage_liblong }}'>
                 </div>
             </div>
             </div>

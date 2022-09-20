@@ -18,7 +18,7 @@
         {!! Form::open(['method' => 'POST','route' => ['fonctions.ajouterstage', $fonction->id] ]) !!}
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
-                <label class='col-sm-5 col-form-label '>Tache</label>
+                <label class='col-sm-5 col-form-label '>Liste des stages</label>
                 <div>
                     <select name='stage_id' id='stage_id' class='custom-select  w-50'>
                         @foreach ($stages as $stage)
@@ -28,7 +28,7 @@
                 </div>
             </div>
                 <div>
-                    <button class='btn btn-primary w-100 mt-4' type='submit'>Ajouter</button>
+                    <button class='btn btn-primary mt-4' type='submit'>Ajouter</button>
                     <br>&nbsp;
                 </div>
             </div>

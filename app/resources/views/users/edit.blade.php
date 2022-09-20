@@ -3,6 +3,7 @@
 @section('content')
     <div class="bg-light p-4 rounded">
         <h1>Modification utilisateur</h1>
+        <div style='text-align:right;'>* champs obligatoires </div>
         <div class="lead">
             
         </div>
@@ -12,7 +13,7 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
+                            <label for="email" class="form-label">Email *</label>
                             {!!Form::email('email', $user->email , ['class' => 'form-control', 'placeholder'=> "Adresse email", 'required']) !!}
                             @if ($errors->has('email'))
                                 <span class="text-danger text-left">{{ $errors->first('email') }}</span>
@@ -44,7 +45,7 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
-                            <label for="name" class="form-label">Nom</label>
+                            <label for="name" class="form-label">Nom *</label>
                             {!!Form::text('name', $user->name , ['class' => 'form-control', 'placeholder'=> "Nom", 'required']) !!}
                             @if ($errors->has('name'))
                                 <span class="text-danger text-left">{{ $errors->first('name') }}</span>
@@ -53,7 +54,7 @@
                     </div>
                     <div class="col">
                         <div class="mb-3">
-                            <label for="specialite" class="form-label">Specialite</label>
+                            <label for="specialite" class="form-label">Sp&eacute;cialit&eacute;</label>
                             <select class="form-control" 
                                 name="specialite_id" required>
                                 <option value="0">Specialite</option>
@@ -63,7 +64,7 @@
                                             : '' }}>
                                         {{ $specialite->specialite_libcourt }}
                                         {{ $user->specialite_id == $specialite->id
-                                            ? ' (specialite actuelle)'
+                                            ? ' (spécialité actuelle)'
                                             : '' }}  </option>
                                 @endforeach
                             </select>
@@ -76,7 +77,7 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
-                            <label for="prenom" class="form-label">Prenom</label>
+                            <label for="prenom" class="form-label">Pr&eacute;nom *</label>
                             {!!Form::text('prenom', $user->prenom , ['class' => 'form-control', 'placeholder'=> "Prénom", 'required']) !!}
                             @if ($errors->has('prenom'))
                                 <span class="text-danger text-left">{{ $errors->first('prenom') }}</span>
@@ -129,7 +130,7 @@
                                             : '' }}>
                                         {{ $diplome->diplome_libcourt }}
                                         {{ $user->diplome_id == $diplome->id
-                                            ? ' (diplome actuel)'
+                                            ? ' (brevet actuel)'
                                             : '' }}  </option>
                                 @endforeach
                             </select>
@@ -151,7 +152,7 @@
                     </div>
                     <div class="col">
                         <div class="mb-3">
-                            <label for="date_debarq" class="form-label">Date de debarquement</label>
+                            <label for="date_debarq" class="form-label">Date de débarquement</label>
                             {!!Form::date('date_debarq', $user->date_debarq , ['class' => 'form-control', 'placeholder'=> 'Date de debarquement']) !!}
                             @if ($errors->has('date_debarq'))
                                 <span class="text-danger text-left">{{ $errors->first(date_debarq) }}</span>
@@ -159,48 +160,59 @@
                         </div>
                     </div>
                 </div>
-                
-                @if (auth()->user()->hasRole("admin"))
-                <div class="mb-3">
-                    <label for="unite_affectation" class="form-label">Unité d'affectation</label>
-                    <select class="form-control" 
-                        name="unite_id" required>
-                        <option value="0">Unité d'affectation</option>
-                        @foreach($unites as $unite)
-                            <option value="{{ $unite->id }}" @selected($user->unite_id == $unite->id)>
-                                {{ $unite->unite_liblong }}
-                                {{ $user->unite_destination_id == $unite->id
-                                    ? ' (unite actuelle)'
-                                    : '' }}  </option>
-                        @endforeach
-                    </select>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="unite_destination" class="form-label">Unité destination</label>
+                            <select class="form-control" 
+                                name="unite_destination_id" required>
+                                <option value="0">Unité destination</option>
+                                @foreach($unites as $unite)
+                                    <option value="{{ $unite->id }}" @selected($user->unite_destination_id == $unite->id)>
+                                        {{ $unite->unite_liblong }}
+                                        {{ $user->unite_destination_id == $unite->id
+                                            ? ' (unite actuelle)'
+                                            : '' }}  </option>
+                                @endforeach
+                            </select>
+                            @if ($errors->has('unite_destination'))
+                                <span class="text-danger text-left">{{ $errors->first(unite_destination) }}</span>
+                            @endif
+                       </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                            @if (auth()->user()->hasRole("admin"))
+                                <label for="unite_affectation" class="form-label">Unité d'affectation</label>
+                                <select class="form-control" 
+                                    name="unite_id" required>
+                                    <option value="0">Unité d'affectation</option>
+                                    @foreach($unites as $unite)
+                                        <option value="{{ $unite->id }}" @selected($user->unite_id == $unite->id)>
+                                            {{ $unite->unite_liblong }}
+                                            {{ $user->unite_destination_id == $unite->id
+                                                ? ' (unite actuelle)'
+                                                : '' }}  </option>
+                                    @endforeach
+                                </select>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-                @endif
-                
-                <div class="mb-3">
-                    <label for="unite_destination" class="form-label">Unité destination</label>
-                    <select class="form-control" 
-                        name="unite_destination_id" required>
-                        <option value="0">Unité destination</option>
-                        @foreach($unites as $unite)
-                            <option value="{{ $unite->id }}" @selected($user->unite_destination_id == $unite->id)>
-                                {{ $unite->unite_liblong }}
-                                {{ $user->unite_destination_id == $unite->id
-                                    ? ' (unite actuelle)'
-                                    : '' }}  </option>
-                        @endforeach
-                    </select>
-                    @if ($errors->has('unite_destination'))
-                        <span class="text-danger text-left">{{ $errors->first(unite_destination) }}</span>
-                    @endif
+                <div class="row">
+                <label for='user_comment' class='form-label'>Commentaire</label>
+                    {!!Form::textarea('user_comment', $user->user_comment , ['class' => 'form-control', 'placeholder'=> "Commentaire", 'cols'=>"100", 'rows'=>"3"]) !!}
+                    @if ($errors->has('user_comment'))
+                        <span class="text-danger text-left">{{ $errors->first('user_comment') }}</span>
+                    @endif                
                 </div>
                 
-                <label for="roles" class="form-label">Attribuer des roles</label>
+               <label for="roles" class="form-label">Attribuer des rôles</label>
 
                 <table class="table table-striped">
                     <thead>
                         <th scope="col" width="1%"><input type="checkbox" name="all_roles"></th>
-                        <th scope="col" width="20%">Nom</th>
+                        <th scope="col" width="20%">Sélectionner les rôles</th>
                     </thead>
 
                     @foreach($roles as $role)

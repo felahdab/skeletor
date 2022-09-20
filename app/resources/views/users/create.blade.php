@@ -3,6 +3,7 @@
 @section('content')
     <div class="bg-light p-4 rounded">
         <h1>Ajouter un utilisateur</h1>
+        <div style='text-align:right;'>* champs obligatoires </div>
 
         <div class="container mt-4">
             <form method="POST" action="">
@@ -10,12 +11,12 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
+                            <label for="email" class="form-label">Email *</label>
                             <input value=""
                                 type="email" 
                                 class="form-control" 
                                 name="email" 
-                                placeholder="Email address" required>
+                                placeholder="Email" required>
                             @if ($errors->has('email'))
                                 <span class="text-danger text-left">{{ $errors->first('email') }}</span>
                             @endif
@@ -39,12 +40,12 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
-                            <label for="name" class="form-label">Nom</label>
+                            <label for="name" class="form-label">Nom *</label>
                             <input value="" 
                                 type="text" 
                                 class="form-control" 
                                 name="name" 
-                                placeholder="Name" required>
+                                placeholder="NOM" required>
 
                             @if ($errors->has('name'))
                                 <span class="text-danger text-left">{{ $errors->first('name') }}</span>
@@ -53,10 +54,10 @@
                     </div>
                     <div class="col">
                         <div class="mb-3">
-                            <label for="specialite_id" class="form-label">Specialite</label>
+                            <label for="specialite_id" class="form-label">Sp&eacute;cialit&eacute;</label>
                             <select class="form-control" 
                                 name="specialite_id" required>
-                                <option value="0">Specialite</option>
+                                <option value="0">Sp&eacute;cialit&eacute;</option>
                                 @foreach($specialites as $specialite)
                                     <option value="{{ $specialite->id }}"}>
                                         {{ $specialite->specialite_libcourt }}
@@ -69,12 +70,12 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
-                            <label for="prenom" class="form-label">Prenom</label>
+                            <label for="prenom" class="form-label">Pr&eacute;nom *</label>
                             <input value="" 
                                 type="text" 
                                 class="form-control" 
                                 name="prenom" 
-                                placeholder="Prenom" required>
+                                placeholder="Pr&eacute;nom" required>
                         </div>
                     </div>
                     <div class="col">
@@ -95,14 +96,12 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
-                            @if (false)
-                            <label for="matricule" class="form-label">Matricule</label>
+                            <label for="date_embarq" class="form-label">Date d'embarquement *</label>
                             <input value="" 
-                                type="text" 
+                                type="date" 
                                 class="form-control" 
-                                name="matricule" 
-                                placeholder="Matricule" required>
-                            @endif
+                                name="date_embarq" 
+                                placeholder="Date d'embarquement" required>
                         </div>
                     </div>
                     <div class="col">
@@ -123,60 +122,47 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
-                            <label for="date_embarq" class="form-label">Date d'embarquement</label>
-                            <input value="" 
-                                type="date" 
-                                class="form-control" 
-                                name="date_embarq" 
-                                placeholder="Date d'embarquement" required>
-                        </div>
+                            <label for="unite_destination_id" class="form-label">Unité destination</label>
+                            <select class="form-control" 
+                                name="unite_destination_id" >
+                                <option value="0">Unité destination</option>
+                                @foreach($unites as $unite)
+                                    <option value="{{ $unite->id }}">
+                                        {{ $unite->unite_liblong }}
+                                        </option>
+                                @endforeach
+                    </select>
+                         </div>
                     </div>
                     <div class="col">
                         <div class="mb-3">
-                            <label for="date_debarq" class="form-label">Date de debarquement</label>
-                            <input value="" 
-                                type="date" 
-                                class="form-control" 
-                                name="date_debarq" 
-                                placeholder="Date de debarquement">
+                        @if (auth()->user()->hasRole("admin"))
+                            <label for="unite_destination_id" class="form-label">Unité d'affectation *</label>
+                            <select class="form-control" 
+                                name="unite_id" >
+                                <option value="0">Unité d'affectation</option>
+                                @foreach($unites as $unite)
+                                    <option value="{{ $unite->id }}" @selected($unite->id == auth()->user()->unite_id)>
+                                        {{ $unite->unite_liblong }}
+                                        </option>
+                                @endforeach
+                            </select>
+                        @endif
                         </div>
                     </div>
                 </div>
-                
-                @if (auth()->user()->hasRole("admin"))
-                <div class="mb-3">
-                    <label for="unite_destination_id" class="form-label">Unité d'affectation</label>
-                    <select class="form-control" 
-                        name="unite_id" >
-                        <option value="0">Unité d'affectation</option>
-                        @foreach($unites as $unite)
-                            <option value="{{ $unite->id }}" @selected($unite->id == auth()->user()->unite_id)>
-                                {{ $unite->unite_liblong }}
-                                </option>
-                        @endforeach
-                    </select>
-                </div>
-                @endif
-                
-                <div class="mb-3">
-                    <label for="unite_destination_id" class="form-label">Unité destination</label>
-                    <select class="form-control" 
-                        name="unite_destination_id" >
-                        <option value="0">Unité destination</option>
-                        @foreach($unites as $unite)
-                            <option value="{{ $unite->id }}">
-                                {{ $unite->unite_liblong }}
-                                </option>
-                        @endforeach
-                    </select>
+                <div class="row">
+                <!-- espace pour ajouter le commentaire-->
+                    <label for='user_comment' class='form-label' style='max-width: 21.6%;'>Commentaire</label>
+                    <textarea class="form-control" cols='100' rows='3' name='user_comment' id='user_comment' placeholder='Commentaire'></textarea>
                 </div>
                 
-                <label for="roles" class="form-label">Attribuer des roles</label>
+                <label for="roles" class="form-label">Attribuer des r&ocirc;les</label>
 
                 <table class="table table-striped">
                     <thead>
                         <th scope="col" width="1%"><input type="checkbox" name="all_roles"></th>
-                        <th scope="col" width="20%">Nom</th>
+                        <th scope="col" width="20%">Sélectionner les r&ocirc;les</th>
                     </thead>
 
                     @foreach($roles as $role)
@@ -192,8 +178,8 @@
                     @endforeach
                 </table>
 
-                <button type="submit" class="btn btn-primary">Save user</button>
-                <a href="{{ route('users.index') }}" class="btn btn-default">Back</a>
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+                <a href="{{ route('users.index') }}" class="btn btn-default">Annuler</a>
             </form>
         </div>
 

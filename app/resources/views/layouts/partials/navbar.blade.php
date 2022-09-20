@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+<nav class="navbar navbar-expand-lg navbar-light bg-dark sticky-top ">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon bg-light"></span>
     </button>
@@ -26,10 +26,10 @@
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="{{ route('fonctions.index')}}">Fonctions</a>
-            <a class="dropdown-item" href="{{ route('compagnonages.index')}}">Compagnonages</a>
-            <a class="dropdown-item" href="{{ route('taches.index')}}">Taches</a>
+            <a class="dropdown-item" href="{{ route('compagnonages.index')}}">Compagnonnages</a>
+            <a class="dropdown-item" href="{{ route('taches.index')}}">Tâches</a>
             <a class="dropdown-item" href="{{ route('objectifs.index')}}">Objectifs</a>
-            <a class="dropdown-item" href="{{ route('sous-objectifs.index')}}">Sous-Objectifs</a>
+            <!--a class="dropdown-item" href="{{ route('sous-objectifs.index')}}">Sous-Objectifs</a-->
           </div>
         </div>
         <div class="dropdown" >

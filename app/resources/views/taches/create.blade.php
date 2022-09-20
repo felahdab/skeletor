@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="bg-light p-4 rounded">
-        <h2>Taches</h2>
+        <h2>T&acirc;ches</h2>
         <div class="mt-2">
             @include('layouts.partials.messages')
         </div>

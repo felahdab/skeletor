@@ -52,12 +52,18 @@
                     <tr class='enTeteFicheSynthese'>
                         <!-- Fonction de service à quai -->
                         <td colspan='2' class='text-right'>Fonction de service à quai :</td>
+                        <!------------------------------------------------->
+                        <!-- un user n'a pas forcement de fonction a quai-->
+                        <!------------------------------------------------->
                         <td id='tdFonctionServiceQuai' class='text-left'>{{$user->fonctionAQuai()->fonction_libcourt}}</td>
                         <td id='tdFonctionServiceQuaiLache'>{{ $user->fonctionAQuai()->pivot->date_lache ? 'LACHE' : 'NON LACHE'}}</td>
                     </tr>
                     <tr class='enTeteFicheSynthese'>
                         <!-- Fonction de quart à la mer -->
                         <td colspan='2' class='text-right'>Fonction de quart à la mer :</td>
+                        <!--------------------------------------------------->
+                        <!-- un user n'a pas forcement de fonction a la mer-->
+                        <!--------------------------------------------------->
                         <td id='tdFonctionQuartMer' class='text-left'>{{$user->fonctionAMer()->fonction_libcourt}}</td>
                         <td id='tdFonctionQuartMerLache'>{{ $user->fonctionAMer()->pivot->date_lache ? 'LACHE' : 'NON LACHE'}}</td>
                     </tr>

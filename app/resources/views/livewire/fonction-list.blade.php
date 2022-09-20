@@ -11,8 +11,9 @@
             <thead>
             <tr>
                 <th scope="col" width="1%">#</th>
-                <th scope="col" width="8%">Libelle court</th>
-                <th scope="col">Libelle long</th>
+                <th scope="col" width="8%">Libellé court</th>
+                <th scope="col">Libellé long</th>
+                <th scope="col">Type</th>
                 <th scope="col" width="1%" colspan="3"></th>    
             </tr>
             </thead>
@@ -22,6 +23,7 @@
                         <th scope="row">{{ $fonction->id }}</th>
                         <td>{{ $fonction->fonction_libcourt }}</td>
                         <td>{{ $fonction->fonction_liblong }}</td>
+                        <td>{{ $fonction->type_fonction->typfonction_libcourt }}</td>
                         @if ($mode == 'gestion')
                             <td><a href="{{ route('fonctions.show', $fonction->id) }}" class="btn btn-primary btn-sm">Consulter</a></td>
                             <td><a href="{{ route('fonctions.edit', $fonction->id) }}" class="btn btn-info btn-sm">Editer</a></td>
