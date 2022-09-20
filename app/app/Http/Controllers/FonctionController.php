@@ -103,8 +103,8 @@ class FonctionController extends Controller
         $compagnonages = $compagnonages->diff($fonction->compagnonages()->get());
         
         return view('fonctions.choisircompagnonage', [ 'fonction' => $fonction,
-                                                'compagnonages' => $compagnonages,
-                                                'filter'    => $filter]);
+                                                       'compagnonages' => $compagnonages,
+                                                       'filter'    => $filter]);
     }
     
     public function ajoutercompagnonage(Request $request, Fonction $fonction)

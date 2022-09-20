@@ -14,6 +14,7 @@ class CompagnonageList extends Component
     
     public $filter="";
     public $mode="gestion";
+    public $fonction=null;
     
     public function updatingFilter()
     {
@@ -26,6 +27,8 @@ class CompagnonageList extends Component
             'compagnonages' => Compagnonage::where('comp_libcourt', 'like', '%'. $this->filter . '%')
                     ->orWhere('comp_liblong', 'like', '%'. $this->filter . '%')
                     ->paginate(10),
+            'mode' => $this->mode,
+            'fonction' => $this->fonction
         ]);
     }
 }
