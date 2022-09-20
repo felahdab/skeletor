@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('prenom', 100)->nullable(false)->default("");
             $table->string('matricule', 20)->nullable(true)->default("");
-            $table->string('date_embarq')->nullable(true);
-            $table->string('date_debarq')->nullable(true);
+            $table->date('date_embarq')->nullable(true);
+            $table->date('date_debarq')->nullable(true);
             $table->string('photo', 256)->nullable(true);
             $table->foreignId('grade_id')->nullable(true);
             $table->foreignId('specialite_id')->nullable(true);
