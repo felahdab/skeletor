@@ -25,6 +25,13 @@ services:
             - mysqldata:/var/lib/mysql
         networks:
              - private
+    phpmyadmin:
+        image: phpmyadmin
+        environment:
+           PMA_ABSOLUTE_URI: ${INSTANCEURL}/pma/
+           PMA_HOST: db
+        networks:
+          - private
 volumes:
     mysqldata: {}
 networks:
