@@ -23,7 +23,7 @@ class StageList extends Component
     public function render()
     {
         return view('livewire.stage-list', [
-            'stages' => Stage::where('stage_libcourt', 'like', '%'. $this->filter . '%')->paginate(10),
+            'stages' => Stage::with('type_licence')->where('stage_libcourt', 'like', '%'. $this->filter . '%')->paginate(10),
         ]);
     }
 }
