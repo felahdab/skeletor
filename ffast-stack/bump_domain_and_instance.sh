@@ -1,0 +1,15 @@
+#!/bin/bash
+SCRIPTDIRECTORY="$(dirname "$0")"
+BASEDIRECTORY=$(realpath $SCRIPTDIRECTORY)
+cd $BASEDIRECTORY
+
+PARENTDIR=$(dirname $BASEDIRECTORY)
+STACKNAME=$(basename $PARENTDIR)
+echo $BASEDIRECTORY
+echo $STACKNAME
+
+DOMAIN=$1
+
+echo "INSTANCEURL=https://$DOMAIN/$STACKNAME" > .env
+SED_CMD='s/STACKNAME/'${STACKNAME}'/g'
+sed -i $SED_CMD nginx.conf

@@ -14,6 +14,7 @@ class StageList extends Component
     
     public $filter="";
     public $mode="gestion";
+    public $fonction=null;
     
     public function updatingFilter()
     {
@@ -23,7 +24,9 @@ class StageList extends Component
     public function render()
     {
         return view('livewire.stage-list', [
-            'stages' => Stage::with('type_licence')->where('stage_libcourt', 'like', '%'. $this->filter . '%')->paginate(10),
+            'stages' => Stage::where('stage_libcourt', 'like', '%'. $this->filter . '%')->paginate(10),
+            'mode' => $this->mode,
+            'fonction' => $this->fonction
         ]);
     }
 }

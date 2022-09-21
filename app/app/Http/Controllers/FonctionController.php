@@ -129,21 +129,11 @@ class FonctionController extends Controller
 
     public function choisirstage(Request $request, Fonction $fonction)
     {
-        if ($request->has('filter') )
-        {
-            $filter = $request->input('filter');
-            $stages = Stage::where('stage_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('stage_libcourt')->get()    ;
-        } 
-        else 
-        {
-            $filter='';
-            $stages = Stage::orderBy('stage_libcourt')->get()    ;
-        }
+        $stages = Stage::orderBy('stage_libcourt')->get();
         $stages = $stages->diff($fonction->stages()->get());
         
         return view('fonctions.choisirstage', [ 'fonction' => $fonction,
-                                                'stages' => $stages,
-                                                'filter'    => $filter]);
+                                                'stages' => $stages]);
     }
     
     public function ajouterstage(Request $request, Fonction $fonction)

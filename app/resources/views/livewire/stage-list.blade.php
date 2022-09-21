@@ -33,10 +33,17 @@
                                 {!! Form::close() !!}
                             </td>
                             @endcan
-                        @elseif ($mode="transformation")
+                        @elseif ($mode=="transformation")
                             <td><a href="{{ route('stages.consulter', ['stage' => $stage->id] ) }}" class="btn btn-info btn-sm">Consulter</a></td>
                             <td><a href="{{ route('stages.choixmarins', ['stage' => $stage->id] ) }}" class="btn btn-primary btn-sm">Validation ou annulation collective</a></td>
                             <td></td>
+                        @elseif ($mode=='selection')
+                            <td colspan="3"> 
+                                {!! Form::open(['method' => 'POST','route' => ['fonctions.ajouterstage', $fonction->id] ]) !!}
+                                <input type='hidden' id='stage_id' name='stage_id' value='{{ $stage->id }}'>
+                                <button type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
+                                {!! Form::close() !!}
+                            </td>
                         @endif
                     </tr>
                 @endforeach
