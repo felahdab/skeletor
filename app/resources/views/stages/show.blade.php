@@ -107,15 +107,19 @@
             </div>
         </div>
         @elseif ($stage == null and $marin != null)
-        <div class='mt-2 mb-2' style='margin-left:50%; text-align: center;'> </div>
+        <div class='mt-2 mb-2' style='margin-left:50%; text-align: center;'> 
+        <a href="{{ route('transformation.livret', $marin->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
+            <a href="{{ route('transformation.progression', $marin->id) }}" class="btn btn-primary btn-sm">Progression</a>
+            <a href="{{ route('transformation.fichebilan', $marin->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
+        </div>
         <div class='mt-2 mb-2' style='margin-left:50%; text-align: center;'> </div>
         <div class='card border-primary mb-3 w-50' style='margin-left:50%;'>
             <div class='card-header text-primary'>Liste des stages valid&eacute;s pour {{$marin->displayString()}}</div>
             <div class='card-body'>
                 @foreach ($marin->stages()->get() as $stageenattente)
-                @if ($stageenattente->pivot->date_validation != null)
-                <div class='mt-3'><a href='{{route("stages.consulter", ["stage" => $stageenattente->id])}}'>{{ $stageenattente->stage_libcourt }}</a></div>
-                @endif
+                    @if ( $marin->aValideLeStage($stageenattente))
+                    <div class='mt-3'><a href='{{route("stages.consulter", ["stage" => $stageenattente->id])}}'>{{ $stageenattente->stage_libcourt }}</a></div>
+                    @endif
                 @endforeach
             </div>
         </div>
@@ -123,12 +127,13 @@
             <div class='card-header text-primary'>Liste des stages en attente pour le {{$marin->displayString()}}</div>
             <div class='card-body'>
                 @foreach ($marin->stages()->get() as $stageenattente)
-                @if ($stageenattente->pivot->date_validation == null)
-                <div class='mt-3'><a href='{{route("stages.consulter", ["stage" => $stageenattente->id])}}'>{{ $stageenattente->stage_libcourt }}</a></div>
-                @endif
+                    @if (! $marin->aValideLeStage($stageenattente))
+                    <div class='mt-3'><a href='{{route("stages.consulter", ["stage" => $stageenattente->id])}}'>{{ $stageenattente->stage_libcourt }}</a></div>
+                    @endif
                 @endforeach
             </div>
         </div>
         @endif
     </div>
+    {!! link_to_route('transformation.index', 'Annuler', [], ['class' => 'btn btn-primary']) !!}
 @endsection

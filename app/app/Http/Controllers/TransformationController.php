@@ -123,15 +123,17 @@ class TransformationController extends Controller
                                                    'readwrite' => $readwrite]);
     }
     
-    public function fichebilan(User $user)
+    public function fichebilan(User $user, $readwrite=true)
     {
         $listcomp = [];
         $liststage= [];
         foreach($user->fonctions()->get() as $fonction)
+        {
             foreach($fonction->compagnonages()->get() as $comp)
                 array_push($listcomp, $comp);
             foreach($fonction->stages()->get() as $stage)
                 array_push($liststage, $stage);
+        }
         
         $nbcomp=count($listcomp);
         $nbstage=count($liststage);
@@ -149,7 +151,7 @@ class TransformationController extends Controller
             $listcomp = array_merge($listcomp, $complement);
         }
         
-        $readwrite=true;
+        // $readwrite=true;
         return view('transformation.fichebilan', ['user' => $user,
                                                   'listcomp' => $listcomp,
                                                   'liststage' => $liststage,
@@ -159,9 +161,7 @@ class TransformationController extends Controller
     public function mafichebilan()
     {
         $user = auth()->user();
-        $readwrite=false;
-        return view('transformation.fichebilan', ['user' => $user,
-                                                  'readwrite' => $readwrite]);
+        return $this->fichebilan($user, $readwrite=false);
     }
     
     public function updatelivret(Request $request, User $user)
