@@ -45,6 +45,10 @@
                     </div>
                 </div>
             </div>
+            <div>
+                <a href="{{ route('fonctions.index') }}" class="btn btn-primary mt-4 ms-4">Retour</a>
+                <br>&nbsp;
+            </div>
 
         <div style='padding-left: 15px;'>
             <div class='card-header ml-n3 mr-n4 mb-3' >Compagnonnage(s) associ&eacute;(s)</div>
