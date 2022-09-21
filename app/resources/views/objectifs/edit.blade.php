@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div class='form-group row' >
-                    <label for='libelle_long_objectif' class='col-sm-5 col-form-label'>Libell&eacute; long</label>
+                    <label for='libelle_long_objectif' class='col-sm-5 col-form-label'>Libell&eacute; long *</label>
                     <div class='col-sm-5'>
                         <input type='text' class='form-control' name='objectif[objectif_liblong]' id='objectif[objectif_liblong]' placeholder='Libell&eacute; long' value="{{ $objectif->objectif_liblong }}" >
                     </div>
@@ -29,7 +29,7 @@
                 <div style='text-align:right;'>
                     <ul  class='navbar-nav mr-auto' >
                         <li class='dropdown'>
-                            <a href='#' class='dropdown-toogle' data-bs-toggle='dropdown'>Tache(s) associée(s)</a>
+                            <a href='#' class='dropdown-toogle' data-bs-toggle='dropdown'>Tâche(s) associée(s)</a>
                             <div class='dropdown-menu'>
                                 @foreach ($objectif->taches()->get() as $tache)
                                     <a class="dropdown-item" href="{{ route('taches.show', $tache->id) }}">{{ $tache->tache_libcourt }}</a>
@@ -39,16 +39,25 @@
                     </ul>
                 </div>
                 <div>
-                    <button class='btn btn-primary w-100 mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Modifier</button>
+                    <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Modifier</button>
+                    <a href="{{ route('objectifs.index') }}" class="btn btn-default mt-4">Annuler</a>
                     <br>&nbsp;
                 </div>
             </div>
         {!! Form::close() !!}
 
         <div style='padding-left: 15px;'>
-            <div class='card-header ml-n3 mr-n4 mb-3' >Sous-objectifs associ&eacute;s</div>
+            <div class='card-header ml-n3 mr-n4 mb-3' >Sous-objectif(s) associ&eacute;(s)</div>
             {!! Form::open(['method' => 'POST','route' => 'sous-objectifs.multipleupdate' ]) !!}
             <input type='hidden' name='objectif_id' id='objectif_id'  value='{{ $objectif->id }}'>
+            {!! Form::close() !!}
+
+            <div style='text-align: center;'>
+                {!! Form::open(['method' => 'POST','route' => 'sous-objectifs.store','style'=>'display:inline']) !!}
+                <input type='hidden' name='objectif_id' id='objectif_id'  value='{{ $objectif->id }}'>
+                {!! Form::submit('Ajouter un nouveau sous objectif', ['class' => 'btn btn-primary btn-sm']) !!}
+                {!! Form::close() !!}
+            </div>
 
             @php $count = 1 @endphp
             @foreach ($objectif->sous_objectifs()->get() as $ssobj)
@@ -94,15 +103,7 @@
             <div>
                 <button class='btn btn-primary w-100 mt-4' type='submit' id='btnmodifobjssobj' name='btnmodifobjssobj'>Enregistrer les sous objectifs associ&eacute;s</button>
             </div>
-
-            {!! Form::close() !!}
-            <div style='text-align: center;'>
-                {!! Form::open(['method' => 'POST','route' => 'sous-objectifs.store','style'=>'display:inline']) !!}
-                <input type='hidden' name='objectif_id' id='objectif_id'  value='{{ $objectif->id }}'>
-                {!! Form::submit('Ajouter un nouveau sous objectif', ['class' => 'btn btn-primary btn-sm']) !!}
-                {!! Form::close() !!}
-            </div>
-            
+           
             <!-- Cette partie contient les formulaires actives par javascript pour provoquer la suppression
             d'un sous-objectif-->
             @php $count = 1 @endphp

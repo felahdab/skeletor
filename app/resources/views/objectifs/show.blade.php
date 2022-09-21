@@ -12,7 +12,7 @@
         <div class='card-header' >Consultation objectif </div>
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
-                    <label for='libelle_court_objectif' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
+                    <label for='libelle_court_objectif' class='col-sm-5 col-form-label'> Libell&eacute; court</label>
                     <div class='col-sm-5'>
                         <input type='text' class='form-control'  name='objectif[objectif_libcourt]' id='objectif[objectif_libcourt]' placeholder='Libell&eacute; court' value="{{ $objectif->objectif_libcourt }}" >
                     </div>
@@ -22,6 +22,10 @@
                     <div class='col-sm-5'>
                         <input type='text' class='form-control' name='objectif[objectif_liblong]' id='objectif[objectif_liblong]' placeholder='Libell&eacute; long' value="{{ $objectif->objectif_liblong }}" >
                     </div>
+                </div>
+                <div>
+                    <a href="{{ route('objectifs.index') }}" class="btn btn-primary mt-4">Retour</a>
+                    <br>&nbsp;
                 </div>
                 <div style='text-align:right;'>
                     <ul  class='navbar-nav mr-auto' >
@@ -38,7 +42,7 @@
             </div>
 
         <div style='padding-left: 15px;'>
-            <div class='card-header ml-n3 mr-n4 mb-3' >Sous-objectifs associ&eacute;s</div>
+            <div class='card-header ml-n3 mr-n4 mb-3' >Sous-objectif(s) associ&eacute;(s)</div>
             @php $count = 1 @endphp
             @foreach ($objectif->sous_objectifs()->get() as $ssobj)
             <div class='cadressobj'>
