@@ -131,9 +131,9 @@ class TransformationController extends Controller
         {
             foreach($fonction->compagnonages()->get() as $comp)
                 array_push($listcomp, $comp);
-            foreach($fonction->stages()->get() as $stage)
-                array_push($liststage, $stage);
         }
+        foreach($user->stages()->get() as $stage)
+            array_push($liststage, $stage);
         
         $nbcomp=count($listcomp);
         $nbstage=count($liststage);

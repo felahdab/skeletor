@@ -181,7 +181,7 @@ class User extends Authenticatable
     public function displayDateDebarquement()
     {
         if ($this->date_debarq == null)
-            return null;
+            return "NON RENSEIGNE";
         return $this->date_debarq;
     }
     
@@ -305,9 +305,6 @@ class User extends Authenticatable
         $workitem = $this->sous_objectifs()->find($sous_objectif);
         if ($workitem == null)
             return false;
-        $workitem = $workitem->pivot;
-        if ($workitem->date_validation == null)
-            return false;
         return true;
     }
     
@@ -320,6 +317,19 @@ class User extends Authenticatable
         if ($workitem->date_validation == null)
             return false;
         return true;
+    }
+    
+    public function stagesOrphelins()
+    {
+        // Pour les stages qui ont été attribués à l'utilisateur en dehors du parcours de transformation.
+        $collect = collect([]);
+        foreach($this->fonctions()->get() as $fonction)
+            foreach($fonction->stages()->get() as $stage)
+                $collect = $collect->concat([$stage]);
+        
+        $orphans = $this->stages()->get()->diff($collect);
+        
+        return $orphans;
     }
     
     public function nbSousObjectifsAValider(Fonction $fonction=null)
