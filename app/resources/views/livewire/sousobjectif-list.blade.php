@@ -10,9 +10,9 @@
             <thead>
             <tr>
                 <th scope="col" width="1%">#</th>
-                <th scope="col" width="60%">Libelle</th>
+                <th scope="col" width="60%">Libellé</th>
                 <th scope="col" width="5%">Coefficient</th>
-                <th scope="col" width="5%">Duree</th>
+                <th scope="col" width="5%">Durée</th>
                 <th scope="col" width="1%" colspan="3"></th>    
             </tr>
             </thead>

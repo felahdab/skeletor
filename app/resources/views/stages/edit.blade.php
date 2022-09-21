@@ -9,6 +9,7 @@
     </div>
     <div id='divmodifobj' class='card bg-light ml-3 w-100' >
         <div class='card-header' >Modification d'un stage </div>
+		<div style='text-align:right;'>* champs obligatoires </div>
         {!! Form::open(['method' => 'PATCH','route' => ['stages.update', $stage->id] ]) !!}
             <input type='hidden' id='stage[id]' name='stage[id]' value='{{ $stage->id }}'>
             <div style='padding-left: 15px;'>
@@ -19,7 +20,7 @@
                     </div>
                 </div>
                 <div class='form-group row' >
-                    <label for='stage[stage_liblong]' class='col-sm-5 col-form-label'>Libell&eacute; long</label>
+                    <label for='stage[stage_liblong]' class='col-sm-5 col-form-label'>Libell&eacute; long *</label>
                     <div class='col-sm-5'>
                         <input type='text' class='form-control' name='stage[stage_liblong]' id='stage[stage_liblong]' placeholder='Libell&eacute; long' value="{{ $stage->stage_liblong }}" >
                     </div>
@@ -49,7 +50,8 @@
                     </select>
                 </div>
                 <div>
-                    <button class='btn btn-primary w-100 mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Modifier</button>
+                    <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Modifier</button>
+                    <a href="{{ route('stages.index') }}" class="btn btn-default mt-4">Annuler</a>
                     <br>&nbsp;
                 </div>
             </div>

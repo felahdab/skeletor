@@ -11,7 +11,7 @@
             <thead>
             <tr>
                 <th scope="col" width="1%">#</th>
-                <th scope="col" width="8%">Libellé court</th>
+                <th scope="col" width="15%">Libellé court</th>
                 <th scope="col">Libellé long</th>
                 <th scope="col">Type</th>
                 <th scope="col" width="1%" colspan="3"></th>    

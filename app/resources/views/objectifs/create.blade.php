@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class='form-group row' >
-                    <label for='libelle_long_objectif' class='col-sm-5 col-form-label'>Libell&eacute; long</label>
+                    <label for='libelle_long_objectif' class='col-sm-5 col-form-label'>Libell&eacute; long *</label>
                     <div class='col-sm-5'>
                         <input type='text' 
 						class='form-control' 
@@ -36,7 +36,8 @@
                     </div>
                 </div>
                 <div>
-                    <button class='btn btn-primary w-100 mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Créer</button>
+                    <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Créer</button>
+                    <a href="{{ route('objectifs.index') }}" class="btn btn-default mt-4">Annuler</a>
                     <br>&nbsp;
                 </div>
             </div>

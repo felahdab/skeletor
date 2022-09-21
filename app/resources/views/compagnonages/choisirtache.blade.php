@@ -3,8 +3,8 @@
 @section('content')
 
     <div class="bg-light p-4 rounded">
-        <h2>Taches</h2>
-		<div class='lead'>Ajout d'une tache pour le compagnonage {!!$compagnonage->comp_libcourt !!} </div>
+        <h2>Tâches</h2>
+		<div class='lead'>Ajout d'une tâche pour le compagnonnage : {!!$compagnonage->comp_libcourt !!} </div>
         <div class="mt-2">
             @include('layouts.partials.messages')
         </div>

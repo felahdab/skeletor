@@ -39,7 +39,8 @@ class StageController extends Controller
      */
     public function create()
     {
-        return view('stages.create');
+        $typelicences = TypeLicence::orderBy('typlicense_libcourt')->get();
+        return view('stages.create', ['typelicences' => $typelicences,]);
     }
 
     /**
@@ -53,7 +54,8 @@ class StageController extends Controller
         $stage=new Stage;
         $stage->stage_libcourt = $request->stage['stage_libcourt'];
         $stage->stage_liblong = $request->stage['stage_liblong'];
-        $stage->typelicence_id=4;
+        $stage->transverse = array_key_exists('transverse', $request->stage) ;
+        $stage->typelicence_id=$request->stage['typelicence_id'];
         $stage->save();
         return redirect()->route('stages.edit', $stage);
     }

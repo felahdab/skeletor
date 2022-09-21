@@ -3,13 +3,13 @@
 @section('content')
     <div class="bg-light p-4 rounded">
         <h2>Fonctions</h2>
-        <div style='text-align:right;'>* champs obligatoires </div>
         <div class="mt-2">
             @include('layouts.partials.messages')
         </div>
     </div>
     <div id='divmodifobj' class='card bg-light ml-3 w-100' >
         <div class='card-header' >Création fonction </div>
+        <div style='text-align:right;'>* champs obligatoires </div>
         {!! Form::open(['method' => 'POST','route' => 'fonctions.store']) !!}
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
@@ -54,6 +54,7 @@
                 </div>                
                 <div>
                     <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Créer</button>
+                    <a href="{{ route('fonctions.index') }}" class="btn btn-default mt-4">Annuler</a>
                     <br>&nbsp;
                 </div>
             </div>
