@@ -24,7 +24,7 @@
                     <select name='liststageconsult' id='liststageconsult' class='custom-select  w-50' onchange=' modifdeuxparam("stage","liststageconsult","marin");'>
                         <option value ='0' >S&eacute;lectionner le stage</option>
                         @foreach($stages as $stageexistant)
-                        <option value ='{{$stageexistant->id}}'>{{$stageexistant->stage_libcourt}}</option>
+                        <option value ='{{$stageexistant->id}}' @selected($stage != null and $stageexistant->id == $stage->id)>{{$stageexistant->stage_libcourt}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -33,7 +33,7 @@
                     <select name='listmarins' id='listmarins' class='custom-select  w-50' onchange='modifdeuxparam("marin","listmarins","stage");'>
                         <option value ='0' >S&eacute;lectionner le marin</option>
                         @foreach($users as $userexistant)
-                        <option value ='{{$userexistant->id}}'>{{$userexistant->displayString()}}</option>
+                        <option value ='{{$userexistant->id}}' @selected($marin != null and $userexistant->id == $marin->id) >{{$userexistant->displayString()}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -94,7 +94,7 @@
                             <td style='height:40px;'>{{$user->displayGrade()}} </td>
                             <td>{{$user->displayDiplome()}} </td>
                             <td>{{$user->displaySpecialite()}} </td>
-                            <td><a href='{{ route("stages.consulter", ["stage" => $stage->id] ) }}'>{{$user->name}} </a></td>
+                            <td><a href='{{ route("stages.consulter", [ "marin" => $user->id]) }}'>{{$user->name}} </a></td>
                             <td>{{$user->prenom}} </td>
                             @if(false)<td>{{$user->matricule}}</td>@endif
                             <td>{{$user->displaySecteur()}} </td>

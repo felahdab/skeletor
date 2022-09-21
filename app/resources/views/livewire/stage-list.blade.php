@@ -22,7 +22,7 @@
                         <td>{{ $stage->stage_libcourt }}</td>
                         <td>{{ $stage->stage_liblong }}</td>
                         @if ($mode=="gestion")
-                            <td><a href="{{ route('stages.consulter', ['stage' => $stage->id] ) }}" class="btn btn-primary btn-sm">Consulter</a></td>
+                            <td><a href="{{ route('stages.choixmarins', ['stage' => $stage->id] ) }}" class="btn btn-primary btn-sm">Validation ou annulation collective</a></td>
                             <td><a href="{{ route('stages.edit', $stage->id) }}" class="btn btn-info btn-sm">Editer</a></td>
                             @can('stage.destroy')
                             <td>

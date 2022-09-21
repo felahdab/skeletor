@@ -248,46 +248,47 @@
                 @foreach($fonction->stages()->get() as $stage)
 
                 <tr class='lignecomp div-table-contrat-compagnonnage'>
-                    <th colspan='3'>{{$stage->stage_libcourt }}</th>
-                </tr>
-                <tr class='lignecomp'>
-                    <td style='width:30%;'>Libelle long</td>
-                    <td style='width:25%;'>Date de Visa</td>
-                    <td style='width:25%;'>Viseur</td>
+                    <th colspan='2'>{{$stage->stage_libcourt }}</th>
                 </tr>
                 <tr class='ligneTache'>
-                    <td>{{$stage->stage_long}}</td>
                     <td>
                         @if ($user->aValideLeStage($stage))
                             <button class='btn btn-success' type='button' disabled>
                             VALIDE {{ $user->stages()->find($stage)->pivot->date_validation }}
                             </button>
-                        @endif</td>
-                    <td>
-                        <input type='checkbox' 
-                            id='stageid[{{$stage->id}}]' 
-                            name='stageid[{{$stage->id}}]' 
-                            value='stageid[{{$stage->id}}]'>
+                        @else
+                            <button class='btn btn-warning' type='button' disabled>
+                            NON VALIDE A CE JOUR
+                            </button>
+                            @if (false)
+                                <input type='checkbox' 
+                                id='stageid[{{$stage->id}}]' 
+                                name='stageid[{{$stage->id}}]' 
+                                value='stageid[{{$stage->id}}]'>
+                            @endif
+                        @endif
                     </td>
                 </tr>
                 @endforeach <!-- foreach stage -->
-                    
-                <tr  class='lignecomp'>
-                    <td colspan='3'>
-                        <button type="submit" 
-                        class="btn btn-primary" 
-                        name="validation"
-                        onclick='divvalid = getElementById("divvalid");
-                            parentForm = jQuery(this).closest("form");
-                            parentForm[0].querySelector("#buttonid").value="validation";
-                            divvalid.querySelector("#formtosubmit").value=parentForm[0].id;
-                            affichage("divvalid");
-                            return false;'>Valider les éléments cochés</button>
-                        <button type="submit" 
-                        class="btn btn-danger" 
-                        name="annulation_validation">Annuler la validation des éléments cochés</button>
-                    </td>
-                </tr>
+                
+                @if (false)
+                    <tr  class='lignecomp'>
+                        <td colspan='3'>
+                            <button type="submit" 
+                            class="btn btn-primary" 
+                            name="validation"
+                            onclick='divvalid = getElementById("divvalid");
+                                parentForm = jQuery(this).closest("form");
+                                parentForm[0].querySelector("#buttonid").value="validation";
+                                divvalid.querySelector("#formtosubmit").value=parentForm[0].id;
+                                affichage("divvalid");
+                                return false;'>Valider les éléments cochés</button>
+                            <button type="submit" 
+                            class="btn btn-danger" 
+                            name="annulation_validation">Annuler la validation des éléments cochés</button>
+                        </td>
+                    </tr>
+                @endif
             </table>
             {!! Form::close() !!}
             

@@ -81,26 +81,41 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($user->fonctions()->get() as $fonction)
-                        @foreach($fonction->compagnonages()->get() as $comp)
+                    @foreach($listcomp as $comp)
                         <tr>
-                            <td style='width:25%;'>{{$comp->comp_libcourt}}</td>
-                            @php $pourcentage = $user->pourcentage_valides_pour_comp($comp);
-                                $pourcentagestr = substr($pourcentage, 0,4);
-                            @endphp
-                            @if ($pourcentage == 100)
-                                <td style='width:25%; background-color:green;'>{{$pourcentagestr}}%</td>
-                            @elseif ($pourcentage >= 70 and $pourcentage < 100)
-                                <td style='width:25%; background-color:gold;'>{{$pourcentagestr}}%</td>
-                            @elseif ($pourcentage >= 30 and $pourcentage < 70)
-                                <td style='width:25%; background-color:orange;'>{{$pourcentagestr}}%</td>
+                            @if ($comp == null)
+                                <td style='width:25%;'></td>
+                                <td style='width:25%;'></td>
                             @else
-                                <td style='width:25%; background-color:red;'>{{$pourcentagestr}}%</td>
+                                <td style='width:25%;'>{{$comp->comp_libcourt}}</td>
+                                @php 
+                                    $pourcentage = $user->pourcentage_valides_pour_comp($comp);
+                                    $pourcentagestr = substr($pourcentage, 0,4);
+                                @endphp
+                                @if ($pourcentage == 100)
+                                    <td style='width:25%; background-color:green;'>{{$pourcentagestr}}%</td>
+                                @elseif ($pourcentage >= 70 and $pourcentage < 100)
+                                    <td style='width:25%; background-color:gold;'>{{$pourcentagestr}}%</td>
+                                @elseif ($pourcentage >= 30 and $pourcentage < 70)
+                                    <td style='width:25%; background-color:orange;'>{{$pourcentagestr}}%</td>
+                                @else
+                                    <td style='width:25%; background-color:red;'>{{$pourcentagestr}}%</td>
+                                @endif
                             @endif
-                            <td style='width:25%;'></td>
-                            <td style='width:25%; background-color:;'></td>
+                            
+                            @php $stage = $liststage[$loop->index] ; @endphp
+                            @if ($stage == null)
+                                <td style='width:25%;'></td>
+                                <td style='width:25%;'></td>
+                            @else
+                                <td style='width:25%;'>{{$stage->stage_libcourt}}</td>
+                                @if ($user->aValideLeStage($stage))
+                                    <td style='width:25%; background-color:green;'> VALIDE </td>
+                                @else
+                                    <td style='width:25%; background-color:red;'> NON VALIDE </td>
+                                @endif
+                            @endif
                         </tr>
-                        @endforeach
                     @endforeach
                 </tbody>
             </table>

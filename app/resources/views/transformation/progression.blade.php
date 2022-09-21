@@ -68,11 +68,11 @@
                                     <span style='width:25%; background-color: transparent; margin-top: 5px;'>
                                         <span style='display:flex; width: 100%; position: relative; '>
                                             <span style='position: absolute; width: 100%; height: 20px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </span>
-                                            @if ($user->stages()->get()->find($stage))
+                                            @if ($user->aValideLeStage($stage))
                                             <span style='position: absolute; width: 100%; height: 20px; background-color: green; margin-top: 1%; border: 1px solid black;'></span>
                                             <span style='position: absolute; margin-left: 5px;'><b>100%</b></span>
                                             @else
-                                            <span style='position: absolute; width: 0%; height: 20px; background-color: red; margin-top: 1%; border: 1px solid black;'></span>
+                                            <span style='position: absolute; width: 100%; height: 20px; background-color: red; margin-top: 1%; border: 1px solid black;'></span>
                                             <span style='position: absolute; margin-left: 5px;'><b>0%</b></span>
                                             @endif
                                         </span>
@@ -177,11 +177,11 @@
                                     <span style='width:25%; background-color: transparent; margin-top: 5px;'>
                                         <span style='display:flex; width: 100%; position: relative; '>
                                             <span style='position: absolute; width: 100%; height: 20px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </span>
-                                            @if ($user->stages()->get()->find($stage))
+                                            @if ($user->aValideLeStage($stage))
                                             <span style='position: absolute; width: 100%; height: 20px; background-color: green; margin-top: 1%; border: 1px solid black;'></span>
                                             <span style='position: absolute; margin-left: 5px;'><b>100%</b></span>
                                             @else
-                                            <span style='position: absolute; width: 0%; height: 20px; background-color: red; margin-top: 1%; border: 1px solid black;'></span>
+                                            <span style='position: absolute; width: 100%; height: 20px; background-color: red; margin-top: 1%; border: 1px solid black;'></span>
                                             <span style='position: absolute; margin-left: 5px;'><b>0%</b></span>
                                             @endif
                                         </span>

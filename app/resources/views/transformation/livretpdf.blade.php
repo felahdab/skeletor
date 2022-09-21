@@ -188,6 +188,7 @@
             @php
             $listcomp=$fonction->compagnonages()->get()->pluck('comp_libcourt')->all();
             $liststage=$fonction->stages()->get()->pluck('stage_libcourt')->all();
+            
             $nbcomp=count($listcomp);
             $nbstage=count($liststage);
             
@@ -204,7 +205,6 @@
                 $listcomp = array_merge($listcomp, $complement);
             }
             
-            $tableauaffichage = array_combine($listcomp, $liststage);
             @endphp
             <tr><td class='titrecompstage'>{{$fonction->fonction_libcourt}}</td></tr>
             <tr><td class='ta-c'>
@@ -213,10 +213,10 @@
                             <th class='titrecompstage w-50 colcompstage'>Compagnonnage(s)</th>
                             <th class='titrecompstage'>Stage(s)</th>
                         </tr>
-                        @foreach($tableauaffichage as $libcomp => $libstage)
+                        @foreach($listcomp as $libcomp)
                             <tr>
                                 <td class='colcompstage'>{{$libcomp}}</td>
-                                <td>{{$libstage}}</td>
+                                <td>{{ $liststage[$loop->index] }}</td>
                             </tr>
                         @endforeach
                     </table>
@@ -255,9 +255,9 @@
                 </tr>
                 @foreach ($user->stages()->get() as $stage)
                     <tr>
-                        <td class='colcompstage'>{{$stage->stage_libcourt}}</td>
-                        <td class='colcompstage'>{{$stage->pivot->date_validation == null ? "NON VALIDE" : "VALIDE"}}</td>
-                        <td class='colcompstage'>{{$stage->pivot->date_validation == null ? "" : $stage->pivot->date_validation}}</td>
+                        <td class='colcompstage'>{{ $stage->stage_libcourt}}</td>
+                        <td class='colcompstage'>{{ $stage->pivot->date_validation == null ? "NON VALIDE" : "VALIDE" }}</td>
+                        <td class='colcompstage'>{{ $stage->pivot->date_validation == null ? "" : $stage->pivot->date_validation }}</td>
                     </tr>
                 @endforeach
             </table>

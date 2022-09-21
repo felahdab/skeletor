@@ -141,6 +141,10 @@ class UsersController extends Controller
                 }
             }
             $user->fonctions()->attach($fonction);
+            foreach ($fonction->stages()->get() as $stage)
+            {
+                $user->stages()->attach($stage);
+            }
         }
         elseif ($fonction->typefonction_id == $fquaiid)
         {
@@ -153,10 +157,18 @@ class UsersController extends Controller
                 }
             }
             $user->fonctions()->attach($fonction);
+            foreach ($fonction->stages()->get() as $stage)
+            {
+                $user->stages()->attach($stage);
+            }
         }
         elseif ($fonction->typefonction_id == $fmetierid)
         {
             $user->fonctions()->attach($fonction);
+            foreach ($fonction->stages()->get() as $stage)
+            {
+                $user->stages()->attach($stage);
+            }
         }
         
         $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
@@ -170,6 +182,10 @@ class UsersController extends Controller
         $fonction = Fonction::where('id', $fonction_id)->get()->first();
         
         $user->fonctions()->detach($fonction);
+         foreach ($fonction->stages()->get() as $stage)
+            {
+                $user->stages()->detach($stage);
+            }
         
         $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
         return redirect()->route('users.choisirfonction', ['user' => $user,
