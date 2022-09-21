@@ -10,6 +10,6 @@ echo $STACKNAME
 
 DOMAIN=$1
 
-echo "INSTANCEURL=https://$DOMAIN/$STACKNAME/" > .env
+echo "INSTANCEURL=https://$DOMAIN/$STACKNAME" > .env
 SED_CMD='s/STACKNAME/'${STACKNAME}'/g'
 sed -i $SED_CMD nginx.conf
