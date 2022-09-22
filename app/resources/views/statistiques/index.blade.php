@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="bg-light p-4 rounded">
-        <h1>Statistiques</h1>
+        <h2>Statistiques</h2>
 
         <div class='flex' style='justify-content: start;'>
             <nav class='navbar-brand bg-light border' style='width: 15rem; height: auto; flex-direction: column; justify-content: start ;'>
