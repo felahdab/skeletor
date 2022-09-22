@@ -8,10 +8,6 @@
             Gérer les permissions.
             <a href="{{ route('permissions.create') }}" class="btn btn-primary btn-sm float-right">Ajouter une permission</a>
         </div>
-        
-        <div class="mt-2">
-            @include('layouts.partials.messages')
-        </div>
 
         <table class="table table-striped">
             <thead>

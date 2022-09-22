@@ -7,9 +7,6 @@
         Gestion des demandes d'activation de compte Mindef Connect
     </div>
     
-    <div class="mt-2">
-        @include('layouts.partials.messages')
-    </div>
     <div>
         <table class="table table-striped">
             <thead>

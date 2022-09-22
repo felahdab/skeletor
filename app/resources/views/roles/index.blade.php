@@ -8,10 +8,6 @@
             Gérer les roles.
             <a href="{{ route('roles.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un role</a>
         </div>
-        
-        <div class="mt-2">
-            @include('layouts.partials.messages')
-        </div>
 
         <table class="table table-bordered">
           <tr>
