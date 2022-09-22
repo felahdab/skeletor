@@ -12,14 +12,14 @@
           Personnel
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="{{ route('mindefconnect.index') }}">Demandes Mindef Connect</a>
+            @can('mindefconnect.index')<a class="dropdown-item" href="{{ route('mindefconnect.index') }}">Demandes Mindef Connect</a>@endcan
             <a class="dropdown-item" href="{{ route('users.index') }}">Utilisateurs</a>
-            <a class="dropdown-item" href="{{ route('roles.index')}}">Roles</a>
-            <a class="dropdown-item" href="{{ route('permissions.index')}}">Permissions</a>
+            @can('roles.index')<a class="dropdown-item" href="{{ route('roles.index')}}">Roles</a>@endcan
+            @can('permissions.index')<a class="dropdown-item" href="{{ route('permissions.index')}}">Permissions</a>@endcan
           </div>
         </div>
         @endcan
-        @hasrole('2ps')
+        @can('fonctions.index')
         <div class="dropdown" >
           <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Fonctions
@@ -32,6 +32,8 @@
             <!--a class="dropdown-item" href="{{ route('sous-objectifs.index')}}">Sous-Objectifs</a-->
           </div>
         </div>
+        @endcan
+        @can('stages.index')
         <div class="dropdown" >
           <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Stages
@@ -40,19 +42,19 @@
             <a class="dropdown-item" href="{{ route('stages.index')}}">Stages</a>
           </div>
         </div>
-        @endrole
-        @hasrole('tuteur')
+        @endcan
+        @can('transformation.index')
         <div class="dropdown" >
           <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Transformation
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
             <a class="dropdown-item" href="{{route('transformation.index')}}">Suivi de la transformation par marin</a>
-            <a class="dropdown-item" href="{{route('transformation.indexparfonction')}}">Suivi de la transformation par fonction</a>
-            <a class="dropdown-item" href="{{route('stages.show', ['stage' => 1])}}">Suivi de la transformation par stage</a>
+            @can('transformation.indexparfonction')<a class="dropdown-item" href="{{route('transformation.indexparfonction')}}">Suivi de la transformation par fonction</a>@endcan
+            @can('transformation.indexparstage')<a class="dropdown-item" href="{{route('stages.show', ['stage' => 1])}}">Suivi de la transformation par stage</a>@endcan
           </div>
         </div>
-        @endrole
+        @endcan
         @if(auth()->user()->en_transformation)
         <div class="dropdown" >
           <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -60,8 +62,8 @@
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="{{route('transformation.monlivret')}}">Mon livret</a>
-            <a class="dropdown-item" href="{{route('transformation.mafichebilan')}}">Ma fiche bilan</a>
             <a class="dropdown-item" href="{{route('transformation.maprogression')}}">Ma progression</a>
+            <a class="dropdown-item" href="{{route('transformation.mafichebilan')}}">Ma fiche bilan</a>
           </div>
         </div>
         @endif
