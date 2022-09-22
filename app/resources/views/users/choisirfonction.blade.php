@@ -3,9 +3,6 @@
 @section('content')
     <div class="bg-light p-4 rounded">
         <h1>Attribution des fonctions à l'utilisateur</h1>
-        <div class="mt-2">
-            @include('layouts.partials.messages')
-        </div>
         <div class='card-header' > Utilisateur </div>
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >

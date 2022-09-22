@@ -3,14 +3,10 @@
 @section('content')
     
     <div class="bg-light p-4 rounded">
-        <h1>Roles</h1>
+        <h2>Roles</h2>
         <div class="lead">
             Gérer les roles.
             <a href="{{ route('roles.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un role</a>
-        </div>
-        
-        <div class="mt-2">
-            @include('layouts.partials.messages')
         </div>
 
         <table class="table table-bordered">

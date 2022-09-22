@@ -3,89 +3,93 @@
         <span class="navbar-toggler-icon bg-light"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-      <ul class="navbar-nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 mr-auto mt-2 mt-lg-0">
-        <li><a href="{{ route('home.index') }}" class="nav-link nav-item text-white">Accueil</a></li>
-        @auth
-        @can('users.index')
-        <div class="dropdown nav-item" >
-          <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          Personnel
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="{{ route('mindefconnect.index') }}">Demandes Mindef Connect</a>
-            <a class="dropdown-item" href="{{ route('users.index') }}">Utilisateurs</a>
-            <a class="dropdown-item" href="{{ route('roles.index')}}">Roles</a>
-            <a class="dropdown-item" href="{{ route('permissions.index')}}">Permissions</a>
-          </div>
-        </div>
-        @endcan
-        @hasrole('2ps')
-        <div class="dropdown" >
-          <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Fonctions
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="{{ route('fonctions.index')}}">Fonctions</a>
-            <a class="dropdown-item" href="{{ route('compagnonages.index')}}">Compagnonnages</a>
-            <a class="dropdown-item" href="{{ route('taches.index')}}">Tâches</a>
-            <a class="dropdown-item" href="{{ route('objectifs.index')}}">Objectifs</a>
-            <!--a class="dropdown-item" href="{{ route('sous-objectifs.index')}}">Sous-Objectifs</a-->
-          </div>
-        </div>
-        <div class="dropdown" >
-          <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Stages
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="{{ route('stages.index')}}">Stages</a>
-          </div>
-        </div>
-        @endrole
-        @hasrole('tuteur')
-        <div class="dropdown" >
-          <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Transformation
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
-            <a class="dropdown-item" href="{{route('transformation.index')}}">Suivi de la transformation par marin</a>
-            <a class="dropdown-item" href="{{route('transformation.indexparfonction')}}">Suivi de la transformation par fonction</a>
-            <a class="dropdown-item" href="{{route('stages.show', ['stage' => 1])}}">Suivi de la transformation par stage</a>
-          </div>
-        </div>
-        @endrole
-        @if(auth()->user()->en_transformation)
-        <div class="dropdown" >
-          <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Ma transformation
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="{{route('transformation.monlivret')}}">Mon livret</a>
-            <a class="dropdown-item" href="{{route('transformation.mafichebilan')}}">Ma fiche bilan</a>
-            <a class="dropdown-item" href="{{route('transformation.maprogression')}}">Ma progression</a>
-          </div>
-        </div>
-        @endif
-        
-		@if (auth()->user()->can('statistiques.index') or auth()->user()->can('statistiques.pourtuteurs') or auth()->user()->can('statistiques.pour2ps') or auth()->user()->can('statistiques.pourem'))
-        <div class="dropdown" >
-          <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Statistiques
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            @can('statistiques.index')<a class="dropdown-item" href="{{route('statistiques.index')}}">Statistiques</a>@endcan
-            @can('statistiques.pourtuteurs')<a class="dropdown-item" href="{{route('statistiques.pourtuteurs')}}">Bilan pour tuteurs</a>@endcan
-            @can('statistiques.pour2ps')<a class="dropdown-item" href="{{route('statistiques.pour2ps')}}">Bilan pour 2PS</a>@endcan
-            @can('statistiques.pourem')<a class="dropdown-item" href="{{route('statistiques.pourem')}}">Bilan pour EM</a>@endcan
+        <ul class="navbar-nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 mr-auto mt-2 mt-lg-0">
+             <a href="{{ route('home.index') }}" class="btn btn-outline-light me-2">Accueil</a>
+            @auth
+            @can('users.index')
+            <div class="dropdown nav-item" >
+              <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              Personnel
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                @can('mindefconnect.index')<a class="dropdown-item" href="{{ route('mindefconnect.index') }}">Demandes Mindef Connect</a>@endcan
+                <a class="dropdown-item" href="{{ route('users.index') }}">Utilisateurs</a>
+                @can('roles.index')<a class="dropdown-item" href="{{ route('roles.index')}}">Roles</a>@endcan
+                @can('permissions.index')<a class="dropdown-item" href="{{ route('permissions.index')}}">Permissions</a>@endcan
+              </div>
+            </div>
+            @endcan
+            @can('fonctions.index')
+            <div class="dropdown" >
+              <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Fonctions
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{{ route('fonctions.index')}}">Fonctions</a>
+                <a class="dropdown-item" href="{{ route('compagnonages.index')}}">Compagnonnages</a>
+                <a class="dropdown-item" href="{{ route('taches.index')}}">Tâches</a>
+                <a class="dropdown-item" href="{{ route('objectifs.index')}}">Objectifs</a>
+                <!--a class="dropdown-item" href="{{ route('sous-objectifs.index')}}">Sous-Objectifs</a-->
+              </div>
+            </div>
+            @endcan
+            @can('stages.index')
+            <div class="dropdown" >
+              <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Stages
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{{ route('stages.index')}}">Stages</a>
+              </div>
+            </div>
+            @endcan
+            @can('transformation.index')
+            <div class="dropdown" >
+              <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Transformation
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+                <a class="dropdown-item" href="{{route('transformation.index')}}">Suivi de la transformation par marin</a>
+                @can('transformation.indexparfonction')<a class="dropdown-item" href="{{route('transformation.indexparfonction')}}">Suivi de la transformation par fonction</a>@endcan
+                @can('transformation.indexparstage')<a class="dropdown-item" href="{{route('stages.show', ['stage' => 1])}}">Suivi de la transformation par stage</a>@endcan
+              </div>
+            </div>
+            @endcan
+            @if(auth()->user()->en_transformation)
+            <div class="dropdown" >
+              <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Ma transformation
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{{route('transformation.monlivret')}}">Mon livret</a>
+                <a class="dropdown-item" href="{{route('transformation.maprogression')}}">Ma progression</a>
+                <a class="dropdown-item" href="{{route('transformation.mafichebilan')}}">Ma fiche bilan</a>
+              </div>
+            </div>
+            @endif
             
-          </div>
-        </div>
-		@endif
-        
-        @endauth
-      </ul>
+            @if (auth()->user()->can('statistiques.index') or auth()->user()->can('statistiques.pourtuteurs') or auth()->user()->can('statistiques.pour2ps') or auth()->user()->can('statistiques.pourem'))
+            <div class="dropdown" >
+              <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Statistiques
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                @can('statistiques.index')<a class="dropdown-item" href="{{route('statistiques.index')}}">Statistiques</a>@endcan
+                @can('statistiques.pourtuteurs')<a class="dropdown-item" href="{{route('statistiques.pourtuteurs')}}">Bilan pour tuteurs</a>@endcan
+                @can('statistiques.pour2ps')<a class="dropdown-item" href="{{route('statistiques.pour2ps')}}">Bilan pour 2PS</a>@endcan
+                @can('statistiques.pourem')<a class="dropdown-item" href="{{route('statistiques.pourem')}}">Bilan pour EM</a>@endcan
+                
+              </div>
+            </div>
+            @endif
+            
+            @endauth
+        </ul>
       
 
       @auth
+        <button class='btn btn-warning' onclick='affichage("bugreport");'>Signaler un problème</button>
+      
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{ auth()->user()->displayString() }}
@@ -104,7 +108,27 @@
           <a href="{{ route('keycloak.login.redirect') }}" class="btn btn-outline-light me-2">Login</a>
         </div>
       @endguest
-      </ul>
+      
     </div>
   </div>
 </nav>
+
+
+<div id='bugreport' class='popupvalidcontrat' style='display:none;'>
+    {!! Form::open(['method' => 'POST','route' => ['bugreports.store'], 'style'=>'display:inline']) !!}
+    <div class='titrenavbarvert'>
+        <h5>Rapport d'anomalie</h5>
+    </div>
+    <input type='hidden' id='url' name='url' value='{{ Request::url() }}'>
+    <div class='form-group row  pl-3' >
+        <label for='comment' class='col-sm-5 col-form-label '>Commentaire</label>
+        <div class='col-sm-5'>
+            <textarea cols='40' rows='4' name='message' id='message' placeholder='Commentaire'></textarea>
+        </div>
+    </div>
+    <div  class='text-center'>
+        <button class='btn btn-primary w-25 mt-4 mb-2' type="submit">Valider</button>
+        <button class='btn btn-primary w-25 mt-4 mb-2' onclick='annuler("bugreport");return false;'>Annuler</button>
+    </div>
+    {!! Form::close() !!}
+</div>

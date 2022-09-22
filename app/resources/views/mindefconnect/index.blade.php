@@ -2,14 +2,11 @@
 
 @section('content')
  <div class="bg-light p-4 rounded">
-    <h1>Utilisateurs</h1>
+    <h2>Utilisateurs</h2>
     <div class="lead">
         Gestion des demandes d'activation de compte Mindef Connect
     </div>
     
-    <div class="mt-2">
-        @include('layouts.partials.messages')
-    </div>
     <div>
         <table class="table table-striped">
             <thead>

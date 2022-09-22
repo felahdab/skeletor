@@ -7,9 +7,6 @@
             Livret de transformation de {{$user->displayString()}}
         </div>
         
-        <div class="mt-2">
-            @include('layouts.partials.messages')
-        </div>
         @if($readwrite)
             <a href="{{ route('transformation.livret', $user->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
             <a href="{{ route('transformation.progression', $user->id) }}" class="btn btn-primary btn-sm">Progression</a>

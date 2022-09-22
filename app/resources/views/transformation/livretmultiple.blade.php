@@ -6,11 +6,6 @@
         <div class="lead">
            Validation collective de sous objectifs ou de taches pour la fonction {{$fonction->fonction_libcourt}}
         </div>
-        
-        <div class="mt-2">
-            @include('layouts.partials.messages')
-        </div>
-        
         {!! Form::open(['method' => 'POST','id'=> 'formlivretfonc' , 'route' => ['fonctions.validermarins', $fonction->id]]) !!}
         <div id='divvalid' class='popupvalidcontrat' style='display:none;'>
             <div class='titrenavbarvert'>
