@@ -33,11 +33,13 @@ class RolesSeeder extends Seeder
             'transformation.mafichebilan',
             'transformation.monlivret',
             'transformation.maprogression',
+            'bugreports.store',
         ];
         $role->syncPermissions($rolepermissions);
         
         $role = Role::create(['name' => 'tuteur']);
-        $rolepermissions = ['fonctions.choixmarins',
+        $rolepermissions = [
+                'fonctions.choixmarins',
                 'fonctions.validermarins',
                 'stages.consulter',
                 'stages.show',
@@ -49,7 +51,7 @@ class RolesSeeder extends Seeder
                 'transformation.validerlacheoudouble',
                 'transformation.progression',
                 'transformation.fichebilan',
-                'statistiques.pourtuteurs']
+                'statistiques.pourtuteurs'];
         $role->syncPermissions($rolepermissions);
         
         $role = Role::create(['name' => 'em']);
