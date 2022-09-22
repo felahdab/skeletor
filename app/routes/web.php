@@ -96,6 +96,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::post('stages/{stage}/attribuerstage', 'StageController@attribuerstage')->name('stages.attribuerstage');
         Route::post('stages/{stage}/retirerstage', 'StageController@annulermarins')->name('stages.annulermarins');
         
+        Route::post('bugreport', 'BugReportController@store')->name('bugreports.store');
         
         Route::group(['prefix' => 'transformation'], function() {
             Route::get('/', 'TransformationController@index')->name('transformation.index');
