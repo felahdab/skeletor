@@ -209,7 +209,7 @@ class TransformationController extends Controller
                 $stages_a_valider = $request['stageid'];
                 foreach ($stages_a_valider as $key => $value){
                     $stage = Stage::find($key);
-                    $user->stages()->attach($stage);
+                    $user->attachStage($stage);
                     $workitem = $user->stages()->find($stage)->pivot;
                     $workitem->commentaire=$commentaire;
                     $workitem->date_validation = $date_validation;

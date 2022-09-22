@@ -319,17 +319,65 @@ class User extends Authenticatable
         return true;
     }
     
-    public function stagesOrphelins()
+    /** Renvoie la liste de stages lies a une fonction.
+    * Attention: ne verifie pas les doublons !
+    */
+    public function stagesLiesAUneFonction()
     {
-        // Pour les stages qui ont été attribués à l'utilisateur en dehors du parcours de transformation.
         $collect = collect([]);
         foreach($this->fonctions()->get() as $fonction)
             foreach($fonction->stages()->get() as $stage)
                 $collect = $collect->concat([$stage]);
-        
-        $orphans = $this->stages()->get()->diff($collect);
+        return $collect;
+    }
+    
+    public function stagesOrphelins()
+    {
+        // Pour les stages qui ont été attribués à l'utilisateur en dehors du parcours de transformation.
+        $orphans = $this->stages()->get()->diff($this->stagesLiesAUneFonction());
         
         return $orphans;
+    }
+    
+    /**
+     * Methode necessaire pour eviter d attacher un stage plusieurs fois.
+     *
+     * @param $stage
+     * @return void
+     */
+    public function attachStage(Stage $stage)
+    {
+        if ($this->stages()->get()->contains($stage))
+            return;
+        $this->stages()->attach($stage);
+    }
+    
+    /**
+     * Methode necessaire pour eviter de detacher un stage encore necessaire au
+     * titre d'une fonction attribuee a l'utilisateur.
+     *
+     * @param $stage
+     * @return void
+     */
+    public function detachStage(Stage $stage)
+    {
+        if ($this->stagesLiesAUneFonction()->contains($stage))
+            return;
+        $this->stages()->detach($stage);
+    }
+    
+    public function attachFonction(Fonction $fonction)
+    {
+        $this->fonctions()->attach($fonction);
+        foreach($fonction->stages()->get() as $stage)
+            $this->attachStage($stage);
+    }
+    
+    public function detachFonction(Fonction $fonction)
+    {
+        $this->fonctions()->detach($fonction);
+        foreach($fonction->stages()->get() as $stage)
+            $this->detachStage($stage);
     }
     
     public function nbSousObjectifsAValider(Fonction $fonction=null)
