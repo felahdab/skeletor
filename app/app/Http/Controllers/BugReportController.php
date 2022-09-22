@@ -44,7 +44,7 @@ class BugReportController extends Controller
             "username" => $user->displayString()
             ]);
         $report->save();
-        return redirect($request->url);
+        return redirect($request->url)->withSuccess("Message bien enregistré. Merci beaucoup.");
     }
 
     /**
