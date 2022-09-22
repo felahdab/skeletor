@@ -18,22 +18,169 @@ class RolesSeeder extends Seeder
     public function run()
     {
         $role = Role::create(['name' => 'admin']);
-        $permissions = Permission::pluck('id','id')->all();
-        $role->syncPermissions($permissions);
+        $rolepermissions = Permission::pluck('id','id')->all();
+        $role->syncPermissions($rolepermissions);
 
         // All users should be assigned the user role, which includes the basic permissions to login, logout, change your
         // own password and your current role.
         $role = Role::create(['name' => 'user']);
-        $defaultpermissions = ['home.index', 'login.show', 'login.perform', 'logout.perform', 
-                    'currentrole.show', 'currentrole.store', 
-                    'changepasswd.show', 'changepasswd.store',];
-        $role->syncPermissions($defaultpermissions);
+        $rolepermissions = [
+            'logout.perform',
+            'currentrole.show',
+            'currentrole.store',
+            'changepasswd.show',
+            'changepasswd.store',
+            'transformation.mafichebilan',
+            'transformation.monlivret',
+            'transformation.maprogression',
+        ];
+        $role->syncPermissions($rolepermissions);
         
         $role = Role::create(['name' => 'tuteur']);
-        $role = Role::create(['name' => 'em']);
-        $role = Role::create(['name' => 'transfo']);
-        $role = Role::create(['name' => 'bord']);
-        $role = Role::create(['name' => '2ps']);
+        $rolepermissions = ['fonctions.choixmarins',
+                'fonctions.validermarins',
+                'stages.consulter',
+                'stages.show',
+                'transformation.index',
+                'transformation.indexparfonction',
+                'transformation.indexparstage',
+                'transformation.livret',
+                'transformation.livretpdf',
+                'transformation.validerlacheoudouble',
+                'transformation.progression',
+                'transformation.fichebilan',
+                'statistiques.pourtuteurs']
+        $role->syncPermissions($rolepermissions);
         
+        $role = Role::create(['name' => 'em']);
+        $rolepermissions = [
+                'users.index',
+                'users.create',
+                'users.store',
+                'users.show',
+                'users.edit',
+                'users.update',
+                'stages.consulter',
+                'stages.show',
+                'transformation.index',
+                'transformation.indexparfonction',
+                'transformation.indexparstage',
+                'users.choisirfonction',
+                'users.attribuerfonction',
+                'users.retirerfonction',
+                'transformation.livret',
+                'transformation.livretpdf',
+                'transformation.validerlacheoudouble',
+                'transformation.progression',
+                'transformation.fichebilan',
+                'statistiques.pourem',
+                'statistiques.index',
+
+        ];
+        $role->syncPermissions($rolepermissions);
+        
+        $role = Role::create(['name' => 'bord']);
+        $rolepermissions = [
+            'transformation.index',
+            'transformation.livret',
+            'transformation.livretpdf',
+            'transformation.validerlacheoudouble',
+            'transformation.progression',
+            'transformation.fichebilan',
+        ];
+        $role->syncPermissions($rolepermissions);
+        
+        $role = Role::create(['name' => '2ps']);
+        $rolepermissions = [
+            'mindefconnect.index',
+            'mindefconnect.edit',
+            'mindefconnect.store',
+            'mindefconnect.destroy',
+            'users.index',
+            'users.create',
+            'users.store',
+            'users.show',
+            'users.edit',
+            'users.update',
+            'users.destroy',
+            'sous-objectifs.index',
+            'sous-objectifs.create',
+            'sous-objectifs.store',
+            'sous-objectifs.show',
+            'sous-objectifs.edit',
+            'sous-objectifs.update',
+            'sous-objectifs.destroy',
+            'sous-objectifs.multipleupdate',
+            'objectifs.index',
+            'objectifs.create',
+            'objectifs.store',
+            'objectifs.show',
+            'objectifs.edit',
+            'objectifs.update',
+            'objectifs.destroy',
+            'compagnonages.index',
+            'compagnonages.create',
+            'compagnonages.store',
+            'compagnonages.show',
+            'compagnonages.edit',
+            'compagnonages.update',
+            'compagnonages.destroy',
+            'compagnonages.choisirtache',
+            'compagnonages.ajoutertache',
+            'compagnonages.removetache',
+            'taches.index',
+            'taches.create',
+            'taches.store',
+            'taches.show',
+            'taches.edit',
+            'taches.update',
+            'taches.destroy',
+            'taches.choisirobjectif',
+            'taches.ajouterobjectif',
+            'taches.removeobjectif',
+            'fonctions.index',
+            'fonctions.create',
+            'fonctions.store',
+            'fonctions.show',
+            'fonctions.edit',
+            'fonctions.update',
+            'fonctions.destroy',
+            'fonctions.choisircompagnonage',
+            'fonctions.ajoutercompagnonage',
+            'fonctions.removecompagnonage',
+            'fonctions.choisirstage',
+            'fonctions.ajouterstage',
+            'fonctions.removestage',
+            'fonctions.choixmarins',
+            'fonctions.validermarins',
+            'stages.consulter',
+            'stages.index',
+            'stages.create',
+            'stages.store',
+            'stages.show',
+            'stages.edit',
+            'stages.update',
+            'stages.destroy',
+            'stages.choixmarins',
+            'stages.validermarins',
+            'stages.attribuerstage',
+            'stages.annulermarins',
+            'transformation.index',
+            'transformation.indexparfonction',
+            'transformation.indexparstage',
+            'users.choisirfonction',
+            'users.attribuerfonction',
+            'users.retirerfonction',
+            'transformation.livret',
+            'transformation.livretpdf',
+            'transformation.validerlacheoudouble',
+            'transformation.progression',
+            'transformation.fichebilan',
+            'statistiques.index',
+            'statistiques.pourtuteurs',
+            'statistiques.pourem',
+            'statistiques.pour2ps',
+        ];
+        $role->syncPermissions($rolepermissions);
     }
 }
