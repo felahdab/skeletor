@@ -64,6 +64,8 @@
             </div>
             
             @foreach ($user->fonctions()->orderBy('typefonction_id')->get() as $fonction)
+            <h3>Situation de la transformation pour la fonction {{$fonction->fonction_liblong }} </h3>
+            
             @if($readwrite){!! Form::open(['method' => 'POST','id'=> 'fonction[' . $fonction->id .']' , 'route' => ['transformation.validerlacheoudouble', $user->id, $fonction->id]]) !!}
             <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
             <input type='hidden' id='date_validation' name='date_validation' value=''>
@@ -148,7 +150,7 @@
             @if($readwrite){!! Form::close() !!} @endif
             
             @if ($fonction->compagnonages()->get()->count() > 0)
-            Compagnonages liés à la fonction {{ $fonction->fonction_liblong }}
+            <h4>Compagnonages liés à la fonction {{ $fonction->fonction_liblong }} </h4>
             
             @if($readwrite){!! Form::open(['method' => 'POST','id'=> 'ssobjs[' . $fonction->id .']' ,'route' => ['transformation.livret', $user->id]]) !!}@endif
             <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
@@ -235,7 +237,7 @@
             @endif
             
             @if ($fonction->stages()->get()->count() > 0)
-            Stages liés à la fonction {{ $fonction->fonction_liblong }}
+            <h4>Stages liés à la fonction {{ $fonction->fonction_liblong }} </h4>
             
             {!! Form::open(['method' => 'POST','id'=> 'stages[' . $fonction->id .']' ,'route' => ['transformation.livret', $user->id]]) !!}
             <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
@@ -294,6 +296,30 @@
             
             @endif
             @endforeach   <!-- foreach fonction -->
+            
+            @if ($user->stagesOrphelins()->count() > 0)
+                <h3>Stages attribues mais non liés à une fonction</h3>
+                <table class='table'>
+                    @foreach($user->stagesOrphelins() as $stage)
+                        <tr class='lignecomp div-table-contrat-compagnonnage'>
+                            <th colspan='2'>{{$stage->stage_libcourt }}</th>
+                        </tr>
+                        <tr class='ligneTache'>
+                            <td>
+                                @if ($user->aValideLeStage($stage))
+                                    <button class='btn btn-success' type='button' disabled>
+                                    VALIDE {{ $user->stages()->find($stage)->pivot->date_validation }}
+                                    </button>
+                                @else
+                                    <button class='btn btn-warning' type='button' disabled>
+                                    NON VALIDE A CE JOUR
+                                    </button>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach <!-- foreach stage -->
+                </table>
+            @endif
         </div> 
     </div>
     
