@@ -14,6 +14,8 @@ use Laravel\Socialite\Facades\Socialite;
 |
 */
 
+Route::impersonate();
+
 Route::get('/auth/redirect', function(){
 	return Socialite::driver('keycloak')->stateless()->redirect();
 })->name('keycloak.login.redirect');

@@ -11,10 +11,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use Lab404\Impersonate\Models\Impersonate;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
     use SoftDeletes;
+    use Impersonate;
 
     /**
      * The database table used by the model.

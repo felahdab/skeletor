@@ -183,6 +183,8 @@ return [
         \SocialiteProviders\Manager\ServiceProvider::class,
         
         hisorange\BrowserDetect\ServiceProvider::class,
+        
+        Lab404\Impersonate\ImpersonateServiceProvider::class,
     ],
 
     /*
