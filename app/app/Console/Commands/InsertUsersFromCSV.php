@@ -76,6 +76,8 @@ class InsertUsersFromCSV extends Command
             $date_embarq = Carbon::create($pieces[2], $pieces[1],$pieces[0],0,0,0);
             $newUser->date_embarq = $date_embarq;
             
+            $newUser->user_comment = $user['specialite'] . " " . $user['lache'];
+            
             $newUser->save();
             
             $fonction=Fonction::find($user["fonction_id"]);
