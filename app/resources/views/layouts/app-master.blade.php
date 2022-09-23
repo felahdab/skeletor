@@ -35,10 +35,10 @@
 <body>
     
     @include('layouts.partials.messages')
+
+    @if ( (Browser::browserFamily() == "Firefox" and Browser::browserVersionMajor() < 60) 
+        or (Browser::browserFamily() == "Internet Explorer" and Browser::browserVersionMajor() <= 11)  )
     
-    
-    
-    @if (auth()->user() != null and auth()->user()->hasrole("bord"))
         @include('layouts.partials.bugreport')
         <div class="container">
             <div class="row">

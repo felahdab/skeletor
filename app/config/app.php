@@ -179,8 +179,10 @@ return [
 
         Meneses\LaravelMpdf\LaravelMpdfServiceProvider::class,
 
-	Laravel\Socialite\SocialiteServiceProvider::class,
-	\SocialiteProviders\Manager\ServiceProvider::class,
+        Laravel\Socialite\SocialiteServiceProvider::class,
+        \SocialiteProviders\Manager\ServiceProvider::class,
+        
+        hisorange\BrowserDetect\ServiceProvider::class,
     ],
 
     /*
@@ -196,6 +198,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         'PDF' => Meneses\LaravelMpdf\Facades\LaravelMpdf::class,
+        'Browser' => hisorange\BrowserDetect\Facade::class,
     ])->toArray(),
 
 ];
