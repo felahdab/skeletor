@@ -445,6 +445,15 @@
                 0 => '*',
             ),
         ),
+        'lab404/laravel-impersonate' => array(
+            'pretty_version' => '1.7.3',
+            'version' => '1.7.3.0',
+            'reference' => '7c1f9c5cefd40247993f52f4b7724fd8b580084f',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../lab404/laravel-impersonate',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'laravel/framework' => array(
             'pretty_version' => 'v9.27.0',
             'version' => '9.27.0.0',
