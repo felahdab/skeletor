@@ -15,17 +15,12 @@ use function is_array;
  */
 class SchemaCreateTableColumnEventArgs extends SchemaEventArgs
 {
-    /** @var Column */
-    private $column;
-
-    /** @var Table */
-    private $table;
-
-    /** @var AbstractPlatform */
-    private $platform;
+    private Column $column;
+    private Table $table;
+    private AbstractPlatform $platform;
 
     /** @var string[] */
-    private $sql = [];
+    private array $sql = [];
 
     public function __construct(Column $column, Table $table, AbstractPlatform $platform)
     {
@@ -34,25 +29,19 @@ class SchemaCreateTableColumnEventArgs extends SchemaEventArgs
         $this->platform = $platform;
     }
 
-    /**
-     * @return Column
-     */
+    /** @return Column */
     public function getColumn()
     {
         return $this->column;
     }
 
-    /**
-     * @return Table
-     */
+    /** @return Table */
     public function getTable()
     {
         return $this->table;
     }
 
-    /**
-     * @return AbstractPlatform
-     */
+    /** @return AbstractPlatform */
     public function getPlatform()
     {
         return $this->platform;
@@ -72,9 +61,7 @@ class SchemaCreateTableColumnEventArgs extends SchemaEventArgs
         return $this;
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public function getSql()
     {
         return $this->sql;

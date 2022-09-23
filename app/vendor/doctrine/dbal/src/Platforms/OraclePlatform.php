@@ -2,10 +2,12 @@
 
 namespace Doctrine\DBAL\Platforms;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\ForeignKeyConstraint;
 use Doctrine\DBAL\Schema\Identifier;
 use Doctrine\DBAL\Schema\Index;
+use Doctrine\DBAL\Schema\OracleSchemaManager;
 use Doctrine\DBAL\Schema\Sequence;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\TableDiff;
@@ -76,7 +78,7 @@ class OraclePlatform extends AbstractPlatform
         Deprecation::trigger(
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/pull/4753',
-            'OraclePlatform::getNowExpression() is deprecated. Generate dates within the application.'
+            'OraclePlatform::getNowExpression() is deprecated. Generate dates within the application.',
         );
 
         switch ($type) {
@@ -183,6 +185,13 @@ class OraclePlatform extends AbstractPlatform
     public function getCreatePrimaryKeySQL(Index $index, $table): string
     {
         if ($table instanceof Table) {
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/issues/4798',
+                'Passing $table as a Table object to %s is deprecated. Pass it as a quoted name instead.',
+                __METHOD__,
+            );
+
             $table = $table->getQuotedName($this);
         }
 
@@ -348,8 +357,17 @@ class OraclePlatform extends AbstractPlatform
     /**
      * {@inheritDoc}
      */
-    protected function getVarcharTypeDeclarationSQLSnippet($length, $fixed)
+    protected function getVarcharTypeDeclarationSQLSnippet($length, $fixed/*, $lengthOmitted = false*/)
     {
+        if ($length <= 0 || (func_num_args() > 2 && func_get_arg(2))) {
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/issues/3263',
+                'Relying on the default string column length on Oracle is deprecated'
+                    . ', specify the length explicitly.',
+            );
+        }
+
         return $fixed ? ($length > 0 ? 'CHAR(' . $length . ')' : 'CHAR(2000)')
                 : ($length > 0 ? 'VARCHAR2(' . $length . ')' : 'VARCHAR2(4000)');
     }
@@ -357,16 +375,33 @@ class OraclePlatform extends AbstractPlatform
     /**
      * {@inheritdoc}
      */
-    protected function getBinaryTypeDeclarationSQLSnippet($length, $fixed)
+    protected function getBinaryTypeDeclarationSQLSnippet($length, $fixed/*, $lengthOmitted = false*/)
     {
+        if ($length <= 0 || (func_num_args() > 2 && func_get_arg(2))) {
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/issues/3263',
+                'Relying on the default binary column length on Oracle is deprecated'
+                . ', specify the length explicitly.',
+            );
+        }
+
         return 'RAW(' . ($length > 0 ? $length : $this->getBinaryMaxLength()) . ')';
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @deprecated
      */
     public function getBinaryMaxLength()
     {
+        Deprecation::triggerIfCalledFromOutside(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/issues/3263',
+            'OraclePlatform::getBinaryMaxLength() is deprecated.',
+        );
+
         return 2000;
     }
 
@@ -380,6 +415,8 @@ class OraclePlatform extends AbstractPlatform
 
     /**
      * {@inheritDoc}
+     *
+     * @internal The method should be only used from within the {@see AbstractSchemaManager} class hierarchy.
      */
     public function getListDatabasesSQL()
     {
@@ -388,6 +425,8 @@ class OraclePlatform extends AbstractPlatform
 
     /**
      * {@inheritDoc}
+     *
+     * @internal The method should be only used from within the {@see AbstractSchemaManager} class hierarchy.
      */
     public function getListSequencesSQL($database)
     {
@@ -430,6 +469,8 @@ class OraclePlatform extends AbstractPlatform
     }
 
     /**
+     * @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon.
+     *
      * {@inheritDoc}
      *
      * @link http://ezcomponents.org/docs/api/trunk/DatabaseSchema/ezcDbSchemaOracleReader.html
@@ -470,6 +511,8 @@ class OraclePlatform extends AbstractPlatform
     }
 
     /**
+     * @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon.
+     *
      * {@inheritDoc}
      */
     public function getListTablesSQL()
@@ -479,6 +522,8 @@ class OraclePlatform extends AbstractPlatform
 
     /**
      * {@inheritDoc}
+     *
+     * @internal The method should be only used from within the {@see AbstractSchemaManager} class hierarchy.
      */
     public function getListViewsSQL($database)
     {
@@ -524,7 +569,7 @@ END;";
 
         $sequenceName = $this->getIdentitySequenceName(
             $tableIdentifier->isQuoted() ? $quotedTableName : $unquotedTableName,
-            $nameIdentifier->isQuoted() ? $quotedName : $unquotedName
+            $nameIdentifier->isQuoted() ? $quotedName : $unquotedName,
         );
         $sequence     = new Sequence($sequenceName, $start);
         $sql[]        = $this->getCreateSequenceSQL($sequence);
@@ -569,7 +614,7 @@ END;';
         $autoincrementIdentifierName = $this->getAutoincrementIdentifierName($table);
         $identitySequenceName        = $this->getIdentitySequenceName(
             $table->isQuoted() ? $table->getQuotedName($this) : $table->getName(),
-            ''
+            '',
         );
 
         return [
@@ -626,6 +671,8 @@ END;';
     }
 
     /**
+     * @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon.
+     *
      * {@inheritDoc}
      */
     public function getListTableForeignKeysSQL($table)
@@ -658,6 +705,8 @@ END;';
     }
 
     /**
+     * @deprecated
+     *
      * {@inheritDoc}
      */
     public function getListTableConstraintsSQL($table)
@@ -669,6 +718,8 @@ END;';
     }
 
     /**
+     * @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon.
+     *
      * {@inheritDoc}
      */
     public function getListTableColumnsSQL($table, $database = null)
@@ -708,7 +759,7 @@ SQL
             $colCommentsOwnerCondition,
             $tabColumnsTableName,
             $table,
-            $tabColumnsOwnerCondition
+            $tabColumnsOwnerCondition,
         );
     }
 
@@ -717,11 +768,26 @@ SQL
      */
     public function getDropForeignKeySQL($foreignKey, $table)
     {
-        if (! $foreignKey instanceof ForeignKeyConstraint) {
+        if ($foreignKey instanceof ForeignKeyConstraint) {
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/issues/4798',
+                'Passing $foreignKey as a ForeignKeyConstraint object to %s is deprecated.'
+                . ' Pass it as a quoted name instead.',
+                __METHOD__,
+            );
+        } else {
             $foreignKey = new Identifier($foreignKey);
         }
 
-        if (! $table instanceof Table) {
+        if ($table instanceof Table) {
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/issues/4798',
+                'Passing $table as a Table object to %s is deprecated. Pass it as a quoted name instead.',
+                __METHOD__,
+            );
+        } else {
             $table = new Identifier($table);
         }
 
@@ -733,6 +799,8 @@ SQL
 
     /**
      * {@inheritdoc}
+     *
+     * @internal The method should be only used from within the {@see AbstractPlatform} class hierarchy.
      */
     public function getAdvancedForeignKeyOptionsSQL(ForeignKeyConstraint $foreignKey)
     {
@@ -751,6 +819,8 @@ SQL
 
     /**
      * {@inheritdoc}
+     *
+     * @internal The method should be only used from within the {@see AbstractPlatform} class hierarchy.
      */
     public function getForeignKeyReferentialActionSQL($action)
     {
@@ -815,7 +885,7 @@ SQL
             $commentsSQL[] = $this->getCommentOnColumnSQL(
                 $diff->getName($this)->getQuotedName($this),
                 $column->getQuotedName($this),
-                $comment
+                $comment,
             );
         }
 
@@ -865,7 +935,7 @@ SQL
             $commentsSQL[] = $this->getCommentOnColumnSQL(
                 $diff->getName($this)->getQuotedName($this),
                 $column->getQuotedName($this),
-                $this->getColumnComment($column)
+                $this->getColumnComment($column),
             );
         }
 
@@ -910,14 +980,14 @@ SQL
                 $sql[] = sprintf(
                     'ALTER TABLE %s RENAME TO %s',
                     $diff->getName($this)->getQuotedName($this),
-                    $newName->getQuotedName($this)
+                    $newName->getQuotedName($this),
                 );
             }
 
             $sql = array_merge(
                 $this->getPreAlterTableIndexForeignKeySQL($diff),
                 $sql,
-                $this->getPostAlterTableIndexForeignKeySQL($diff)
+                $this->getPostAlterTableIndexForeignKeySQL($diff),
             );
         }
 
@@ -926,6 +996,8 @@ SQL
 
     /**
      * {@inheritdoc}
+     *
+     * @internal The method should be only used from within the {@see AbstractPlatform} class hierarchy.
      */
     public function getColumnDeclarationSQL($name, array $column)
     {
@@ -968,14 +1040,25 @@ SQL
 
     /**
      * {@inheritdoc}
+     *
+     * @deprecated
      */
     public function usesSequenceEmulatedIdentityColumns()
     {
+        Deprecation::trigger(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/pull/5513',
+            '%s is deprecated.',
+            __METHOD__,
+        );
+
         return true;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @internal The method should be only used from within the OraclePlatform class hierarchy.
      */
     public function getIdentitySequenceName($tableName, $columnName)
     {
@@ -995,6 +1078,8 @@ SQL
 
     /**
      * {@inheritDoc}
+     *
+     * @internal The method should be only used from within the {@see AbstractPlatform} class hierarchy.
      */
     public function supportsCommentOnStatement()
     {
@@ -1009,7 +1094,7 @@ SQL
         Deprecation::triggerIfCalledFromOutside(
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/issues/4749',
-            'OraclePlatform::getName() is deprecated. Identify platforms by their class.'
+            'OraclePlatform::getName() is deprecated. Identify platforms by their class.',
         );
 
         return 'oracle';
@@ -1176,7 +1261,7 @@ SQL
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/issues/4510',
             'OraclePlatform::getReservedKeywordsClass() is deprecated,'
-            . ' use OraclePlatform::createReservedKeywordsList() instead.'
+            . ' use OraclePlatform::createReservedKeywordsList() instead.',
         );
 
         return Keywords\OracleKeywords::class;
@@ -1190,6 +1275,7 @@ SQL
         return 'BLOB';
     }
 
+    /** @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon. */
     public function getListTableCommentsSQL(string $table, ?string $database = null): string
     {
         $tableCommentsName = 'user_tab_comments';
@@ -1198,7 +1284,7 @@ SQL
         if ($database !== null && $database !== '/') {
             $tableCommentsName = 'all_tab_comments';
             $ownerCondition    = ' AND owner = ' . $this->quoteStringLiteral(
-                $this->normalizeIdentifier($database)->getName()
+                $this->normalizeIdentifier($database)->getName(),
             );
         }
 
@@ -1209,7 +1295,12 @@ SQL
             ,
             $tableCommentsName,
             $this->quoteStringLiteral($this->normalizeIdentifier($table)->getName()),
-            $ownerCondition
+            $ownerCondition,
         );
+    }
+
+    public function createSchemaManager(Connection $connection): OracleSchemaManager
+    {
+        return new OracleSchemaManager($connection, $this);
     }
 }

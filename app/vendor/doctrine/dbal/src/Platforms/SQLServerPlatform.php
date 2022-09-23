@@ -2,6 +2,7 @@
 
 namespace Doctrine\DBAL\Platforms;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\InvalidLockMode;
 use Doctrine\DBAL\LockMode;
 use Doctrine\DBAL\Schema\Column;
@@ -10,6 +11,7 @@ use Doctrine\DBAL\Schema\ForeignKeyConstraint;
 use Doctrine\DBAL\Schema\Identifier;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\Sequence;
+use Doctrine\DBAL\Schema\SQLServerSchemaManager;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\TableDiff;
 use Doctrine\Deprecations\Deprecation;
@@ -22,7 +24,9 @@ use function count;
 use function crc32;
 use function dechex;
 use function explode;
+use function func_get_arg;
 use function func_get_args;
+use function func_num_args;
 use function implode;
 use function is_array;
 use function is_bool;
@@ -106,7 +110,7 @@ class SQLServerPlatform extends AbstractPlatform
         Deprecation::trigger(
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/pulls/1519',
-            'SQLServerPlatform::prefersIdentityColumns() is deprecated.'
+            'SQLServerPlatform::prefersIdentityColumns() is deprecated.',
         );
 
         return true;
@@ -140,14 +144,25 @@ class SQLServerPlatform extends AbstractPlatform
 
     /**
      * {@inheritdoc}
+     *
+     * @deprecated
      */
     public function getDefaultSchemaName()
     {
+        Deprecation::trigger(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/pull/5513',
+            '%s is deprecated.',
+            __METHOD__,
+        );
+
         return 'dbo';
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @internal The method should be only used from within the {@see AbstractPlatform} class hierarchy.
      */
     public function supportsColumnCollation()
     {
@@ -175,6 +190,8 @@ class SQLServerPlatform extends AbstractPlatform
 
     /**
      * {@inheritdoc}
+     *
+     * @internal The method should be only used from within the {@see AbstractSchemaManager} class hierarchy.
      */
     public function getListSequencesSQL($database)
     {
@@ -198,9 +215,18 @@ class SQLServerPlatform extends AbstractPlatform
 
     /**
      * {@inheritDoc}
+     *
+     * @deprecated
      */
     public function hasNativeGuidType()
     {
+        Deprecation::triggerIfCalledFromOutside(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/pull/5509',
+            '%s is deprecated.',
+            __METHOD__,
+        );
+
         return true;
     }
 
@@ -229,18 +255,32 @@ class SQLServerPlatform extends AbstractPlatform
     public function getDropIndexSQL($index, $table = null)
     {
         if ($index instanceof Index) {
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/issues/4798',
+                'Passing $index as an Index object to %s is deprecated. Pass it as a quoted name instead.',
+                __METHOD__,
+            );
+
             $index = $index->getQuotedName($this);
         } elseif (! is_string($index)) {
             throw new InvalidArgumentException(
-                __METHOD__ . '() expects $index parameter to be string or ' . Index::class . '.'
+                __METHOD__ . '() expects $index parameter to be string or ' . Index::class . '.',
             );
         }
 
         if ($table instanceof Table) {
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/issues/4798',
+                'Passing $table as an Table object to %s is deprecated. Pass it as a quoted name instead.',
+                __METHOD__,
+            );
+
             $table = $table->getQuotedName($this);
         } elseif (! is_string($table)) {
             throw new InvalidArgumentException(
-                __METHOD__ . '() expects $table parameter to be string or ' . Table::class . '.'
+                __METHOD__ . '() expects $table parameter to be string or ' . Table::class . '.',
             );
         }
 
@@ -316,7 +356,7 @@ class SQLServerPlatform extends AbstractPlatform
         }
 
         if (isset($options['foreignKeys'])) {
-            foreach ((array) $options['foreignKeys'] as $definition) {
+            foreach ($options['foreignKeys'] as $definition) {
                 $sql[] = $this->getCreateForeignKeySQL($definition, $name);
             }
         }
@@ -330,6 +370,13 @@ class SQLServerPlatform extends AbstractPlatform
     public function getCreatePrimaryKeySQL(Index $index, $table)
     {
         if ($table instanceof Table) {
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/issues/4798',
+                'Passing $table as a Table object to %s is deprecated. Pass it as a quoted name instead.',
+                __METHOD__,
+            );
+
             $identifier = $table->getQuotedName($this);
         } else {
             $identifier = $table;
@@ -380,7 +427,7 @@ class SQLServerPlatform extends AbstractPlatform
             'TABLE',
             $tableSQL,
             'COLUMN',
-            $columnName
+            $columnName,
         );
     }
 
@@ -493,7 +540,7 @@ class SQLServerPlatform extends AbstractPlatform
             $commentsSql[] = $this->getCreateColumnCommentSQL(
                 $diff->name,
                 $column->getQuotedName($this),
-                $comment
+                $comment,
             );
         }
 
@@ -522,7 +569,7 @@ class SQLServerPlatform extends AbstractPlatform
                     $commentsSql[] = $this->getAlterColumnCommentSQL(
                         $diff->name,
                         $column->getQuotedName($this),
-                        $comment
+                        $comment,
                     );
                 } elseif ($hasFromComment && ! $hasComment) {
                     $commentsSql[] = $this->getDropColumnCommentSQL($diff->name, $column->getQuotedName($this));
@@ -530,7 +577,7 @@ class SQLServerPlatform extends AbstractPlatform
                     $commentsSql[] = $this->getCreateColumnCommentSQL(
                         $diff->name,
                         $column->getQuotedName($this),
-                        $comment
+                        $comment,
                     );
                 }
             }
@@ -545,7 +592,7 @@ class SQLServerPlatform extends AbstractPlatform
             if ($requireDropDefaultConstraint) {
                 $queryParts[] = $this->getAlterTableDropDefaultConstraintClause(
                     $diff->name,
-                    $columnDiff->oldColumnName
+                    $columnDiff->oldColumnName,
                 );
             }
 
@@ -582,7 +629,7 @@ class SQLServerPlatform extends AbstractPlatform
 
             $queryParts[] = $this->getAlterTableDropDefaultConstraintClause(
                 $diff->name,
-                $oldColumnName->getQuotedName($this)
+                $oldColumnName->getQuotedName($this),
             );
             $queryParts[] = $this->getAlterTableAddDefaultConstraintClause($diff->name, $column);
         }
@@ -625,7 +672,7 @@ class SQLServerPlatform extends AbstractPlatform
         $sql = array_merge(
             $this->getPreAlterTableIndexForeignKeySQL($diff),
             $sql,
-            $this->getPostAlterTableIndexForeignKeySQL($diff)
+            $this->getPostAlterTableIndexForeignKeySQL($diff),
         );
 
         return array_merge($sql, $tableSql, $columnSql);
@@ -725,7 +772,7 @@ class SQLServerPlatform extends AbstractPlatform
             'TABLE',
             $tableSQL,
             'COLUMN',
-            $columnName
+            $columnName,
         );
     }
 
@@ -763,7 +810,7 @@ class SQLServerPlatform extends AbstractPlatform
             'TABLE',
             $tableSQL,
             'COLUMN',
-            $columnName
+            $columnName,
         );
     }
 
@@ -776,7 +823,7 @@ class SQLServerPlatform extends AbstractPlatform
             "EXEC sp_rename N'%s.%s', N'%s', N'INDEX'",
             $tableName,
             $oldIndexName,
-            $index->getQuotedName($this)
+            $index->getQuotedName($this),
         ),
         ];
     }
@@ -893,6 +940,8 @@ class SQLServerPlatform extends AbstractPlatform
     }
 
     /**
+     * @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon.
+     *
      * {@inheritDoc}
      */
     public function getListTablesSQL()
@@ -904,6 +953,8 @@ class SQLServerPlatform extends AbstractPlatform
     }
 
     /**
+     * @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon.
+     *
      * {@inheritDoc}
      */
     public function getListTableColumnsSQL($table, $database = null)
@@ -937,6 +988,8 @@ class SQLServerPlatform extends AbstractPlatform
     }
 
     /**
+     * @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon.
+     *
      * @param string      $table
      * @param string|null $database
      *
@@ -963,6 +1016,8 @@ class SQLServerPlatform extends AbstractPlatform
     }
 
     /**
+     * @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon.
+     *
      * {@inheritDoc}
      */
     public function getListTableIndexesSQL($table, $database = null)
@@ -987,6 +1042,8 @@ class SQLServerPlatform extends AbstractPlatform
 
     /**
      * {@inheritDoc}
+     *
+     * @internal The method should be only used from within the {@see AbstractSchemaManager} class hierarchy.
      */
     public function getListViewsSQL($database)
     {
@@ -1084,6 +1141,8 @@ class SQLServerPlatform extends AbstractPlatform
 
     /**
      * {@inheritDoc}
+     *
+     * @internal The method should be only used from within the {@see AbstractSchemaManager} class hierarchy.
      */
     public function getListDatabasesSQL()
     {
@@ -1101,7 +1160,7 @@ class SQLServerPlatform extends AbstractPlatform
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/issues/4503',
             'SQLServerPlatform::getListNamespacesSQL() is deprecated,'
-                . ' use SQLServerSchemaManager::listSchemaNames() instead.'
+                . ' use SQLServerSchemaManager::listSchemaNames() instead.',
         );
 
         return "SELECT name FROM sys.schemas WHERE name NOT IN('guest', 'INFORMATION_SCHEMA', 'sys')";
@@ -1197,18 +1256,36 @@ class SQLServerPlatform extends AbstractPlatform
     /**
      * {@inheritDoc}
      */
-    protected function getVarcharTypeDeclarationSQLSnippet($length, $fixed)
+    protected function getVarcharTypeDeclarationSQLSnippet($length, $fixed/*, $lengthOmitted = false*/)
     {
+        if ($length <= 0 || (func_num_args() > 2 && func_get_arg(2))) {
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/issues/3263',
+                'Relying on the default string column length on SQL Server is deprecated'
+                    . ', specify the length explicitly.',
+            );
+        }
+
         return $fixed
-            ? ($length > 0 ? 'NCHAR(' . $length . ')' : 'CHAR(255)')
-            : ($length > 0 ? 'NVARCHAR(' . $length . ')' : 'NVARCHAR(255)');
+            ? 'NCHAR(' . ($length > 0 ? $length : 255) . ')'
+            : 'NVARCHAR(' . ($length > 0 ? $length : 255) . ')';
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function getBinaryTypeDeclarationSQLSnippet($length, $fixed)
+    protected function getBinaryTypeDeclarationSQLSnippet($length, $fixed/*, $lengthOmitted = false*/)
     {
+        if ($length <= 0 || (func_num_args() > 2 && func_get_arg(2))) {
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/issues/3263',
+                'Relying on the default binary column length on SQL Server is deprecated'
+                    . ', specify the length explicitly.',
+            );
+        }
+
         return $fixed
             ? 'BINARY(' . ($length > 0 ? $length : 255) . ')'
             : 'VARBINARY(' . ($length > 0 ? $length : 255) . ')';
@@ -1216,9 +1293,17 @@ class SQLServerPlatform extends AbstractPlatform
 
     /**
      * {@inheritdoc}
+     *
+     * @deprecated
      */
     public function getBinaryMaxLength()
     {
+        Deprecation::triggerIfCalledFromOutside(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/issues/3263',
+            'SQLServerPlatform::getBinaryMaxLength() is deprecated.',
+        );
+
         return 8000;
     }
 
@@ -1449,6 +1534,8 @@ class SQLServerPlatform extends AbstractPlatform
 
     /**
      * {@inheritdoc}
+     *
+     * @internal The method should be only used from within the {@see AbstractPlatform} class hierarchy.
      */
     public function getForeignKeyReferentialActionSQL($action)
     {
@@ -1497,7 +1584,7 @@ class SQLServerPlatform extends AbstractPlatform
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/issues/4510',
             'SQLServerPlatform::getReservedKeywordsClass() is deprecated,'
-                . ' use SQLServerPlatform::createReservedKeywordsList() instead.'
+                . ' use SQLServerPlatform::createReservedKeywordsList() instead.',
         );
 
         return Keywords\SQLServer2012Keywords::class;
@@ -1532,7 +1619,7 @@ class SQLServerPlatform extends AbstractPlatform
     /**
      * {@inheritdoc}
      *
-     * Modifies column declaration order as it differs in Microsoft SQL Server.
+     * @internal The method should be only used from within the {@see AbstractPlatform} class hierarchy.
      */
     public function getColumnDeclarationSQL($name, array $column)
     {
@@ -1606,10 +1693,11 @@ class SQLServerPlatform extends AbstractPlatform
                 SQL
             ,
             $this->quoteStringLiteral((string) $comment),
-            $this->quoteStringLiteral($tableName)
+            $this->quoteStringLiteral($tableName),
         );
     }
 
+    /** @deprecated The SQL used for schema introspection is an implementation detail and should not be relied upon. */
     public function getListTableMetadataSQL(string $table): string
     {
         return sprintf(
@@ -1623,13 +1711,11 @@ class SQLServerPlatform extends AbstractPlatform
                   (tbl.name=N%s and SCHEMA_NAME(tbl.schema_id)=N'dbo' and p.name=N'MS_Description')
                 SQL
             ,
-            $this->quoteStringLiteral($table)
+            $this->quoteStringLiteral($table),
         );
     }
 
-    /**
-     * @param string $query
-     */
+    /** @param string $query */
     private function shouldAddOrderBy($query): bool
     {
         // Find the position of the last instance of ORDER BY and ensure it is not within a parenthetical statement
@@ -1656,5 +1742,10 @@ class SQLServerPlatform extends AbstractPlatform
         }
 
         return true;
+    }
+
+    public function createSchemaManager(Connection $connection): SQLServerSchemaManager
+    {
+        return new SQLServerSchemaManager($connection, $this);
     }
 }
