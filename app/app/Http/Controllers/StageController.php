@@ -149,7 +149,7 @@ class StageController extends Controller
         if ($request->has('user_id'))
         {
             $user = User::find(intval($request['user_id']));
-            $user->stages()->attach($stage);
+            $user->attachStage($stage);
         }
         return redirect()->route('stages.choixmarins', ['stage'=>$stage]);
     }

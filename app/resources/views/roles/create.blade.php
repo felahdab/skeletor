@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="bg-light p-4 rounded">
-        <h1>Ajouter un role</h1>
+        <h2>Ajouter un role</h2>
         <div class="lead">
             Ajouter un role et lui attribuer des permissions.
         </div>

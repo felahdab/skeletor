@@ -14,20 +14,18 @@ use function is_array;
  */
 class SchemaCreateTableEventArgs extends SchemaEventArgs
 {
-    /** @var Table */
-    private $table;
+    private Table $table;
 
     /** @var mixed[][] */
-    private $columns;
+    private array $columns;
 
     /** @var mixed[] */
-    private $options;
+    private array $options;
 
-    /** @var AbstractPlatform */
-    private $platform;
+    private AbstractPlatform $platform;
 
     /** @var string[] */
-    private $sql = [];
+    private array $sql = [];
 
     /**
      * @param mixed[][] $columns
@@ -41,33 +39,25 @@ class SchemaCreateTableEventArgs extends SchemaEventArgs
         $this->platform = $platform;
     }
 
-    /**
-     * @return Table
-     */
+    /** @return Table */
     public function getTable()
     {
         return $this->table;
     }
 
-    /**
-     * @return mixed[][]
-     */
+    /** @return mixed[][] */
     public function getColumns()
     {
         return $this->columns;
     }
 
-    /**
-     * @return mixed[]
-     */
+    /** @return mixed[] */
     public function getOptions()
     {
         return $this->options;
     }
 
-    /**
-     * @return AbstractPlatform
-     */
+    /** @return AbstractPlatform */
     public function getPlatform()
     {
         return $this->platform;
@@ -87,9 +77,7 @@ class SchemaCreateTableEventArgs extends SchemaEventArgs
         return $this;
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public function getSql()
     {
         return $this->sql;

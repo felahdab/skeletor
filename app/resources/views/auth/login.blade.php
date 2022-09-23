@@ -9,9 +9,6 @@
     <form method="post" action="{{ route('login.perform') }}">
         
         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-        
-
-        @include('layouts.partials.messages')
 
         <div class="mb-3">
             <input type="text" class="form-control" name="email" value="{{ old('email') }}" placeholder="Email" required="required" autofocus>

@@ -3,9 +3,6 @@
 @section('content')
     <div class="bg-light p-4 rounded">
         <h2>Stages - Validation ou annulation collective du stage {{$stage->stage_libcourt}}</h2>
-        <div class="mt-2">
-            @include('layouts.partials.messages')
-        </div>
     </div>
 
         <div id='divvalid' class='popupvalidcontrat' style='display:none;'>

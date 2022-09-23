@@ -7,11 +7,7 @@
         <div class="lead">
             Gérer les sous objectifs.
         </div>
-        
-        <div class="mt-2">
-            @include('layouts.partials.messages')
-        </div>
-    
+
         @livewire('sousobjectif-list')
     </div>
     

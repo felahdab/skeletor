@@ -8,10 +8,6 @@
         <div class="lead">
             Liste des marins
         </div>
-        
-        <div class="mt-2">
-            @include('layouts.partials.messages')
-        </div>
 
         @livewire('user-list', ["mode" => "transformation"])
 

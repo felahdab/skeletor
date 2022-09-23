@@ -137,14 +137,10 @@ class UsersController extends Controller
             {
                 foreach ($fonctionsmer as $fmer)
                 {
-                    $user->fonctions()->detach($fmer);
+                    $user->detachFonction($fmer);
                 }
             }
-            $user->fonctions()->attach($fonction);
-            foreach ($fonction->stages()->get() as $stage)
-            {
-                $user->stages()->attach($stage);
-            }
+            $user->attachFonction($fonction);
         }
         elseif ($fonction->typefonction_id == $fquaiid)
         {
@@ -153,39 +149,27 @@ class UsersController extends Controller
             {
                 foreach ($fonctionsquai as $fquai)
                 {
-                    $user->fonctions()->detach($fquai);
+                    $user->detachFonction($fquai);
                 }
             }
-            $user->fonctions()->attach($fonction);
-            foreach ($fonction->stages()->get() as $stage)
-            {
-                $user->stages()->attach($stage);
-            }
+            $user->attachFonction($fonction);
         }
         elseif ($fonction->typefonction_id == $fmetierid)
         {
-            $user->fonctions()->attach($fonction);
-            foreach ($fonction->stages()->get() as $stage)
-            {
-                $user->stages()->attach($stage);
-            }
+            $user->attachFonction($fonction);
         }
         
         $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
         return redirect()->route('users.choisirfonction', ['user' => $user,
                                                            'fonctions' => $fonctions]);
     }
-	
-	public function retirerfonction(Request $request, User $user)
+    
+    public function retirerfonction(Request $request, User $user)
     {
         $fonction_id = $request->fonction_id;
         $fonction = Fonction::where('id', $fonction_id)->get()->first();
         
-        $user->fonctions()->detach($fonction);
-         foreach ($fonction->stages()->get() as $stage)
-            {
-                $user->stages()->detach($stage);
-            }
+        $user->detachFonction($fonction);
         
         $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
         return redirect()->route('users.choisirfonction', ['user' => $user,
