@@ -213,11 +213,13 @@
                                         </button>
                                     @endif
                                 </td>
-                                <td>
-                                    @if ($user->aValideLeSousObjectif($sous_objectif))
-                                        {{ $user->sous_objectifs()->find($sous_objectif)->pivot->valideur }}
-                                    @endif
-                                </td>
+                                @if ($user->aValideLeSousObjectif($sous_objectif))
+                                    <td title="{{ $user->sous_objectifs()->find($sous_objectif)->pivot->commentaire }}">
+                                            {{ $user->sous_objectifs()->find($sous_objectif)->pivot->valideur }}
+                                    </td>
+                                @else
+                                    <td>&nbsp;</td>
+                                @endif
                                 <td>{{$sous_objectif->lieu()->get()->first()->lieu_libcourt}}</td>
                                 </tr>
                             @endforeach <!-- foreach sous objectif -->
