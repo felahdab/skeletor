@@ -6,9 +6,6 @@
         <div class="lead">
             Gérer la transformation par les stages
         </div>
-        <div class="mt-2">
-            @include('layouts.partials.messages')
-        </div>
 
         @livewire('stage-list', ['mode' => "transformation"])
 

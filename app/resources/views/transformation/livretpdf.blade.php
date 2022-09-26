@@ -187,7 +187,7 @@
         @foreach ($user->fonctions()->get() as $fonction)
             @php
             $listcomp=$fonction->compagnonages()->get()->pluck('comp_libcourt')->all();
-            $liststage=$fonction->stages()->get()->pluck('stage_libcourt')->all();
+            $liststage=$user->stages()->get()->pluck('stage_libcourt')->all();
             
             $nbcomp=count($listcomp);
             $nbstage=count($liststage);

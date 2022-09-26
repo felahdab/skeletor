@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="bg-light p-4 rounded">
-        <h1>Modification utilisateur</h1>
+        <h2>Modification utilisateur</h2>
         <div style='text-align:right;'>* champs obligatoires </div>
         <div class="lead">
             

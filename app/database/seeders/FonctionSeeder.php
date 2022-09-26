@@ -84,11 +84,11 @@ class FonctionSeeder extends Seeder
             [88,NULL,'2022-09-14 14:25:04','MAINT ELEM MECAN MOB','MAINTENANCE ELEMENTAIRE MECAN MOBILITE',3,1,1],
             [89,NULL,'2022-09-14 14:25:40','MAINT EXPERT MECAN MOB','MAINTENANCE EXPERT MECAN MOBILITE',3,1,1],
             [90,NULL,'2022-09-15 11:46:40','LSM OPSONAR MOOPS','OPSONAR MOOPS',3,1,1],
-            [99,'2022-09-14 12:20:48','2022-09-15 11:59:06','SIC MAINT EXP RECOM','MAINTENANCE EXPERT RECOM',0,0,0],
-            [100,'2022-09-14 12:52:06','2022-09-15 11:57:15','SIC MAINT EXP SYNUM','MAINTENANCE EXPERT SYNUM',0,0,0],
+            [99,'2022-09-14 12:20:48','2022-09-15 11:59:06','SIC MAINT EXP RECOM','MAINTENANCE EXPERT RECOM',3,0,0],
+            [100,'2022-09-14 12:52:06','2022-09-15 11:57:15','SIC MAINT EXP SYNUM','MAINTENANCE EXPERT SYNUM',3,0,0],
             [101,'2022-09-14 14:12:11','2022-09-14 14:25:29','ARM MAINT ELEM MOMACH','MAINTENANCE ELEMENTAIRE MOMACH',3,1,1],
             [102,'2022-09-14 14:14:13','2022-09-14 14:14:21','PONT EQ PEH','EQUIPIER PEH',3,1,1],
-            [104,'2022-09-15 14:05:57','2022-09-15 14:08:49','FCM-LSM OPSONAR DSM/SURF','FCM - OPERATEUR SONAR',0,0,0]
+            [104,'2022-09-15 14:05:57','2022-09-15 14:08:49','FCM-LSM OPSONAR DSM/SURF','FCM - OPERATEUR SONAR',3,0,0]
         ];
         foreach ($records as $record){
             DB::insert('insert into fonctions (id, created_at, updated_at, fonction_libcourt, fonction_liblong, typefonction_id, fonction_lache, fonction_double) values (?, ?, ?, ?, ?, ?, ?, ?)', $record);

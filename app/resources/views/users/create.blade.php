@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="bg-light p-4 rounded">
-        <h1>Ajouter un utilisateur</h1>
+        <h2>Ajouter un utilisateur</h2>
         <div style='text-align:right;'>* champs obligatoires </div>
 
         <div class="container mt-4">

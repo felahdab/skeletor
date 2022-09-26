@@ -14,10 +14,10 @@
                     <th scope="col" width="8%">Prénom</th>
                     <th scope="col">Email</th>
                     @if($mode == "gestion")
-                        <th scope="col" width="20%">Roles</th>
+                        <th scope="col" width="15%">Roles</th>
                         <th scope="col" width="40%" colspan="3"></th>
                     @elseif ($mode == "transformation")
-                        <th scope="col" width="50%">Actions</th>
+                        <th scope="col" width="40%">Actions</th>
                         <th scope="col" width="1%" colspan="3"></th>
                     @endif
                 </tr>
@@ -36,14 +36,20 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    <a href="{{ route('users.show', $user->id) }}" class="btn btn-warning btn-sm">Afficher</a>
                                     <a href="{{ route('users.edit', $user->id) }}" class="btn btn-info btn-sm">Editer</a>
                                 
                                     {!! Form::open(['method' => 'DELETE','route' => ['users.destroy', $user->id],'style'=>'display:inline']) !!}
                                     {!! Form::submit('Supprimer', ['class' => 'btn btn-danger btn-sm']) !!}
                                     {!! Form::close() !!}
+                                </td>
+                                <td>
                                 @can('changepasswd.allusers')
                                     <a href="{{ route('changepasswd.show', $user->id) }}" class="btn btn-secondary btn-sm">Changer le mot de passe</a>
+                                @endcan
+                                </td>
+                                <td>
+                                @can('impersonate')
+                                    <a href="{{ route('impersonate', $user->id) }}" class="btn btn-danger btn-sm">Se faire passer pour</a>
                                 @endcan
                                 </td>
 

@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="bg-light p-4 rounded">
-        <h1>Update role</h1>
+        <h2>Update role</h2>
         <div class="lead">
             Edit role and manage permissions.
         </div>
@@ -54,8 +54,8 @@
                     @endforeach
                 </table>
 
-                <button type="submit" class="btn btn-primary">Save changes</button>
-                <a href="{{ route('roles.index') }}" class="btn btn-default">Back</a>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                <a href="{{ route('roles.index') }}" class="btn btn-default">Retour</a>
 			{!! Form::close() !!}
         </div>
 

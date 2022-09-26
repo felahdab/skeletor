@@ -16,22 +16,21 @@ use function substr;
 final class ExpandArrayParameters implements Visitor
 {
     /** @var array<int,mixed>|array<string,mixed> */
-    private $originalParameters;
+    private array $originalParameters;
 
     /** @var array<int,Type|int|string|null>|array<string,Type|int|string|null> */
-    private $originalTypes;
+    private array $originalTypes;
 
-    /** @var int */
-    private $originalParameterIndex = 0;
+    private int $originalParameterIndex = 0;
 
     /** @var list<string> */
-    private $convertedSQL = [];
+    private array $convertedSQL = [];
 
     /** @var list<mixed> */
-    private $convertedParameteres = [];
+    private array $convertedParameteres = [];
 
     /** @var array<int,Type|int|string|null> */
-    private $convertedTypes = [];
+    private array $convertedTypes = [];
 
     /**
      * @param array<int, mixed>|array<string, mixed>                             $parameters
@@ -77,9 +76,7 @@ final class ExpandArrayParameters implements Visitor
         return implode('', $this->convertedSQL);
     }
 
-    /**
-     * @return list<mixed>
-     */
+    /** @return list<mixed> */
     public function getParameters(): array
     {
         return $this->convertedParameteres;
@@ -119,9 +116,7 @@ final class ExpandArrayParameters implements Visitor
         $this->appendTypedParameter($value, $type - Connection::ARRAY_PARAM_OFFSET);
     }
 
-    /**
-     * @return array<int,Type|int|string|null>
-     */
+    /** @return array<int,Type|int|string|null> */
     public function getTypes(): array
     {
         return $this->convertedTypes;

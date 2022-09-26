@@ -3,9 +3,6 @@
 @section('content')
     <div class="bg-light p-4 rounded">
         <h2>Compagnonnages</h2>
-        <div class="mt-2">
-            @include('layouts.partials.messages')
-        </div>
     </div>
     <div id='divmodifobj' class='card bg-light ml-3 w-100' >
         <div class='card-header' >Création compagnonnage </div>

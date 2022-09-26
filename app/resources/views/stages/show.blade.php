@@ -3,9 +3,6 @@
 @section('content')
     <div class="bg-light p-4 rounded">
         <h2>Stages - Visualisation des stages et des marins concernés</h2>
-        <div class="mt-2">
-            @include('layouts.partials.messages')
-        </div>
     </div>
     
     <div id='divconsultstage' class='card bg-light ml-3 w-100'>

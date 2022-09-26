@@ -8,12 +8,9 @@
             Gérer les sous objectifs.
         </div>
         
-        <div class="mt-2">
-            @include('layouts.partials.messages')
-        </div>
-		{!! Form::open(['method' => 'PATCH','route' => ['sousobjectifs.update', $sousobjectif->id] ]) !!}
-		
-		{!! Form::close() !!}
+        {!! Form::open(['method' => 'PATCH','route' => ['sousobjectifs.update', $sousobjectif->id] ]) !!}
+        
+        {!! Form::close() !!}
 
     </div>
 @endsection
