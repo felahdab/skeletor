@@ -440,9 +440,18 @@ class User extends Authenticatable
         }
         
         $coll = collect([]);
-        foreach ($this->fonctions()->get() as $fonction)
+        foreach ($this->fonctions()->with('compagnonages.taches.objectifs.sous_objectifs')->get() as $fonction)
         {
-            $coll = $coll->concat($fonction->coll_sous_objectifs());
+            foreach ($fonction->compagnonages as $compagnonage)
+            {
+                foreach ($compagnonage->taches as $tache)
+                {
+                    foreach ($tache->objectifs as $objectif)
+                    {
+                        $coll = $coll->concat($objectif->sous_objectifs);
+                    }
+                }
+            }
         }
         return $coll;
     }

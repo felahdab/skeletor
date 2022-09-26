@@ -15,10 +15,12 @@
                     <tr>
                         <td>{{$service->service_libcourt}}</td>
                         <td>@php
-                        $service_id = $service->id;
-                        $serviceusers = $users->with('secteur')->get()->where('secteur.service_id', $service_id);
-                        $activeusers = $serviceusers->where('en_transformation', true); @endphp
-                        {{$activeusers->count()}}</td>
+                                $service_id = $service->id;
+                                $serviceusers = $users->with('secteur')->get()->where('secteur.service_id', $service_id);
+                                $activeusers = $serviceusers->where('en_transformation', true); 
+                            @endphp
+                            {{$activeusers->count()}}
+                        </td>
                     </tr>
                     @endforeach
                 </table>
@@ -30,10 +32,13 @@
                         <th>Nb transfo</th>
                     </tr>
                     @foreach($fonctionsaquai->get() as $fonction)
-                    <tr title='@foreach($fonction->users()->get() as $marin){!!$marin->displayString(). "(" . substr($marin->pourcentage_valides_pour_fonction($fonction), 0,4)  . ")&#10;"!!}@endforeach'>
-                        <td>{{$fonction->fonction_libcourt}}</td>
-                        <td>{{$fonction->users()->count()}}</td>
-                    </tr>
+                        
+                        <tr title='@foreach($fonction->users()->get() as $marin)
+                            {!! $marin->displayString(). "(" . substr($marin->pourcentage_valides_pour_fonction($fonction), 0,4)  . ")&#10;" !!}
+                        @endforeach'>
+                            <td>{{$fonction->fonction_libcourt}}</td>
+                            <td>{{$fonction->users()->count()}}</td>
+                        </tr>
                     @endforeach
                 </table>
             </div>

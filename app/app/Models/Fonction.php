@@ -55,9 +55,15 @@ class Fonction extends Model
     public function coll_sous_objectifs()
     {
         $coll = collect([]);
-        foreach ($this->compagnonages()->get() as $compagnonage)
+        foreach ($this->compagnonages()->with('taches.objectifs.sous_objectifs')->get() as $compagnonage)
         {
-            $coll = $coll->concat($compagnonage->coll_sous_objectifs());
+            foreach ($compagnonage->taches as $tache)
+            {
+                foreach ($tache->objectifs as $objectif)
+                {
+                    $coll = $coll->concat($objectif->sous_objectifs);
+                }
+            }
         }
         return $coll;
     }
