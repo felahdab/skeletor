@@ -10,13 +10,13 @@
                 <div class='form-group row' >
                     <label for='comp[comp_libcourt]' class='col-sm-5 col-form-label'> Libell&eacute; court</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control'  name='comp[comp_libcourt]' id='comp[comp_libcourt]' placeholder='Libell&eacute; court' value="{{ $compagnonage->comp_libcourt }}" >
+                        <input disabled type='text' class='form-control'  name='comp[comp_libcourt]' id='comp[comp_libcourt]' placeholder='Libell&eacute; court' value="{{ $compagnonage->comp_libcourt }}" >
                     </div>
                 </div>
                 <div class='form-group row' >
                     <label for='comp[comp_liblong]' class='col-sm-5 col-form-label'>Libell&eacute; long</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control' name='comp[comp_liblong]' id='comp[comp_liblong]' placeholder='Libell&eacute; long' value="{{ $compagnonage->comp_liblong }}" >
+                        <input disabled type='text' class='form-control' name='comp[comp_liblong]' id='comp[comp_liblong]' placeholder='Libell&eacute; long' value="{{ $compagnonage->comp_liblong }}" >
                     </div>
                 </div>
                 <div>
@@ -50,13 +50,13 @@
             <div class='form-group row' >
                 <label class='col-sm-5 col-form-label '>Libellé court</label>
                 <div class='col-sm-5'>
-                    <input type='text' class='form-control' name='taches[{{$count}}][tache_libcourt]' id='taches[{{$count}}][tache_libcourt]' placeholder='Libelle court' value='{{ $tache->tache_libcourt }}'>
+                    <input disabled type='text' class='form-control' name='taches[{{$count}}][tache_libcourt]' id='taches[{{$count}}][tache_libcourt]' placeholder='Libelle court' value='{{ $tache->tache_libcourt }}'>
                 </div>
             </div>
             <div class='form-group row' >
                 <label class='col-sm-5 col-form-label '>Libellé long</label>
                 <div class='col-sm-5'>
-                    <input type='text' class='form-control' name='taches[{{$count}}][tache_liblong]' id='taches[{{$count}}][tache_liblong]' placeholder='Libelle long' value='{{ $tache->tache_liblong }}'>
+                    <input disabled type='text' class='form-control' name='taches[{{$count}}][tache_liblong]' id='taches[{{$count}}][tache_liblong]' placeholder='Libelle long' value='{{ $tache->tache_liblong }}'>
                 </div>
             </div>
             </div>

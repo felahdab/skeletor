@@ -11,13 +11,13 @@
                 <div class='form-group row' >
                     <label for='libelle_court_objectif' class='col-sm-5 col-form-label'> Libell&eacute; court</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control'  name='tache[tache_libcourt]' id='tache[tache_libcourt]' placeholder='Libell&eacute; court' value="{{ $tache->tache_libcourt }}" >
+                        <input disabled type='text' class='form-control'  name='tache[tache_libcourt]' id='tache[tache_libcourt]' placeholder='Libell&eacute; court' value="{{ $tache->tache_libcourt }}" >
                     </div>
                 </div>
                 <div class='form-group row' >
                     <label for='libelle_long_objectif' class='col-sm-5 col-form-label'>Libell&eacute; long</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control' name='tache[tache_liblong]' id='tache[tache_liblong]' placeholder='Libell&eacute; long' value="{{ $tache->tache_liblong }}" >
+                        <input disabled type='text' class='form-control' name='tache[tache_liblong]' id='tache[tache_liblong]' placeholder='Libell&eacute; long' value="{{ $tache->tache_liblong }}" >
                     </div>
                 </div>
                 <div>
@@ -50,7 +50,7 @@
                 <label class='col-sm-5 col-form-label '>Objectif </label>
                 <input type='hidden' name='sous_objectifs[{{$count}}][id]' id='sous_objectifs[{{$count}}][id]'  value='{{ $objectif->id }}'>
                 <div class='col-sm-5'>
-                    <textarea cols='60' rows='2' name='objectifs[{{$count}}][objectif_libcourt]' id='objectifs[{{$count}}][objectif_libcourt]' placeholder='Libell&eacute;' >{{ $objectif->objectif_libcourt }}</textarea>
+                    <textarea disabled cols='60' rows='2' name='objectifs[{{$count}}][objectif_libcourt]' id='objectifs[{{$count}}][objectif_libcourt]' placeholder='Libell&eacute;' >{{ $objectif->objectif_libcourt }}</textarea>
                 </div>
             </div>
             </div>

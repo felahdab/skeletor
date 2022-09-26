@@ -11,13 +11,13 @@
                 <div class='form-group row' >
                     <label for='libelle_court_objectif' class='col-sm-5 col-form-label'> Libell&eacute; court</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control'  name='objectif[objectif_libcourt]' id='objectif[objectif_libcourt]' placeholder='Libell&eacute; court' value="{{ $objectif->objectif_libcourt }}" >
+                        <input disabled type='text' class='form-control'  name='objectif[objectif_libcourt]' id='objectif[objectif_libcourt]' placeholder='Libell&eacute; court' value="{{ $objectif->objectif_libcourt }}" >
                     </div>
                 </div>
                 <div class='form-group row' >
                     <label for='libelle_long_objectif' class='col-sm-5 col-form-label'>Libell&eacute; long</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control' name='objectif[objectif_liblong]' id='objectif[objectif_liblong]' placeholder='Libell&eacute; long' value="{{ $objectif->objectif_liblong }}" >
+                        <input disabled type='text' class='form-control' name='objectif[objectif_liblong]' id='objectif[objectif_liblong]' placeholder='Libell&eacute; long' value="{{ $objectif->objectif_liblong }}" >
                     </div>
                 </div>
                 <div>
@@ -47,25 +47,25 @@
                     <label class='col-sm-5 col-form-label '>Sous-objectif </label>
                     <input type='hidden' name='sous_objectifs[{{$count}}][id]' id='sous_objectifs[{{$count}}][id]'  value='{{ $ssobj->id }}'>
                     <div class='col-sm-5'>
-                        <textarea cols='40' rows='6' name='sous_objectifs[{{$count}}][ssobj_lib]' id='sous_objectifs[{{$count}}][ssobj_lib]' placeholder='Libell&eacute;' >{{ $ssobj->ssobj_lib }}</textarea>
+                        <textarea disabled cols='40' rows='6' name='sous_objectifs[{{$count}}][ssobj_lib]' id='sous_objectifs[{{$count}}][ssobj_lib]' placeholder='Libell&eacute;' >{{ $ssobj->ssobj_lib }}</textarea>
                     </div>
                 </div>
                 <div class='form-group row' >
                     <label class='col-sm-5 col-form-label '>Coefficient</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control' name='sous_objectifs[{{$count}}][ssobj_coeff]' id='sous_objectifs[{{$count}}][ssobj_coeff]' placeholder='Coefficient' value='{{ $ssobj->ssobj_coeff }}'>
+                        <input disabled type='text' class='form-control' name='sous_objectifs[{{$count}}][ssobj_coeff]' id='sous_objectifs[{{$count}}][ssobj_coeff]' placeholder='Coefficient' value='{{ $ssobj->ssobj_coeff }}'>
                     </div>
                 </div>
                 <div class='form-group row' >
                     <label class='col-sm-5 col-form-label '>Dur&eacute;e (heure)</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control' name='sous_objectifs[{{$count}}][ssobj_duree]' id='sous_objectifs[{{$count}}][ssobj_duree]' placeholder='Durée' value='{{ $ssobj->ssobj_duree }}'>
+                        <input disabled type='text' class='form-control' name='sous_objectifs[{{$count}}][ssobj_duree]' id='sous_objectifs[{{$count}}][ssobj_duree]' placeholder='Durée' value='{{ $ssobj->ssobj_duree }}'>
                     </div>
                 </div>
                 <div class='form-group row' >
                     <label class='col-sm-5 col-form-label '>Lieu </label>
                     <div class='col-sm-5'>
-                        <select name='sous_objectifs[{{$count}}][lieu_id]' id='sous_objectifs[{{$count}}][lieu_id]' class='custom-select  w-50'>
+                        <select disabled name='sous_objectifs[{{$count}}][lieu_id]' id='sous_objectifs[{{$count}}][lieu_id]' class='custom-select  w-50'>
                             @foreach ($lieux as $lieu)
                                 <option value='{{ $lieu->id }}' {{ $lieu->id == $ssobj->lieu_id
                                 ? ' selected'
