@@ -23,7 +23,7 @@
                         <td>{{ $objectif->objectif_liblong }}</td>
                         @if ($mode == "gestion")
                             <td><a href="{{ route('objectifs.show', $objectif->id) }}" class="btn btn-primary btn-sm">Consulter</a></td>
-                            <td><a href="{{ route('objectifs.edit', $objectif->id) }}" class="btn btn-info btn-sm">Editer</a></td>
+                            <td><a href="{{ route('objectifs.edit', $objectif->id) }}" class="btn btn-info btn-sm">Modifier</a></td>
                             @can('objectifs.destroy')
                             <td>
                                 {!! Form::open(['method' => 'DELETE','route' => ['objectifs.destroy', $objectif->id],'style'=>'display:inline']) !!}

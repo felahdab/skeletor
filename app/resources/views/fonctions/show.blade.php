@@ -10,25 +10,25 @@
                 <div class='form-group row' >
                     <label for='fonction[fonction_libcourt]' class='col-sm-5 col-form-label'> Libell&eacute; court</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control'  name='fonction[fonction_libcourt]' id='fonction[fonction_libcourt]' placeholder='Libell&eacute; court' value="{{ $fonction->fonction_libcourt }}" >
+                        <input disabled type='text' class='form-control'  name='fonction[fonction_libcourt]' id='fonction[fonction_libcourt]' placeholder='Libell&eacute; court' value="{{ $fonction->fonction_libcourt }}" >
                     </div>
                 </div>
                 <div class='form-group row' >
                     <label for='fonction[fonction_liblong]' class='col-sm-5 col-form-label'>Libell&eacute; long</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control' name='fonction[fonction_liblong]' id='fonction[fonction_liblong]' placeholder='Libell&eacute; long' value="{{ $fonction->fonction_liblong }}" >
+                        <input disabled type='text' class='form-control' name='fonction[fonction_liblong]' id='fonction[fonction_liblong]' placeholder='Libell&eacute; long' value="{{ $fonction->fonction_liblong }}" >
                     </div>
                 </div>
                 <div class='form-group row' >
                     <label for='fonction[typefonction_id]' class='col-sm-5 col-form-label'>Type de fonction</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control' name='fonction[typefonction_id]' id='fonction[typefonction_id]' placeholder='Type de fonction' value="{{ $fonction->type_fonction()->get()->first()->typfonction_libcourt }}" >
+                        <input disabled type='text' class='form-control' name='fonction[typefonction_id]' id='fonction[typefonction_id]' placeholder='Type de fonction' value="{{ $fonction->type_fonction()->get()->first()->typfonction_libcourt }}" >
                     </div>
                 </div>
                 <div class='form-group row' >
                     <label for='fonction_lache' class='col-sm-5 col-form-label'>Lâcher</label>
                     <div class='col-sm-5'>
-                        <input type='checkbox'name='fonction[fonction_lache]' id='fonction[fonction_lache]' {{ $fonction->fonction_lache
+                        <input disabled type='checkbox'name='fonction[fonction_lache]' id='fonction[fonction_lache]' {{ $fonction->fonction_lache
                                             ? ' checked'
                                             : '' }}> 
                     </div>
@@ -36,7 +36,7 @@
                 <div class='form-group row' >
                     <label for='fonction_double' class='col-sm-5 col-form-label'>Double</label>
                     <div class='col-sm-5'>
-                        <input type='checkbox'name='fonction[fonction_double]' id='fonction[fonction_double]' {{ $fonction->fonction_double
+                        <input disabled type='checkbox'name='fonction[fonction_double]' id='fonction[fonction_double]' {{ $fonction->fonction_double
                                             ? ' checked'
                                             : '' }}> 
                     </div>
@@ -60,13 +60,13 @@
             <div class='form-group row' >
                 <label class='col-sm-5 col-form-label '>Libellé court</label>
                 <div class='col-sm-5'>
-                    <input type='text' class='form-control' name='compagnonages[{{$count}}][comp_libcourt]' id='compagnonages[{{$count}}][comp_libcourt]' placeholder='Libellé court' value='{{ $compagnonage->comp_libcourt }}'>
+                    <input disabled type='text' class='form-control' name='compagnonages[{{$count}}][comp_libcourt]' id='compagnonages[{{$count}}][comp_libcourt]' placeholder='Libellé court' value='{{ $compagnonage->comp_libcourt }}'>
                 </div>
             </div>
             <div class='form-group row' >
                 <label class='col-sm-5 col-form-label '>Libellé long</label>
                 <div class='col-sm-5'>
-                    <input type='text' class='form-control' name='compagnonages[{{$count}}][comp_libclong]' id='compagnonages[{{$count}}][comp_libclong]' placeholder='Libellé long' value='{{ $compagnonage->comp_liblong }}'>
+                    <input disabled type='text' class='form-control' name='compagnonages[{{$count}}][comp_libclong]' id='compagnonages[{{$count}}][comp_libclong]' placeholder='Libellé long' value='{{ $compagnonage->comp_liblong }}'>
                 </div>
             </div>
             </div>
@@ -87,13 +87,13 @@
             <div class='form-group row' >
                 <label class='col-sm-5 col-form-label '>Libellé court</label>
                 <div class='col-sm-5'>
-                    <input type='text' class='form-control' name='stages[{{$count}}][stage_libcourt]' id='stages[{{$count}}][stage_libcourt]' placeholder='Libellé court' value='{{ $stage->stage_libcourt }}'>
+                    <input disabled type='text' class='form-control' name='stages[{{$count}}][stage_libcourt]' id='stages[{{$count}}][stage_libcourt]' placeholder='Libellé court' value='{{ $stage->stage_libcourt }}'>
                 </div>
             </div>
             <div class='form-group row' >
                 <label class='col-sm-5 col-form-label '>Libellé long</label>
                 <div class='col-sm-5'>
-                    <input type='text' class='form-control' name='stages[{{$count}}][stage_liblong]' id='stages[{{$count}}][stage_liblong]' placeholder='Libellé long' value='{{ $stage->stage_liblong }}'>
+                    <input disabled type='text' class='form-control' name='stages[{{$count}}][stage_liblong]' id='stages[{{$count}}][stage_liblong]' placeholder='Libellé long' value='{{ $stage->stage_liblong }}'>
                 </div>
             </div>
             </div>

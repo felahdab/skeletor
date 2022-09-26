@@ -26,7 +26,7 @@
                         <td>{{ $fonction->type_fonction->typfonction_libcourt }}</td>
                         @if ($mode == 'gestion')
                             <td><a href="{{ route('fonctions.show', $fonction->id) }}" class="btn btn-primary btn-sm">Consulter</a></td>
-                            <td><a href="{{ route('fonctions.edit', $fonction->id) }}" class="btn btn-info btn-sm">Editer</a></td>
+                            <td><a href="{{ route('fonctions.edit', $fonction->id) }}" class="btn btn-info btn-sm">Modifier</a></td>
                             @can('fonctions.destroy')
                             <td>
                                 {!! Form::open(['method' => 'DELETE','route' => ['fonctions.destroy', $fonction->id],'style'=>'display:inline']) !!}

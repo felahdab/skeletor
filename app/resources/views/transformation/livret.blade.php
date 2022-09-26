@@ -11,7 +11,10 @@
             <a href="{{ route('transformation.livret', $user->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
             <a href="{{ route('transformation.progression', $user->id) }}" class="btn btn-primary btn-sm">Progression</a>
             <a href="{{ route('transformation.fichebilan', $user->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
-             <a href="{{ route('stages.consulter', [ 'marin' => $user->id]) }}" class="btn btn-danger btn-sm">Stages</a>
+            @can('stages.consulter')
+                <a href="{{ route('stages.consulter', [ 'marin' => $user->id]) }}" class="btn btn-danger btn-sm">Stages</a>
+            @endcan
+            <a href="{{ route('transformation.index') }}" class="btn btn-default btn-sm">Annuler</a>
         @else
             <a href="{{ route('transformation.monlivret') }}" class="btn btn-warning btn-sm">Mon livret de transformation</a>
             <a href="{{ route('transformation.maprogression') }}" class="btn btn-primary btn-sm">Ma progression</a>
@@ -213,11 +216,13 @@
                                         </button>
                                     @endif
                                 </td>
-                                <td>
-                                    @if ($user->aValideLeSousObjectif($sous_objectif))
-                                        {{ $user->sous_objectifs()->find($sous_objectif)->pivot->valideur }}
-                                    @endif
-                                </td>
+                                @if ($user->aValideLeSousObjectif($sous_objectif))
+                                    <td title="{{ $user->sous_objectifs()->find($sous_objectif)->pivot->commentaire }}">
+                                            {{ $user->sous_objectifs()->find($sous_objectif)->pivot->valideur }}
+                                    </td>
+                                @else
+                                    <td>&nbsp;</td>
+                                @endif
                                 <td>{{$sous_objectif->lieu()->get()->first()->lieu_libcourt}}</td>
                                 </tr>
                             @endforeach <!-- foreach sous objectif -->

@@ -23,7 +23,7 @@
                         <td>{{ $compagnonage->comp_liblong }}</td>
                         @if ($mode == "gestion")
                             <td><a href="{{ route('compagnonages.show', $compagnonage->id) }}" class="btn btn-primary btn-sm">Consulter</a></td>
-                            <td><a href="{{ route('compagnonages.edit', $compagnonage->id) }}" class="btn btn-info btn-sm">Editer</a></td>
+                            <td><a href="{{ route('compagnonages.edit', $compagnonage->id) }}" class="btn btn-info btn-sm">Modifier</a></td>
                             @can('compagnonages.destroy')
                             <td>
                                 {!! Form::open(['method' => 'DELETE','route' => ['compagnonages.destroy', $compagnonage->id],'style'=>'display:inline']) !!}
