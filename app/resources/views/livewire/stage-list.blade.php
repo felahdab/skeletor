@@ -25,7 +25,7 @@
                         <td>{{ $stage->type_licence->typlicense_libcourt}}</td>
                         @if ($mode=="gestion")
                             <td><a href="{{ route('stages.choixmarins', ['stage' => $stage->id] ) }}" class="btn btn-primary btn-sm">Validation ou annulation collective</a></td>
-                            <td><a href="{{ route('stages.edit', $stage->id) }}" class="btn btn-info btn-sm">Editer</a></td>
+                            <td><a href="{{ route('stages.edit', $stage->id) }}" class="btn btn-info btn-sm">Modifier</a></td>
                             @can('stage.destroy')
                             <td>
                                 {!! Form::open(['method' => 'DELETE','route' => ['stages.destroy', $stage->id],'style'=>'display:inline']) !!}

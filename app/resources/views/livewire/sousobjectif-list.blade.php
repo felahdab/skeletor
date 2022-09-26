@@ -24,7 +24,7 @@
                         <td>{{ $sousobjectif->ssobj_coeff }}</td>
                         <td>{{ $sousobjectif->ssobj_duree }}</td>
                         <td><a href="{{ route('sous-objectifs.show', $sousobjectif->id) }}" class="btn btn-primary btn-sm">Consulter</a></td>
-                        <td><a href="{{ route('sous-objectifs.edit', $sousobjectif->id) }}" class="btn btn-info btn-sm">Editer</a></td>
+                        <td><a href="{{ route('sous-objectifs.edit', $sousobjectif->id) }}" class="btn btn-info btn-sm">Modifier</a></td>
                         @can('sousobjectifs.destroy')
                         <td>
                             {!! Form::open(['method' => 'DELETE','route' => ['sous-objectifs.destroy', $sousobjectif->id],'style'=>'display:inline']) !!}
