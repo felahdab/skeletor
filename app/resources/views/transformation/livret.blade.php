@@ -76,17 +76,23 @@
             
             <table class='table'>
                 <tr class='lignecomp div-table-contrat-compagnonnage'>
-                    <th colspan='4'>{{$fonction->fonction_liblong }}</th>
+                    <th colspan='5'>{{$fonction->fonction_liblong }}</th>
                 </tr>
                 <tr class='lignecomp'>
-                        <td style='width:75%;'>Activité liée à la fonction</td>
+                        <td style='width:5%;'>&nbsp;</td>
+                        <td style='width:70%;'>Commentaire</td>
                         <td style='width:10%;'>Date de Visa</td>
                         <td style='width:10%;'>Viseur</td>
                         <td style='width:5%;'>Lieu de formation</td>
-                    </tr>
+                </tr>
                 @if ($fonction->fonction_double)
                 <tr  class='lignecomp'>
                     <td>DOUBLE</td>
+                    <td>
+                    @if ($fonction->pivot->date_double != null)
+                        {{ $fonction->pivot->commentaire_double }}
+                    @endif
+                    </td>
                     <td>
                     @if ($fonction->pivot->date_double != null)
                         <button class='btn btn-success' type='button' disabled>
@@ -119,6 +125,11 @@
                 @if ($fonction->fonction_lache)
                 <tr  class='lignecomp'>
                     <td>LACHER</td>
+                    <td class="text-start">
+                    @if ($fonction->pivot->date_double != null)
+                        {{ $fonction->pivot->commentaire_lache }}
+                    @endif
+                    </td>
                     <td>
                     @if ($fonction->pivot->date_lache != null)
                         <button class='btn btn-success' type='button' disabled>
