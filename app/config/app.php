@@ -201,6 +201,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         'PDF' => Meneses\LaravelMpdf\Facades\LaravelMpdf::class,
         'Browser' => hisorange\BrowserDetect\Facade::class,
+        'Debugbar' => Barryvdh\Debugbar\Facades\Debugbar::class,
     ])->toArray(),
 
 ];

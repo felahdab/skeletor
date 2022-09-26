@@ -17,7 +17,7 @@ use Laravel\Socialite\Facades\Socialite;
 Route::impersonate();
 
 Route::get('/auth/redirect', function(){
-	return Socialite::driver('keycloak')->stateless()->redirect();
+    return Socialite::driver('keycloak')->stateless()->redirect();
 })->name('keycloak.login.redirect');
 
 
@@ -124,9 +124,9 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::get('statistiques/pourem', 'StatistiqueController@pourem')->name('statistiques.pourem');
         Route::get('statistiques/pour2ps', 'StatistiqueController@pour2ps')->name('statistiques.pour2ps');
 
-        if (env('APP_ENV') == "local")
-        {
+        // if (env('APP_ENV') == "local")
+        // {
             Route::get('/test', 'TestController@test')->name('test.test');
-        }
+        // }
     });
 });

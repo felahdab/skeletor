@@ -1,6 +1,6 @@
 @extends('layouts.app-master')
 
 @section('content')
-    @livewire('user-list')
+    None
 @endsection
 

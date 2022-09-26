@@ -19,6 +19,8 @@ use App\Models\Stage;
 
 use Illuminate\Support\Facades\Storage;
 
+use App\Jobs\CalculateUserTransformationRatios;
+
 class TransformationController extends Controller
 {
     /**
@@ -253,6 +255,7 @@ class TransformationController extends Controller
                 }
             }
         }
+        CalculateUserTransformationRatios::dispatch($user);
         return redirect()->route('transformation.livret', ['user' => $user]);
      }
 
