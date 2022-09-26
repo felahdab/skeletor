@@ -320,7 +320,12 @@
     @if ($fonction->fonction_double)
             <tr class='trlache'>
             <td class='h-30'>DOUBLE</td>
-            <td colspan='3'>
+            <td colspan='2'>
+            @if($fonction->pivot->date_double != null)
+                {{ $fonction->pivot->commentaire_double }}
+            @endif
+            </td>
+            <td>
             @if($fonction->pivot->date_double != null)
                 {{ $fonction->pivot->date_double }}
             @endif
@@ -336,7 +341,12 @@
     @if ($fonction->fonction_lache)
             <tr class='trlache'>
             <td class='h-30'>L&Acirc;CHER</td>
-            <td colspan='3'>
+            <td colspan='2'>
+            @if($fonction->pivot->date_lache != null)
+                {{ $fonction->pivot->commentaire_lache }}
+            @endif
+            </td>
+            <td>
             @if($fonction->pivot->date_lache != null)
                 {{ $fonction->pivot->date_lache }}
             @endif
