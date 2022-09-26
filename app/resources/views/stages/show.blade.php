@@ -104,11 +104,13 @@
             </div>
         </div>
         @elseif ($stage == null and $marin != null)
-        <div class='mt-2 mb-2' style='margin-left:50%; text-align: center;'> 
-        <a href="{{ route('transformation.livret', $marin->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
+        <div class='mt-2 mb-2 offset-6'> 
+            <a href="{{ route('transformation.livret', $marin->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
             <a href="{{ route('transformation.progression', $marin->id) }}" class="btn btn-primary btn-sm">Progression</a>
             <a href="{{ route('transformation.fichebilan', $marin->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
-        </div>
+            <a href="{{ route('stages.consulter', [ 'marin' => $marin->id]) }}" class="btn btn-danger btn-sm">Stages</a>
+            <a href="{{ route('transformation.index') }}" class="btn btn-default btn-sm">Annuler</a>
+       </div>
         <div class='mt-2 mb-2' style='margin-left:50%; text-align: center;'> </div>
         <div class='card border-primary mb-3 w-50' style='margin-left:50%;'>
             <div class='card-header text-primary'>Liste des stages valid&eacute;s pour {{$marin->displayString()}}</div>

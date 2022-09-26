@@ -36,7 +36,7 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-info btn-sm">Editer</a>
+                                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-info btn-sm">Modifier</a>
                                 
                                     {!! Form::open(['method' => 'DELETE','route' => ['users.destroy', $user->id],'style'=>'display:inline']) !!}
                                     {!! Form::submit('Supprimer', ['class' => 'btn btn-danger btn-sm']) !!}
