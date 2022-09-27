@@ -763,6 +763,7 @@ class ComposerStaticInite02b18f2e6d570fbc3e1e1247d251339
         'App\\Models\\Fonction' => __DIR__ . '/../..' . '/app/Models/Fonction.php',
         'App\\Models\\Grade' => __DIR__ . '/../..' . '/app/Models/Grade.php',
         'App\\Models\\Groupement' => __DIR__ . '/../..' . '/app/Models/Groupement.php',
+        'App\\Models\\Liens' => __DIR__ . '/../..' . '/app/Models/Liens.php',
         'App\\Models\\Lieu' => __DIR__ . '/../..' . '/app/Models/Lieu.php',
         'App\\Models\\MindefConnectUser' => __DIR__ . '/../..' . '/app/Models/MindefConnectUser.php',
         'App\\Models\\Objectif' => __DIR__ . '/../..' . '/app/Models/Objectif.php',

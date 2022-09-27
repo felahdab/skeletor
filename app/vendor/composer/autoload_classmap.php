@@ -108,6 +108,7 @@ return array(
     'App\\Models\\Fonction' => $baseDir . '/app/Models/Fonction.php',
     'App\\Models\\Grade' => $baseDir . '/app/Models/Grade.php',
     'App\\Models\\Groupement' => $baseDir . '/app/Models/Groupement.php',
+    'App\\Models\\Liens' => $baseDir . '/app/Models/Liens.php',
     'App\\Models\\Lieu' => $baseDir . '/app/Models/Lieu.php',
     'App\\Models\\MindefConnectUser' => $baseDir . '/app/Models/MindefConnectUser.php',
     'App\\Models\\Objectif' => $baseDir . '/app/Models/Objectif.php',
