@@ -17,13 +17,13 @@ class RolesSeeder extends Seeder
      */
     public function run()
     {
-        $role = Role::create(['name' => 'admin']);
+        $role = Role::findOrCreate('admin');
         $rolepermissions = Permission::pluck('id','id')->all();
         $role->syncPermissions($rolepermissions);
 
         // All users should be assigned the user role, which includes the basic permissions to login, logout, change your
         // own password and your current role.
-        $role = Role::create(['name' => 'user']);
+        $role = Role::findOrCreate('user');
         $rolepermissions = [
             'logout.perform',
             'currentrole.show',
@@ -37,7 +37,7 @@ class RolesSeeder extends Seeder
         ];
         $role->syncPermissions($rolepermissions);
         
-        $role = Role::create(['name' => 'tuteur']);
+        $role = Role::findOrCreate('tuteur');
         $rolepermissions = [
                 'fonctions.choixmarins',
                 'fonctions.validermarins',
@@ -54,7 +54,7 @@ class RolesSeeder extends Seeder
                 'statistiques.pourtuteurs'];
         $role->syncPermissions($rolepermissions);
         
-        $role = Role::create(['name' => 'em']);
+        $role = Role::findOrCreate('em');
         $rolepermissions = [
                 'users.index',
                 'users.create',
@@ -81,7 +81,7 @@ class RolesSeeder extends Seeder
         ];
         $role->syncPermissions($rolepermissions);
         
-        $role = Role::create(['name' => 'bord']);
+        $role = Role::findOrCreate( 'bord');
         $rolepermissions = [
             'transformation.index',
             'transformation.livret',
@@ -92,7 +92,7 @@ class RolesSeeder extends Seeder
         ];
         $role->syncPermissions($rolepermissions);
         
-        $role = Role::create(['name' => '2ps']);
+        $role = Role::findOrCreate('2ps');
         $rolepermissions = [
             'mindefconnect.index',
             'mindefconnect.edit',
