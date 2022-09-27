@@ -7,5 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Liens extends Model
 {
-    use HasFactory;
+    
+  /*  public function unite()
+    {
+        return $this->belongsTo(unite::class, 'unite_id');
+    }*/
 }

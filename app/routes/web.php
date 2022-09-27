@@ -105,7 +105,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::get('/parfonction', 'TransformationController@indexparfonction')->name('transformation.indexparfonction');
             Route::get('/parstage', 'TransformationController@indexparstage')->name('transformation.indexparstage');
             Route::get('/{user}/choisirfonction', 'UsersController@choisirfonction')->name('users.choisirfonction');
-            Route::get('statistiques/', 'StatistiqueController@index')->name('statistiques.index');'/{user}/choisirfonction', 'UsersController@attribuerfonction')->name('users.attribuerfonction');
+            Route::post('/{user}/choisirfonction', 'UsersController@attribuerfonction')->name('users.attribuerfonction');
             Route::post('/{user}/retirerfonction', 'UsersController@retirerfonction')->name('users.retirerfonction');
             Route::get('/{user}/livret', 'TransformationController@livret')->name('transformation.livret');
             Route::get('/{user}/livretpdf', 'TransformationController@livretpdf')->name('transformation.livretpdf');
@@ -124,8 +124,10 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::get('statistiques/pourem', 'StatistiqueController@pourem')->name('statistiques.pourem');
         Route::get('statistiques/pour2ps', 'StatistiqueController@pour2ps')->name('statistiques.pour2ps');
 
-        Route::get('/liens', 'LiensController@create')->name('liens.create');
-        Route::post('/liens', 'LiensController@store')->name('liens.store');
+        Route::get('/liens', 'LiensController@index')->name('liens.index');
+        Route::get('/creationlien', 'LiensController@create')->name('liens.create');
+        Route::post('/creationlien', 'LiensController@store')->name('liens.store');
+
 
         if (env('APP_ENV') == "local")
         {
