@@ -41,7 +41,7 @@ class CalculateUserTransformationRatios implements ShouldQueue
         
         foreach($fonctions as $fonction)
         {
-            $taux = $user->pourcentage_valides_pour_fonction($fonction);
+            $taux = $user->pourcentage_valides_pour_fonction($fonction, true);
             $workitem = $fonction->pivot;
             $workitem->taux_de_transformation = $taux;
             $workitem->save();

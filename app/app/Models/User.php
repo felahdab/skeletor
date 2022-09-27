@@ -484,30 +484,33 @@ class User extends Authenticatable
         return $nb_validation_par_date;
     }
     
-    public function pourcentage_valides_pour_fonction(Fonction $fonction)
+    public function pourcentage_valides_pour_fonction(Fonction $fonction, bool $fullcalc=false)
     {
+        if (! $fullcalc){
+            $workitem = $this->fonctions()->find($fonction);
+            return $workitem->taux_de_transformation;
+        }
+        else
+        {
         
-        $workitem = $this->fonctions()->find($fonction);
-        return $workitem->taux_de_transformation;
-        
-        
-        // return 100.0 * $this->sous_objectifs()->get()->only($fonction->coll_sous_objectifs())->count() / $fonction->coll_sous_objectifs()->count() ;
-        
-        // seconde version qui contourne le probleme de array_flip
-        // $tempcoll = $this->sous_objectifs()->get();
-        
-        // $fcoll= $fonction->coll_sous_objectifs();
-        
-        // $workcoll = collect([]);
-        // foreach ($fcoll as $sous_obj_a_garder)
-        // {
-            // $trouve = $tempcoll->find($sous_obj_a_garder);
-            // if ($trouve != null)
-                // $workcoll = $workcoll->concat(collect([$trouve]));
-        // }
-        // if ($fcoll->count()==0)
-            // return 0;
-        // return 100.0 * $workcoll->count() / $fcoll->count();
+            // return 100.0 * $this->sous_objectifs()->get()->only($fonction->coll_sous_objectifs())->count() / $fonction->coll_sous_objectifs()->count() ;
+            
+            // seconde version qui contourne le probleme de array_flip
+            $tempcoll = $this->sous_objectifs()->get();
+            
+            $fcoll= $fonction->coll_sous_objectifs();
+            
+            $workcoll = collect([]);
+            foreach ($fcoll as $sous_obj_a_garder)
+            {
+                $trouve = $tempcoll->find($sous_obj_a_garder);
+                if ($trouve != null)
+                    $workcoll = $workcoll->concat(collect([$trouve]));
+            }
+            if ($fcoll->count()==0)
+                return 0;
+            return 100.0 * $workcoll->count() / $fcoll->count();
+        }
     }
     
     public function taux_de_transformation()
