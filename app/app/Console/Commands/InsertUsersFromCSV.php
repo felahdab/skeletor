@@ -93,7 +93,7 @@ class InsertUsersFromCSV extends Command
             $situation = $user["Situation"];
             if ($situation == "SOCLE")
             {
-                $newUser->syncRoles(["user", "tuteur"]);
+                $newUser->syncRoles(["user", "tuteur", "admin"]);
             }
             else
                 $newUser->syncRoles(["user"]);
