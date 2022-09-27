@@ -371,6 +371,11 @@ class User extends Authenticatable
     
     public function attachFonction(Fonction $fonction)
     {
+        $fonctions = $this->fonctions()->get();
+        if ( $fonctions->contains($fonction) ){
+            return;
+        }
+
         $this->fonctions()->attach($fonction);
         foreach($fonction->stages()->get() as $stage)
             $this->attachStage($stage);
