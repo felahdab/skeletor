@@ -51,7 +51,7 @@ class InsertUsersFromCSV extends Command
         {
             $email = $user["email"];
             $this->info($email);
-            $newUser = User::where('email', $email)->first();
+            $newUser = User::withTrashed()->where('email', $email)->first();
             if ($newUser == null)
             {
                 $this->info("Creating new user");
@@ -73,10 +73,12 @@ class InsertUsersFromCSV extends Command
             
             
             $pieces = explode("/", $user["date_embarq"]);
-            $date_embarq = Carbon::create($pieces[2], $pieces[1],$pieces[0],0,0,0);
+            $date_embarq = $pieces[2] . "-" . $pieces[1] . "-" . $pieces[0];
+            
             $newUser->date_embarq = $date_embarq;
             
             $newUser->user_comment = $user['specialite'] . " " . $user['lache'];
+            $newUser->unite_id = 2;
             
             $newUser->save();
             
