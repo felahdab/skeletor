@@ -80,6 +80,8 @@ class InsertUsersFromCSV extends Command
             $newUser->user_comment = $user['specialite'] . " " . $user['lache'];
             $newUser->unite_id = 2;
             
+            $newUser->secteur_id = intval($user["secteur_id"]);
+            
             $newUser->save();
             
             $fonction=Fonction::find($user["fonction_id"]);
