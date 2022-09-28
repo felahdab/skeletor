@@ -6,6 +6,8 @@ use App\Http\Requests\StoreBugReportRequest;
 use App\Http\Requests\UpdateBugReportRequest;
 use App\Models\BugReport;
 
+use Illuminate\Support\Facades\Http;
+
 class BugReportController extends Controller
 {
     /**
@@ -37,13 +39,25 @@ class BugReportController extends Controller
     public function store(StoreBugReportRequest $request)
     {
         $user = auth()->user();
-        $report = BugReport::create([
-            "url" => $request->url,
-            "message" => $request->message,
-            "user_id" => $user->id,
-            "username" => $user->displayString()
+        // $report = BugReport::create([
+            // "url" => $request->url,
+            // "message" => $request->message,
+            // "user_id" => $user->id,
+            // "username" => $user->displayString()
+            // ]);
+        // $report->save();
+        
+        $response = Http::withoutVerifying()
+            ->withHeaders(["X-Auth-AccessKey" => env("TULEAP_TOKEN")])
+            ->post(env("TULEAP_URL") . "api/artifacts", [
+                "tracker" =>  ["id" => env('TULEAP_TRACKER_BUGREPORT') ],
+                "values_by_field" => [
+                    "commentaire"    => [ "value" => $request->message ],
+                    "url"=>  ["value"  => $request->url ],
+                    "user"=> ["value" => $user->displayString()]
+                ]
             ]);
-        $report->save();
+        
         return redirect($request->url)->withSuccess("Message bien enregistré. Merci beaucoup.");
     }
 
