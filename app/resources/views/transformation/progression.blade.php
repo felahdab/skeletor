@@ -54,8 +54,8 @@
                             });
                         </script>
                         <div style='position: absolute; width: 100%; height: 35px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </div>
-                        @php $pourcentage = substr($user->taux_de_transformation, 0, 4); @endphp
-                        <div style='position: absolute; width: {{$pourcentage}}%; height: 35px; background-color: red; margin-top: 1%; border: 1px solid black;'>
+                        @php $pourcentage = substr($user->taux_de_transformation, 0, 5); @endphp
+                        <div style='position: absolute; width: {{ $pourcentage}}%; height: 35px; background-color: red; margin-top: 1%; border: 1px solid black;'>
                             <h3>{{$pourcentage}}%</h3>
                         </div>
                     </div>
@@ -88,12 +88,12 @@
                             @foreach($user->fonctions()->with('compagnonages')->get() as $fonction)
                                 @foreach($fonction->compagnonages as $compagnonage)
                                 <p class='card-text' style='margin-bottom: 25px;'>
-                                    <span style='width:25%;'>{{$compagnonage->comp_libcourt}}</span>
+                                    <span style='width:25%;'>{{ $compagnonage->comp_libcourt }}</span>
                                     <span style='width:25%; background-color: transparent; margin-top: 5px;'>
                                         <span style='display:flex; width: 100%; position: relative; '>
                                             <span style='position: absolute; width: 100%; height: 20px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </span>
                                             @php $pourcentage = $user->pourcentage_valides_pour_comp($compagnonage);
-                                                 $pourcentagestr = substr($pourcentage, 0, 4);
+                                                 $pourcentagestr = substr($pourcentage, 0, 5);
                                             @endphp
                                             @if ($pourcentage == 100)
                                                 <span style='position: absolute; width: {{$pourcentagestr}}%; height: 20px; background-color: green; margin-top: 1%; border: 1px solid black;'></span>
@@ -153,7 +153,7 @@
                             <div style='position: absolute; width: 100%; height: 35px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </div>
                             @if ($fonction->coll_sous_objectifs()->count()!=0 ) 
                             @php $pourcentage = $fonction->pivot->taux_de_transformation;
-                                 $pourcentagestr = substr($pourcentage, 0, 4);
+                                 $pourcentagestr = substr($pourcentage, 0, 5);
                             @endphp
                             @if ($pourcentage == 100)
                                 <div style='position: absolute; width: {{$pourcentagestr}}%; height: 35px; background-color: green; margin-top: 1%; border: 1px solid black;'>
