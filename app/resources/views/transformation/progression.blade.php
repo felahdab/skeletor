@@ -54,8 +54,8 @@
                             });
                         </script>
                         <div style='position: absolute; width: 100%; height: 35px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </div>
-                        @php $pourcentage = substr(100.0* $user->sous_objectifs()->get()->count() / $user->coll_sous_objectifs()->count(), 0, 4); @endphp
-                        <div style='position: absolute; width: {{$pourcentage}}%; height: 35px; background-color: red; margin-top: 1%; border: 1px solid black;'>
+                        @php $pourcentage = substr($user->taux_de_transformation, 0, 5); @endphp
+                        <div style='position: absolute; width: {{ $pourcentage}}%; height: 35px; background-color: red; margin-top: 1%; border: 1px solid black;'>
                             <h3>{{$pourcentage}}%</h3>
                         </div>
                     </div>
@@ -85,15 +85,15 @@
                         <div class='card border-primary mb-3' style='width:50%;padding-bottom: 20px;'>
                             <div class='card-header text-primary'>Compagnonnages</div>
                             <div class='card-body'>
-                            @foreach($user->fonctions()->get() as $fonction)
-                                @foreach($fonction->compagnonages()->get() as $compagnonage)
+                            @foreach($user->fonctions()->with('compagnonages')->get() as $fonction)
+                                @foreach($fonction->compagnonages as $compagnonage)
                                 <p class='card-text' style='margin-bottom: 25px;'>
-                                    <span style='width:25%;'>{{$compagnonage->comp_libcourt}}</span>
+                                    <span style='width:25%;'>{{ $compagnonage->comp_libcourt }}</span>
                                     <span style='width:25%; background-color: transparent; margin-top: 5px;'>
                                         <span style='display:flex; width: 100%; position: relative; '>
                                             <span style='position: absolute; width: 100%; height: 20px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </span>
                                             @php $pourcentage = $user->pourcentage_valides_pour_comp($compagnonage);
-                                                 $pourcentagestr = substr($pourcentage, 0, 4);
+                                                 $pourcentagestr = substr($pourcentage, 0, 5);
                                             @endphp
                                             @if ($pourcentage == 100)
                                                 <span style='position: absolute; width: {{$pourcentagestr}}%; height: 20px; background-color: green; margin-top: 1%; border: 1px solid black;'></span>
@@ -115,7 +115,7 @@
                     </div>
                 </div>
             </div>
-            @foreach($user->fonctions()->get() as $fonction)
+            @foreach($user->fonctions()->with('stages')->with('compagnonages')->get() as $fonction)
             <div>
                 <div style='display: flex; padding: 2%; background-color: transparent; justify-content: space-evenly;'>
                     <div style=' width: 48%; background-color: transparent; position: relative; '>
@@ -152,8 +152,8 @@
                         </script>
                             <div style='position: absolute; width: 100%; height: 35px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </div>
                             @if ($fonction->coll_sous_objectifs()->count()!=0 ) 
-                            @php $pourcentage = $user->pourcentage_valides_pour_fonction($fonction);
-                                 $pourcentagestr = substr($pourcentage, 0, 4);
+                            @php $pourcentage = $fonction->pivot->taux_de_transformation;
+                                 $pourcentagestr = substr($pourcentage, 0, 5);
                             @endphp
                             @if ($pourcentage == 100)
                                 <div style='position: absolute; width: {{$pourcentagestr}}%; height: 35px; background-color: green; margin-top: 1%; border: 1px solid black;'>
@@ -171,7 +171,7 @@
                         <div class='card border-primary mb-3' style='width:50%;'>
                             <div class='card-header text-primary'>Stages</div>
                             <div class='card-body '>
-                            @foreach($fonction->stages()->get() as $stage)
+                            @foreach($fonction->stages as $stage)
                                 <p class='card-text' style='margin-bottom: 25px;'>
                                     <span style='width:25%;'>{{$stage->stage_libcourt}}</span>
                                     <span style='width:25%; background-color: transparent; margin-top: 5px;'>
@@ -193,7 +193,7 @@
                         <div class='card border-primary mb-3' style='width:50%;padding-bottom: 20px;'>
                             <div class='card-header text-primary'>Compagnonnages</div>
                             <div class='card-body'>
-                                @foreach($fonction->compagnonages()->get() as $compagnonage)
+                                @foreach($fonction->compagnonages as $compagnonage)
                                 <p class='card-text' style='margin-bottom: 25px;'>
                                     <span style='width:25%;'>{{$compagnonage->comp_libcourt}}</span>
                                     <span style='width:25%; background-color: transparent; margin-top: 5px;'>

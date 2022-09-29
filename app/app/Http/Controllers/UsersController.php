@@ -75,8 +75,12 @@ class UsersController extends Controller
             $user->roles()->attach($roletransfo);
         }
 
-        return redirect()->route('users.index')
-            ->withSuccess(__('Utilisateur a été créé avec succès. Vous devez changer son mot de passe.'));
+        if ($request["buttonid"] == "users.index")
+            return redirect()->route("users.index")
+                ->withSuccess(__('L utilisateur a été créé avec succès.'));
+        elseif ($request["buttonid"] == "users.choisirfonction")
+            return redirect()->route("users.choisirfonction", $user->id)
+                ->withSuccess(__('L utilisateur a été créé avec succès.'));
     }
 
     /**
@@ -125,6 +129,11 @@ class UsersController extends Controller
     {
         $fonction_id = $request->fonction_id;
         $fonction = Fonction::where('id', $fonction_id)->get()->first();
+        if ($fonction == null){
+            $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
+            return redirect()->route('users.choisirfonction', ['user' => $user,
+                                                           'fonctions' => $fonctions])->withError("Merci de selectionner une fonction");
+        }
         
         $fmerid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'mer')->get()->first()->id;
         $fquaiid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'quai')->get()->first()->id;

@@ -8,39 +8,30 @@
             @auth
             @can('users.index')
             <div class="dropdown nav-item" >
-                <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    Personnel
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    @can('mindefconnect.index')<a class="dropdown-item" href="{{ route('mindefconnect.index') }}">Demandes Mindef Connect</a>@endcan
-                    <a class="dropdown-item" href="{{ route('users.index') }}">Utilisateurs</a>
-                    @can('roles.index')<a class="dropdown-item" href="{{ route('roles.index')}}">Roles</a>@endcan
-                    @can('permissions.index')<a class="dropdown-item" href="{{ route('permissions.index')}}">Permissions</a>@endcan
-                    @can('liens.index')<a class="dropdown-item" href="{{ route('liens.index')}}">Liens</a>@endcan
-                </div>
+              <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              Administration
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                @can('mindefconnect.index')<a class="dropdown-item" href="{{ route('mindefconnect.index') }}">Demandes Mindef Connect</a>@endcan
+                <a class="dropdown-item" href="{{ route('users.index') }}">Fiches des marins</a>
+                @can('roles.index')<a class="dropdown-item" href="{{ route('roles.index')}}">Roles</a>@endcan
+                @can('permissions.index')<a class="dropdown-item" href="{{ route('permissions.index')}}">Droits d'acces</a>@endcan
+                @can('liens.index')<a class="dropdown-item" href="{{ route('liens.index')}}">Liens</a>@endcan
+              </div>
             </div>
             @endcan
             @can('fonctions.index')
             <div class="dropdown" >
               <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Fonctions
+              Parcours
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <a class="dropdown-item" href="{{ route('fonctions.index')}}">Fonctions</a>
                 <a class="dropdown-item" href="{{ route('compagnonages.index')}}">Compagnonnages</a>
                 <a class="dropdown-item" href="{{ route('taches.index')}}">Tâches</a>
                 <a class="dropdown-item" href="{{ route('objectifs.index')}}">Objectifs</a>
+                @can('stages.index')<a class="dropdown-item" href="{{ route('stages.index')}}">Stages</a>@endcan
                 <!--a class="dropdown-item" href="{{ route('sous-objectifs.index')}}">Sous-Objectifs</a-->
-              </div>
-            </div>
-            @endcan
-            @can('stages.index')
-            <div class="dropdown" >
-              <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Stages
-              </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="{{ route('stages.index')}}">Stages</a>
               </div>
             </div>
             @endcan

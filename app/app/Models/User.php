@@ -96,7 +96,7 @@ class User extends Authenticatable
     
     public function displayString()
     {
-        $gradecoll= $grade = $this->grade()->get();
+        $gradecoll= $this->grade()->get();
         if ($gradecoll->count() == 1)
             $grade = $gradecoll->first()->grade_libcourt;
         else
@@ -234,7 +234,7 @@ class User extends Authenticatable
             ->withTimeStamps()
             ->withPivot('date_lache','valideur_lache','commentaire_lache',
                     'date_double','valideur_double','commentaire_double',
-                    'validation');
+                    'validation', 'taux_de_transformation');
     }
     
     public function stages()
@@ -371,6 +371,11 @@ class User extends Authenticatable
     
     public function attachFonction(Fonction $fonction)
     {
+        $fonctions = $this->fonctions()->get();
+        if ( $fonctions->contains($fonction) ){
+            return;
+        }
+
         $this->fonctions()->attach($fonction);
         foreach($fonction->stages()->get() as $stage)
             $this->attachStage($stage);
@@ -406,30 +411,20 @@ class User extends Authenticatable
     
     public function fonctionAQuai()
     {
-        $fonction = $this->fonctions()->where('typefonction_id', 2);
-        if ($fonction->count() == 1){
-            return $fonction->get()->first();
-        }
-        return null;
+        $fonction = $this->fonctions()->where('typefonction_id', 2)->get()->first();
+        return $fonction;
     }
     
     public function fonctionAMer()
     {
-        $fonction = $this->fonctions()->where('typefonction_id', 1);
-        if ($fonction->count() == 1){
-            return $fonction->get()->first();
-        }
-        return null;
+        $fonction = $this->fonctions()->where('typefonction_id', 1)->get()->first();
+        return $fonction;
     }
     
     public function fonctionsMetier()
     {
         $fonctions = $this->fonctions()->where('typefonction_id', 3);
         return $fonctions;
-        if ($fonctions->count() > 0){
-            return $fonctions;
-        }
-        return null;
     }
     
     public function coll_sous_objectifs(Fonction $fonction=null)
@@ -494,23 +489,33 @@ class User extends Authenticatable
         return $nb_validation_par_date;
     }
     
-    public function pourcentage_valides_pour_fonction(Fonction $fonction)
+    public function pourcentage_valides_pour_fonction(Fonction $fonction, bool $fullcalc=false)
     {
-        // return 100.0 * $this->sous_objectifs()->get()->only($fonction->coll_sous_objectifs())->count() / $fonction->coll_sous_objectifs()->count() ;
-        
-        // seconde version qui contourne le probleme de array_flip
-        $tempcoll = $this->sous_objectifs()->get();
-        
-        $workcoll = collect([]);
-        foreach ($fonction->coll_sous_objectifs() as $sous_obj_a_garder)
-        {
-            $trouve = $tempcoll->find($sous_obj_a_garder);
-            if ($trouve != null)
-                $workcoll = $workcoll->concat(collect([$trouve]));
+        if (! $fullcalc){
+            $workitem = $this->fonctions()->find($fonction);
+            return $workitem->taux_de_transformation;
         }
-        if ($fonction->coll_sous_objectifs()->count()==0)
-            return 0;
-        return 100.0 * $workcoll->count() / $fonction->coll_sous_objectifs()->count();
+        else
+        {
+        
+            // return 100.0 * $this->sous_objectifs()->get()->only($fonction->coll_sous_objectifs())->count() / $fonction->coll_sous_objectifs()->count() ;
+            
+            // seconde version qui contourne le probleme de array_flip
+            $tempcoll = $this->sous_objectifs()->get();
+            
+            $fcoll= $fonction->coll_sous_objectifs();
+            
+            $workcoll = collect([]);
+            foreach ($fcoll as $sous_obj_a_garder)
+            {
+                $trouve = $tempcoll->find($sous_obj_a_garder);
+                if ($trouve != null)
+                    $workcoll = $workcoll->concat(collect([$trouve]));
+            }
+            if ($fcoll->count()==0)
+                return 0;
+            return 100.0 * $workcoll->count() / $fcoll->count();
+        }
     }
     
     public function taux_de_transformation()
@@ -542,7 +547,7 @@ class User extends Authenticatable
     public function getFonctionHtmlAttribute(Fonction $fonction)
     {
         
-        $taux = $this->pourcentage_valides_pour_fonction($fonction);
+        $taux = $fonction->pivot->taux_de_transformation;
         
         if ($taux == 100)
             $couleur="green";
@@ -564,6 +569,7 @@ class User extends Authenticatable
     
     public function getEnTransformationAttribute()
     {
-        return $this->fonctions()->count() > 0;
+        $fonctions = $this->fonctions()->get();
+        return $fonctions->count() > 0;
     }
 }

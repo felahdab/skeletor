@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Event;
 
 use SocialiteProviders\Keycloak\KeycloakExtendSocialite;
 
+use App\Events\UserTransformationUpdated;
+use App\Listeners\UpdateUserTransformationRatio;
+
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -20,9 +23,12 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-	\SocialiteProviders\Manager\SocialiteWasCalled::class => [
-	    'SocialiteProviders\Keycloak\KeycloakExtendSocialite@handle',
-	],
+        \SocialiteProviders\Manager\SocialiteWasCalled::class => [
+            'SocialiteProviders\Keycloak\KeycloakExtendSocialite@handle',
+        ],
+        UserTransformationUpdated::class => [
+            UpdateUserTransformationRatio::class,
+        ]
     ];
 
     /**

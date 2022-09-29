@@ -17,7 +17,7 @@ use Laravel\Socialite\Facades\Socialite;
 Route::impersonate();
 
 Route::get('/auth/redirect', function(){
-	return Socialite::driver('keycloak')->stateless()->redirect();
+    return Socialite::driver('keycloak')->stateless()->redirect();
 })->name('keycloak.login.redirect');
 
 
@@ -109,7 +109,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::post('/{user}/retirerfonction', 'UsersController@retirerfonction')->name('users.retirerfonction');
             Route::get('/{user}/livret', 'TransformationController@livret')->name('transformation.livret');
             Route::get('/{user}/livretpdf', 'TransformationController@livretpdf')->name('transformation.livretpdf');
-            Route::post('/{user}/livret', 'TransformationController@updatelivret')->name('transformation.livret');
+            Route::post('/{user}/livret', 'TransformationController@updatelivret')->name('transformation.updatelivret');
             Route::post('/{user}/validerlacheoudouble/{fonction}', 'TransformationController@validerlacheoudouble')->name('transformation.validerlacheoudouble');
             Route::get('/{user}/progression', 'TransformationController@progression')->name('transformation.progression');
             Route::get('/{user}/fichebilan', 'TransformationController@fichebilan')->name('transformation.fichebilan');
@@ -129,9 +129,9 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::post('/creationlien', 'LiensController@store')->name('liens.store');
 
 
-        if (env('APP_ENV') == "local")
-        {
+        // if (env('APP_ENV') == "local")
+        // {
             Route::get('/test', 'TestController@test')->name('test.test');
-        }
+        // }
     });
 });

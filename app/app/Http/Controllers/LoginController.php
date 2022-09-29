@@ -11,6 +11,8 @@ use App\Models\User;
 use App\Models\MindefConnectUser;
 use Spatie\Permission\Models\Role;
 
+use Illuminate\Support\Facades\Http;
+
 class LoginController extends Controller
 {
     /**
@@ -58,19 +60,19 @@ class LoginController extends Controller
                 'display_name'=> $MCuser->user['display_name'],
             ]);
             
+        $response = Http::withoutVerifying()
+            ->withHeaders(["X-Auth-AccessKey" => env("TULEAP_TOKEN")])
+            ->post(env("TULEAP_URL") . "api/artifacts", [
+                "tracker" =>  ["id" => env('TULEAP_TRACKER_MINDEFCONNECT') ],
+                "values_by_field" => [
+                    "affectation"=>  ["value"  => $MCuser->user['main_department_number'] ],
+                    "user"=> ["value" => $MCuser->user['display_name']] ,
+                    "instance" => ["value" => env("APP_PREFIX") ]
+                ]
+            ]);
+            
+            
         return view('auth.comebacklater');
-    
-
-        $defaultRole = Role::find(2);
-        $user->roles()->detach($defaultRole);
-        $user->roles()->attach($defaultRole);
-
-        Auth::login($user);
-
-        $userRole = $user->roles[0];
-        $request->session()->put('current_role', $userRole->id);
-        $request->session()->save();
-        return $this->authenticated($request, $user);
     }
     
     public function locallogin(LoginRequest $request)

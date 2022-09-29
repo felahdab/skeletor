@@ -220,6 +220,9 @@ class FonctionController extends Controller
         $commentaire = $request->input('commentaire');
         $date_validation = $request->input('date_validation');
         
+        if ($date_validation == null)
+            $date_validation = date('Y-m-d');
+        
         if ($request->has('marinsfonc'))
         {
             $marinsid = $request['marinsfonc'];
@@ -233,12 +236,11 @@ class FonctionController extends Controller
                     foreach ($sous_objectifs_a_valider as $key => $value){
                         $sousobjectif = SousObjectif::find($key);
                         $marin->sous_objectifs()->detach($sousobjectif);
-                        $marin->sous_objectifs()->attach($sousobjectif);
-                        $workitem = $marin->sous_objectifs()->find($sousobjectif)->pivot;
-                        $workitem->valideur=$valideur;
-                        $workitem->commentaire=$commentaire;
-                        $workitem->date_validation = $date_validation;
-                        $workitem->save();
+                        $marin->sous_objectifs()->attach($sousobjectif, [
+                            'valideur'        => $valideur,
+                            'commentaire'     => $commentaire,
+                            'date_validation' => $date_validation,
+                        ]);
                     }
                 }
                 if ($request->has('tacheid'))
@@ -249,12 +251,11 @@ class FonctionController extends Controller
                         foreach ($tache->coll_sous_objectifs() as $sousobjectif)
                         {
                             $marin->sous_objectifs()->detach($sousobjectif);
-                            $marin->sous_objectifs()->attach($sousobjectif);
-                            $workitem = $marin->sous_objectifs()->find($sousobjectif)->pivot;
-                            $workitem->valideur=$valideur;
-                            $workitem->commentaire=$commentaire;
-                            $workitem->date_validation = $date_validation;
-                            $workitem->save();
+                            $marin->sous_objectifs()->attach($sousobjectif, [
+                                'valideur'        =>$valideur,
+                                'commentaire'     =>$commentaire,
+                                'date_validation' => $date_validation,
+                            ]);
                         }
                     }
                 }

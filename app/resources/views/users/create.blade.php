@@ -7,6 +7,7 @@
 
         <div class="container mt-4">
             <form method="POST" action="">
+                <input type='hidden' id='buttonid' name='buttonid' value=''>
                 @csrf
                 <div class="row">
                     <div class="col">
@@ -97,7 +98,7 @@
                     <div class="col">
                         <div class="mb-3">
                             <label for="date_embarq" class="form-label">Date d'embarquement *</label>
-                            <input value="" 
+                            <input value="{{ date('Y-m-d') }}" 
                                 type="date" 
                                 class="form-control" 
                                 name="date_embarq" 
@@ -177,8 +178,20 @@
                         </tr>
                     @endforeach
                 </table>
-
-                <button type="submit" class="btn btn-primary">Ajouter</button>
+                <div class="btn-group" role="groupe">
+                    <button type="submit" 
+                            class="btn btn-primary" 
+                            onclick='parentForm = jQuery(this).closest("form");
+                                    parentForm[0].querySelector("#buttonid").value="users.index";
+                                    parentForm.submit();
+                                    return false;'>Ajouter</button>
+                    <button type="submit" 
+                            class="btn btn-primary" 
+                            onclick='parentForm = jQuery(this).closest("form");
+                                    parentForm[0].querySelector("#buttonid").value="users.choisirfonction";
+                                    parentForm.submit();
+                                    return false;'>Ajouter et attribuer des fonctions</button>
+                </div>
                 <a href="{{ route('users.index') }}" class="btn btn-default">Annuler</a>
             </form>
         </div>
