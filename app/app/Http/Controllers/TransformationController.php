@@ -179,12 +179,11 @@ class TransformationController extends Controller
                 $sous_objectifs_a_valider = $request['ssobjid'];
                 foreach ($sous_objectifs_a_valider as $key => $value){
                     $sousobjectif = SousObjectif::find($key);
-                    $user->sous_objectifs()->attach($sousobjectif);
-                    $workitem = $user->sous_objectifs()->find($sousobjectif)->pivot;
-                    $workitem->valideur=$valideur;
-                    $workitem->commentaire=$commentaire;
-                    $workitem->date_validation = $date_validation;
-                    $workitem->save();
+                    $user->sous_objectifs()->attach($sousobjectif, [
+                        'valideur'=> $valideur,
+                        'commentaire'=> $commentaire,
+                        'date_validation' => $date_validation,
+                    ]);
                 }
             }
             if ($request->has('tacheid'))
@@ -196,12 +195,11 @@ class TransformationController extends Controller
                     {
                         foreach($objectif->sous_objectifs()->get() as $sous_objectif)
                         {
-                            $user->sous_objectifs()->attach($sous_objectif);
-                            $workitem = $user->sous_objectifs()->find($sous_objectif)->pivot;
-                            $workitem->valideur=$valideur;
-                            $workitem->commentaire=$commentaire;
-                            $workitem->date_validation = $date_validation;
-                            $workitem->save();
+                            $user->sous_objectifs()->attach($sous_objectif, [
+                                'valideur' => $valideur,
+                                'commentaire' => $commentaire,
+                                'date_validation' => $date_validation,
+                            ]);
                         }
                     }
                 }
@@ -211,11 +209,10 @@ class TransformationController extends Controller
                 $stages_a_valider = $request['stageid'];
                 foreach ($stages_a_valider as $key => $value){
                     $stage = Stage::find($key);
-                    $user->attachStage($stage);
-                    $workitem = $user->stages()->find($stage)->pivot;
-                    $workitem->commentaire=$commentaire;
-                    $workitem->date_validation = $date_validation;
-                    $workitem->save();
+                    $user->attachStage($stage, [
+                        'commentaire' => $commentaire,
+                        'date_validation' => $date_validation,
+                    ]);
                 }
             }
         }
