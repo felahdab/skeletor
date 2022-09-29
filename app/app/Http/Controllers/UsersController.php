@@ -75,8 +75,12 @@ class UsersController extends Controller
             $user->roles()->attach($roletransfo);
         }
 
-        return redirect()->route('users.index')
-            ->withSuccess(__('Utilisateur a été créé avec succès. Vous devez changer son mot de passe.'));
+        if ($request["buttonid"] == "users.index")
+            return redirect()->route("users.index")
+                ->withSuccess(__('L utilisateur a été créé avec succès.'));
+        elseif ($request["buttonid"] == "users.choisirfonction")
+            return redirect()->route("users.choisirfonction", $user->id)
+                ->withSuccess(__('L utilisateur a été créé avec succès.'));
     }
 
     /**
