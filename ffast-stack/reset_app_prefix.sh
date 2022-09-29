@@ -5,10 +5,7 @@ cd $BASEDIRECTORY
 
 PARENTDIR=$(dirname $BASEDIRECTORY)
 STACKNAME=$(basename $PARENTDIR)
-# echo $BASEDIRECTORY
-# echo $STACKNAME
 
-sed -i 's/APP_PREFIX=.*/APP_PREFIX=""/g' .env
 
-cd public
-find . -mindepth 1 -maxdepth 1 ! -path ./assets -type d -exec mv {} assets \;
+echo "" > .env
+sed -i '/pma/c\    location ^~ /STACKNAME/pma/ {' nginx.conf

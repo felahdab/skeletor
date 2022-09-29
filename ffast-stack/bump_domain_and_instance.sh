@@ -4,12 +4,13 @@ BASEDIRECTORY=$(realpath $SCRIPTDIRECTORY)
 cd $BASEDIRECTORY
 
 PARENTDIR=$(dirname $BASEDIRECTORY)
-STACKNAME=$(basename $PARENTDIR)
 echo $BASEDIRECTORY
 echo $STACKNAME
 
-DOMAIN=$1
+source $PARENTDIR/.env
 
-echo "INSTANCEURL=https://$DOMAIN/$STACKNAME" > .env
-SED_CMD='s/STACKNAME/'${STACKNAME}'/g'
+./reset_app_prefix.sh
+
+echo "INSTANCEURL=https://$DOMAIN/$PREFIX" > .env
+SED_CMD='s/STACKNAME/'${PREFIX}'/g'
 sed -i $SED_CMD nginx.conf
