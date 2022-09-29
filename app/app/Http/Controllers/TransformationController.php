@@ -172,6 +172,9 @@ class TransformationController extends Controller
         $commentaire = $request->input('commentaire');
         $date_validation = $request->input('date_validation');
         
+        if ($date_validation == null)
+            $date_validation = date('Y-m-d');
+        
         if ($request->input("buttonid") == "validation")
         {
             if ($request->has('ssobjid'))
