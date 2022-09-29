@@ -13,7 +13,7 @@
                 <th scope="col" width="5%">Image</th>
                 <th scope="col">Libellé</th>
                 <th scope="col">URL</th>
-                <th scope="col" width="1%" colspan="3"></th>    
+                <th scope="col" width="1%"></th>    
             </tr>
             </thead>
             <tbody>
@@ -23,16 +23,7 @@
                         <td><img src="{{ $lien->lien_image}}" alt="logo" style="height: 50px;"></td>
                         <td>{{ $lien->lien_lib }}</td>
                         <td>{{ $lien->lien_url }}</td>
-                        <td><a href="{{ route('liens.store', $lien->id) }}" class="btn btn-info btn-sm">Modifier</a></td>
-                        <td>
-
-                        </td>
-                        <td>
-                            {!! Form::open(['method' => 'POST','route' => ['liens.create', $lien->id] ]) !!}
-                            <input type='hidden' id='lien_id' name='lien_id' value='{{ $lien->id }}'>
-                            <button type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
-                            {!! Form::close() !!}
-                        </td>
+                        <td><a href="{{ route('liens.edit', $lien->id) }}" class="btn btn-info btn-sm">Modifier</a></td>
                     </tr>
                 @endforeach
             </tbody>

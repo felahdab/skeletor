@@ -23,5 +23,9 @@ class LiensController extends Controller
         return view('liens.store');
         //
     }
+    public function edit()
+    {
+        return view('liens.edit');
+    }
 
 }
