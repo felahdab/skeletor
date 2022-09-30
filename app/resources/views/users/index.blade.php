@@ -9,8 +9,9 @@
             Gestion des utilisateurs
             <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un utilisateur</a>
         </div>
-
-        @livewire('users-table')
+        <div class="mt-3">
+            <livewire:users-table mode="gestion">
+        </div>
 
     </div>
 @endsection
