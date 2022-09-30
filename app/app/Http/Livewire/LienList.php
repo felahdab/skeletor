@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-use App\Models\Liens;
+use App\Models\Lien;
 
 class LienList extends Component
 {
@@ -22,6 +22,6 @@ class LienList extends Component
     public function render()
     {
         return view('livewire.liens-list', 
-            ['liens' => Liens::where('lien_lib', 'LIKE', '%'. $this->filter .'%')->orderBy('lien_lib')->paginate(10)]);
+            ['liens' => Lien::where('lien_lib', 'LIKE', '%'. $this->filter .'%')->orderBy('lien_lib')->paginate(10)]);
     }
 }

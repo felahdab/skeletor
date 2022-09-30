@@ -124,10 +124,10 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::get('statistiques/pourem', 'StatistiqueController@pourem')->name('statistiques.pourem');
         Route::get('statistiques/pour2ps', 'StatistiqueController@pour2ps')->name('statistiques.pour2ps');
 
-        Route::resource('liens',          LiensController::class);
-        Route::get('/liens', 'LiensController@index')->name('liens.index');
-        Route::get('/creationlien', 'LiensController@create')->name('liens.create');
-        Route::post('/creationlien', 'LiensController@store')->name('liens.store');
+        Route::resource('liens',          LienController::class);
+        Route::get('/liens', 'LienController@index')->name('liens.index');
+        Route::get('/creationlien', 'LienController@create')->name('liens.create');
+        Route::post('/creationlien', 'LienController@store')->name('liens.store');
 
 
         // if (env('APP_ENV') == "local")
