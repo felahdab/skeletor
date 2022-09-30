@@ -719,6 +719,7 @@ class ComposerStaticInite02b18f2e6d570fbc3e1e1247d251339
         'App\\Http\\Livewire\\StageList' => __DIR__ . '/../..' . '/app/Http/Livewire/StageList.php',
         'App\\Http\\Livewire\\TacheList' => __DIR__ . '/../..' . '/app/Http/Livewire/TacheList.php',
         'App\\Http\\Livewire\\UserList' => __DIR__ . '/../..' . '/app/Http/Livewire/UserList.php',
+        'App\\Http\\Livewire\\UsersTable' => __DIR__ . '/../..' . '/app/Http/Livewire/UsersTable.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
         'App\\Http\\Middleware\\PermissionMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/PermissionMiddleware.php',

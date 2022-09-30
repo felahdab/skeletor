@@ -10,7 +10,7 @@
             <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un utilisateur</a>
         </div>
 
-        @livewire('user-list')
+        @livewire('users-table')
 
     </div>
 @endsection

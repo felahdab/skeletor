@@ -54,6 +54,7 @@ return array(
     'App\\Http\\Livewire\\StageList' => $baseDir . '/app/Http/Livewire/StageList.php',
     'App\\Http\\Livewire\\TacheList' => $baseDir . '/app/Http/Livewire/TacheList.php',
     'App\\Http\\Livewire\\UserList' => $baseDir . '/app/Http/Livewire/UserList.php',
+    'App\\Http\\Livewire\\UsersTable' => $baseDir . '/app/Http/Livewire/UsersTable.php',
     'App\\Http\\Middleware\\Authenticate' => $baseDir . '/app/Http/Middleware/Authenticate.php',
     'App\\Http\\Middleware\\EncryptCookies' => $baseDir . '/app/Http/Middleware/EncryptCookies.php',
     'App\\Http\\Middleware\\PermissionMiddleware' => $baseDir . '/app/Http/Middleware/PermissionMiddleware.php',
