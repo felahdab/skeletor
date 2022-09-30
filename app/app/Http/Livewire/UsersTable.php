@@ -25,7 +25,7 @@ class UsersTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setFilterLayout('slide-down');
+        $this->setFilterLayoutSlideDown();
     }
 
     public function userActions()
@@ -80,8 +80,8 @@ class UsersTable extends DataTableComponent
         return [
              TextFilter::make('Grade')
                 ->config([
-                    'placeholder' => 'Grade...',
-                    'maxlength'   => 4
+                    'placeholder' => 'SM...',
+                    'maxlength'   => 3
                     ])
                 ->filter(function(Builder $builder, string $value) {
                         $grade = Grade::where('grade_libcourt', 'like', '%' . $value . '%')->get()->first();
@@ -90,8 +90,8 @@ class UsersTable extends DataTableComponent
                 }),
             TextFilter::make('Brevet')
                 ->config([
-                    'placeholder' => 'Brevet...',
-                    'maxlength'   => 4
+                    'placeholder' => 'BAT...',
+                    'maxlength'   => 3
                     ])
                 ->filter(function(Builder $builder, string $value) {
                         $diplome = Diplome::where('diplome_libcourt', 'like', '%' . $value . '%')->get()->first();
