@@ -9,22 +9,6 @@
         <div class='card-header'>Consultation {{$stage->stage_libcourt}}
         </div>
         
-        <div style='padding-left: 15px;'>
-            <div class='flex' style='justify-content: start;'>
-                <div class='form-group row w-50 mt-3'>
-                    <label for='liststages' class='col-sm-5 col-form-label'> Stage </label>
-                    <select name='liststageconsult' id='liststageconsult' class='custom-select  w-50' onchange=' modifdeuxparam("stage","liststageconsult","marin");'>
-                        <option value ='0' >S&eacute;lectionner le stage</option>
-                        @foreach($stages as $stageexistant)
-                        <option value ='{{$stageexistant->id}}' @selected($stage != null and $stageexistant->id == $stage->id)>{{$stageexistant->stage_libcourt}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class='form-group row w-50 mt-3' >
-                </div>
-            </div>
-        </div>
-        
         @if ($stage != null)
         <div class='card border-primary mb-3'>
             <div class='card-header text-primary'>Liste des marins en attente du stage {{$stage->stage_libcourt}}</div>
