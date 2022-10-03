@@ -2,8 +2,10 @@
 
 @section('content')
     <div class="bg-light p-4 rounded">
-        <h2>Stages - Visualisation des stages et des marins concernés</h2>
+        <h2>Stage {{$stage->stage_libcourt}} - Situation des marins </h2>
     </div>
+    
+    @livewire('users-table',  ['mode' => "stages",  'stage' => $stage])
     
     <div id='divconsultstage' class='card bg-light ml-3 w-100'>
         <div class='card-header'>Consultation {{$stage->stage_libcourt}}

@@ -34,7 +34,7 @@
                             </td>
                             @endcan
                         @elseif ($mode=="transformation")
-                            <td><a href="{{ route('stages.consulter', ['stage' => $stage->id] ) }}" class="btn btn-info btn-sm">Consulter</a></td>
+                            <td><a href="{{ route('stages.show', $stage->id ) }}" class="btn btn-info btn-sm">Consulter</a></td>
                             <td><a href="{{ route('stages.choixmarins', ['stage' => $stage->id] ) }}" class="btn btn-primary btn-sm">Validation ou annulation collective</a></td>
                             <td></td>
                         @elseif ($mode=='selection')

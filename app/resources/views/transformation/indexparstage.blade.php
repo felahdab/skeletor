@@ -7,7 +7,7 @@
             Gérer la transformation par les stages
         </div>
 
-        @livewire('stages-table', ['mode' => "transformation"])
+        <livewire:stages-table mode="transformation">
 
     </div>
 @endsection

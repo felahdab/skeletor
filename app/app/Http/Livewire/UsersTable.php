@@ -10,6 +10,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
+use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\TextFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
@@ -21,6 +22,7 @@ class UsersTable extends DataTableComponent
     protected $model = User::class;
     
     public $mode='gestion';
+    public $stage = null;
 
     public function configure(): void
     {
@@ -34,11 +36,13 @@ class UsersTable extends DataTableComponent
             return view('tables.userstable.gestion');
         elseif ($this->mode == "transformation")
             return view('tables.userstable.transformation');
+        elseif ($this->mode == "stages")
+            return view('tables.userstable.stages');
     }
 
     public function columns(): array
     {
-        return [
+        $basecolumns = [
             Column::make('ID', 'id')
                 ->sortable()
                 ->searchable(),
@@ -63,16 +67,46 @@ class UsersTable extends DataTableComponent
             Column::make('Service', 'secteur.service.service_libcourt')
                 ->searchable(),
             Column::make('Groupement', 'secteur.service.groupement.groupement_libcourt')
-                ->searchable(),
-            Column::make('Roles')
-                ->label(
-                    fn($row, Column $column) => view('tables.userstable.roles')->withRow($row)
-                    ),
-            Column::make('Actions')
-                ->label(
-                    fn($row, Column $column) => $this->userActions()->withRow($row)
-                    ),
-        ];
+                ->searchable() ];
+                
+        if ($this->mode == "gestion")
+        {
+            return array_merge($basecolumns ,[
+                    Column::make('Roles')
+                        ->label(
+                            fn($row, Column $column) => view('tables.userstable.roles')->withRow($row)
+                            ),
+                    Column::make('Actions')
+                        ->label(
+                            fn($row, Column $column) => $this->userActions()->withRow($row)
+                            ),
+                    ]);
+        }
+        elseif ($this->mode == "transformation")
+        {
+            return array_merge($basecolumns , [
+                    Column::make('Actions')
+                        ->label(
+                            fn($row, Column $column) => $this->userActions()->withRow($row)
+                            ),
+                    ]);
+        }
+        elseif ($this->mode == "stages")
+        {
+            return array_merge($basecolumns , [
+                    BooleanColumn::make("Validé", "id")
+                        ->setCallback(function(string $value, $row){
+                            return $row->aValideLeStage($this->stage);
+                        }),
+                    Column::make('Date de validation')
+                        ->label(
+                            fn($row, Column $column) => ""),
+                    Column::make('Actions')
+                        ->label(
+                            fn($row, Column $column) => $this->userActions()->withRow($row)
+                            ),
+                    ]);
+        }
     }
     
     public function filters(): array
