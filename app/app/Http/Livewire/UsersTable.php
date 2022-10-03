@@ -19,7 +19,17 @@ use Illuminate\Database\Eloquent\Builder;
 
 class UsersTable extends DataTableComponent
 {
-    protected $model = User::class;
+    // protected $model = User::class;
+    
+    public function builder(): Builder
+    {
+        if ($this->mode == "stages")
+        {
+            $userlist = $this->stage->users()->get()->pluck('id', 'id');
+            return User::query()->whereIn('users.id', $userlist);
+        }
+        return User::query();
+    }
     
     public $mode='gestion';
     public $stage = null;
@@ -37,15 +47,23 @@ class UsersTable extends DataTableComponent
         elseif ($this->mode == "transformation")
             return view('tables.userstable.transformation');
         elseif ($this->mode == "stages")
+        {
+            // @livewire('users-table',  ['mode' => "stages",  'stage' => $stage])
             return view('tables.userstable.stages');
+        }
     }
 
     public function columns(): array
     {
         $basecolumns = [
+            Column::make('Grade', 'grade.grade_libcourt')
+                ->searchable(),
+            Column::make('Brevet', 'diplome.diplome_libcourt')
+                ->searchable(),
             Column::make('ID', 'id')
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->deSelected(),
             Column::make('Nom', 'name')
                 ->sortable()
                 ->searchable(),
@@ -56,10 +74,6 @@ class UsersTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->deSelected(),
-            Column::make('Grade', 'grade.grade_libcourt')
-                ->searchable(),
-            Column::make('Brevet', 'diplome.diplome_libcourt')
-                ->searchable(),
             Column::make('Specialité', 'specialite.specialite_libcourt')
                 ->searchable(),
             Column::make('Secteur', 'secteur.secteur_libcourt')
@@ -99,8 +113,9 @@ class UsersTable extends DataTableComponent
                             return $row->aValideLeStage($this->stage);
                         }),
                     Column::make('Date de validation')
+                        ->searchable()
                         ->label(
-                            fn($row, Column $column) => ""),
+                            fn($row, Column $column) => $row->dateValidationDuStage($this->stage)),
                     Column::make('Actions')
                         ->label(
                             fn($row, Column $column) => $this->userActions()->withRow($row)

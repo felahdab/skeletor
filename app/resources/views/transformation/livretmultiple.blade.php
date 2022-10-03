@@ -6,32 +6,39 @@
         <div class="lead">
            Validation collective de sous objectifs ou de taches pour la fonction {{$fonction->fonction_libcourt}}
         </div>
+        
+        <div>
+        Selectionnez les sous objectifs ou les taches pour lesquelles vous souhaitez enregistrer
+        une validation, puis cliquer sur "Enregistrer les validation". Vous pourrez ensuite
+        selectionner les marins pour lesquels ces elements du parcours de transformation sont
+        validés.
+        </div>
         {!! Form::open(['method' => 'POST','id'=> 'formlivretfonc' , 'route' => ['fonctions.validermarins', $fonction->id]]) !!}
         <div id='divvalid' class='popupvalidcontrat' style='display:none;'>
             <div class='titrenavbarvert'>
                 <h5>Validation</h5>
             </div>
-            <div class='form-group row pl-3 mt-2'>
+            <div class='form-group row mt-2'>
                 <label for='datvalid' class='col-sm-5 col-form-label '>Date validation</label>
-                <div class='col-sm-5'>
+                <div class='col'>
                     <input type='date' class='form-control' name='date_validation' id='date_validation' value='{{date("Y-m-d")}}' required>
                 </div>
             </div>
-            <div class='form-group row  pl-3'>
+            <div class='form-group row'>
                 <label for='valideur' class='col-sm-5 col-form-label '>Valideur</label>
-                <div class='col-sm-5'>
+                <div class='col'>
                     <input type='text' class='form-control' name='valideur' id='valideur' placeholder=' Valideur' value='{{auth()->user()->displayString()}}'>
                 </div>
             </div>
-            <div class='form-group row  pl-3'>
+            <div class='form-group row'>
                 <label for='comment' class='col-sm-5 col-form-label '>Commentaire</label>
                 <div class='col-sm-5'>
                     <textarea cols='40' rows='4' name='commentaire' id='commentaire' placeholder='Commentaire'></textarea>
                 </div>
             </div>
-            <div class='form-group row  pl-3'>
+            <div class='form-group row'>
                 <label for='marinsfonc' class='col-sm-5 col-form-label '>S&eacute;lectionnez les marins à valider</label>
-                <div class='col-sm-5'>
+                <div class='col w-100'>
                     <select multiple name='marinsfonc[]' id='marinsfonc[]'>
                     @foreach($usersfonction as $user)
                         <option value ='{{$user->id}}'>{{$user->displayString()}}</option>
