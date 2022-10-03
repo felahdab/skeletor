@@ -96,6 +96,13 @@ class UsersController extends Controller
             'user' => $user
         ]);
     }
+    
+    public function stages(User $user) 
+    {
+        return view('users.stages', [
+            'marin' => $user
+        ]);
+    }
 
     /**
      * Edit user data
