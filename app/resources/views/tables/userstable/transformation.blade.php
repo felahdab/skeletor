@@ -5,5 +5,5 @@
 <a href="{{ route('transformation.progression', $row->id) }}" class="btn btn-primary btn-sm">Progression</a>
 <a href="{{ route('transformation.fichebilan', $row->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
 @can('stages.consulter')
-    <a href="{{ route('stages.consulter', [ 'marin' => $row->id]) }}" class="btn btn-danger btn-sm">Stages</a>
+    <a href="{{ route('users.stages', $row->id) }}" class="btn btn-danger btn-sm">Stages</a>
 @endcan

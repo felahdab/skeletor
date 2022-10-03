@@ -50,16 +50,9 @@ class TransformationController extends Controller
     
     public function indexparstage(Request $request) 
     {
-        if ($request->has('filter') )
-        {
-            $filter = $request->input('filter');
-            $stages = Stage::where('stage_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('stage_libcourt')->paginate(10);
-        } else {
-            $filter="";
-            $stages = Stage::orderBy('stage_libcourt')->paginate(10);
-        }
-        return view('transformation.indexparstage', ['stages' => $stages,
-                                                     'filter' => $filter]);
+        
+        $stages = Stage::orderBy('stage_libcourt')->paginate(10);
+        return view('transformation.indexparstage', ['stages' => $stages]);
     }
 
     /**
