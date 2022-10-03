@@ -392,10 +392,10 @@ class User extends Authenticatable
     {
         if ($fonction != null)
         {
-            return $fonction->coll_sous_objectifs()->count();
+            return $fonction->coll_sous_objectifs()->unique()->count();
         }
         else{
-            return $this->coll_sous_objectifs()->count();
+            return $this->coll_sous_objectifs()->unique()->count();
         }
     }
     
@@ -522,7 +522,7 @@ class User extends Authenticatable
     {
         if ($this->coll_sous_objectifs()->count()==0)
             return 0;
-        $taux = 100.0* $this->sous_objectifs()->get()->count() / $this->coll_sous_objectifs()->count();
+        $taux = 100.0* $this->sous_objectifs()->get()->count() / $this->coll_sous_objectifs()->unique()->count();
         return $taux;
     }
     

@@ -94,12 +94,12 @@ class RegisterInstanceInNPM extends Command
                         "forward_port"=>80];
         array_push($updatedlocations, $newlocation);
         
-        $newlocation = ["path"=>"/assets" . $subpath,
-                        "advanced_config"=>"",
-                        "forward_scheme"=>"http",
-                        "forward_host"=>$containername,
-                        "forward_port"=>80];
-        array_push($updatedlocations, $newlocation);
+        // $newlocation = ["path"=>"/assets" . $subpath,
+                        // "advanced_config"=>"",
+                        // "forward_scheme"=>"http",
+                        // "forward_host"=>$containername,
+                        // "forward_port"=>80];
+        // array_push($updatedlocations, $newlocation);
         
         // $this->info(json_encode($updatedlocations));
         
