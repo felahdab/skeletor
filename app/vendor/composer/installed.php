@@ -986,6 +986,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'rappasoft/laravel-livewire-tables' => array(
+            'pretty_version' => 'v2.8.0',
+            'version' => '2.8.0.0',
+            'reference' => 'e6069cd0fac4b7f8a5d492388a735a3b7351bc80',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../rappasoft/laravel-livewire-tables',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'rhumsaa/uuid' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -1198,6 +1207,15 @@
             'install_path' => __DIR__ . '/../spatie/laravel-ignition',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'spatie/laravel-package-tools' => array(
+            'pretty_version' => '1.13.5',
+            'version' => '1.13.5.0',
+            'reference' => '163ee3bc6c0a987535d8a99722a7dbcc5471a140',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spatie/laravel-package-tools',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'spatie/laravel-permission' => array(
             'pretty_version' => '5.5.5',
