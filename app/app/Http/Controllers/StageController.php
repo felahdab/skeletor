@@ -163,7 +163,7 @@ class StageController extends Controller
                 $workitem->save();
             }
         }
-        return redirect()->route('stages.choixmarins', ['stage'=>$stage]);
+        return redirect()->route('stages.show', ['stage'=>$stage]);
     }
     
      public function annulermarins(Request $request, Stage $stage)
@@ -179,7 +179,7 @@ class StageController extends Controller
                 $workitem->save();
             }
         }
-        return redirect()->route('stages.choixmarins', ['stage'=>$stage]);
+        return redirect()->route('stages.show', ['stage'=>$stage]);
     }
 
     public function consulter(Request $request)
