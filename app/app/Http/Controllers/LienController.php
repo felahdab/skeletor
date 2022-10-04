@@ -7,7 +7,7 @@ use App\Http\Requests\UpdateLienRequest;
 use Illuminate\Http\Request;
 use App\Models\Lien;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Filesystem;
+
 
 class LienController extends Controller
 {
@@ -29,7 +29,7 @@ class LienController extends Controller
         $lien=new Lien;
         $lien->lien_lib=$request->input('lien_lib');
         $lien->lien_url=$request->input('lien_url');
-        $lien->lien_image=asset('public/images/' . $name->hashName());
+        $lien->lien_image=$name->hashName();
         $lien->unite_id=2;
         $lien->save();
         return redirect()->route('liens.index', $lien);
@@ -45,20 +45,29 @@ class LienController extends Controller
         $query=Lien::where('id', $lien->id);
         if ( $query->count() == 1)
         {
-            $oldimage=$lien->lien_image;
+            //$oldimage=asset('public/images/' . $lien->lien_image);
             $lien = $query->first();
             $lien->lien_lib=$request->input('lien_lib');
             $lien->lien_url=$request->input('lien_url');
             if ($name=$request->file('lien_image')){
                 // on supprime l'ancienne image
-                //$inutile=delete($oldimage);
-                //on stocke l'image
+                $success = unlink(storage_path('app/public/images/' . $lien->lien_image));
+                //on stocke la nouvelle image
                 $name->storePublicly("public/images");
-                $lien->lien_image=asset('public/images/' . $name->hashName());
+                $lien->lien_image=$name->hashName();
             }
             $lien->save();
         }
         return redirect()->route('liens.index', $lien);
     }
+    public function destroy(Lien $lien) 
+    {
+        // on supprime l'ancienne image
+        $success = unlink(storage_path('app/public/images/' . $lien->lien_image));
+        
+        $lien->delete();
 
+        return redirect()->route('liens.index')
+            ->withSuccess(__('Lien supprimé avec succès.'));
+    }
 }
