@@ -6,6 +6,8 @@ use App\Http\Requests\StoreLienRequest;
 use App\Http\Requests\UpdateLienRequest;
 use Illuminate\Http\Request;
 use App\Models\Lien;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Filesystem;
 
 class LienController extends Controller
 {
@@ -22,20 +24,15 @@ class LienController extends Controller
 
     public function store(StoreLienRequest $request)
     {
-        ddd($_FILES);
-        if (move_uploaded_file($_FILES['lien[lien_image]']['tmp_name'],"/assets/images/".$request->lien['lien_image'])){
-            $lien=new Lien;
-            $lien->lien_lib=$request->lien['lien_lib'];
-            $lien->lien_url=$request->lien['lien_url'];
-            $lien->lien_image="/assets/images/".$request->lien['lien_image'];
-            $lien->unite_id=2;
-            $lien->save();
-            return redirect()->route('liens.store', $lien);
-        }
-        else{
-            
-        }
-        
+        $name=$request->file('lien_image');
+        $result = $name->storePublicly("public/images");
+        $lien=new Lien;
+        $lien->lien_lib=$request->input('lien_lib');
+        $lien->lien_url=$request->input('lien_url');
+        $lien->lien_image=asset('public/images/' . $name->hashName());
+        $lien->unite_id=2;
+        $lien->save();
+        return redirect()->route('liens.index', $lien);
     }
 
     public function edit(Lien $lien)
@@ -45,17 +42,23 @@ class LienController extends Controller
     
     public function update(UpdateLienRequest $request, Lien $lien)
     {
-        $lien_id= intval($request->input('lien')['id']);
-        $query=Lien::where('id', $lien_id);
+        $query=Lien::where('id', $lien->id);
         if ( $query->count() == 1)
         {
+            $oldimage=$lien->lien_image;
             $lien = $query->first();
-            $lien->lien_lib=$request->lien['lien_lib'];
-            $lien->lien_url=$request->lien['lien_url'];
-            $lien->lien_image="/assets/images/".$request->lien['lien_image'];
+            $lien->lien_lib=$request->input('lien_lib');
+            $lien->lien_url=$request->input('lien_url');
+            if ($name=$request->file('lien_image')){
+                // on supprime l'ancienne image
+                //$inutile=delete($oldimage);
+                //on stocke l'image
+                $name->storePublicly("public/images");
+                $lien->lien_image=asset('public/images/' . $name->hashName());
+            }
             $lien->save();
         }
-        return redirect()->route('liens.edit', $lien);
+        return redirect()->route('liens.index', $lien);
     }
 
 }

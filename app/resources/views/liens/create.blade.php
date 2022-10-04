@@ -7,24 +7,24 @@
     <div id='divmodifobj' class='card bg-light ml-3 w-100' >
         <div class='card-header' >Création d'un lien </div>
         <div style='text-align:right;'>* champs obligatoires </div>
-        {!! Form::open(['method' => 'POST','route' => 'liens.store' ]) !!}
+        {!! Form::open(['method' => 'POST','route' => 'liens.store', 'enctype'=>'multipart/form-data' ]) !!}
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
                     <label for='lib_lien' class='col-sm-5 col-form-label'> Libell&eacute; *</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control'  name='lien[lien_lib]' id='tache[lien_lib]' placeholder='Libell&eacute;' value="" >
+                        <input type='text' class='form-control'  name='lien_lib' id='lien_lib' placeholder='Libell&eacute;' value="" >
                     </div>
                 </div>
                 <div class='form-group row' >
                     <label for='url_lien' class='col-sm-5 col-form-label'>URL *</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control' name='lien[lien_url]' id='lien[lien_url]' placeholder='URL' value="" >
+                        <input type='text' class='form-control' name='lien_url' id='lien_url' placeholder='URL' value="" >
                     </div>
                 </div>
                 <div class='form-group row' >
                     <label for='image_lien' class='col-sm-5 col-form-label'>Logo (100 Ko max) *</label>
                     <div class='col-sm-5'>
-                        <input type='file' class='form-control' name='lien[lien_image]' id='lien[lien_image]' accept='.jpg, .jpeg, .png'>
+                        <input type='file' class='form-control' name='lien_image' id='lien_image' accept='.jpg, .jpeg, .png'>
                     </div>
                 </div>
                 <div>
