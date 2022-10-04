@@ -146,5 +146,5 @@
         {!! Form::close() !!}
         @endif
     </div>
-    {!! link_to_route('transformation.index', 'Annuler', [], ['class' => 'btn btn-primary']) !!}
+    {!! link_to_route('transformation.indexparstage', 'Annuler', [], ['class' => 'btn btn-primary']) !!}
 @endsection

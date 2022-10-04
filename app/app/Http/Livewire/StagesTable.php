@@ -83,16 +83,6 @@ class StagesTable extends DataTableComponent
                         if ($typelic != null)
                             $builder->where('typelicence_id', $typelic->id);
                 }),
-            // TextFilter::make('Brevet')
-                // ->config([
-                    // 'placeholder' => 'BAT...',
-                    // 'maxlength'   => 3
-                    // ])
-                // ->filter(function(Builder $builder, string $value) {
-                        // $diplome = Diplome::where('diplome_libcourt', 'like', '%' . $value . '%')->get()->first();
-                        // if ($diplome != null)
-                            // $builder->where('diplome_id', $diplome->id);
-                // })
         ];
     }
     

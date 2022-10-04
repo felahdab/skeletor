@@ -36,11 +36,9 @@
                     let stageid=divvalid.querySelector("#stageid").value;
                     
                     formtosubmit = getElementById(formtosubmitid);
-                    let date_validation = divvalid.querySelector("#date_validation").value ;
-                    let commentaire = divvalid.querySelector("#commentaire").value ;
-                    
-                    console.log(formtosubmit.attributes[1]);
-                    console.log("ValidateStage( " + userid + "," + stageid + ",\"" +commentaire + "\",\"" +date_validation +"\");");
+                    date_validation = divvalid.querySelector("#date_validation").value ;
+                    commentaire = divvalid.querySelector("#commentaire").value.replaceAll("\n", "<br>") ;
+                    console.log(commentaire);
                     formtosubmit.attributes[1].value="ValidateStage( " + userid + "," + stageid + ",\"" +commentaire + "\",\"" +date_validation +"\");";
                     formtosubmit.click();'
                         >Valider</button>
