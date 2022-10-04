@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Stage;
+use App\Models\User;
 use App\Models\TypeLicence;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -20,6 +21,17 @@ class StagesTable extends DataTableComponent
     protected $model = Stage::class;
     
     public $mode='gestion';
+    public $user=null;
+
+    public function builder(): Builder
+    {
+        if ($this->mode == "uservalidation")
+        {
+            $stagelist = $this->user->stages()->get()->pluck('id', 'id');
+            return Stage::query()->whereIn('stages.id', $stagelist);
+        }
+        return Stage::query();
+    }
 
     public function configure(): void
     {
@@ -33,6 +45,8 @@ class StagesTable extends DataTableComponent
             return view('tables.stagestable.gestion');
         elseif ($this->mode == "transformation")
             return view('tables.stagestable.transformation');
+        elseif ($this->mode == "uservalidation")
+            return view('tables.stagestable.uservalidation', ['user' => $this->user]);
     }
 
     public function columns(): array
@@ -80,5 +94,21 @@ class StagesTable extends DataTableComponent
                             // $builder->where('diplome_id', $diplome->id);
                 // })
         ];
+    }
+    
+    public function UnvalidateStage(User $user, Stage $stage)
+    {
+        $workitem = $user->stages()->find($stage)->pivot;
+        $workitem->date_validation = null;
+        $workitem->commentaire = null;
+        $workitem->save();
+    }
+    
+    public function ValidateStage(User $user, Stage $stage, $commentaire, $date_validation)
+    {
+        $workitem = $user->stages()->find($stage)->pivot;
+        $workitem->date_validation = $date_validation;
+        $workitem->commentaire = $commentaire;
+        $workitem->save();
     }
 }
