@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Lien;
 
 class HomeController extends Controller
 {
     public function index() 
     {
-        return view('home.index');
         if(auth()->user())
         {
             $user=auth()->user();
@@ -19,7 +19,8 @@ class HomeController extends Controller
             elseif ($user->hasRole("em"))
                 return redirect()->route("statistiques.pourem");
         }
-                
-        return view('home.index');
+        $liens= Lien::orderBy('lien_lib')->get();
+        $user = auth()->user();
+        return view('home.index' , [ 'liens' => $liens , 'user' => $user]);
     }
 }
