@@ -16,6 +16,7 @@
                 <a class="dropdown-item" href="{{ route('users.index') }}">Fiches des marins</a>
                 @can('roles.index')<a class="dropdown-item" href="{{ route('roles.index')}}">Roles</a>@endcan
                 @can('permissions.index')<a class="dropdown-item" href="{{ route('permissions.index')}}">Droits d'acces</a>@endcan
+                @can('liens.index')<a class="dropdown-item" href="{{ route('liens.index')}}">Liens</a>@endcan
               </div>
             </div>
             @endcan
