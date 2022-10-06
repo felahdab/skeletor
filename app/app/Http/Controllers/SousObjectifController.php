@@ -19,18 +19,18 @@ class SousObjectifController extends Controller
     {
         // $sousobjectifs = SousObjectif::orderBy('ssobj_lib')->get();
         // return view('sousobjectifs.index', compact('sousobjectifs'));
-		
-		if ($request->has('filter') )
-		{
-			$filter = $request->input('filter');
-			$sousobjectifs = SousObjectif::where('ssobj_lib', 'LIKE', '%'.$filter.'%')->orderBy('ssobj_lib')->paginate(10);
-		} else {
-			$filter = "";
-			$sousobjectifs = SousObjectif::orderBy('ssobj_lib')->paginate(10);
-		}
+        
+        if ($request->has('filter') )
+        {
+            $filter = $request->input('filter');
+            $sousobjectifs = SousObjectif::where('ssobj_lib', 'LIKE', '%'.$filter.'%')->orderBy('ssobj_lib')->paginate(10);
+        } else {
+            $filter = "";
+            $sousobjectifs = SousObjectif::orderBy('ssobj_lib')->paginate(10);
+        }
         
         return view('sousobjectifs.index', ['sousobjectifs' => $sousobjectifs ,
-											'filter'        => $filter] );
+                                            'filter'        => $filter] );
     }
 
     /**
