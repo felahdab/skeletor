@@ -51,7 +51,12 @@ class LienController extends Controller
             $lien->lien_url=$request->input('lien_url');
             if ($name=$request->file('lien_image')){
                 // on supprime l'ancienne image
-                $success = unlink(storage_path('app/public/images/' . $lien->lien_image));
+                try {
+                    unlink(storage_path('app/public/images/' . $lien->lien_image));
+                    $success = true;
+                } catch (ErrorException $e) {
+                    $success = false;
+                }
                 //on stocke la nouvelle image
                 $name->storePublicly("public/images");
                 $lien->lien_image=$name->hashName();
