@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="mt-5 text-center"><h4>Bonne Transformation !<h4></div>
-        <div class="text-center"><img src="{!! asset("assets/images/profil fremm.png") !!}" height="100px" ></div>        
+        <div class="text-center"><img src="{!! asset("assets/images/profilfremm.png") !!}" height="100px" ></div>        
     @else
         <div>
             <img src='{!! asset("assets/images/InsigneEscouade.jpg") !!}' alt="Logo de l'escouade" style="height:450px; display: block; margin-left:auto; margin-right: auto; ">
