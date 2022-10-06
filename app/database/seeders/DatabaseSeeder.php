@@ -37,7 +37,8 @@ class DatabaseSeeder extends Seeder
                     SousObjectifSeeder::class,
                     StageSeeder::class,
                     TypeLicenceSeeder::class,
-                    FonctionStage::class
+                    FonctionStage::class,
+                    LiensSeeder::class
                 ]);
 
     }
