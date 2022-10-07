@@ -17,7 +17,7 @@ class TestController extends Controller
 {
     public function test()
     {
-        Mail::to("sandrine.zambelli@intradef.gouv.fr")->send(new EssaiMail());
+        Mail::to("florian.el-ahdab@intradef.gouv.fr")->queue(new EssaiMail());
         return redirect()->route("home.index")->withSuccess("Mail sent");
         
     }
