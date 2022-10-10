@@ -212,7 +212,7 @@
 
                 <table class="table table-striped">
                     <thead>
-                        <th scope="col" width="1%"><button x-on:click.prevent="allchecked = !allchecked; $dispatch('toggleallroles');">Tous</button></th>
+                        <th scope="col" width="1%"><input type="checkbox" x-on:click="allchecked = !allchecked; $dispatch('toggleallroles');">Tous</button></th>
                         <th scope="col" width="20%">Sélectionner les rôles</th>
                     </thead>
 
