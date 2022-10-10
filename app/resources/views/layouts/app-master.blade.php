@@ -30,6 +30,11 @@
         }
       }
     </style>
+    <style>
+        [x-cloak] {
+            display: none;
+        }
+    </style>
 
 </head>
 <body>
