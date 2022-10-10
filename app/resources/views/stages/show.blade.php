@@ -137,7 +137,7 @@
         <div class="text-center">
             <button type="submit" 
                 class="btn btn-danger" 
-                name="validation_double">Dé-valider les marins sélectionnés ci-dessous</button>
+                name="validation_double">Dé-valider les marins sélectionnés ci-dessus</button>
         </div>
         {!! Form::close() !!}
         @endif
