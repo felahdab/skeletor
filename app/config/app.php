@@ -177,14 +177,14 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        Meneses\LaravelMpdf\LaravelMpdfServiceProvider::class,
+        // Meneses\LaravelMpdf\LaravelMpdfServiceProvider::class,
 
-        Laravel\Socialite\SocialiteServiceProvider::class,
-        \SocialiteProviders\Manager\ServiceProvider::class,
+        // Laravel\Socialite\SocialiteServiceProvider::class,
+        // \SocialiteProviders\Manager\ServiceProvider::class,
         
-        hisorange\BrowserDetect\ServiceProvider::class,
+        // hisorange\BrowserDetect\ServiceProvider::class,
         
-        Lab404\Impersonate\ImpersonateServiceProvider::class,
+        // Lab404\Impersonate\ImpersonateServiceProvider::class,
     ],
 
     /*

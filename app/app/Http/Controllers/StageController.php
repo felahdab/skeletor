@@ -68,28 +68,13 @@ class StageController extends Controller
      */
     public function show(Request $request, Stage $stage)
     {
-        
-        if ($request->has("stage"))
-        {
-            return redirect()->route('stages.show', intval($request["stage"]));
-        }
-        $marin = null;
-        if ($request->has("marin"))
-        {
-            $marin = User::find(intval($request["marin"]));
-        }
-        
         $stages = Stage::orderBy('stage_libcourt')->get();
-        $typelicences = TypeLicence::orderBy('typlicense_libcourt')->get();
         $users = User::local()->orderBy('name')->get();
         
         $usersdustage = $stage->users()->get();
         
         return view('stages.show', ['stage'        => $stage, 
                                     'stages'       => $stages,
-                                    'typelicences' => $typelicences,
-                                    'users'        => $users,
-                                    'marin'        => $marin,
                                     'usersdustage' => $usersdustage] );
     }
 
@@ -178,7 +163,7 @@ class StageController extends Controller
                 $workitem->save();
             }
         }
-        return redirect()->route('stages.choixmarins', ['stage'=>$stage]);
+        return redirect()->route('stages.show', ['stage'=>$stage]);
     }
     
      public function annulermarins(Request $request, Stage $stage)
@@ -194,7 +179,7 @@ class StageController extends Controller
                 $workitem->save();
             }
         }
-        return redirect()->route('stages.choixmarins', ['stage'=>$stage]);
+        return redirect()->route('stages.show', ['stage'=>$stage]);
     }
 
     public function consulter(Request $request)

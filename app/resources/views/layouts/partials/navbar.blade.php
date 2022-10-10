@@ -43,7 +43,7 @@
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
                 <a class="dropdown-item" href="{{route('transformation.index')}}">Suivi de la transformation par marin</a>
                 @can('transformation.indexparfonction')<a class="dropdown-item" href="{{route('transformation.indexparfonction')}}">Suivi de la transformation par fonction</a>@endcan
-                @can('transformation.indexparstage')<a class="dropdown-item" href="{{route('stages.show', ['stage' => 1])}}">Suivi de la transformation par stage</a>@endcan
+                @can('transformation.indexparstage')<a class="dropdown-item" href="{{route('transformation.indexparstage')}}">Suivi de la transformation par stage</a>@endcan
               </div>
             </div>
             @endcan

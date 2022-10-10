@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('lien_lib', 50)->nullable(false);
             $table->string('lien_image', 500)->nullable(false);
             $table->string('lien_url', 500)->nullable(false);
-            $table->foreignId('unite_id')->nullable(false);
         });
     }
 

@@ -322,6 +322,17 @@ class User extends Authenticatable
         return true;
     }
     
+    public function dateValidationDuStage(Stage $stage)
+    {
+        $workitem = $this->stages()->find($stage);
+        if ($workitem == null)
+            return "";
+        $workitem = $workitem->pivot;
+        if ($workitem->date_validation == null)
+            return "";
+        return $workitem->date_validation;
+    }
+    
     /** Renvoie la liste de stages lies a une fonction.
     * Attention: ne verifie pas les doublons !
     */

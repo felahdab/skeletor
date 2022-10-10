@@ -9,7 +9,9 @@
             Liste des marins
         </div>
 
-        @livewire('user-list', ["mode" => "transformation"])
+        <div class="mt-3">
+            <livewire:users-table mode="transformation">
+        </div>
 
     </div>
 @endsection

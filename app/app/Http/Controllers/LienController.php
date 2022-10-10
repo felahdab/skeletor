@@ -51,7 +51,9 @@ class LienController extends Controller
             $lien->lien_url=$request->input('lien_url');
             if ($name=$request->file('lien_image')){
                 // on supprime l'ancienne image
-                $success = unlink(storage_path('app/public/images/' . $lien->lien_image));
+                $previouspath = storage_path('app/public/images/' . $lien->lien_image);
+                if (file_exists($previouspath))
+                    unlink($previouspath);
                 //on stocke la nouvelle image
                 $name->storePublicly("public/images");
                 $lien->lien_image=$name->hashName();
@@ -63,7 +65,9 @@ class LienController extends Controller
     public function destroy(Lien $lien) 
     {
         // on supprime l'ancienne image
-        $success = unlink(storage_path('app/public/images/' . $lien->lien_image));
+        $previouspath = storage_path('app/public/images/' . $lien->lien_image);
+                if (file_exists($previouspath))
+                    unlink($previouspath);
         
         $lien->delete();
 
