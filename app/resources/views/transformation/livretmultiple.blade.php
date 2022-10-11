@@ -1,7 +1,11 @@
 @extends('layouts.app-master')
 
 @section('content')
-    <div class="bg-light p-4 rounded">
+    <div class="bg-light p-4 rounded" x-data="{ opendivvalid : false,
+                                                commentaire : '',
+                                                date_validation : '{{ date('Y-m-d') }}', 
+                                                valideur : '{{auth()->user()->displayString()}}',
+                                                }">
         <h1>Transformation</h1>
         <div class="lead">
            Validation collective de sous objectifs ou de taches pour la fonction {{$fonction->fonction_libcourt}}
@@ -14,26 +18,26 @@
         validés.
         </div>
         {!! Form::open(['method' => 'POST','id'=> 'formlivretfonc' , 'route' => ['fonctions.validermarins', $fonction->id]]) !!}
-        <div id='divvalid' class='popupvalidcontrat' style='display:none;'>
+        <div x-show="opendivvalid" id='divvalid' class='popupvalidcontrat' >
             <div class='titrenavbarvert'>
                 <h5>Validation</h5>
             </div>
             <div class='form-group row mt-2'>
                 <label for='datvalid' class='col-sm-5 col-form-label '>Date validation</label>
                 <div class='col'>
-                    <input type='date' class='form-control' name='date_validation' id='date_validation' value='{{date("Y-m-d")}}' required>
+                    <input type='date' class='form-control' name='date_validation' id='date_validation' x-model="date_validation" required>
                 </div>
             </div>
             <div class='form-group row'>
                 <label for='valideur' class='col-sm-5 col-form-label '>Valideur</label>
                 <div class='col'>
-                    <input type='text' class='form-control' name='valideur' id='valideur' placeholder=' Valideur' value='{{auth()->user()->displayString()}}'>
+                    <input type='text' class='form-control' name='valideur' id='valideur' placeholder=' Valideur' x-model="valideur">
                 </div>
             </div>
             <div class='form-group row'>
                 <label for='comment' class='col-sm-5 col-form-label '>Commentaire</label>
                 <div class='col-sm-5'>
-                    <textarea cols='40' rows='4' name='commentaire' id='commentaire' placeholder='Commentaire'></textarea>
+                    <textarea cols='40' rows='4' name='commentaire' id='commentaire' placeholder='Commentaire' x-model="commentaire"></textarea>
                 </div>
             </div>
             <div class='form-group row'>
@@ -47,8 +51,17 @@
                 </div>
             </div>
             <div class='text-center'>
-                <button class='btn btn-primary w-25 mt-4 mr-2 mb-2' type='submit' form='formlivretfonc' id='btnvalidobjusers' name='btnvalidobjusers'>Valider</button>
-                <button class='btn btn-primary w-25 mt-4 mb-2' type='reset' form='formlivretfonc' onclick='annuler("divvalid"); return false;'>Annuler</button>
+                <button class='btn btn-primary w-25 mt-4 mr-2 mb-2' 
+                        type='submit' 
+                        form='formlivretfonc' 
+                        id='btnvalidobjusers' 
+                        name='btnvalidobjusers'
+                        x-on:click.prevent="$dispatch('uservalidated');
+                                            opendivvalid=false;">Valider</button>
+                <button class='btn btn-primary w-25 mt-4 mb-2' 
+                        type='reset' 
+                        form='formlivretfonc' 
+                        x-on:click.prevent='opendivvalid=false;'>Annuler</button>
             </div>
         </div>
         
@@ -59,8 +72,9 @@
                 <button type="submit" 
                 class="btn btn-primary" 
                 name="validation"
-                onclick='affichage("divvalid");
-                         return false;'>Enregistrer les validations</button></td>
+                x-on:click.prevent='opendivvalid=true'>Enregistrer les validations</button>
+                <button x-show="false" type="submit" 
+                x-on:uservalidated.window='$el.click();'></button></td>
                 </tr>
                 @foreach($fonction->compagnonages()->get() as $compagnonage)
 
@@ -110,9 +124,7 @@
                             <button type="submit" 
                             class="btn btn-primary" 
                             name="validation"
-                            onclick='
-                                affichage("divvalid");
-                                return false;'>Enregistrer les validations</button>
+                            x-on:click.prevent='opendivvalid=true'>Enregistrer les validations</button>
                         </td>
                     </tr>
             </table>
