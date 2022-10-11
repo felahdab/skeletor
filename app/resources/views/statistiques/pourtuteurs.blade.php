@@ -20,7 +20,7 @@
                             <tbody>
                                 @foreach($users as $marin)
                                 <tr title=''>
-                                    <td>{{$marin->displayString()}}</td>
+                                    <td><a href ="{{ route('transformation.livret', $marin->id) }}">{{$marin->displayString()}}</a></td>
                                     <td>{{$marin->displayDiplome() . " " . $marin->displaySpecialite()}}</td>
                                     @php
                                        $fonctionAQuai = $marin->fonctionAQuai();
