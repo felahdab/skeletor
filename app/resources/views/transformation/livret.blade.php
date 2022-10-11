@@ -162,7 +162,7 @@
             @if($readwrite){!! Form::close() !!} @endif
             
             @if ($fonction->compagnonages()->get()->count() > 0)
-            <h4>Compagnonages liés à la fonction {{ $fonction->fonction_liblong }} </h4>
+            <h4>Compagnonnages liés à la fonction {{ $fonction->fonction_liblong }} </h4>
             
             @if($readwrite){!! Form::open(['method' => 'POST','id'=> 'ssobjs[' . $fonction->id .']' ,'route' => ['transformation.livret', $user->id]]) !!}@endif
             <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
