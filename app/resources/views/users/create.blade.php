@@ -4,7 +4,7 @@
     <div class="bg-light p-4 rounded">
         <h2>Ajouter un utilisateur</h2>
         <div style='text-align:right;'>* champs obligatoires </div>
-
+<div x-data='{ allChecked : false }'>
         <div class="container mt-4">
             <form method="POST" action="">
                 <input type='hidden' id='buttonid' name='buttonid' value=''>
@@ -162,7 +162,7 @@
 
                 <table class="table table-striped">
                     <thead>
-                        <th scope="col" width="1%"><input type="checkbox" name="all_roles"></th>
+                        <th scope="col" width="1%"><input type="checkbox" x-on:click="allChecked = ! allChecked; $dispatch('toggleallroles');"></th>
                         <th scope="col" width="20%">Sélectionner les r&ocirc;les</th>
                     </thead>
 
@@ -172,7 +172,8 @@
                                 <input type="checkbox" 
                                 name="role[{{ $role->name }}]"
                                 value="{{ $role->name }}"
-                                class='role'>
+				class='role'
+                                x-on:toggleallroles.window="$el.checked = allChecked;">
                             </td>
                             <td>{{ $role->name }}</td>
                         </tr>
@@ -195,26 +196,7 @@
                 <a href="{{ route('users.index') }}" class="btn btn-default">Annuler</a>
             </form>
         </div>
-
+</div>
     </div>
 @endsection
 
-@section('scripts')
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('[name="all_roles"]').on('click', function() {
-
-                if($(this).is(':checked')) {
-                    $.each($('.role'), function() {
-                        $(this).prop('checked',true);
-                    });
-                } else {
-                    $.each($('.role'), function() {
-                        $(this).prop('checked',false);
-                    });
-                }
-                
-            });
-        });
-    </script>
-@endsection

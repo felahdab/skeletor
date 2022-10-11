@@ -7,6 +7,7 @@
             Edit role and manage permissions.
         </div>
 
+<div x-data='{allChecked : false }'>
         <div class="container mt-4">
 
             @if (count($errors) > 0)
@@ -32,7 +33,7 @@
 
                 <table class="table table-striped">
                     <thead>
-                        <th scope="col" width="1%"><input type="checkbox" name="all_permission"></th>
+                        <th scope="col" width="1%"><input type="checkbox" x-on:click="allChecked = !allChecked; $dispatch('toggleallperms');"></th>
                         <th scope="col" width="20%">Name</th>
                         <th scope="col" width="1%">Guard</th> 
                     </thead>
@@ -43,7 +44,8 @@
                                 <input type="checkbox" 
                                 name="permission[{{ $permission->name }}]"
                                 value="{{ $permission->name }}"
-                                class='permission'
+				class='permission'
+                                x-on:toggleallperms.window="$el.checked = allChecked;"
                                 {{ in_array($permission->name, $rolePermissions) 
                                     ? 'checked'
                                     : '' }}>
@@ -58,26 +60,7 @@
                 <a href="{{ route('roles.index') }}" class="btn btn-default">Retour</a>
 			{!! Form::close() !!}
         </div>
-
+</div>
     </div>
 @endsection
 
-@section('scripts')
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('[name="all_permission"]').on('click', function() {
-
-                if($(this).is(':checked')) {
-                    $.each($('.permission'), function() {
-                        $(this).prop('checked',true);
-                    });
-                } else {
-                    $.each($('.permission'), function() {
-                        $(this).prop('checked',false);
-                    });
-                }
-                
-            });
-        });
-    </script>
-@endsection
