@@ -79,8 +79,8 @@
                     </tr>
                     <tr>
                         <!-- Entete fiche synthese -->
-                        <th colspan='2' class='text-center'>COMPAGNONNAGE - PRODEF</th>
-                        <th colspan='2' class='text-center'>STAGES - TP</th>
+                        <th colspan='2' class='text-center'>COMPAGNONNAGES</th>
+                        <th colspan='2' class='text-center'>STAGES</th>
                     </tr>
                 </thead>
                 <tbody>
