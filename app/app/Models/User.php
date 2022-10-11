@@ -570,7 +570,7 @@ class User extends Authenticatable
         $nb_stage_valides = 0;
         $nb_stage_valides = $this->stages()->wherePivotNotNull('date_validation')->get()->count();
         
-        $sous_objs = $this->coll_sous_objectifs();
+        $sous_objs = $this->coll_sous_objectifs()->unique();
         $total_des_coeff = $sous_objs->sum('ssobj_coeff');
         // $this->info($total_des_coeff);
         
