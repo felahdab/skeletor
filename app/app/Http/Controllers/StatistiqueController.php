@@ -45,7 +45,7 @@ class StatistiqueController extends Controller
         $secteur_id = $currentuser->secteur_id;
         
         $stages = Stage::all();
-        $users = User::local()->where('secteur_id', $secteur_id)->get()->where('en_transformation', true);
+        $users = User::orderBy('name','asc')->where('secteur_id', $secteur_id)->get()->where('en_transformation', true);
         $services = Service::orderBy('service_libcourt')->get();
         $fonctionsaquai = Fonction::where('typefonction_id', 2);
         
