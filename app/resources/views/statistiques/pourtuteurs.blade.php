@@ -4,12 +4,13 @@
         <div class='flex'>
             <div style='width: 100%; background-color: transparent;'>
                 <div style=' width:100%; border: 1px solid darkgrey'>
-                    <p class='card-header border' style='height: 48px;'> SUIVI TRANSFORMATION : {{ $currentuser->displaySecteur()}}</p>
+                    <p class='card-header border' style='height: 48px;'> SUIVI TRANSFORMATION : {{ $currentuser->displayService()}}</p>
                     <div>
                         <table class='table table-hover'>
                             <thead style='position: sticky; top: 0; background: lightgray; border: 1px solid #C3C3C3;'>
                                 <tr>
                                     <th>Marin</th>
+                                    <th>Service/Secteur</th>
                                     <th>Spécialité</th>
                                     <th>Fonction quai</th>
                                     <th>Fonction mer</th>
@@ -21,6 +22,7 @@
                                 @foreach($users as $marin)
                                 <tr title=''>
                                     <td><a href ="{{ route('transformation.livret', $marin->id) }}">{{$marin->displayString()}}</a></td>
+                                    <td>{{$marin->displayServiceSecteur()}}</td>
                                     <td>{{$marin->displayDiplome() . " " . $marin->displaySpecialite()}}</td>
                                     @php
                                        $fonctionAQuai = $marin->fonctionAQuai();

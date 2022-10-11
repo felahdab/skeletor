@@ -557,25 +557,20 @@ class User extends Authenticatable
     
     public function getFonctionHtmlAttribute(Fonction $fonction)
     {
-        
+        $date_lache = $fonction->pivot->date_lache;
         $taux = $fonction->pivot->taux_de_transformation;
+        $libelle = $fonction->fonction_libcourt;
         
-        if ($taux == 100)
+        if ($date_lache != null)
             $couleur="green";
         elseif($taux >= 70)
-            $couleur="gold";
-        elseif($taux >= 30)
-            $couleur = "orange";
+            $couleur="Goldenrod";
+        elseif($taux >= 35)
+            $couleur = "orangered";
         else
             $couleur = "red";
         
-        $stylepart = "color:". $couleur . "'>";
-        
-        $libelle = $fonction->fonction_libcourt . 
-                    "<br>(" . substr($taux,0,4) ."%)" ;
-        
-        $result = $stylepart . $libelle;
-        return $result;
+        return "color:". $couleur . "'>" . $libelle . " (" . $taux ."%)" ;
     }
     
     public function getEnTransformationAttribute()

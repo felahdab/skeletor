@@ -43,9 +43,21 @@ class StatistiqueController extends Controller
         // Debugbar::startMeasure("controller", "Controller");
         $currentuser = auth()->user();
         $secteur_id = $currentuser->secteur_id;
-        
+        $service_id=$currentuser->service->id;
+
         $stages = Stage::all();
-        $users = User::orderBy('name','asc')->where('secteur_id', $secteur_id)->get()->where('en_transformation', true);
+        $users = User::with('secteur')
+                  ->orderBy('name','asc')
+                  ->get()
+                  ->where('secteur.service_id', $service_id)
+                  ->where('en_transformation', true);
+        // $users = User::with('secteur.service')->orderBy('name','asc')
+            // ->join ('secteurs', 'users.secteur_id','=','secteurs.id')
+            // ->where ('secteurs.service_id', $service_id)
+            // ->get()
+            
+ // ddd($users);           
+// $users = User::orderBy('name','asc')->where('secteur_id', $secteur_id)->get()->where('en_transformation', true);
         $services = Service::orderBy('service_libcourt')->get();
         $fonctionsaquai = Fonction::where('typefonction_id', 2);
         
