@@ -40,7 +40,6 @@ class StatistiqueController extends Controller
     
     public function pourtuteurs()
     {
-        // Debugbar::startMeasure("controller", "Controller");
         $currentuser = auth()->user();
         $secteur_id = $currentuser->secteur_id;
         $service_id=$currentuser->service->id;
@@ -51,24 +50,15 @@ class StatistiqueController extends Controller
                   ->get()
                   ->where('secteur.service_id', $service_id)
                   ->where('en_transformation', true);
-        // $users = User::with('secteur.service')->orderBy('name','asc')
-            // ->join ('secteurs', 'users.secteur_id','=','secteurs.id')
-            // ->where ('secteurs.service_id', $service_id)
-            // ->get()
             
- // ddd($users);           
-// $users = User::orderBy('name','asc')->where('secteur_id', $secteur_id)->get()->where('en_transformation', true);
         $services = Service::orderBy('service_libcourt')->get();
         $fonctionsaquai = Fonction::where('typefonction_id', 2);
         
-        // Debugbar::startMeasure("render", "Rendering");
         $view = view('statistiques.pourtuteurs', ['currentuser' => $currentuser,
                                     'stages'   => $stages,
                                    'services' => $services,
                                    'fonctionsaquai' => $fonctionsaquai,
                                    'users'    => $users]); 
-        // Debugbar::stopMeasure("render");
-        // Debugbar::stopMeasure("controller");
         return $view;
     }
     
