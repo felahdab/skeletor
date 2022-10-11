@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class StagesTable extends DataTableComponent
 {
+    protected $listeners = ['refreshUser' => '$refresh'];
+    
     protected $model = Stage::class;
     
     public $mode='gestion';
@@ -29,6 +31,11 @@ class StagesTable extends DataTableComponent
         {
             $stagelist = $this->user->stages()->get()->pluck('id', 'id');
             return Stage::query()->whereIn('stages.id', $stagelist);
+        }
+        elseif ($this->mode == "selectnewstage")
+        {
+            $stagelist = $this->user->stages()->get()->pluck('id', 'id');
+            return Stage::query()->whereNotIn('stages.id', $stagelist);
         }
         return Stage::query();
     }
@@ -47,6 +54,8 @@ class StagesTable extends DataTableComponent
             return view('tables.stagestable.transformation');
         elseif ($this->mode == "uservalidation")
             return view('tables.stagestable.uservalidation', ['user' => $this->user]);
+        elseif ($this->mode == "selectnewstage")
+            return view('tables.stagestable.selectnewstage', ['user' => $this->user]);
     }
 
     public function columns(): array
@@ -88,17 +97,23 @@ class StagesTable extends DataTableComponent
     
     public function UnvalidateStage(User $user, Stage $stage)
     {
-        $workitem = $user->stages()->find($stage)->pivot;
-        $workitem->date_validation = null;
-        $workitem->commentaire = null;
-        $workitem->save();
+        $user->unValidateStage($stage);
     }
     
     public function ValidateStage(User $user, Stage $stage, $commentaire, $date_validation)
     {
-        $workitem = $user->stages()->find($stage)->pivot;
-        $workitem->date_validation = $date_validation;
-        $workitem->commentaire = $commentaire;
-        $workitem->save();
+        $user->validateStage($stage, $commentaire, $date_validation);
+    }
+    
+    public function AttribuerStage(User $user, Stage $stage)
+    {
+        $user->attachStage($stage);
+        $this->emit('refreshUser');
+    }
+    
+    public function RetirerStage(User $user, Stage $stage)
+    {
+        $user->detachStage($stage);
+        $this->emit('refreshUser');
     }
 }

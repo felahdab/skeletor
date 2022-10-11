@@ -375,9 +375,31 @@ class User extends Authenticatable
      */
     public function detachStage(Stage $stage)
     {
-        if ($this->stagesLiesAUneFonction()->contains($stage))
+        if (array_key_exists($stage->id,  $this->stagesLiesAUneFonction()->pluck('id','id')->toArray()))
             return;
         $this->stages()->detach($stage);
+    }
+    
+    public function validateStage(Stage $stage, $commentaire, $date_validation)
+    {
+        $workitem = $this->stages()->find($stage)->pivot;
+        if ($workitem != null)
+        {
+            $workitem->date_validation = $date_validation;
+            $workitem->commentaire = $commentaire;
+            $workitem->save();
+        }
+    }
+    
+    public function unValidateStage(Stage $stage)
+    {
+        $workitem = $this->stages()->find($stage)->pivot;
+        if ($workitem != null)
+        {
+            $workitem->date_validation = null;
+            $workitem->commentaire = null;
+            $workitem->save();
+        }
     }
     
     public function attachFonction(Fonction $fonction)
