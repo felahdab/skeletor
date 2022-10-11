@@ -16,7 +16,6 @@ class MindefConnectUserFactory extends Factory
      */
     public function definition()
     {
-<<<<<<< HEAD
         $lastname = strtolower($this->faker->lastName());
         $firstname = strtolower($this->faker->firstName());
         $email = $firstname . "." . $lastname . "@intradef.gouv.fr";
@@ -49,10 +48,6 @@ class MindefConnectUserFactory extends Factory
             'rank'                      => 'Capitaine de vaisseau',
             'short_rank'                => $shortrank,
             'display_name'              => $displayname
-=======
-        return [
-            //
->>>>>>> b073ccc53f20ae7f0ef168fa08dee6090f81d3ed
         ];
     }
 }

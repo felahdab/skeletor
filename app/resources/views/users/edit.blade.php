@@ -8,6 +8,7 @@
             
         </div>
 
+<div x-data='{ allchecked : false }' >
         <div class="container mt-4">
             {!! Form::open(['method' => 'PATCH','route' => ['users.update', $user->id]]) !!}
                 <div class="row">
@@ -211,7 +212,7 @@
 
                 <table class="table table-striped">
                     <thead>
-                        <th scope="col" width="1%"><input type="checkbox" name="all_roles"></th>
+                        <th scope="col" width="1%"><input type="checkbox" x-on:click="allchecked = !allchecked; $dispatch('toggleallroles');">Tous</button></th>
                         <th scope="col" width="20%">Sélectionner les rôles</th>
                     </thead>
 
@@ -222,9 +223,11 @@
                                 name="role[{{ $role->name }}]"
                                 value="{{ $role->name }}"
                                 class='role'
+                                x-on:toggleallroles.window="$el.checked = allchecked;"
                                 {{ in_array($role->name, $userRole) 
                                     ? 'checked'
-                                    : '' }}>
+				    : '' }}
+                                >
                             </td>
                             <td>{{ $role->name }}</td>
                         </tr>
@@ -240,24 +243,6 @@
         </div>
 
     </div>
+</div>
 @endsection
 
-@section('scripts')
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('[name="all_roles"]').on('click', function() {
-
-                if($(this).is(':checked')) {
-                    $.each($('.role'), function() {
-                        $(this).prop('checked',true);
-                    });
-                } else {
-                    $.each($('.role'), function() {
-                        $(this).prop('checked',false);
-                    });
-                }
-                
-            });
-        });
-    </script>
-@endsection
