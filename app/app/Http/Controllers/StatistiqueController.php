@@ -41,22 +41,7 @@ class StatistiqueController extends Controller
     public function pourtuteurs()
     {
         $currentuser = auth()->user();
-        $secteur_id = $currentuser->secteur_id;
-        $service_id=$currentuser->service->id;
-
-        $users = User::with('secteur')
-                  ->orderBy('name','asc')
-                  ->get()
-                  ->where('secteur.service_id', $service_id)
-                  ->where('en_transformation', true);
-            
-        $services = Service::orderBy('service_libcourt')->get();
-        $fonctionsaquai = Fonction::where('typefonction_id', 2);
-        
-        $view = view('statistiques.pourtuteurs', ['currentuser' => $currentuser,
-                                   'services' => $services,
-                                   'fonctionsaquai' => $fonctionsaquai,
-                                   'users'    => $users]); 
+        $view = view('statistiques.pourtuteurs', ['currentuser' => $currentuser,]); 
         return $view;
     }
     

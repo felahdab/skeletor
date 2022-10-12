@@ -1,7 +1,6 @@
 @extends('layouts.app-master')
 
 @section('content')
-
     <div class="bg-light p-4 rounded">
         <h2>SUIVI TRANSFORMATION </h2>
         <div class="lead">
