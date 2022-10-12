@@ -44,7 +44,6 @@ class StatistiqueController extends Controller
         $secteur_id = $currentuser->secteur_id;
         $service_id=$currentuser->service->id;
 
-        $stages = Stage::all();
         $users = User::with('secteur')
                   ->orderBy('name','asc')
                   ->get()
@@ -55,7 +54,6 @@ class StatistiqueController extends Controller
         $fonctionsaquai = Fonction::where('typefonction_id', 2);
         
         $view = view('statistiques.pourtuteurs', ['currentuser' => $currentuser,
-                                    'stages'   => $stages,
                                    'services' => $services,
                                    'fonctionsaquai' => $fonctionsaquai,
                                    'users'    => $users]); 
