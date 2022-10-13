@@ -47,7 +47,7 @@ class BugReportController extends Controller
                 "values_by_field" => [
                     "commentaire"    => [ "value" => $request->message ],
                     "url"=>  ["value"  => $request->url ],
-                    "user"=> ["value" => $user->display_name()]
+                    "user"=> ["value" => $user->display_name]
                 ]
             ]);
         
