@@ -38,6 +38,7 @@ class UsersTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
         $this->setFilterLayoutSlideDown();
+        $this->setDefaultSort('name', 'asc');
     }
 
     public function userActions()
