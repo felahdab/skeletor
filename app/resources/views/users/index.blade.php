@@ -4,10 +4,10 @@
     
 
     <div class="bg-light p-4 rounded">
-        <h2>Utilisateurs</h2>
+        <h2>Marins</h2>
         <div class="lead">
-            Gestion des utilisateurs
-            <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un utilisateur</a>
+            Gestion des marins
+            <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un marin</a>
         </div>
         <div class="mt-3">
             <livewire:users-table mode="gestion">

@@ -87,7 +87,7 @@ class UsersTable extends DataTableComponent
         if ($this->mode == "gestion")
         {
             return array_merge($basecolumns ,[
-                    Column::make('Roles')
+                    Column::make('Rôles')
                         ->label(
                             fn($row, Column $column) => view('tables.userstable.roles')->withRow($row)
                             ),

@@ -57,10 +57,10 @@ class StattuteurTable extends DataTableComponent
                 ->sortable(),
             Column::make('Grade', 'grade.grade_libcourt')
                 ->searchable(),
-            Column::make("Name", "name")
+            Column::make("Nom", "name")
                 ->sortable()
                 ->searchable(),
-            Column::make("Prenom", "prenom")
+            Column::make("Prénom", "prenom")
                 ->searchable(),
             Column::make('Brevet', 'diplome.diplome_libcourt')
                 ->deSelected()
