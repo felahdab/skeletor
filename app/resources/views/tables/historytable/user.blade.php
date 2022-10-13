@@ -1,1 +1,1 @@
-{{ $user->displayString() }}
+{{ $user->display_name }}

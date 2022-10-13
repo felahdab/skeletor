@@ -28,7 +28,7 @@
             style='width: 100%; height: 95%; '>
                 <thead style='border: 1px solid #C3C3C3; '>
                     <tr class='enTeteFicheSynthese'>
-                        <td colspan='2'><h1>{{$user->displayString()}}</h1></td>
+                        <td colspan='2'><h1>{{$user->display_name}}</h1></td>
                         <td></td>
                         <td rowspan='4 '></td>
                     </tr>

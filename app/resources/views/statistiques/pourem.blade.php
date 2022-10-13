@@ -34,7 +34,7 @@
                     </tr>
                     @foreach($fonctionsaquai->get() as $fonction)
                         <tr title='@foreach($fonction->users()->get() as $marin)
-                            {!! $marin->displayString() . "(" . substr($marin->pourcentage_valides_pour_fonction($fonction), 0, 4) . ")" !!}
+                            {!! $marin->display_name . "(" . substr($marin->pourcentage_valides_pour_fonction($fonction), 0, 4) . ")" !!}
                         @endforeach'>
                             <td>{{$fonction->fonction_libcourt}}</td>
                             <td>{{$fonction->users()->count()}}</td>

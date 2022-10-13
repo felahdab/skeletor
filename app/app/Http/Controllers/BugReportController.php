@@ -39,13 +39,6 @@ class BugReportController extends Controller
     public function store(StoreBugReportRequest $request)
     {
         $user = auth()->user();
-        // $report = BugReport::create([
-            // "url" => $request->url,
-            // "message" => $request->message,
-            // "user_id" => $user->id,
-            // "username" => $user->displayString()
-            // ]);
-        // $report->save();
         
         $response = Http::withoutVerifying()
             ->withHeaders(["X-Auth-AccessKey" => env("TULEAP_TOKEN")])
@@ -54,7 +47,7 @@ class BugReportController extends Controller
                 "values_by_field" => [
                     "commentaire"    => [ "value" => $request->message ],
                     "url"=>  ["value"  => $request->url ],
-                    "user"=> ["value" => $user->displayString()]
+                    "user"=> ["value" => $user->display_name()]
                 ]
             ]);
         

@@ -88,7 +88,7 @@
       
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {{ auth()->user()->displayString() }}
+          {{ auth()->user()->display_name }}
           </button>
           <div class="dropdown-menu" style="position:absolute;left:-90px" aria-labelledby="dropdownMenuButton">
           @if (count(auth()->user()->roles) > 1 )

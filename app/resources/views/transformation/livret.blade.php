@@ -4,7 +4,7 @@
     <div class="bg-light p-4 rounded">
         <h1>Transformation</h1>
         <div class="lead">
-            Livret de transformation de {{$user->displayString()}}
+            Livret de transformation de {{$user->display_name}}
         </div>
         
         @if($readwrite)
@@ -23,7 +23,7 @@
         
         <div x-data="{ opendivvalid : false ,
                        commentaire : '' ,
-                       valideur : '{{auth()->user()->displayString()}}',
+                       valideur : '{{auth()->user()->display_name}}',
                        button : null,
                        buttonid : '',
                        date_validation : '{{ date('Y-m-d')}}' }">

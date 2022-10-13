@@ -4,7 +4,7 @@
     <div class="bg-light p-4 rounded" x-data="{ opendivvalid : false,
                                                 commentaire : '',
                                                 date_validation : '{{ date('Y-m-d') }}', 
-                                                valideur : '{{auth()->user()->displayString()}}',
+                                                valideur : '{{auth()->user()->display_name}}',
                                                 }">
         <h1>Transformation</h1>
         <div class="lead">
@@ -45,7 +45,7 @@
                 <div class='col w-100'>
                     <select multiple name='marinsfonc[]' id='marinsfonc[]'>
                     @foreach($usersfonction as $user)
-                        <option value ='{{$user->id}}'>{{$user->displayString()}}</option>
+                        <option value ='{{$user->id}}'>{{$user->display_name}}</option>
                     @endforeach
                     </select>
                 </div>

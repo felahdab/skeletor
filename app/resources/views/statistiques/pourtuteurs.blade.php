@@ -20,7 +20,7 @@
                             <tbody>
                                 @foreach($users as $marin)
                                 <tr title=''>
-                                    <td>{{$marin->displayString()}}</td>
+                                    <td>{{$marin->display_name}}</td>
                                     <td>{{$marin->displayDiplome() . " " . $marin->displaySpecialite()}}</td>
                                     @php
                                        $fonctionAQuai = $marin->fonctionAQuai();
