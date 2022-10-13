@@ -51,8 +51,21 @@
         <div class='mt-2 mb-2' style='margin-left:50%; text-align: center;'> </div>
         
         
-        @livewire('stages-table', ['mode' => 'uservalidation', 'user' => $marin])
         
+        <div x-data='{ selectstage : false }'>
+            <button class="btn btn-primary" 
+                x-on:click.prevent="selectstage= ! selectstage;
+                                    if (selectstage)
+                                        $el.innerHTML='Retour à la liste des stages du marin';
+                                    else
+                                        $el.innerHTML='Rajouter un stage supplémentaire';">Rajouter un stage supplémentaire</button>
+            <div x-cloak x-show="selectstage">
+                @livewire('stages-table', ['mode' => 'selectnewstage', 'user' => $marin])
+            </div>
+            <div x-cloak x-show=" ! selectstage">
+                @livewire('stages-table', ['mode' => 'uservalidation', 'user' => $marin])
+            </div>
+        </div>
         @endif
     </div>
     {!! link_to_route('transformation.index', 'Annuler', [], ['class' => 'btn btn-primary']) !!}

@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Lab404\Impersonate\Models\Impersonate;
 
+use App\Jobs\CalculateUserTransformationRatios;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
@@ -364,6 +366,7 @@ class User extends Authenticatable
         if ($this->stages()->get()->contains($stage))
             return;
         $this->stages()->attach($stage);
+        CalculateUserTransformationRatios::dispatch($this);
     }
     
     /**
@@ -375,9 +378,34 @@ class User extends Authenticatable
      */
     public function detachStage(Stage $stage)
     {
-        if ($this->stagesLiesAUneFonction()->contains($stage))
+        if (array_key_exists($stage->id,  $this->stagesLiesAUneFonction()->pluck('id','id')->toArray()))
             return;
         $this->stages()->detach($stage);
+        CalculateUserTransformationRatios::dispatch($this);
+    }
+    
+    public function validateStage(Stage $stage, $commentaire, $date_validation)
+    {
+        $workitem = $this->stages()->find($stage)->pivot;
+        if ($workitem != null)
+        {
+            $workitem->date_validation = $date_validation;
+            $workitem->commentaire = $commentaire;
+            $workitem->save();
+        }
+        CalculateUserTransformationRatios::dispatch($this);
+    }
+    
+    public function unValidateStage(Stage $stage)
+    {
+        $workitem = $this->stages()->find($stage)->pivot;
+        if ($workitem != null)
+        {
+            $workitem->date_validation = null;
+            $workitem->commentaire = null;
+            $workitem->save();
+        }
+        CalculateUserTransformationRatios::dispatch($this);
     }
     
     public function attachFonction(Fonction $fonction)
@@ -388,6 +416,7 @@ class User extends Authenticatable
         }
 
         $this->fonctions()->attach($fonction);
+        CalculateUserTransformationRatios::dispatch($this);
         foreach($fonction->stages()->get() as $stage)
             $this->attachStage($stage);
     }
@@ -397,6 +426,7 @@ class User extends Authenticatable
         $this->fonctions()->detach($fonction);
         foreach($fonction->stages()->get() as $stage)
             $this->detachStage($stage);
+        CalculateUserTransformationRatios::dispatch($this);
     }
     
     public function nbSousObjectifsAValider(Fonction $fonction=null)
@@ -529,12 +559,31 @@ class User extends Authenticatable
         }
     }
     
-    public function taux_de_transformation()
+    public function taux_de_transformation(bool $fullcalc=false)
     {
-        if ($this->coll_sous_objectifs()->count()==0)
-            return 0;
-        $taux = 100.0* $this->sous_objectifs()->get()->count() / $this->coll_sous_objectifs()->unique()->count();
-        return $taux;
+        if (! $fullcalc)
+            return user->taux_de_transformation;
+        
+        $nb_stage_total = 0;
+        $nb_stage_total = $this->stages()->get()->count();
+        
+        $nb_stage_valides = 0;
+        $nb_stage_valides = $this->stages()->wherePivotNotNull('date_validation')->get()->count();
+        
+        $sous_objs = $this->coll_sous_objectifs()->unique();
+        $total_des_coeff = $sous_objs->sum('ssobj_coeff');
+        // $this->info($total_des_coeff);
+        
+        $sous_objs_valides = $this->sous_objectifs()
+                            ->whereNotNull('date_validation')->get();
+        $coeff_valides = $sous_objs_valides->sum('ssobj_coeff');
+        // $this->info($coeff_valides);
+        
+        $taux_transfo=0;
+        if ($nb_stage_total>0 and $total_des_coeff>0){
+            $taux_transfo = 100 * ($nb_stage_valides + $coeff_valides) / ($nb_stage_total + $total_des_coeff) ;
+        }
+        return $taux_transfo;
     }
     
     public function pourcentage_valides_pour_comp(Compagnonage $comp)
