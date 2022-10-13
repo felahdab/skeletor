@@ -414,7 +414,7 @@ class User extends Authenticatable
         }
         CalculateUserTransformationRatios::dispatch($this);
         $event_detail = [
-            "stage" => $stage->toJson(),
+            "stage" => $stage,
             "commentaire" => $commentaire,
             "date_validation" => $date_validation,
         ];
