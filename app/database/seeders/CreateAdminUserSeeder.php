@@ -24,6 +24,7 @@ class CreateAdminUserSeeder extends Seeder
             'email' => 'admin@intradef.gouv.fr',
             'password' => 'admin123',
             'grade_id' => 20,
+            'display_name' => 'Admin Admin'
         ]);
     
         $roles = Role::all()->pluck('name')->all();
@@ -38,8 +39,9 @@ class CreateAdminUserSeeder extends Seeder
             'email' => 'sza@intradef.gouv.fr',
             'password' => 'sza',
             'grade_id' => 20,
+            'display_name' => 'ZA SA'
         ]);
-    
+        
         $roles = Role::all()->pluck('name')->all();
      
         $user->syncRoles($roles);
