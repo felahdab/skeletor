@@ -25,8 +25,12 @@ class StattuteurTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setTableRowUrl(function($row) {
+            return route('transformation.livret', $row);
+        });
         $this->setPaginationStatus(false);
         $this->setFilterLayoutSlideDown();
+        $this->setDefaultSort('name', 'asc');
     }
 
     public function builder(): Builder
@@ -41,8 +45,6 @@ class StattuteurTable extends DataTableComponent
                                 ->from ('user_fonction')
                                 ->whereColumn('user_fonction.user_id', 'users.id')
                   ;})
-                  ->orderBy('name','asc')                  
-                  ->orderBy('prenom','asc')                  
                  ;
     }
 
