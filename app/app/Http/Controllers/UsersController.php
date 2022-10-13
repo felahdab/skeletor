@@ -65,6 +65,7 @@ class UsersController extends Controller
         
         $user->name = strtoupper($user->name);
         $user->prenom = ucfirst(strtolower($user->prenom));
+        $user->display_name = $user->displayString();
         $user->save();
         
         $user->syncRoles($request->get('role'));
@@ -209,6 +210,7 @@ class UsersController extends Controller
         $user->update($request->validated());
         $user->name = strtoupper($user->name);
         $user->prenom = ucfirst(strtolower($user->prenom));
+        $user->display_name = $user->displayString();
         $user->save();
 
         $user->syncRoles($request->get('role'));
