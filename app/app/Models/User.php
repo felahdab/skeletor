@@ -54,6 +54,7 @@ class User extends Authenticatable
         'unite_id',
         'unite_destination_id',
         'user_comment',
+        'display_name',
     ];
 
     /**
