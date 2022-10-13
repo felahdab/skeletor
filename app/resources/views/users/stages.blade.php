@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="bg-light p-4 rounded">
-        <h2>Stages - {{$marin->displayString()}}</h2>
+        <h2>Stages - {{$marin->display_name}}</h2>
     </div>
     
     <div x-data="{stageid : null , 
@@ -36,7 +36,7 @@
     </div>
     
     <div id='divconsultstage' class='card bg-light ml-3 w-100'>
-        <div class='card-header'>Consultation des stages pour {{$marin->displayString()}}
+        <div class='card-header'>Consultation des stages pour {{$marin->display_name}}
         </div>
         
         

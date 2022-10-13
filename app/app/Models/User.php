@@ -15,6 +15,11 @@ use Lab404\Impersonate\Models\Impersonate;
 
 use App\Jobs\CalculateUserTransformationRatios;
 
+use Illuminate\Database\Eloquent\Model;
+use App\Models\TransformationHistory;
+use App\Models\Stage;
+use App\Models\Fonction;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
@@ -49,6 +54,7 @@ class User extends Authenticatable
         'unite_id',
         'unite_destination_id',
         'user_comment',
+        'display_name',
     ];
 
     /**
@@ -254,6 +260,18 @@ class User extends Authenticatable
     }
     
     // Cette partie contient des fonctions d'aide pour le suivi de la transformation
+    public function logTransformationHistory($event, $event_details = "")
+    {
+        $currentuser = auth()->user();
+        
+        TransformationHistory::create([
+            "modifying_user_id" => $currentuser->id, 
+            "modified_user_id" => $this->id, 
+            "event" => $event,
+            "event_details" => $event_details
+        ]);
+    }
+    
     public function aValideLaFonction(Fonction $fonction)
     {
         foreach ($fonction->$compagnonages->get() as $compagnonage)
@@ -367,6 +385,7 @@ class User extends Authenticatable
             return;
         $this->stages()->attach($stage);
         CalculateUserTransformationRatios::dispatch($this);
+        $this->logTransformationHistory("ATTRIBUE_STAGE", json_encode(["stage" => $stage]));
     }
     
     /**
@@ -382,6 +401,7 @@ class User extends Authenticatable
             return;
         $this->stages()->detach($stage);
         CalculateUserTransformationRatios::dispatch($this);
+        $this->logTransformationHistory("RETIRE_STAGE", json_encode(["stage" => $stage]));
     }
     
     public function validateStage(Stage $stage, $commentaire, $date_validation)
@@ -394,6 +414,12 @@ class User extends Authenticatable
             $workitem->save();
         }
         CalculateUserTransformationRatios::dispatch($this);
+        $event_detail = [
+            "stage" => $stage,
+            "commentaire" => $commentaire,
+            "date_validation" => $date_validation,
+        ];
+        $this->logTransformationHistory("VALIDE_STAGE", json_encode($event_detail));
     }
     
     public function unValidateStage(Stage $stage)
@@ -406,6 +432,7 @@ class User extends Authenticatable
             $workitem->save();
         }
         CalculateUserTransformationRatios::dispatch($this);
+        $this->logTransformationHistory("DEVALIDE_STAGE", json_encode(["stage" => $stage]));
     }
     
     public function attachFonction(Fonction $fonction)
@@ -417,6 +444,7 @@ class User extends Authenticatable
 
         $this->fonctions()->attach($fonction);
         CalculateUserTransformationRatios::dispatch($this);
+        $this->logTransformationHistory("ATTRIBUE_FONCTION", json_encode(["fonction" => $fonction]));
         foreach($fonction->stages()->get() as $stage)
             $this->attachStage($stage);
     }
@@ -424,9 +452,11 @@ class User extends Authenticatable
     public function detachFonction(Fonction $fonction)
     {
         $this->fonctions()->detach($fonction);
+        $this->logTransformationHistory("RETIRE_FONCTION", json_encode(["fonction" => $fonction]));
         foreach($fonction->stages()->get() as $stage)
             $this->detachStage($stage);
         CalculateUserTransformationRatios::dispatch($this);
+        
     }
     
     public function nbSousObjectifsAValider(Fonction $fonction=null)

@@ -146,7 +146,7 @@
             <td colspan='2' class='titrelivret'>LIVRET DE<br>TRANSFORMATION</td>
         </tr>
         <tr>
-            <td colspan='2' class='nom'>{{$user->displayString()}}</td>
+            <td colspan='2' class='nom'>{{$user->display_name}}</td>
         </tr>
         <tr class='h-20'>
             <td>Sp&eacute;cialit&eacute; : {{ $user->displaySpecialite() }}</td>

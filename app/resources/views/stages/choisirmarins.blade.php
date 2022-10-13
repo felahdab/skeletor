@@ -58,7 +58,7 @@
 				    class='user'
                                     x-on:toggleallusers.window="$el.checked = allChecked;">
                                 </td>
-                                <td>{{ $user->displayString() }}</td>
+                                <td>{{ $user->display_name }}</td>
                             </tr>
                             @endif
                     @endforeach
@@ -81,7 +81,7 @@
                 @foreach($users as $user)
                     @if ($user->stages()->find($stage) == null)
                     <option value="{{ $user->id }}">
-                    {{ $user->displayString() }}
+                    {{ $user->display_name }}
                     </option>
                     @endif
                 @endforeach
@@ -115,7 +115,7 @@
 				class='user'
                                 x-on:toggleallusers.window="$el.checked=allChecked">
                             </td>
-                            <td>{{ $user->displayString() }}</td>
+                            <td>{{ $user->display_name }}</td>
                             <td>{{ $user->stages()->find($stage)->pivot->date_validation }}</td>
                         </tr>
                         @endif

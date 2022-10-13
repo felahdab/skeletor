@@ -180,6 +180,12 @@ class TransformationController extends Controller
                         'commentaire'=> $commentaire,
                         'date_validation' => $date_validation,
                     ]);
+                    $event_detail = [
+                        "sous_objectif" => $sousobjectif,
+                        "commentaire" => $commentaire,
+                        "date_validation" => $date_validation,
+                    ];
+                    $user->logTransformationHistory("VALIDE_SOUS_OBJECTIF", json_encode($event_detail));
                 }
             }
             if ($request->has('tacheid'))
@@ -187,6 +193,12 @@ class TransformationController extends Controller
                 $taches_a_valider = $request['tacheid'];
                 foreach ($taches_a_valider as $key => $value){
                     $tache = Tache::find($key);
+                    $event_detail = [
+                        "tache" => $tache,
+                        "commentaire" => $commentaire,
+                        "date_validation" => $date_validation,
+                    ];
+                    $user->logTransformationHistory("VALIDE_TACHE", json_encode($event_detail));
                     foreach ($tache->objectifs()->get() as $objectif)
                     {
                         foreach($objectif->sous_objectifs()->get() as $sous_objectif)
@@ -196,6 +208,12 @@ class TransformationController extends Controller
                                 'commentaire' => $commentaire,
                                 'date_validation' => $date_validation,
                             ]);
+                            $event_detail = [
+                                "sous_objectif" => $sous_objectif,
+                                "commentaire" => $commentaire,
+                                "date_validation" => $date_validation,
+                            ];
+                            $user->logTransformationHistory("VALIDE_SOUS_OBJECTIF", json_encode($event_detail));
                         }
                     }
                 }
@@ -218,8 +236,9 @@ class TransformationController extends Controller
             {
                 $sous_objectifs_a_valider = $request['ssobjid'];
                 foreach ($sous_objectifs_a_valider as $key => $value){
-                    $sousobjectif = SousObjectif::find($key);
-                    $user->sous_objectifs()->detach($sousobjectif);
+                    $sous_objectif = SousObjectif::find($key);
+                    $user->sous_objectifs()->detach($sous_objectif);
+                    $user->logTransformationHistory("DEVALIDE_SOUS_OBJECTIF", json_encode(["sous_objectif" => $sous_objectif]));
                 }
             }
             if ($request->has('tacheid'))
@@ -227,11 +246,13 @@ class TransformationController extends Controller
                 $taches_a_valider = $request['tacheid'];
                 foreach ($taches_a_valider as $key => $value){
                     $tache = Tache::find($key);
+                    $user->logTransformationHistory("DEVALIDE_TACHE", json_encode(["tache" => $tache]));
                     foreach ($tache->objectifs()->get() as $objectif)
                     {
                         foreach($objectif->sous_objectifs()->get() as $sous_objectif)
                         {
                             $user->sous_objectifs()->detach($sous_objectif);
+                            $user->logTransformationHistory("DEVALIDE_SOUS_OBJECTIF", json_encode(["sous_objectif" => $sous_objectif]));
                         }
                     }
                 }
@@ -245,6 +266,7 @@ class TransformationController extends Controller
                     $workitem->date_validation=null;
                     $workitem->commentaire=null;
                     $workitem->save();
+                    $user->logTransformationHistory("DEVALIDE_STAGE", json_encode(["stage" => $stage]));
                 }
             }
         }
@@ -269,6 +291,12 @@ class TransformationController extends Controller
                 $userfonc->pivot->valideur_lache=$valideur;
                 $userfonc->pivot->date_lache = $date_validation;
                 $userfonc->pivot->save();
+                $event_detail = [
+                    "fonction" => $fonction,
+                    "commentaire" => $commentaire,
+                    "date_validation" => $date_validation,
+                ];
+                $user->logTransformationHistory("VALIDE_LACHE_FONCTION", json_encode($event_detail));
             }
             else
             {
@@ -282,6 +310,12 @@ class TransformationController extends Controller
             $userfonc->pivot->valideur_double=$valideur;
             $userfonc->pivot->date_double = $date_validation;
             $userfonc->pivot->save();
+            $event_detail = [
+                "fonction" => $fonction,
+                "commentaire" => $commentaire,
+                "date_validation" => $date_validation,
+            ];
+            $user->logTransformationHistory("VALIDE_DOUBLE_FONCTION", json_encode($event_detail));
         }
         elseif ($request->has('annulation_double'))
         {
@@ -289,6 +323,7 @@ class TransformationController extends Controller
             $userfonc->pivot->valideur_double=null;
             $userfonc->pivot->date_double = null;
             $userfonc->pivot->save();
+            $user->logTransformationHistory("ANNULE_DOUBLE_FONCTION", json_encode(["fonction" => $fonction]));
         }
         elseif ($request->has('annulation_lache'))
         {
@@ -296,6 +331,7 @@ class TransformationController extends Controller
             $userfonc->pivot->valideur_lache=null;
             $userfonc->pivot->date_lache = null;
             $userfonc->pivot->save();
+            $user->logTransformationHistory("ANNULE_LACHE_FONCTION", json_encode(["fonction" => $fonction]));
         }
         return redirect()->route('transformation.livret', ['user' => $user])->withSuccess('Mise a jour reussie.');
     }
