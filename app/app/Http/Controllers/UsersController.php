@@ -76,6 +76,7 @@ class UsersController extends Controller
             $user->roles()->attach($roletransfo);
         }
 
+
         if ($request["buttonid"] == "users.index")
             return redirect()->route("users.index")
                 ->withSuccess(__('L utilisateur a été créé avec succès.'));

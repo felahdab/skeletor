@@ -5,9 +5,9 @@
         <h2>Ajouter un utilisateur</h2>
         <div style='text-align:right;'>* champs obligatoires </div>
 <div x-data='{ allChecked : false }'>
-        <div class="container mt-4">
+        <div class="container mt-4" x-data="{ buttonid : '' }">
             <form method="POST" action="">
-                <input type='hidden' id='buttonid' name='buttonid' value=''>
+                <input type='hidden' id='buttonid' name='buttonid' x-model="buttonid">
                 @csrf
                 <div class="row">
                     <div class="col">
@@ -172,7 +172,7 @@
                                 <input type="checkbox" 
                                 name="role[{{ $role->name }}]"
                                 value="{{ $role->name }}"
-				class='role'
+                class='role'
                                 x-on:toggleallroles.window="$el.checked = allChecked;">
                             </td>
                             <td>{{ $role->name }}</td>
@@ -182,16 +182,10 @@
                 <div class="btn-group" role="groupe">
                     <button type="submit" 
                             class="btn btn-primary" 
-                            onclick='parentForm = jQuery(this).closest("form");
-                                    parentForm[0].querySelector("#buttonid").value="users.index";
-                                    parentForm.submit();
-                                    return false;'>Ajouter</button>
+                            x-on:click='buttonid ="users.index";'>Ajouter</button>
                     <button type="submit" 
                             class="btn btn-primary" 
-                            onclick='parentForm = jQuery(this).closest("form");
-                                    parentForm[0].querySelector("#buttonid").value="users.choisirfonction";
-                                    parentForm.submit();
-                                    return false;'>Ajouter et attribuer des fonctions</button>
+                            x-on:click='buttonid ="users.choisirfonction";'>Ajouter et attribuer des fonctions</button>
                 </div>
                 <a href="{{ route('users.index') }}" class="btn btn-default">Annuler</a>
             </form>

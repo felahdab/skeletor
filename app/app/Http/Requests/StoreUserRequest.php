@@ -39,6 +39,7 @@ class StoreUserRequest extends FormRequest
             'secteur_id' => 'required|numeric',
             'unite_destination_id' => 'required|numeric',
             'user_comment' => 'nullable',
+            'buttonid' => 'nullable'
         ];
     }
     
