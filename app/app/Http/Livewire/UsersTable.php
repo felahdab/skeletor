@@ -82,7 +82,18 @@ class UsersTable extends DataTableComponent
             Column::make('Service', 'secteur.service.service_libcourt')
                 ->searchable(),
             Column::make('Groupement', 'secteur.service.groupement.groupement_libcourt')
-                ->searchable() ];
+                ->searchable(),
+            Column::make('Comete', 'comete')
+                ->deSelected()
+                ->searchable()
+                ->format(
+                    fn($value, $row, Column $column) => view('tables.userstable.comete')->withRow($row)),
+            Column::make('Socle', 'socle')
+                ->deSelected()
+                ->searchable() 
+                ->format(
+                    fn($value, $row, Column $column) => view('tables.userstable.socle')->withRow($row)),
+        ];
                 
         if ($this->mode == "gestion")
         {
@@ -147,7 +158,35 @@ class UsersTable extends DataTableComponent
                         $diplome = Diplome::where('diplome_libcourt', 'like', '%' . $value . '%')->get()->first();
                         if ($diplome != null)
                             $builder->where('diplome_id', $diplome->id);
-                })
+                }),
+            SelectFilter::make('Comete')
+                ->options([
+                    '' => 'Tous',
+                    '1' => 'Embarqué',
+                    '0' => 'Non embarqué',
+                ])
+                ->filter(function(Builder $builder, string $value) {
+                    if ($value === '1') {
+                        $builder->where('comete', true);
+                    } 
+                    elseif ($value === '0') {
+                        $builder->where('comete', false);
+                    }
+                }),
+            SelectFilter::make('Socle')
+                ->options([
+                    '' => 'Tous',
+                    '1' => 'Socle',
+                    '0' => 'Transformation',
+                ])
+                ->filter(function(Builder $builder, string $value) {
+                    if ($value === '1') {
+                        $builder->where('socle', true);
+                    } 
+                    elseif ($value === '0') {
+                        $builder->where('socle', false);
+                    }
+                }),
         ];
     }
 }
