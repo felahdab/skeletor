@@ -110,13 +110,11 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
-                        @if (false)
                             <label for="matricule" class="form-label">Matricule</label>
                             {!!Form::text('matricule', $user->matricule , ['class' => 'form-control', 'placeholder'=> "Matricule", 'required']) !!}
                             @if ($errors->has('matricule'))
                                 <span class="text-danger text-left">{{ $errors->first(matricule) }}</span>
                             @endif
-                        @endif
                         </div>
                     </div>
                     <div class="col">
@@ -144,6 +142,25 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
+                            <label for="nid" class="form-label">NID</label>
+                            {!!Form::text('nid', $user->nid , ['class' => 'form-control', 'placeholder'=> "NID"]) !!}
+                            @if ($errors->has('nid'))
+                                <span class="text-danger text-left">{{ $errors->first(nid) }}</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="photo" class="form-label">Photo</label>
+                            <input type="file" 
+                                class="form-control" 
+                                name="photo">
+                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
                             <label for="date_embarq" class="form-label">Date d'embarquement</label>
                             {!!Form::date('date_embarq', $user->date_embarq , ['class' => 'form-control', 'placeholder'=> 'Date d\'embarquement', 'required']) !!}
                             @if ($errors->has('date_embarq'))
@@ -151,17 +168,6 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col">
-                        <div class="mb-3">
-                            <label for="date_debarq" class="form-label">Date de débarquement</label>
-                            {!!Form::date('date_debarq', $user->date_debarq , ['class' => 'form-control', 'placeholder'=> 'Date de debarquement']) !!}
-                            @if ($errors->has('date_debarq'))
-                                <span class="text-danger text-left">{{ $errors->first(date_debarq) }}</span>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
                     <div class="col">
                         <div class="mb-3">
                             <label for="unite_destination" class="form-label">Unité destination</label>
@@ -179,10 +185,22 @@
                             @if ($errors->has('unite_destination'))
                                 <span class="text-danger text-left">{{ $errors->first(unite_destination) }}</span>
                             @endif
-                       </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="date_debarq" class="form-label">Date de débarquement</label>
+                            {!!Form::date('date_debarq', $user->date_debarq , ['class' => 'form-control', 'placeholder'=> 'Date de debarquement']) !!}
+                            @if ($errors->has('date_debarq'))
+                                <span class="text-danger text-left">{{ $errors->first(date_debarq) }}</span>
+                            @endif
+                        </div>
                     </div>
                     <div class="col">
                         <div class="mb-3">
+                            @if (false)
                             @if (auth()->user()->hasRole("admin"))
                                 <label for="unite_affectation" class="form-label">Unité d'affectation</label>
                                 <select class="form-control" 
@@ -197,7 +215,26 @@
                                     @endforeach
                                 </select>
                             @endif
+                            @endif
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <input type="checkbox" name="comete" value="1"{{ $user->comete
+                                            ? ' checked'
+                                            : '' }}>
+                            <label for="comete" class="form-label">Embarqué COMETE</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                            <input type="checkbox" name="socle" value="1"{{ $user->socle
+                                            ? ' checked'
+                                            : '' }}>
+                            <label for="socle" class="form-label">Socle</label>
+                         </div>
                     </div>
                 </div>
                 <div class="row">

@@ -67,7 +67,6 @@ class UsersController extends Controller
         $user->prenom = ucfirst(strtolower($user->prenom));
         $user->display_name = $user->displayString();
         $user->save();
-        
         $user->syncRoles($request->get('role'));
         
         if (is_null($request->get('role')) or ! in_array("user", $request->get('role')))
@@ -75,7 +74,6 @@ class UsersController extends Controller
             $roletransfo = Role::where("name", "user")->get()->first();
             $user->roles()->attach($roletransfo);
         }
-
 
         if ($request["buttonid"] == "users.index")
             return redirect()->route("users.index")
@@ -208,6 +206,14 @@ class UsersController extends Controller
      */
     public function update(User $user, UpdateUserRequest $request) 
     {
+        if ($request->has('socle'))
+            $user->socle = true;
+        else
+            $user->socle = false;
+        if ($request->has('comete'))
+            $user->comete = true;
+        else
+            $user->comete = false;
         $user->update($request->validated());
         $user->name = strtoupper($user->name);
         $user->prenom = ucfirst(strtolower($user->prenom));
