@@ -10,7 +10,7 @@
 
 <div x-data='{ allchecked : false }' >
         <div class="container mt-4">
-            {!! Form::open(['method' => 'PATCH','route' => ['users.update', $user->id]]) !!}
+            {!! Form::open(['method' => 'PATCH','route' => ['users.update', $user->id], 'enctype'=>'multipart/form-data' ]) !!}
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
@@ -153,6 +153,7 @@
                         <div class="mb-3">
                             <label for="photo" class="form-label">Photo</label>
                             <input type="file" 
+                                accept='.jpg, .jpeg, .png'
                                 class="form-control" 
                                 name="photo">
                          </div>

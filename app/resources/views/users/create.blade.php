@@ -6,7 +6,7 @@
         <div style='text-align:right;'>* champs obligatoires </div>
 <div x-data='{ allChecked : false }'>
         <div class="container mt-4" x-data="{ buttonid : '' }">
-            <form method="POST" action="">
+            <form method="POST" action="" enctype="multipart/form-data">
                 <input type='hidden' id='buttonid' name='buttonid' x-model="buttonid">
                 @csrf
                 <div class="row">
@@ -134,6 +134,7 @@
                             <label for="photo" class="form-label">Photo</label>
                             <input type="file" 
                                 class="form-control" 
+                                accept='.jpg, .jpeg, .png'
                                 name="photo">
                         </div>
                     </div>
