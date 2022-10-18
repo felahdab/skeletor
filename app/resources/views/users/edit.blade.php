@@ -152,6 +152,7 @@
                     <div class="col">
                         <div class="mb-3">
                             <label for="photo" class="form-label">Photo</label>
+                            <img src="{{asset('public/images/' . $user->photo)}}" height="10px" width="10px">
                             <input type="file" 
                                 accept='.jpg, .jpeg, .png'
                                 class="form-control" 
