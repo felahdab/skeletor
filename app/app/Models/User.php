@@ -43,7 +43,7 @@ class User extends Authenticatable
         'prenom',
         'email',
         'password',
-        // 'matricule',
+        'matricule',
         'date_embarq',
         'date_debarq',
         'photo',
@@ -55,6 +55,9 @@ class User extends Authenticatable
         'unite_destination_id',
         'user_comment',
         'display_name',
+        'nid',
+        'comete',
+        'socle',
     ];
 
     /**
