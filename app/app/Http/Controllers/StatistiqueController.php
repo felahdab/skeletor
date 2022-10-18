@@ -40,23 +40,8 @@ class StatistiqueController extends Controller
     
     public function pourtuteurs()
     {
-        // Debugbar::startMeasure("controller", "Controller");
         $currentuser = auth()->user();
-        $secteur_id = $currentuser->secteur_id;
-        
-        $stages = Stage::all();
-        $users = User::local()->where('secteur_id', $secteur_id)->get()->where('en_transformation', true);
-        $services = Service::orderBy('service_libcourt')->get();
-        $fonctionsaquai = Fonction::where('typefonction_id', 2);
-        
-        // Debugbar::startMeasure("render", "Rendering");
-        $view = view('statistiques.pourtuteurs', ['currentuser' => $currentuser,
-                                    'stages'   => $stages,
-                                   'services' => $services,
-                                   'fonctionsaquai' => $fonctionsaquai,
-                                   'users'    => $users]); 
-        // Debugbar::stopMeasure("render");
-        // Debugbar::stopMeasure("controller");
+        $view = view('statistiques.pourtuteurs', ['currentuser' => $currentuser,]); 
         return $view;
     }
     

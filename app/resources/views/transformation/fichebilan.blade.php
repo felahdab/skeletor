@@ -28,7 +28,7 @@
             style='width: 100%; height: 95%; '>
                 <thead style='border: 1px solid #C3C3C3; '>
                     <tr class='enTeteFicheSynthese'>
-                        <td colspan='2'><h1>{{$user->displayString()}}</h1></td>
+                        <td colspan='2'><h1>{{$user->display_name}}</h1></td>
                         <td></td>
                         <td rowspan='4 '></td>
                     </tr>
@@ -79,8 +79,8 @@
                     </tr>
                     <tr>
                         <!-- Entete fiche synthese -->
-                        <th colspan='2' class='text-center'>COMPAGNONNAGE - PRODEF</th>
-                        <th colspan='2' class='text-center'>STAGES - TP</th>
+                        <th colspan='2' class='text-center'>COMPAGNONNAGES</th>
+                        <th colspan='2' class='text-center'>STAGES</th>
                     </tr>
                 </thead>
                 <tbody>

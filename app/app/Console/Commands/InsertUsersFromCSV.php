@@ -77,18 +77,18 @@ class InsertUsersFromCSV extends Command
             
             $newUser->date_embarq = $date_embarq;
             
-            $newUser->user_comment = $user['specialite'] . " " . $user['lache'];
+            // $newUser->user_comment = $user['specialite'] . " " . $user['lache'];
             $newUser->unite_id = 2;
             
-            $newUser->secteur_id = intval($user["secteur_id"]);
+            // $newUser->secteur_id = intval($user["secteur_id"]);
             
             $newUser->save();
             
-            $fonction=Fonction::find($user["fonction_id"]);
-            if ($fonction!=null)
-            {
-                $newUser->attachFonction($fonction);
-            }
+            // $fonction=Fonction::find($user["fonction_id"]);
+            // if ($fonction!=null)
+            // {
+                // $newUser->attachFonction($fonction);
+            // }
             
             $situation = $user["Situation"];
             if ($situation == "SOCLE")

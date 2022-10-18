@@ -62,11 +62,15 @@ class UsersController extends Controller
     public function store(User $user, StoreUserRequest $request) 
     {
         $user = $user->create(array_merge($request->validated(), [ "password" =>$this->generateRandomString()]));
+
+        $name=$request->file('photo');
+        $result = $name->storePublicly("public/images");
+        $user->photo=$name->hashName();
         
         $user->name = strtoupper($user->name);
         $user->prenom = ucfirst(strtolower($user->prenom));
+        $user->display_name = $user->displayString();
         $user->save();
-        
         $user->syncRoles($request->get('role'));
         
         if (is_null($request->get('role')) or ! in_array("user", $request->get('role')))
@@ -206,9 +210,29 @@ class UsersController extends Controller
      */
     public function update(User $user, UpdateUserRequest $request) 
     {
+        if ($name=$request->file('photo')){
+            if ($user->photo){
+                // on supprime l'ancienne photo
+                $previouspath = storage_path('app/public/images/' . $user->photo);
+                if (file_exists($previouspath)){unlink($previouspath);}
+            }
+            //on stocke la nouvelle image
+            $name->storePublicly("public/images");
+            $user->photo=$name->hashName();
+        }
+        
+        if ($request->has('socle'))
+            $user->socle = true;
+        else
+            $user->socle = false;
+        if ($request->has('comete'))
+            $user->comete = true;
+        else
+            $user->comete = false;
         $user->update($request->validated());
         $user->name = strtoupper($user->name);
         $user->prenom = ucfirst(strtolower($user->prenom));
+        $user->display_name = $user->displayString();
         $user->save();
 
         $user->syncRoles($request->get('role'));

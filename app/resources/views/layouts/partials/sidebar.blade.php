@@ -1,6 +1,6 @@
 @auth
     <a class="btn btn-outline-primary w-100" href="{{ route('home.index') }}">Accueil</a>
-    <h5 class="w-100 text-center">{{ auth()->user()->displayString() }}</h5>
+    <h5 class="w-100 text-center">{{ auth()->user()->display_name }}</h5>
         @if (count(auth()->user()->roles) > 1 )
             <a class="btn btn-outline-primary w-100"  href="{{ route('currentrole.show') }}">Changer de role</a>
         @endif

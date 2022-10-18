@@ -4,10 +4,10 @@
     <div class="bg-light p-4 rounded">
         <h2>Ajouter un utilisateur</h2>
         <div style='text-align:right;'>* champs obligatoires </div>
-
-        <div class="container mt-4">
-            <form method="POST" action="">
-                <input type='hidden' id='buttonid' name='buttonid' value=''>
+<div x-data='{ allChecked : false }'>
+        <div class="container mt-4" x-data="{ buttonid : '' }">
+            <form method="POST" action="" enctype="multipart/form-data">
+                <input type='hidden' id='buttonid' name='buttonid' x-model="buttonid">
                 @csrf
                 <div class="row">
                     <div class="col">
@@ -97,12 +97,11 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
-                            <label for="date_embarq" class="form-label">Date d'embarquement *</label>
-                            <input value="{{ date('Y-m-d') }}" 
-                                type="date" 
+                            <label for="matricule" class="form-label">Matricule</label>
+                            <input type="text" 
                                 class="form-control" 
-                                name="date_embarq" 
-                                placeholder="Date d'embarquement" required>
+                                name="matricule" 
+                                placeholder="Matricule">
                         </div>
                     </div>
                     <div class="col">
@@ -123,19 +122,23 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
-                            <label for="unite_destination_id" class="form-label">Unité destination</label>
-                            <select class="form-control" 
-                                name="unite_destination_id" >
-                                <option value="0">Unité destination</option>
-                                @foreach($unites as $unite)
-                                    <option value="{{ $unite->id }}">
-                                        {{ $unite->unite_liblong }}
-                                        </option>
-                                @endforeach
-                    </select>
+                            <label for="nid" class="form-label">NID</label>
+                            <input type="text" 
+                                class="form-control" 
+                                name="nid" 
+                                placeholder="NID">
                          </div>
                     </div>
                     <div class="col">
+                        <div class="mb-3">
+                            <label for="photo" class="form-label">Photo</label>
+                            <input type="file" 
+                                class="form-control" 
+                                accept='.jpg, .jpeg, .png'
+                                name="photo">
+                        </div>
+                    </div>
+                    <!--div class="col">
                         <div class="mb-3">
                         @if (auth()->user()->hasRole("admin"))
                             <label for="unite_destination_id" class="form-label">Unité d'affectation *</label>
@@ -150,6 +153,46 @@
                             </select>
                         @endif
                         </div>
+                    </div-->
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="date_embarq" class="form-label">Date d'embarquement *</label>
+                            <input value="{{ date('Y-m-d') }}" 
+                                type="date" 
+                                class="form-control" 
+                                name="date_embarq" 
+                                placeholder="Date d'embarquement" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                             <label for="unite_destination_id" class="form-label">Unité destination (informatif uniquement)</label>
+                            <select class="form-control" 
+                                name="unite_destination_id" >
+                                <option value="0">Unité destination</option>
+                                @foreach($unites as $unite)
+                                    <option value="{{ $unite->id }}">
+                                        {{ $unite->unite_liblong }}
+                                        </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <input type="checkbox" name="comete" value="1">
+                            <label for="comete" class="form-label">Embarqué COMETE</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                            <input type="checkbox" name="socle" value="1">
+                            <label for="socle" class="form-label">Socle</label>
+                         </div>
                     </div>
                 </div>
                 <div class="row">
@@ -162,7 +205,7 @@
 
                 <table class="table table-striped">
                     <thead>
-                        <th scope="col" width="1%"><input type="checkbox" name="all_roles"></th>
+                        <th scope="col" width="1%"><input type="checkbox" x-on:click="allChecked = ! allChecked; $dispatch('toggleallroles');"></th>
                         <th scope="col" width="20%">Sélectionner les r&ocirc;les</th>
                     </thead>
 
@@ -172,7 +215,8 @@
                                 <input type="checkbox" 
                                 name="role[{{ $role->name }}]"
                                 value="{{ $role->name }}"
-                                class='role'>
+                class='role'
+                                x-on:toggleallroles.window="$el.checked = allChecked;">
                             </td>
                             <td>{{ $role->name }}</td>
                         </tr>
@@ -181,40 +225,15 @@
                 <div class="btn-group" role="groupe">
                     <button type="submit" 
                             class="btn btn-primary" 
-                            onclick='parentForm = jQuery(this).closest("form");
-                                    parentForm[0].querySelector("#buttonid").value="users.index";
-                                    parentForm.submit();
-                                    return false;'>Ajouter</button>
+                            x-on:click='buttonid ="users.index";'>Ajouter</button>
                     <button type="submit" 
                             class="btn btn-primary" 
-                            onclick='parentForm = jQuery(this).closest("form");
-                                    parentForm[0].querySelector("#buttonid").value="users.choisirfonction";
-                                    parentForm.submit();
-                                    return false;'>Ajouter et attribuer des fonctions</button>
+                            x-on:click='buttonid ="users.choisirfonction";'>Ajouter et attribuer des fonctions</button>
                 </div>
                 <a href="{{ route('users.index') }}" class="btn btn-default">Annuler</a>
             </form>
         </div>
-
+</div>
     </div>
 @endsection
 
-@section('scripts')
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('[name="all_roles"]').on('click', function() {
-
-                if($(this).is(':checked')) {
-                    $.each($('.role'), function() {
-                        $(this).prop('checked',true);
-                    });
-                } else {
-                    $.each($('.role'), function() {
-                        $(this).prop('checked',false);
-                    });
-                }
-                
-            });
-        });
-    </script>
-@endsection

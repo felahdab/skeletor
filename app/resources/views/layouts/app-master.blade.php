@@ -30,6 +30,11 @@
         }
       }
     </style>
+    <style>
+        [x-cloak] {
+            display: none;
+        }
+    </style>
 
 </head>
 <body>
@@ -61,7 +66,6 @@
     @livewireScripts
     <script src="{!! asset('assets/js/alpine.js') !!}"></script>
     <script src="{!! asset('assets/js/jsfile.js') !!}"></script>
-    <script src="{!! asset('assets/jquery/jquery-3.6.0.min.js') !!}"></script>
     <script src="{!! asset('assets/bootstrap/js/bootstrap.bundle.js') !!}"></script>
     @yield("scripts")
 

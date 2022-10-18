@@ -120,6 +120,10 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::get('/maprogression', 'TransformationController@maprogression')->name('transformation.maprogression');
         });
         
+        Route::group(['prefix' => 'historique'], function() {
+             Route::get('/', 'TransformationHistoryController@index')->name('historique.index');
+        });
+        
         Route::get('statistiques/', 'StatistiqueController@index')->name('statistiques.index');
         Route::get('statistiques/pourtuteurs', 'StatistiqueController@pourtuteurs')->name('statistiques.pourtuteurs');
         Route::get('statistiques/pourem', 'StatistiqueController@pourem')->name('statistiques.pourem');

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Models\Fonction;
 use App\Models\User;
+use App\Mail\EssaiMail;
+use Illuminate\Support\Facades\Mail;
 
 // use App\Events\UserTransformationUpdated;
 
@@ -15,9 +17,8 @@ class TestController extends Controller
 {
     public function test()
     {
-        $user = User::find(1);
-        CalculateUserTransformationRatios::dispatch($user);
-        return view('test.test');
+        Mail::to("florian.el-ahdab@intradef.gouv.fr")->queue(new EssaiMail());
+        return redirect()->route("home.index")->withSuccess("Mail sent");
         
     }
 }

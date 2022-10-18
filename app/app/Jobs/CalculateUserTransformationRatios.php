@@ -46,7 +46,7 @@ class CalculateUserTransformationRatios implements ShouldQueue
             $workitem->taux_de_transformation = $taux;
             $workitem->save();
         }
-        $taux_global = $user->taux_de_transformation();
+        $taux_global = $user->taux_de_transformation(true);
         $user->taux_de_transformation = $taux_global;
         $user->save();
         return;

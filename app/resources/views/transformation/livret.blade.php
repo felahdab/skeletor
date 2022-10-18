@@ -4,7 +4,7 @@
     <div class="bg-light p-4 rounded">
         <h1>Transformation</h1>
         <div class="lead">
-            Livret de transformation de {{$user->displayString()}}
+            Livret de transformation de {{$user->display_name}}
         </div>
         
         @if($readwrite)
@@ -14,14 +14,22 @@
             @can('users.stages')
                 <a href="{{ route('users.stages', $user->id) }}" class="btn btn-danger btn-sm">Stages</a>
             @endcan
-            <a href="{{ route('transformation.index') }}" class="btn btn-default btn-sm">Annuler</a>
+            <a href="{{ url()->previous() }}" class="btn btn-default btn-sm">Annuler</a>
         @else
             <a href="{{ route('transformation.monlivret') }}" class="btn btn-warning btn-sm">Mon livret de transformation</a>
             <a href="{{ route('transformation.maprogression') }}" class="btn btn-primary btn-sm">Ma progression</a>
             <a href="{{ route('transformation.mafichebilan') }}" class="btn btn-secondary btn-sm">Ma fiche bilan</a>
         @endif
+        
+        <div x-data="{ opendivvalid : false ,
+                       commentaire : '' ,
+                       valideur : '{{auth()->user()->display_name}}',
+                       button : null,
+                       buttonid : '',
+                       date_validation : '{{ date('Y-m-d')}}' }">
+                       
         @if($readwrite)
-        <div id='divvalid' class='popupvalidcontrat' style='display:none;'>
+        <div x-cloak x-show="opendivvalid" id='divvalid' class='popupvalidcontrat'>
             <div class='titrenavbarvert'>
                 <h5>Validation</h5>
             </div>
@@ -29,34 +37,28 @@
             <div class='form-group row pl-3 mt-2' >
                 <label for='datvalid' class='col-sm-5 col-form-label '>Date validation</label>
                 <div class='col-sm-5'>
-                <input type='date' class='form-control'name='date_validation' id='date_validation' value='{{date("Y-m-d")}}' required>
+                <input type='date' class='form-control'name='date_validation' id='date_validation' required x-model="date_validation">
                 </div>
             </div>
             <div class='form-group row  pl-3' >
                 <label for='valideur' class='col-sm-5 col-form-label '>Valideur</label>
                 <div class='col-sm-5'>
-                    <input type='text' class='form-control' name='valideur' id='valideur' placeholder=' Valideur' value='{{auth()->user()->displayString()}}'>
+                    <input type='text' class='form-control' name='valideur' id='valideur' placeholder=' Valideur' x-model="valideur">
                 </div>
             </div>
             <div class='form-group row  pl-3' >
                 <label for='comment' class='col-sm-5 col-form-label '>Commentaire</label>
                 <div class='col-sm-5'>
-                    <textarea cols='40' rows='4' name='commentaire' id='commentaire' placeholder='Commentaire'></textarea>
+                    <textarea cols='40' rows='4' name='commentaire' id='commentaire' placeholder='Commentaire' x-model="commentaire"></textarea>
                 </div>
             </div>
             <div class='text-center'>
                 <button class='btn btn-primary w-25 mt-4 mr-2 mb-2' 
                 id='btnvalidobj' 
                 name='btnvalidobj'
-                onclick='divvalid = getElementById("divvalid");
-                        formtosubmitid=divvalid.querySelector("#formtosubmit").value;
-                        formtosubmit = getElementById(formtosubmitid);
-                        formtosubmit.querySelector("#commentaire").value = divvalid.querySelector("#commentaire").value;
-                        formtosubmit.querySelector("#date_validation").value = divvalid.querySelector("#date_validation").value;
-                        formtosubmit.querySelector("#valideur").value = divvalid.querySelector("#valideur").value;
-                        formtosubmit.submit();'
-                            >Valider</button>
-                <button class='btn btn-primary w-25 mt-4 mb-2' type='reset' form='formlivret' id='btnresetobj' name='btnresetobj' onclick='annuler("divvalid");'>Annuler</button>
+                x-on:click="opendivvalid = false;
+                            $dispatch('uservalidated');">Valider</button>
+                <button class='btn btn-primary w-25 mt-4 mb-2' x-on:click='opendivvalid=false;'>Annuler</button>
             </div>
         </div>
         @endif
@@ -71,10 +73,10 @@
             
             @if($readwrite){!! Form::open(['method' => 'POST','id'=> 'fonction[' . $fonction->id .']' , 'route' => ['transformation.validerlacheoudouble', $user->id, $fonction->id]]) !!}
             <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
-            <input type='hidden' id='date_validation' name='date_validation' value=''>
-            <input type='hidden' id='commentaire' name='commentaire' value=''>
-            <input type='hidden' id='valideur' name='valideur' value=''>
-            <input type='hidden' id='buttonid' name='buttonid' value=''>@endif
+            <input type='hidden' id='date_validation' name='date_validation' x-model="date_validation">
+            <input type='hidden' id='commentaire' name='commentaire' x-model="commentaire">
+            <input type='hidden' id='valideur' name='valideur' x-model="valideur">
+            <input type='hidden' id='buttonid' name='buttonid' x-model="buttonid">@endif
             
             <table class='table'>
                 <tr class='lignecomp div-table-contrat-compagnonnage'>
@@ -88,7 +90,7 @@
                         <td style='width:5%;'>Lieu de formation</td>
                 </tr>
                 @if ($fonction->fonction_double)
-                <tr  class='lignecomp'>
+                <tr  class='lignecomp' x-data='{ active : false }'>
                     <td>DOUBLE</td>
                     <td>
                     @if ($fonction->pivot->date_double != null)
@@ -113,19 +115,17 @@
                     <button type="submit" 
                         class="btn btn-primary" 
                         name="validation_double"
-                        onclick='divvalid = getElementById("divvalid");
-                                parentForm = jQuery(this).closest("form");
-                                parentForm[0].querySelector("#buttonid").value="validation_double";
-                                divvalid.querySelector("#formtosubmit").value=parentForm[0].id;
-                                affichage("divvalid");
-                                return false;'>Valider</button>
+                        x-on:click.prevent="active  = true; 
+                                           buttonid ='validation_double'; 
+                                       opendivvalid =true;">Valider</button>
+                    <button x-show="false" type="submit"  x-on:uservalidated.window="if (active){ active = false;  $el.click();}"></button>
                     @endif
                     </td>
                     <td>Bord</td>
                 </tr>
                 @endif
                 @if ($fonction->fonction_lache)
-                <tr  class='lignecomp'>
+                <tr  class='lignecomp' x-data='{ active : false }'>
                     <td>LACHER</td>
                     <td class="text-start">
                     @if ($fonction->pivot->date_double != null)
@@ -149,12 +149,10 @@
                     <button type="submit" 
                         class="btn btn-primary" 
                         name="validation_lache"
-                        onclick='divvalid = getElementById("divvalid");
-                                parentForm = jQuery(this).closest("form");
-                                parentForm[0].querySelector("#buttonid").value="validation_lache";
-                                divvalid.querySelector("#formtosubmit").value=parentForm[0].id;
-                                affichage("divvalid");
-                                return false;'>Valider</button>
+                        x-on:click.prevent="active  = true; 
+                                           buttonid ='validation_lache'; 
+                                       opendivvalid =true;">Valider</button>
+                        <button x-show="false" type="submit"  x-on:uservalidated.window="if (active){ active = false;  $el.click();}"></button>
                     @endif
                     </td>
                     <td>Bord</td>
@@ -164,16 +162,16 @@
             @if($readwrite){!! Form::close() !!} @endif
             
             @if ($fonction->compagnonages()->get()->count() > 0)
-            <h4>Compagnonages liés à la fonction {{ $fonction->fonction_liblong }} </h4>
+            <h4>Compagnonnages liés à la fonction {{ $fonction->fonction_liblong }} </h4>
             
             @if($readwrite){!! Form::open(['method' => 'POST','id'=> 'ssobjs[' . $fonction->id .']' ,'route' => ['transformation.livret', $user->id]]) !!}@endif
             <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
-            <input type='hidden' id='date_validation' name='date_validation' value=''>
-            <input type='hidden' id='commentaire' name='commentaire' value=''>
-            <input type='hidden' id='valideur' name='valideur' value=''>
-            <input type='hidden' id='buttonid' name='buttonid' value=''>
+            <input type='hidden' id='date_validation' name='date_validation' x-model="date_validation">
+            <input type='hidden' id='commentaire' name='commentaire' x-model="commentaire">
+            <input type='hidden' id='valideur' name='valideur' x-model="valideur">
+            <input type='hidden' id='buttonid' name='buttonid' x-model="buttonid">
             
-            <table class='table'>
+            <table class='table' x-data='{ active : false }'>
                 @foreach($fonction->compagnonages()->get() as $compagnonage)
 
                     <tr class='lignecomp div-table-contrat-compagnonnage'>
@@ -235,12 +233,10 @@
                             <button type="submit" 
                             class="btn btn-primary" 
                             name="validation"
-                            onclick='divvalid = getElementById("divvalid");
-                                parentForm = jQuery(this).closest("form");
-                                parentForm[0].querySelector("#buttonid").value="validation";
-                                divvalid.querySelector("#formtosubmit").value=parentForm[0].id;
-                                affichage("divvalid");
-                                return false;'>Valider les éléments cochés</button>
+                            x-on:click.prevent="active = true ;
+                                                opendivvalid = true ;
+                                                buttonid = 'validation' ;">Valider les éléments cochés</button>
+                            <button x-show="false" type="submit"  x-on:uservalidated.window="if (active){ active = false;  $el.click();}"></button>
                             <button type="submit" 
                             class="btn btn-danger" 
                             name="annulation_validation">Annuler la validation des éléments cochés</button>
@@ -257,12 +253,12 @@
             
             {!! Form::open(['method' => 'POST','id'=> 'stages[' . $fonction->id .']' ,'route' => ['transformation.livret', $user->id]]) !!}
             <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
-            <input type='hidden' id='date_validation' name='date_validation' value=''>
-            <input type='hidden' id='commentaire' name='commentaire' value=''>
-            <input type='hidden' id='valideur' name='valideur' value=''>
-            <input type='hidden' id='buttonid' name='buttonid' value=''>
+            <input type='hidden' id='date_validation' name='date_validation' x-model="date_validation">
+            <input type='hidden' id='commentaire' name='commentaire' x-model="commentaire">
+            <input type='hidden' id='valideur' name='valideur' x-model="valideur">
+            <input type='hidden' id='buttonid' name='buttonid' x-model="buttonid">
             
-            <table class='table'>
+            <table class='table' x-data='{ active : false }'>
                 @foreach($fonction->stages()->get() as $stage)
 
                 <tr class='lignecomp div-table-contrat-compagnonnage'>
@@ -295,12 +291,10 @@
                             <button type="submit" 
                             class="btn btn-primary" 
                             name="validation"
-                            onclick='divvalid = getElementById("divvalid");
-                                parentForm = jQuery(this).closest("form");
-                                parentForm[0].querySelector("#buttonid").value="validation";
-                                divvalid.querySelector("#formtosubmit").value=parentForm[0].id;
-                                affichage("divvalid");
-                                return false;'>Valider les éléments cochés</button>
+                            x-on:click.prevent='active = true;
+                                                opendivvalid = true;
+                                                buttonid = "validation";'>Valider les éléments cochés</button>
+                            <button x-show="false" type="submit"  x-on:uservalidated.window="if (active){ active = false;  $el.click();}"></button>
                             <button type="submit" 
                             class="btn btn-danger" 
                             name="annulation_validation">Annuler la validation des éléments cochés</button>
@@ -337,6 +331,6 @@
                 </table>
             @endif
         </div> 
+        </div>
     </div>
-    
 @endsection

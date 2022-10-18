@@ -30,7 +30,7 @@ class StoreUserRequest extends FormRequest
             'name' => 'required',
             'prenom' => 'required',
             'email' =>  [ 'required', 'email:rfc,dns', 'unique:users,email', new IntradefEmailValidation],
-            // 'matricule' => 'required',
+            'matricule' => 'required',
             'date_embarq' => 'required|date', 
             'date_debarq' => 'date|nullable',
             'grade_id' => 'required|numeric',
@@ -39,6 +39,10 @@ class StoreUserRequest extends FormRequest
             'secteur_id' => 'required|numeric',
             'unite_destination_id' => 'required|numeric',
             'user_comment' => 'nullable',
+            'buttonid' => 'nullable',
+            'nid'=>'nullable',
+            'comete'=>'required',
+            'socle'=>'required'
         ];
     }
     
