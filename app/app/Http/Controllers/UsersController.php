@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\Secteur;
 use App\Models\Specialite;
@@ -60,13 +62,27 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(User $user, StoreUserRequest $request) 
-    {
+    {        
         $user = $user->create(array_merge($request->validated(), [ "password" =>$this->generateRandomString()]));
-
-        $name=$request->file('photo');
-        $result = $name->storePublicly("public/images");
-        $user->photo=$name->hashName();
-        
+        // partie photo //
+        if ($request->file('photo')){
+            $filename = $user->id.'.'.$request->file('photo')->extension(); 
+            $path = $request->file('photo')->storeAs(
+                                                'photos', //repertoire
+                                                $filename , //nom fichier
+                                                'public' // espace de stockage
+                                            );
+            $user->photo=$path;
+        }
+        if ($request->has('socle'))
+            $user->socle = true;
+        else
+            $user->socle = false;
+        if ($request->has('comete'))
+            $user->comete = true;
+        else
+            $user->comete = false;
+       
         $user->name = strtoupper($user->name);
         $user->prenom = ucfirst(strtolower($user->prenom));
         $user->display_name = $user->displayString();
@@ -210,15 +226,15 @@ class UsersController extends Controller
      */
     public function update(User $user, UpdateUserRequest $request) 
     {
-        if ($name=$request->file('photo')){
-            if ($user->photo){
-                // on supprime l'ancienne photo
-                $previouspath = storage_path('app/public/images/' . $user->photo);
-                if (file_exists($previouspath)){unlink($previouspath);}
-            }
-            //on stocke la nouvelle image
-            $name->storePublicly("public/images");
-            $user->photo=$name->hashName();
+        // partie photo //
+        if ($request->file('photo')){
+            $filename = $user->id.'.'.$request->file('photo')->extension(); 
+            $path = $request->file('photo')->storeAs(
+                                                'photos', //repertoire
+                                                $filename , //nom fichier
+                                                'public' // espace de stockage
+                                            );
+            $user->photo=$path;
         }
         
         if ($request->has('socle'))

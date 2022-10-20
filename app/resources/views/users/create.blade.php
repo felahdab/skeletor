@@ -131,29 +131,18 @@
                     </div>
                     <div class="col">
                         <div class="mb-3">
-                            <label for="photo" class="form-label">Photo</label>
-                            <input type="file" 
-                                class="form-control" 
-                                accept='.jpg, .jpeg, .png'
-                                name="photo">
-                        </div>
-                    </div>
-                    <!--div class="col">
-                        <div class="mb-3">
-                        @if (auth()->user()->hasRole("admin"))
-                            <label for="unite_destination_id" class="form-label">Unité d'affectation *</label>
+                            <label for="unite_destination_id" class="form-label">Unité destination (informatif uniquement)</label>
                             <select class="form-control" 
-                                name="unite_id" >
-                                <option value="0">Unité d'affectation</option>
+                                name="unite_destination_id" >
+                                <option value="0">Unité destination</option>
                                 @foreach($unites as $unite)
-                                    <option value="{{ $unite->id }}" @selected($unite->id == auth()->user()->unite_id)>
+                                    <option value="{{ $unite->id }}">
                                         {{ $unite->unite_liblong }}
                                         </option>
                                 @endforeach
                             </select>
-                        @endif
                         </div>
-                    </div-->
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col">
@@ -168,16 +157,11 @@
                     </div>
                     <div class="col">
                         <div class="mb-3">
-                             <label for="unite_destination_id" class="form-label">Unité destination (informatif uniquement)</label>
-                            <select class="form-control" 
-                                name="unite_destination_id" >
-                                <option value="0">Unité destination</option>
-                                @foreach($unites as $unite)
-                                    <option value="{{ $unite->id }}">
-                                        {{ $unite->unite_liblong }}
-                                        </option>
-                                @endforeach
-                            </select>
+                            <label for="photo" class="form-label">Photo</label>
+                            <input type="file" 
+                                class="form-control" 
+                                accept='.jpg, .jpeg, .png'
+                                name="photo">
                         </div>
                     </div>
                 </div>

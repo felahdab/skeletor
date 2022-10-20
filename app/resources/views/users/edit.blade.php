@@ -111,7 +111,7 @@
                     <div class="col">
                         <div class="mb-3">
                             <label for="matricule" class="form-label">Matricule</label>
-                            {!!Form::text('matricule', $user->matricule , ['class' => 'form-control', 'placeholder'=> "Matricule", 'required']) !!}
+                            {!!Form::text('matricule', $user->matricule , ['class' => 'form-control', 'placeholder'=> "Matricule"]) !!}
                             @if ($errors->has('matricule'))
                                 <span class="text-danger text-left">{{ $errors->first(matricule) }}</span>
                             @endif
@@ -151,27 +151,6 @@
                     </div>
                     <div class="col">
                         <div class="mb-3">
-                            <label for="photo" class="form-label">Photo</label>
-                            <img src="{{asset('public/images/' . $user->photo)}}" height="10px" width="10px">
-                            <input type="file" 
-                                accept='.jpg, .jpeg, .png'
-                                class="form-control" 
-                                name="photo">
-                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="mb-3">
-                            <label for="date_embarq" class="form-label">Date d'embarquement</label>
-                            {!!Form::date('date_embarq', $user->date_embarq , ['class' => 'form-control', 'placeholder'=> 'Date d\'embarquement', 'required']) !!}
-                            @if ($errors->has('date_embarq'))
-                                <span class="text-danger text-left">{{ $errors->first(date_embarq) }}</span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="mb-3">
                             <label for="unite_destination" class="form-label">Unité destination</label>
                             <select class="form-control" 
                                 name="unite_destination_id" required>
@@ -187,7 +166,26 @@
                             @if ($errors->has('unite_destination'))
                                 <span class="text-danger text-left">{{ $errors->first(unite_destination) }}</span>
                             @endif
+                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="date_embarq" class="form-label">Date d'embarquement</label>
+                            {!!Form::date('date_embarq', $user->date_embarq , ['class' => 'form-control', 'placeholder'=> 'Date d\'embarquement', 'required']) !!}
+                            @if ($errors->has('date_embarq'))
+                                <span class="text-danger text-left">{{ $errors->first(date_embarq) }}</span>
+                            @endif
                         </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="photo" class="form-label">Photo</label>
+                            <input type="file" 
+                                accept='.jpg, .jpeg, .png'
+                                class="form-control" 
+                                name="photo">
                     </div>
                 </div>
                 <div class="row">
@@ -202,22 +200,7 @@
                     </div>
                     <div class="col">
                         <div class="mb-3">
-                            @if (false)
-                            @if (auth()->user()->hasRole("admin"))
-                                <label for="unite_affectation" class="form-label">Unité d'affectation</label>
-                                <select class="form-control" 
-                                    name="unite_id" required>
-                                    <option value="0">Unité d'affectation</option>
-                                    @foreach($unites as $unite)
-                                        <option value="{{ $unite->id }}" @selected($user->unite_id == $unite->id)>
-                                            {{ $unite->unite_liblong }}
-                                            {{ $user->unite_destination_id == $unite->id
-                                                ? ' (unite actuelle)'
-                                                : '' }}  </option>
-                                    @endforeach
-                                </select>
-                            @endif
-                            @endif
+                            <img src="{{url(asset('public/' . $user->photo))}}" height="75px">
                         </div>
                     </div>
                 </div>

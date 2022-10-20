@@ -33,7 +33,7 @@ class UpdateUserRequest extends FormRequest
             'name' => 'required',
             'prenom' => 'required',
             'email' =>  [ 'required', 'email:rfc,dns', Rule::unique('users')->ignore($user->id), new IntradefEmailValidation],
-            'matricule' => 'required',
+            'matricule' => 'nullable',
             'date_embarq' => 'required|date',
             'date_debarq' => 'date|nullable',
             'grade_id' => 'required|numeric',
