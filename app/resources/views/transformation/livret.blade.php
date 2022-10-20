@@ -21,7 +21,10 @@
             <a href="{{ route('transformation.mafichebilan') }}" class="btn btn-secondary btn-sm">Ma fiche bilan</a>
         @endif
         
-        <div x-data="{ opendivvalid : false ,
+            @if($readwrite)
+           @endif
+        
+<div x-data="{ opendivvalid : false ,
                        commentaire : '' ,
                        valideur : '{{auth()->user()->display_name}}',
                        button : null,
@@ -29,6 +32,23 @@
                        date_validation : '{{ date('Y-m-d')}}' }">
                        
         @if($readwrite)
+            <!-- div avec boutons generaux -->
+            <div class='text-center mt-1 sticky-top' style="top:3.5rem">
+                <button type="submit" 
+                form="ssobjs"
+                class="btn btn-primary" 
+                name="validation"
+                x-on:click.prevent="active = true ;
+                                    opendivvalid = true ;
+                                    buttonid = 'validation' ;">Valider les éléments cochés</button>
+                <button x-show="false" form="ssobjs" type="submit"  x-on:uservalidated.window="if (active){ active = false;  $el.click();}"></button>
+                <button type="submit" 
+                class="btn btn-danger" 
+                name="annulation_validation">Annuler la validation des éléments cochés</button>
+                <a href="{{ route('transformation.livretpdf', $user->id) }}" class="btn btn-info">Imprimer</a>
+            </div>
+
+            <!-- div avec formulaire de validation -->
         <div x-cloak x-show="opendivvalid" id='divvalid' class='popupvalidcontrat'>
             <div class='titrenavbarvert'>
                 <h5>Validation</h5>
@@ -64,9 +84,6 @@
         @endif
         
         <div id='livret' class='div-table-contrat-compagnonnage table'>
-            <div class='text-center'>
-                <a href="{{ route('transformation.livretpdf', $user->id) }}" class="btn btn-primary w-25 ml-5 mb-2">Imprimer</a>
-            </div>
             
             @foreach ($user->fonctions()->orderBy('typefonction_id')->get() as $fonction)
             <h3>Situation de la transformation pour la fonction {{$fonction->fonction_liblong }} </h3>
@@ -92,7 +109,7 @@
                 @if ($fonction->fonction_double)
                 <tr  class='lignecomp' x-data='{ active : false }'>
                     <td>DOUBLE</td>
-                    <td>
+                    <td class="text-start">
                     @if ($fonction->pivot->date_double != null)
                         {{ $fonction->pivot->commentaire_double }}
                     @endif
@@ -164,7 +181,7 @@
             @if ($fonction->compagnonages()->get()->count() > 0)
             <h4>Compagnonnages liés à la fonction {{ $fonction->fonction_liblong }} </h4>
             
-            @if($readwrite){!! Form::open(['method' => 'POST','id'=> 'ssobjs[' . $fonction->id .']' ,'route' => ['transformation.livret', $user->id]]) !!}@endif
+            @if($readwrite){!! Form::open(['method' => 'POST','id'=> 'ssobjs' ,'route' => ['transformation.livret', $user->id]]) !!}@endif
             <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
             <input type='hidden' id='date_validation' name='date_validation' x-model="date_validation">
             <input type='hidden' id='commentaire' name='commentaire' x-model="commentaire">
@@ -228,20 +245,6 @@
                     
                     @endforeach <!-- foreach tache -->
                     </tr>
-                    @if($readwrite)<tr  class='lignecomp'>
-                        <td colspan='7'>
-                            <button type="submit" 
-                            class="btn btn-primary" 
-                            name="validation"
-                            x-on:click.prevent="active = true ;
-                                                opendivvalid = true ;
-                                                buttonid = 'validation' ;">Valider les éléments cochés</button>
-                            <button x-show="false" type="submit"  x-on:uservalidated.window="if (active){ active = false;  $el.click();}"></button>
-                            <button type="submit" 
-                            class="btn btn-danger" 
-                            name="annulation_validation">Annuler la validation des éléments cochés</button>
-                        </td>
-                    </tr>@endif
 
                 @endforeach <!-- foreach compagnonage -->
             </table>
@@ -250,8 +253,6 @@
             
             @if ($fonction->stages()->get()->count() > 0)
             <h4>Stages liés à la fonction {{ $fonction->fonction_liblong }} </h4>
-            
-            {!! Form::open(['method' => 'POST','id'=> 'stages[' . $fonction->id .']' ,'route' => ['transformation.livret', $user->id]]) !!}
             <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
             <input type='hidden' id='date_validation' name='date_validation' x-model="date_validation">
             <input type='hidden' id='commentaire' name='commentaire' x-model="commentaire">
@@ -285,25 +286,7 @@
                 </tr>
                 @endforeach <!-- foreach stage -->
                 
-                @if (false)
-                    <tr  class='lignecomp'>
-                        <td colspan='3'>
-                            <button type="submit" 
-                            class="btn btn-primary" 
-                            name="validation"
-                            x-on:click.prevent='active = true;
-                                                opendivvalid = true;
-                                                buttonid = "validation";'>Valider les éléments cochés</button>
-                            <button x-show="false" type="submit"  x-on:uservalidated.window="if (active){ active = false;  $el.click();}"></button>
-                            <button type="submit" 
-                            class="btn btn-danger" 
-                            name="annulation_validation">Annuler la validation des éléments cochés</button>
-                        </td>
-                    </tr>
-                @endif
             </table>
-            {!! Form::close() !!}
-            
             @endif
             @endforeach   <!-- foreach fonction -->
             
