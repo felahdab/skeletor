@@ -462,6 +462,137 @@ class User extends Authenticatable
         
     }
     
+        
+    public function ValidateSousObjectif(SousObjectif $sous_objectif, $date_validation , $commentaire, $valideur)
+    {
+        $this->sous_objectifs()->attach($sous_objectif, [
+            'valideur'=> $valideur,
+            'commentaire'=> $commentaire,
+            'date_validation' => $date_validation,
+        ]);
+        $event_detail = [
+            "sous_objectif" => $sous_objectif,
+            "commentaire" => $commentaire,
+            "date_validation" => $date_validation,
+        ];
+        CalculateUserTransformationRatios::dispatch($this);
+        $this->logTransformationHistory("VALIDE_SOUS_OBJECTIF", json_encode($event_detail));
+    }
+    
+    public function UnValidateSousObjectif(SousObjectif $sous_objectif)
+    {
+        $this->sous_objectifs()->detach($sous_objectif);
+        CalculateUserTransformationRatios::dispatch($this);
+        $this->logTransformationHistory("DEVALIDE_SOUS_OBJECTIF", json_encode(["sous_objectif" => $sous_objectif]));
+    }
+    
+    public function ValidateObjectif(Objectif $objectif, $date_validation , $commentaire, $valideur)
+    {
+        foreach ($objectif->sous_objectifs()->get() as $sous_objectif)
+        {
+            $this->ValidateSousObjectif( $sous_objectif, $date_validation , $commentaire, $valideur);
+        }
+    }
+    
+    public function UnValidateObjectif(Objectif $objectif)
+    {
+        foreach ($objectif->sous_objectifs()->get() as $sous_objectif)
+        {
+            $this->UnValidateSousObjectif( $sous_objectif);
+        }
+    }
+    
+    public function ValidateTache(Tache $tache, $date_validation , $commentaire, $valideur)
+    {
+        $event_detail = [
+            "tache" => $tache,
+            "commentaire" => $commentaire,
+            "date_validation" => $date_validation,
+            "valideur" => $valideur
+        ];
+        $this->logTransformationHistory("VALIDE_TACHE", json_encode($event_detail));
+        
+        foreach ($tache->objectifs()->get() as $objectif)
+        {
+            $this->ValidateObjectif( $objectif, $date_validation , $commentaire, $valideur);
+        }
+        CalculateUserTransformationRatios::dispatch($this);
+    }
+    
+    public function UnValidateTache(Tache $tache)
+    {
+        $event_detail = [
+            "tache" => $tache
+        ];
+        $this->logTransformationHistory("DEVALIDE_TACHE", json_encode($event_detail));
+        
+        foreach ($tache->objectifs()->get() as $objectif)
+        {
+            $this->UnValidateObjectif( $objectif);
+        }
+        CalculateUserTransformationRatios::dispatch($this);
+    }
+    
+    public function ValideLacheFonction(Fonction $fonction, $date_validation , $commentaire, $valideur)
+    {
+        $userfonc = $this->fonctions->find($fonction);
+        // L'utilisateur a cliqué sur un bouton de validation du lache
+        // Si la fonction necessite un double, il faut que le double soit valide avant le lache
+        if ($userfonc->pivot->date_double != null or !$fonction->fonction_double) 
+        {
+            $userfonc->pivot->commentaire_lache=$commentaire;
+            $userfonc->pivot->valideur_lache=$valideur;
+            $userfonc->pivot->date_lache = $date_validation;
+            $userfonc->pivot->save();
+            $event_detail = [
+                "fonction" => $fonction,
+                "commentaire" => $commentaire,
+                "date_validation" => $date_validation,
+            ];
+            $this->logTransformationHistory("VALIDE_LACHE_FONCTION", json_encode($event_detail));
+        }
+    }
+    
+    public function UnValideLacheFonction(Fonction $fonction)
+    {
+        $userfonc = $this->fonctions->find($fonction);
+        if ($userfonc == null)
+            return;
+        $userfonc->pivot->commentaire_lache=null;
+        $userfonc->pivot->valideur_lache=null;
+        $userfonc->pivot->date_lache = null;
+        $userfonc->pivot->save();
+        $this->logTransformationHistory("ANNULE_LACHE_FONCTION", json_encode(["fonction" => $fonction]));
+    }
+    
+    public function UnValideDoubleFonction(Fonction $fonction)
+    {
+        $userfonc = $this->fonctions->find($fonction);
+        if ($userfonc == null)
+            return;
+        $userfonc->pivot->commentaire_double=null;
+        $userfonc->pivot->valideur_double=null;
+        $userfonc->pivot->date_double = null;
+        $userfonc->pivot->save();
+        $this->logTransformationHistory("ANNULE_DOUBLE_FONCTION", json_encode(["fonction" => $fonction]));
+    }
+    
+    public function ValideDoubleFonction(Fonction $fonction, $date_validation , $commentaire, $valideur)
+    {
+        $userfonc = $this->fonctions->find($fonction);
+        
+        $userfonc->pivot->commentaire_double=$commentaire;
+        $userfonc->pivot->valideur_double=$valideur;
+        $userfonc->pivot->date_double = $date_validation;
+        $userfonc->pivot->save();
+        $event_detail = [
+            "fonction" => $fonction,
+            "commentaire" => $commentaire,
+            "date_validation" => $date_validation,
+        ];
+        $this->logTransformationHistory("VALIDE_DOUBLE_FONCTION", json_encode($event_detail));
+    }
+    
     public function nbSousObjectifsAValider(Fonction $fonction=null)
     {
         if ($fonction != null)

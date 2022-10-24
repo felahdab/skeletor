@@ -162,7 +162,6 @@ class TransformationController extends Controller
         
         if ($date_validation == null)
             $date_validation = date('Y-m-d');
-        
         if ($request->input("buttonid") == "validation")
         {
             if ($request->has('ssobjid'))
@@ -211,17 +210,6 @@ class TransformationController extends Controller
                             $user->logTransformationHistory("VALIDE_SOUS_OBJECTIF", json_encode($event_detail));
                         }
                     }
-                }
-            }
-            if ($request->has('stageid'))
-            {
-                $stages_a_valider = $request['stageid'];
-                foreach ($stages_a_valider as $key => $value){
-                    $stage = Stage::find($key);
-                    $user->attachStage($stage, [
-                        'commentaire' => $commentaire,
-                        'date_validation' => $date_validation,
-                    ]);
                 }
             }
         }
