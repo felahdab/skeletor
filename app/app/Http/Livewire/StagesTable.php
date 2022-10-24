@@ -62,15 +62,28 @@ class StagesTable extends DataTableComponent
     {
         return [
             Column::make('ID', 'id')
+                ->deSelected()
+                ->sortable(),
+            Column::make('Libellé court', 'stage_libcourt')
                 ->sortable()
                 ->searchable(),
-            Column::make('Libelle court', 'stage_libcourt')
-                ->sortable()
-                ->searchable(),
-            Column::make('Libelle long', 'stage_liblong')
+            Column::make('Libellé long', 'stage_liblong')
                 ->sortable()
                 ->searchable(),
             Column::make('Licence', 'type_licence.typlicense_libcourt')
+                ->searchable(),
+            Column::make('Date fin', 'stage_date_fin_licence')
+                ->sortable()
+                ->searchable(),
+            Column::make('Capa max', 'stage_capamax')
+                ->deSelected(),
+            Column::make('Durée (j)', 'stage_duree')
+                ->deSelected(),
+            Column::make('Lieu', 'stage_lieu')
+                ->sortable()
+                ->searchable(),
+            Column::make('Commentaire', 'stage_commentaire')
+                ->deSelected()
                 ->searchable(),
             Column::make('Actions')
                 ->label(

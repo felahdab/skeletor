@@ -56,6 +56,11 @@ class StageController extends Controller
         $stage->stage_liblong = $request->stage['stage_liblong'];
         $stage->transverse = array_key_exists('transverse', $request->stage) ;
         $stage->typelicence_id=$request->stage['typelicence_id'];
+        $stage->stage_lieu = $request->stage['stage_lieu'];
+        $stage->stage_duree = $request->stage['stage_duree'];
+        $stage->stage_capamax = $request->stage['stage_capamax'];
+        $stage->stage_date_fin_licence = $request->stage['stage_date_fin_licence'];
+        $stage->stage_commentaire = $request->stage['stage_commentaire'];
         $stage->save();
         return redirect()->route('stages.edit', $stage);
     }
@@ -112,6 +117,11 @@ class StageController extends Controller
             $stage->transverse = true;
         else
             $stage->transverse = false;
+        $stage->stage_lieu = $request->stage['stage_lieu'];
+        $stage->stage_duree = $request->stage['stage_duree'];
+        $stage->stage_capamax = $request->stage['stage_capamax'];
+        $stage->stage_date_fin_licence = $request->stage['stage_date_fin_licence'];
+        $stage->stage_commentaire = $request->stage['stage_commentaire'];
         $stage->save();
         
         return redirect()->route('stages.edit', $stage);

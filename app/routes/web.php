@@ -133,6 +133,10 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::get('/liens', 'LienController@index')->name('liens.index');
         Route::get('/creationlien', 'LienController@create')->name('liens.create');
         Route::post('/creationlien', 'LienController@store')->name('liens.store');
+        
+         Route::group(['prefix' => 'annudef'], function() {
+             Route::get('/', 'AnnudefController@index')->name('annudef.index');
+        });
 
 
         // if (env('APP_ENV') == "local")

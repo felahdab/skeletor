@@ -6,7 +6,7 @@
         <div style='text-align:right;'>* champs obligatoires </div>
 <div x-data='{ allChecked : false }'>
         <div class="container mt-4" x-data="{ buttonid : '' }">
-            <form method="POST" action="">
+            <form method="POST" action="" enctype="multipart/form-data">
                 <input type='hidden' id='buttonid' name='buttonid' x-model="buttonid">
                 @csrf
                 <div class="row">
@@ -97,12 +97,11 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
-                            <label for="date_embarq" class="form-label">Date d'embarquement *</label>
-                            <input value="{{ date('Y-m-d') }}" 
-                                type="date" 
+                            <label for="matricule" class="form-label">Matricule</label>
+                            <input type="text" 
                                 class="form-control" 
-                                name="date_embarq" 
-                                placeholder="Date d'embarquement" required>
+                                name="matricule" 
+                                placeholder="Matricule">
                         </div>
                     </div>
                     <div class="col">
@@ -123,19 +122,23 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
-                            <label for="unite_destination_id" class="form-label">Unité destination</label>
-                            <select class="form-control" 
-                                name="unite_destination_id" >
-                                <option value="0">Unité destination</option>
-                                @foreach($unites as $unite)
-                                    <option value="{{ $unite->id }}">
-                                        {{ $unite->unite_liblong }}
-                                        </option>
-                                @endforeach
-                    </select>
+                            <label for="nid" class="form-label">NID</label>
+                            <input type="text" 
+                                class="form-control" 
+                                name="nid" 
+                                placeholder="NID">
                          </div>
                     </div>
                     <div class="col">
+                        <div class="mb-3">
+                            <label for="photo" class="form-label">Photo</label>
+                            <input type="file" 
+                                class="form-control" 
+                                accept='.jpg, .jpeg, .png'
+                                name="photo">
+                        </div>
+                    </div>
+                    <!--div class="col">
                         <div class="mb-3">
                         @if (auth()->user()->hasRole("admin"))
                             <label for="unite_destination_id" class="form-label">Unité d'affectation *</label>
@@ -150,6 +153,46 @@
                             </select>
                         @endif
                         </div>
+                    </div-->
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="date_embarq" class="form-label">Date d'embarquement *</label>
+                            <input value="{{ date('Y-m-d') }}" 
+                                type="date" 
+                                class="form-control" 
+                                name="date_embarq" 
+                                placeholder="Date d'embarquement" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                             <label for="unite_destination_id" class="form-label">Unité destination (informatif uniquement)</label>
+                            <select class="form-control" 
+                                name="unite_destination_id" >
+                                <option value="0">Unité destination</option>
+                                @foreach($unites as $unite)
+                                    <option value="{{ $unite->id }}">
+                                        {{ $unite->unite_liblong }}
+                                        </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <input type="checkbox" name="comete" value="1">
+                            <label for="comete" class="form-label">Embarqué COMETE</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                            <input type="checkbox" name="socle" value="1">
+                            <label for="socle" class="form-label">Socle</label>
+                         </div>
                     </div>
                 </div>
                 <div class="row">
