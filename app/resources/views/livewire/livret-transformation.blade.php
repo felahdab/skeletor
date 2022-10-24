@@ -1,6 +1,10 @@
 <div>
-    <div wire:loading>
-        Chargement...
+    <div wire:loading class="w-100">
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Chargement...</span>
+            </div>
+        </div>
     </div>
     <div wire:loading.remove x-data="{ opendivvalid : false ,
                     commentaire : '' ,
@@ -77,222 +81,229 @@ $wire.UnValideElementsDuParcours( {{$user->id}} , selected_compagnonnages , sele
             @foreach ($user->fonctions()->orderBy('typefonction_id')->get() as $fonction)
              <div class="accordion">
                 <div class="accordion-item">
-                 <div class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFonction_{{$fonction->id}}">
-                        <h3>Fonction {{$fonction->fonction_liblong }} </h3>
-                    </button>
-                </div>
-                <div id="collapseFonction_{{$fonction->id}}" class="accordion-collapse collapse">
-                    <div  class="accordion-body">
-                        <table class='table'>
-                            <tr class='lignecomp div-table-contrat-compagnonnage'>
-                                <th colspan='5'>{{$fonction->fonction_liblong }}</th>
-                            </tr>
-                            <tr class='lignecomp'>
-                                    <td style='width:5%;'>&nbsp;</td>
-                                    <td style='width:70%;'>Commentaire</td>
-                                    <td style='width:10%;'>Date de Visa</td>
-                                    <td style='width:10%;'>Viseur</td>
-                                    <td style='width:5%;'>Lieu de formation</td>
-                            </tr>
-                            @if ($fonction->fonction_double)
-                            <tr  class='lignecomp' x-data='{ active : false }'>
-                                <td>DOUBLE</td>
-                                <td class="text-start">
-                                @if ($fonction->pivot->date_double != null)
-                                    {{ $fonction->pivot->commentaire_double }}
-                                @endif
-                                </td>
-                                <td>
-                                @if ($fonction->pivot->date_double != null)
-                                    <button class='btn btn-success' type='button' disabled>
-                                        VALIDE {{ $fonction->pivot->date_double }}
-                                    </button>
-                                @endif
-                                </td>
-                                <td>
-                                @if ($fonction->pivot->valideur_double != null and $readwrite)
-                                    {{ $fonction->pivot->valideur_double }}
-                                    <button class="btn btn-danger" 
-                                    x-on:click.prevent="$wire.UnValideDoubleFonction( {{ $user->id }}, {{ $fonction->id }} );">
-                                    Annuler</button>
-                                @elseif ($readwrite)
-                                <button type="submit" 
-                                    class="btn btn-primary" 
-                                    name="validation_double"
-                                    x-on:click.prevent="active  = true; 
-                                                       buttonid ='validation_double'; 
-                                                   opendivvalid =true;">Valider</button>
-                                <button x-show="false" 
-                                        x-on:uservalidated.window="if (active)
-                                        {   
-                                            active = false;  
-                                            $wire.ValideDoubleFonction( {{$user->id}}, {{$fonction->id}}, date_validation , commentaire, valideur);
-                                         };"></button>
-                                @endif
-                                </td>
-                                <td>Bord</td>
-                            </tr>
-                            @endif
-                            @if ($fonction->fonction_lache)
-                            <tr  class='lignecomp' x-data='{ active : false }'>
-                                <td>LACHER</td>
-                                <td class="text-start">
-                                @if ($fonction->pivot->date_double != null)
-                                    {{ $fonction->pivot->commentaire_lache }}
-                                @endif
-                                </td>
-                                <td>
-                                @if ($fonction->pivot->date_lache != null)
-                                    <button class='btn btn-success' type='button' disabled>
-                                        VALIDE {{ $fonction->pivot->date_lache }}
-                                    </button>
-                                @endif
-                                </td>
-                                <td>
-                                @if ($fonction->pivot->valideur_lache != null and $readwrite)
-                                    {{ $fonction->pivot->valideur_lache }}
-                                    <button class="btn btn-danger" 
-                                    x-on:click.prevent="$wire.UnValideLacheFonction( {{ $user->id }}, {{ $fonction->id }} );">
-                                    Annuler</button>
-                                @elseif($readwrite)
-                                <button type="submit" 
-                                    class="btn btn-primary" 
-                                    name="validation_lache"
-                                    x-on:click.prevent="active  = true; 
-                                                       buttonid ='validation_lache'; 
-                                                   opendivvalid =true;">Valider</button>
-                                    <button x-show="false"  
+                    <div class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFonction_{{$fonction->id}}">
+                            <h3>Fonction {{$fonction->fonction_liblong }} </h3>
+                        </button>
+                    </div>
+                    <div id="collapseFonction_{{$fonction->id}}" class="accordion-collapse collapse">
+                        <div  class="accordion-body">
+                            <table class='table'>
+                                <tr class='lignecomp div-table-contrat-compagnonnage'>
+                                    <th colspan='5'>{{$fonction->fonction_liblong }}</th>
+                                </tr>
+                                <tr class='lignecomp'>
+                                        <td style='width:5%;'>&nbsp;</td>
+                                        <td style='width:70%;'>Commentaire</td>
+                                        <td style='width:10%;'>Date de Visa</td>
+                                        <td style='width:10%;'>Viseur</td>
+                                        <td style='width:5%;'>Lieu de formation</td>
+                                </tr>
+                                @if ($fonction->fonction_double)
+                                <tr  class='lignecomp' x-data='{ active : false }'>
+                                    <td>DOUBLE</td>
+                                    <td class="text-start">
+                                    @if ($fonction->pivot->date_double != null)
+                                        {{ $fonction->pivot->commentaire_double }}
+                                    @endif
+                                    </td>
+                                    <td>
+                                    @if ($fonction->pivot->date_double != null)
+                                        <button class='btn btn-success' type='button' disabled>
+                                            VALIDE {{ $fonction->pivot->date_double }}
+                                        </button>
+                                    @endif
+                                    </td>
+                                    <td>
+                                    @if ($fonction->pivot->valideur_double != null and $readwrite)
+                                        {{ $fonction->pivot->valideur_double }}
+                                        <button class="btn btn-danger" 
+                                        x-on:click.prevent="$wire.UnValideDoubleFonction( {{ $user->id }}, {{ $fonction->id }} );">
+                                        Annuler</button>
+                                    @elseif ($readwrite)
+                                    <button type="submit" 
+                                        class="btn btn-primary" 
+                                        name="validation_double"
+                                        x-on:click.prevent="active  = true; 
+                                                           buttonid ='validation_double'; 
+                                                       opendivvalid =true;">Valider</button>
+                                    <button x-show="false" 
                                             x-on:uservalidated.window="if (active)
-                                            { 
+                                            {   
                                                 active = false;  
-                                                $wire.ValideLacheFonction({{$user->id}}, {{$fonction->id}}, date_validation , commentaire, valideur);
-                                            }"></button>
+                                                $wire.ValideDoubleFonction( {{$user->id}}, {{$fonction->id}}, date_validation , commentaire, valideur);
+                                             };"></button>
+                                    @endif
+                                    </td>
+                                    <td>Bord</td>
+                                </tr>
                                 @endif
-                                </td>
-                                <td>Bord</td>
-                            </tr>
-                            @endif
-                        </table>
-                        
-                        @if ($fonction->compagnonages()->get()->count() > 0)
-                        <h4>Compagnonnages liés à la fonction {{ $fonction->fonction_liblong }} </h4>
-                            @foreach($fonction->compagnonages()->get() as $compagnonage)
-                                <div class="accordion">
-                                    <div class="accordion-item">
-                                        <div class="accordion-header">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComp_{{$compagnonage->id}}">
-                                            <h5>{{$compagnonage->comp_libcourt}}</h5>
-                                            </button>
-                                        </div>
-                                        <div id="collapseComp_{{$compagnonage->id}}" class="accordion-collapse collapse">
-                                            <div class="accordion-body">
-                                            <table class='table' x-data='{ active : false }'>
-                                                <tr class='lignecomp'>
-                                                    <td style='width:20%;'>Tâche</td>
-                                                    <td style='width:25%;'>Objectif</td>
-                                                    <td style='width:25%;'>Détail du compagnonnage</td>
-                                                    <td style='width:5%;'>Durée (h)</td>
-                                                    <td style='width:10%;'>Date de Visa</td>
-                                                    <td style='width:10%;'>Viseur</td>
-                                                    <td style='width:5%;'>Lieu de formation</td>
-                                                </tr>
-                                                @foreach($compagnonage->taches()->get() as $tache)
-                                                <tr class='ligneTache'>
-                                                    <td rowspan='{{$tache->nb_ssobj()}}'>
-                                                    @if($readwrite)
-                                                        <input type='checkbox' 
-                                                            x-data='{ active: false }'
-                                                            x-on:click="active = !active;
-                                                                        if (active){
-                                                                            selected_taches[{{$tache->id}}] = true; 
-                                                                        }
-                                                                        else {
-                                                                            selected_taches[{{$tache->id}}] = false; 
-                                                                        }";>@endif {{$tache->tache_liblong }} 
-                                                        @if ($user->aValideLaTache($tache))
-                                                            <button class='btn btn-success' type='button' disabled>VALIDEE</button>
-                                                    @endif
-                                                    </td>
-                                                    @foreach($tache->objectifs()->get() as $objectif)
-                                                    <td rowspan='{{$objectif->sous_objectifs()->get()->count()}}'> {{$objectif->objectif_liblong }} </td>
-                                                        @foreach($objectif->sous_objectifs()->get() as $sous_objectif)
-                                                            <td>{{$sous_objectif->ssobj_lib}}</td>
-                                                            <td>{{$sous_objectif->ssobj_duree}}</td>
-                                                            <td title=''>
-                                                                @if($readwrite)
-                                                                    <input type='checkbox' 
-                                                                    x-data='{ active: false }'
-                                                                    x-on:click="active = !active;
-                                                                                if (active){
-                                                                                    selected_sous_objectifs[{{$sous_objectif->id}}] = true; 
-                                                                                }
-                                                                                else {
-                                                                                    selected_sous_objectifs[{{$sous_objectif->id}}] = false; 
-                                                                                };"
-                                                                                >@endif
-                                                                @if ($user->aValideLeSousObjectif($sous_objectif))
-                                                                    <button class='btn btn-success' type='button' disabled>
-                                                                    VALIDE {{ $user->sous_objectifs()->find($sous_objectif)->pivot->date_validation }}
-                                                                    </button>
-                                                                @endif
-                                                            </td>
-                                                            @if ($user->aValideLeSousObjectif($sous_objectif))
-                                                                <td title="{{ $user->sous_objectifs()->find($sous_objectif)->pivot->commentaire }}">
-                                                                        {{ $user->sous_objectifs()->find($sous_objectif)->pivot->valideur }}
+                                @if ($fonction->fonction_lache)
+                                <tr  class='lignecomp' x-data='{ active : false }'>
+                                    <td>LACHER</td>
+                                    <td class="text-start">
+                                    @if ($fonction->pivot->date_double != null)
+                                        {{ $fonction->pivot->commentaire_lache }}
+                                    @endif
+                                    </td>
+                                    <td>
+                                    @if ($fonction->pivot->date_lache != null)
+                                        <button class='btn btn-success' type='button' disabled>
+                                            VALIDE {{ $fonction->pivot->date_lache }}
+                                        </button>
+                                    @endif
+                                    </td>
+                                    <td>
+                                    @if ($fonction->pivot->valideur_lache != null and $readwrite)
+                                        {{ $fonction->pivot->valideur_lache }}
+                                        <button class="btn btn-danger" 
+                                        x-on:click.prevent="$wire.UnValideLacheFonction( {{ $user->id }}, {{ $fonction->id }} );">
+                                        Annuler</button>
+                                    @elseif($readwrite)
+                                    <button type="submit" 
+                                        class="btn btn-primary" 
+                                        name="validation_lache"
+                                        x-on:click.prevent="active  = true; 
+                                                           buttonid ='validation_lache'; 
+                                                       opendivvalid =true;">Valider</button>
+                                        <button x-show="false"  
+                                                x-on:uservalidated.window="if (active)
+                                                { 
+                                                    active = false;  
+                                                    $wire.ValideLacheFonction({{$user->id}}, {{$fonction->id}}, date_validation , commentaire, valideur);
+                                                }"></button>
+                                    @endif
+                                    </td>
+                                    <td>Bord</td>
+                                </tr>
+                                @endif
+                            </table>
+                            
+                            @if ($fonction->compagnonages()->get()->count() > 0)
+                                @foreach($fonction->compagnonages()->get() as $compagnonage)
+                                    <div class="accordion">
+                                        <div class="accordion-item">
+                                            <div class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComp_{{$compagnonage->id}}">
+                                                <h5>{{$compagnonage->comp_libcourt}}</h5>
+                                                </button>
+                                            </div>
+                                            <div id="collapseComp_{{$compagnonage->id}}" class="accordion-collapse collapse">
+                                                <div class="accordion-body">
+                                                <table class='table' x-data='{ active : false }'>
+                                                    <tr class='lignecomp'>
+                                                        <td style='width:20%;'>Tâche</td>
+                                                        <td style='width:25%;'>Objectif</td>
+                                                        <td style='width:25%;'>Détail du compagnonnage</td>
+                                                        <td style='width:5%;'>Durée (h)</td>
+                                                        <td style='width:10%;'>Date de Visa</td>
+                                                        <td style='width:10%;'>Viseur</td>
+                                                        <td style='width:5%;'>Lieu de formation</td>
+                                                    </tr>
+                                                    @foreach($compagnonage->taches()->get() as $tache)
+                                                    <tr class='ligneTache'>
+                                                        <td rowspan='{{$tache->nb_ssobj()}}'>
+                                                        @if($readwrite)
+                                                            <input type='checkbox' 
+                                                                x-data='{ active: false }'
+                                                                x-on:click="active = !active;
+                                                                            if (active){
+                                                                                selected_taches[{{$tache->id}}] = true; 
+                                                                            }
+                                                                            else {
+                                                                                selected_taches[{{$tache->id}}] = false; 
+                                                                            }";>@endif {{$tache->tache_liblong }} 
+                                                            @if ($user->aValideLaTache($tache))
+                                                                <button class='btn btn-success' type='button' disabled>VALIDEE</button>
+                                                        @endif
+                                                        </td>
+                                                        @foreach($tache->objectifs()->get() as $objectif)
+                                                        <td rowspan='{{$objectif->sous_objectifs()->get()->count()}}'> {{$objectif->objectif_liblong }} </td>
+                                                            @foreach($objectif->sous_objectifs()->get() as $sous_objectif)
+                                                                <td>{{$sous_objectif->ssobj_lib}}</td>
+                                                                <td>{{$sous_objectif->ssobj_duree}}</td>
+                                                                <td title=''>
+                                                                    @if($readwrite)
+                                                                        <input type='checkbox' 
+                                                                        x-data='{ active: false }'
+                                                                        x-on:click="active = !active;
+                                                                                    if (active){
+                                                                                        selected_sous_objectifs[{{$sous_objectif->id}}] = true; 
+                                                                                    }
+                                                                                    else {
+                                                                                        selected_sous_objectifs[{{$sous_objectif->id}}] = false; 
+                                                                                    };"
+                                                                                    >@endif
+                                                                    @if ($user->aValideLeSousObjectif($sous_objectif))
+                                                                        <button class='btn btn-success' type='button' disabled>
+                                                                        VALIDE {{ $user->sous_objectifs()->find($sous_objectif)->pivot->date_validation }}
+                                                                        </button>
+                                                                    @endif
                                                                 </td>
-                                                            @else
-                                                                <td>&nbsp;</td>
-                                                            @endif
-                                                            <td>{{$sous_objectif->lieu()->get()->first()->lieu_libcourt}}</td>
-                                                           </tr>
-                                                        @endforeach <!-- foreach sous objectif -->
-                                                    @endforeach <!-- foreach objectif -->
-                                                @endforeach <!-- foreach tache -->
-                                            </table>
+                                                                @if ($user->aValideLeSousObjectif($sous_objectif))
+                                                                    <td title="{{ $user->sous_objectifs()->find($sous_objectif)->pivot->commentaire }}">
+                                                                            {{ $user->sous_objectifs()->find($sous_objectif)->pivot->valideur }}
+                                                                    </td>
+                                                                @else
+                                                                    <td>&nbsp;</td>
+                                                                @endif
+                                                                <td>{{$sous_objectif->lieu()->get()->first()->lieu_libcourt}}</td>
+                                                               </tr>
+                                                            @endforeach <!-- foreach sous objectif -->
+                                                        @endforeach <!-- foreach objectif -->
+                                                    @endforeach <!-- foreach tache -->
+                                                </table>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                               @endforeach <!-- foreach compagnonage -->
-                        @endif
-                        
-                        @if ($fonction->stages()->get()->count() > 0)
-                        <div x-data='{ show_stages : false }'>
-                            <h4 x-on:click="show_stages = !show_stages">Stages liés à la fonction {{ $fonction->fonction_liblong }} </h4>
-
+                                   @endforeach <!-- foreach compagnonage -->
+                            @endif
                             
-                            <table class='table' x-show='show_stages'>
-                                @foreach($fonction->stages()->get() as $stage)
+                            @if ($fonction->stages()->get()->count() > 0)
+                            <div class="accordion">
+                                <div class="accordion-item">
+                                    <div class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseStages">
+                                            <h5>Stages</h5>
+                                        </button>
+                                    </div>
+                                    <div id="collapseStages" class="accordion-collapse collapse">
+                                        <div  class="accordion-body">
+                                            <table class='table'>
+                                                @foreach($fonction->stages()->get() as $stage)
 
-                                <tr class='lignecomp div-table-contrat-compagnonnage'>
-                                    <th colspan='2'>{{$stage->stage_libcourt }}</th>
-                                </tr>
-                                <tr class='ligneTache'>
-                                    <td>
-                                        @if ($user->aValideLeStage($stage))
-                                            <button class='btn btn-success' type='button' disabled>
-                                            VALIDE {{ $user->stages()->find($stage)->pivot->date_validation }}
-                                            </button>
-                                        @else
-                                            <button class='btn btn-warning' type='button' disabled>
-                                            NON VALIDE A CE JOUR
-                                            </button>
-                                            @if (false)
-                                                <input type='checkbox' 
-                                                id='stageid[{{$stage->id}}]' 
-                                                name='stageid[{{$stage->id}}]' 
-                                                value='stageid[{{$stage->id}}]'>
-                                            @endif
-                                        @endif
-                                    </td>
-                                </tr>
-                                @endforeach <!-- foreach stage -->
-                                
-                            </table>
+                                                <tr class='lignecomp div-table-contrat-compagnonnage'>
+                                                    <th colspan='2'>{{$stage->stage_libcourt }}</th>
+                                                </tr>
+                                                <tr class='ligneTache'>
+                                                    <td>
+                                                        @if ($user->aValideLeStage($stage))
+                                                            <button class='btn btn-success' type='button' disabled>
+                                                            VALIDE {{ $user->stages()->find($stage)->pivot->date_validation }}
+                                                            </button>
+                                                        @else
+                                                            <button class='btn btn-warning' type='button' disabled>
+                                                            NON VALIDE A CE JOUR
+                                                            </button>
+                                                            @if (false)
+                                                                <input type='checkbox' 
+                                                                id='stageid[{{$stage->id}}]' 
+                                                                name='stageid[{{$stage->id}}]' 
+                                                                value='stageid[{{$stage->id}}]'>
+                                                            @endif
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                @endforeach <!-- foreach stage -->
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+                            
                         </div>
-                        @endif
-                        
                     </div>
                 </div>
             </div>
