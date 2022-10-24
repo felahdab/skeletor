@@ -56,6 +56,7 @@ return array(
     'App\\Http\\Livewire\\SousobjectifList' => $baseDir . '/app/Http/Livewire/SousobjectifList.php',
     'App\\Http\\Livewire\\StageList' => $baseDir . '/app/Http/Livewire/StageList.php',
     'App\\Http\\Livewire\\StagesTable' => $baseDir . '/app/Http/Livewire/StagesTable.php',
+    'App\\Http\\Livewire\\StattuteurTable' => $baseDir . '/app/Http/Livewire/StattuteurTable.php',
     'App\\Http\\Livewire\\TacheList' => $baseDir . '/app/Http/Livewire/TacheList.php',
     'App\\Http\\Livewire\\TransformationHistoryTable' => $baseDir . '/app/Http/Livewire/TransformationHistoryTable.php',
     'App\\Http\\Livewire\\UserList' => $baseDir . '/app/Http/Livewire/UserList.php',

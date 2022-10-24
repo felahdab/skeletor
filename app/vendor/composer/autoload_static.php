@@ -721,6 +721,7 @@ class ComposerStaticInite02b18f2e6d570fbc3e1e1247d251339
         'App\\Http\\Livewire\\SousobjectifList' => __DIR__ . '/../..' . '/app/Http/Livewire/SousobjectifList.php',
         'App\\Http\\Livewire\\StageList' => __DIR__ . '/../..' . '/app/Http/Livewire/StageList.php',
         'App\\Http\\Livewire\\StagesTable' => __DIR__ . '/../..' . '/app/Http/Livewire/StagesTable.php',
+        'App\\Http\\Livewire\\StattuteurTable' => __DIR__ . '/../..' . '/app/Http/Livewire/StattuteurTable.php',
         'App\\Http\\Livewire\\TacheList' => __DIR__ . '/../..' . '/app/Http/Livewire/TacheList.php',
         'App\\Http\\Livewire\\TransformationHistoryTable' => __DIR__ . '/../..' . '/app/Http/Livewire/TransformationHistoryTable.php',
         'App\\Http\\Livewire\\UserList' => __DIR__ . '/../..' . '/app/Http/Livewire/UserList.php',
