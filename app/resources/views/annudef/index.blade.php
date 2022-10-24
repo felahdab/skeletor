@@ -4,13 +4,9 @@
     
 
     <div class="bg-light p-4 rounded">
-        <h2>Marins</h2>
-        <div class="lead">
-            Gestion des marins
-            <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un marin</a>
-        </div>
+        <h2>Recherche Annudef</h2>
         <div class="mt-3">
-            <livewire:users-table mode="gestion">
+            <livewire:annudef-search>
         </div>
 
     </div>

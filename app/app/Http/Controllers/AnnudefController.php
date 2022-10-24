@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use SimpleXMLElement;
 
+use Illuminate\Http\Client\ConnectionException;
+
 class AnnudefController extends Controller
 {
     public static function searchUsersRequest($tel ='', $nom='' ,$prenom='' ,$mail='' , $bdd='' , $zone='' ,$localite ='' ,
@@ -58,7 +60,9 @@ class AnnudefController extends Controller
         
         $request = AnnudefController::searchUsersRequest($tel , $nom ,$prenom ,$mail , $bdd , $zone ,$localite  ,
             $entite ,$fonction , $nid , $LDAPLOGIN, $LDAPPASSWORD );
-        $response=Http::withBody($request, 'application/soap+xml')
+        
+        $response=Http::timeout(intval(env("LDAPTIMEOUT")))
+                ->withBody($request, 'application/soap+xml')
                 ->post($ANNUBASEURL);
                 
         $result = new SimpleXMLElement($response->body(), null, 0, "http://schemas.xmlsoap.org/soap/envelope/");
@@ -111,5 +115,10 @@ class AnnudefController extends Controller
             // $this->info($request . "\n");
         }
         return $results;
+    }
+    
+    public function index()
+    {
+        return view('annudef.index');
     }
 }
