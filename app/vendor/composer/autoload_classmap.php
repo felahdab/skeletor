@@ -11,7 +11,6 @@ return array(
     'App\\Console\\Commands\\InsertUsersFromCSV' => $baseDir . '/app/Console/Commands/InsertUsersFromCSV.php',
     'App\\Console\\Commands\\ListUnites' => $baseDir . '/app/Console/Commands/ListUnites.php',
     'App\\Console\\Commands\\RegisterInstanceInNPM' => $baseDir . '/app/Console/Commands/RegisterInstanceInNPM.php',
-    'App\\Console\\Commands\\TestLdapConnexion' => $baseDir . '/app/Console/Commands/TestLdapConnexion.php',
     'App\\Console\\Commands\\UnregisterInstanceInNPM' => $baseDir . '/app/Console/Commands/UnregisterInstanceInNPM.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Events\\UserTransformationUpdated' => $baseDir . '/app/Events/UserTransformationUpdated.php',

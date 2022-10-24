@@ -671,7 +671,6 @@ class ComposerStaticInite02b18f2e6d570fbc3e1e1247d251339
         'App\\Console\\Commands\\InsertUsersFromCSV' => __DIR__ . '/../..' . '/app/Console/Commands/InsertUsersFromCSV.php',
         'App\\Console\\Commands\\ListUnites' => __DIR__ . '/../..' . '/app/Console/Commands/ListUnites.php',
         'App\\Console\\Commands\\RegisterInstanceInNPM' => __DIR__ . '/../..' . '/app/Console/Commands/RegisterInstanceInNPM.php',
-        'App\\Console\\Commands\\TestLdapConnexion' => __DIR__ . '/../..' . '/app/Console/Commands/TestLdapConnexion.php',
         'App\\Console\\Commands\\UnregisterInstanceInNPM' => __DIR__ . '/../..' . '/app/Console/Commands/UnregisterInstanceInNPM.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Events\\UserTransformationUpdated' => __DIR__ . '/../..' . '/app/Events/UserTransformationUpdated.php',
