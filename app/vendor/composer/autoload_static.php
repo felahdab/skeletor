@@ -109,7 +109,6 @@ class ComposerStaticInite02b18f2e6d570fbc3e1e1247d251339
         ),
         'R' => 
         array (
-            'RicorocksDigitalAgency\\Soap\\' => 28,
             'Ramsey\\Uuid\\' => 12,
             'Ramsey\\Collection\\' => 18,
         ),
@@ -389,10 +388,6 @@ class ComposerStaticInite02b18f2e6d570fbc3e1e1247d251339
         'SocialiteProviders\\Keycloak\\' => 
         array (
             0 => __DIR__ . '/..' . '/socialiteproviders/keycloak',
-        ),
-        'RicorocksDigitalAgency\\Soap\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src',
         ),
         'Ramsey\\Uuid\\' => 
         array (
@@ -676,6 +671,7 @@ class ComposerStaticInite02b18f2e6d570fbc3e1e1247d251339
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Events\\UserTransformationUpdated' => __DIR__ . '/../..' . '/app/Events/UserTransformationUpdated.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Http\\Controllers\\AnnudefController' => __DIR__ . '/../..' . '/app/Http/Controllers/AnnudefController.php',
         'App\\Http\\Controllers\\BugReportController' => __DIR__ . '/../..' . '/app/Http/Controllers/BugReportController.php',
         'App\\Http\\Controllers\\ChangeUserCurrentRole' => __DIR__ . '/../..' . '/app/Http/Controllers/ChangeUserCurrentRole.php',
         'App\\Http\\Controllers\\ChangeUserPassword' => __DIR__ . '/../..' . '/app/Http/Controllers/ChangeUserPassword.php',
@@ -5523,26 +5519,6 @@ class ComposerStaticInite02b18f2e6d570fbc3e1e1247d251339
         'Ramsey\\Uuid\\Validator\\GenericValidator' => __DIR__ . '/..' . '/ramsey/uuid/src/Validator/GenericValidator.php',
         'Ramsey\\Uuid\\Validator\\ValidatorInterface' => __DIR__ . '/..' . '/ramsey/uuid/src/Validator/ValidatorInterface.php',
         'ReturnTypeWillChange' => __DIR__ . '/..' . '/symfony/polyfill-php81/Resources/stubs/ReturnTypeWillChange.php',
-        'RicorocksDigitalAgency\\Soap\\Contracts\\Soapable' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/Contracts/Soapable.php',
-        'RicorocksDigitalAgency\\Soap\\Facades\\Soap' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/Facades/Soap.php',
-        'RicorocksDigitalAgency\\Soap\\Header' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/Header.php',
-        'RicorocksDigitalAgency\\Soap\\HeaderSet' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/HeaderSet.php',
-        'RicorocksDigitalAgency\\Soap\\Inclusion' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/Inclusion.php',
-        'RicorocksDigitalAgency\\Soap\\OptionSet' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/OptionSet.php',
-        'RicorocksDigitalAgency\\Soap\\Parameters\\Builder' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/Parameters/Builder.php',
-        'RicorocksDigitalAgency\\Soap\\Parameters\\IntelligentBuilder' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/Parameters/IntelligentBuilder.php',
-        'RicorocksDigitalAgency\\Soap\\Parameters\\Node' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/Parameters/Node.php',
-        'RicorocksDigitalAgency\\Soap\\Providers\\SoapServiceProvider' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/Providers/SoapServiceProvider.php',
-        'RicorocksDigitalAgency\\Soap\\Ray\\SoapWatcher' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/Ray/SoapWatcher.php',
-        'RicorocksDigitalAgency\\Soap\\Request\\Request' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/Request/Request.php',
-        'RicorocksDigitalAgency\\Soap\\Request\\SoapClientRequest' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/Request/SoapClientRequest.php',
-        'RicorocksDigitalAgency\\Soap\\Response\\Response' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/Response/Response.php',
-        'RicorocksDigitalAgency\\Soap\\Soap' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/Soap.php',
-        'RicorocksDigitalAgency\\Soap\\Support\\Fakery\\Fakery' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/Support/Fakery/Fakery.php',
-        'RicorocksDigitalAgency\\Soap\\Support\\Fakery\\Stub' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/Support/Fakery/Stub.php',
-        'RicorocksDigitalAgency\\Soap\\Support\\Fakery\\Stubs' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/Support/Fakery/Stubs.php',
-        'RicorocksDigitalAgency\\Soap\\Support\\Scoped' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/Support/Scoped.php',
-        'RicorocksDigitalAgency\\Soap\\Support\\Tracing\\Trace' => __DIR__ . '/..' . '/ricorocks-digital-agency/soap/src/Support/Tracing/Trace.php',
         'SebastianBergmann\\CliParser\\AmbiguousOptionException' => __DIR__ . '/..' . '/sebastian/cli-parser/src/exceptions/AmbiguousOptionException.php',
         'SebastianBergmann\\CliParser\\Exception' => __DIR__ . '/..' . '/sebastian/cli-parser/src/exceptions/Exception.php',
         'SebastianBergmann\\CliParser\\OptionDoesNotAllowArgumentException' => __DIR__ . '/..' . '/sebastian/cli-parser/src/exceptions/OptionDoesNotAllowArgumentException.php',

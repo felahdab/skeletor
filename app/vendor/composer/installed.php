@@ -992,15 +992,6 @@
                 0 => '4.5.1',
             ),
         ),
-        'ricorocks-digital-agency/soap' => array(
-            'pretty_version' => 'v1.6.0',
-            'version' => '1.6.0.0',
-            'reference' => '8b14a922b48cbf627dff98954ebf0c34b653ad19',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../ricorocks-digital-agency/soap',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'sebastian/cli-parser' => array(
             'pretty_version' => '1.0.1',
             'version' => '1.0.1.0',

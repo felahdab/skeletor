@@ -49,7 +49,6 @@ return array(
     'Spatie\\Backtrace\\' => array($vendorDir . '/spatie/backtrace/src'),
     'SocialiteProviders\\Manager\\' => array($vendorDir . '/socialiteproviders/manager/src'),
     'SocialiteProviders\\Keycloak\\' => array($vendorDir . '/socialiteproviders/keycloak'),
-    'RicorocksDigitalAgency\\Soap\\' => array($vendorDir . '/ricorocks-digital-agency/soap/src'),
     'Ramsey\\Uuid\\' => array($vendorDir . '/ramsey/uuid/src'),
     'Ramsey\\Collection\\' => array($vendorDir . '/ramsey/collection/src'),
     'Psy\\' => array($vendorDir . '/psy/psysh/src'),
