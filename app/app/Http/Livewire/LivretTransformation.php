@@ -15,11 +15,27 @@ class LivretTransformation extends Component
 {
     
     public $mode="unique";
+    public $fonctions;
+    
     public $user;
+    
+    public $fonction;
+    public $usersfonction;
+    
     public $readwrite;
+    
     
     public function render()
     {
+        if ($this->mode == "unique")
+        {
+            $this->fonctions = $this->user->fonctions()->orderBy('typefonction_id')->get();
+        }
+        elseif ($this->mode == "multiple")
+        {
+            $this->fonctions = [ $this->fonction ];
+            $this->usersfonction = $this->fonction->users()->get();
+        }
         return view('livewire.livret-transformation');
     }
     
@@ -50,36 +66,51 @@ class LivretTransformation extends Component
                                     $selected_objectifs = null,
                                     $selected_sous_objectifs = null)
     {
-        foreach($selected_compagnonnages as $compid => $value)
+        foreach($selected_compagnonnages as $compid)
         {
-            if ($value == true){
-                $compagnonage = Compagnonage::find($compid);
-                
+            $compagnonage = Compagnonage::find($compid);
+        }
+        
+        foreach($selected_taches as $tacheid )
+        {
+            $tache = Tache::find($tacheid);
+            $user->ValidateTache($tache, $date_validation , $commentaire, $valideur);
+        }
+        
+        foreach($selected_objectifs as $objectifid)
+        {
+            $objectif = Objectif::find($objectifid);
+            foreach($objectif->sous_objectifs()->get() as $ssobj)
+            {
+                $user->ValidateSousObjectif($ssobj, $date_validation , $commentaire, $valideur);
             }
         }
         
-        foreach($selected_taches as $tacheid => $value)
+        foreach($selected_sous_objectifs as $ssobjid)
         {
-            if ($value == true){
-                $tache = Tache::find($tacheid);
-                $user->ValidateTache($tache, $date_validation , $commentaire, $valideur);
-            }
+            $sous_objectif = SousObjectif::find($ssobjid);
+            $user->ValidateSousObjectif($sous_objectif, $date_validation , $commentaire, $valideur);
         }
-        
-        foreach($selected_objectifs as $objectifid => $value)
+    }
+    
+     public function ValideElementsDuParcoursMultiple($users = null, 
+                                    $date_validation , $commentaire, $valideur,
+                                    $selected_compagnonnages = null,
+                                    $selected_taches = null,
+                                    $selected_objectifs = null,
+                                    $selected_sous_objectifs = null)
+    {
+        foreach ($users as $userid)
         {
-            if ($value == true){
-                $objectif = Objectif::find($objectifid);
-                // ddd($objectif);
-            }
-        }
-        
-        foreach($selected_sous_objectifs as $ssobjid => $value)
-        {
-            if ($value == true){
-                $sous_objectif = SousObjectif::find($ssobjid);
-                $user->ValidateSousObjectif($sous_objectif, $date_validation , $commentaire, $valideur);
-                // ddd($sous_objectif);
+            $user = User::find($userid);
+            if ($user != null)
+            {
+                $this->ValideElementsDuParcours($user, 
+                                    $date_validation , $commentaire, $valideur,
+                                    $selected_compagnonnages ,
+                                    $selected_taches ,
+                                    $selected_objectifs ,
+                                    $selected_sous_objectifs);
             }
         }
     }
@@ -90,37 +121,30 @@ class LivretTransformation extends Component
                                     $selected_objectifs = null,
                                     $selected_sous_objectifs = null)
     {
-        foreach($selected_compagnonnages as $compid => $value)
+        foreach($selected_compagnonnages as $compid)
         {
-            if ($value == true){
-                $compagnonage = Compagnonage::find($compid);
-                
+            $compagnonage = Compagnonage::find($compid);
+        }
+        
+        foreach($selected_taches as $tacheid)
+        {
+            $tache = Tache::find($tacheid);
+            $user->UnValidateTache($tache);
+        }
+        
+        foreach($selected_objectifs as $objectifid)
+        {
+            $objectif = Objectif::find($objectifid);
+            foreach($objectif->sous_objectifs()->get() as $ssobj)
+            {
+                $user->UnValidateSousObjectif($ssobj);
             }
         }
         
-        foreach($selected_taches as $tacheid => $value)
+        foreach($selected_sous_objectifs as $ssobjid)
         {
-            if ($value == true){
-                $tache = Tache::find($tacheid);
-                $user->UnValidateTache($tache);
-            }
-        }
-        
-        foreach($selected_objectifs as $objectifid => $value)
-        {
-            if ($value == true){
-                $objectif = Objectif::find($objectifid);
-                // ddd($objectif);
-            }
-        }
-        
-        foreach($selected_sous_objectifs as $ssobjid => $value)
-        {
-            if ($value == true){
-                $sous_objectif = SousObjectif::find($ssobjid);
-                $user->UnValidateSousObjectif($sous_objectif);
-                // ddd($sous_objectif);
-            }
+            $sous_objectif = SousObjectif::find($ssobjid);
+            $user->UnValidateSousObjectif($sous_objectif);
         }
     }
 }
