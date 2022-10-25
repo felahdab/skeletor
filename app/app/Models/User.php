@@ -768,24 +768,6 @@ class User extends Authenticatable
         return 100.0 * $workcoll->count() / $comp->coll_sous_objectifs()->count();
     }
     
-    public function getFonctionHtmlAttribute(Fonction $fonction)
-    {
-        $date_lache = $fonction->pivot->date_lache;
-        $taux = $fonction->pivot->taux_de_transformation;
-        $libelle = $fonction->fonction_libcourt;
-        
-        if ($date_lache != null)
-            $couleur="green";
-        elseif($taux >= 70)
-            $couleur="Goldenrod";
-        elseif($taux >= 35)
-            $couleur = "orangered";
-        else
-            $couleur = "red";
-        
-        return "color:". $couleur . "'>" . $libelle . " (" . $taux ."%)" ;
-    }
-    
     public function getEnTransformationAttribute()
     {
         $fonctions = $this->fonctions()->get();
