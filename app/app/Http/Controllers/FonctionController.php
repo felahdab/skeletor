@@ -203,64 +203,6 @@ class FonctionController extends Controller
     
     public function choixmarins(Fonction $fonction)
     {
-        $users = User::local()->orderBy('name')->get();
-        
-        // $usersfonction = $fonction->users()->whereIn('user_id', $users->pluck('id')->all())->get();
-        $usersfonction = $fonction->users()->get();
-        
-        return view('transformation.livretmultiple', ['fonction' => $fonction,
-                                                      'users'    => $users,
-                                                      'usersfonction' => $usersfonction]);
-    }
-    
-    public function validermarins(Request $request, Fonction $fonction)
-    {
-        // ddd($request->input());
-        $valideur = $request->input('valideur');
-        $commentaire = $request->input('commentaire');
-        $date_validation = $request->input('date_validation');
-        
-        if ($date_validation == null)
-            $date_validation = date('Y-m-d');
-        
-        if ($request->has('marinsfonc'))
-        {
-            $marinsid = $request['marinsfonc'];
-            foreach ($marinsid as $key => $marinid)
-            {
-                $marin = User::find(intval($marinid));
-                
-                if ($request->has('ssobjid'))
-                {
-                    $sous_objectifs_a_valider = $request['ssobjid'];
-                    foreach ($sous_objectifs_a_valider as $key => $value){
-                        $sousobjectif = SousObjectif::find($key);
-                        $marin->sous_objectifs()->detach($sousobjectif);
-                        $marin->sous_objectifs()->attach($sousobjectif, [
-                            'valideur'        => $valideur,
-                            'commentaire'     => $commentaire,
-                            'date_validation' => $date_validation,
-                        ]);
-                    }
-                }
-                if ($request->has('tacheid'))
-                {
-                    $taches_a_valider = $request['tacheid'];
-                    foreach ($taches_a_valider as $key => $value){
-                        $tache = Tache::find($key);
-                        foreach ($tache->coll_sous_objectifs() as $sousobjectif)
-                        {
-                            $marin->sous_objectifs()->detach($sousobjectif);
-                            $marin->sous_objectifs()->attach($sousobjectif, [
-                                'valideur'        =>$valideur,
-                                'commentaire'     =>$commentaire,
-                                'date_validation' => $date_validation,
-                            ]);
-                        }
-                    }
-                }
-            }
-        }
-        return redirect()->route('fonctions.choixmarins', ['fonction' => $fonction]);
+        return view('transformation.livretmultiple', ['fonction' => $fonction]);
     }
 }
