@@ -31,7 +31,7 @@
                             <a href="{{$lien->lien_url}}" 
                             style="text-align: center;" 
                             target="_blank">
-                            <img  src="{{asset('public/images/' . $lien->lien_image)}}" 
+                            <img  src="{{url('public/images/' . $lien->lien_image)}}" 
                             style="width: 65px; height: 65px; " 
                             alt="{{$lien->lien_lib}}" /><br>{{$lien->lien_lib}}
                             </a>
