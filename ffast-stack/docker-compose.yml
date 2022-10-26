@@ -32,6 +32,13 @@ services:
            PMA_HOST: db
         networks:
           - private
+    code-editor:
+        image: codercom/code-server
+        networks:
+          - private
+        user: "1000:1002"
+        volumes:
+          - ../:/home/coder/project/
 volumes:
     mysqldata: {}
 networks:
