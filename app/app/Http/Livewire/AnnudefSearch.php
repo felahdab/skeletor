@@ -135,4 +135,72 @@ class AnnudefSearch extends Component
             $localuser->save();
         }
     }
+    
+    public function createAllLocalUser()
+    {
+        foreach($this->users as $key=>$ldapuser)
+        {
+            $localuser = User::where('email', $ldapuser['email'])->first();
+            if ($localuser == null)
+            {
+                $this->createLocalUser($key);
+            }
+        }
+    }
+    
+    public function aligneAllNom()
+    {
+        foreach($this->users as $key=>$ldapuser)
+        {
+            $localuser = User::where('email', $ldapuser['email'])->first();
+            if ($localuser != null)
+            {
+                if ($localuser->name != $ldapuser['nom']){
+                    $this->aligneNom($key);
+                }
+            }
+        }
+    }
+    
+    public function aligneAllPrenom()
+    {
+        foreach($this->users as $key=>$ldapuser)
+        {
+            $localuser = User::where('email', $ldapuser['email'])->first();
+            if ($localuser != null)
+            {
+                if ($localuser->prenom != $ldapuser['prenomusuel']){
+                    $this->alignePrenom($key);
+                }
+                
+            }
+        }
+    }
+    
+    public function aligneAllNid()
+    {
+        foreach($this->users as $key=>$ldapuser)
+        {
+            $localuser = User::where('email', $ldapuser['email'])->first();
+            if ($localuser != null)
+            {
+                if ($localuser->nid != $ldapuser['nid']){
+                    $this->aligneNid($key);
+                }
+            }
+        }
+    }
+    public function aligneAllGrade()
+    {
+        foreach($this->users as $key=>$ldapuser)
+        {
+            $localuser = User::where('email', $ldapuser['email'])->first();
+            if ($localuser != null)
+            {
+                if ($localuser->grade()->first()?->grade_libcourt != $ldapuser['gradecourt']){
+                    $this->aligneGrade($key);
+                }
+            }
+        }
+    }
 }

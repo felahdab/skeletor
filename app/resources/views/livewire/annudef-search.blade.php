@@ -7,13 +7,21 @@
     
     @if ($error)
         <div  wire:loading.remove class="alert alert-danger text-center" role="alert">
-            <i class="fa fa-check"></i>
             {{ $error }}
         </div>
     @endif
     
     <div wire:loading> Recherche en cours... </div>
     @if (count($users))
+        <div class="btn-group" role="groupe">
+            <button x-on:click="$wire.createAllLocalUser()" class='btn btn-primary'>Créer toutes les fiches manquantes</button>
+            <button x-on:click="$wire.aligneAllNom()" class='btn btn-warning'>Ajuster tous les noms</button>
+            <button x-on:click="$wire.aligneAllPrenom()" class='btn btn-secondary'>Ajuster tous les prénoms</button>
+            <button x-on:click="$wire.aligneAllNid()" class='btn btn-danger'>Ajuster tous les NID</button>
+            <button x-on:click="$wire.aligneAllGrade()" class='btn btn-info'>Ajuster tous les grades</button>
+        </div>
+    
+    
        <table>
             <thead>
             <tr>
