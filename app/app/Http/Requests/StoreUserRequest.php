@@ -41,8 +41,8 @@ class StoreUserRequest extends FormRequest
             'user_comment' => 'nullable',
             'buttonid' => 'nullable',
             'nid'=>'nullable',
-            'comete'=>'required',
-            'socle'=>'required'
+            'comete'=>'nullable',
+            'socle'=>'nullable'
         ];
     }
     
