@@ -8,6 +8,8 @@ use RicorocksDigitalAgency\Soap\Facades\Soap;
 
 use App\Http\Controllers\AnnudefController;
 
+use App\Models\User;
+
 class TestLdapConnexion extends Command
 {
     /**
@@ -29,11 +31,13 @@ class TestLdapConnexion extends Command
     public function handle()
     {
         
-        $results = AnnudefController::searchUsers($tel ='', $nom='el-ahdab' , $prenom='' ,$mail='' , $bdd='' , $zone='' ,$localite ='' ,
-                $entite='' ,$fonction='' , $nid='');
-        
-        $this->info(count($results));
-        $this->info(json_encode($results));
+        $results = collect(AnnudefController::searchUsers($tel ='', $nom='' , $prenom='' ,
+                                                        $mail='' , $bdd='' , $zone='' ,
+                                                        $localite ='' ,
+                $entite='MARINE/ALFAN/GTR FREMM TOULON' ,$fonction='' , $nid=''));
+                
+        // $this->info(count($results));
+        $this->info(json_encode($results, JSON_PRETTY_PRINT));
         return 0;
     }
 }

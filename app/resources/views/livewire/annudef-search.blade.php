@@ -17,15 +17,15 @@
        <table>
             <thead>
             <tr>
-                <th scope="col">titre</th>
-                <th scope="col">nom</th>
-                <th scope="col">prenom</th>
-                <th scope="col">gradelong</th>
-                <th scope="col">gradecourt</th>
-                <th scope="col">nid</th>
-                <th scope="col">nomaffiche</th>
-                <th scope="col">email</th>
-                <th scope="col">unites</th>
+                <th scope="col">Titre</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Prénom</th>
+                <th scope="col">Grade long</th>
+                <th scope="col">Grade court</th>
+                <th scope="col">NID</th>
+                <th scope="col">Email</th>
+                <th scope="col">Unité</th>
+                <th scope="col">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -37,9 +37,11 @@
                 <td>{{ $user['gradelong'] }}</td>
                 <td>{{ $user['gradecourt'] }}</td>
                 <td>{{ $user['nid'] }}</td>
-                <td>{{ $user['nomaffiche'] }}</td>
                 <td>{{ $user['email'] }}</td>
                 <td>{{ $user['unites'] }}</td>
+                <td>
+                    @include('livewire.annudef-search.actions', ['user' => $user])
+                </td>
             </tr>
             @endforeach
         </table>
