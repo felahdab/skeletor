@@ -63,9 +63,12 @@ class UsersController extends Controller
     {
         $user = $user->create(array_merge($request->validated(), [ "password" =>$this->generateRandomString()]));
 
-        $name=$request->file('photo');
-        $result = $name->storePublicly("public/images");
-        $user->photo=$name->hashName();
+        
+        if ($request->file('photo') != null){
+            $name=$request->file('photo');
+            $result = $name->storePublicly("public/images");
+            $user->photo=$name->hashName();
+        }
         
         $user->name = strtoupper($user->name);
         $user->prenom = ucfirst(strtolower($user->prenom));
