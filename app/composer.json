@@ -20,7 +20,6 @@
         "laravelcollective/html": "^6.3",
         "livewire/livewire": "^2.10",
         "mpdf/mpdf": "8.1.0",
-        "qoraiche/laravel-mail-editor": "^4.0",
         "rappasoft/laravel-livewire-tables": "^2.8",
         "recca0120/terminal": "^1.10",
         "socialiteproviders/keycloak": "^5.2",
