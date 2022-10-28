@@ -8,7 +8,11 @@ STACKNAME=$(basename $PARENTDIR)
 # echo $BASEDIRECTORY
 # echo $STACKNAME
 
+source $PARENTDIR/.env
+echo $DOMAIN
+echo $PREFIX
+
 sed -i 's/APP_PREFIX=.*/APP_PREFIX=""/g' .env
 
 cd public
-find . -mindepth 1 -maxdepth 1 ! -path ./assets -type d -exec mv {} assets \;
+rm -f $PREFIX
