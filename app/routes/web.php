@@ -110,11 +110,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::post('/{user}/retirerfonction', 'UsersController@retirerfonction')->name('users.retirerfonction');
             Route::get('/{user}/livret', 'TransformationController@livret')->name('transformation.livret');
             Route::get('/{user}/livretpdf', 'TransformationController@livretpdf')->name('transformation.livretpdf');
-            Route::post('/{user}/livret', 'TransformationController@updatelivret')->name('transformation.updatelivret');
-            Route::post('/{user}/validerlacheoudouble/{fonction}', 'TransformationController@validerlacheoudouble')->name('transformation.validerlacheoudouble');
             Route::get('/{user}/progression', 'TransformationController@progression')->name('transformation.progression');
             Route::get('/{user}/fichebilan', 'TransformationController@fichebilan')->name('transformation.fichebilan');
-            
             Route::get('/mafichebilan', 'TransformationController@mafichebilan')->name('transformation.mafichebilan');
             Route::get('/monlivret', 'TransformationController@monlivret')->name('transformation.monlivret');
             Route::get('/maprogression', 'TransformationController@maprogression')->name('transformation.maprogression');
@@ -133,6 +130,10 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::get('/liens', 'LienController@index')->name('liens.index');
         Route::get('/creationlien', 'LienController@create')->name('liens.create');
         Route::post('/creationlien', 'LienController@store')->name('liens.store');
+        
+         Route::group(['prefix' => 'annudef'], function() {
+             Route::get('/', 'AnnudefController@index')->name('annudef.index');
+        });
 
 
         // if (env('APP_ENV') == "local")
