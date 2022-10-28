@@ -132,9 +132,15 @@ class GradeSeeder extends Seeder
         ]);
 		Grade::create([
 			'id'             => 20,
-			'grade_libcourt' => 'MOT',
+			'grade_libcourt' => 'MO1',
 			'grade_liblong'  => 'MATELOT',
 			'ordre_classmt'  => 1,
+        ]);
+        Grade::create([
+			'id'             => 21,
+			'grade_libcourt' => 'MO2',
+			'grade_liblong'  => 'MATELOT',
+			'ordre_classmt'  => 0,
         ]);
     }
 }
