@@ -17,4 +17,6 @@ echo $PREFIX
 SED_CMD='s/APP_PREFIX=.*/APP_PREFIX='$PREFIX'/g'
 sed -i $SED_CMD .env
 
-mv public/assets public/$PREFIX
+#mv public/assets public/$PREFIX
+cd public
+ln -s ./assets $PREFIX
