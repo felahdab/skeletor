@@ -32,6 +32,7 @@ class ComposerStaticInite02b18f2e6d570fbc3e1e1247d251339
         'c7a3c339e7e14b60e06a2d7fcce9476b' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Events/functions.php',
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
+        'a1af1fc0cffb5f61cbaf64dbe030fdb9' => __DIR__ . '/..' . '/laravel/legacy-factories/helpers.php',
         '40275907c8566c390185147049ef6e5d' => __DIR__ . '/..' . '/livewire/livewire/src/helpers.php',
         '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
         '4a1f389d6ce373bda9e57857d3b61c84' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/helpers.php',
@@ -112,10 +113,15 @@ class ComposerStaticInite02b18f2e6d570fbc3e1e1247d251339
         ),
         'R' => 
         array (
+            'ReeceM\\Mocker\\' => 14,
             'Recca0120\\Terminal\\' => 19,
             'Rappasoft\\LaravelLivewireTables\\' => 32,
             'Ramsey\\Uuid\\' => 12,
             'Ramsey\\Collection\\' => 18,
+        ),
+        'Q' => 
+        array (
+            'Qoraiche\\MailEclipse\\' => 21,
         ),
         'P' => 
         array (
@@ -163,6 +169,7 @@ class ComposerStaticInite02b18f2e6d570fbc3e1e1247d251339
         'I' => 
         array (
             'Illuminate\\Support\\' => 19,
+            'Illuminate\\Database\\Eloquent\\' => 29,
             'Illuminate\\' => 11,
         ),
         'H' => 
@@ -402,6 +409,10 @@ class ComposerStaticInite02b18f2e6d570fbc3e1e1247d251339
         array (
             0 => __DIR__ . '/..' . '/socialiteproviders/keycloak',
         ),
+        'ReeceM\\Mocker\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/reecem/mocker/src',
+        ),
         'Recca0120\\Terminal\\' => 
         array (
             0 => __DIR__ . '/..' . '/recca0120/terminal/src',
@@ -417,6 +428,10 @@ class ComposerStaticInite02b18f2e6d570fbc3e1e1247d251339
         'Ramsey\\Collection\\' => 
         array (
             0 => __DIR__ . '/..' . '/ramsey/collection/src',
+        ),
+        'Qoraiche\\MailEclipse\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/qoraiche/laravel-mail-editor/src',
         ),
         'Psy\\' => 
         array (
@@ -536,6 +551,10 @@ class ComposerStaticInite02b18f2e6d570fbc3e1e1247d251339
             0 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Macroable',
             1 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Collections',
             2 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Conditionable',
+        ),
+        'Illuminate\\Database\\Eloquent\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laravel/legacy-factories/src',
         ),
         'Illuminate\\' => 
         array (
@@ -2705,9 +2724,12 @@ class ComposerStaticInite02b18f2e6d570fbc3e1e1247d251339
         'Illuminate\\Database\\Eloquent\\Factories\\HasFactory' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Eloquent/Factories/HasFactory.php',
         'Illuminate\\Database\\Eloquent\\Factories\\Relationship' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Eloquent/Factories/Relationship.php',
         'Illuminate\\Database\\Eloquent\\Factories\\Sequence' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Eloquent/Factories/Sequence.php',
+        'Illuminate\\Database\\Eloquent\\Factory' => __DIR__ . '/..' . '/laravel/legacy-factories/src/Factory.php',
+        'Illuminate\\Database\\Eloquent\\FactoryBuilder' => __DIR__ . '/..' . '/laravel/legacy-factories/src/FactoryBuilder.php',
         'Illuminate\\Database\\Eloquent\\HigherOrderBuilderProxy' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Eloquent/HigherOrderBuilderProxy.php',
         'Illuminate\\Database\\Eloquent\\InvalidCastException' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Eloquent/InvalidCastException.php',
         'Illuminate\\Database\\Eloquent\\JsonEncodingException' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Eloquent/JsonEncodingException.php',
+        'Illuminate\\Database\\Eloquent\\LegacyFactoryServiceProvider' => __DIR__ . '/..' . '/laravel/legacy-factories/src/LegacyFactoryServiceProvider.php',
         'Illuminate\\Database\\Eloquent\\MassAssignmentException' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Eloquent/MassAssignmentException.php',
         'Illuminate\\Database\\Eloquent\\MassPrunable' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Eloquent/MassPrunable.php',
         'Illuminate\\Database\\Eloquent\\MissingAttributeException' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Eloquent/MissingAttributeException.php',
@@ -5457,6 +5479,19 @@ class ComposerStaticInite02b18f2e6d570fbc3e1e1247d251339
         'Psy\\VersionUpdater\\GitHubChecker' => __DIR__ . '/..' . '/psy/psysh/src/VersionUpdater/GitHubChecker.php',
         'Psy\\VersionUpdater\\IntervalChecker' => __DIR__ . '/..' . '/psy/psysh/src/VersionUpdater/IntervalChecker.php',
         'Psy\\VersionUpdater\\NoopChecker' => __DIR__ . '/..' . '/psy/psysh/src/VersionUpdater/NoopChecker.php',
+        'Qoraiche\\MailEclipse\\Actions\\CreateMailable' => __DIR__ . '/..' . '/qoraiche/laravel-mail-editor/src/Actions/CreateMailable.php',
+        'Qoraiche\\MailEclipse\\Actions\\DeleteMailable' => __DIR__ . '/..' . '/qoraiche/laravel-mail-editor/src/Actions/DeleteMailable.php',
+        'Qoraiche\\MailEclipse\\Command\\VendorPublishCommand' => __DIR__ . '/..' . '/qoraiche/laravel-mail-editor/src/Command/VendorPublishCommand.php',
+        'Qoraiche\\MailEclipse\\Facades\\MailEclipse' => __DIR__ . '/..' . '/qoraiche/laravel-mail-editor/src/Facades/MailEclipse.php',
+        'Qoraiche\\MailEclipse\\Http\\Controllers\\MailablesController' => __DIR__ . '/..' . '/qoraiche/laravel-mail-editor/src/Http/Controllers/MailablesController.php',
+        'Qoraiche\\MailEclipse\\Http\\Controllers\\MailablesPreviewController' => __DIR__ . '/..' . '/qoraiche/laravel-mail-editor/src/Http/Controllers/MailablesPreviewController.php',
+        'Qoraiche\\MailEclipse\\Http\\Controllers\\TemplatesController' => __DIR__ . '/..' . '/qoraiche/laravel-mail-editor/src/Http/Controllers/TemplatesController.php',
+        'Qoraiche\\MailEclipse\\Http\\Exceptions\\PreviewErrorException' => __DIR__ . '/..' . '/qoraiche/laravel-mail-editor/src/Http/Exceptions/PreviewErrorException.php',
+        'Qoraiche\\MailEclipse\\MailEclipse' => __DIR__ . '/..' . '/qoraiche/laravel-mail-editor/src/MailEclipse.php',
+        'Qoraiche\\MailEclipse\\MailEclipseMailables' => __DIR__ . '/..' . '/qoraiche/laravel-mail-editor/src/MailEclipseMailables.php',
+        'Qoraiche\\MailEclipse\\MailEclipseServiceProvider' => __DIR__ . '/..' . '/qoraiche/laravel-mail-editor/src/MailEclipseServiceProvider.php',
+        'Qoraiche\\MailEclipse\\Utils\\Replacer' => __DIR__ . '/..' . '/qoraiche/laravel-mail-editor/src/Utils/Replacer.php',
+        'Qoraiche\\MailEclipse\\Utils\\TemplateSkeletons' => __DIR__ . '/..' . '/qoraiche/laravel-mail-editor/src/Utils/TemplateSkeletons.php',
         'Ramsey\\Collection\\AbstractArray' => __DIR__ . '/..' . '/ramsey/collection/src/AbstractArray.php',
         'Ramsey\\Collection\\AbstractCollection' => __DIR__ . '/..' . '/ramsey/collection/src/AbstractCollection.php',
         'Ramsey\\Collection\\AbstractSet' => __DIR__ . '/..' . '/ramsey/collection/src/AbstractSet.php',
@@ -5681,6 +5716,12 @@ class ComposerStaticInite02b18f2e6d570fbc3e1e1247d251339
         'Recca0120\\Terminal\\Kernel' => __DIR__ . '/..' . '/recca0120/terminal/src/Kernel.php',
         'Recca0120\\Terminal\\ProcessUtils' => __DIR__ . '/..' . '/recca0120/terminal/src/ProcessUtils.php',
         'Recca0120\\Terminal\\TerminalServiceProvider' => __DIR__ . '/..' . '/recca0120/terminal/src/TerminalServiceProvider.php',
+        'ReeceM\\Mocker\\Exceptions\\VarStoreMissingException' => __DIR__ . '/..' . '/reecem/mocker/src/Exceptions/VarStoreMissingException.php',
+        'ReeceM\\Mocker\\Mocked' => __DIR__ . '/..' . '/reecem/mocker/src/Mocked.php',
+        'ReeceM\\Mocker\\ReflectionMockery' => __DIR__ . '/..' . '/reecem/mocker/src/ReflectionMockery.php',
+        'ReeceM\\Mocker\\Traits\\ArrayMagic' => __DIR__ . '/..' . '/reecem/mocker/src/Traits/ArrayMagic.php',
+        'ReeceM\\Mocker\\Traits\\ObjectMagic' => __DIR__ . '/..' . '/reecem/mocker/src/Traits/ObjectMagic.php',
+        'ReeceM\\Mocker\\Utils\\VarStore' => __DIR__ . '/..' . '/reecem/mocker/src/Utils/VarStore.php',
         'ReturnTypeWillChange' => __DIR__ . '/..' . '/symfony/polyfill-php81/Resources/stubs/ReturnTypeWillChange.php',
         'SebastianBergmann\\CliParser\\AmbiguousOptionException' => __DIR__ . '/..' . '/sebastian/cli-parser/src/exceptions/AmbiguousOptionException.php',
         'SebastianBergmann\\CliParser\\Exception' => __DIR__ . '/..' . '/sebastian/cli-parser/src/exceptions/Exception.php',
