@@ -82,15 +82,17 @@
                 </table>
             </div>
         </div>
-        <div class="text-center">
-            <button type="submit" 
-                class="btn btn-primary w-50" 
-		name="validation_double"
-                x-on:click.prevent="opendivvalid=true">Valider les marins sélectionnés ci-dessus</button>
-            <button x-show="false" type="submit" class="btn btn-primary w-50" 
-		name="validation_double"
-                x-on:uservalidated.window="$el.click()"></button>
-        </div>
+        @can('stages.validermarins')
+            <div class="text-center">
+                <button type="submit" 
+                    class="btn btn-primary w-50" 
+            name="validation_double"
+                    x-on:click.prevent="opendivvalid=true">Valider les marins sélectionnés ci-dessus</button>
+                <button x-show="false" type="submit" class="btn btn-primary w-50" 
+            name="validation_double"
+                    x-on:uservalidated.window="$el.click()"></button>
+            </div>
+        @endcan
         {!! Form::close() !!}
         
         {!! Form::open(['method' => 'POST','route' => ['stages.annulermarins', $stage->id], 'id' => 'form']) !!}
@@ -98,7 +100,7 @@
         <input type='hidden' id='commentaire' name='commentaire' value=''>
         <input type='hidden' id='valideur' name='valideur' value=''>
         
-        <div  class='card border-primary mb-3'>
+        <div  class='card border-primary mb-3 mt-3'>
             <div class='card-header text-primary'>Liste des marins ayant valid&eacute; le stage {{$stage->stage_libcourt}}</div>
             <div class='card-body'>
                 <table class='table-hover' style='width:100%;'>
@@ -134,11 +136,13 @@
                 </table>
             </div>
         </div>
-        <div class="text-center">
-            <button type="submit" 
-                class="btn btn-danger" 
-                name="validation_double">Dé-valider les marins sélectionnés ci-dessus</button>
-        </div>
+        @can('stages.annulermarins')
+            <div class="text-center  mb-3">
+                <button type="submit" 
+                    class="btn btn-danger" 
+                    name="validation_double">Dé-valider les marins sélectionnés ci-dessus</button>
+            </div>
+        @endcan
         {!! Form::close() !!}
         @endif
     </div>

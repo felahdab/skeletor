@@ -48,48 +48,77 @@ class StagesTable extends DataTableComponent
 
     public function stageActions()
     {
-        if ($this->mode == "gestion")
-            return view('tables.stagestable.gestion');
-        elseif ($this->mode == "transformation")
-            return view('tables.stagestable.transformation');
-        elseif ($this->mode == "uservalidation")
-            return view('tables.stagestable.uservalidation', ['user' => $this->user]);
-        elseif ($this->mode == "selectnewstage")
-            return view('tables.stagestable.selectnewstage', ['user' => $this->user]);
+        switch ($this->mode){
+            case "gestion" :
+                return view('tables.stagestable.gestion');
+                break;
+            case "transformation" :
+                return view('tables.stagestable.transformation');
+                break;
+            case "uservalidation" :
+                return view('tables.stagestable.uservalidation', ['user' => $this->user]);
+                break;
+            case "selectnewstage" :
+                return view('tables.stagestable.selectnewstage', ['user' => $this->user]);
+                break;
+        }
     }
 
     public function columns(): array
     {
-        return [
-            Column::make('ID', 'id')
-                ->deSelected()
-                ->sortable(),
-            Column::make('Libellé court', 'stage_libcourt')
-                ->sortable()
-                ->searchable(),
-            Column::make('Libellé long', 'stage_liblong')
-                ->sortable()
-                ->searchable(),
-            Column::make('Licence', 'type_licence.typlicense_libcourt')
-                ->searchable(),
-            Column::make('Date fin', 'stage_date_fin_licence')
-                ->sortable()
-                ->searchable(),
-            Column::make('Capa max', 'stage_capamax')
-                ->deSelected(),
-            Column::make('Durée (j)', 'stage_duree')
-                ->deSelected(),
-            Column::make('Lieu', 'stage_lieu')
-                ->sortable()
-                ->searchable(),
-            Column::make('Commentaire', 'stage_commentaire')
-                ->deSelected()
-                ->searchable(),
-            Column::make('Actions')
-                ->label(
-                    fn($row, Column $column) => $this->stageActions()->withRow($row)
-                    ),
-        ];
+        switch ($this->mode){
+            case "transformation" :
+            case "uservalidation" :
+                return [
+                    Column::make('ID', 'id')
+                        ->deSelected()
+                        ->sortable(),
+                    Column::make('Libellé court', 'stage_libcourt')
+                        ->sortable()
+                        ->searchable(),
+                    Column::make('Libellé long', 'stage_liblong')
+                        ->deSelected()
+                        ->sortable()
+                        ->searchable(),
+                    Column::make('Actions')
+                        ->label(
+                            fn($row, Column $column) => $this->stageActions()->withRow($row)
+                            ),
+                ];
+                break;
+            default :
+                return [
+                    Column::make('ID', 'id')
+                        ->deSelected()
+                        ->sortable(),
+                    Column::make('Libellé court', 'stage_libcourt')
+                        ->sortable()
+                        ->searchable(),
+                    Column::make('Libellé long', 'stage_liblong')
+                        ->sortable()
+                        ->searchable(),
+                    Column::make('Licence', 'type_licence.typlicense_libcourt')
+                        ->searchable(),
+                    Column::make('Date fin', 'stage_date_fin_licence')
+                        ->sortable()
+                        ->searchable(),
+                    Column::make('Capa max', 'stage_capamax')
+                        ->deSelected(),
+                    Column::make('Durée (j)', 'stage_duree')
+                        ->deSelected(),
+                    Column::make('Lieu', 'stage_lieu')
+                        ->sortable()
+                        ->searchable(),
+                    Column::make('Commentaire', 'stage_commentaire')
+                        ->deSelected()
+                        ->searchable(),
+                    Column::make('Actions')
+                        ->label(
+                            fn($row, Column $column) => $this->stageActions()->withRow($row)
+                            ),
+                ];
+                break;
+        }
     }
     
     public function filters(): array
