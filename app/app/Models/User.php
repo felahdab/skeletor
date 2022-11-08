@@ -716,6 +716,7 @@ class User extends Authenticatable
     public function pourcentage_valides_pour_fonction(Fonction $fonction, bool $fullcalc=false)
     {
         if (! $fullcalc){
+            //je crois que cette partie ne marche pas.
             $workitem = $this->fonctions()->find($fonction);
             return $workitem->taux_de_transformation;
         }
@@ -738,7 +739,7 @@ class User extends Authenticatable
             }
             if ($fcoll->count()==0)
                 return 0;
-            return 100.0 * $workcoll->count() / $fcoll->count();
+            return round(100.0 * $workcoll->count() / $fcoll->count(), 2);
         }
     }
     

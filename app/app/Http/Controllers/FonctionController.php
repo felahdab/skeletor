@@ -205,4 +205,9 @@ class FonctionController extends Controller
     {
         return view('transformation.livretmultiple', ['fonction' => $fonction]);
     }
+
+    public function listemarinsfonction(Fonction $fonction)
+    {
+        return view('fonctions.listemarinsfonction', ['fonction' => $fonction]);
+    }
 }

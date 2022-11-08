@@ -36,7 +36,7 @@ class Fonction extends Model
         ->withTimeStamps()
         ->withPivot('date_lache','valideur_lache','commentaire_lache',
                     'date_double','valideur_double','commentaire_double',
-                    'validation');
+                    'validation','taux_de_transformation');
     }
     
     public function nbObjectifsAValider()
