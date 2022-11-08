@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="bg-light p-4 rounded">
-        <h2>Stage {{$stage->stage_libcourt}} - Situation des marins </h2>
+        <h2>Situation des marins pour le stage : {{$stage->stage_libcourt}}</h2>
     </div>
 <div x-data="{ opendivvalid : false ,
 	       date_validation : '{{date('Y-m-d') }}',
@@ -34,35 +34,40 @@
         </div>
     </div>
     
-    <div id='divconsultstage' class='card bg-light ml-3 w-100'>
-        <div class='card-header'>Consultation {{$stage->stage_libcourt}}
-        </div>
-        
+    <div id='divconsultstage'>
         @if ($stage != null)
         {!! Form::open(['method' => 'POST','route' => ['stages.validermarins', $stage->id], 'id' => 'form']) !!}
         <input type='hidden' id='date_validation' name='date_validation' x-model="date_validation">
         <input type='hidden' id='commentaire'     name='commentaire'     x-model="commentaire">
         <input type='hidden' id='valideur'        name='valideur'        x-model="valideur">
         
-        <div class='card border-primary mb-3'>
-            <div class='card-header text-primary'>Liste des marins en attente du stage {{$stage->stage_libcourt}}</div>
-            <div class='card-body'>
-                <table class='table-hover' style='width:100%;'>
-                    <tr style='background-color:#DCDCDC; font-weight: bold;'>
-                        <td> Selection </td>
-                        <td style='height:40px;'>Grd</td>
-                        <td>Bvt</td>
-                        <td>Sp&eacute;</td>
-                        <td>Nom</td>
-                        <td>Pr&eacute;nom</td>
-                        @if(false)<td>Mat</td>@endif
-                        <td>Secteur</td>
-                        <td>Dest</td>
-                        <td>Date mut</td>
-                    </tr>
+        <div>
+            <div class='lead'>Liste des marins <b>en attente</b> du stage {{$stage->stage_libcourt}}</div>
+            <div class='table-responsive'>
+                <table class='table table-striped'>
+                    <thead>
+                        <tr style='background-color:silver; font-weight: bold;'>
+                            <th scope="col">&#10003;</th>
+                            <th scope="col">Grd</th>
+                            <th scope="col">Bvt</th>
+                            <th scope="col">Sp&eacute;</th>
+                            <th scope="col">Nom</th>
+                            <th scope="col">Pr&eacute;nom</th>
+                            <th scope="col">Mat</th>
+                            <th scope="col">NID</th>
+                            <th scope="col">Secteur</th>
+                            <th scope="col">Mut</th>
+                            <th scope="col">Date mut</th>
+                            @if(auth()->user()->can('stages.attribuerstage'))
+                                <th scope="col">&#10069;</th>
+                            @endif
+                            <th scope="col">Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     @foreach($usersdustage as $user)
                         @if ($user->pivot->date_validation == null)
-                        <tr title='' style='color:black; '>
+                        <tr title="{{$user->user_comment}}">
                             <td> <input type='checkbox' 
                                     id='user[{{ $user->id }}]' 
                                     name='user[{{ $user->id }}]' 
@@ -72,13 +77,23 @@
                             <td>{{$user->displaySpecialite()}} </td>
                             <td><a href='{{ route("users.stages", $user->id) }}'>{{$user->name}} </a></td>
                             <td>{{$user->prenom}} </td>
-                            @if(false)<td>{{$user->matricule}}</td>@endif
+                            <td>{{$user->matricule}}</td>
+                            <td>{{$user->nid}}</td>
                             <td>{{$user->displaySecteur()}} </td>
                             <td>{{$user->displayDestination()}}</td>
                             <td>{{$user->displayDateDebarquement()}}</td>
+                            @if(auth()->user()->can('stages.attribuerstage'))
+                                @if ($user->pivot->commentaire == null)
+                                    <td>&nbsp;</td>
+                                @else
+                                    <td title="{{$user->pivot->commentaire}}">&#10069;</td>
+                                @endif
+                            @endif
+                            <td>{{$user->email}}</td>
                         </tr>
                         @endif
                     @endforeach
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -101,11 +116,11 @@
         <input type='hidden' id='valideur' name='valideur' value=''>
         
         <div  class='card border-primary mb-3 mt-3'>
-            <div class='card-header text-primary'>Liste des marins ayant valid&eacute; le stage {{$stage->stage_libcourt}}</div>
+            <div class='card-header'>Liste des marins ayant <b>valid&eacute;</b> le stage {{$stage->stage_libcourt}}</div>
             <div class='card-body'>
-                <table class='table-hover' style='width:100%;'>
-                    <tr style='background-color:#DCDCDC; font-weight: bold;'>
-                        <td> Selection </td>
+                <table class='table table-striped' style='width:100%;'>
+                    <tr style='background-color:silver; font-weight: bold;'>
+                        <td>&#10003;</td>
                         <td style='height:40px;'>Grd</td>
                         <td>Bvt</td>
                         <td>Sp&eacute;</td>
@@ -115,6 +130,7 @@
                         <td>Secteur</td>
                         <td>Date valid</td>
                     </tr>
+                    <tbody>
                     @foreach($usersdustage as $user)
                         @if ($user->pivot->date_validation != null)
                         <tr title='' style='color:black; '>
@@ -133,6 +149,7 @@
                         </tr>
                         @endif
                     @endforeach
+                    </tbody>
                 </table>
             </div>
         </div>

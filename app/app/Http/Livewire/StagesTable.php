@@ -147,6 +147,11 @@ class StagesTable extends DataTableComponent
         $user->validateStage($stage, $commentaire, $date_validation);
     }
     
+    public function ValidateCommentStage(User $user, Stage $stage, $commentaire)
+    {
+        $user->validateCommentStage($stage, $commentaire);
+    }
+    
     public function AttribuerStage(User $user, Stage $stage)
     {
         $user->attachStage($stage);
