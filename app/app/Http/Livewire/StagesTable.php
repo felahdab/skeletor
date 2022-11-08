@@ -30,14 +30,14 @@ class StagesTable extends DataTableComponent
         if ($this->mode == "uservalidation")
         {
             $stagelist = $this->user->stages()->get()->pluck('id', 'id');
-            return Stage::query()->whereIn('stages.id', $stagelist);
+            return Stage::query()->whereIn('stages.id', $stagelist)->orderBy('stages.stage_libcourt');
         }
         elseif ($this->mode == "selectnewstage")
         {
             $stagelist = $this->user->stages()->get()->pluck('id', 'id');
-            return Stage::query()->whereNotIn('stages.id', $stagelist);
+            return Stage::query()->whereNotIn('stages.id', $stagelist)->orderBy('stages.stage_libcourt');
         }
-        return Stage::query();
+        return Stage::query()->orderBy('stages.stage_libcourt');
     }
 
     public function configure(): void
