@@ -9,7 +9,7 @@
             <div  class="accordion-body">
                 <table class='table'>
                     @foreach($user->stagesOrphelins() as $stage)
-                        <tr class='lignecomp div-table-contrat-compagnonnage'>
+                        <tr class='bg-secondary bg-opacity-25 div-table-contrat-compagnonnage'>
                             <th colspan='2'>{{$stage->stage_libcourt }}</th>
                         </tr>
                         <tr class='ligneTache'>

@@ -195,7 +195,7 @@ class User extends Authenticatable
     public function displayDateDebarquement()
     {
         if ($this->date_debarq == null)
-            return "NON RENSEIGNE";
+            return "N.C.";
         return $this->date_debarq;
     }
     
@@ -355,6 +355,16 @@ class User extends Authenticatable
             return "";
         return $workitem->date_validation;
     }
+    public function CommentaireDuStage(Stage $stage)
+    {
+        $workitem = $this->stages()->find($stage);
+        if ($workitem == null)
+            return "";
+        $workitem = $workitem->pivot;
+        if ($workitem->commentaire == null)
+            return "";
+        return $workitem->commentaire;
+    }
     
     /** Renvoie la liste de stages lies a une fonction.
     * Attention: ne verifie pas les doublons !
@@ -413,7 +423,7 @@ class User extends Authenticatable
         if ($workitem != null)
         {
             $workitem->date_validation = $date_validation;
-            $workitem->commentaire = $commentaire;
+            $workitem->commentaire = " " . $commentaire;
             $workitem->save();
         }
         CalculateUserTransformationRatios::dispatch($this);
@@ -424,6 +434,16 @@ class User extends Authenticatable
         ];
         $this->logTransformationHistory("VALIDE_STAGE", json_encode($event_detail));
     }
+
+    public function validateCommentStage(Stage $stage, $commentaire)
+    {
+        $workitem = $this->stages()->find($stage)->pivot;
+        if ($workitem != null)
+        {
+            $workitem->commentaire = $commentaire;
+            $workitem->save();
+        }
+    }
     
     public function unValidateStage(Stage $stage)
     {
@@ -431,7 +451,6 @@ class User extends Authenticatable
         if ($workitem != null)
         {
             $workitem->date_validation = null;
-            $workitem->commentaire = null;
             $workitem->save();
         }
         CalculateUserTransformationRatios::dispatch($this);
@@ -697,6 +716,7 @@ class User extends Authenticatable
     public function pourcentage_valides_pour_fonction(Fonction $fonction, bool $fullcalc=false)
     {
         if (! $fullcalc){
+            //je crois que cette partie ne marche pas.
             $workitem = $this->fonctions()->find($fonction);
             return $workitem->taux_de_transformation;
         }
@@ -719,7 +739,7 @@ class User extends Authenticatable
             }
             if ($fcoll->count()==0)
                 return 0;
-            return 100.0 * $workcoll->count() / $fcoll->count();
+            return round(100.0 * $workcoll->count() / $fcoll->count(), 2);
         }
     }
     

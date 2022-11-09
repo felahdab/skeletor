@@ -169,7 +169,7 @@ class StageController extends Controller
                 $user = User::find($userid);
                 $workitem = $user->stages()->find($stage)->pivot;
                 $workitem->date_validation = $request["date_validation"];
-                $workitem->commentaire = $request["commentaire"];
+                $workitem->commentaire .= ' ' . $request["commentaire"];
                 $workitem->save();
             }
         }
@@ -185,7 +185,6 @@ class StageController extends Controller
                 $user = User::find($userid);
                 $workitem = $user->stages()->find($stage)->pivot;
                 $workitem->date_validation = null;
-                $workitem->commentaire = null;
                 $workitem->save();
             }
         }

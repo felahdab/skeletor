@@ -4,10 +4,10 @@
     <div class="bg-light p-4 rounded">
         <h2>Transformation - Stages</h2>
         <div class="lead">
-            Gérer la transformation par les stages
+            Liste des stages pour validation collective
         </div>
-
-        <livewire:stages-table mode="transformation">
-
+        <div class="mt-3">
+            <livewire:stages-table mode="transformation">
+        </div>
     </div>
 @endsection

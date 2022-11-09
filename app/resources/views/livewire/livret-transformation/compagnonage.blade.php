@@ -8,14 +8,14 @@
         <div id="collapseComp_{{$compagnonage->id}}" class="accordion-collapse collapse">
             <div class="accordion-body">
             <table class='table' x-data='{ active : false }'>
-                <tr class='lignecomp'>
-                    <td style='width:20%;'>Tâche</td>
-                    <td style='width:25%;'>Objectif</td>
-                    <td style='width:25%;'>Détail du compagnonnage</td>
-                    <td style='width:5%;'>Durée (h)</td>
-                    <td style='width:10%;'>Date de Visa</td>
-                    <td style='width:10%;'>Viseur</td>
-                    <td style='width:5%;'>Lieu de formation</td>
+                <tr class='table-active text-center'>
+                    <th style='width:20%;'>Tâche</td>
+                    <th style='width:25%;'>Objectif</td>
+                    <th style='width:25%;'>Détail du compagnonnage</td>
+                    <th style='width:5%;'>Durée (h)</td>
+                    <th style='width:10%;'>Date de Visa</td>
+                    <th style='width:10%;'>Viseur</td>
+                    <th style='width:5%;'>Lieu de formation</td>
                 </tr>
                 @foreach($compagnonage->taches()->get() as $tache)
                 <tr class='ligneTache'>
