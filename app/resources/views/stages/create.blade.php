@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="bg-light p-4 rounded">
-        <h2>Stages</h2>
+        <h2>Ajouter un stage</h2>
     </div>
     <div id='divmodifobj' class='card bg-light ml-3 w-100' >
         <div class='card-header' >Création d'un stage </div>

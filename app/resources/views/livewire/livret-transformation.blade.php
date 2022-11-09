@@ -29,9 +29,9 @@
             @foreach ($fonctions as $fonction)
              <div class="accordion">
                 <div class="accordion-item">
-                    <div class="accordion-header">
+                    <div class="accordion-header bg-primary">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFonction_{{$fonction->id}}">
-                            <h3>Fonction {{$fonction->fonction_liblong }} </h3>
+                            <h3>{{$fonction->fonction_liblong }} </h3>
                         </button>
                     </div>
                     <div id="collapseFonction_{{$fonction->id}}" class="accordion-collapse collapse">

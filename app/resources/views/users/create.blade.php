@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="bg-light p-4 rounded">
-        <h2>Ajouter un utilisateur</h2>
+        <h2>Ajouter un marin</h2>
         <div style='text-align:right;'>* champs obligatoires </div>
 <div x-data='{ allChecked : false }'>
         <div class="container mt-4" x-data="{ buttonid : '' }">

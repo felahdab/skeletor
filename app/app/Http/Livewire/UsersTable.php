@@ -23,16 +23,23 @@ class UsersTable extends DataTableComponent
     
     public function builder(): Builder
     {
-        if ($this->mode == "stages")
-        {
-            $userlist = $this->stage->users()->get()->pluck('id', 'id');
-            return User::query()->whereIn('users.id', $userlist);
+        switch ($this->mode){
+            // case "stages" :
+                // $userlist = $this->stage->users()->get()->pluck('id', 'id');
+                // return User::query()->whereIn('users.id', $userlist);
+                // break;
+            case "listmarin" :
+                $userlist = User::query()->join('user_fonction','users.id','=','user_id')->Where('fonction_id', $this->fonction->id)->get()->pluck('id', 'id');
+                return User::query()->whereIn('users.id', $userlist);
+                break;
+            default :
+                return User::query();
+                break;
         }
-        return User::query();
     }
     
     public $mode='gestion';
-    public $stage = null;
+    public $fonction = null;
 
     public function configure(): void
     {
@@ -43,14 +50,16 @@ class UsersTable extends DataTableComponent
 
     public function userActions()
     {
-        if ($this->mode == "gestion")
-            return view('tables.userstable.gestion');
-        elseif ($this->mode == "transformation")
-            return view('tables.userstable.transformation');
-        elseif ($this->mode == "stages")
-        {
-            // @livewire('users-table',  ['mode' => "stages",  'stage' => $stage])
-            return view('tables.userstable.stages');
+        switch ($this->mode){
+            case "gestion" :
+                return view('tables.userstable.gestion');
+                break;
+            case "transformation" :
+                return view('tables.userstable.transformation');
+                break;
+            // case "stages" :
+                // return view('tables.userstable.stages');
+                // break;
         }
     }
 
@@ -100,10 +109,9 @@ class UsersTable extends DataTableComponent
                 ->format(
                     fn($value, $row, Column $column) => view('tables.userstable.socle')->withRow($row)),
         ];
-                
-        if ($this->mode == "gestion")
-        {
-            return array_merge($basecolumns ,[
+        switch ($this->mode){
+            case "gestion" :
+                return array_merge($basecolumns ,[
                     Column::make('Rôles')
                         ->label(
                             fn($row, Column $column) => view('tables.userstable.roles')->withRow($row)
@@ -112,35 +120,45 @@ class UsersTable extends DataTableComponent
                         ->label(
                             fn($row, Column $column) => $this->userActions()->withRow($row)
                             ),
-                    ]);
-        }
-        elseif ($this->mode == "transformation")
-        {
-            return array_merge($basecolumns , [
+                ]);
+                break;
+            case "transformation" :
+                return array_merge($basecolumns , [
                     Column::make('Actions')
                         ->label(
                             fn($row, Column $column) => $this->userActions()->withRow($row)
                             ),
-                    ]);
-        }
-        elseif ($this->mode == "stages")
-        {
-            return array_merge($basecolumns , [
-                    BooleanColumn::make("Validé", "id")
-                        ->setCallback(function(string $value, $row){
-                            return $row->aValideLeStage($this->stage);
-                        }),
-                    Column::make('Date de validation')
-                        ->searchable()
+                ]);
+                break;
+            // case "stages" :
+                // return array_merge($basecolumns , [
+                    // BooleanColumn::make("Validé", "id")
+                        // ->setCallback(function(string $value, $row){
+                            // return $row->aValideLeStage($this->stage);
+                        // }),
+                    // Column::make('Date de validation')
+                        // ->searchable()
+                        // ->label(
+                            // fn($row, Column $column) => $row->dateValidationDuStage($this->stage)),
+                    // Column::make('Actions')
+                        // ->label(
+                            // fn($row, Column $column) => $this->userActions()->withRow($row)
+                            // ),
+                // ]);
+                // break;
+            case "listmarin" :
+                return array_merge($basecolumns , [
+                    Column::make('Tx transfo')
                         ->label(
-                            fn($row, Column $column) => $row->dateValidationDuStage($this->stage)),
-                    Column::make('Actions')
-                        ->label(
-                            fn($row, Column $column) => $this->userActions()->withRow($row)
-                            ),
-                    ]);
+                            fn($row, Column $column) => $row->pourcentage_valides_pour_fonction($this->fonction, true)),
+                // ne fonctionne pas avec false car renvoie null. ???????
+                ]);
+                break;
+            default :
+                return $basecolumns;
+                break;
         }
-    }
+   }
     
     public function filters(): array
     {
