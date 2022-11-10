@@ -5,7 +5,7 @@
 
 ## Important Notes
 
-> Currently supported mpdf version `8.1.0` with FPDF version 2 and PHP version >= 7.0. [MPDF documentation](https://mpdf.github.io/)
+> [MPDF documentation](https://mpdf.github.io/)
 
 > mPDF will timeout on [fetching external HTTP resources](https://github.com/mpdf/mpdf#known-server-caveats) when using single-threaded servers
 > such as `php -S` or `artisan serve`. Use a proper webserver for full functionality.
@@ -16,7 +16,7 @@ Require this package in your `composer.json`
 
 ```
 "require": {
-  carlos-meneses/laravel-mpdf: "2.1.9"
+  carlos-meneses/laravel-mpdf: "2.1.10"
 }
 ```
 
@@ -95,7 +95,7 @@ return [
   'custom_font_dir'            => '',
   'custom_font_data'           => [],
   'auto_language_detection'    => false,
-  'temp_dir'                   => rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR),
+  'temp_dir'                   => storage_path('app'),
   'pdfa'                       => false,
   'pdfaauto'                   => false,
   'use_active_forms'           => false,
@@ -148,7 +148,7 @@ You can use your own fonts in the generated PDFs. The TTF files have to be locat
 return [
   'custom_font_dir'  => base_path('resources/fonts/'), // don't forget the trailing slash!
   'custom_font_data' => [
-    'examplefont' => [
+    'examplefont' => [ // must be lowercase and snake_case
       'R'  => 'ExampleFont-Regular.ttf',    // regular font
       'B'  => 'ExampleFont-Bold.ttf',       // optional: bold font
       'I'  => 'ExampleFont-Italic.ttf',     // optional: italic font
