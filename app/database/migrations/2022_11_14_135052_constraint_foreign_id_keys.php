@@ -14,81 +14,84 @@ return new class extends Migration
     public function up()
     {
         Schema::table('secteurs', function (Blueprint $table) {
-            $table->foreign('service_id')->references('id')->on('services');
+            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
         });
         
         Schema::table('services', function (Blueprint $table) {
-            $table->foreign('groupement_id')->references('id')->on('groupements');
+            $table->foreign('groupement_id')->references('id')->on('groupements')->onDelete('cascade');
         });
         
         Schema::table('users', function (Blueprint $table) {
-            $table->foreign('grade_id')->references('id')->on('grades');
-            $table->foreign('specialite_id')->references('id')->on('specialites');
-            $table->foreign('diplome_id')->references('id')->on('diplomes');
-            $table->foreign('secteur_id')->references('id')->on('secteurs');
-            $table->foreign('unite_id')->references('id')->on('unites');
-            $table->foreign('unite_destination_id')->references('id')->on('unites');
+            $table->foreign('grade_id')->references('id')->on('grades')->onDelete('set null');
+            $table->foreign('specialite_id')->references('id')->on('specialites')->onDelete('set null');
+            $table->foreign('diplome_id')->references('id')->on('diplomes')->onDelete('set null');
+            $table->foreign('secteur_id')->references('id')->on('secteurs')->onDelete('restrict');
+            $table->foreign('unite_id')->references('id')->on('unites')->onDelete('restrict');
+            $table->foreign('unite_destination_id')->references('id')->on('unites')->onDelete('restrict');
          });
          
         Schema::table('sous_objectifs', function (Blueprint $table) {
-            $table->foreign('objectif_id')->references('id')->on('objectifs');
+            $table->unsignedBigInteger('lieu_id')->nullable(true)->change();
+            $table->foreign('objectif_id')->references('id')->on('objectifs')->onDelete('cascade');
             $table->foreign('lieu_id')->references('id')->on('lieux');
          });
          
         Schema::table('fonctions', function (Blueprint $table) {
+            $table->unsignedBigInteger('typefonction_id')->nullable(true)->change();
             $table->foreign('typefonction_id')->references('id')->on('type_fonctions');
          });
          
         Schema::table('stages', function (Blueprint $table) {
-            $table->foreign('typelicence_id')->references('id')->on('type_licences');
+            $table->unsignedBigInteger('typelicence_id')->nullable(true)->change();
+            $table->foreign('typelicence_id')->references('id')->on('type_licences')->onDelete('restrict');
          });
          
         Schema::table('tache_objectif', function (Blueprint $table) {
-            $table->foreign('tache_id')->references('id')->on('taches');
-            $table->foreign('objectif_id')->references('id')->on('objectifs');
+            $table->foreign('tache_id')->references('id')->on('taches')->onDelete('cascade');
+            $table->foreign('objectif_id')->references('id')->on('objectifs')->onDelete('cascade');
         });
         
         Schema::table('compagnonage_tache', function (Blueprint $table) {
-            $table->foreign('compagnonage_id')->references('id')->on('compagnonages');
-            $table->foreign('tache_id')->references('id')->on('taches');
+            $table->foreign('compagnonage_id')->references('id')->on('compagnonages')->onDelete('cascade');
+            $table->foreign('tache_id')->references('id')->on('taches')->onDelete('cascade');
         });
         
         Schema::table('compagnonage_fonction', function (Blueprint $table) {
-            $table->foreign('compagnonage_id')->references('id')->on('compagnonages');
-            $table->foreign('fonction_id')->references('id')->on('fonctions');
+            $table->foreign('compagnonage_id')->references('id')->on('compagnonages')->onDelete('cascade');
+            $table->foreign('fonction_id')->references('id')->on('fonctions')->onDelete('cascade');
         });
         
         Schema::table('fonction_stage', function (Blueprint $table) {
-            $table->foreign('fonction_id')->references('id')->on('fonctions');
-            $table->foreign('stage_id')->references('id')->on('stages');
+            $table->foreign('fonction_id')->references('id')->on('fonctions')->onDelete('cascade');
+            $table->foreign('stage_id')->references('id')->on('stages')->onDelete('cascade');
         });
         
         Schema::table('user_fonction', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('fonction_id')->references('id')->on('fonctions');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('fonction_id')->references('id')->on('fonctions')->onDelete('cascade');
         });
         
         Schema::table('user_stage', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('stage_id')->references('id')->on('stages');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('stage_id')->references('id')->on('stages')->onDelete('cascade');
         });
         
         Schema::table('user_sous_objectif', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('sous_objectif_id')->references('id')->on('sous_objectifs');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('sous_objectif_id')->references('id')->on('sous_objectifs')->onDelete('cascade');
         });
         
         Schema::table('statistiques', function (Blueprint $table) {
-            $table->foreign('unite_id')->references('id')->on('unites');
+            $table->foreign('unite_id')->references('id')->on('unites')->onDelete('cascade');
         });
         
         Schema::table('bug_reports', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
         
         Schema::table('transformation_histories', function (Blueprint $table) {
-            $table->foreign('modifying_user_id')->references('id')->on('users');
-            $table->foreign('modified_user_id')->references('id')->on('users');
+            $table->foreign('modifying_user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('modified_user_id')->references('id')->on('users')->onDelete('cascade');
         });
         
     }
