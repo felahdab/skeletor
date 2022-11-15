@@ -13,7 +13,8 @@ class SearchOrphanRecords extends Command
      *
      * @var string
      */
-    protected $signature = 'ffast:searchorphanrecords';
+    protected $signature = 'ffast:searchorphanrecords 
+                             {delete=0 : Faut-il supprimer les enregistrements orphelins.}';
 
     /**
      * The console command description.
@@ -28,7 +29,11 @@ class SearchOrphanRecords extends Command
      * @return int
      */
      
-    public function findOrphanRecordsForForeignRelation($sourceModel, $destinationModel, $foreignKeyField , $destinationfield='id')
+    public function findOrphanRecordsForForeignRelation($sourceModel, 
+                                    $destinationModel, 
+                                    $foreignKeyField , 
+                                    $destinationfield='id',
+                                    $removeRecord = false)
     {
         foreach ($sourceModel::all() as $source)
         {
@@ -42,6 +47,12 @@ class SearchOrphanRecords extends Command
                 {
                     $this->error("Identified an orphan record: ");
                     $this->info(json_encode($source, JSON_PRETTY_PRINT) . " is referencing a non existant record thru key " . $foreignKeyField);
+                    
+                    if ($removeRecord)
+                    {
+                        $this->warn("Removing orphan record");
+                        $source->forceDelete();
+                    }
                 }
             }
         }
@@ -73,6 +84,16 @@ class SearchOrphanRecords extends Command
     public function handle()
     {
         
+        
+        $delete = false;
+        if ($this->argument('delete') != "0"){
+            $delete = true;
+            if (! $this->confirm("Du you really want to delete orphan records if any is found?") )
+            {
+                return Command::SUCCESS;
+            };
+        }
+        
         $checkList = [ 
             [ 'App\Models\Secteur', 'App\Models\Service', 'service_id' ],
             [ 'App\Models\Service', 'App\Models\Groupement', 'groupement_id' ],
@@ -99,9 +120,11 @@ class SearchOrphanRecords extends Command
             $destinationModel = get_class(new $check[1]());
             $foreignKeyField = $check[2];
             
-            $this->findOrphanRecordsForForeignRelation($sourceModel, $destinationModel, $foreignKeyField);
+            $this->findOrphanRecordsForForeignRelation($sourceModel, 
+                                        $destinationModel, 
+                                        $foreignKeyField, 
+                                        removeRecord : $delete);
         }
-        
         
         $checkList = [ 
             [ 'tache_objectif', 'App\Models\Tache', 'tache_id' ],
@@ -127,7 +150,10 @@ class SearchOrphanRecords extends Command
             $destinationModel = get_class(new $check[1]());
             $foreignKeyField = $check[2];
             
-            $this->findOrphanRecordsForForeignRelation($sourceModel, $destinationModel, $foreignKeyField);
+            $this->findOrphanRecordsForForeignRelation($sourceModel, 
+                                    $destinationModel, 
+                                    $foreignKeyField, 
+                                    removeRecord : $delete);
         }
         
         
