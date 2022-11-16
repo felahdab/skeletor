@@ -39,7 +39,6 @@ class SearchOrphanRecords extends Command
         {
             $attributes = $source->getAttributes();
             $ref = $attributes[$foreignKeyField];
-            
             if ($ref != null)
             {
                 $dest = $destinationModel::where($destinationfield, $ref)->first();
@@ -116,8 +115,8 @@ class SearchOrphanRecords extends Command
         foreach($checkList as $check)
         {
             $this->info("Checking: " . $check[0] . " against " . $check[1] . " thru key: " . $check[2]);
-            $sourceModel = get_class(new $check[0]());
-            $destinationModel = get_class(new $check[1]());
+            $sourceModel = $check[0];
+            $destinationModel = $check[1];
             $foreignKeyField = $check[2];
             
             $this->findOrphanRecordsForForeignRelation($sourceModel, 
@@ -147,7 +146,7 @@ class SearchOrphanRecords extends Command
         {
             $this->info("Checking: " . $check[0] . " against " . $check[1] . " thru key: " . $check[2]);
             $sourceModel =  $this->pivotClass($check[0]);
-            $destinationModel = get_class(new $check[1]());
+            $destinationModel = $check[1];
             $foreignKeyField = $check[2];
             
             $this->findOrphanRecordsForForeignRelation($sourceModel, 
