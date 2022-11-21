@@ -32,11 +32,11 @@ class StoreMindefConnectUserRequest extends FormRequest
             // 'matricule' => 'required',
             'date_embarq' => 'required|date', 
             'date_debarq' => 'date|nullable',
-            'grade_id' => 'required|numeric',
-            'specialite_id' => 'required|numeric',
-            'diplome_id' => 'required|numeric',
-            'secteur_id' => 'required|numeric',
-            'unite_destination_id' => 'required|numeric',
+            'grade_id' => 'nullable',
+            'specialite_id' => 'nullable',
+            'diplome_id' => 'nullable',
+            'secteur_id' => 'nullable',
+            'unite_destination_id' => 'nullable',
         ];
     }
 }
