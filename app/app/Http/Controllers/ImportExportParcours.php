@@ -21,21 +21,32 @@ class ImportExportParcours extends Controller
         $sheet->setCellValue('A1', $comp->comp_liblong);
         $sheet->setCellValue('A2', $comp->comp_libcourt);
         
+        $firstColumn = 2;
+        
         $row = 4;
-        $column = 1;
+        $column = $firstColumn;
         
         $sheet->setCellValue([$column++, $row ] , 'Tache ID');
+        $sheet->getColumnDimensionByColumn($column-1)->setVisible(false);
         $sheet->setCellValue([$column++, $row ] , 'Tache');
         $sheet->setCellValue([$column++, $row ] , 'Objectif ID');
+        $sheet->getColumnDimensionByColumn($column-1)->setVisible(false);
         $sheet->setCellValue([$column++, $row ] , 'Objectif');
         $sheet->setCellValue([$column++, $row ] , 'SousObjectif ID');
+        $sheet->getColumnDimensionByColumn($column-1)->setVisible(false);
         $sheet->setCellValue([$column++, $row ] , 'SousObjectif');
+        $sheet->setCellValue([$column++, $row ] , 'SousObjectif coeff');
+        $sheet->setCellValue([$column++, $row ] , 'SousObjectif duree');
+        $sheet->setCellValue([$column++, $row ] , 'SousObjectif lieu');
+        
+        $sheet->getStyle([$firstColumn, $row, $column, $row])->getFont()->setBold(true);
+        
         $row ++;
-        $column = 1;
+        $column = $firstColumn;
         
         foreach ($comp->taches as $tache)
         {
-            $column = 1;
+            $column = $firstColumn;
             $sheet->setCellValue([$column++, $row ] , $tache->id);
             $sheet->getColumnDimensionByColumn($column - 1)->setWidth(10);
             $sheet->setCellValue([$column++, $row ] , $tache->tache_libcourt);
@@ -56,11 +67,17 @@ class ImportExportParcours extends Controller
                     $sheet->getColumnDimensionByColumn($column - 1)->setWidth(10);
                     $sheet->setCellValue([$column++, $row ] , $sousobj->ssobj_lib);
                     $sheet->getColumnDimensionByColumn($column - 1)->setAutoSize(true);
+                    $sheet->setCellValue([$column++, $row ] , $sousobj->ssobj_coeff);
+                    $sheet->getColumnDimensionByColumn($column - 1)->setAutoSize(true);
+                    $sheet->setCellValue([$column++, $row ] , $sousobj->ssobj_duree);
+                    $sheet->getColumnDimensionByColumn($column - 1)->setAutoSize(true);
+                    $sheet->setCellValue([$column++, $row ] , $sousobj->lieu()->first()?->lieu_libcourt);
+                    $sheet->getColumnDimensionByColumn($column - 1)->setAutoSize(true);
                     $row ++;
                 }
             }
         }
-        // $table = new Table([ 1 , 4, $column, $row ], "Table_" . $comp->id);
+        // $table = new Table([ $firstColumn , 4, $column, $row ], "Table_" . $comp->id);
         // $sheet->addTable($table);
     }
     
