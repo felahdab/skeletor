@@ -14,7 +14,8 @@ class SearchOrphanRecords extends Command
      * @var string
      */
     protected $signature = 'ffast:searchorphanrecords 
-                             {delete=0 : Faut-il supprimer les enregistrements orphelins.}';
+                             {delete=0 : Faut-il supprimer les enregistrements orphelins.},
+                             {replacezeros=0 : Remplacer les references 0 par null.}';
 
     /**
      * The console command description.
@@ -33,14 +34,23 @@ class SearchOrphanRecords extends Command
                                     $destinationModel, 
                                     $foreignKeyField , 
                                     $destinationfield='id',
-                                    $removeRecord = false)
+                                    $removeRecord = false,
+                                    $replaceZeros = false)
     {
-        foreach ($sourceModel::all() as $source)
+        $sourcetraits = class_uses($sourceModel);
+        $source_use_soft_delete = in_array("Illuminate\Database\Eloquent\SoftDeletes", $sourcetraits);
+        if ($source_use_soft_delete)
+            $sourcerecords = $sourceModel::withTrashed()->get();
+        else
+            $sourcerecords = $sourceModel::all();
+        
+        foreach ($sourcerecords as $source)
         {
             $attributes = $source->getAttributes();
             $ref = $attributes[$foreignKeyField];
             
-            if ($ref != null)
+            
+            if (! is_null($ref ) )
             {
                 $traits = class_uses($destinationModel);
                 $use_soft_delete = in_array("Illuminate\Database\Eloquent\SoftDeletes", $traits);
@@ -51,13 +61,27 @@ class SearchOrphanRecords extends Command
                 
                 if ($dest == null)
                 {
-                    $this->error("Identified an orphan record: ");
-                    $this->info(json_encode($source, JSON_PRETTY_PRINT) . " is referencing a non existant record thru key " . $foreignKeyField);
-                    
-                    if ($removeRecord)
+                    if ($ref == 0)
                     {
-                        $this->warn("Removing orphan record");
-                        $source->forceDelete();
+                        $this->error("Identified an orphan record with a 0 reference: ");
+                        $this->info(json_encode($source, JSON_PRETTY_PRINT) . " is referencing a non existant record thru key " . $foreignKeyField);
+                        
+                        if ($replaceZeros)
+                        {
+                            $this->warn("Removing orphan record");
+                            $source->{$foreignKeyField}=null;
+                            $source->save();
+                        }
+                    }
+                    else {
+                        $this->error("Identified an orphan record: ");
+                        $this->info(json_encode($source, JSON_PRETTY_PRINT) . " is referencing a non existant record thru key " . $foreignKeyField);
+                        
+                        if ($removeRecord)
+                        {
+                            $this->warn("Removing orphan record");
+                            $source->forceDelete();
+                        }
                     }
                 }
             }
@@ -89,7 +113,14 @@ class SearchOrphanRecords extends Command
     
     public function handle()
     {
-        
+        $replacezeros = false;
+        if ($this->argument('replacezeros') != "0"){
+            $replacezeros = true;
+            if (! $this->confirm("Du you really want to replace 0 references by null if any is found?") )
+            {
+                return Command::SUCCESS;
+            };
+        }
         
         $delete = false;
         if ($this->argument('delete') != "0"){
@@ -129,7 +160,8 @@ class SearchOrphanRecords extends Command
             $this->findOrphanRecordsForForeignRelation($sourceModel, 
                                         $destinationModel, 
                                         $foreignKeyField, 
-                                        removeRecord : $delete);
+                                        removeRecord : $delete,
+                                        replaceZeros : $replacezeros);
         }
         
         $checkList = [ 
@@ -159,7 +191,8 @@ class SearchOrphanRecords extends Command
             $this->findOrphanRecordsForForeignRelation($sourceModel, 
                                     $destinationModel, 
                                     $foreignKeyField, 
-                                    removeRecord : $delete);
+                                    removeRecord : $delete,
+                                    replaceZeros : $replacezeros);
         }
         
         
