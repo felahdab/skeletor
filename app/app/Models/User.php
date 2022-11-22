@@ -479,10 +479,6 @@ class User extends Authenticatable
             $this->detachStage($stage);
         CalculateUserTransformationRatios::dispatch($this);
         
-        /////////////////////////////////////////
-        // il manque la suppression des sous-obj asociés ?
-        ///////////////////////////////////////////
-        
     }
     
         
@@ -770,8 +766,8 @@ class User extends Authenticatable
                 if ($trouve != null)
                     $workcoll = $workcoll->concat(collect([$trouve]));
             }
-         $coeff_valides = $workcoll->count();
-
+        $coeff_valides = $workcoll->count();
+        
         $taux_transfo=0;
         if ($nb_stage_total>0 and $total_des_coeff>0){
             $taux_transfo = 100 * ($nb_stage_valides + $coeff_valides) / ($nb_stage_total + $total_des_coeff) ;
