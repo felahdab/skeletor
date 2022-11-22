@@ -9,7 +9,7 @@ services:
              - backend
              - private
     php:
-        image: ffast-php:0.3
+        image: ffast-php:0.5
         volumes:
             - ../app:/app
         networks:
