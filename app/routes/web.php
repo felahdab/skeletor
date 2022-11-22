@@ -116,6 +116,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::get('/mafichebilan', 'TransformationController@mafichebilan')->name('transformation.mafichebilan');
             Route::get('/monlivret', 'TransformationController@monlivret')->name('transformation.monlivret');
             Route::get('/maprogression', 'TransformationController@maprogression')->name('transformation.maprogression');
+            Route::get('/exportparcours', 'ImportExportParcours@ExportParcoursVersExcel')->name('transformation.exportparcours');
         });
         
         Route::group(['prefix' => 'historique'], function() {

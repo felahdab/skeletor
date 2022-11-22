@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('lieux', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-			$table->string('lieu_libcourt', 50)->nullable(false)->default('');
-			$table->string('lieu_liblong', 250)->nullable(false)->default('');
+            $table->string('lieu_libcourt', 50)->nullable(false)->default('');
+            $table->string('lieu_liblong', 250)->nullable(false)->default('');
         });
     }
 
