@@ -5,8 +5,10 @@
     <div class="bg-light p-4 rounded">
         <h2>Transformation - Fonctions</h2>
         <div class="lead">
-            Gérer la transformation par fonction
+            Liste des fonctions pour validation collective
         </div>
-        @livewire('fonction-list', ["mode" => "transformation"])
+        <div class="mt-3">
+            @livewire('fonction-list', ["mode" => "transformation"])
+        </div>
     </div>
 @endsection

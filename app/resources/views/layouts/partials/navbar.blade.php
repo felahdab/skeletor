@@ -33,6 +33,7 @@
                 <a class="dropdown-item" href="{{ route('taches.index')}}">Tâches</a>
                 <a class="dropdown-item" href="{{ route('objectifs.index')}}">Objectifs</a>
                 @can('stages.index')<a class="dropdown-item" href="{{ route('stages.index')}}">Stages</a>@endcan
+                <a class="dropdown-item" href="{{ route('transformation.exportparcours')}}">Exporter les parcours</a>
                 <!--a class="dropdown-item" href="{{ route('sous-objectifs.index')}}">Sous-Objectifs</a-->
               </div>
             </div>

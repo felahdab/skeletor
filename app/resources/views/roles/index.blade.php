@@ -20,10 +20,10 @@
                 <td>{{ $role->id }}</td>
                 <td>{{ $role->name }}</td>
                 <td>
-                    <a class="btn btn-info btn-sm" href="{{ route('roles.show', $role->id) }}">Consulter</a>
+                    <a class="btn btn-primary btn-sm" href="{{ route('roles.show', $role->id) }}">Consulter</a>
                 </td>
                 <td>
-                    <a class="btn btn-primary btn-sm" href="{{ route('roles.edit', $role->id) }}">Modifier</a>
+                    <a class="btn btn-info btn-sm" href="{{ route('roles.edit', $role->id) }}">Modifier</a>
                 </td>
                 <td>
                     {!! Form::open(['method' => 'DELETE','route' => ['roles.destroy', $role->id],'style'=>'display:inline']) !!}

@@ -29,7 +29,7 @@ $wire.UnValideElementsDuParcours( {{$user->id}} , selected_compagnonnages , sele
     name="validation"
     x-on:click.prevent='active = true ;;
                         opendivvalid=true'>Enregistrer les validations</button>
-        
+    <a href="{{ url()->previous() }}" class="btn btn-light">Retour</a>
     <button x-show="false" 
         x-on:uservalidated.window="if (active)
         { 

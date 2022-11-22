@@ -14,7 +14,7 @@
                 <th scope="col" width="15%">Libellé court</th>
                 <th scope="col">Libellé long</th>
                 <th scope="col">Type</th>
-                <th scope="col" width="1%" colspan="3"></th>    
+                <th scope="col">Actions</th>    
             </tr>
             </thead>
             <tbody>
@@ -24,21 +24,21 @@
                         <td>{{ $fonction->fonction_libcourt }}</td>
                         <td>{{ $fonction->fonction_liblong }}</td>
                         <td>{{ $fonction->type_fonction->typfonction_libcourt }}</td>
+                        <td>
                         @if ($mode == 'gestion')
-                            <td><a href="{{ route('fonctions.show', $fonction->id) }}" class="btn btn-primary btn-sm">Consulter</a></td>
-                            <td><a href="{{ route('fonctions.edit', $fonction->id) }}" class="btn btn-info btn-sm">Modifier</a></td>
+                            <a href="{{ route('fonctions.show', $fonction->id) }}" class="btn btn-primary btn-sm">Consulter</a>
+                            <a href="{{ route('fonctions.edit', $fonction->id) }}" class="btn btn-info btn-sm">Modifier</a>
                             @can('fonctions.destroy')
-                            <td>
                                 {!! Form::open(['method' => 'DELETE','route' => ['fonctions.destroy', $fonction->id],'style'=>'display:inline']) !!}
                                 {!! Form::submit('Supprimer', ['class' => 'btn btn-danger btn-sm']) !!}
                                 {!! Form::close() !!}
-                            </td>
+                            
                             @endcan
                         @elseif($mode == 'transformation')
-                            <td><a href="{{ route('fonctions.choixmarins', $fonction->id) }}" class="btn btn-primary btn-sm">Validation collective</a></td>
-                            <td></td>
-                            <td></td>
+                            <a href="{{ route('fonctions.choixmarins', $fonction->id) }}" class="btn btn-info btn-sm">Validation collective</a>
+                            <a href="{{ route('fonctions.listemarinsfonction', $fonction->id) }}" class="btn btn-primary btn-sm">Liste des marins ayant cette fonction</a>
                         @endif
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

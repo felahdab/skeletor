@@ -12,9 +12,9 @@
         </div>
         
         <div>
-        Selectionnez les sous objectifs ou les taches pour lesquelles vous souhaitez enregistrer
-        une validation, puis cliquer sur "Enregistrer les validation". Vous pourrez ensuite
-        selectionner les marins pour lesquels ces elements du parcours de transformation sont
+        Sélectionnez les sous objectifs ou les tâches pour lesquelles vous souhaitez enregistrer
+        une validation, puis cliquez sur "Enregistrer les validations". Vous pourrez ensuite
+        sélectionner les marins pour lesquels ces éléments du parcours de transformation sont
         validés.
         </div>
         

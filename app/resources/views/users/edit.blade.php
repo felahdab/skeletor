@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="bg-light p-4 rounded">
-        <h2>Modification utilisateur</h2>
+        <h2>Modifier un marin</h2>
         <div style='text-align:right;'>* champs obligatoires </div>
         <div class="lead">
             
@@ -25,8 +25,8 @@
                         <div class="mb-3">
                             <label for="grade" class="form-label">Grade</label>
                             <select class="form-control" 
-                                name="grade_id" required>
-                                <option value="0">Grade</option>
+                                name="grade_id">
+                                <option value="">Grade</option>
                                 @foreach($grades as $grade)
                                     <option value="{{ $grade->id }}" {{ $user->grade_id == $grade->id
                                             ? ' selected'
@@ -57,8 +57,8 @@
                         <div class="mb-3">
                             <label for="specialite" class="form-label">Sp&eacute;cialit&eacute;</label>
                             <select class="form-control" 
-                                name="specialite_id" required>
-                                <option value="0">Specialite</option>
+                                name="specialite_id" >
+                                <option value="">Specialite</option>
                                 @foreach($specialites as $specialite)
                                     <option value="{{ $specialite->id }}" {{ $user->specialite_id == $specialite->id
                                             ? ' selected'
@@ -89,8 +89,8 @@
                         <div class="mb-3">
                             <label for="secteur" class="form-label">Secteur</label>
                             <select class="form-control" 
-                                name="secteur_id" required>
-                                <option value="0">Secteur</option>
+                                name="secteur_id" >
+                                <option value="">Secteur</option>
                                 @foreach($secteurs as $secteur)
                                     <option value="{{ $secteur->id }}" {{ $user->secteur_id == $secteur->id
                                             ? ' selected'
@@ -121,8 +121,8 @@
                         <div class="mb-3">
                             <label for="diplome_id" class="form-label">Brevet</label>
                             <select class="form-control" 
-                                name="diplome_id" required>
-                                <option value="0">Brevet</option>
+                                name="diplome_id" >
+                                <option value="">Brevet</option>
                                 @foreach($diplomes as $diplome)
                                     <option value="{{ $diplome->id }}" {{ $user->diplome_id == $diplome->id
                                             ? ' selected'
@@ -153,8 +153,8 @@
                         <div class="mb-3">
                             <label for="unite_destination" class="form-label">Unité destination</label>
                             <select class="form-control" 
-                                name="unite_destination_id" required>
-                                <option value="0">Unité destination</option>
+                                name="unite_destination_id" >
+                                <option value="">Unité destination</option>
                                 @foreach($unites as $unite)
                                     <option value="{{ $unite->id }}" @selected($user->unite_destination_id == $unite->id)>
                                         {{ $unite->unite_liblong }}

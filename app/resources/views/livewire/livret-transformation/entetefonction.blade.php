@@ -1,16 +1,16 @@
 <table class='table'>
-    <tr class='lignecomp div-table-contrat-compagnonnage'>
+    <!--tr class='lignecomp div-table-contrat-compagnonnage'>
         <th colspan='5'>{{$fonction->fonction_liblong }}</th>
-    </tr>
-    <tr class='lignecomp'>
-            <td style='width:5%;'>&nbsp;</td>
-            <td style='width:70%;'>Commentaire</td>
-            <td style='width:10%;'>Date de Visa</td>
-            <td style='width:10%;'>Viseur</td>
-            <td style='width:5%;'>Lieu de formation</td>
+    </tr-->
+    <tr  class="table-active text-center">
+            <th style='width:5%;'>&nbsp;</td>
+            <th style='width:70%;'>Commentaire</td>
+            <th style='width:10%;'>Date de Visa</td>
+            <th style='width:10%;'>Viseur</td>
+            <th style='width:5%;'>Lieu de formation</td>
     </tr>
     @if ($fonction->fonction_double)
-    <tr  class='lignecomp' x-data='{ active : false }'>
+    <tr x-data='{ active : false }'>
         <td>DOUBLE</td>
         <td class="text-start">
         @if ($fonction->pivot->date_double != null)
@@ -49,7 +49,7 @@
     </tr>
     @endif
     @if ($fonction->fonction_lache)
-    <tr  class='lignecomp' x-data='{ active : false }'>
+    <tr x-data='{ active : false }'>
         <td>LACHER</td>
         <td class="text-start">
         @if ($fonction->pivot->date_double != null)

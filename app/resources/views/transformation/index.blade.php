@@ -6,7 +6,7 @@
     <div class="bg-light p-4 rounded">
         <h2>Transformation - Marins</h2>
         <div class="lead">
-            Liste des marins
+            Liste des marins en transformation
         </div>
 
         <div class="mt-3">

@@ -90,6 +90,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::post('fonctions/{fonction}/removestage', 'FonctionController@removestage')->name('fonctions.removestage');
         Route::get('fonctions/{fonction}/validergroupe', 'FonctionController@choixmarins')->name('fonctions.choixmarins');
         Route::post('fonctions/{fonction}/validergroupe', 'FonctionController@validermarins')->name('fonctions.validermarins');
+        Route::get('fonctions/{fonction}/listemarinsfonction', 'FonctionController@listemarinsfonction')->name('fonctions.listemarinsfonction');
 
         
         Route::get('stages/consulter', 'StageController@consulter')->name('stages.consulter');
@@ -115,6 +116,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::get('/mafichebilan', 'TransformationController@mafichebilan')->name('transformation.mafichebilan');
             Route::get('/monlivret', 'TransformationController@monlivret')->name('transformation.monlivret');
             Route::get('/maprogression', 'TransformationController@maprogression')->name('transformation.maprogression');
+            Route::get('/exportparcours', 'ImportExportParcours@ExportParcoursVersExcel')->name('transformation.exportparcours');
         });
         
         Route::group(['prefix' => 'historique'], function() {
