@@ -200,7 +200,7 @@
                     </div>
                     <div class="col">
                         <div class="mb-3">
-                            <img src="{{url(asset('public/' . $user->photo))}}" height="75px">
+                            <img src="{{asset('public/' . $user->photo)}}" height="75px">
                         </div>
                     </div>
                 </div>
