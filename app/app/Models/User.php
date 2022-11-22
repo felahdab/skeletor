@@ -479,6 +479,10 @@ class User extends Authenticatable
             $this->detachStage($stage);
         CalculateUserTransformationRatios::dispatch($this);
         
+        /////////////////////////////////////////
+        // il manque la suppression des sous-obj asociés ?
+        ///////////////////////////////////////////
+        
     }
     
         
@@ -756,13 +760,18 @@ class User extends Authenticatable
         
         $sous_objs = $this->coll_sous_objectifs()->unique();
         $total_des_coeff = $sous_objs->sum('ssobj_coeff');
-        // $this->info($total_des_coeff);
         
         $sous_objs_valides = $this->sous_objectifs()
                             ->whereNotNull('date_validation')->get();
-        $coeff_valides = $sous_objs_valides->sum('ssobj_coeff');
-        // $this->info($coeff_valides);
-        
+        $workcoll = collect([]);
+            foreach ($sous_objs as $sous_obj_a_garder)
+            {
+                $trouve = $sous_objs_valides->find($sous_obj_a_garder);
+                if ($trouve != null)
+                    $workcoll = $workcoll->concat(collect([$trouve]));
+            }
+         $coeff_valides = $workcoll->count();
+
         $taux_transfo=0;
         if ($nb_stage_total>0 and $total_des_coeff>0){
             $taux_transfo = 100 * ($nb_stage_valides + $coeff_valides) / ($nb_stage_total + $total_des_coeff) ;
