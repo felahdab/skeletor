@@ -33,15 +33,18 @@ class UpdateUserRequest extends FormRequest
             'name' => 'required',
             'prenom' => 'required',
             'email' =>  [ 'required', 'email:rfc,dns', Rule::unique('users')->ignore($user->id), new IntradefEmailValidation],
-            // 'matricule' => 'required',
+            'matricule' => 'nullable',
             'date_embarq' => 'required|date',
             'date_debarq' => 'date|nullable',
             'grade_id' => 'required|numeric',
-            'specialite_id' => 'required|numeric',
-            'diplome_id' => 'required|numeric',
-            'secteur_id' => 'required|numeric',
-            'unite_destination_id' => 'required|numeric',
+            'specialite_id' => 'nullable',
+            'diplome_id' => 'nullable',
+            'secteur_id' => 'nullable',
+            'unite_destination_id' => 'nullable',
             'user_comment' => 'nullable',
+            'nid'=>'nullable',
+            'comete'=>'nullable',
+            'socle'=>'nullable'
             
         ];
     }

@@ -50,16 +50,9 @@ class TransformationController extends Controller
     
     public function indexparstage(Request $request) 
     {
-        if ($request->has('filter') )
-        {
-            $filter = $request->input('filter');
-            $stages = Stage::where('stage_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('stage_libcourt')->paginate(10);
-        } else {
-            $filter="";
-            $stages = Stage::orderBy('stage_libcourt')->paginate(10);
-        }
-        return view('transformation.indexparstage', ['stages' => $stages,
-                                                     'filter' => $filter]);
+        
+        $stages = Stage::orderBy('stage_libcourt')->paginate(10);
+        return view('transformation.indexparstage', ['stages' => $stages]);
     }
 
     /**
@@ -86,12 +79,10 @@ class TransformationController extends Controller
     {
         $pathbrest = Storage::path('public/livret-gtr-brest.jpg');
         $pathtln = Storage::path('public/livret-gtr-toulon.jpg');
-        
+
         $html = view('transformation.livretpdf', ['user' => $user,
             'pathbrest' => $pathbrest,
             'pathtln'   => $pathtln])->render();
-
-        // ddd($html);
 
         $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 
                             'format' => 'A4',
@@ -100,14 +91,11 @@ class TransformationController extends Controller
                             'margin_top' => 15,
                             'margin_bottom' => 15
                             ]);
-
         $mpdf->SetTitle('Livret de transformation');
         $mpdf->setFooter('{PAGENO}/{nb}');
         $mpdf->WriteHTML($html);
         $nomfic=date('Ymd')."_Livret de transformation de ".$user->name."_".$user->prenom.".pdf";
-        // $nomfic="livret.pdf";
         $mpdf->Output($nomfic,'D');
-        ddd($html);
     }
     
     public function progression(User $user)
@@ -166,144 +154,4 @@ class TransformationController extends Controller
         return $this->fichebilan($user, $readwrite=false);
     }
     
-    public function updatelivret(Request $request, User $user)
-    {
-        $valideur = $request->input('valideur');
-        $commentaire = $request->input('commentaire');
-        $date_validation = $request->input('date_validation');
-        
-        if ($date_validation == null)
-            $date_validation = date('Y-m-d');
-        
-        if ($request->input("buttonid") == "validation")
-        {
-            if ($request->has('ssobjid'))
-            {
-                $sous_objectifs_a_valider = $request['ssobjid'];
-                foreach ($sous_objectifs_a_valider as $key => $value){
-                    $sousobjectif = SousObjectif::find($key);
-                    $user->sous_objectifs()->attach($sousobjectif, [
-                        'valideur'=> $valideur,
-                        'commentaire'=> $commentaire,
-                        'date_validation' => $date_validation,
-                    ]);
-                }
-            }
-            if ($request->has('tacheid'))
-            {
-                $taches_a_valider = $request['tacheid'];
-                foreach ($taches_a_valider as $key => $value){
-                    $tache = Tache::find($key);
-                    foreach ($tache->objectifs()->get() as $objectif)
-                    {
-                        foreach($objectif->sous_objectifs()->get() as $sous_objectif)
-                        {
-                            $user->sous_objectifs()->attach($sous_objectif, [
-                                'valideur' => $valideur,
-                                'commentaire' => $commentaire,
-                                'date_validation' => $date_validation,
-                            ]);
-                        }
-                    }
-                }
-            }
-            if ($request->has('stageid'))
-            {
-                $stages_a_valider = $request['stageid'];
-                foreach ($stages_a_valider as $key => $value){
-                    $stage = Stage::find($key);
-                    $user->attachStage($stage, [
-                        'commentaire' => $commentaire,
-                        'date_validation' => $date_validation,
-                    ]);
-                }
-            }
-        }
-        elseif ($request->has("annulation_validation"))
-        {
-            if ($request->has('ssobjid'))
-            {
-                $sous_objectifs_a_valider = $request['ssobjid'];
-                foreach ($sous_objectifs_a_valider as $key => $value){
-                    $sousobjectif = SousObjectif::find($key);
-                    $user->sous_objectifs()->detach($sousobjectif);
-                }
-            }
-            if ($request->has('tacheid'))
-            {
-                $taches_a_valider = $request['tacheid'];
-                foreach ($taches_a_valider as $key => $value){
-                    $tache = Tache::find($key);
-                    foreach ($tache->objectifs()->get() as $objectif)
-                    {
-                        foreach($objectif->sous_objectifs()->get() as $sous_objectif)
-                        {
-                            $user->sous_objectifs()->detach($sous_objectif);
-                        }
-                    }
-                }
-            }
-            if ($request->has('stageid'))
-            {
-                $stages_a_valider = $request['stageid'];
-                foreach ($stages_a_valider as $key => $value){
-                    $stage = Stage::find($key);
-                    $workitem= $user->stages()->find($stage)->pivot;
-                    $workitem->date_validation=null;
-                    $workitem->commentaire=null;
-                    $workitem->save();
-                }
-            }
-        }
-        CalculateUserTransformationRatios::dispatch($user);
-        return redirect()->route('transformation.livret', ['user' => $user]);
-     }
-
-    public function validerlacheoudouble(Request $request, User $user, Fonction $fonction)
-    {
-        $valideur = $request->input('valideur');
-        $commentaire = $request->input('commentaire');
-        $date_validation = $request->input('date_validation');
-        
-        $userfonc = $user->fonctions->find($fonction);
-        if ($request->input("buttonid") == "validation_lache")
-        {
-            // L'utilisateur a cliqué sur un bouton de validation du lache
-            // Si la fonction necessite un double, il faut que le double soit valide avant le lache
-            if ($userfonc->pivot->date_double != null or !$fonction->fonction_double) 
-            {
-                $userfonc->pivot->commentaire_lache=$commentaire;
-                $userfonc->pivot->valideur_lache=$valideur;
-                $userfonc->pivot->date_lache = $date_validation;
-                $userfonc->pivot->save();
-            }
-            else
-            {
-                return redirect()->route('transformation.livret', ['user' => $user])->withErrors('Si une fonction necessite un tour en double valide, ce dernier doit etre valide avant le lache');
-            }
-        }
-        elseif ($request->input("buttonid") == "validation_double")
-        {
-            // L'utilisateur a cliqué sur un bouton de validation du double
-            $userfonc->pivot->commentaire_double=$commentaire;
-            $userfonc->pivot->valideur_double=$valideur;
-            $userfonc->pivot->date_double = $date_validation;
-            $userfonc->pivot->save();
-        }
-        elseif ($request->has('annulation_double'))
-        {
-            $userfonc->pivot->commentaire_double=null;
-            $userfonc->pivot->valideur_double=null;
-            $userfonc->pivot->date_double = null;
-            $userfonc->pivot->save();
-        }
-        elseif ($request->has('annulation_lache'))
-        {
-            $userfonc->pivot->commentaire_lache=null;
-            $userfonc->pivot->valideur_lache=null;
-            $userfonc->pivot->date_lache = null;
-            $userfonc->pivot->save();
-        }
-        return redirect()->route('transformation.livret', ['user' => $user])->withSuccess('Mise a jour reussie.');
-    }
 }

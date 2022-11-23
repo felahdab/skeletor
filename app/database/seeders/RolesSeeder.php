@@ -48,7 +48,6 @@ class RolesSeeder extends Seeder
                 'transformation.indexparstage',
                 'transformation.livret',
                 'transformation.livretpdf',
-                'transformation.validerlacheoudouble',
                 'transformation.progression',
                 'transformation.fichebilan',
                 'statistiques.pourtuteurs'];
@@ -72,7 +71,6 @@ class RolesSeeder extends Seeder
                 'users.retirerfonction',
                 'transformation.livret',
                 'transformation.livretpdf',
-                'transformation.validerlacheoudouble',
                 'transformation.progression',
                 'transformation.fichebilan',
                 'statistiques.pourem',
@@ -86,7 +84,6 @@ class RolesSeeder extends Seeder
             'transformation.index',
             'transformation.livret',
             'transformation.livretpdf',
-            'transformation.validerlacheoudouble',
             'transformation.progression',
             'transformation.fichebilan',
         ];
@@ -175,7 +172,6 @@ class RolesSeeder extends Seeder
             'users.retirerfonction',
             'transformation.livret',
             'transformation.livretpdf',
-            'transformation.validerlacheoudouble',
             'transformation.progression',
             'transformation.fichebilan',
             'statistiques.index',

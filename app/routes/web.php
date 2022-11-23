@@ -60,6 +60,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::get('/currentrole', 'ChangeUserCurrentRole@index')->name('currentrole.show');
             Route::post('/currentrole', 'ChangeUserCurrentRole@store')->name('currentrole.store');
             Route::get('/{user}/changepasswd', 'ChangeUserPassword@index')->name('changepasswd.show');
+            Route::get('/{user}/stages', 'UsersController@stages')->name('users.stages');
             Route::post('/{user}/changepasswd', 'ChangeUserPassword@store')->name('changepasswd.store');
         });
 
@@ -89,6 +90,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::post('fonctions/{fonction}/removestage', 'FonctionController@removestage')->name('fonctions.removestage');
         Route::get('fonctions/{fonction}/validergroupe', 'FonctionController@choixmarins')->name('fonctions.choixmarins');
         Route::post('fonctions/{fonction}/validergroupe', 'FonctionController@validermarins')->name('fonctions.validermarins');
+        Route::get('fonctions/{fonction}/listemarinsfonction', 'FonctionController@listemarinsfonction')->name('fonctions.listemarinsfonction');
 
         
         Route::get('stages/consulter', 'StageController@consulter')->name('stages.consulter');
@@ -109,20 +111,32 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::post('/{user}/retirerfonction', 'UsersController@retirerfonction')->name('users.retirerfonction');
             Route::get('/{user}/livret', 'TransformationController@livret')->name('transformation.livret');
             Route::get('/{user}/livretpdf', 'TransformationController@livretpdf')->name('transformation.livretpdf');
-            Route::post('/{user}/livret', 'TransformationController@updatelivret')->name('transformation.updatelivret');
-            Route::post('/{user}/validerlacheoudouble/{fonction}', 'TransformationController@validerlacheoudouble')->name('transformation.validerlacheoudouble');
             Route::get('/{user}/progression', 'TransformationController@progression')->name('transformation.progression');
             Route::get('/{user}/fichebilan', 'TransformationController@fichebilan')->name('transformation.fichebilan');
-            
             Route::get('/mafichebilan', 'TransformationController@mafichebilan')->name('transformation.mafichebilan');
             Route::get('/monlivret', 'TransformationController@monlivret')->name('transformation.monlivret');
             Route::get('/maprogression', 'TransformationController@maprogression')->name('transformation.maprogression');
+            Route::get('/exportparcours', 'ImportExportParcours@ExportParcoursVersExcel')->name('transformation.exportparcours');
+        });
+        
+        Route::group(['prefix' => 'historique'], function() {
+             Route::get('/', 'TransformationHistoryController@index')->name('historique.index');
         });
         
         Route::get('statistiques/', 'StatistiqueController@index')->name('statistiques.index');
         Route::get('statistiques/pourtuteurs', 'StatistiqueController@pourtuteurs')->name('statistiques.pourtuteurs');
         Route::get('statistiques/pourem', 'StatistiqueController@pourem')->name('statistiques.pourem');
         Route::get('statistiques/pour2ps', 'StatistiqueController@pour2ps')->name('statistiques.pour2ps');
+
+        Route::resource('liens',          LienController::class);
+        Route::get('/liens', 'LienController@index')->name('liens.index');
+        Route::get('/creationlien', 'LienController@create')->name('liens.create');
+        Route::post('/creationlien', 'LienController@store')->name('liens.store');
+        
+         Route::group(['prefix' => 'annudef'], function() {
+             Route::get('/', 'AnnudefController@index')->name('annudef.index');
+        });
+
 
         // if (env('APP_ENV') == "local")
         // {

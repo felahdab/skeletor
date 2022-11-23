@@ -30,14 +30,15 @@
                     <tr style='background-color:lightgray;'>
                         <th style='width:80%;'>Fonction quai</th>
                         <th>Nb transfo</th>
+                        <th>Nb lâché</th>
                     </tr>
                     @foreach($fonctionsaquai->get() as $fonction)
-                        
                         <tr title='@foreach($fonction->users()->get() as $marin)
-                            {!! $marin->displayString() . "(" . substr($marin->pourcentage_valides_pour_fonction($fonction), 0, 4) . ")" !!}
+                            {!! $marin->display_name . "(" . substr($marin->pourcentage_valides_pour_fonction($fonction), 0, 4) . ")" !!}
                         @endforeach'>
                             <td>{{$fonction->fonction_libcourt}}</td>
                             <td>{{$fonction->users()->count()}}</td>
+                            <td>{{$fonction->users()->get()->whereNotNull('pivot.date_lache')->count()}}</td>
                         </tr>
                     @endforeach
                 </table>

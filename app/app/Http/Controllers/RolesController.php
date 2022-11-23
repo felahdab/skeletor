@@ -71,8 +71,8 @@ class RolesController extends Controller
     public function show(Role $role)
     {
         $role = $role;
-        $rolePermissions = $role->permissions;
-    
+        $rolePermissions = $role->permissions->sortBy('name');
+        // dd($rolePermissions);
         return view('roles.show', compact('role', 'rolePermissions'));
     }
     
@@ -86,7 +86,7 @@ class RolesController extends Controller
     {
         $role = $role;
         $rolePermissions = $role->permissions->pluck('name')->toArray();
-        $permissions = Permission::get();
+        $permissions = Permission::orderBy('name')->get();
     
         return view('roles.edit', compact('role', 'rolePermissions', 'permissions'));
     }

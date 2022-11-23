@@ -115,20 +115,15 @@ trait HasPermissions
     }
 
     /**
-     * Determine if the model may perform the given permission.
+     * Find a permission.
      *
      * @param string|int|\Spatie\Permission\Contracts\Permission $permission
-     * @param string|null $guardName
      *
-     * @return bool
+     * @return \Spatie\Permission\Contracts\Permission
      * @throws PermissionDoesNotExist
      */
-    public function hasPermissionTo($permission, $guardName = null): bool
+    public function filterPermission($permission, $guardName = null)
     {
-        if (config('permission.enable_wildcard_permission', false)) {
-            return $this->hasWildcardPermission($permission, $guardName);
-        }
-
         $permissionClass = $this->getPermissionClass();
 
         if (is_string($permission)) {
@@ -148,6 +143,26 @@ trait HasPermissions
         if (! $permission instanceof Permission) {
             throw new PermissionDoesNotExist();
         }
+
+        return $permission;
+    }
+
+    /**
+     * Determine if the model may perform the given permission.
+     *
+     * @param string|int|\Spatie\Permission\Contracts\Permission $permission
+     * @param string|null $guardName
+     *
+     * @return bool
+     * @throws PermissionDoesNotExist
+     */
+    public function hasPermissionTo($permission, $guardName = null): bool
+    {
+        if (config('permission.enable_wildcard_permission', false)) {
+            return $this->hasWildcardPermission($permission, $guardName);
+        }
+
+        $permission = $this->filterPermission($permission, $guardName);
 
         return $this->hasDirectPermission($permission) || $this->hasPermissionViaRole($permission);
     }
@@ -271,19 +286,7 @@ trait HasPermissions
      */
     public function hasDirectPermission($permission): bool
     {
-        $permissionClass = $this->getPermissionClass();
-
-        if (is_string($permission)) {
-            $permission = $permissionClass->findByName($permission, $this->getDefaultGuardName());
-        }
-
-        if (is_int($permission)) {
-            $permission = $permissionClass->findById($permission, $this->getDefaultGuardName());
-        }
-
-        if (! $permission instanceof Permission) {
-            throw new PermissionDoesNotExist();
-        }
+        $permission = $this->filterPermission($permission);
 
         return $this->permissions->contains($permission->getKeyName(), $permission->getKey());
     }
@@ -315,15 +318,15 @@ trait HasPermissions
     }
 
     /**
-     * Grant the given permission(s) to a role.
+     * Returns permissions ids as array keys
      *
      * @param string|int|array|\Spatie\Permission\Contracts\Permission|\Illuminate\Support\Collection $permissions
      *
-     * @return $this
+     * @return array
      */
-    public function givePermissionTo(...$permissions)
+    public function collectPermissions(...$permissions)
     {
-        $permissions = collect($permissions)
+        return collect($permissions)
             ->flatten()
             ->reduce(function ($array, $permission) {
                 if (empty($permission)) {
@@ -342,6 +345,18 @@ trait HasPermissions
 
                 return $array;
             }, []);
+    }
+
+    /**
+     * Grant the given permission(s) to a role.
+     *
+     * @param string|int|array|\Spatie\Permission\Contracts\Permission|\Illuminate\Support\Collection $permissions
+     *
+     * @return $this
+     */
+    public function givePermissionTo(...$permissions)
+    {
+        $permissions = $this->collectPermissions(...$permissions);
 
         $model = $this->getModel();
 

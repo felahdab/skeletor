@@ -57,6 +57,9 @@ class MindefConnectUserController extends Controller
     public function store(MindefConnectUser $user, StoreMindefConnectUserRequest $request)
     {
         $newUser = User::create(array_merge($request->input(), [ "password" =>$this->generateRandomString()]));
+        $newUser->display_name=$newUser->displayString();
+        $newUser->save();
+        
         $newUser->syncRoles($request->get('role'));
         
         if (is_null($request->get('role')) or ! in_array("user", $request->get('role')))

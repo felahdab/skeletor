@@ -30,14 +30,18 @@
         }
       }
     </style>
+    <style>
+        [x-cloak] {
+            display: none;
+        }
+    </style>
 
 </head>
 <body>
     
     @include('layouts.partials.messages')
 
-    @if ( (Browser::browserFamily() == "Firefox" and Browser::browserVersionMajor() < 60) 
-        or (Browser::browserFamily() == "Internet Explorer" and Browser::browserVersionMajor() <= 11)  )
+    @if (false)
     
         @include('layouts.partials.bugreport')
         <div class="container">
@@ -60,8 +64,8 @@
     @endif
      
     @livewireScripts
+    <script src="{!! asset('assets/js/alpine.js') !!}"></script>
     <script src="{!! asset('assets/js/jsfile.js') !!}"></script>
-    <script src="{!! asset('assets/jquery/jquery-3.6.0.min.js') !!}"></script>
     <script src="{!! asset('assets/bootstrap/js/bootstrap.bundle.js') !!}"></script>
     @yield("scripts")
 

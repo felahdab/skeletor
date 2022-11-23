@@ -27,7 +27,6 @@
                 </div>
             </div>
         <div class="container mt-4">
-                
             <div style='padding-left: 15px;'>
                 <div class='card-header ml-n3 mr-n4 mb-3' >Fonction(s) attribu&eacute;e(s)</div>
                 
@@ -94,6 +93,11 @@
 
             {!! Form::button('Attribuer cette fonction', ['type'=> 'submit', 'class'=>'btn btn-primary']) !!}
             {!! Form::close() !!}
+            
+            <div class="btn-group mt-3" role="groupe">
+                <a href="{{ route('transformation.index') }}" class="btn btn-primary"> Retour </button>
+                <a href="{{ route('transformation.livret', $user->id) }}" class="btn btn-warning">Livret de transformation</a>
+            </div>
         </div>
 
     </div>

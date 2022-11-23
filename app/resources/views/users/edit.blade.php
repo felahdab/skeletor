@@ -2,14 +2,15 @@
 
 @section('content')
     <div class="bg-light p-4 rounded">
-        <h2>Modification utilisateur</h2>
+        <h2>Modifier un marin</h2>
         <div style='text-align:right;'>* champs obligatoires </div>
         <div class="lead">
             
         </div>
 
+<div x-data='{ allchecked : false }' >
         <div class="container mt-4">
-            {!! Form::open(['method' => 'PATCH','route' => ['users.update', $user->id]]) !!}
+            {!! Form::open(['method' => 'PATCH','route' => ['users.update', $user->id], 'enctype'=>'multipart/form-data' ]) !!}
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
@@ -24,8 +25,8 @@
                         <div class="mb-3">
                             <label for="grade" class="form-label">Grade</label>
                             <select class="form-control" 
-                                name="grade_id" required>
-                                <option value="0">Grade</option>
+                                name="grade_id">
+                                <option value="">Grade</option>
                                 @foreach($grades as $grade)
                                     <option value="{{ $grade->id }}" {{ $user->grade_id == $grade->id
                                             ? ' selected'
@@ -56,8 +57,8 @@
                         <div class="mb-3">
                             <label for="specialite" class="form-label">Sp&eacute;cialit&eacute;</label>
                             <select class="form-control" 
-                                name="specialite_id" required>
-                                <option value="0">Specialite</option>
+                                name="specialite_id" >
+                                <option value="">Specialite</option>
                                 @foreach($specialites as $specialite)
                                     <option value="{{ $specialite->id }}" {{ $user->specialite_id == $specialite->id
                                             ? ' selected'
@@ -88,8 +89,8 @@
                         <div class="mb-3">
                             <label for="secteur" class="form-label">Secteur</label>
                             <select class="form-control" 
-                                name="secteur_id" required>
-                                <option value="0">Secteur</option>
+                                name="secteur_id" >
+                                <option value="">Secteur</option>
                                 @foreach($secteurs as $secteur)
                                     <option value="{{ $secteur->id }}" {{ $user->secteur_id == $secteur->id
                                             ? ' selected'
@@ -109,21 +110,19 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
-                        @if (false)
                             <label for="matricule" class="form-label">Matricule</label>
-                            {!!Form::text('matricule', $user->matricule , ['class' => 'form-control', 'placeholder'=> "Matricule", 'required']) !!}
+                            {!!Form::text('matricule', $user->matricule , ['class' => 'form-control', 'placeholder'=> "Matricule"]) !!}
                             @if ($errors->has('matricule'))
                                 <span class="text-danger text-left">{{ $errors->first(matricule) }}</span>
                             @endif
-                        @endif
                         </div>
                     </div>
                     <div class="col">
                         <div class="mb-3">
                             <label for="diplome_id" class="form-label">Brevet</label>
                             <select class="form-control" 
-                                name="diplome_id" required>
-                                <option value="0">Brevet</option>
+                                name="diplome_id" >
+                                <option value="">Brevet</option>
                                 @foreach($diplomes as $diplome)
                                     <option value="{{ $diplome->id }}" {{ $user->diplome_id == $diplome->id
                                             ? ' selected'
@@ -143,30 +142,19 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
-                            <label for="date_embarq" class="form-label">Date d'embarquement</label>
-                            {!!Form::date('date_embarq', $user->date_embarq , ['class' => 'form-control', 'placeholder'=> 'Date d\'embarquement', 'required']) !!}
-                            @if ($errors->has('date_embarq'))
-                                <span class="text-danger text-left">{{ $errors->first(date_embarq) }}</span>
+                            <label for="nid" class="form-label">NID</label>
+                            {!!Form::text('nid', $user->nid , ['class' => 'form-control', 'placeholder'=> "NID"]) !!}
+                            @if ($errors->has('nid'))
+                                <span class="text-danger text-left">{{ $errors->first(nid) }}</span>
                             @endif
                         </div>
                     </div>
-                    <div class="col">
-                        <div class="mb-3">
-                            <label for="date_debarq" class="form-label">Date de débarquement</label>
-                            {!!Form::date('date_debarq', $user->date_debarq , ['class' => 'form-control', 'placeholder'=> 'Date de debarquement']) !!}
-                            @if ($errors->has('date_debarq'))
-                                <span class="text-danger text-left">{{ $errors->first(date_debarq) }}</span>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
                     <div class="col">
                         <div class="mb-3">
                             <label for="unite_destination" class="form-label">Unité destination</label>
                             <select class="form-control" 
-                                name="unite_destination_id" required>
-                                <option value="0">Unité destination</option>
+                                name="unite_destination_id" >
+                                <option value="">Unité destination</option>
                                 @foreach($unites as $unite)
                                     <option value="{{ $unite->id }}" @selected($user->unite_destination_id == $unite->id)>
                                         {{ $unite->unite_liblong }}
@@ -178,25 +166,60 @@
                             @if ($errors->has('unite_destination'))
                                 <span class="text-danger text-left">{{ $errors->first(unite_destination) }}</span>
                             @endif
-                       </div>
+                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="date_embarq" class="form-label">Date d'embarquement</label>
+                            {!!Form::date('date_embarq', $user->date_embarq , ['class' => 'form-control', 'placeholder'=> 'Date d\'embarquement', 'required']) !!}
+                            @if ($errors->has('date_embarq'))
+                                <span class="text-danger text-left">{{ $errors->first(date_embarq) }}</span>
+                            @endif
+                        </div>
                     </div>
                     <div class="col">
                         <div class="mb-3">
-                            @if (auth()->user()->hasRole("admin"))
-                                <label for="unite_affectation" class="form-label">Unité d'affectation</label>
-                                <select class="form-control" 
-                                    name="unite_id" required>
-                                    <option value="0">Unité d'affectation</option>
-                                    @foreach($unites as $unite)
-                                        <option value="{{ $unite->id }}" @selected($user->unite_id == $unite->id)>
-                                            {{ $unite->unite_liblong }}
-                                            {{ $user->unite_destination_id == $unite->id
-                                                ? ' (unite actuelle)'
-                                                : '' }}  </option>
-                                    @endforeach
-                                </select>
+                            <label for="photo" class="form-label">Photo</label>
+                            <input type="file" 
+                                accept='.jpg, .jpeg, .png'
+                                class="form-control" 
+                                name="photo">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="date_debarq" class="form-label">Date de débarquement</label>
+                            {!!Form::date('date_debarq', $user->date_debarq , ['class' => 'form-control', 'placeholder'=> 'Date de debarquement']) !!}
+                            @if ($errors->has('date_debarq'))
+                                <span class="text-danger text-left">{{ $errors->first(date_debarq) }}</span>
                             @endif
                         </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                            <img src="{{asset('public/' . $user->photo)}}" height="75px">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <input type="checkbox" name="comete" value="1"{{ $user->comete
+                                            ? ' checked'
+                                            : '' }}>
+                            <label for="comete" class="form-label">Embarqué COMETE</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                            <input type="checkbox" name="socle" value="1"{{ $user->socle
+                                            ? ' checked'
+                                            : '' }}>
+                            <label for="socle" class="form-label">Socle</label>
+                         </div>
                     </div>
                 </div>
                 <div class="row">
@@ -211,7 +234,7 @@
 
                 <table class="table table-striped">
                     <thead>
-                        <th scope="col" width="1%"><input type="checkbox" name="all_roles"></th>
+                        <th scope="col" width="1%"><input type="checkbox" x-on:click="allchecked = !allchecked; $dispatch('toggleallroles');">Tous</button></th>
                         <th scope="col" width="20%">Sélectionner les rôles</th>
                     </thead>
 
@@ -222,9 +245,11 @@
                                 name="role[{{ $role->name }}]"
                                 value="{{ $role->name }}"
                                 class='role'
+                                x-on:toggleallroles.window="$el.checked = allchecked;"
                                 {{ in_array($role->name, $userRole) 
                                     ? 'checked'
-                                    : '' }}>
+				    : '' }}
+                                >
                             </td>
                             <td>{{ $role->name }}</td>
                         </tr>
@@ -240,24 +265,6 @@
         </div>
 
     </div>
+</div>
 @endsection
 
-@section('scripts')
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('[name="all_roles"]').on('click', function() {
-
-                if($(this).is(':checked')) {
-                    $.each($('.role'), function() {
-                        $(this).prop('checked',true);
-                    });
-                } else {
-                    $.each($('.role'), function() {
-                        $(this).prop('checked',false);
-                    });
-                }
-                
-            });
-        });
-    </script>
-@endsection

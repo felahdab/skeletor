@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="bg-light p-4 rounded">
-        <h2>Stages</h2>
+        <h2>Ajouter un stage</h2>
     </div>
     <div id='divmodifobj' class='card bg-light ml-3 w-100' >
         <div class='card-header' >Création d'un stage </div>
@@ -31,14 +31,16 @@
                         value="" >
                     </div>
                 </div>
+                @if (false)
                 <div class='form-group row' >
                     <label for='stage[transverse]' class='col-sm-5 col-form-label'>Transverse</label>
                     <div class='col-sm-5'>
                         <input type='checkbox'name='stage[transverse]' id='stage[transverse]'> 
                     </div>
                 </div>
+                @endif
                 <div class="form-group row">
-                    <label for="stage[typelicence_id]" class="col-sm-5 col-form-label">Type de licence</label>
+                    <label for="stage[typelicence_id]" class="col-sm-5 col-form-label">Type de licence *</label>
                     <div class='col-sm-5'>
                         <select class="form-control" 
                             name="stage[typelicence_id]" required>
@@ -52,6 +54,58 @@
                                         : '' }}  </option>
                             @endforeach
                         </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="stage[stage_date_fin_licence]" class="col-sm-5 col-form-label">Date de fin de licence</label>
+                    <div class='col-sm-5'>
+                        <input type="date" 
+                            class="form-control" 
+                            name="stage[stage_date_fin_licence]" 
+                            placeholder="Date fin licence" required>
+                    </div>
+                </div>
+                <div class='form-group row' >
+                    <label for='stage[stage_capamax]' class='col-sm-5 col-form-label'>Capacité maximum</label>
+                    <div class='col-sm-5'>
+                        <input type='text' 
+                        class='form-control' 
+                        name='stage[stage_capamax]' 
+                        id='stage[stage_capamax]' 
+                        placeholder='Capacité maximum' 
+                        value="" >
+                    </div>
+                </div>
+                <div class='form-group row' >
+                    <label for='stage[stage_duree]' class='col-sm-5 col-form-label'>Durée (j)</label>
+                    <div class='col-sm-5'>
+                        <input type='text' 
+                        class='form-control' 
+                        name='stage[stage_duree]' 
+                        id='stage[stage_duree]' 
+                        placeholder='Durée' 
+                        value="" >
+                    </div>
+                </div>
+                <div class='form-group row' >
+                    <label for='stage[stage_lieu]' class='col-sm-5 col-form-label'>Lieu</label>
+                    <div class='col-sm-5'>
+                        <input type='text' 
+                        class='form-control' 
+                        name='stage[stage_lieu]' 
+                        id='stage[stage_lieu]' 
+                        placeholder='Lieu' 
+                        value="" >
+                    </div>
+                </div>
+                <div class='form-group row' >
+                    <label for='stage[stage_commentaire]' class='col-sm-5 col-form-label'>Commentaire</label>
+                    <div class='col-sm-5'>
+                        <textarea class="form-control" 
+                                rows='5' 
+                                name='stage[stage_commentaire]' 
+                                id='stage[stage_commentaire]' 
+                                placeholder='Commentaire'></textarea>
                     </div>
                 </div>
                 <div>

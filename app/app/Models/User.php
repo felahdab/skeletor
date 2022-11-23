@@ -13,6 +13,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Lab404\Impersonate\Models\Impersonate;
 
+use App\Jobs\CalculateUserTransformationRatios;
+
+use Illuminate\Database\Eloquent\Model;
+use App\Models\TransformationHistory;
+use App\Models\Stage;
+use App\Models\Fonction;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
@@ -26,7 +33,7 @@ class User extends Authenticatable
      */
     protected $table = 'users';
 
-    /**
+    /** 
      * The attributes that are mass assignable.
      *
      * @var array
@@ -36,7 +43,7 @@ class User extends Authenticatable
         'prenom',
         'email',
         'password',
-        // 'matricule',
+        'matricule',
         'date_embarq',
         'date_debarq',
         'photo',
@@ -47,6 +54,10 @@ class User extends Authenticatable
         'unite_id',
         'unite_destination_id',
         'user_comment',
+        'display_name',
+        'nid',
+        'comete',
+        'socle',
     ];
 
     /**
@@ -184,7 +195,7 @@ class User extends Authenticatable
     public function displayDateDebarquement()
     {
         if ($this->date_debarq == null)
-            return "NON RENSEIGNE";
+            return "N.C.";
         return $this->date_debarq;
     }
     
@@ -252,6 +263,18 @@ class User extends Authenticatable
     }
     
     // Cette partie contient des fonctions d'aide pour le suivi de la transformation
+    public function logTransformationHistory($event, $event_details = "")
+    {
+        $currentuser = auth()->user();
+        
+        TransformationHistory::create([
+            "modifying_user_id" => $currentuser->id, 
+            "modified_user_id" => $this->id, 
+            "event" => $event,
+            "event_details" => $event_details
+        ]);
+    }
+    
     public function aValideLaFonction(Fonction $fonction)
     {
         foreach ($fonction->$compagnonages->get() as $compagnonage)
@@ -322,6 +345,27 @@ class User extends Authenticatable
         return true;
     }
     
+    public function dateValidationDuStage(Stage $stage)
+    {
+        $workitem = $this->stages()->find($stage);
+        if ($workitem == null)
+            return "";
+        $workitem = $workitem->pivot;
+        if ($workitem->date_validation == null)
+            return "";
+        return $workitem->date_validation;
+    }
+    public function CommentaireDuStage(Stage $stage)
+    {
+        $workitem = $this->stages()->find($stage);
+        if ($workitem == null)
+            return "";
+        $workitem = $workitem->pivot;
+        if ($workitem->commentaire == null)
+            return "";
+        return $workitem->commentaire;
+    }
+    
     /** Renvoie la liste de stages lies a une fonction.
     * Attention: ne verifie pas les doublons !
     */
@@ -353,6 +397,8 @@ class User extends Authenticatable
         if ($this->stages()->get()->contains($stage))
             return;
         $this->stages()->attach($stage);
+        CalculateUserTransformationRatios::dispatch($this);
+        $this->logTransformationHistory("ATTRIBUE_STAGE", json_encode(["stage" => $stage]));
     }
     
     /**
@@ -364,9 +410,51 @@ class User extends Authenticatable
      */
     public function detachStage(Stage $stage)
     {
-        if ($this->stagesLiesAUneFonction()->contains($stage))
+        if (array_key_exists($stage->id,  $this->stagesLiesAUneFonction()->pluck('id','id')->toArray()))
             return;
         $this->stages()->detach($stage);
+        CalculateUserTransformationRatios::dispatch($this);
+        $this->logTransformationHistory("RETIRE_STAGE", json_encode(["stage" => $stage]));
+    }
+    
+    public function validateStage(Stage $stage, $commentaire, $date_validation)
+    {
+        $workitem = $this->stages()->find($stage)->pivot;
+        if ($workitem != null)
+        {
+            $workitem->date_validation = $date_validation;
+            $workitem->commentaire = " " . $commentaire;
+            $workitem->save();
+        }
+        CalculateUserTransformationRatios::dispatch($this);
+        $event_detail = [
+            "stage" => $stage,
+            "commentaire" => $commentaire,
+            "date_validation" => $date_validation,
+        ];
+        $this->logTransformationHistory("VALIDE_STAGE", json_encode($event_detail));
+    }
+
+    public function validateCommentStage(Stage $stage, $commentaire)
+    {
+        $workitem = $this->stages()->find($stage)->pivot;
+        if ($workitem != null)
+        {
+            $workitem->commentaire = $commentaire;
+            $workitem->save();
+        }
+    }
+    
+    public function unValidateStage(Stage $stage)
+    {
+        $workitem = $this->stages()->find($stage)->pivot;
+        if ($workitem != null)
+        {
+            $workitem->date_validation = null;
+            $workitem->save();
+        }
+        CalculateUserTransformationRatios::dispatch($this);
+        $this->logTransformationHistory("DEVALIDE_STAGE", json_encode(["stage" => $stage]));
     }
     
     public function attachFonction(Fonction $fonction)
@@ -377,6 +465,8 @@ class User extends Authenticatable
         }
 
         $this->fonctions()->attach($fonction);
+        CalculateUserTransformationRatios::dispatch($this);
+        $this->logTransformationHistory("ATTRIBUE_FONCTION", json_encode(["fonction" => $fonction]));
         foreach($fonction->stages()->get() as $stage)
             $this->attachStage($stage);
     }
@@ -384,18 +474,152 @@ class User extends Authenticatable
     public function detachFonction(Fonction $fonction)
     {
         $this->fonctions()->detach($fonction);
+        $this->logTransformationHistory("RETIRE_FONCTION", json_encode(["fonction" => $fonction]));
         foreach($fonction->stages()->get() as $stage)
             $this->detachStage($stage);
+        CalculateUserTransformationRatios::dispatch($this);
+        
+    }
+    
+        
+    public function ValidateSousObjectif(SousObjectif $sous_objectif, $date_validation , $commentaire, $valideur)
+    {
+        $this->sous_objectifs()->attach($sous_objectif, [
+            'valideur'=> $valideur,
+            'commentaire'=> $commentaire,
+            'date_validation' => $date_validation,
+        ]);
+        $event_detail = [
+            "sous_objectif" => $sous_objectif,
+            "commentaire" => $commentaire,
+            "date_validation" => $date_validation,
+        ];
+        CalculateUserTransformationRatios::dispatch($this);
+        $this->logTransformationHistory("VALIDE_SOUS_OBJECTIF", json_encode($event_detail));
+    }
+    
+    public function UnValidateSousObjectif(SousObjectif $sous_objectif)
+    {
+        $this->sous_objectifs()->detach($sous_objectif);
+        CalculateUserTransformationRatios::dispatch($this);
+        $this->logTransformationHistory("DEVALIDE_SOUS_OBJECTIF", json_encode(["sous_objectif" => $sous_objectif]));
+    }
+    
+    public function ValidateObjectif(Objectif $objectif, $date_validation , $commentaire, $valideur)
+    {
+        foreach ($objectif->sous_objectifs()->get() as $sous_objectif)
+        {
+            $this->ValidateSousObjectif( $sous_objectif, $date_validation , $commentaire, $valideur);
+        }
+    }
+    
+    public function UnValidateObjectif(Objectif $objectif)
+    {
+        foreach ($objectif->sous_objectifs()->get() as $sous_objectif)
+        {
+            $this->UnValidateSousObjectif( $sous_objectif);
+        }
+    }
+    
+    public function ValidateTache(Tache $tache, $date_validation , $commentaire, $valideur)
+    {
+        $event_detail = [
+            "tache" => $tache,
+            "commentaire" => $commentaire,
+            "date_validation" => $date_validation,
+            "valideur" => $valideur
+        ];
+        $this->logTransformationHistory("VALIDE_TACHE", json_encode($event_detail));
+        
+        foreach ($tache->objectifs()->get() as $objectif)
+        {
+            $this->ValidateObjectif( $objectif, $date_validation , $commentaire, $valideur);
+        }
+        CalculateUserTransformationRatios::dispatch($this);
+    }
+    
+    public function UnValidateTache(Tache $tache)
+    {
+        $event_detail = [
+            "tache" => $tache
+        ];
+        $this->logTransformationHistory("DEVALIDE_TACHE", json_encode($event_detail));
+        
+        foreach ($tache->objectifs()->get() as $objectif)
+        {
+            $this->UnValidateObjectif( $objectif);
+        }
+        CalculateUserTransformationRatios::dispatch($this);
+    }
+    
+    public function ValideLacheFonction(Fonction $fonction, $date_validation , $commentaire, $valideur)
+    {
+        $userfonc = $this->fonctions->find($fonction);
+        // L'utilisateur a cliqué sur un bouton de validation du lache
+        // Si la fonction necessite un double, il faut que le double soit valide avant le lache
+        if ($userfonc->pivot->date_double != null or !$fonction->fonction_double) 
+        {
+            $userfonc->pivot->commentaire_lache=$commentaire;
+            $userfonc->pivot->valideur_lache=$valideur;
+            $userfonc->pivot->date_lache = $date_validation;
+            $userfonc->pivot->save();
+            $event_detail = [
+                "fonction" => $fonction,
+                "commentaire" => $commentaire,
+                "date_validation" => $date_validation,
+            ];
+            $this->logTransformationHistory("VALIDE_LACHE_FONCTION", json_encode($event_detail));
+        }
+    }
+    
+    public function UnValideLacheFonction(Fonction $fonction)
+    {
+        $userfonc = $this->fonctions->find($fonction);
+        if ($userfonc == null)
+            return;
+        $userfonc->pivot->commentaire_lache=null;
+        $userfonc->pivot->valideur_lache=null;
+        $userfonc->pivot->date_lache = null;
+        $userfonc->pivot->save();
+        $this->logTransformationHistory("ANNULE_LACHE_FONCTION", json_encode(["fonction" => $fonction]));
+    }
+    
+    public function UnValideDoubleFonction(Fonction $fonction)
+    {
+        $userfonc = $this->fonctions->find($fonction);
+        if ($userfonc == null)
+            return;
+        $userfonc->pivot->commentaire_double=null;
+        $userfonc->pivot->valideur_double=null;
+        $userfonc->pivot->date_double = null;
+        $userfonc->pivot->save();
+        $this->logTransformationHistory("ANNULE_DOUBLE_FONCTION", json_encode(["fonction" => $fonction]));
+    }
+    
+    public function ValideDoubleFonction(Fonction $fonction, $date_validation , $commentaire, $valideur)
+    {
+        $userfonc = $this->fonctions->find($fonction);
+        
+        $userfonc->pivot->commentaire_double=$commentaire;
+        $userfonc->pivot->valideur_double=$valideur;
+        $userfonc->pivot->date_double = $date_validation;
+        $userfonc->pivot->save();
+        $event_detail = [
+            "fonction" => $fonction,
+            "commentaire" => $commentaire,
+            "date_validation" => $date_validation,
+        ];
+        $this->logTransformationHistory("VALIDE_DOUBLE_FONCTION", json_encode($event_detail));
     }
     
     public function nbSousObjectifsAValider(Fonction $fonction=null)
     {
         if ($fonction != null)
         {
-            return $fonction->coll_sous_objectifs()->count();
+            return $fonction->coll_sous_objectifs()->unique()->count();
         }
         else{
-            return $this->coll_sous_objectifs()->count();
+            return $this->coll_sous_objectifs()->unique()->count();
         }
     }
     
@@ -492,6 +716,7 @@ class User extends Authenticatable
     public function pourcentage_valides_pour_fonction(Fonction $fonction, bool $fullcalc=false)
     {
         if (! $fullcalc){
+            //je crois que cette partie ne marche pas.
             $workitem = $this->fonctions()->find($fonction);
             return $workitem->taux_de_transformation;
         }
@@ -514,16 +739,40 @@ class User extends Authenticatable
             }
             if ($fcoll->count()==0)
                 return 0;
-            return 100.0 * $workcoll->count() / $fcoll->count();
+            return round(100.0 * $workcoll->count() / $fcoll->count(), 2);
         }
     }
     
-    public function taux_de_transformation()
+    public function taux_de_transformation(bool $fullcalc=false)
     {
-        if ($this->coll_sous_objectifs()->count()==0)
-            return 0;
-        $taux = 100.0* $this->sous_objectifs()->get()->count() / $this->coll_sous_objectifs()->count();
-        return $taux;
+        if (! $fullcalc)
+            return user->taux_de_transformation;
+        
+        $nb_stage_total = 0;
+        $nb_stage_total = $this->stages()->get()->count();
+        
+        $nb_stage_valides = 0;
+        $nb_stage_valides = $this->stages()->wherePivotNotNull('date_validation')->get()->count();
+        
+        $sous_objs = $this->coll_sous_objectifs()->unique();
+        $total_des_coeff = $sous_objs->sum('ssobj_coeff');
+        
+        $sous_objs_valides = $this->sous_objectifs()
+                            ->whereNotNull('date_validation')->get();
+        $workcoll = collect([]);
+            foreach ($sous_objs as $sous_obj_a_garder)
+            {
+                $trouve = $sous_objs_valides->find($sous_obj_a_garder);
+                if ($trouve != null)
+                    $workcoll = $workcoll->concat(collect([$trouve]));
+            }
+        $coeff_valides = $workcoll->count();
+        
+        $taux_transfo=0;
+        if ($nb_stage_total>0 and $total_des_coeff>0){
+            $taux_transfo = 100 * ($nb_stage_valides + $coeff_valides) / ($nb_stage_total + $total_des_coeff) ;
+        }
+        return $taux_transfo;
     }
     
     public function pourcentage_valides_pour_comp(Compagnonage $comp)
@@ -542,29 +791,6 @@ class User extends Authenticatable
         }
         
         return 100.0 * $workcoll->count() / $comp->coll_sous_objectifs()->count();
-    }
-    
-    public function getFonctionHtmlAttribute(Fonction $fonction)
-    {
-        
-        $taux = $fonction->pivot->taux_de_transformation;
-        
-        if ($taux == 100)
-            $couleur="green";
-        elseif($taux >= 70)
-            $couleur="gold";
-        elseif($taux >= 30)
-            $couleur = "orange";
-        else
-            $couleur = "red";
-        
-        $stylepart = "color:". $couleur . "'>";
-        
-        $libelle = $fonction->fonction_libcourt . 
-                    "<br>(" . substr($taux,0,4) ."%)" ;
-        
-        $result = $stylepart . $libelle;
-        return $result;
     }
     
     public function getEnTransformationAttribute()

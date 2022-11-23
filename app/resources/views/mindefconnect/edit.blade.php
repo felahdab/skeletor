@@ -6,7 +6,9 @@
     <div class="lead">
         Valider une demande d'accès
     </div>
-    
+
+<div x-data='{ allChecked : false }'>
+
     <div>
         <table class="table table-striped">
             <thead>
@@ -58,8 +60,8 @@
                         <div class="mb-3">
                             <label for="grade" class="form-label">Grade</label>
                             <select class="form-control" 
-                                name="grade_id" required>
-                                <option value="0">Grade</option>
+                                name="grade_id">
+                                <option value="">Grade</option>
                                 @foreach($grades as $grade)
                                     <option value="{{ $grade->id }}" @selected($possibleGrade!= null and $grade->id  == $possibleGrade->id) >
                                         {{ $grade->grade_liblong }}
@@ -88,8 +90,8 @@
                         <div class="mb-3">
                             <label for="specialite_id" class="form-label">Specialite</label>
                             <select class="form-control" 
-                                name="specialite_id" required>
-                                <option value="0">Specialite</option>
+                                name="specialite_id" >
+                                <option value="">Specialite</option>
                                 @foreach($specialites as $specialite)
                                     <option value="{{ $specialite->id }}"}>
                                         {{ $specialite->specialite_libcourt }}
@@ -114,8 +116,8 @@
                         <div class="mb-3">
                             <label for="secteur_id" class="form-label">Secteur</label>
                             <select class="form-control" 
-                                name="secteur_id" required>
-                                <option value="0">Secteur</option>
+                                name="secteur_id" >
+                                <option value="">Secteur</option>
                                 @foreach($secteurs as $secteur)
                                     <option value="{{ $secteur->id }}">
                                         {{ $secteur->displayName() }}
@@ -142,8 +144,8 @@
                         <div class="mb-3">
                             <label for="diplome_id" class="form-label">Brevet</label>
                             <select class="form-control" 
-                                name="diplome_id" required>
-                                <option value="0">Brevet</option>
+                                name="diplome_id" >
+                                <option value="">Brevet</option>
                                 @foreach($diplomes as $diplome)
                                     <option value="{{ $diplome->id }}">
                                         {{ $diplome->diplome_libcourt }}
@@ -180,7 +182,7 @@
                     <label for="unite_destination_id" class="form-label">Unité d'affectation</label>
                     <select class="form-control" 
                         name="unite_id" >
-                        <option value="0">Unité d'affectation</option>
+                        <option value="">Unité d'affectation</option>
                         @foreach($unites as $unite)
                             <option value="{{ $unite->id }}" @selected($possibleUnite!= null and $unite->id == $possibleUnite->id)>
                                 {{ $unite->unite_liblong }}
@@ -193,7 +195,7 @@
                     <label for="unite_destination_id" class="form-label">Unité destination</label>
                     <select class="form-control" 
                         name="unite_destination_id" >
-                        <option value="0">Unité destination</option>
+                        <option value="{{ null }}">Unité destination</option>
                         @foreach($unites as $unite)
                             <option value="{{ $unite->id }}">
                                 {{ $unite->unite_liblong }}
@@ -206,7 +208,7 @@
 
                 <table class="table table-striped">
                     <thead>
-                        <th scope="col" width="1%"><input type="checkbox" name="all_roles"></th>
+                        <th scope="col" width="1%"><input type="checkbox" name="all_roles" x-on:click="allChecked = !allChecked; $dispatch('toggleallroles');"></th>
                         <th scope="col" width="20%">Nom</th>
                     </thead>
 
@@ -215,7 +217,8 @@
                             <td>
                                 <input type="checkbox" 
                                 name="role[{{ $role->name }}]"
-                                value="{{ $role->name }}"
+				value="{{ $role->name }}"
+                                x-on:toggleallroles.window="$el.checked = allChecked;"
                                 class='role' @checked($role->name == "user")>
                             </td>
                             <td>{{ $role->name }}</td>
@@ -226,26 +229,8 @@
                 <button type="submit" class="btn btn-primary">Enregistrer l'utilisateur</button>
                 <a href="{{ route('mindefconnect.index') }}" class="btn btn-default">Retour</a>
             </form>
-        </div>
+	</div>
+</div>
 </div>
 @endsection
 
-@section('scripts')
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('[name="all_roles"]').on('click', function() {
-
-                if($(this).is(':checked')) {
-                    $.each($('.role'), function() {
-                        $(this).prop('checked',true);
-                    });
-                } else {
-                    $.each($('.role'), function() {
-                        $(this).prop('checked',false);
-                    });
-                }
-                
-            });
-        });
-    </script>
-@endsection

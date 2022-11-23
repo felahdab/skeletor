@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\Secteur;
 use App\Models\Specialite;
@@ -48,7 +50,7 @@ class UsersController extends Controller
         ]);
     }
 
-    function generateRandomString($length = 10) {
+    public static function generateRandomString($length = 10) {
         return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
     }
     /**
@@ -60,13 +62,31 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(User $user, StoreUserRequest $request) 
-    {
+    {        
         $user = $user->create(array_merge($request->validated(), [ "password" =>$this->generateRandomString()]));
-        
+        // partie photo //
+        if ($request->file('photo')){
+            $filename = $user->id.'.'.$request->file('photo')->extension(); 
+            $path = $request->file('photo')->storeAs(
+                                                'photos', //repertoire
+                                                $filename , //nom fichier
+                                                'public' // espace de stockage
+                                            );
+            $user->photo=$path;
+        }
+        if ($request->has('socle'))
+            $user->socle = true;
+        else
+            $user->socle = false;
+        if ($request->has('comete'))
+            $user->comete = true;
+        else
+            $user->comete = false;
+       
         $user->name = strtoupper($user->name);
         $user->prenom = ucfirst(strtolower($user->prenom));
+        $user->display_name = $user->displayString();
         $user->save();
-        
         $user->syncRoles($request->get('role'));
         
         if (is_null($request->get('role')) or ! in_array("user", $request->get('role')))
@@ -75,8 +95,12 @@ class UsersController extends Controller
             $user->roles()->attach($roletransfo);
         }
 
-        return redirect()->route('users.index')
-            ->withSuccess(__('Utilisateur a été créé avec succès. Vous devez changer son mot de passe.'));
+        if ($request["buttonid"] == "users.index")
+            return redirect()->route("users.index")
+                ->withSuccess(__('L utilisateur a été créé avec succès.'));
+        elseif ($request["buttonid"] == "users.choisirfonction")
+            return redirect()->route("users.choisirfonction", $user->id)
+                ->withSuccess(__('L utilisateur a été créé avec succès.'));
     }
 
     /**
@@ -90,6 +114,13 @@ class UsersController extends Controller
     {
         return view('users.show', [
             'user' => $user
+        ]);
+    }
+    
+    public function stages(User $user) 
+    {
+        return view('users.stages', [
+            'marin' => $user
         ]);
     }
 
@@ -195,9 +226,29 @@ class UsersController extends Controller
      */
     public function update(User $user, UpdateUserRequest $request) 
     {
+        // partie photo //
+        if ($request->file('photo')){
+            $filename = $user->id.'.'.$request->file('photo')->extension(); 
+            $path = $request->file('photo')->storeAs(
+                                                'photos', //repertoire
+                                                $filename , //nom fichier
+                                                'public' // espace de stockage
+                                            );
+            $user->photo=$path;
+        }
+        
+        if ($request->has('socle'))
+            $user->socle = true;
+        else
+            $user->socle = false;
+        if ($request->has('comete'))
+            $user->comete = true;
+        else
+            $user->comete = false;
         $user->update($request->validated());
         $user->name = strtoupper($user->name);
         $user->prenom = ucfirst(strtolower($user->prenom));
+        $user->display_name = $user->displayString();
         $user->save();
 
         $user->syncRoles($request->get('role'));

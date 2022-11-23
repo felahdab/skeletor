@@ -56,6 +56,11 @@ class StageController extends Controller
         $stage->stage_liblong = $request->stage['stage_liblong'];
         $stage->transverse = array_key_exists('transverse', $request->stage) ;
         $stage->typelicence_id=$request->stage['typelicence_id'];
+        $stage->stage_lieu = $request->stage['stage_lieu'];
+        $stage->stage_duree = $request->stage['stage_duree'];
+        $stage->stage_capamax = $request->stage['stage_capamax'];
+        $stage->stage_date_fin_licence = $request->stage['stage_date_fin_licence'];
+        $stage->stage_commentaire = $request->stage['stage_commentaire'];
         $stage->save();
         return redirect()->route('stages.edit', $stage);
     }
@@ -68,28 +73,13 @@ class StageController extends Controller
      */
     public function show(Request $request, Stage $stage)
     {
-        
-        if ($request->has("stage"))
-        {
-            return redirect()->route('stages.show', intval($request["stage"]));
-        }
-        $marin = null;
-        if ($request->has("marin"))
-        {
-            $marin = User::find(intval($request["marin"]));
-        }
-        
         $stages = Stage::orderBy('stage_libcourt')->get();
-        $typelicences = TypeLicence::orderBy('typlicense_libcourt')->get();
         $users = User::local()->orderBy('name')->get();
         
         $usersdustage = $stage->users()->get();
         
         return view('stages.show', ['stage'        => $stage, 
                                     'stages'       => $stages,
-                                    'typelicences' => $typelicences,
-                                    'users'        => $users,
-                                    'marin'        => $marin,
                                     'usersdustage' => $usersdustage] );
     }
 
@@ -127,6 +117,11 @@ class StageController extends Controller
             $stage->transverse = true;
         else
             $stage->transverse = false;
+        $stage->stage_lieu = $request->stage['stage_lieu'];
+        $stage->stage_duree = $request->stage['stage_duree'];
+        $stage->stage_capamax = $request->stage['stage_capamax'];
+        $stage->stage_date_fin_licence = $request->stage['stage_date_fin_licence'];
+        $stage->stage_commentaire = $request->stage['stage_commentaire'];
         $stage->save();
         
         return redirect()->route('stages.edit', $stage);
@@ -174,11 +169,11 @@ class StageController extends Controller
                 $user = User::find($userid);
                 $workitem = $user->stages()->find($stage)->pivot;
                 $workitem->date_validation = $request["date_validation"];
-                $workitem->commentaire = $request["commentaire"];
+                $workitem->commentaire .= ' ' . $request["commentaire"];
                 $workitem->save();
             }
         }
-        return redirect()->route('stages.choixmarins', ['stage'=>$stage]);
+        return redirect()->route('stages.show', ['stage'=>$stage]);
     }
     
      public function annulermarins(Request $request, Stage $stage)
@@ -190,11 +185,10 @@ class StageController extends Controller
                 $user = User::find($userid);
                 $workitem = $user->stages()->find($stage)->pivot;
                 $workitem->date_validation = null;
-                $workitem->commentaire = null;
                 $workitem->save();
             }
         }
-        return redirect()->route('stages.choixmarins', ['stage'=>$stage]);
+        return redirect()->route('stages.show', ['stage'=>$stage]);
     }
 
     public function consulter(Request $request)

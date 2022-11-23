@@ -10,8 +10,8 @@
             <a href="{{ route('transformation.livret', $user->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
             <a href="{{ route('transformation.progression', $user->id) }}" class="btn btn-primary btn-sm">Progression</a>
             <a href="{{ route('transformation.fichebilan', $user->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
-            @can('stages.consulter')
-                <a href="{{ route('stages.consulter', [ 'marin' => $user->id]) }}" class="btn btn-danger btn-sm">Stages</a>
+            @can('users.stages')
+                <a href="{{ route('users.stages', $user->id) }}" class="btn btn-danger btn-sm">Stages</a>
             @endcan
             <a href="{{ route('transformation.index') }}" class="btn btn-default btn-sm">Annuler</a>
         @else
@@ -54,8 +54,18 @@
                             });
                         </script>
                         <div style='position: absolute; width: 100%; height: 35px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </div>
-                        @php $pourcentage = substr($user->taux_de_transformation, 0, 5); @endphp
-                        <div style='position: absolute; width: {{ $pourcentage}}%; height: 35px; background-color: red; margin-top: 1%; border: 1px solid black;'>
+                            @php $pourcentage = $user->taux_de_transformation;
+                                     $pourcentagestr = substr($pourcentage, 0, 5);
+                            @endphp
+                            @if ($pourcentage == 100)
+                                <div style='position: absolute; width: {{$pourcentagestr}}%; height: 35px; background-color: green; margin-top: 1%; border: 1px solid black;'>
+                            @elseif ($pourcentage >= 70 and $pourcentage < 100)
+                                <div style='position: absolute; width: {{$pourcentagestr}}%; height: 35px; background-color: gold; margin-top: 1%; border: 1px solid black;'>
+                            @elseif ($pourcentage >= 30 and $pourcentage < 70)
+                                <div style='position: absolute; width: {{$pourcentagestr}}%; height: 35px; background-color: orange; margin-top: 1%; border: 1px solid black;'>
+                            @else
+                                <div style='position: absolute; width: {{$pourcentagestr}}%; height: 35px; background-color: red; margin-top: 1%; border: 1px solid black;'>
+                            @endif
                             <h3>{{$pourcentage}}%</h3>
                         </div>
                     </div>
@@ -152,18 +162,18 @@
                         </script>
                             <div style='position: absolute; width: 100%; height: 35px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </div>
                             @if ($fonction->coll_sous_objectifs()->count()!=0 ) 
-                            @php $pourcentage = $fonction->pivot->taux_de_transformation;
-                                 $pourcentagestr = substr($pourcentage, 0, 5);
-                            @endphp
-                            @if ($pourcentage == 100)
-                                <div style='position: absolute; width: {{$pourcentagestr}}%; height: 35px; background-color: green; margin-top: 1%; border: 1px solid black;'>
-                            @elseif ($pourcentage >= 70 and $pourcentage < 100)
-                                <div style='position: absolute; width: {{$pourcentagestr}}%; height: 35px; background-color: gold; margin-top: 1%; border: 1px solid black;'>
-                            @elseif ($pourcentage >= 30 and $pourcentage < 70)
-                                <div style='position: absolute; width: {{$pourcentagestr}}%; height: 35px; background-color: orange; margin-top: 1%; border: 1px solid black;'>
-                            @else
-                                <div style='position: absolute; width: {{$pourcentagestr}}%; height: 35px; background-color: red; margin-top: 1%; border: 1px solid black;'>
-                            @endif
+                                @php $pourcentage = $fonction->pivot->taux_de_transformation;
+                                     $pourcentagestr = substr($pourcentage, 0, 5);
+                                @endphp
+                                @if ($pourcentage == 100)
+                                    <div style='position: absolute; width: {{$pourcentagestr}}%; height: 35px; background-color: green; margin-top: 1%; border: 1px solid black;'>
+                                @elseif ($pourcentage >= 70 and $pourcentage < 100)
+                                    <div style='position: absolute; width: {{$pourcentagestr}}%; height: 35px; background-color: gold; margin-top: 1%; border: 1px solid black;'>
+                                @elseif ($pourcentage >= 30 and $pourcentage < 70)
+                                    <div style='position: absolute; width: {{$pourcentagestr}}%; height: 35px; background-color: orange; margin-top: 1%; border: 1px solid black;'>
+                                @else
+                                    <div style='position: absolute; width: {{$pourcentagestr}}%; height: 35px; background-color: red; margin-top: 1%; border: 1px solid black;'>
+                                @endif
                                 <h3>{{$pourcentagestr}}%</h3></div>
                             @endif
                     </div>

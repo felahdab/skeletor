@@ -10,9 +10,13 @@ STACKNAME=$(basename $PARENTDIR)
 
 ./reset_app_prefix.sh
 
-APP_PREFIX=$1
+source $PARENTDIR/.env
+echo $DOMAIN
+echo $PREFIX
 
-SED_CMD='s/APP_PREFIX=.*/APP_PREFIX='$1'/g'
+SED_CMD='s/APP_PREFIX=.*/APP_PREFIX='$PREFIX'/g'
 sed -i $SED_CMD .env
 
-mv public/assets public/assets$APP_PREFIX
+#mv public/assets public/$PREFIX
+cd public
+ln -s ./assets $PREFIX

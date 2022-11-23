@@ -80,7 +80,7 @@ class GenerateStatistics extends Command
         
         foreach ($users as $user)
         {
-            $this->info($user->displayString());
+            $this->info($user->display_name);
             $date_embarq = new Carbon($user->date_embarq);
             $date_debarq = new Carbon($user->date_debarq);
             $nb_jour_gtr = $date_debarq->diffInDays($date_embarq);

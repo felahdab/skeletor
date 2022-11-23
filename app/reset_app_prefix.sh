@@ -5,15 +5,14 @@ cd $BASEDIRECTORY
 
 PARENTDIR=$(dirname $BASEDIRECTORY)
 STACKNAME=$(basename $PARENTDIR)
-echo $BASEDIRECTORY
-echo $STACKNAME
+# echo $BASEDIRECTORY
+# echo $STACKNAME
+
+source $PARENTDIR/.env
+echo $DOMAIN
+echo $PREFIX
 
 sed -i 's/APP_PREFIX=.*/APP_PREFIX=""/g' .env
 
-ls public/ | grep asse | while read dirname 
-do
-    if [ $dirname != "assets" ]
-    then
-        mv public/$dirname public/assets
-    fi
-done
+cd public
+rm -f $PREFIX

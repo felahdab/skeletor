@@ -11,8 +11,8 @@
             <a href="{{ route('transformation.livret', $user->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
             <a href="{{ route('transformation.progression', $user->id) }}" class="btn btn-primary btn-sm">Progression</a>
             <a href="{{ route('transformation.fichebilan', $user->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
-            @can('stages.consulter')
-                <a href="{{ route('stages.consulter', [ 'marin' => $user->id]) }}" class="btn btn-danger btn-sm">Stages</a>
+            @can('users.stages')
+                <a href="{{ route('users.stages', $user->id) }}" class="btn btn-danger btn-sm">Stages</a>
             @endcan
             <a href="{{ route('transformation.index') }}" class="btn btn-default btn-sm">Annuler</a>
         @else
@@ -28,9 +28,9 @@
             style='width: 100%; height: 95%; '>
                 <thead style='border: 1px solid #C3C3C3; '>
                     <tr class='enTeteFicheSynthese'>
-                        <td colspan='2'><h1>{{$user->displayString()}}</h1></td>
+                        <td colspan='2'><h1>{{$user->display_name}}</h1></td>
                         <td></td>
-                        <td rowspan='4 '></td>
+                        <td rowspan='4 '><img src="{{url(asset('public/' . $user->photo))}}" </td>
                     </tr>
                     <tr class='enTeteFicheSynthese '>
                         <td colspan='2 ' 
@@ -51,6 +51,7 @@
                         <!-- Pourcentage transformation -->
                         <td colspan='2' class='text-right'>Taux de transformation :</td>
                         <td id='tdTauxTransformation' class='text-left'>{{substr($user->taux_de_transformation, 0, 4)}}%</td>
+                        <td></td>
                     </tr>
                     @if ($user->fonctionAQuai() != null)
                     <tr class='enTeteFicheSynthese'>
@@ -79,8 +80,8 @@
                     </tr>
                     <tr>
                         <!-- Entete fiche synthese -->
-                        <th colspan='2' class='text-center'>COMPAGNONNAGE - PRODEF</th>
-                        <th colspan='2' class='text-center'>STAGES - TP</th>
+                        <th colspan='2' class='text-center'>COMPAGNONNAGES</th>
+                        <th colspan='2' class='text-center'>STAGES</th>
                     </tr>
                 </thead>
                 <tbody>

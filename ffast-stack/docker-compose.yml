@@ -9,7 +9,7 @@ services:
              - backend
              - private
     php:
-        image: ffast-php
+        image: ffast-php:0.5
         volumes:
             - ../app:/app
         networks:
@@ -32,6 +32,13 @@ services:
            PMA_HOST: db
         networks:
           - private
+    code-editor:
+        image: codercom/code-server
+        networks:
+          - private
+        user: "1000:1002"
+        volumes:
+          - ../:/home/coder/project/
 volumes:
     mysqldata: {}
 networks:

@@ -16,6 +16,9 @@
                 <a class="dropdown-item" href="{{ route('users.index') }}">Fiches des marins</a>
                 @can('roles.index')<a class="dropdown-item" href="{{ route('roles.index')}}">Roles</a>@endcan
                 @can('permissions.index')<a class="dropdown-item" href="{{ route('permissions.index')}}">Droits d'acces</a>@endcan
+                @can('liens.index')<a class="dropdown-item" href="{{ route('liens.index')}}">Liens</a>@endcan
+                @can('historique.index')<a class="dropdown-item" href="{{ route('historique.index')}}">Historique</a>@endcan
+                @can('annudef.index')<a class="dropdown-item" href="{{ route('annudef.index')}}">Annudef</a>@endcan
               </div>
             </div>
             @endcan
@@ -30,6 +33,7 @@
                 <a class="dropdown-item" href="{{ route('taches.index')}}">Tâches</a>
                 <a class="dropdown-item" href="{{ route('objectifs.index')}}">Objectifs</a>
                 @can('stages.index')<a class="dropdown-item" href="{{ route('stages.index')}}">Stages</a>@endcan
+                <a class="dropdown-item" href="{{ route('transformation.exportparcours')}}">Exporter les parcours</a>
                 <!--a class="dropdown-item" href="{{ route('sous-objectifs.index')}}">Sous-Objectifs</a-->
               </div>
             </div>
@@ -42,7 +46,7 @@
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
                 <a class="dropdown-item" href="{{route('transformation.index')}}">Suivi de la transformation par marin</a>
                 @can('transformation.indexparfonction')<a class="dropdown-item" href="{{route('transformation.indexparfonction')}}">Suivi de la transformation par fonction</a>@endcan
-                @can('transformation.indexparstage')<a class="dropdown-item" href="{{route('stages.show', ['stage' => 1])}}">Suivi de la transformation par stage</a>@endcan
+                @can('transformation.indexparstage')<a class="dropdown-item" href="{{route('transformation.indexparstage')}}">Suivi de la transformation par stage</a>@endcan
               </div>
             </div>
             @endcan
@@ -86,7 +90,7 @@
       
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {{ auth()->user()->displayString() }}
+          {{ auth()->user()->display_name }}
           </button>
           <div class="dropdown-menu" style="position:absolute;left:-90px" aria-labelledby="dropdownMenuButton">
           @if (count(auth()->user()->roles) > 1 )

@@ -8,6 +8,6 @@
             <a href="{{ route('stages.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un stage</a>
         </div>
         
-        @livewire('stage-list', ['mode' => "gestion"])
+        @livewire('stages-table', ['mode' => "gestion"])
     </div>
 @endsection

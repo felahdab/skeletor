@@ -45,9 +45,7 @@
 
         <div style='padding-left: 15px;'>
             <div class='card-header ml-n3 mr-n4 mb-3' >Sous-objectif(s) associ&eacute;(s)</div>
-            {!! Form::open(['method' => 'POST','route' => 'sous-objectifs.multipleupdate' ]) !!}
-            <input type='hidden' name='objectif_id' id='objectif_id'  value='{{ $objectif->id }}'>
-            {!! Form::close() !!}
+            
 
             <div style='text-align: center;'>
                 {!! Form::open(['method' => 'POST','route' => 'sous-objectifs.store','style'=>'display:inline']) !!}
@@ -55,6 +53,9 @@
                 {!! Form::submit('Ajouter un nouveau sous objectif', ['class' => 'btn btn-primary btn-sm']) !!}
                 {!! Form::close() !!}
             </div>
+            {!! Form::open(['method' => 'POST','route' => 'sous-objectifs.multipleupdate' ]) !!}
+            <input type='hidden' name='objectif_id' id='objectif_id'  value='{{ $objectif->id }}'>
+            
 
             @php $count = 1 @endphp
             @foreach ($objectif->sous_objectifs()->get() as $ssobj)
@@ -100,7 +101,7 @@
             <div>
                 <button class='btn btn-primary w-100 mt-4' type='submit' id='btnmodifobjssobj' name='btnmodifobjssobj'>Enregistrer les sous objectifs associ&eacute;s</button>
             </div>
-           
+            {!! Form::close() !!}
             <!-- Cette partie contient les formulaires actives par javascript pour provoquer la suppression
             d'un sous-objectif-->
             @php $count = 1 @endphp

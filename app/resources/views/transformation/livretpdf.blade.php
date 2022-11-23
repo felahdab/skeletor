@@ -60,14 +60,12 @@
             border-collapse: collapse;
         }
         .tablecomp td, tr{
-            border: solid 1px black;
-            font-size: 10pt
+            font-size: 10pt;
         }
         .tdcomp{
             text-align: center;
             background-color : #0062cc;
             color : white;
-            /*background-color: #F2DCDB;  */    
             height:30px;
         }
         .trlache{
@@ -94,6 +92,14 @@
         .w-25{width: 25%;}
         .w-35{width: 35%;}
         .w-50{width: 50%;}
+        /*bordures*/
+        .4bords {
+            border: solid 1px black;
+        }
+        .bt{border-top: solid 1px black;}
+        .bb{border-bottom: solid 1px black;}
+        .bl{border-left: solid 1px black;}
+        .br{border-right: solid 1px black;}
         .tablenote{
             text-align: center;
             width: 210mm;
@@ -146,7 +152,7 @@
             <td colspan='2' class='titrelivret'>LIVRET DE<br>TRANSFORMATION</td>
         </tr>
         <tr>
-            <td colspan='2' class='nom'>{{$user->displayString()}}</td>
+            <td colspan='2' class='nom'>{{$user->display_name}}</td>
         </tr>
         <tr class='h-20'>
             <td>Sp&eacute;cialit&eacute; : {{ $user->displaySpecialite() }}</td>
@@ -255,9 +261,9 @@
                 </tr>
                 @foreach ($user->stages()->get() as $stage)
                     <tr>
-                        <td class='colcompstage'>{{ $stage->stage_libcourt}}</td>
-                        <td class='colcompstage'>{{ $stage->pivot->date_validation == null ? "NON VALIDE" : "VALIDE" }}</td>
-                        <td class='colcompstage'>{{ $stage->pivot->date_validation == null ? "" : $stage->pivot->date_validation }}</td>
+                        <td class='colcompstage br bl bt bb'>{{ $stage->stage_libcourt}}</td>
+                        <td class='colcompstage br bl bt bb'>{{ $stage->pivot->date_validation == null ? "NON VALIDE" : "VALIDE" }}</td>
+                        <td class='colcompstage br bl bt bb'>{{ $stage->pivot->date_validation == null ? "" : $stage->pivot->date_validation }}</td>
                     </tr>
                 @endforeach
             </table>
@@ -269,49 +275,65 @@
 @foreach ($user->fonctions()->get() as $fonction)
     <bookmark content='{{$fonction->fonction_libcourt}}'  level='0' />
     <table class='tablecomp'>
-        <tr>
+        <tr class="4bords">
             <td colspan='6' class='titrefonction'>{{$fonction->fonction_libcourt}}</td>
         </tr>
     @foreach ($fonction->compagnonages()->get() as $comp)
 
         <bookmark content='{{$comp->comp_libcourt}}'  level='1' />
-        <tr>
+        <tr class="4bords">
             <td colspan='6' class='tdcomp'><strong>{{$comp->comp_libcourt}}</strong></td>
         </tr>
-        <tr>
-            <td class='tdcomp w-15' >Tâche</td>
-            <td class='tdcomp w-25'>Objectif</td>
-            <td class='tdcomp w-35'>Détail du compagnonnage</td>
-            <td class='tdcomp w-5'>Durée (j)</td>
-            <td class='tdcomp w-15'>Date <br>Valideur</td>
-            <td class='tdcomp w-5'>Lieu form.</td>
+        <tr class="4bords">
+            <td class='tdcomp w-15 br' >Tâche</td>
+            <td class='tdcomp w-25 br'>Objectif</td>
+            <td class='tdcomp w-35 br'>Détail du compagnonnage</td>
+            <td class='tdcomp w-5 br'>Durée (j)</td>
+            <td class='tdcomp w-15 br'>Date <br>Valideur</td>
+            <td class='tdcomp w-5 '>Lieu form.</td>
         </tr>
+        @php
+            $libtachsauv=""; 
+            $libobjsauv="";
+        @endphp
         @foreach ($comp->taches()->get() as $tache)
-            @php
-            $nbssobjtach=$tache->nb_ssobj();
-            @endphp
-            <tr>
-                <td rowspan='{{$nbssobjtach}}' class='ta-l va-t'> {{$tache->tache_libcourt}}</td>
             @foreach ($tache->objectifs()->get() as $objectif)
-                @if ( !$loop->first)
-                    <tr>
-                @endif
-                <td rowspan='{{$objectif->sous_objectifs()->get()->count()}}' class='ta-l va-t'>{{$objectif->objectif_libcourt}}</td>
                 @foreach ($objectif->sous_objectifs()->get() as $ssobj)
-                    @if ( !$loop->first)
-                        <tr>
-                    @endif
-                    <td class='ta-l va-t h-20'>{{$ssobj->ssobj_lib}} (coef :{{$ssobj->ssobj_coeff}})</td>
-                        <td>{{$ssobj->ssobj_duree}}</td>
-                        <td>
-                        @if ($user->aValideLeSousObjectif($ssobj))
-                            {{ $user->sous_objectifs()->find($ssobj)->pivot->date_validation }}
-                        @endif 
-                        <br>
-                        @if ($user->aValideLeSousObjectif($ssobj))
-                            {{ $user->sous_objectifs()->find($ssobj)->pivot->valideur }}
-                        @endif</td>
-                        <td>{{$ssobj->lieu()->get()->first()->lieu_libcourt}}</td>
+                    <tr>
+                        @php
+                            $libtach=$tache->tache_libcourt;
+                        @endphp
+                        @if ($libtach!=$libtachsauv)
+                            <td class='ta-l va-t  w-15 br bl bt'>{{$tache->tache_libcourt}}</td>
+                        @else
+                            <td class='ta-l va-t  w-15 br bl'>&nbsp;</td>
+                        @endif
+                        @php
+                            $libtachsauv=$libtach;
+                        @endphp
+                        @php
+                            $libobj=$objectif->objectif_libcourt;
+                        @endphp
+                        @if ($libobj!=$libobjsauv)
+                            <td class='ta-l va-t w-25 br bt'>{{$libobj}}</td>
+                        @else
+                            <td class='ta-l va-t w-25 br'>&nbsp;</td>
+                        @endif
+                        @php
+                            $libobjsauv=$libobj;
+                        @endphp
+                        <td class="ta-l va-t h-20 w-35 4bords">{{$ssobj->ssobj_lib}} (coef :{{$ssobj->ssobj_coeff}})</td>
+                        <td class="w-5 4bords">{{$ssobj->ssobj_duree}}</td>
+                        <td class="w-15 4bords">
+                            @if ($user->aValideLeSousObjectif($ssobj))
+                                {{ $user->sous_objectifs()->find($ssobj)->pivot->date_validation }}
+                            @endif 
+                            <br>
+                            @if ($user->aValideLeSousObjectif($ssobj))
+                                {{ $user->sous_objectifs()->find($ssobj)->pivot->valideur }}
+                            @endif
+                        </td>
+                        <td class="w-5 4bords">{{$ssobj->lieu()->get()->first()->lieu_libcourt}}</td>
                     </tr>
                 @endforeach
             @endforeach
@@ -319,44 +341,44 @@
     @endforeach
     @if ($fonction->fonction_double)
             <tr class='trlache'>
-            <td class='h-30'>DOUBLE</td>
-            <td colspan='2'>
+            <td class='h-30 4bords'>DOUBLE</td>
+            <td colspan='2' class="4bords">
             @if($fonction->pivot->date_double != null)
                 {{ $fonction->pivot->commentaire_double }}
             @endif
             </td>
-            <td>
+            <td class="4bords">
             @if($fonction->pivot->date_double != null)
                 {{ $fonction->pivot->date_double }}
             @endif
             </td>
-            <td>
+            <td class="4bords">
             @if($fonction->pivot->date_double != null)
                 {{ $fonction->pivot->valideur_double }}
             @endif
             </td>
-            <td>Bord</td>
+            <td class="4bords">Bord</td>
             </tr>
     @endif
     @if ($fonction->fonction_lache)
             <tr class='trlache'>
-            <td class='h-30'>L&Acirc;CHER</td>
-            <td colspan='2'>
+            <td class='h-30 4bords'>L&Acirc;CHER</td>
+            <td colspan='2' class="4bords">
             @if($fonction->pivot->date_lache != null)
                 {{ $fonction->pivot->commentaire_lache }}
             @endif
             </td>
-            <td>
+            <td class="4bords">
             @if($fonction->pivot->date_lache != null)
                 {{ $fonction->pivot->date_lache }}
             @endif
             </td>
-            <td>
+            <td class="4bords">
             @if($fonction->pivot->date_lache != null)
                 {{ $fonction->pivot->valideur_lache }}
             @endif
             </td>
-            <td>Bord</td>
+            <td class="4bords">Bord</td>
             </tr>
     @endif
     </table>
