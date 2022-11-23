@@ -3,29 +3,8 @@
 @section('content')
     <div class="bg-light p-4 rounded">
         <h1>Attribution des fonctions à l'utilisateur</h1>
-        <div class='card-header' > Utilisateur </div>
-            <div style='padding-left: 15px;'>
-                <div class='form-group row' >
-                    <label for='fonction[fonction_libcourt]' class='col-sm-5 col-form-label'> Nom</label>
-                    <div class='col-sm-5'>
-                        <input type='text' 
-                        class='form-control'  
-                        name='nom' 
-                        id='nom' 
-                        value="{{ $user->name }}" >
-                    </div>
-                </div>
-                <div class='form-group row' >
-                    <label for='fonction[fonction_libcourt]' class='col-sm-5 col-form-label'> Prénom</label>
-                    <div class='col-sm-5'>
-                        <input type='text' 
-                        class='form-control'  
-                        name='prenom' 
-                        id='prenom' 
-                        value="{{ $user->prenom }}" >
-                    </div>
-                </div>
-            </div>
+        <h3>{{ $user->display_name }}</h3>
+            
         <div class="container mt-4">
             <div style='padding-left: 15px;'>
                 <div class='card-header ml-n3 mr-n4 mb-3' >Fonction(s) attribu&eacute;e(s)</div>
