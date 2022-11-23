@@ -5,6 +5,9 @@ namespace App\Http\Livewire;
 use App\Models\User;
 use App\Models\Grade;
 use App\Models\Diplome;
+use App\Models\Specialite;
+use App\Models\Service;
+use App\Models\Groupement;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -70,7 +73,7 @@ class UsersTable extends DataTableComponent
                 ->searchable(),
             Column::make('Brevet', 'diplome.diplome_libcourt')
                 ->searchable(),
-            Column::make('Specialité', 'specialite.specialite_libcourt')
+            Column::make('Spécialité', 'specialite.specialite_libcourt')
                 ->searchable(),
             Column::make('ID', 'id')
                 ->sortable()
@@ -182,6 +185,36 @@ class UsersTable extends DataTableComponent
                         $diplome = Diplome::where('diplome_libcourt', 'like', '%' . $value . '%')->get()->first();
                         if ($diplome != null)
                             $builder->where('diplome_id', $diplome->id);
+                }),
+            TextFilter::make('Spé')
+                ->config([
+                    'placeholder' => 'SECNAV...',
+                    'maxlength'   => 15
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $specialite = Specialite::where('specialite_libcourt', 'like', '%' . $value . '%')->get()->first();
+                        if ($specialite != null)
+                            $builder->where('specialite_id', $specialite->id);
+                }),
+            TextFilter::make('Service')
+                ->config([
+                    'placeholder' => 'LAS...',
+                    'maxlength'   => 5
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $service = Service::where('service_libcourt', 'like', '%' . $value . '%')->get()->first();
+                        if ($service != null)
+                            $builder->where('service_id', $service->id);
+                }),
+            TextFilter::make('Gpmt')
+                ->config([
+                    'placeholder' => 'NAV...',
+                    'maxlength'   => 5
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $gpmt = Groupement::where('groupement_libcourt', 'like', '%' . $value . '%')->get()->first();
+                        if ($gpmt != null)
+                            $builder->where('groupement_id', $gpmt->id);
                 }),
             SelectFilter::make('Comete')
                 ->options([
