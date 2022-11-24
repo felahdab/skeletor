@@ -4,7 +4,7 @@
     <div class="bg-light p-4 rounded">
         <h1>Transformation</h1>
         <div class="lead">
-            Fiche bilan de {{$user->prenom}} {{$user->name}}
+            Fiche bilan de {{$user->display_name}}
         </div>
         
         @if($readwrite)
@@ -16,7 +16,7 @@
             @endcan
             <a href="{{ route('transformation.index') }}" class="btn btn-default btn-sm">Annuler</a>
         @else
-             <a href="{{ route('transformation.monlivret') }}" class="btn btn-warning btn-sm">Mon livret de transformation</a>
+            <a href="{{ route('transformation.monlivret') }}" class="btn btn-warning btn-sm">Mon livret de transformation</a>
             <a href="{{ route('transformation.maprogression') }}" class="btn btn-primary btn-sm">Ma progression</a>
             <a href="{{ route('transformation.mafichebilan') }}" class="btn btn-secondary btn-sm">Ma fiche bilan</a>
         @endif
@@ -31,11 +31,6 @@
                         <td colspan='2'><h1>{{$user->display_name}}</h1></td>
                         <td></td>
                         <td rowspan='4 '><img src="{{url(asset('public/' . $user->photo))}}" </td>
-                    </tr>
-                    <tr class='enTeteFicheSynthese '>
-                        <td colspan='2 ' 
-                        class='text-right'>Grade :</td>
-                        <td>{{ $user->displayGrade() }}</td>
                     </tr>
 
                     <tr class='enTeteFicheSynthese '>
