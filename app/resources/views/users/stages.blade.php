@@ -2,9 +2,18 @@
 
 @section('content')
     <div class="bg-light p-4 rounded">
-        <h2>Stages - {{$marin->display_name}}</h2>
-    </div>
-    
+        <h1>Transformation</h1>
+        <div class="lead">
+            Stages de {{$marin->display_name}}
+        </div>
+        <div class='mt-2'> 
+            <a href="{{ route('transformation.livret', $marin->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
+            <a href="{{ route('transformation.progression', $marin->id) }}" class="btn btn-primary btn-sm">Progression</a>
+            <a href="{{ route('transformation.fichebilan', $marin->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
+            <a href="{{ route('users.stages', $marin->id) }}" class="btn btn-danger btn-sm">Stages</a>
+            <a href="{{ route('transformation.index') }}" class="btn btn-default btn-sm">Annuler</a>
+        </div>
+   
     <div x-data="{stageid : null , 
                 commentaire : null , 
                 libstage : null ,
@@ -14,15 +23,7 @@
                 opendivvalidcomment : false }">
 
         <div id='divconsultstage' class='card bg-light ml-3 w-100'>
-            <div class='card-header'>Consultation des stages pour {{$marin->display_name}}</div>
             @if ( $marin != null)
-            <div class='mt-2 mb-2'> 
-                <a href="{{ route('transformation.livret', $marin->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
-                <a href="{{ route('transformation.progression', $marin->id) }}" class="btn btn-primary btn-sm">Progression</a>
-                <a href="{{ route('transformation.fichebilan', $marin->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
-                <a href="{{ route('users.stages', $marin->id) }}" class="btn btn-danger btn-sm">Stages</a>
-                <a href="{{ route('transformation.index') }}" class="btn btn-default btn-sm">Annuler</a>
-            </div>
             <div class='mt-2 mb-2' style='margin-left:50%; text-align: center;'> </div>
 
             <div x-data='{ selectstage : false }'>
@@ -91,6 +92,5 @@
             </div>
             @endif
         </div>
-        {!! link_to_route('transformation.index', 'Annuler', [], ['class' => 'btn btn-primary']) !!}
     </div>
 @endsection

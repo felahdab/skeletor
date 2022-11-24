@@ -36,7 +36,7 @@
                             @endcan
                         @elseif($mode == 'transformation')
                             <a href="{{ route('fonctions.choixmarins', $fonction->id) }}" class="btn btn-info btn-sm">Validation collective</a>
-                            <a href="{{ route('fonctions.listemarinsfonction', $fonction->id) }}" class="btn btn-primary btn-sm">Liste des marins ayant cette fonction</a>
+                            <a href="{{ route('fonctions.listemarinsfonction', $fonction->id) }}" class="btn btn-primary btn-sm">Liste marins</a>
                         @endif
                         </td>
                     </tr>

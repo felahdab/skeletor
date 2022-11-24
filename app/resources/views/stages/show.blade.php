@@ -163,6 +163,6 @@
         {!! Form::close() !!}
         @endif
     </div>
-    {!! link_to_route('transformation.indexparstage', 'Annuler', [], ['class' => 'btn btn-primary']) !!}
+        <a href="{{ url()->previous() }}" class="btn btn-primary btn-sm">Annuler</a>
 </div>
 @endsection

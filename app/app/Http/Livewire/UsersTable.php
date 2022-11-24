@@ -5,6 +5,9 @@ namespace App\Http\Livewire;
 use App\Models\User;
 use App\Models\Grade;
 use App\Models\Diplome;
+use App\Models\Specialite;
+use App\Models\Service;
+use App\Models\Groupement;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -24,12 +27,8 @@ class UsersTable extends DataTableComponent
     public function builder(): Builder
     {
         switch ($this->mode){
-            // case "stages" :
-                // $userlist = $this->stage->users()->get()->pluck('id', 'id');
-                // return User::query()->whereIn('users.id', $userlist);
-                // break;
             case "listmarin" :
-                $userlist = User::query()->join('user_fonction','users.id','=','user_id')->Where('fonction_id', $this->fonction->id)->get()->pluck('id', 'id');
+                $userlist = User::query()->join('user_fonction','users.id','=','user_id')->Where('fonction_id', $this->fonction->id)->get()->pluck('user_id', 'id');
                 return User::query()->whereIn('users.id', $userlist);
                 break;
             default :
@@ -57,9 +56,6 @@ class UsersTable extends DataTableComponent
             case "transformation" :
                 return view('tables.userstable.transformation');
                 break;
-            // case "stages" :
-                // return view('tables.userstable.stages');
-                // break;
         }
     }
 
@@ -70,7 +66,7 @@ class UsersTable extends DataTableComponent
                 ->searchable(),
             Column::make('Brevet', 'diplome.diplome_libcourt')
                 ->searchable(),
-            Column::make('Specialité', 'specialite.specialite_libcourt')
+            Column::make('Spécialité', 'specialite.specialite_libcourt')
                 ->searchable(),
             Column::make('ID', 'id')
                 ->sortable()
@@ -130,22 +126,6 @@ class UsersTable extends DataTableComponent
                             ),
                 ]);
                 break;
-            // case "stages" :
-                // return array_merge($basecolumns , [
-                    // BooleanColumn::make("Validé", "id")
-                        // ->setCallback(function(string $value, $row){
-                            // return $row->aValideLeStage($this->stage);
-                        // }),
-                    // Column::make('Date de validation')
-                        // ->searchable()
-                        // ->label(
-                            // fn($row, Column $column) => $row->dateValidationDuStage($this->stage)),
-                    // Column::make('Actions')
-                        // ->label(
-                            // fn($row, Column $column) => $this->userActions()->withRow($row)
-                            // ),
-                // ]);
-                // break;
             case "listmarin" :
                 return array_merge($basecolumns , [
                     Column::make('Tx transfo')
@@ -182,6 +162,36 @@ class UsersTable extends DataTableComponent
                         $diplome = Diplome::where('diplome_libcourt', 'like', '%' . $value . '%')->get()->first();
                         if ($diplome != null)
                             $builder->where('diplome_id', $diplome->id);
+                }),
+            TextFilter::make('Spé')
+                ->config([
+                    'placeholder' => 'SECNAV...',
+                    'maxlength'   => 15
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $specialite = Specialite::where('specialite_libcourt', 'like', '%' . $value . '%')->get()->first();
+                        if ($specialite != null)
+                            $builder->where('specialite_id', $specialite->id);
+                }),
+            TextFilter::make('Service')
+                ->config([
+                    'placeholder' => 'LAS...',
+                    'maxlength'   => 5
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $service = Service::where('service_libcourt', 'like', '%' . $value . '%')->get()->first();
+                        if ($service != null)
+                            $builder->where('service_id', $service->id);
+                }),
+            TextFilter::make('Gpmt')
+                ->config([
+                    'placeholder' => 'NAV...',
+                    'maxlength'   => 5
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $gpmt = Groupement::where('groupement_libcourt', 'like', '%' . $value . '%')->get()->first();
+                        if ($gpmt != null)
+                            $builder->where('groupement_id', $gpmt->id);
                 }),
             SelectFilter::make('Comete')
                 ->options([
