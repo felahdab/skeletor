@@ -13,3 +13,4 @@ chmod -R o+rwx storage/debugbar
 chmod -R o+rwx storage/framework
 chmod -R o+rwx bootstrap/cache
 chmod -R o+rwx vendor/mpdf/mpdf/tmp
+chmod o+rwx storage/app/public/photos/
