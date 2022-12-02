@@ -115,7 +115,11 @@ class SpecialiteSeeder extends Seeder
             [96, 'SCSIC', ''],
             [97, 'IETA', ''],
             [98, 'ARMES-EQUIPEMENT', ''],
-            [99, 'MOMACHINE', '']
+            [99, 'MOMACHINE', ''],
+            [100, 'SYNUM', ''],
+            [101, 'RECOM', ''],
+            [102, 'OPS/3D', ''],
+            [103, 'OPS/DEM', ''],
             ];
         foreach ($records as $record){
             DB::insert('insert into specialites (id, specialite_libcourt, specialite_liblong) values (?, ?, ?)', $record);
