@@ -83,6 +83,7 @@ class User extends Authenticatable
 
     public function scopeLocal($query)
     {
+        return;
         $currentuser = auth()->user();
         if ($currentuser != null)
         {
