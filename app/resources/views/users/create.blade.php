@@ -134,7 +134,7 @@
                             <label for="unite_destination_id" class="form-label">Unité destination (informatif uniquement)</label>
                             <select class="form-control" 
                                 name="unite_destination_id" >
-                                <option value="0">Unité destination</option>
+                                <option value="">Unité destination</option>
                                 @foreach($unites as $unite)
                                     <option value="{{ $unite->id }}">
                                         {{ $unite->unite_liblong }}
