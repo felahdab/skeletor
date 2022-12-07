@@ -6,7 +6,11 @@
         
         @if (auth()->user()->secteur_id != 0)
             <div class="lead">
+        @if (auth()->user()->hasRole("em"))
+                Liste des marins en transformation par entité
+        @else
                 Liste des marins en transformation dans le service {{ $currentuser->displayService() }}
+        @endif
             </div>
             <div style="text-align: right;">
                 Cliquez sur un marin pour afficher son livret de transformation

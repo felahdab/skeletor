@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Grade;
 use App\Models\Diplome;
 use App\Models\Secteur;
+use App\Models\Service;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -35,17 +36,31 @@ class StattuteurTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $service_id=auth()->user()->service->id;
+        $currentuser=auth()->user();
+        $service_id=$currentuser->service->id;
         
-        return User::query()
-                  ->join ('secteurs', 'secteurs.id', '=', 'users.secteur_id')
-                  ->where('secteurs.service_id', $service_id)
-                  ->WhereExists(function($maquery){
-                      $maquery->select ('id')
-                                ->from ('user_fonction')
-                                ->whereColumn('user_fonction.user_id', 'users.id')
-                  ;})
-                 ;
+        if ($currentuser->hasRole("em")) {
+            return User::query()
+                      ->join ('secteurs', 'secteurs.id', '=', 'users.secteur_id')
+                      ->WhereExists(function($maquery){
+                          $maquery->select ('id')
+                                    ->from ('user_fonction')
+                                    ->whereColumn('user_fonction.user_id', 'users.id')
+                      ;})
+                     ;
+        }
+        else
+        {
+            return User::query()
+                      ->join ('secteurs', 'secteurs.id', '=', 'users.secteur_id')
+                      ->where('secteurs.service_id', $service_id)
+                      ->WhereExists(function($maquery){
+                          $maquery->select ('id')
+                                    ->from ('user_fonction')
+                                    ->whereColumn('user_fonction.user_id', 'users.id')
+                      ;})
+                     ;
+        }
     }
 
     public function columns(): array
@@ -98,7 +113,9 @@ class StattuteurTable extends DataTableComponent
     }
     public function filters(): array
     {
-        return [
+        $currentuser=auth()->user();
+        
+        $filter = [
              TextFilter::make('Secteur')
                 ->config([
                     'placeholder' => 'RESEAU...',
@@ -108,17 +125,27 @@ class StattuteurTable extends DataTableComponent
                         $secteur = Secteur::where('secteur_libcourt', 'like', '%' . $value . '%')->get()->first();
                         if ($secteur != null)
                             $builder->where('secteur_id', $secteur->id);
-                }),
-            // TextFilter::make('Fonction')
-                // ->config([
-                    // 'placeholder' => 'GRADE...',
-                    // 'maxlength'   => 15
-                    // ])
-                // ->filter(function(Builder $builder, string $value) {
-                        // $fonction = Fonction::where('fonction_libcourt', 'like', '%' . $value . '%')->get()->first();
-                        // if ($fonction != null)
-                            // $builder->where('fonction_id', $fonction->id);
-                // })
-        ];
+                })
+                ];
+                
+        if ($currentuser->hasRole("em")){
+            $servicefilter = [ TextFilter::make('Service')
+                ->config([
+                    'placeholder' => 'SIC...',
+                    'maxlength'   => 10
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $service = Service::where('service_libcourt', 'like', '%' . $value . '%')->get()->first();
+                        if ($service != null)
+                            $secteurs = $service->secteurs()->get()->pluck('id');
+                            $builder->whereIn('secteur_id', $secteurs);
+                })
+                ];
+                
+            $filter = array_merge($filter, $servicefilter);
+        }
+        
+        return $filter;
+           
     }
 }
