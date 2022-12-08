@@ -241,7 +241,7 @@ return [
      | from trying to overcome bugs like this: http://trac.nginx.org/nginx/ticket/97
      |
      */
-    'route_prefix' => env('APP_PREFIX') . '/_debugbar',
+    'route_prefix' => env('APP_PREFIX')== '' ? '_debugbar':  env('APP_PREFIX') . '/_debugbar',
 
     /*
      |--------------------------------------------------------------------------

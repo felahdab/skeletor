@@ -35,7 +35,7 @@ return [
     */
 
     'route' => [
-        'prefix' => env('APP_PREFIX') . '/terminal',
+        'prefix' => env('APP_PREFIX')== '' ? 'terminal':  env('APP_PREFIX') . '/terminal',
         'as' => 'terminal.',
         'middleware' => ['web', 'auth', 'permission'],
     ],

@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'asset_url' => '/' . env('APP_PREFIX'),
+    'asset_url' => env('APP_PREFIX')== '' ? env('APP_PREFIX'):  '/' . env('APP_PREFIX'),
 
     /*
     |--------------------------------------------------------------------------
@@ -68,7 +68,7 @@ return [
     |
     */
 
-    'app_url' => '/' . env('APP_PREFIX'),
+    'app_url' => env('APP_PREFIX')== '' ? env('APP_PREFIX'):  '/' . env('APP_PREFIX'),
 
     /*
     |--------------------------------------------------------------------------
