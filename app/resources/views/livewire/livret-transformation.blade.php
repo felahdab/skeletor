@@ -15,7 +15,12 @@
                     selected_objectifs : [],
                     selected_sous_objectifs : [],
                     selected_marins : []
-                       }">
+                       }"
+                       
+                    x-on:resetselection.window="selected_taches = [];
+                    selected_objectifs = [];
+                    selected_sous_objectifs = [];
+                    selected_marins = [];">
     
         @if($readwrite)
             <!-- div avec boutons generaux -->

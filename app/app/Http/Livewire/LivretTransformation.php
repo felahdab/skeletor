@@ -91,6 +91,7 @@ class LivretTransformation extends Component
             $sous_objectif = SousObjectif::find($ssobjid);
             $user->ValidateSousObjectif($sous_objectif, $date_validation , $commentaire, $valideur);
         }
+        $this->dispatchBrowserEvent("resetselection");
     }
     
      public function ValideElementsDuParcoursMultiple($users = null, 
@@ -146,5 +147,6 @@ class LivretTransformation extends Component
             $sous_objectif = SousObjectif::find($ssobjid);
             $user->UnValidateSousObjectif($sous_objectif);
         }
+        $this->dispatchBrowserEvent("resetselection");
     }
 }

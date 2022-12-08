@@ -485,11 +485,17 @@ class User extends Authenticatable
         
     public function ValidateSousObjectif(SousObjectif $sous_objectif, $date_validation , $commentaire, $valideur)
     {
-        $this->sous_objectifs()->attach($sous_objectif, [
-            'valideur'=> $valideur,
-            'commentaire'=> $commentaire,
-            'date_validation' => $date_validation,
-        ]);
+        $ssobj = $this->sous_objectifs()->find($sous_objectif);
+        if ($ssobj != null){
+        
+        }
+        else{
+            $this->sous_objectifs()->attach($sous_objectif, [
+                'valideur'=> $valideur,
+                'commentaire'=> $commentaire,
+                'date_validation' => $date_validation,
+            ]);
+        }
         $event_detail = [
             "sous_objectif" => $sous_objectif,
             "commentaire" => $commentaire,
