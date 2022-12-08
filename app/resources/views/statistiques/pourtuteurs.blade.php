@@ -16,7 +16,11 @@
                 Cliquez sur un marin pour afficher son livret de transformation
             </div>
             <div class="mt-3">
-                <livewire:stattuteur-table>
+            @if (isset($service))
+                @livewire('stattuteur-table', ['service' => $service ])
+            @else
+                @livewire('stattuteur-table')
+            @endif
             </div>        
         @else
             <div class="lead">

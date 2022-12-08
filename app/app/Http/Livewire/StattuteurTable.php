@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Builder;
 class StattuteurTable extends DataTableComponent
 {
     protected $model = User::class;
+    
+    public $service;
 
     public function configure(): void
     {
@@ -32,6 +34,10 @@ class StattuteurTable extends DataTableComponent
         $this->setPaginationStatus(false);
         $this->setFilterLayoutSlideDown();
         $this->setDefaultSort('name', 'asc');
+        
+        if ($this->service){
+            $this->setFilter('service', $this->service->service_libcourt);
+        }
     }
 
     public function builder(): Builder

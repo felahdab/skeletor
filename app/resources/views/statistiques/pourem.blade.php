@@ -12,8 +12,9 @@
                         <th>Nb transfo</th>
                     </tr>
                     @foreach($services as $service)
+                    
                     <tr>
-                        <td>{{$service->service_libcourt}}</td>
+                        <td><a href="{{route ('statistiques.parservice', $service ) }}">{{$service->service_libcourt}}</a></td>
                         <td>@php
                                 $service_id = $service->id;
                                 $serviceusers = $users->where('secteur.service_id', $service_id);
@@ -22,6 +23,7 @@
                             {{$activeusers->count()}}
                         </td>
                     </tr>
+                    
                     @endforeach
                 </table>
             </div>
@@ -36,7 +38,7 @@
                         <tr title='@foreach($fonction->users()->get() as $marin)
                             {!! $marin->display_name . "(" . substr($marin->pourcentage_valides_pour_fonction($fonction), 0, 4) . ")" !!}
                         @endforeach'>
-                            <td>{{$fonction->fonction_libcourt}}</td>
+                            <td><a href="{{route ('fonctions.listemarinsfonction', $fonction->id ) }}">{{$fonction->fonction_libcourt}}</a></td>
                             <td>{{$fonction->users()->count()}}</td>
                             <td>{{$fonction->users()->get()->whereNotNull('pivot.date_lache')->count()}}</td>
                         </tr>

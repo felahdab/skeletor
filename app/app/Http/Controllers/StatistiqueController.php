@@ -45,6 +45,13 @@ class StatistiqueController extends Controller
         return $view;
     }
     
+    public function parservice(Service $service)
+    {
+        $currentuser = auth()->user();
+        $view = view('statistiques.pourtuteurs', ['currentuser' => $currentuser, 'service'=> $service]); 
+        return $view;
+    }
+    
     public function pourem()
     {
         

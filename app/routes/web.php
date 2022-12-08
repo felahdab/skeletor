@@ -125,6 +125,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         
         Route::get('statistiques/', 'StatistiqueController@index')->name('statistiques.index');
         Route::get('statistiques/pourtuteurs', 'StatistiqueController@pourtuteurs')->name('statistiques.pourtuteurs');
+        Route::get('statistiques/parservice/{service}', 'StatistiqueController@parservice')->name('statistiques.parservice');
         Route::get('statistiques/pourem', 'StatistiqueController@pourem')->name('statistiques.pourem');
         Route::get('statistiques/pour2ps', 'StatistiqueController@pour2ps')->name('statistiques.pour2ps');
 
