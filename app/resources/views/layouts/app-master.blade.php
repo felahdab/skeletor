@@ -1,4 +1,30 @@
 <!doctype html>
+@if ( (Browser::browserFamily() == "Firefox" and Browser::browserVersionMajor() < 60) 
+       or (Browser::browserFamily() == "Internet Explorer" and Browser::browserVersionMajor() <= 11)  )
+
+    <html lang="en">
+    <head>
+    <title>FFAST</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="{!! asset('assets/images/favicon-32x32.png') !!}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{!! asset('assets/images/favicon-16x16.png') !!}">
+</head>
+<body>
+<div><center><h1>Bienvenue sur FFAST !</h1></center></div>
+<div>
+    <img src='{!! asset("assets/images/InsigneEscouade.jpg") !!}' alt="Logo de l'escouade" style="height:450px; display: block; margin-left:auto; margin-right: auto; ">
+</div>
+<div>
+<center>
+Votre navigateur est trop ancien pour utiliser les fonctionnalités de FFAST.<p>
+Veuillez le mettre à jour.<p>
+Vous avez également la possibilité de télécharger directement une version portable de Firefox vous permettant d'utiliser FFAST: <p>
+<a href="{!! asset('assets/20221208_NP_GTR_Toulon_FirefoxPortable_pour_FFAST.zip') !!}">Firefox Portable</a>
+</center>
+</body>
+</html>
+@else
+
+
 <html lang="en">
     <head>
     <meta charset="utf-8">
@@ -40,28 +66,12 @@
 <body>
     
     @include('layouts.partials.messages')
-
-    @if (false)
+    @include('layouts.partials.navbar')
+    @include('layouts.partials.bugreport')
     
-        @include('layouts.partials.bugreport')
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-2 bg-light">
-                    @include('layouts.partials.sidebar')
-                </div>
-                <div class="col-sm-10">
-                    @yield('content')
-                </div>
-            </div>
-        </div>
-    @else
-        @include('layouts.partials.navbar')
-        @include('layouts.partials.bugreport')
-        <main class="container">
-            @yield('content')
-        </main>
-        
-    @endif
+    <main class="container">
+        @yield('content')
+    </main>
      
     @livewireScripts
     <script src="{!! asset('assets/js/alpine.js') !!}"></script>
@@ -71,3 +81,5 @@
 
   </body>
 </html>
+
+@endif
