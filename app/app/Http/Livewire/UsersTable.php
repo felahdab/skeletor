@@ -132,6 +132,9 @@ class UsersTable extends DataTableComponent
                         ->label(
                             fn($row, Column $column) => $row->pourcentage_valides_pour_fonction($this->fonction, true)),
                 // ne fonctionne pas avec false car renvoie null. ???????
+                    Column::make('Laché')
+                        ->label(
+                            fn($row, Column $column) => $row->fonctions()->find($this->fonction)->pivot->date_lache ),
                 ]);
                 break;
             default :
@@ -142,7 +145,7 @@ class UsersTable extends DataTableComponent
     
     public function filters(): array
     {
-        return [
+        $basefilters= [
              TextFilter::make('Grade')
                 ->config([
                     'placeholder' => 'SM...',
@@ -222,5 +225,7 @@ class UsersTable extends DataTableComponent
                     }
                 }),
         ];
+        
+        return $basefilters;
     }
 }
