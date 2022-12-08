@@ -29,16 +29,20 @@
                         </div>
                         <div class='flex'><canvas id='global_canvas' style='width:100%;'></canvas></div>
                         <script>
+                        @php
+                            $historique = $user->historique_validation_sous_objectifs_cumulatif();
+                        @endphp
+                        
                             var ctx = document.getElementById('global_canvas');
                             var chart = new Chart(ctx, {
                                 type: 'line',
                                 data: {
-                                    labels: {!! '["'. implode('","', array_keys($user->historique_validation_sous_objectifs_cumulatif())) .'"]' !!},
+                                    labels: {!! '["'. implode('","', array_keys( $historique )) .'"]' !!},
                                     datasets: [{
                                         label: ' Nb sous-objectifs réalisés',
                                         backgroundColor: 'rgba(50,108,172,0.4)',
                                         borderColor: 'rgb(242,223,205)',
-                                        data: {{ "[". implode(",", array_values($user->historique_validation_sous_objectifs_cumulatif())) ."]"}}
+                                        data: {{ "[". implode(",", array_values( $historique )) ."]"}}
                                     }]
                                 },
                                 options: {
@@ -133,19 +137,26 @@
                             <h1>{{$fonction->fonction_libcourt}}</h1>
                         </div>
                         <div class='flex'>
+                        @php
+                            $collssobj = $fonction->coll_sous_objectifs();
+                            $collssobjcount = $collssobj->count();
+                        @endphp
                         <canvas id='fonc{{$fonction->id}}' 
-                        style='width:100%; display:{{ $fonction->coll_sous_objectifs()->count()==0 ? "none" : ""}}'></canvas></div>
+                        style='width:100%; display:{{ $collssobjcount == 0 ? "none" : ""}}'></canvas></div>
                         <script>
+                            @php
+                                $historique = $user->historique_validation_sous_objectifs_cumulatif($fonction);
+                            @endphp
                             var ctx = document.getElementById('fonc{!!$fonction->id!!}');
                             var chart = new Chart(ctx, {
                                 type: 'line',
                                 data: {
-                                    labels: {!! '["'. implode('","', array_keys($user->historique_validation_sous_objectifs_cumulatif($fonction))) .'"]' !!},
+                                    labels: {!! '["'. implode('","', array_keys( $historique )) .'"]' !!},
                                     datasets: [{
                                         label: ' Nb sous-objectifs réalisés',
                                         backgroundColor: 'rgba(50,108,172,0.4)',
                                         borderColor: 'rgb(242,223,205)',
-                                        data: {{ "[". implode(",", array_values($user->historique_validation_sous_objectifs_cumulatif($fonction))) ."]"}}
+                                        data: {{ "[". implode(",", array_values( $historique )) ."]"}}
                                     }]
                                 },
                                 options: {
@@ -153,7 +164,7 @@
                                     scales: {
                                         yAxes: [{
                                             ticks: {
-                                                max: {{ $fonction->coll_sous_objectifs()->count() }},
+                                                max: {{ $collssobjcount }},
                                             }
                                         }]
                                     },
@@ -161,7 +172,7 @@
                             });
                         </script>
                             <div style='position: absolute; width: 100%; height: 35px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </div>
-                            @if ($fonction->coll_sous_objectifs()->count()!=0 ) 
+                            @if ($collssobjcount !=0 ) 
                                 @php $pourcentage = $fonction->pivot->taux_de_transformation;
                                      $pourcentagestr = substr($pourcentage, 0, 5);
                                 @endphp

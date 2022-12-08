@@ -80,6 +80,8 @@ class User extends Authenticatable
     ];
     
     protected $appends = ['en_transformation'];
+    
+    private $fonctionscount=null;
 
     public function scopeLocal($query)
     {
@@ -802,7 +804,11 @@ class User extends Authenticatable
     
     public function getEnTransformationAttribute()
     {
-        $fonctions = $this->fonctions()->get();
-        return $fonctions->count() > 0;
+        if ($this->fonctionscount == null){
+            $fonctions = $this->fonctions()->get();
+            $this->fonctionscount = $fonctions->count();
+        }
+        
+        return $this->fonctionscount > 0;
     }
 }
