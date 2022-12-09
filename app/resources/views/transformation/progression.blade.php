@@ -48,14 +48,13 @@
                                 options: {
                                     responsive: true,
                                     scales: {
-                                        yAxes: [{
-                                            ticks: {
-                                                max: {{ $user->nbSousObjectifsAValider() }},
+                                        y: {
+                                            suggestedMax: {{$user->nbSousObjectifsAValider() }}
                                             }
-                                        }]
-                                    },
+                                        }
+                                    }
                                 }
-                            });
+                            );
                         </script>
                         <div style='position: absolute; width: 100%; height: 35px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </div>
                             @php $pourcentage = $user->taux_de_transformation;
@@ -162,14 +161,13 @@
                                 options: {
                                     responsive: true,
                                     scales: {
-                                        yAxes: [{
-                                            ticks: {
-                                                max: {{ $collssobjcount }},
+                                        y: {
+                                            suggestedMax: {{ $collssobjcount }}
                                             }
-                                        }]
-                                    },
+                                        }
+                                    }
                                 }
-                            });
+                            );
                         </script>
                             <div style='position: absolute; width: 100%; height: 35px; background-color: transparent; margin-top: 1%; border: 1px solid black;'> </div>
                             @if ($collssobjcount !=0 ) 
