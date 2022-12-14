@@ -2,21 +2,26 @@
    $fonctionAMer = $marin->fonctionAMer();
 @endphp
 @if($fonctionAMer)
+    @php
+        $pourcentage = $fonctionAMer->pivot->taux_de_transformation;
+    @endphp
+
     @if($fonctionAMer->pivot->date_lache)
-        <span style='color: green'>{{$fonctionAMer->fonction_libcourt}} ( {{$fonctionAMer->pivot->taux_de_transformation}}% ) 
-        </span>
+        <div style='color: green'>{{$fonctionAMer->fonction_libcourt}} ( {{$fonctionAMer->pivot->taux_de_transformation}}% ) 
+        </div>
     @else
-        <span x-data='{
-            getColor(p){
-                if (p >= 70){
-                    return "color: Goldenrod";}
-                else if(p >= 35){
-                    return "color: orangered";}
-                else {
-                    return  "color: red";}
-            }
-        }' x-bind:style='getColor({{$fonctionAMer->pivot->taux_de_transformation}})'>{{$fonctionAMer->fonction_libcourt}} ( {{$fonctionAMer->pivot->taux_de_transformation}}% )
-        </span>
+        @if ($pourcentage >= 70 )
+            <div style='color: Goldenrod'>{{$fonctionAMer->fonction_libcourt}} ( {{$fonctionAMer->pivot->taux_de_transformation}}% )
+            </div>
+        @elseif ($pourcentage >= 35)
+            <div style='color: orangered'>{{$fonctionAMer->fonction_libcourt}} ( {{$fonctionAMer->pivot->taux_de_transformation}}% )
+            </div>
+        @else
+            <div style='color: red'>{{$fonctionAMer->fonction_libcourt}} ( {{$fonctionAMer->pivot->taux_de_transformation}}% )
+            </div>
+        @endif
     @endif
+    
+    
 @endif
 

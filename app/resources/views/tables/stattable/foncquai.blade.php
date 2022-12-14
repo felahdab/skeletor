@@ -2,20 +2,23 @@
    $fonctionAQuai = $marin->fonctionAQuai();
 @endphp
 @if($fonctionAQuai)
+    @php
+        $pourcentage = $fonctionAQuai->pivot->taux_de_transformation;
+    @endphp
     @if($fonctionAQuai->pivot->date_lache)
-        <span style='color: green'>{{$fonctionAQuai->fonction_libcourt}} ( {{$fonctionAQuai->pivot->taux_de_transformation}}% ) 
-        </span>
+        <div style='color: green'>{{$fonctionAQuai->fonction_libcourt}} ( {{$fonctionAQuai->pivot->taux_de_transformation}}% ) 
+        </div>
     @else
-        <span x-data='{
-            getColor(p){
-                if (p >= 70){
-                    return "color: Goldenrod";}
-                else if(p >= 35){
-                    return "color: orangered";}
-                else {
-                    return  "color: red";}
-            }
-        }' x-bind:style='getColor({{$fonctionAQuai->pivot->taux_de_transformation}})'>{{$fonctionAQuai->fonction_libcourt}} ( {{$fonctionAQuai->pivot->taux_de_transformation}}% )
-        </span>
+        @if ($pourcentage >= 70 )
+            <div style='color: Goldenrod'>{{$fonctionAQuai->fonction_libcourt}} ( {{$fonctionAQuai->pivot->taux_de_transformation}}% )
+            </div>
+        @elseif ($pourcentage >= 35)
+            <div style='color: orangered'>{{$fonctionAQuai->fonction_libcourt}} ( {{$fonctionAQuai->pivot->taux_de_transformation}}% )
+            </div>
+        @else
+            <div style='color: red'>{{$fonctionAQuai->fonction_libcourt}} ( {{$fonctionAQuai->pivot->taux_de_transformation}}% )
+            </div>
+        @endif
     @endif
+    
 @endif
