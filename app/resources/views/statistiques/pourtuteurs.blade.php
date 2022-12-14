@@ -12,9 +12,6 @@
                 Liste des marins en transformation dans le service {{ $currentuser->displayService() }}
         @endif
             </div>
-            <div style="text-align: right;">
-                Cliquez sur un marin pour afficher son livret de transformation
-            </div>
             <div class="mt-3">
             @if (isset($service))
                 @livewire('stattuteur-table', ['service' => $service ])
