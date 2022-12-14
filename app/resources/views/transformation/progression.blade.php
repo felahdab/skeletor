@@ -13,7 +13,7 @@
             @can('users.stages')
                 <a href="{{ route('users.stages', $user->id) }}" class="btn btn-danger btn-sm">Stages</a>
             @endcan
-            <a href="{{ route('transformation.index') }}" class="btn btn-default btn-sm">Annuler</a>
+            <a href="{{ url()->previous() }}" class="btn btn-default btn-sm">Annuler</a>
         @else
              <a href="{{ route('transformation.monlivret') }}" class="btn btn-warning btn-sm">Mon livret de transformation</a>
             <a href="{{ route('transformation.maprogression') }}" class="btn btn-primary btn-sm">Ma progression</a>

@@ -1,25 +1,28 @@
 @php
     $fonctionsMetier = $marin->fonctionsMetier()->get();
 @endphp
-<span>
-    <ul style='list-style-type : none;' x-data='{
-            getColor(p){
-                if (p >= 70){
-                    return "color: Goldenrod";}
-                else if(p >= 35){
-                    return "color: orangered";}
-                else {
-                    return  "color: red";}
-            }
-        }'>
+<div>
+    <ul style='list-style-type : none;' >
         @foreach($fonctionsMetier as $fonction)
+            @php
+                $pourcentage = $fonction->pivot->taux_de_transformation
+            @endphp
             @if($fonction->pivot->date_lache)
                 <li style='margin-bottom: 3px; color: green'>{{$fonction->fonction_libcourt}} ( {{$fonction->pivot->taux_de_transformation}}% ) 
                 </li>
             @else
-                <li style='margin-bottom: 3px;' x-bind:style='getColor({{$fonction->pivot->taux_de_transformation}})'>{{$fonction->fonction_libcourt}} ( {{$fonction->pivot->taux_de_transformation}}% )
-                </li>
+                @if ($pourcentage >= 70 )
+                    <li style='margin-bottom: 3px; color: Goldenrod'>{{$fonction->fonction_libcourt}} ( {{$fonction->pivot->taux_de_transformation}}% ) 
+                    </li>
+                @elseif ($pourcentage >= 35)
+                    <li style='margin-bottom: 3px; color: orangered'>{{$fonction->fonction_libcourt}} ( {{$fonction->pivot->taux_de_transformation}}% ) 
+                    </li>
+                @else
+                    <li style='margin-bottom: 3px; color: red'>{{$fonction->fonction_libcourt}} ( {{$fonction->pivot->taux_de_transformation}}% ) 
+                    </li>
+                @endif
             @endif
+            
         @endforeach
     </ul>
-</span>
+</div>

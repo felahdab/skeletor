@@ -69,10 +69,15 @@ class StattuteurTable extends DataTableComponent
         }
     }
 
+    public function userActions()
+    {
+        return view('tables.stattable.boutons');
+    }
+
     public function columns(): array
     {
         
-        return [
+        $basecolumns = [
             Column::make("Id", "id")
                 ->deSelected()
                 ->sortable(),
@@ -115,7 +120,13 @@ class StattuteurTable extends DataTableComponent
             Column::make("Tx transfo", "taux_de_transformation")
                 ->sortable()
                 ->searchable(), 
-         ];
+        ];
+        return array_merge($basecolumns , [
+            Column::make('Actions')
+                ->label(
+                    fn($row, Column $column) => $this->userActions()->withRow($row)
+                    ),
+        ]);
     }
     public function filters(): array
     {
