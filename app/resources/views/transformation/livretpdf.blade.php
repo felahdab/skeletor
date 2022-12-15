@@ -193,7 +193,7 @@
         @foreach ($user->fonctions()->get() as $fonction)
             @php
             $listcomp=$fonction->compagnonages()->get()->pluck('comp_libcourt')->all();
-            $liststage=$user->stages()->get()->pluck('stage_libcourt')->all();
+            $liststage=$fonction->stages()->get()->pluck('stage_libcourt')->all();
             
             $nbcomp=count($listcomp);
             $nbstage=count($liststage);
@@ -250,6 +250,27 @@
 
 <bookmark content='Stages' level='0' />
     <table class='tablerecap'>
+        <tr><td class='titrerecap' colspan="3">Taux de transformation</td></tr>
+        <tr>
+            <td class='ta-c'>
+            <table class='tabcompstage'>
+                <tr>
+                    <th class='titrecompstage w-50 colcompstage'>Fonction</td>
+                    <th class='titrecompstage w-25 colcompstage'>Taux</td>
+                    <th class='titrecompstage w-25 colcompstage'>Date de lâché</td>
+                </tr>
+                @foreach ($user->fonctions()->get() as $fonction)
+                    <tr>
+                        <td class='colcompstage br bl bt bb'>{{ $fonction->fonction_liblong}}</td>
+                        <td class='colcompstage br bl bt bb'>{{ $fonction->pivot->taux_de_transformation}}</td>
+                        <td class='colcompstage br bl bt bb'>{{ $fonction->pivot->date_lache == null ? "" : $fonction->pivot->date_lache }}</td>
+                    </tr>
+                @endforeach
+            </table>
+            </td>
+        </tr>
+    </table>
+    <table class='tablerecap'>
         <tr><td class='titrerecap' colspan="3">Situation des stages</td></tr>
         <tr>
             <td class='ta-c'>
@@ -268,8 +289,8 @@
                 @endforeach
             </table>
             </td>
-        </td>
-</table>
+        </tr>
+    </table>
 
 <pagebreak>
 @foreach ($user->fonctions()->get() as $fonction)
