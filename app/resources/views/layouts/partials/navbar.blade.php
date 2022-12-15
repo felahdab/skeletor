@@ -19,6 +19,7 @@
                 @can('liens.index')<a class="dropdown-item" href="{{ route('liens.index')}}">Liens</a>@endcan
                 @can('historique.index')<a class="dropdown-item" href="{{ route('historique.index')}}">Historique</a>@endcan
                 @can('annudef.index')<a class="dropdown-item" href="{{ route('annudef.index')}}">Annudef</a>@endcan
+                @can('mails.index')<a class="dropdown-item" href="{{ route('mails.index')}}">Mails</a>@endcan
               </div>
             </div>
             @endcan

@@ -56,6 +56,9 @@ class UsersTable extends DataTableComponent
             case "transformation" :
                 return view('tables.userstable.transformation');
                 break;
+            // case "selection" :
+                // return view('tables.userstable.selection');
+                // break;
         }
     }
 
@@ -135,6 +138,14 @@ class UsersTable extends DataTableComponent
                     Column::make('Laché')
                         ->label(
                             fn($row, Column $column) => $row->fonctions()->find($this->fonction)->pivot->date_lache ),
+                ]);
+                break;
+             case "selection" :
+                 return array_merge($basecolumns , [
+                    Column::make('Actions')
+                        ->label(
+                            fn($row, Column $column) => $this->userActions()->withRow($row)
+                            ),
                 ]);
                 break;
             default :
