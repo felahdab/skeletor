@@ -87,7 +87,9 @@
         @impersonating()
             <a href="{{ route('impersonate.leave') }}" class="btn btn-outline-danger me-2">Redevenir soit meme</a>
         @endImpersonating
+        <img src='{!! asset("assets/images/Question_mark.svg") !!}' style="height:50px;">
         <button class='btn btn-warning' onclick='affichage("bugreport");'>Signaler un problème</button>
+        
       
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
