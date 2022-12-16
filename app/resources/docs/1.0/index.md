@@ -1,3 +1,5 @@
-- ## Get Started
-    - [Overview](/{{route}}/{{version}}/overview)
-    - [Essai](/{{route}}/{{version}}/essai)
+- ## Rubriques 
+    - [Généralités](/{{route}}/{{version}}/generalites)
+    - [Administration](/{{route}}/{{version}}/administration)
+    - [Parcours](/{{route}}/{{version}}/parcours)
+    - [Transformation](/{{route}}/{{version}}/transformation)
