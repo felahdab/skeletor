@@ -59,7 +59,7 @@ class MailEditComponent extends Component
         
         $roles = Role::whereNotIn('name', ['user', 'transfo'])->get();
         $recipients = User::role($roles)->get();
-        $newMail = new ManualMail($this->corps);
+        $newMail = new ManualMail($this->corps, $this->sujet);
         SupportMail::to($recipients)
             ->bcc('florian.el-ahdab@intradef.gouv.fr')
             ->send($newMail);
