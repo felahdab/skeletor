@@ -34,7 +34,7 @@ class LivretTransformation extends Component
         elseif ($this->mode == "multiple")
         {
             $this->fonctions = [ $this->fonction ];
-            $this->usersfonction = $this->fonction->users()->get();
+            $this->usersfonction = $this->fonction->users()->orderBy('name')->get();
         }
         return view('livewire.livret-transformation');
     }
