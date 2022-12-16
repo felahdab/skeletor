@@ -86,8 +86,9 @@
       @auth
         @impersonating()
             <a href="{{ route('impersonate.leave') }}" class="btn btn-outline-danger me-2">Redevenir soit meme</a>
-        @endImpersonating
-        <img src='{!! asset("assets/images/Question_mark.svg") !!}' style="height:50px;">
+	@endImpersonating
+
+	@yield('helplink')
         <button class='btn btn-warning' onclick='affichage("bugreport");'>Signaler un problème</button>
         
       
