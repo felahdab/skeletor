@@ -166,6 +166,12 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'facebook/webdriver' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => '*',
+            ),
+        ),
         'fakerphp/faker' => array(
             'pretty_version' => 'v1.20.0',
             'version' => '1.20.0.0',
@@ -471,6 +477,15 @@
             'install_path' => __DIR__ . '/../lab404/laravel-impersonate',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'laravel/dusk' => array(
+            'pretty_version' => 'v7.2.0',
+            'version' => '7.2.0.0',
+            'reference' => 'eedf08c80106ac4983b77ec23197528bf90aaec2',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../laravel/dusk',
+            'aliases' => array(),
+            'dev_requirement' => true,
         ),
         'laravel/framework' => array(
             'pretty_version' => 'v9.43.0',
@@ -810,6 +825,15 @@
             'install_path' => __DIR__ . '/../php-http/message-factory',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'php-webdriver/webdriver' => array(
+            'pretty_version' => '1.13.1',
+            'version' => '1.13.1.0',
+            'reference' => '6dfe5f814b796c1b5748850aa19f781b9274c36c',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../php-webdriver/webdriver',
+            'aliases' => array(),
+            'dev_requirement' => true,
         ),
         'phpoffice/phpspreadsheet' => array(
             'pretty_version' => '1.25.2',
