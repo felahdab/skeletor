@@ -44,6 +44,8 @@ Les actions qu'un utilisateur peut accomplir sont donc la somme de toutes les pe
 
 # TODO: insérer une capture d'écran d'une page
 
+ ![image]({{ url(asset('docs/images/' . '1.0' . '/home.png' )) }})
+
 L'interface utilisateur de FFAST orbite autour de la barre de navigation située en haut de l'écran.
 Cette barre rassemble toutes les fonctions auxquelles l'utilisateur a accès.
 Avant que l'utilisateur se connecte, aucune fonction n'est accessible.
