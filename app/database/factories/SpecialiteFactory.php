@@ -1,0 +1,25 @@
+<?php
+
+namespace Database\Factories;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Specialite>
+ */
+class SpecialiteFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition()
+    {
+        return [
+   'specialite_libcourt' =>$this->faker->name(),
+            'specialite_liblong' =>$this->faker->name(),
+           //
+        ];
+    }
+}
