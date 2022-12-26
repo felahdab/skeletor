@@ -30,9 +30,9 @@ class LocalLoginTest extends DuskTestCase
         $this->browse(function (Browser $browser) use($user) {
             $browser->visit(route('login.show'))
                     ->assertSee('Login')
-                    ->type('email', $user->email)
-                    ->type('password', 'admin123')
-                    ->press('Login')
+                    ->type('@login-email', $user->email)
+                    ->type('@login-password', 'admin123')
+                    ->press('@login-button')
                     ->assertPathIs('/florian/statistiques/pour2ps');
         });
     }

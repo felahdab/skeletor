@@ -10,12 +10,16 @@ use App\Models\User;
 
 class NavbarTest extends DuskTestCase
 {
-    /**
-     * A Dusk test example.
-     *
-     * @return void
-     */
-    public function testExample()
+    public function test_main_menu_displays()
+    {
+        $this->browse(function ($browser) {
+            $browser->loginAs(User::find(1))
+                  ->visit(route('home.index'))
+                  ->assertSee('Accueil');
+        });
+    }
+
+    public function test_users_table_displays()
     {
         $this->browse(function ($browser) {
             $browser->loginAs(User::find(1))

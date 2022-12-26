@@ -11,20 +11,20 @@
         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
         <div class="mb-3">
-            <input type="text" class="form-control" name="email" value="{{ old('email') }}" placeholder="Email" required="required" autofocus>
+            <input dusk="login-email" type="text" class="form-control" name="email" value="{{ old('email') }}" placeholder="Email" required="required" autofocus>
             @if ($errors->has('username'))
                 <span class="text-danger text-left">{{ $errors->first('username') }}</span>
             @endif
         </div>
         
         <div class="mb-3">
-            <input type="password" class="form-control" name="password" value="{{ old('password') }}" placeholder="Password" required="required">
+            <input  dusk="login-password" type="password" class="form-control" name="password" value="{{ old('password') }}" placeholder="Password" required="required">
             @if ($errors->has('password'))
                 <span class="text-danger text-left">{{ $errors->first('password') }}</span>
             @endif
         </div>
 
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Login</button>
+        <button  dusk="login-button" class="w-100 btn btn-lg btn-primary" type="submit">Login</button>
         
     </form>
     </div>
