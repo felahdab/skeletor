@@ -25,7 +25,7 @@ class UsersControllerTest extends TestCase
         $response->assertStatus(302);
     }
 	 
-    public function test_user_index_redirect_when_logged_in()
+    public function test_user_index_succeeds()
     {
 	    $this->seed();
 	    $user=User::find(1);
@@ -35,7 +35,7 @@ class UsersControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_user_creation_when_logged_in()
+    public function test_user_creation_when_admin_succeeds()
     {
 	    $this->seed();
 	    $user=User::find(1);
@@ -50,6 +50,8 @@ class UsersControllerTest extends TestCase
 
 	    $response->assertStatus(200);
 	    $this->assertDatabaseHas('users', ['name' => 'NOM']);
+
+	    return 'NOM';
     }
 
      public function test_user_creation_when_logged_in_fails_if_incomplete_request()
@@ -100,6 +102,30 @@ class UsersControllerTest extends TestCase
 	    $this->assertDatabaseHas('users', ['name' => 'NOM']);
 	    $newUser=User::where('name', 'NOM')->first();
 	    $this->assertTrue($newUser->hasRole('user'));
+    }
+    
+    public function test_deletion_of_created_user_when_admin_succeeds()
+    {
+	    $this->seed();
+	    $user=User::find(1);
+
+	    $newUser = User::factory()->create();
+
+
+	    $response = $this->actingAs($user)
+		    ->delete(route('users.destroy', ['user' => $newUser])); 
+	    $this->assertSoftDeleted($newUser);
+    }
+
+    public function test_deletion_of_created_user_when_not_admin_fails()
+    {
+	    $this->seed();
+
+	    $newUser = User::factory()->create();
+
+
+	    $response = $this->delete(route('users.destroy', ['user' => $newUser])); 
+	    $response->assertRedirect();
     }
 
 }

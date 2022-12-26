@@ -32,6 +32,22 @@ services:
            PMA_HOST: db
         networks:
           - private
+    code-editor:
+        image: codercom/code-server
+        networks:
+          - private
+        user: "1000:1002"
+        volumes:
+          - ../:/home/coder/project/
+    selenium:
+        image: 'selenium/standalone-chrome'
+        # extra_hosts:
+        #    - 'host.docker.internal:host-gateway'
+        volumes:
+            - '/dev/shm:/dev/shm'
+        shm_size: '2gb'
+        networks:
+            - private
 volumes:
     mysqldata: {}
 networks:
