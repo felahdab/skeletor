@@ -10,7 +10,6 @@ use App\Models\User;
 
 class LocalLoginTest extends DuskTestCase
 {
-    use DatabaseMigrations;
     /**
      * A Dusk test example.
      *
@@ -26,7 +25,6 @@ class LocalLoginTest extends DuskTestCase
 
     public function test_local_login_as_admin()
     {
-        $this->artisan('db:seed');
         $user=User::find(1);
         
         $this->browse(function (Browser $browser) use($user) {

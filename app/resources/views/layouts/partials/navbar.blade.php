@@ -8,7 +8,7 @@
             @auth
             @can('users.index')
             <div class="dropdown nav-item" >
-              <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <button dusk="administration-button" class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               Administration
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
