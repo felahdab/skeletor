@@ -10,7 +10,7 @@ use App\Models\User;
 
 class UsersControllerTest extends TestCase
 {
-	 use RefreshDatabase;
+	use RefreshDatabase;
 
     /**
      * A basic feature test example.
@@ -19,7 +19,7 @@ class UsersControllerTest extends TestCase
      */
     public function test_user_index_redirect_when_not_logged_in()
     {
-	$this->seed();
+	    $this->seed();
         $response = $this->get(route('users.index'));
 
         $response->assertStatus(302);
