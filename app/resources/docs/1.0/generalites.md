@@ -1,10 +1,11 @@
 # Généralités
 
-- Besoin initial
-- Le parcours de transformation
-- Les rôles
-- Interface utilisateur
+- [Besoin initial](#besoin-initial)
+- [Le parcours de transformation](#parcours-de-transformation)
+- [Les rôles](#roles)
+- [Interface utilisateur](#interface-utilisateur)
 
+<a name="besoin-initial">
 ## Besoin initial
 FFAST (Frégates Fortement Automatisé - Suivi de la Transformation) est une application conçue faciliter le suivi du parcours de transformation des marins destinés à être affectés à bord des frégates fortement automatisés.  
 
@@ -12,6 +13,7 @@ Plus besoin de mettre à jour des fichiers bloqués par un autre utilisateur par
 
 Même si FFAST a été conçu initialement pour les besoins des GTR et des FREMM, sa structure générique lui permet de s'adapter à d'autre structures ayant besoin de suivre l'avancement des actions de formations auprofit d'un groupe d'élèves.
 
+<a name="parcours-de-transformation">
 ## Le parcours de transformation
 Le coeur de FFAST est constitué par le parcours de transformation.
 Ce parcours, stocké en base de données est totalement configurable.
@@ -23,6 +25,7 @@ En outre, chaque fonction peut se voir attribuer des stages devant normalement �
 
 > {info} Chaque fonction comporte éventuellement 1 ou plusieurs stages et dans tous les cas au moins 1 compagnonage. Chaque compagnonage comporte au moins 1 tâche. Chaque tâche comporte au moins 1 objectif. Chaque objectif comporte au moins 1 sous-objectif.
 
+<a name="roles">
 ## Les rôles
 Dans FFAST, chaque utilisateur se voit attribuer un ou plusieurs rôles qui déterminent les actions pouvant être réalisées.
 Par défaut, les rôles suivants existent:
@@ -40,6 +43,7 @@ Chaque rôle se voit attribuer 0, 1 ou plusieurs de ces permissions.
 Et chaque utilisateur se voit attribuer 0, 1 ou plusieurs rôles.
 Les actions qu'un utilisateur peut accomplir sont donc la somme de toutes les permissions dont il bénéficie au travers des roles qu'on lui attribue.
 
+<a name="interface-utilisateur">
 ## Interface utilisateur
 
 L'interface utilisateur de FFAST orbite autour de la barre de navigation située en haut de l'écran.
@@ -54,7 +58,8 @@ Ce principe est également appliqué dans tous les écrans de l'application: si 
 
 > {info} Les éléments affichés à l'écran sont directement liés aux rôles attribués, et donc aux permissions de l'utilisateur.
 
-La barre de navigation comporte 2 éléments importants:
-- le bouton d'aide (qui permet à l'utilisateur de rejoindre la page de documentation en ligne correspondant à la page depuis laquelle il clique sur le lien).
-- le bouton "Signaler un problème" permettant à l'utilisateur de faire part de ses remarques ou de ses difficultés à l'équipe d'administration technique qui s'efforcera de l'aider ou de résoudre le problème.
+-
+> {info} La barre de navigation comporte 2 éléments importants:
+> - le bouton d'aide (qui permet à l'utilisateur de rejoindre la page de documentation en ligne correspondant à la page depuis laquelle il clique sur le lien).
+> - le bouton "Signaler un problème" permettant à l'utilisateur de faire part de ses remarques ou de ses difficultés à l'équipe d'administration technique qui s'efforcera de l'aider ou de résoudre le problème.
 
