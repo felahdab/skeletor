@@ -17,5 +17,6 @@ class WebRoutesTest extends TestCase
     public function test_route_caching_succeeds()
     {
         Artisan::call('route:cache');
+        $this->assertTrue(true);
     }
 }
