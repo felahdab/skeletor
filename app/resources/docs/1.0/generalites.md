@@ -35,10 +35,10 @@ Par défaut, les rôles suivants existent:
 | 2ps     | Peut suivre la situation des stages, valider ou dévalider un stage pour 1 ou plusieurs marins. | 
 | em      | Peut consulter les différents tableaux de bord et bilans pour superviser l'activité de transformation. | 
 
-Là encore, la structure de FFAST est très générique. L'application définit des permissions, associées à chaque action qu'un utilisateur pour réaliser.
+Là encore, la structure de FFAST est très générique. L'application définit des permissions, associées à chaque action qu'un utilisateur peut réaliser.
 Chaque rôle se voit attribuer 0, 1 ou plusieurs de ces permissions.
 Et chaque utilisateur se voit attribuer 0, 1 ou plusieurs rôles.
-Les actions qu'un utilisateur peut accomplir sont donc la somme de toutes les permissions dont il bénéficient au travers des roles qu'on lui attribue.
+Les actions qu'un utilisateur peut accomplir sont donc la somme de toutes les permissions dont il bénéficie au travers des roles qu'on lui attribue.
 
 ## Interface utilisateur
 
