@@ -60,7 +60,7 @@ Dans la partie « Attribuer des rôle »:
 Le bouton « retour » (3) permet de revenir à la liste des demandes d’activation de compte.
 
 <a name="fiches-des-marins">
-# Fiches des marins
+## Fiches des marins
 Vous retrouvez la liste de tous les marins ayant le droit de se connecter à l’application (1) classés par ordre alphabétique. Des filtres (2) (3) vous permettent d’affiner l’affichage. 
 
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/administration/liste-utilisateurs.png' )) }}" width=1000px>
@@ -76,7 +76,7 @@ Vous retrouvez la liste de tous les marins ayant le droit de se connecter à l�
 
 
 <a name="roles">
-# Rôles
+## Rôles
 À partir de cet écran, vous pouvez gérer les rôles. 
 
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/administration/liste-roles.png' )) }}" width=600px>
@@ -86,7 +86,7 @@ Un rôle regroupe l’ensemble des permissions (ou autorisations ou droits d’a
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/administration/attribution-permissions-roles.png' )) }}" width=400px>
 
 <a name="permissions">
-# Droits d’accès
+## Droits d’accès
 À partir de cet écran, vous pouvez gérer les permissions c’est à dire les actions possibles sur l’application.
 
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/administration/liste-permissions.png' )) }}" width=800px>
@@ -97,7 +97,7 @@ Un rôle regroupe l’ensemble des permissions (ou autorisations ou droits d’a
 
 
 <a name="liens">
-# Liens
+## Liens
 Cet écran permet de gérer l’affichage des liens liés à la transformation qui apparaissent sur la page d’accueil des marins en transformation.
 
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/administration/liste-liens.png' )) }}" width=800px>
@@ -107,7 +107,7 @@ Voici le résultat sur la page d’accueil :
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/administration/accueil-ma-transformation.png' )) }}" width=800px>
 
 <a name="historique">
-# Historique
+## Historique
 Écran qui liste toutes les actions liées à la transformation.
 
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/administration/liste-historique.png' )) }}" width=1000px>
@@ -115,7 +115,7 @@ Voici le résultat sur la page d’accueil :
 Des filtres (1) (2)  permettent d’affiner l’affichage. 
 
 <a name="annudef">
-# Annudef
+## Annudef
 
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/administration/bandeau-recherche-annudef.png' )) }}" width=1000px>
 
@@ -133,6 +133,6 @@ Pour cela:
 
 
 <a name="mails">
-# Mails
+## Mails
 
 TODO...
