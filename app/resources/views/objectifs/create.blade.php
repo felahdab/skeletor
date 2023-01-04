@@ -1,5 +1,10 @@
 @extends('layouts.app-master')
 
+@section('helplink')
+<x-documentation-link page="parcours"/>
+@endsection
+
+
 @section('content')
 
     <div class="bg-light p-4 rounded">
@@ -14,22 +19,22 @@
                     <label for='libelle_court_objectif' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
                     <div class='col-sm-5'>
                         <input type='text' 
-						class='form-control'  
-						name='objectif[objectif_libcourt]' 
-						id='objectif[objectif_libcourt]' 
-						placeholder='Libell&eacute; court' 
-						value="" >
+                        class='form-control'  
+                        name='objectif[objectif_libcourt]' 
+                        id='objectif[objectif_libcourt]' 
+                        placeholder='Libell&eacute; court' 
+                        value="" >
                     </div>
                 </div>
                 <div class='form-group row' >
                     <label for='libelle_long_objectif' class='col-sm-5 col-form-label'>Libell&eacute; long *</label>
                     <div class='col-sm-5'>
                         <input type='text' 
-						class='form-control' 
-						name='objectif[objectif_liblong]' 
-						id='objectif[objectif_liblong]' 
-						placeholder='Libell&eacute; long' 
-						value="" >
+                        class='form-control' 
+                        name='objectif[objectif_liblong]' 
+                        id='objectif[objectif_liblong]' 
+                        placeholder='Libell&eacute; long' 
+                        value="" >
                     </div>
                 </div>
                 <div>

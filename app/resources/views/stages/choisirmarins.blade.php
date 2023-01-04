@@ -1,5 +1,10 @@
 @extends('layouts.app-master')
 
+@section('helplink')
+<x-documentation-link page="transformation"/>
+@endsection
+
+
 @section('content')
     <div class="bg-light p-4 rounded">
         <h2>Stages - Validation ou annulation collective du stage {{$stage->stage_libcourt}}</h2>
