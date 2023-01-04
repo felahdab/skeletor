@@ -1,3 +1,6 @@
+## 1.0.3 (janvier 04, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.2 –> 1.0.3
+
 ## 1.0.2 (janvier 04, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.1 –> 1.0.2
 - Added bump-version.sh script and initialized changelog and VERSION file
