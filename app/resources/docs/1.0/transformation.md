@@ -8,7 +8,7 @@
    - [Stages](#stages)
 - [Suivi de la transformation par fonction](#suivi-par-fonction)
 - [Suivi de la transformation par stage](#suivi-par-stage)
-
+- [Ma transformation](#ma-transformation)
 
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/menu_transformation.png' )) }}" width=400px>
 Ce menu permet d’accéder : 
@@ -26,7 +26,8 @@ Ce menu permet d’accéder :
 
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/filtre_users.png' )) }}" width=600px>
 4. Vous pouvez paramétrer l’affichage : le bouton colonne vous permet de cacher/afficher les colonnes selon vos besoins et le nombre est le nombre de lignes affichées sur la page courante.
-5. Ces boutons vous permettent d’accéder aux données du marin. Attention : selon votre profile, certains boutons peuvent ne pas être accessibles.
+5. Ces boutons vous permettent d’accéder aux données du marin. 
+> {info} Attention : selon votre profil, certains boutons peuvent ne pas être accessibles.
 
 <a name="attribuer-des-fonctions">
 ### Attribuer des fonctions
@@ -52,25 +53,19 @@ Pour valider des sous-objectifs, objectifs ou tâches (9, 10, 11), cocher la ou 
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/livret_de_transformation_validation.png' )) }}" width=600px> 
 Saisir les données nécessaires. Pour enregistrer les validations, cliquer sur le bouton « Valider ».
 
-**Remarques :**
-- la date est par défaut la date du jour.
-- le valideur est par défaut la personne connectée.
-- le commentaire n’est pas obligatoire.
+> {info} ** Remarques: **
+> - la date est par défaut la date du jour.
+> - le valideur est par défaut la personne connectée.
+> - le commentaire n’est pas obligatoire.
 
 Il vous est possible d’annuler des validations en cochant les cases voulues (9, 10, 11))puis en cliquant sur « Annuler la validation des éléments cochés » (4). 
 Attention, aucune confirmation de suppression n’est demandée.
-Pour valider un double ou un lâcher, cliquer sur le bouton « valider » (12,13) de la ligne concernée. L’écran suivant s’affiche :
- 
-Saisir les données nécessaires. Pour enregistrer les validations, cliquer sur le bouton « Valider ».
 
-**Remarques :  **
-- la date est par défaut la date du jour.
-- le valideur est par défaut la personne connectée.
-- il est fortement recommandé de saisir un commentaire pour le double et le lâcher.
+Pour valider un double ou un lâcher, cliquer sur le bouton « valider » (12,13) de la ligne concernée. Le même écran de validation s'affiche.
 
 Le bouton « Imprimer » (5) permet d’éditer le livret au format pdf.
 
-**Remarque : **Pour l’imprimer au format livret, sélectionnez l’option d’impression d’Acrobate Reader « brochure ».
+**Remarque : ** Pour l’imprimer au format livret, sélectionnez l’option d’impression d’Acrobate Reader « brochure ».
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/livret_de_transformation_impression_livret.jpg' )) }}" width=600px> 
 
 <a name="progression">
@@ -110,11 +105,11 @@ Cocher les cases à cocher correspondantes aux tâches, objectifs ou sous-object
 
 Sélectionner les marins à valider. Pour cela, cliquer sur les marins voulus en maintenant enfoncée la touche « Ctrl » de votre clavier. Cliquer ensuite sur le bouton « valider » pour enregistrer les validations. 
 
-** Remarques : **
-- tous les marins auront la même date, le même valideur et le même commentaire.
-- la date est par défaut la date du jour.
-- le valideur est par défaut la personne connectée.
-- Les doubles et lâchers ne peuvent pas être validés de cette façon.
+> {info} ** Remarques : **
+> - tous les marins auront la même date, le même valideur et le même commentaire.
+> - la date est par défaut la date du jour.
+> - le valideur est par défaut la personne connectée.
+> - Les doubles et lâchers ne peuvent pas être validés de cette façon.
 
 <a name="suivi-par-stage">
 ## Suivi de la transformation par stage
@@ -127,11 +122,11 @@ En cliquant sur le bouton « Situation des marins pour ce stage » (1), vous aff
 ** Remarque : ** pour exporter ce tableau sous Excel, sélectionner toutes les cases voulues en maintenant enfoncée la touche « Ctrl » de votre clavier puis copier et coller.
 
 
-
+<a name="ma-transformation">
 # Ma Transformation
-Ce menu n’est visible que si vous avez une fonction de service. 
-Vous y retrouvez sur le même modèle que dans le menu « Transformation » :
-- votre livret de transformation,
-- vos diagrammes de progression,
-- votre fiche bilan.
+Ce menu n’est visible que pour les marins qui ont une fonction attribuée. 
+Il y retrouve sur le même modèle que dans le menu « Transformation » :
+- son propre livret de transformation,
+- ses diagrammes de progression,
+- sa fiche bilan.
 
