@@ -143,6 +143,11 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
              Route::get('/', 'AnnudefController@index')->name('annudef.index');
         });
 
+        Route::group(['prefix' => 'mails'], function() {
+             Route::get('/', 'MailController@index')->name('mails.index');
+             Route::get('/edit/{mail}', 'MailController@edit')->name('mails.edit');
+             Route::get('/create', 'MailController@create')->name('mails.create');
+        });
 
         // if (env('APP_ENV') == "local")
         // {

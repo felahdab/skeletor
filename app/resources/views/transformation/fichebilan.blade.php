@@ -87,19 +87,11 @@
                                 <td style='width:25%;'></td>
                             @else
                                 <td style='width:25%;'>{{$comp->comp_libcourt}}</td>
+                                
                                 @php 
                                     $pourcentage = $user->pourcentage_valides_pour_comp($comp);
-                                    $pourcentagestr = substr($pourcentage, 0,4);
                                 @endphp
-                                @if ($pourcentage == 100)
-                                    <td style='width:25%; background-color:green;'>{{$pourcentagestr}}%</td>
-                                @elseif ($pourcentage >= 70 and $pourcentage < 100)
-                                    <td style='width:25%; background-color:gold;'>{{$pourcentagestr}}%</td>
-                                @elseif ($pourcentage >= 30 and $pourcentage < 70)
-                                    <td style='width:25%; background-color:orange;'>{{$pourcentagestr}}%</td>
-                                @else
-                                    <td style='width:25%; background-color:red;'>{{$pourcentagestr}}%</td>
-                                @endif
+                                <x-ffast-progression-div :pourcentage="$pourcentage" height="whatever" style="td"/>
                             @endif
                             
                             @php $stage = $liststage[$loop->index] ; @endphp
@@ -109,9 +101,9 @@
                             @else
                                 <td style='width:25%;'>{{$stage->stage_libcourt}}</td>
                                 @if ($user->aValideLeStage($stage))
-                                    <td style='width:25%; background-color:green;'> VALIDE </td>
+                                    <x-ffast-progression-div :pourcentage="100" height="whatever" style="td"  text="VALIDE"/>
                                 @else
-                                    <td style='width:25%; background-color:red;'> NON VALIDE </td>
+                                    <x-ffast-progression-div :pourcentage="0" height="whatever" style="td" text="NON VALIDE"/>
                                 @endif
                             @endif
                         </tr>

@@ -148,6 +148,8 @@ class UsersTable extends DataTableComponent
                 return array_merge($basecolumns , [
                     Column::make('Débarq.', 'date_debarq')
                         ->searchable(),
+             case "selection" :
+                 return array_merge($basecolumns , [
                     Column::make('Actions')
                         ->label(
                             fn($row, Column $column) => $this->userActions()->withRow($row)
