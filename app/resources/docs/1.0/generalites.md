@@ -49,10 +49,10 @@ Les actions qu'un utilisateur peut accomplir sont donc la somme de toutes les pe
 L'interface utilisateur de FFAST orbite autour de la barre de navigation située en haut de l'écran.
 Cette barre rassemble toutes les fonctions auxquelles l'utilisateur a accès.
 Avant que l'utilisateur se connecte, aucune fonction n'est accessible.
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/home.png' )) }}" width=1000px>
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/generalites/home.png' )) }}" width=1000px>
 
 Une fois connecté, les menus apparaissent en fonction des roles, et donc des permissions, de l'utilisateur.
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/home_loggedin.png' )) }}" width=1000px>
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/generalites/home_loggedin.png' )) }}" width=1000px>
 
 Ce principe est également appliqué dans tous les écrans de l'application: si un utilisateur voit un élément dans la page (un bouton, un lien, etc...) c'est qu'il bénéficie de la permission associée à l'action.
 
