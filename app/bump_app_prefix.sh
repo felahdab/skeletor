@@ -13,7 +13,10 @@ STACKNAME=$(basename $PARENTDIR)
 source $PARENTDIR/.env
 echo $DOMAIN
 echo $PREFIX
+echo $ENVIRONNEMENT
 
+
+cp -a .env.${ENVIRONNEMENT} .env
 SED_CMD='s/APP_PREFIX=.*/APP_PREFIX='$PREFIX'/g'
 sed -i $SED_CMD .env
 

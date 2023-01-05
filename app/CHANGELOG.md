@@ -1,0 +1,74 @@
+## 1.0.4 (janvier 05, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.3 –> 1.0.4
+- The WebRoutesTest is modified to un cache the routes after the route caching test because it appears that route caching does not take the APP_PREFIX into account as it should, resulting in broken routes.
+- Adjust image path in generalite doc page to reflect file structure
+- Moved doc imaged for generalites in the appropriate folder.
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/ffast into tuleap-53184-declaration-de-routes-en-double
+- Add assertion to WebRoutesTest
+- update composer autoload
+- Implement tests, factory, correct bugs in LienController
+- Create test to reproduce the bug
+- Cleanup repository ffast-stack
+- Correct nginx.conf state for master branch
+- Staged composer dump-autoload result
+- Merge branch 'master' into tuleap-53080-mise-a-jour-de-la-documentation
+- Adjuste env.production file to point to the appropriate doc version
+- Created .env for each environnement. Modified bump and reset prefix script to handle the .env setup and reset.
+- Added help link in all pages
+
+## 1.0.3 (janvier 04, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.2 –> 1.0.3
+
+## 1.0.2 (janvier 04, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.1 –> 1.0.2
+- Added bump-version.sh script and initialized changelog and VERSION file
+- adjust doc administration
+- Add administration doc
+- Adjust doc
+- Adjust doc
+- Created statistiques documentation page
+- Cleanup documentation images
+- Insere la documentation tuteur dans larecipe
+- Added screenshot of navbar when logged in.
+- Unstaged general .env
+- Adjusted bump and reset scripts
+- Make sure tests/Unit directory exists.
+- Correct .env files
+- Corrected details for testing integration
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/ffast into create_first_tests
+- Continue test implementation.
+- Adjust testing configuration for Dusk.
+- Correct APP_URL (remove final slash)
+- Remove APP_PREFIX from APP_URL. Is useless, and confuses phpunit for testing.
+- Cleanup database configuration
+- First trial with dusk selectors.
+- Adds basic HTTP tests. Initialize Dusk configuration for browser tests. Duplicates docker-compose file to have a production and a testing version.
+- Begin test implementation for UserController.
+- First real test for LoginController
+- Cleanup tests directory
+- Change testing settings to include temporary sqlite database
+- Updated Models factory to permit testing
+- Add test condition on roles to avoid unecessary errors on localogin
+- Trial at linking image into doc
+- Created public folder to serve documentation images and resources
+- First elements of doc
+- Create DOC_VERSION env variable.
+- Started creating documentation page. Created a DOC_VERSION env variable so that we point to the appropriate version of the doc.
+- Correct larecipe template to use instance urls
+- Introduce blade component to redirect user towards the documentation. Make the pages layout so that the documentation reference is defined in each blade view.
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/ffast into tuleap-52400-integrer-un-systeme-de-documentation
+- Added question mark to navbar
+- composer dump-autoload
+- Fixed.
+- artisan dusk:install
+- composer require --dev laravel/dusk
+- Adjust larecipe path for APP_PREFIX
+- php artisan larecipe:install
+- composer require binarytorch/larecipe
+- Change user order by in livewire component
+- Merge branch 'master' into release-1
+- Fixe conflit
+- Update release branch
+- Adjust configuration for production
+- Configuration change for production
+

@@ -1,5 +1,10 @@
 @extends('layouts.app-master')
 
+@section('helplink')
+<x-documentation-link page="administration"/>
+@endsection
+
+
 @section('content')
     
 

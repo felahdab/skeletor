@@ -24,13 +24,18 @@ class LienController extends Controller
 
     public function store(StoreLienRequest $request)
     {
-        $name=$request->file('lien_image');
-        $result = $name->storePublicly("public/images");
         $lien=new Lien;
         $lien->lien_lib=$request->input('lien_lib');
         $lien->lien_url=$request->input('lien_url');
-        $lien->lien_image=$name->hashName();
-        $lien->unite_id=2;
+        $name=$request->file('lien_image');
+        
+        if ($name != null){
+            $result = $name->storePublicly("public/images");
+            $lien->lien_image=$name->hashName();
+        }
+        else
+            $lien->lien_image="";
+        
         $lien->save();
         return redirect()->route('liens.index', $lien);
     }
@@ -62,14 +67,17 @@ class LienController extends Controller
         }
         return redirect()->route('liens.index', $lien);
     }
+    
     public function destroy(Lien $lien) 
     {
-        // on supprime l'ancienne image
-        $previouspath = storage_path('app/public/images/' . $lien->lien_image);
-                if (file_exists($previouspath))
-                    unlink($previouspath);
-        
+        if ($lien->lien_image != ""){
+            // on supprime l'ancienne image
+            $previouspath = storage_path('app/public/images/' . $lien->lien_image);
+                    if (file_exists($previouspath))
+                        unlink($previouspath);
+        }
         $lien->delete();
+        
 
         return redirect()->route('liens.index')
             ->withSuccess(__('Lien supprimé avec succès.'));

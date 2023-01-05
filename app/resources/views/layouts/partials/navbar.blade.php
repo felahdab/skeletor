@@ -9,7 +9,7 @@
             @auth
             @can('users.index')
             <div class="dropdown nav-item" >
-              <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <button dusk="administration-button" class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               Administration
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -88,8 +88,9 @@
       @auth
         @impersonating()
             <a href="{{ route('impersonate.leave') }}" class="btn btn-outline-danger me-2">Redevenir soit meme</a>
-        @endImpersonating
-        <img src='{!! asset("assets/images/Question_mark.svg") !!}' style="height:50px;">
+	@endImpersonating
+
+	@yield('helplink')
         <button class='btn btn-warning' onclick='affichage("bugreport");'>Signaler un problème</button>
         
       

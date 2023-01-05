@@ -1,5 +1,10 @@
 @extends('layouts.app-master')
 
+@section('helplink')
+<x-documentation-link page="statistiques"/>
+@endsection
+
+
 @section('content')
     <div class="bg-light p-4 rounded">
         <h2>SUIVI TRANSFORMATION </h2>

@@ -1,5 +1,10 @@
 @extends('layouts.app-master')
 
+@section('helplink')
+<x-documentation-link page="statistiques"/>
+@endsection
+
+
 @section('content')
         <div class='flex'>
             <div style='width: 50%; background-color: transparent;'>

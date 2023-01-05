@@ -1,0 +1,58 @@
+version: '3'
+services:
+    web:
+        image: ffast-web 
+        volumes:
+            - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+            - ../app/:/app
+        networks:
+             - backend
+             - private
+    php:
+        image: ffast-php:0.5
+        volumes:
+            - ../app:/app
+        networks:
+             - private
+    db:
+        image: mariadb:10.8.3
+        environment:
+          MYSQL_ROOT_PASSWORD: 'secret'
+          MYSQL_USER: 'ffast'
+          MYSQL_PASSWORD: 'ffast'
+          MYSQL_DATABASE: 'ffastdb'
+        volumes:
+            - mysqldata:/var/lib/mysql
+        networks:
+             - private
+    phpmyadmin:
+        image: phpmyadmin
+        environment:
+           PMA_ABSOLUTE_URI: ${INSTANCEURL}/pma/
+           PMA_HOST: db
+        networks:
+          - private
+    code-editor:
+        image: codercom/code-server
+        networks:
+          - private
+        user: "1000:1002"
+        volumes:
+          - ../:/home/coder/project/
+    selenium:
+        image: 'selenium/standalone-chrome'
+        # extra_hosts:
+        #    - 'host.docker.internal:host-gateway'
+        volumes:
+            - '/dev/shm:/dev/shm'
+        shm_size: '2gb'
+        networks:
+            - private
+volumes:
+    mysqldata: {}
+networks:
+  private:
+    driver: bridge
+  backend:
+    external: true
+    name: backend

@@ -25,13 +25,6 @@ services:
             - mysqldata:/var/lib/mysql
         networks:
              - private
-    phpmyadmin:
-        image: phpmyadmin
-        environment:
-           PMA_ABSOLUTE_URI: ${INSTANCEURL}/pma/
-           PMA_HOST: db
-        networks:
-          - private
     code-editor:
         image: codercom/code-server
         networks:
@@ -39,6 +32,13 @@ services:
         user: "1000:1002"
         volumes:
           - ../:/home/coder/project/
+    phpmyadmin:
+        image: phpmyadmin
+        environment:
+           PMA_ABSOLUTE_URI: ${INSTANCEURL}/pma/
+           PMA_HOST: db
+        networks:
+          - private
 volumes:
     mysqldata: {}
 networks:
