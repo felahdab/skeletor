@@ -31,8 +31,8 @@ class StatistiqueController extends Controller
         
         $statistiques = Statistique::all()->where("periode", $period);
         
-        $liste_des_periodes = Statistique::all()->pluck('periode')->sortBy('periode')->unique();
-        
+        $liste_des_periodes = Statistique::all()->pluck('periode')->sort()->unique();
+
         return view('statistiques.index', ['period' => $period,
                                            'liste_des_periodes' => $liste_des_periodes,
                                            'statistiques'       => $statistiques]);

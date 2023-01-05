@@ -48,8 +48,8 @@ class Statistique extends Model
     public function getPeriodeAttribute()
     {
         $date_stat = new DateTime($this->date_stat);
-        $month = $date_stat->format("n");
+        $month = $date_stat->format("m");
         $year = $date_stat->format("Y");
-        return $year . "/" . $month;
+        return $year . "-" . $month;
     }
 }
