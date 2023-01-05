@@ -33,7 +33,7 @@ class LocalLoginTest extends DuskTestCase
                     ->type('@login-email', $user->email)
                     ->type('@login-password', 'admin123')
                     ->press('@login-button')
-                    ->assertPathIs('/florian/statistiques/pour2ps');
+                    ->assertPathIs('/testing/statistiques/pour2ps');
         });
     }
 }
