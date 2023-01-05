@@ -69,14 +69,19 @@ class GenerateStatistics extends Command
             $dbrecord->delete();
         }
         
-        $users = User::where('unite_id', $unite->id)
-            ->where('date_debarq', '>', $date_min)
-            ->where('date_debarq', '<=', $date_max)
-            ->whereNotIn('unite_destination_id',[1,2,19]) // Les 2 GTR et hors escouade
-            ->whereNotNull('unite_destination_id')
-            ->get();
+        // $users = User::where('unite_id', $unite->id)
+            // ->where('date_debarq', '>', $date_min)
+            // ->where('date_debarq', '<=', $date_max)
+            // ->whereNotIn('unite_destination_id',[1,2,19]) // Les 2 GTR et hors escouade
+            // ->whereNotNull('unite_destination_id')
+            // ->get();
             
         // $this->info($users);
+        $users = User::withTrashed
+            ->where('date_debarq', '>', $date_min)
+            ->where('date_debarq', '<=', $date_max)
+            ->get();
+        
         
         foreach ($users as $user)
         {
@@ -84,7 +89,7 @@ class GenerateStatistics extends Command
             $date_embarq = new Carbon($user->date_embarq);
             $date_debarq = new Carbon($user->date_debarq);
             $nb_jour_gtr = $date_debarq->diffInDays($date_embarq);
-            $this->info($nb_jour_gtr);
+            // $this->info($nb_jour_gtr);
             
             $nb_stage_total = 0;
             $nb_stage_total = $user->stages()->get()->count();
@@ -108,10 +113,10 @@ class GenerateStatistics extends Command
             if ($total_des_coeff>0)
                 $taux_validation_coeff = 100 * $coeff_valides / $total_des_coeff;
             
-            $taux_transfo=0;
-            if ($nb_stage_total>0 and $total_des_coeff>0){
-                $taux_transfo = 100 * ($nb_stage_valides + $coeff_valides) / ($nb_stage_total + $total_des_coeff) ;
-            }
+            // $taux_transfo=0;
+            // if ($nb_stage_total>0 and $total_des_coeff>0){
+                // $taux_transfo = 100 * ($nb_stage_valides + $coeff_valides) / ($nb_stage_total + $total_des_coeff) ;
+            // }
             
             $nb_jour_quai=0;
             $fonction_a_quai = $user->fonctionAQuai();
@@ -119,7 +124,7 @@ class GenerateStatistics extends Command
                 if (!is_null($fonction_a_quai->pivot->date_lache)){
                     $date_validation = new Carbon($fonction_a_quai->pivot->date_lache);
                     $nb_jour_quai= $date_validation->diffInDays($date_embarq);
-                    $this->info($nb_jour_quai);
+                    // $this->info($nb_jour_quai);
                 }    
             }
             
@@ -129,7 +134,7 @@ class GenerateStatistics extends Command
                 if (!is_null($fonction_a_mer->pivot->date_lache)){
                     $date_validation = new Carbon($fonction_a_mer->pivot->date_lache);
                     $nb_jour_mer= $date_validation->diffInDays($date_embarq);
-                    $this->info($nb_jour_mer);
+                    // $this->info($nb_jour_mer);
                 }    
             }
             
@@ -144,7 +149,7 @@ class GenerateStatistics extends Command
                 if (!is_null($latest_validation_date)){
                     $date_validation = new Carbon($latest_validation_date->pivot->date_lache);
                     $nb_jour_metier= $date_validation->diffInDays($date_embarq);
-                    $this->info($nb_jour_metier);
+                    // $this->info($nb_jour_metier);
                 }
             }
             
@@ -163,7 +168,8 @@ class GenerateStatistics extends Command
                 'gpmt'                      => $user->groupement()->groupement_libcourt,
                 'taux_stage_valides'        => $taux_validation_stage,
                 'taux_comp_valides'         => $taux_validation_coeff,
-                'taux_de_transformation'    => $taux_transfo,
+                // 'taux_de_transformation'    => $taux_transfo,
+                'taux_de_transformation'    => $user->taux_de_transformation,
                 'nb_jour_pour_lache_quai'   => $nb_jour_quai,
                 'nb_jour_pour_lache_mer'    => $nb_jour_mer,
                 'nb_jour_pour_lache_metier' => $nb_jour_metier,]
