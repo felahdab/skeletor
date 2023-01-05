@@ -1,3 +1,17 @@
+## 1.0.5 (janvier 05, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.4 –> 1.0.5
+- Changes the name of the dusk settings file. Dusk tests cannot run in testing environnement because the testing environnement comes with an in memory sqlite database settings which makes all data volatile.
+- Adjusted settings and paths for the testing scenario. Testing instance should always be instanciated as testing.
+- Added some tests in reset_app_prefix script to avoid spurious error messages.
+- Add livrets directory and .gitignore
+- Remove test pdf livrets
+- Remove color difference in navbar
+- Merge branch 'master' into tuleap-40560-suppression-d-un-user
+- Really fix merge conflict
+- Fix merge conflict
+- modif du calcul stat pour prise en compte des users softdeleted
+- ajout de la fonctionnalité archivage
+
 ## 1.0.4 (janvier 05, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.3 –> 1.0.4
 - The WebRoutesTest is modified to un cache the routes after the route caching test because it appears that route caching does not take the APP_PREFIX into account as it should, resulting in broken routes.
