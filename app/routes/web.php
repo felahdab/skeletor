@@ -66,6 +66,11 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
 
         Route::resource('roles',          RolesController::class);
         Route::resource('permissions',    PermissionsController::class);
+        // Route::resource('archivage',    ArchivageController::class);
+        Route::get('archivage', 'ArchivageController@index')->name('archivage.index');
+        Route::get('archivage/{user}/restauration', 'ArchivageController@restaurer')->name('archivage.restaurer');
+        Route::get('archivage/{user}/archivage', 'ArchivageController@archiver')->name('archivage.archiver');
+        
         
         Route::resource('sous-objectifs', SousObjectifController::class);
         Route::post('sous-objectifs/multipleupdate', 'SousObjectifController@multipleupdate')->name('sous-objectifs.multipleupdate');

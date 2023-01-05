@@ -1,4 +1,5 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-dark sticky-top ">
+<!--nav class="navbar navbar-expand-lg navbar-light bg-dark sticky-top "-->
+<nav class="navbar navbar-expand-lg navbar-light bg-secondary sticky-top ">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon bg-light"></span>
     </button>
@@ -19,6 +20,7 @@
                 @can('liens.index')<a class="dropdown-item" href="{{ route('liens.index')}}">Liens</a>@endcan
                 @can('historique.index')<a class="dropdown-item" href="{{ route('historique.index')}}">Historique</a>@endcan
                 @can('annudef.index')<a class="dropdown-item" href="{{ route('annudef.index')}}">Annudef</a>@endcan
+                @can('archivage.index')<a class="dropdown-item" href="{{ route('archivage.index')}}">Archivage</a>@endcan
               </div>
             </div>
             @endcan

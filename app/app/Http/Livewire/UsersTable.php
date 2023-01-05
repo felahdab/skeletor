@@ -31,6 +31,10 @@ class UsersTable extends DataTableComponent
                 $userlist = User::query()->join('user_fonction','users.id','=','user_id')->Where('fonction_id', $this->fonction->id)->get()->pluck('user_id', 'id');
                 return User::query()->whereIn('users.id', $userlist);
                 break;
+            case "archiv" :
+                $today=date('d/m/Y');
+                return User::withTrashed()->whereNotNull('users.date_debarq')->whereNull('users.date_archivage');
+                break;
             default :
                 return User::query();
                 break;
@@ -55,6 +59,9 @@ class UsersTable extends DataTableComponent
                 break;
             case "transformation" :
                 return view('tables.userstable.transformation');
+                break;
+            case "archiv" :
+                return view('tables.userstable.archivage');
                 break;
         }
     }
@@ -135,6 +142,16 @@ class UsersTable extends DataTableComponent
                     Column::make('Laché')
                         ->label(
                             fn($row, Column $column) => $row->fonctions()->find($this->fonction)->pivot->date_lache ),
+                ]);
+                break;
+            case "archiv" :
+                return array_merge($basecolumns , [
+                    Column::make('Débarq.', 'date_debarq')
+                        ->searchable(),
+                    Column::make('Actions')
+                        ->label(
+                            fn($row, Column $column) => $this->userActions()->withRow($row)
+                            ),
                 ]);
                 break;
             default :
