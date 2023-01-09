@@ -6,6 +6,8 @@ use Illuminate\Support\Carbon;
 
 use Illuminate\Http\Request;
 
+use App\Service\StatService;
+
 use App\Models\Statistique;
 use App\Models\Stage;
 use App\Models\User;
@@ -18,13 +20,21 @@ class StatistiqueController extends Controller
 {
     public function index(Request $request) 
     {
-        
         if ($request->has("period"))
+        {
             $period = $request["period"];
+            $pieces = explode("-", $period);
+            $date_calcul = Carbon::create($pieces[0], $pieces[1], 1,0,0,0);
+        }
         else
         {
-            $date_stat = Carbon::now();
-            $period =$date_stat->format("Y") . "-" . $date_stat->format("m");
+            $date_calcul = Carbon::now();
+            $period =$date_calcul->format("Y") . "-" . $date_calcul->format("m");
+        }
+        
+        if ($request->has("calcul")&& $request["period"]==$request["calcul"]) 
+        {
+            StatService::GenerateStatistics($date_calcul);
         }
         
         $statistiques = Statistique::all()->where("periode", $period);

@@ -18,7 +18,7 @@
         </div>
         <div class="lead mt-3">
             <form method='post' action='#'>
-                Période sélectionnée : {{$period}} <a class='btn btn-success btn-sm ml-2' href="{{ route('statistiques.index', ['period' =>$period] ) }}" id='btnstat' name='btnstat'>Recalculer cette période</a>
+                Période sélectionnée : {{$period}} <a class='btn btn-success btn-sm ml-2' href="{{ route('statistiques.index', ['period' =>$period, 'calcul' =>$period] ) }}" id='btnstat' name='btnstat'>Recalculer cette période</a>
             </form>
         </div>
     </div>

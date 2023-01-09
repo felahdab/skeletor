@@ -1,10 +1,12 @@
 <?php
 namespace App\Service;
 
+use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
+use Illuminate\Http\Request;
+
 use App\Models\User;
 use App\Models\Statistique;
-
-use Illuminate\Support\Carbon;
 
 class StatService
 {
@@ -85,5 +87,28 @@ class StatService
             'nb_jour_pour_lache_mer'    => $nb_jour_mer,
             'nb_jour_pour_lache_metier' => $nb_jour_metier,]
         );
+    }
+
+    public static function GenerateStatistics($date_calcul)
+    {
+        $date_max = $date_calcul->copy()->lastOfMonth();
+        $date_min = $date_calcul->copy()->firstOfMonth();
+        $period =$date_calcul->format("Y") . "-" . $date_calcul->format("m");
+
+        $existing_stats_for_period = Statistique::all()->where('periode', $period);
+        foreach ($existing_stats_for_period as $stat)
+        {
+            $dbrecord = Statistique::find($stat->id);
+            // $dbrecord->delete();
+        }
+        
+        $users = User::withTrashed()
+            ->where('date_debarq', '>', $date_min)
+            ->where('date_debarq', '<=', $date_max)
+            ->get();
+        foreach ($users as $user)
+        {
+            StatService::statuser($user);
+        }
     }
 }
