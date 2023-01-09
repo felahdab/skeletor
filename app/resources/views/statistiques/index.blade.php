@@ -8,31 +8,29 @@
 @section('content')
     <div class="bg-light p-4 rounded">
         <h2>Indicateurs</h2>
-        <div class='mb-2 ml-2 mt-2 mr-2 w-25'>
+        <div class='mb-2 mt-2 me-2 w-25'>
             <select name='listdates' id='listdates' class='custom-select w-100' onchange='modifparam("period","listdates");'>
-                <option value =''>Choisissez la période</option>
+                <option value ='à choisir'>Choisissez la période</option>
             @foreach ($liste_des_periodes as $per)
                 <option value ='{{$per}}'>{{$per}}</option>
              @endforeach
             </select>
         </div>
-        <a class='btn btn-secondary btn-sm' href='#' onclick='affichage("indic");annuler("durspe");annuler("durmarin");annuler("durgtr");'>Indicateurs</a>
-        <a class='btn btn-primary btn-sm' href='#' onclick='annuler("indic");annuler("durspe");affichage("durmarin");annuler("durgtr");'>Temps de l&acirc;cher par marin</a>
-        <a class='btn btn-info btn-sm' href='#' onclick='annuler("indic");affichage("durspe");annuler("durmarin");annuler("durgtr");'>Temps de l&acirc;cher par sp&eacute;</a>
-@php
-    $periode="à choisir";
-    if (isset($_GET["period"])){
-        $periode=$_GET["period"];
-    }
-@endphp
-        <div class="lead mt-2">
-            Période sélectionnée : {{$periode}}
+        <div class="lead mt-3">
+            <form method='post' action='#'>
+                Période sélectionnée : {{$period}} <a class='btn btn-success btn-sm ml-2' href="{{ route('statistiques.index', ['period' =>$period] ) }}" id='btnstat' name='btnstat'>Recalculer cette période</a>
+            </form>
         </div>
     </div>
+    <div class='ms-4'>
+        <a class='btn btn-secondary btn-sm' href='#' onclick='affichage("indic");annuler("durspe");annuler("durmarin");'>Indicateurs</a>
+        <a class='btn btn-primary btn-sm' href='#' onclick='annuler("indic");annuler("durspe");affichage("durmarin");'>Temps de l&acirc;cher par marin</a>
+        <a class='btn btn-info btn-sm' href='#' onclick='annuler("indic");affichage("durspe");annuler("durmarin");'>Temps de l&acirc;cher par sp&eacute;</a>
+    </div>
     <div class='flex' style='justify-content: start;'>
-        <div id='indic' class='card bg-light ml-3 w-50' style=''>
+        <div id='indic' class='card bg-light w-50' style=''>
             <div class='card-header'>Indicateurs 2PS </div>
-            <div id='div2ps' class='mb-2 ml-2 mt-2 mr-2'>
+            <div id='div2ps' class='mb-2 mt-2'>
                 <table class='table table-hover'>
                     <tr>
                         <td>Nb marins</td>
@@ -40,24 +38,24 @@
                     </tr>
                     <tr>
                         <td>Taux SAE achev&eacute;</td>
-                        <td>{{$statistiques->avg('taux_stage_valides')}}%</td>
+                        <td>{{round($statistiques->avg('taux_stage_valides'),2)}}%</td>
                     </tr>
                     <tr>
                         <td>Taux compagnonnage achev&eacute;</td>
-                        <td>{{$statistiques->avg('taux_comp_valides')}}%</td>
+                        <td>{{round($statistiques->avg('taux_comp_valides'),2)}}%</td>
                     </tr>
                     <tr>
                         <td>Taux transformation</td>
-                        <td>{{$statistiques->avg('taux_de_transformation')}}%</td>
+                        <td>{{round($statistiques->avg('taux_de_transformation'),2)}}%</td>
                     </tr>
                     <tr>
                         <td>Nb jours au GTR</td>
-                        <td>{{$statistiques->avg('nb_jour_gtr')}}</td>
+                        <td>{{round($statistiques->avg('nb_jour_gtr'),0)}}</td>
                     </tr>
                 </table>
             </div>
             <div class='card-header'>Indicateurs OPS </div>
-            <div id='divops' class='mb-2 ml-2 mt-2 mr-2'>
+            <div id='divops' class='mb-2 mt-2'>
                 <table class='table table-hover'>
                     <tr title=''>
                         <td>Nb de marins</td>
@@ -88,7 +86,7 @@
                 </table>
             </div>
             <div class='card-header'>Indicateurs NAV </div>
-            <div id='divnav' class='mb-2 ml-2 mt-2 mr-2'>
+            <div id='divnav' class='mb-2 mt-2'>
                 <table class='table table-hover'>
                     <tr title=''>
                         <td>Nb de marins</td>
@@ -119,7 +117,7 @@
                 </table>
             </div>
         </div>
-        <div id='durmarin' class='card bg-light ml-3 w-100' style='display:none;'>
+        <div id='durmarin' class='card bg-light w-100' style='display:none;'>
             <div class='card-header'>Dur&eacute;e moyenne avant l&acirc;cher par marin</div>
             <table class='table table-hover'>
                 <tr>
@@ -150,7 +148,7 @@
                 @endforeach
             </table>
         </div>
-        <div id='durspe' class='card bg-light ml-3 w-50' style='display:none;'>
+        <div id='durspe' class='card bg-light w-50' style='display:none;'>
             <div class='card-header'>Dur&eacute;e moyenne (jour) avant l&acirc;cher par brevet/sp&eacute;cialit&eacute; </div>
             <table class='table table-hover'>
                 <tr>
