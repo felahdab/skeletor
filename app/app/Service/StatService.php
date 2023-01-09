@@ -99,7 +99,7 @@ class StatService
         foreach ($existing_stats_for_period as $stat)
         {
             $dbrecord = Statistique::find($stat->id);
-            // $dbrecord->delete();
+            $dbrecord->delete();
         }
         
         $users = User::withTrashed()
