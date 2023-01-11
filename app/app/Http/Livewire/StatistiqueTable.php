@@ -84,7 +84,7 @@ class StatistiqueTable extends DataTableComponent
                 ->sortable(),
             Column::make("Fonc metier", "nb_jour_pour_lache_metier")
                 ->sortable(),
-            Column::make("Nb jours", "nb_jour_gtr")
+            Column::make("Présence", "nb_jour_gtr")
                 ->sortable(),
         ];
     }

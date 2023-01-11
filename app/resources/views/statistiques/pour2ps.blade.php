@@ -34,7 +34,7 @@
             </div>
             <div style='width: 50%; background-color: transparent;'>
                 <div style='width:80%; border: 1px solid darkgrey'>
-                    <p class='card-header border' style='height: 48px;'> STAGES EXT&Eacute;RIEURS</p>
+                    <p class='card-header border' style='height: 48px; text-align:center;'> STAGES EXT&Eacute;RIEURS</p>
                     <div>
                         <table class='table table-hover'>
                             <thead>
