@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+
+use App\Models\User;
+use App\Models\UserSousObjectif;
+
+use App\Jobs\CalculateUserTransformationRatios;
+
+class SuppressDoublons extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'ffast:suppressdoublons';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Supprimer les doubles dans la table user_sous_objectif. Recalcule le taux de transformation.';
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
+        foreach (User::withTrashed()->get() as $user) {
+            $userid=$user->id;
+            $this->info($userid);
+            if ($user->sous_objectifs->count() != 0){
+                $liste_totale = $user->sous_objectifs->pluck('id');
+                $liste_unique = $user->sous_objectifs->pluck('id')->unique();
+                if ($liste_unique->count() != $liste_totale->count()){
+                    $this->warn("Non unique");
+                    foreach($liste_unique as $ssobjid){
+                        $keep=UserSousObjectif::where('user_id', $userid)->where('sous_objectif_id', $ssobjid)->first();
+                        UserSousObjectif::where('user_id', $userid)->where('sous_objectif_id', $ssobjid)->where('id', '!=', $keep->id)->delete();
+                        $this->info($keep);
+                    }
+                }
+            }
+        }
+        
+        foreach (User::withTrashed()->get() as $user) {
+            $this->info("Dispatching: " . $user->id);
+            CalculateUserTransformationRatios::dispatch($user);
+        }
+        
+        return Command::SUCCESS;
+    }
+}
