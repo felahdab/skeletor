@@ -41,8 +41,6 @@ services:
           - ../:/home/coder/project/
     metabase:
         image: metabase/metabase
-        ports:
-          - 3000:3000
         networks:
           - private
         environment:
