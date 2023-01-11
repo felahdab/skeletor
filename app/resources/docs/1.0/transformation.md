@@ -73,9 +73,10 @@ Le bouton « Imprimer » (5) permet d’éditer le livret au format pdf.
 Représentation graphique du taux de transformation global puis par fonction.
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/progression.png' )) }}" width=600px> 
 On retrouve le titre de la fonction (1) (2), le taux de transformation pour cette fonction (3) (4), la liste des stages associés (5) (6) et le taux d’avancement par compagnonnage (7) (8). 
-        Somme coefficients sous objectifs validés + nb stages validés
-Tx transfo =                                                                                                                    x 100
-		       Somme coefficients sous objectifs + nb stages
+
+                         Somme coefficients sous objectifs validés + nb stages validés
+    Tx transfo =  100 x ---------------------------------------------------------------
+                               Somme coefficients sous objectifs + nb stages
 
 <a name="fiche-bilan">
 ### Fiche bilan
