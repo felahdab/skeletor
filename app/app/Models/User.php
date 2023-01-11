@@ -799,7 +799,7 @@ class User extends Authenticatable
                 $workcoll = $workcoll->concat(collect([$trouve]));
         }
         
-        return 100.0 * $workcoll->count() / $comp->coll_sous_objectifs()->count();
+        return round(100.0 * $workcoll->count() / $comp->coll_sous_objectifs()->count(),2);
     }
     
     public function getEnTransformationAttribute()

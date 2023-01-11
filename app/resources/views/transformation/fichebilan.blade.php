@@ -50,7 +50,7 @@
                     <tr class='enTeteFicheSynthese'>
                         <!-- Pourcentage transformation -->
                         <td colspan='2' class='text-right'>Taux de transformation :</td>
-                        <td id='tdTauxTransformation' class='text-left'>{{substr($user->taux_de_transformation, 0, 4)}}%</td>
+                        <td id='tdTauxTransformation' class='text-left'>{{round($user->taux_de_transformation, 2)}}%</td>
                         <td></td>
                     </tr>
                     @if ($user->fonctionAQuai() != null)
