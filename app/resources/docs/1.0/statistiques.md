@@ -5,7 +5,7 @@
 - [Bilan global](#bilan-global)
 - [Indicateurs](#indicateurs)
 
-> {info} Pour exporter ces tableaux sous Excel, sélectionnez toutes les cases voulues en maintenant enfoncée la touche « Ctrl » de votre clavier puis copiez et collez dans votre fichier Excel.
+> {info} Pour exporter ces tableaux sous Excel, sélectionnez toutes les cases souhaitées en maintenant enfoncée la touche « Ctrl » de votre clavier puis copiez et collez dans votre fichier Excel.
 
 <a name="bilan-service">
 ## Bilan par service
@@ -19,7 +19,7 @@ Pour chaque marin, vous pouvez consulter l’ensemble des fonctions qui lui sont
 
 <a name="bilan-stage">
 ## Bilan par stage
-Page permettant d’afficher un tableau récapitulant le nombre de marins en attente de validation d’un stage sous licence (1) et un tableau récapitulant le nombre de marins en attente de validation d’un stage extérieur (2).
+Page permettant d’afficher le tableau récapitulatif le nombre de marins en attente de validation d’un stage sous licence (1) et un tableau récapitulant le nombre de marins en attente de validation d’un stage extérieur (2).
 
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/statistiques/bilan_stages.png' )) }}" width=1000px> 
 
