@@ -39,6 +39,18 @@ services:
         user: "1000:1002"
         volumes:
           - ../:/home/coder/project/
+    metabase:
+        image: metabase/metabase
+        ports:
+          - 3000:3000
+        networks:
+          - private
+        environment:
+          MB_DB_FILE: '/metabase-data/metabase.db'
+          MUID: 1002
+          MGID: 1002
+        volumes:
+          - ../metabase-data:/metabase-data
     selenium:
         image: 'selenium/standalone-chrome'
         # extra_hosts:
