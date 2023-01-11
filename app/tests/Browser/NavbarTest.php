@@ -12,21 +12,31 @@ class NavbarTest extends DuskTestCase
 {
     public function test_main_menu_displays()
     {
-        $this->browse(function ($browser) {
-            $browser->loginAs(User::find(1))
+        $user=User::factory()->create();
+        $user->assignRole("admin");
+        
+        $this->browse(function ($browser) use ($user){
+            $browser->loginAs($user)
                   ->visit(route('home.index'))
                   ->assertSee('Accueil');
         });
+        
+        $user->forceDelete();
     }
 
     public function test_users_table_displays()
     {
-        $this->browse(function ($browser) {
-            $browser->loginAs(User::find(1))
+        $user=User::factory()->create();
+        $user->assignRole("admin");
+        
+        $this->browse(function ($browser)  use ($user){
+            $browser->loginAs($user)
                   ->visit(route('home.index'))
                   ->assertSee('Accueil')
                   ->click("@administration-button")
                   ->assertSee('Demandes Mindef Connect');
         });
+        
+        $user->forceDelete();
     }
 }

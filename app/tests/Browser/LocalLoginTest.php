@@ -25,7 +25,10 @@ class LocalLoginTest extends DuskTestCase
 
     public function test_local_login_as_admin()
     {
-        $user=User::find(1);
+        $user=User::factory()->create();
+        $user->password="admin123";
+        $user->save();
+        $user->assignRole("admin");
         
         $this->browse(function (Browser $browser) use($user) {
             $browser->visit(route('login.show'))
@@ -33,7 +36,9 @@ class LocalLoginTest extends DuskTestCase
                     ->type('@login-email', $user->email)
                     ->type('@login-password', 'admin123')
                     ->press('@login-button')
-                    ->assertPathIs('/testing/statistiques/pour2ps');
+                    ->assertPathIs('/' . env('APP_PREFIX'));
         });
+        
+        $user->forceDelete();
     }
 }
