@@ -1,36 +1,20 @@
 # Administration
 
-- [Menu principal](#menu-principal)
-- [Administration](#administration)
-   - [Demandes Mindef Connect](#demandes-mindef-connect)
-   - [Fiches des marins](#fiches-des-marins)
-   - [Rôles](#roles)
-   - [Droits d'accès](#permissions)
-   - [Liens](#liens)
-   - [Historique](#historique)
-   - [Annudef](#annudef)
-   - [Mails](#mails)
+- [Menu Administration](#menu_administration)
+- [Demandes Mindef Connect](#demandes-mindef-connect)
+- [Fiches des marins](#fiches-des-marins)
+- [Rôles](#roles)
+- [Droits d'accès](#permissions)
+- [Liens](#liens)
+- [Historique](#historique)
+- [Annudef](#annudef)
+- [Archivage](#archivage)
+- [Mails](#mails)
 
 
-<a name="menu-principal">
-# Menu principal
-
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/administration/menu-principal.png' )) }}" width=1000px>
-
-1. Menu horizontal proposant les fonctionnalités disponibles :
-  - Accueil : pour revenir à la page d’accueil.
-  - Administration : menu qui regroupe les fonctionnalités liées à l’administration de l’application.
-  - Parcours : menu permettant de gérer tous les composants du parcours de transformation.
-  - Transformation : menu pour gérer la transformation des marins de l’unité.
-  - Ma transformation : Données concernant votre propre transformation. Ce menu n’apparait que si vous avez une fonction de service.
-  - Statistiques : tableaux récapitulatifs des taux de transformation des marins.
-2. le nom de l’utilisateur connecté est aussi un menu qui permet de se déconnecter (Logout).
-
-** Remarque : ** les menus 1 et 2 sont accessibles depuis n’importe quel écran de l’application.
-
-<a name="administration">
-# Administration
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/administration/menu-administration.png' )) }}" width=400px>
+<a name="menu_administration">
+## Menu Administration
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/administration/menu-administration.png' )) }}" width=300px>
 Ce menu permet d’accéder : 
  
 1. Liste des demandes de connexion en attente de validation.
@@ -65,13 +49,14 @@ Vous retrouvez la liste de tous les marins ayant le droit de se connecter à l�
 
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/administration/liste-utilisateurs.png' )) }}" width=1000px>
 
-(4) « Ajouter un marin » pour créer un nouveau compte.
-(5) « Modifier » les données du marin.
-(6) « Supprimer » le marin. 
+(4) « Ajouter un marin » pour créer un nouveau compte.  
+(5) « Modifier » les données du marin.  
+(6) « Supprimer » le marin.  
 
-** Remarque : ** La suppression ne supprime pas le marin de la BDD mais il n’est plus visible dans les listes. Le compte ne peut plus être créé à nouveau.
+** Remarque : ** La suppression ne supprime pas le marin de la BDD mais il n’est plus visible dans les listes. Le compte ne peut plus être créé à nouveau. Pour rendre visible ce marin, allez "Restaurer" le marin dans le menu Archivage.
 
-(7) « Changer le mot de passe » valable uniquement pour les marins qui n’utilisent pas la connexion Mindef Connect.
+
+(7) « Changer le mot de passe » valable uniquement pour les marins qui n’utilisent pas la connexion Mindef Connect.  
 (8) « Se faire passer pour » permet de prendre la place du marin sélectionné.
 
 
@@ -131,6 +116,16 @@ Pour cela:
 - rechercher l'utilisateur (ou un groupe d'utilisateurs par exemple en utilisant la recherche par entité).
 - aligner les données, soit fiche par fiche, soit en masse grâce aux boutons en tête de liste.
 
+<a name="archivage">
+## Archivage
+Cet écran va permettre d'archiver les marins. Vous y retrouvez : 
+- les marins pour lesquels la date de débarquement a été renseignée. 
+- les marins supprimés dans le menu "Fiches des marins".
+
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/administration/archivage.png' )) }}" width=1000px>
+
+Le bouton "Restaurer" (1) permet de rendre un utilisateur visible s'il a été supprimé dans l'écran "Fiches des marins".
+Le bouton "Archivage" (2) supprime l'utilisateur de la visualisation dans l'application. Son livret de transformation est sauvegardé sur le serveur et ses données enregistrées pour établir des statistiques.
 
 <a name="mails">
 ## Mails

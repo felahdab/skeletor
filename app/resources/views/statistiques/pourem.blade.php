@@ -41,7 +41,7 @@
                     </tr>
                     @foreach($fonctionsaquai->get() as $fonction)
                         <tr title='@foreach($fonction->users()->get() as $marin)
-                            {!! $marin->display_name . "(" . substr($marin->pourcentage_valides_pour_fonction($fonction), 0, 4) . ")" !!}
+                            {!! $marin->display_name . "(" . round($marin->pourcentage_valides_pour_fonction($fonction), 2) . ")" !!}
                         @endforeach'>
                             <td><a href="{{route ('fonctions.listemarinsfonction', $fonction->id ) }}">{{$fonction->fonction_libcourt}}</a></td>
                             <td>{{$fonction->users()->count()}}</td>

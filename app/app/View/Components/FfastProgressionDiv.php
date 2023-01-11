@@ -38,7 +38,7 @@ class FfastProgressionDiv extends Component
             $color = 'orangered';
         else
             $color = 'red';
-        $pourcentagestr = substr($this->pourcentage, 0, 5);
+        $pourcentagestr = round($this->pourcentage, 2);
         if ($this->text == "")
             $this->text = $pourcentagestr . "%";
         switch ($this->style){

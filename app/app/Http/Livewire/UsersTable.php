@@ -33,7 +33,13 @@ class UsersTable extends DataTableComponent
                 break;
             case "archiv" :
                 $today=date('d/m/Y');
-                return User::withTrashed()->whereNotNull('users.date_debarq')->whereNull('users.date_archivage');
+                $userlist =User::withTrashed()->whereNull('users.date_archivage')
+                ->where(function($query)
+                {
+                   $query->whereNotNull('users.deleted_at')
+                         ->OrWhereNotNull('users.date_debarq'); 
+                });
+                return $userlist;
                 break;
             default :
                 return User::query();

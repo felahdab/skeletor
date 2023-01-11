@@ -63,7 +63,7 @@
                         <td>{{round($statistiques->avg('taux_de_transformation'),2)}}%</td>
                     </tr>
                     <tr>
-                        <td>Nb jours au GTR</td>
+                        <td>Pr&eacute;sence</td>
                         <td>{{round($statistiques->where('gpmt', 'OPS')->avg('nb_jour_gtr'),0)}}</td>
                         <td>{{round($statistiques->where('gpmt', 'NAV')->avg('nb_jour_gtr'),0)}}</td>
                         <td>{{round($statistiques->avg('nb_jour_gtr'),0)}}</td>
