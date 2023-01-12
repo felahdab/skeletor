@@ -7,5 +7,5 @@ PARENTDIR=$(dirname $BASEDIRECTORY)
 STACKNAME=$(basename $PARENTDIR)
 
 
-echo -n "" > .env
-cp -a nginx_base.conf nginx.conf
+rm -f .env
+rm -f nginx.conf
