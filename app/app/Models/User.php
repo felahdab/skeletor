@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\TransformationHistory;
 use App\Models\Stage;
 use App\Models\Fonction;
+use App\Models\UserSousObjectif;
 
 class User extends Authenticatable
 {
@@ -478,9 +479,34 @@ class User extends Authenticatable
     {
         $this->fonctions()->detach($fonction);
         $this->logTransformationHistory("RETIRE_FONCTION", json_encode(["fonction" => $fonction]));
-        foreach($fonction->stages()->get() as $stage)
-            $this->detachStage($stage);
         CalculateUserTransformationRatios::dispatch($this);
+        
+        return;
+        ///////////////////////////////////////////////////////
+        // suppression des stages associés
+        // foreach($fonction->stages()->get() as $stage)
+            // $this->detachStage($stage);
+        // il faut supprimer les ssobj valides associes 
+        // mais faire attention qu'ils n'appartiennent pas à une autre fonction
+        // la fonc est déja detachee
+
+        // $list_ssobj_asuppr=UserSousObjectif::where ('user_id' , $this->id)->get();
+        
+        // $list_ssobj_restants = collect([]);
+        // foreach($this->fonctions()->get() as $fonction)
+        // {
+            // $list_ssobj_restants=$list_ssobj_restants->merge($fonction->coll_sous_objectifs());
+        // }
+        // $list_ssobj_restants=$list_ssobj_restants->unique();
+        
+        // foreach($list_ssobj_asuppr as $ssobj_asupp)
+        // {
+            // if (!$list_ssobj_restants->contains('id', $ssobj_asupp->sous_objectif_id)){
+                //// dd ($ssobj_asupp->sous_objectif_id);
+                // UserSousObjectif::where ('user_id' , $this->id)->where ('sous_objectif_id' , $ssobj_asupp->sous_objectif_id)->delete();
+            // }
+        // }
+        ///////////////////////////////////////////////////////
         
     }
     
