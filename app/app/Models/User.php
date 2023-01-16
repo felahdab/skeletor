@@ -607,7 +607,7 @@ class User extends Authenticatable
         {
             $this->UnValidateObjectif( $objectif);
         }
-        CalculateUserTransformationRatios::dispatch($this);
+        CalculateUserTransformationRatios::dispatch($this); 
     }
     
     public function ValideLacheFonction(Fonction $fonction, $date_validation , $commentaire, $valideur)
