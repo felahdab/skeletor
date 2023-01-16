@@ -13,4 +13,4 @@ source $PARENTDIR/.env
 
 echo "INSTANCEURL=https://$DOMAIN/$PREFIX" > .env
 SED_CMD='s/STACKNAME/'${PREFIX}'/g'
-sed -i $SED_CMD nginx.conf
+sed $SED_CMD nginx_${ENVIRONNEMENT}.conf > nginx.conf

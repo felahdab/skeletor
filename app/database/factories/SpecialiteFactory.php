@@ -17,8 +17,8 @@ class SpecialiteFactory extends Factory
     public function definition()
     {
         return [
-   'specialite_libcourt' =>$this->faker->name(),
-            'specialite_liblong' =>$this->faker->name(),
+            'specialite_libcourt' =>$this->faker->text(5),
+            'specialite_liblong' =>$this->faker->text(5),
            //
         ];
     }

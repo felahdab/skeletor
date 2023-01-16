@@ -1,3 +1,44 @@
+## 1.0.6 (janvier 12, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.5 –> 1.0.6
+- Changed the way the prefix is bumped into the stack. Removed automaticaly generated files of composer (autoload).
+- Merge branch 'master' into tuleap-54260-integrer-une-solution-de-tableau-de-bord-indicateurs
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.5 –> 1.0.6
+- Correct dusk tests to create an admin user for the duration of the tests.
+- Correct bump_app_prefix script: must generate usable .env files and not update .slugs
+- Move the prefix issue up by moving .env files to slugs for each environment. Theses slugs are personalized when the instance is created.
+- Merge branch 'master' into tuleap-53243-revoir-toutes-les-stats
+- Add metabase container to the stack. Add /metabase location to nginx.conf. Metabase user data-analyst@ffast.intradef.gouv.fr / ffast83
+- corrections orthographiques
+- Create new command to suppress duplicate entries in user_sous_objectif table.
+- remplacement de substr par round pour les tx de transfo
+- mise à jour de la doc en ligne
+- corrections syntaxiques
+- correction requete selection users: manquait or deleted_at not null
+- Update compose autoload
+- Merge branch 'master' into tuleap-53243-revoir-toutes-les-stats
+- remplacement du tableau duree lacher par marin par une table livewire
+-  ajout fonction GenerateStatistics dans StatService pour re-calcul
+- revision des calculs de stat et activation du bouton recalcul
+- changement des libelles du menu statistique
+- evolution presentation ecran indicateurs
+- remplacement du code pour impression pdf par le service dans transfocontroller
+
+## 1.0.6 (janvier 11, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.5 –> 1.0.6
+- Correct dusk tests to create an admin user for the duration of the tests.
+- Correct bump_app_prefix script: must generate usable .env files and not update .slugs
+- Move the prefix issue up by moving .env files to slugs for each environment. Theses slugs are personalized when the instance is created.
+- Add metabase container to the stack. Add /metabase location to nginx.conf. Metabase user data-analyst@ffast.intradef.gouv.fr / ffast83
+- Create new command to suppress duplicate entries in user_sous_objectif table.
+- Update compose autoload
+- Merge branch 'master' into tuleap-53243-revoir-toutes-les-stats
+- remplacement du tableau duree lacher par marin par une table livewire
+-  ajout fonction GenerateStatistics dans StatService pour re-calcul
+- revision des calculs de stat et activation du bouton recalcul
+- changement des libelles du menu statistique
+- evolution presentation ecran indicateurs
+- remplacement du code pour impression pdf par le service dans transfocontroller
+
 ## 1.0.5 (janvier 05, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.4 –> 1.0.5
 - Changes the name of the dusk settings file. Dusk tests cannot run in testing environnement because the testing environnement comes with an in memory sqlite database settings which makes all data volatile.

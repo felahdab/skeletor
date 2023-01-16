@@ -41,12 +41,11 @@ services:
           - private
     metabase:
         image: metabase/metabase
-        ports:
-          - 3000:3000
         networks:
           - private
         environment:
           MB_DB_FILE: '/metabase-data/metabase.db'
+          MB_SITE_URL: ${INSTANCEURL}/metabase/
           MUID: 1002
           MGID: 1002
         volumes:

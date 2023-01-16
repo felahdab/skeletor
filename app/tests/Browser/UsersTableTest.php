@@ -17,11 +17,15 @@ class UsersTableTest extends DuskTestCase
      */
     public function test_users_table_gestion()
     {
-        $this->browse(function ($browser) {
-            $browser->loginAs(User::find(1))
+        $user=User::factory()->create();
+        $user->assignRole("admin");
+        
+        $this->browse(function ($browser)  use ($user){
+            $browser->loginAs($user)
                   ->visit(route('users.index'))
                   ->assertSee('Marins');
         });
         
+        $user->forceDelete();
     }
 }
