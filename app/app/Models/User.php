@@ -84,6 +84,9 @@ class User extends Authenticatable
     
     private $fonctionscount=null;
 
+    private $colls_sous_objs = [];
+    private $colls_sous_objs_non_orphelins = null;
+
     public function scopeLocal($query)
     {
         return; 
@@ -259,8 +262,27 @@ class User extends Authenticatable
             ->withPivot('commentaire', 'date_validation');
     }
     
-    public function sous_objectifs()
+    // Doit renvoyer la liste des sous objectifs que l'utilisateur a valide
+    // associes à une fonction actuelle de l'utilisateur.
+    public function sous_objectifs_non_orphelins()  
     {
+        if ($this->colls_sous_objs_non_orphelins != null)
+            return $this->colls_sous_objs_non_orphelins;
+        
+        $ssobj_du_parcours_de_transformation = $this->coll_sous_objectifs();
+        
+        $liste_sous_obj_valides = $this->belongsToMany(SousObjectif::class, 'user_sous_objectif')
+            ->withTimeStamps()
+            ->withPivot('commentaire', 'date_validation', 'valideur')
+            ->get();
+            
+        $resultat = $liste_sous_obj_valides->intersect($ssobj_du_parcours_de_transformation);
+        
+        $this->colls_sous_objs_non_orphelins = $resultat;
+        return $resultat;
+    }
+    
+    public function sous_objectifs(){  
         return $this->belongsToMany(SousObjectif::class, 'user_sous_objectif')
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation', 'valideur');
@@ -486,7 +508,8 @@ class User extends Authenticatable
         // suppression des stages associés
         // foreach($fonction->stages()->get() as $stage)
             // $this->detachStage($stage);
-        // il faut supprimer les ssobj valides associes 
+            
+        // suppression des ssobj valides associes 
         // mais faire attention qu'ils n'appartiennent pas à une autre fonction
         // la fonc est déja detachee
 
@@ -667,7 +690,7 @@ class User extends Authenticatable
         }
         return $count;
     }
-    
+
     public function fonctionAQuai()
     {
         $fonction = $this->fonctions()->where('typefonction_id', 2)->get()->first();
@@ -688,9 +711,18 @@ class User extends Authenticatable
     
     public function coll_sous_objectifs(Fonction $fonction=null)
     {
+        if ($fonction == null)
+            $key="null";
+        else
+            $key=$fonction->id;
+        if (array_key_exists($key, $this->colls_sous_objs)){
+            return $this->colls_sous_objs[$key];
+        }
+        
         if ($fonction != null)
         {
-            return $fonction->coll_sous_objectifs();
+            $this->colls_sous_objs[$fonction->id]= $fonction->coll_sous_objectifs();
+            return $this->colls_sous_objs[$fonction->id];
         }
         
         $coll = collect([]);
@@ -707,28 +739,30 @@ class User extends Authenticatable
                 }
             }
         }
-        return $coll;
+        $this->colls_sous_objs["null"]= $coll;
+        return $this->colls_sous_objs["null"];
     }
     
     public function historique_validation_sous_objectifs(Fonction $fonction=null)
     {
         if ($fonction == null)
         {
-            $sous_objectifs_valides = $this->sous_objectifs()->orderBy('pivot_date_validation')->get();
+            $sous_objectifs_valides = $this->sous_objectifs_non_orphelins()->sortBy('pivot_date_validation');
         }
         else
         {
-            $sous_objectifs_valides = $this->sous_objectifs()->orderBy('pivot_date_validation')->get();
+            $sous_objectifs_valides = $this->sous_objectifs_non_orphelins()->sortBy('pivot_date_validation');
             $sous_objectifs_a_garder = $fonction->coll_sous_objectifs();
             
-            $workcoll = collect([]);
-            foreach ($sous_objectifs_a_garder as $sous_obj_a_garder)
-            {
-                $trouve = $sous_objectifs_valides->find($sous_obj_a_garder);
-                if ($trouve != null)
-                    $workcoll = $workcoll->concat(collect([$trouve]));
-            }
-            $sous_objectifs_valides = $workcoll;
+            // $workcoll = collect([]);
+            // foreach ($sous_objectifs_a_garder as $sous_obj_a_garder)
+            // {
+                // $trouve = $sous_objectifs_valides->find($sous_obj_a_garder);
+                // if ($trouve != null)
+                    // $workcoll = $workcoll->concat(collect([$trouve]));
+            // }
+            // $sous_objectifs_valides = $workcoll;
+            $sous_objectifs_valides = $sous_objectifs_valides->intersect($sous_objectifs_a_garder);
         }
         $liste_des_dates_de_validation = $sous_objectifs_valides->pluck('pivot.date_validation');
         $nb_validation_par_date = array_count_values($liste_des_dates_de_validation->all());
@@ -757,24 +791,26 @@ class User extends Authenticatable
         }
         else
         {
-        
-            // return 100.0 * $this->sous_objectifs()->get()->only($fonction->coll_sous_objectifs())->count() / $fonction->coll_sous_objectifs()->count() ;
-            
-            // seconde version qui contourne le probleme de array_flip
-            $tempcoll = $this->sous_objectifs()->get();
             
             $fcoll= $fonction->coll_sous_objectifs();
+            $workcoll = $this->sous_objectifs_non_orphelins()->intersect($fcoll);
+            return round(100.0 * $workcoll->sum('ssobj_coeff') / $fcoll->sum('ssobj_coeff'),2);
             
-            $workcoll = collect([]);
-            foreach ($fcoll as $sous_obj_a_garder)
-            {
-                $trouve = $tempcoll->find($sous_obj_a_garder);
-                if ($trouve != null)
-                    $workcoll = $workcoll->concat(collect([$trouve]));
-            }
-            if ($fcoll->count()==0)
-                return 0;
-            return round(100.0 * $workcoll->count() / $fcoll->count(), 2);
+            /////////////////////////////////////
+            // $tempcoll = $this->sous_objectifs()->get();
+            
+            // $fcoll= $fonction->coll_sous_objectifs();
+            
+            // $workcoll = collect([]);
+            // foreach ($fcoll as $sous_obj_a_garder)
+            // {
+                // $trouve = $tempcoll->find($sous_obj_a_garder);
+                // if ($trouve != null)
+                    // $workcoll = $workcoll->concat(collect([$trouve]));
+            // }
+            // if ($fcoll->count()==0)
+                // return 0;
+            // return round(100.0 * $workcoll->count() / $fcoll->count(), 2);
         }
     }
     
@@ -788,23 +824,29 @@ class User extends Authenticatable
         
         $nb_stage_valides = 0;
         $nb_stage_valides = $this->stages()->wherePivotNotNull('date_validation')->get()->count();
+        /////////////////////////////////////////////////////////// a revoir 
+        // $sous_objs = $this->coll_sous_objectifs()->unique();
+        // $total_des_coeff = $sous_objs->sum('ssobj_coeff');
         
-        $sous_objs = $this->coll_sous_objectifs()->unique();
-        $total_des_coeff = $sous_objs->sum('ssobj_coeff');
+        // $sous_objs_valides = $this->sous_objectifs()
+                            // ->whereNotNull('date_validation')->get();
+        // $workcoll = collect([]);
+            // foreach ($sous_objs as $sous_obj_a_garder)
+            // {
+                // $trouve = $sous_objs_valides->find($sous_obj_a_garder);
+                // if ($trouve != null)
+                    // $workcoll = $workcoll->concat(collect([$trouve]));
+            // }
+        // $coeff_valides = $workcoll->count();
+        ////////////////////////////////
         
-        $sous_objs_valides = $this->sous_objectifs()
-                            ->whereNotNull('date_validation')->get();
-        $workcoll = collect([]);
-            foreach ($sous_objs as $sous_obj_a_garder)
-            {
-                $trouve = $sous_objs_valides->find($sous_obj_a_garder);
-                if ($trouve != null)
-                    $workcoll = $workcoll->concat(collect([$trouve]));
-            }
-        $coeff_valides = $workcoll->count();
+        $coll_sous_objs_valides = $this->sous_objectifs_non_orphelins();
+        $coeff_valides = $coll_sous_objs_valides->sum('ssobj_coeff');
+        $coll_sous_objs = $this->coll_sous_objectifs();
+        $total_des_coeff = $coll_sous_objs->sum('ssobj_coeff');
         
         $taux_transfo=0;
-        if ($nb_stage_total>0 and $total_des_coeff>0){
+        if ($nb_stage_total>0 or $total_des_coeff>0){
             $taux_transfo = 100 * ($nb_stage_valides + $coeff_valides) / ($nb_stage_total + $total_des_coeff) ;
         }
         return $taux_transfo;
@@ -812,20 +854,10 @@ class User extends Authenticatable
     
     public function pourcentage_valides_pour_comp(Compagnonage $comp)
     {
-        // return 100.0 * $this->sous_objectifs()->get()->only($comp->coll_sous_objectifs())->count() / $fonction->coll_sous_objectifs()->count() ;
-        
-        // seconde version qui contourne le probleme de array_flip
-        $tempcoll = $this->sous_objectifs()->get();
-        
-        $workcoll = collect([]);
-        foreach ($comp->coll_sous_objectifs() as $sous_obj_a_garder)
-        {
-            $trouve = $tempcoll->find($sous_obj_a_garder);
-            if ($trouve != null)
-                $workcoll = $workcoll->concat(collect([$trouve]));
-        }
-        
-        return round(100.0 * $workcoll->count() / $comp->coll_sous_objectifs()->count(),2);
+        $compcoll = $comp->coll_sous_objectifs();
+        $workcoll = $this->sous_objectifs_non_orphelins()->intersect($compcoll);
+
+        return round(100.0 * $workcoll->sum('ssobj_coeff') / $compcoll->sum('ssobj_coeff'),2);
     }
     
     public function getEnTransformationAttribute()
