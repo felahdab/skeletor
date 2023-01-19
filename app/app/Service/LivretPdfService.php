@@ -30,7 +30,6 @@ class LivretPdfService
             //sauvegarde sur serveur
             $filename=Storage::disk('local')->path('livrets/' . $nomfic);
             $mpdf->Output($filename,'F');
-            // return Storage::disk('local')->download('livrets/' . $nomfic);
         }
         else {
             $mpdf->Output($nomfic,'D');

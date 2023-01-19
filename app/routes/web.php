@@ -69,6 +69,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         // Route::resource('archivage',    ArchivageController::class);
         Route::get('archivage', 'ArchivageController@index')->name('archivage.index');
         Route::get('archivage/{user}/restauration', 'ArchivageController@restaurer')->name('archivage.restaurer');
+        Route::get('archivage/{user}/impression', 'ArchivageController@imprimer')->name('archivage.imprimer');
         Route::get('archivage/{user}/archivage', 'ArchivageController@archiver')->name('archivage.archiver');
         
         
