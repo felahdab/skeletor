@@ -35,12 +35,38 @@ class RecalculerTransformation extends Command
             $date_embarq = new Carbon($user->date_embarq);
             foreach($user->sous_objectifs as $sousobj){
                 $workitem = $sousobj->pivot;
-                $date_validation = new Carbon($workitem->date_validation);
-                
-                $nb_jours = $date_validation->diffInDays($date_embarq);
-                
-                $workitem->nb_jours_pour_validation=$nb_jours;
-                $workitem->save();
+                if ($workitem->date_validation != null) {
+                    $date_validation = new Carbon($workitem->date_validation);
+                    
+                    $nb_jours = $date_validation->diffInDays($date_embarq);
+                    
+                    $workitem->nb_jours_pour_validation=$nb_jours;
+                    $workitem->save();
+                }
+                else {
+                    $workitem->nb_jours_pour_validation=0;
+                    $workitem->save();
+                }
+            }
+        }
+        
+        foreach (User::withTrashed()->get() as $user) {
+            $this->info("Cal du nombre de jour pour les validations des fonctions pour: " . $user->id);
+            $date_embarq = new Carbon($user->date_embarq);
+            foreach($user->fonctions as $fonction){
+                $workitem = $fonction->pivot;
+                if ($workitem->date_lache != null){
+                    $date_lache   = new Carbon($workitem->date_lache );
+                    
+                    $nb_jours = $date_lache->diffInDays($date_embarq);
+                    
+                    $workitem->nb_jours_pour_validation=$nb_jours;
+                    $workitem->save();
+                }
+                else {
+                    $workitem->nb_jours_pour_validation=0;
+                    $workitem->save();
+                }
             }
         }
         
