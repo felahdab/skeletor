@@ -131,7 +131,7 @@ Cette page permet de relancer le calcul du taux de transformation pour tous les 
 
 En cliquant sur le bouton « Lancer le calcul » (1), tous les taux de transformation de tous les marins sont recalculés.
 
-> {info} ** Remarque : ** Plus il y a de marins plus le calcul peut être long.
+> {info} ** Remarque : ** Plus il y a de marins plus le calcul peut être long. 
 
 
 <a name="ma-transformation">
