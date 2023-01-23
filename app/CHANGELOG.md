@@ -1,3 +1,17 @@
+## 1.0.7 (janvier 23, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.6 –> 1.0.7
+- Retrait de la commande RecalculTxTransfo superflue car en doublon de la commande RecalculerTransformation.
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/ffast into tuleap-53243-revoir-toutes-les-stats
+- Modification de la commande de recalcul des taux de transformation et des durees de validation pour ne pas recalculer les elements des utilisateurs archives. Sinon, on risque de fausser les statistiques en cas de modification, dans l'intervalle, du parcour de transformation.
+- Creation du champs nb_jours_pour_validation dans la table user_fonction. Ajout du calcul du nb de jours jusqu'au lache dans la table user_fonction.
+- correction suite demande 55326 : le nb marin à valider etait faux
+- 2eme essai
+- Merge branch 'master' into tuleap-53243-revoir-toutes-les-stats
+-  modif calcul tx transfo car il peut y avoir des ssobj orphelins
+- Separer la commande de suppression des doubles et la commande de calcul des taux de transformation et du nombre de jour avant la validation des sous objectifs pour ne pas forcer les 2 operations. Ajoute le champs nb_de_jours_avant_validation a la table pivot user_sous_objectif.
+- Added MB_SITE_URL environnement variable to the metabase docker-compose definition.
+- lors de la suppression d'une fonction pour un user, on n'enleve plus ni les stages ni les sssobj validés
+
 ## 1.0.6 (janvier 12, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.5 –> 1.0.6
 - Changed the way the prefix is bumped into the stack. Removed automaticaly generated files of composer (autoload).

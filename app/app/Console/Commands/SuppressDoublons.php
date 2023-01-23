@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 
 use App\Models\User;
 use App\Models\UserSousObjectif;
@@ -32,6 +33,7 @@ class SuppressDoublons extends Command
      */
     public function handle()
     {
+        $found=false;
         foreach (User::withTrashed()->get() as $user) {
             $userid=$user->id;
             $this->info($userid);
@@ -40,20 +42,18 @@ class SuppressDoublons extends Command
                 $liste_unique = $user->sous_objectifs->pluck('id')->unique();
                 if ($liste_unique->count() != $liste_totale->count()){
                     $this->warn("Non unique");
+                    $found=true;
                     foreach($liste_unique as $ssobjid){
                         $keep=UserSousObjectif::where('user_id', $userid)->where('sous_objectif_id', $ssobjid)->first();
-                        UserSousObjectif::where('user_id', $userid)->where('sous_objectif_id', $ssobjid)->where('id', '!=', $keep->id)->delete();
-                        $this->info($keep);
+                        $nb = UserSousObjectif::where('user_id', $userid)->where('sous_objectif_id', $ssobjid)->where('id', '!=', $keep->id)->delete();
+                        $this->output->write(".", false);
                     }
+                    $this->output->write("\n", false);
                 }
             }
         }
-        
-        foreach (User::withTrashed()->get() as $user) {
-            $this->info("Dispatching: " . $user->id);
-            CalculateUserTransformationRatios::dispatch($user);
-        }
-        
+        if($found)
+            $this->warn("Des doubles ont ete trouves et supprimes. Vous devriez recalculer les indicateurs avec la commande ffast:recalculertransformation.");
         return Command::SUCCESS;
     }
 }

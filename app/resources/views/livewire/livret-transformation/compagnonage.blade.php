@@ -54,13 +54,13 @@
                                     value="{{$sous_objectif->id}}">@endif
                                 @if ($mode=='unique' && $user->aValideLeSousObjectif($sous_objectif))
                                     <button class='btn btn-success' type='button' disabled>
-                                    VALIDE {{ $user->sous_objectifs()->find($sous_objectif)->pivot->date_validation }}
+                                    VALIDE {{ $user->sous_objectifs_non_orphelins()->find($sous_objectif)->pivot->date_validation }}
                                     </button>
                                 @endif
                             </td>
                             @if ($mode=='unique' && $user->aValideLeSousObjectif($sous_objectif))
-                                <td title="{{ $user->sous_objectifs()->find($sous_objectif)->pivot->commentaire }}">
-                                        {{ $user->sous_objectifs()->find($sous_objectif)->pivot->valideur }}
+                                <td title="{{ $user->sous_objectifs_non_orphelins()->find($sous_objectif)->pivot->commentaire }}">
+                                        {{ $user->sous_objectifs_non_orphelins()->find($sous_objectif)->pivot->valideur }}
                                 </td>
                             @else
                                 <td>&nbsp;</td>

@@ -20,10 +20,13 @@
                             </thead>
                             <tbody>
                                 @foreach($stages->where('typelicence_id', '<', 4) as $stage)
-                                    @if($stage->users()->get()->whereNull('pivot_date_validation')->count() != 0)
+                                    @php
+                                        $nb_user_a_valider=$stage->users()->wherePivotNull('date_validation')->get()->count();
+                                    @endphp
+                                    @if($nb_user_a_valider != 0)
                                     <tr>
                                         <td>{{$stage->stage_libcourt}}</td>
-                                        <td>{{$stage->users()->get()->whereNull('pivot_date_validation')->count()}}</td>
+                                        <td>{{$nb_user_a_valider}}</td>
                                     </tr>
                                     @endif
                                 @endforeach
@@ -45,10 +48,13 @@
                             </thead>
                             <tbody>
                                 @foreach($stages->where('typelicence_id', 4) as $stage)
-                                    @if($stage->users()->get()->whereNull('pivot_date_validation')->count() != 0)
+                                    @php
+                                        $nb_user_a_valider=$stage->users()->wherePivotNull('date_validation')->get()->count();
+                                    @endphp
+                                    @if($nb_user_a_valider != 0)
                                     <tr>
                                         <td>{{$stage->stage_libcourt}}</td>
-                                        <td>{{$stage->users()->get()->whereNull('pivot_date_validation')->count()}}</td>
+                                        <td>{{$nb_user_a_valider}}</td>
                                     </tr>
                                     @endif
                                 @endforeach
