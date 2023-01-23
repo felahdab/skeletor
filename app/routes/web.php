@@ -123,6 +123,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::get('/monlivret', 'TransformationController@monlivret')->name('transformation.monlivret');
             Route::get('/maprogression', 'TransformationController@maprogression')->name('transformation.maprogression');
             Route::get('/exportparcours', 'ImportExportParcours@ExportParcoursVersExcel')->name('transformation.exportparcours');
+            Route::get('/recalcultransfo', 'TransformationController@recalcultransfo')->name('transformation.recalcultransfo');
         });
         
         Route::group(['prefix' => 'historique'], function() {

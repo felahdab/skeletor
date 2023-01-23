@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Artisan;
+
+use App\Console\Commands\RecalculerTransformation;
+use App\Console\Commands;
+
 use App\Service\LivretPdfService;
 
 use App\Models\User;
@@ -138,4 +143,14 @@ class TransformationController extends Controller
         return $this->fichebilan($user, $readwrite=false);
     }
     
+    public function recalcultransfo(Request $request) 
+    {
+        if ($request->has("mode"))
+        {
+            Artisan::call('ffast:recalculertransformation');
+            return view('transformation.recalcultransfo')
+            ->withSuccess(__('Calcul terminé'));
+        }
+        return view('transformation.recalcultransfo');
+    }
 }
