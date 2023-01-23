@@ -8,6 +8,7 @@
    - [Stages](#stages)
 - [Suivi de la transformation par fonction](#suivi-par-fonction)
 - [Suivi de la transformation par stage](#suivi-par-stage)
+- [Recalcul des taux de transformation](#recalcul-transfo)
 - [Ma transformation](#ma-transformation)
 
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/menu_transformation.png' )) }}" width=400px>
@@ -16,6 +17,7 @@ Ce menu permet d’accéder :
 1. à la liste des marins en cours de transformation. Un lien vers son livret de transformation permet la validation d’objectifs.
 2. à la liste des fonctions. Un lien vers le livret associé à la fonction permet la validation collective d’objectifs.
 3. à la liste des stages. Permet de consulter la liste des marins en attente de ce stage ou ceux l’ayant déjà validé.
+4. au calcul des taux de transformation
 
 <a name="suivi-par-marin">
 ## Suivi de la transformation par marin
@@ -121,6 +123,15 @@ En cliquant sur le bouton « Situation des marins pour ce stage » (1), vous aff
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/situation_marin_pour_stage.png' )) }}" width=600px> 
  
 ** Remarque : ** pour exporter ce tableau sous Excel, sélectionner toutes les cases voulues en maintenant enfoncée la touche « Ctrl » de votre clavier puis copier et coller.
+
+<a name="recalcul-transfo">
+## Recalcul des taux de transformation
+Cette page permet de relancer le calcul du taux de transformation pour tous les marins non archivés. Cela peut être nécessaire lors de l'évolution des parcours (modification d'un coefficient d'un sous-objectif ou ajout d'un tâche dans une fonction par exemple).
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/recalcul_transfo.png' )) }}" width=400px>
+
+En cliquant sur le bouton « Lancer le calcul » (1), tous les taux de transformation de tous les marins sont recalculés.
+
+> {info} ** Remarque : ** Plus il y a de marins plus le calcul peut être long.
 
 
 <a name="ma-transformation">
