@@ -31,7 +31,7 @@ class RecalculerTransformation extends Command
     public function handle()
     {
         foreach (User::withTrashed()->get() as $user) {
-            if ($user->date_archivage == null)
+            if ($user->date_archivage != null)
                 continue;
             $this->info("Cal du nombre de jour pour les validations de sous objectifs pour: " . $user->id);
             $date_embarq = new Carbon($user->date_embarq);
@@ -53,7 +53,7 @@ class RecalculerTransformation extends Command
         }
         
         foreach (User::withTrashed()->get() as $user) {
-            if ($user->date_archivage == null)
+            if ($user->date_archivage != null)
                 continue;
             $this->info("Cal du nombre de jour pour les validations des fonctions pour: " . $user->id);
             $date_embarq = new Carbon($user->date_embarq);
@@ -75,7 +75,7 @@ class RecalculerTransformation extends Command
         }
         
         foreach (User::withTrashed()->get() as $user) {
-            if ($user->date_archivage == null)
+            if ($user->date_archivage != null)
                 continue;
             $this->info("Dispatching: " . $user->id);
             CalculateUserTransformationRatios::dispatch($user);
