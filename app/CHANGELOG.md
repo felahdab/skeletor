@@ -1,3 +1,7 @@
+## 1.0.8 (janvier 23, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.7 –> 1.0.8
+- Inversion de la logique dans la commande RecalculerTransformation pour ne pas toucher aux dossiers des marins archives, et seulement toucher aux dossiers des marins non archives.
+
 ## 1.0.7 (janvier 23, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.6 –> 1.0.7
 - Retrait de la commande RecalculTxTransfo superflue car en doublon de la commande RecalculerTransformation.
