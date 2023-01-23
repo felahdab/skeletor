@@ -77,7 +77,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'email_verified_at' => 'datetime'
     ];
     
     protected $appends = ['en_transformation'];
@@ -285,7 +285,7 @@ class User extends Authenticatable
     public function sous_objectifs(){  
         return $this->belongsToMany(SousObjectif::class, 'user_sous_objectif')
             ->withTimeStamps()
-            ->withPivot('commentaire', 'date_validation', 'valideur');
+            ->withPivot('commentaire', 'date_validation', 'valideur', 'nb_jours_pour_validation');
     }
     
     // Cette partie contient des fonctions d'aide pour le suivi de la transformation
