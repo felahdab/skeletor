@@ -28,7 +28,7 @@ return [
      * Only used in the built-in controller.
      * * Use 'back' to redirect to the previous page
      */
-    'take_redirect_to' => env('APP_URL'),
+    'take_redirect_to' =>  env('APP_URL') . '/' . env('APP_PREFIX'),
 
     /**
      * The URI to redirect after leaving an impersonation.
@@ -36,6 +36,6 @@ return [
      * Only used in the built-in controller.
      * Use 'back' to redirect to the previous page
      */
-    'leave_redirect_to' => env('APP_URL'),
+    'leave_redirect_to' => env('APP_URL') . '/' . env('APP_PREFIX'),
 
 ];
