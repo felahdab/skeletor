@@ -125,7 +125,8 @@ Cet écran va permettre d'archiver les marins. Vous y retrouvez :
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/administration/archivage.png' )) }}" width=1000px>
 
 Le bouton "Restaurer" (1) permet de rendre un utilisateur visible s'il a été supprimé dans l'écran "Fiches des marins".
-Le bouton "Archivage" (2) supprime l'utilisateur de la visualisation dans l'application. Son livret de transformation est sauvegardé sur le serveur et ses données enregistrées pour établir des statistiques.
+Le bouton "Télécharger livret" (2) permet d'obtenir le livret du marin au format pdf pour une sauvegarde en local.
+Le bouton "Archivage" (3) supprime l'utilisateur de la visualisation dans l'application. Son livret de transformation est sauvegardé sur le serveur et ses données enregistrées pour établir des statistiques.
 
 <a name="mails">
 ## Mails
