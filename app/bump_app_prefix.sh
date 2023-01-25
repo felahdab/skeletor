@@ -15,11 +15,13 @@ echo $DOMAIN
 echo $PREFIX
 echo $ENVIRONNEMENT
 
-SED_CMD='s/APP_PREFIX=.*/APP_PREFIX='$PREFIX'/g'
-sed $SED_CMD .env.dev.slug > .env.dev
-sed $SED_CMD .env.testing.slug > .env.testing
-sed $SED_CMD .env.production.slug > .env.production
-sed $SED_CMD .env.dusk.dev.slug > .env.dusk.dev
+APP_VERSION=$(cat VERSION)
+
+SED_CMD='s/APP_PREFIX=.*/APP_PREFIX='$PREFIX'/g; s/APP_VERSION=.*/APP_VERSION='$APP_VERSION'/g'
+sed "$SED_CMD" .env.dev.slug > .env.dev
+sed "$SED_CMD" .env.testing.slug > .env.testing
+sed "$SED_CMD" .env.production.slug > .env.production
+sed "$SED_CMD" .env.dusk.dev.slug > .env.dusk.dev
 
 cp -a .env.${ENVIRONNEMENT} .env
 SED_CMD='s/APP_PREFIX=.*/APP_PREFIX='$PREFIX'/g'
