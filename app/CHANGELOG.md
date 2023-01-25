@@ -1,3 +1,18 @@
+## 1.0.9 (janvier 25, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.8 –> 1.0.9
+- Adds APP_VERSION to slug files, and adjust bump_app_prefix script to update the value in generated env files.
+- ajout bouton ? pour lien vers la doc
+- maj doc admin/archivage ajout bouton telecharg livret
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/ffast into tuleap-40560-suppression-d-un-user
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/ffast into tuleap-53243-revoir-toutes-les-stats
+- Redefinit les routes de redirection du module lab404/impersonate afin que l'utilisateur ne soit pas renvoye hors de l'instance lorsqu'il utilise ces fonctions.
+- correction ortho
+- Merge branch 'master' into tuleap-53243-revoir-toutes-les-stats
+- maj doc transformation suite ajout menu recalcul tx transfo
+- ajout du menu/transfo/recalcultransfo pour pouvoir relancer le calcul de tous les tx de transfo pour tous les utilisateurs
+- Merge branch 'master' into tuleap-40560-suppression-d-un-user
+- ajout bouton  telecharger livret car impossible de faire une redirection apres mpdf->output() donc de remettre à jour l'affichage
+
 ## 1.0.8 (janvier 23, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.7 –> 1.0.8
 - Inversion de la logique dans la commande RecalculerTransformation pour ne pas toucher aux dossiers des marins archives, et seulement toucher aux dossiers des marins non archives.
