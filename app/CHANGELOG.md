@@ -1,3 +1,8 @@
+## 1.0.10 (janvier 30, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.9 –> 1.0.10
+- Added label definition in stack for traefik integration
+- Useless commit to test deploy strategy.
+
 ## 1.0.9 (janvier 25, 2023) 
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.8 –> 1.0.9
 - Adds APP_VERSION to slug files, and adjust bump_app_prefix script to update the value in generated env files.
