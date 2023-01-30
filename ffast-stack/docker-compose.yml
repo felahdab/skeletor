@@ -8,6 +8,12 @@ services:
         networks:
              - backend
              - private
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.${PREFIX}.rule=Host(`${DOMAIN}`) && PathPrefix(`/${PREFIX}`)"
+            - "traefik.http.routers.${PREFIX}.tls=true"
+            - "traefik.http.services.${PREFIX}.loadbalancer.server.port=80"
+            - "traefik.docker.network=backend"
     php:
         image: ffast-php:0.5
         volumes:
