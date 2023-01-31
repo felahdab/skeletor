@@ -14,12 +14,14 @@ services:
             - "traefik.http.routers.${PREFIX}.tls=true"
             - "traefik.http.services.${PREFIX}.loadbalancer.server.port=80"
             - "traefik.docker.network=backend"
+        restart: unless-stopped
     php:
         image: ffast-php:0.5
         volumes:
             - ../app:/app
         networks:
              - private
+        restart: unless-stopped
     db:
         image: mariadb:10.8.3
         environment:
@@ -31,6 +33,7 @@ services:
             - mysqldata:/var/lib/mysql
         networks:
              - private
+        restart: unless-stopped
     code-editor:
         image: codercom/code-server
         networks:
@@ -38,6 +41,7 @@ services:
         user: "1000:1002"
         volumes:
           - ../:/home/coder/project/
+        restart: unless-stopped
     phpmyadmin:
         image: phpmyadmin
         environment:
@@ -45,6 +49,7 @@ services:
            PMA_HOST: db
         networks:
           - private
+        restart: unless-stopped
     metabase:
         image: metabase/metabase
         networks:
@@ -56,6 +61,7 @@ services:
           MGID: 1002
         volumes:
           - ../metabase-data:/metabase-data
+        restart: unless-stopped
 volumes:
     mysqldata: {}
 networks:
