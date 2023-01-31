@@ -1,3 +1,9 @@
+## 1.0.11 (janvier 31, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.10 –> 1.0.11
+- Removed useless Event and Listener.
+- Removed NGINX parameters in .env files. Removed register and unregister artisan commands.
+- Change restart policy of all containers
+
 ## 1.0.10 (janvier 30, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.9 –> 1.0.10
 - Added label definition in stack for traefik integration
