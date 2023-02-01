@@ -37,29 +37,17 @@ class TransformationController extends Controller
      */
     public function index() 
     {
-        $users = User::local()->paginate(10);
-        return view('transformation.index', ['users' => $users]);
+        return view('transformation.index');
     }
     
     public function indexparfonction(Request $request) 
     {
-       if ($request->has('filter') )
-        {
-            $filter = $request->input('filter');
-            $fonctions = Fonction::where('fonction_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('fonction_libcourt')->paginate(10);
-        } else {
-            $filter="";
-            $fonctions = Fonction::orderBy('fonction_libcourt')->paginate(10);
-        }
-        return view('transformation.indexparfonction', ['fonctions' => $fonctions,
-                                                           'filter' => $filter]);
+        return view('transformation.indexparfonction');
     }
     
     public function indexparstage(Request $request) 
     {
-        
-        $stages = Stage::orderBy('stage_libcourt')->paginate(10);
-        return view('transformation.indexparstage', ['stages' => $stages]);
+        return view('transformation.indexparstage');
     }
 
     /**
@@ -149,7 +137,7 @@ class TransformationController extends Controller
         {
             Artisan::call('ffast:recalculertransformation');
             return view('transformation.recalcultransfo')
-            ->withSuccess(__('Calcul terminé'));
+                ->withSuccess(__('Calcul terminé'));
         }
         return view('transformation.recalcultransfo');
     }

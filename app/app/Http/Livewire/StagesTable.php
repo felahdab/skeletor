@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire;
 
+use App\Service\GererTransformationService;
+
 use App\Models\Stage;
 use App\Models\User;
 use App\Models\TypeLicence;
@@ -140,28 +142,33 @@ class StagesTable extends DataTableComponent
     
     public function UnvalidateStage(User $user, Stage $stage)
     {
-        $user->unValidateStage($stage);
+        $transformationService = new GererTransformationService;
+        $transformationService->unValidateStage($user, $stage);
     }
     
     public function ValidateStage(User $user, Stage $stage, $commentaire, $date_validation)
     {
-        $user->validateStage($stage, $commentaire, $date_validation);
+        $transformationService = new GererTransformationService;
+        $transformationService->validateStage($user, $stage, $commentaire, $date_validation);
     }
     
     public function ValidateCommentStage(User $user, Stage $stage, $commentaire)
     {
-        $user->validateCommentStage($stage, $commentaire);
+        $transformationService = new GererTransformationService;
+        $transformationService->validateCommentStage($user, $stage, $commentaire);
     }
     
     public function AttribuerStage(User $user, Stage $stage)
     {
-        $user->attachStage($stage);
+        $transformationService = new GererTransformationService;
+        $transformationService->attachStage($user, $stage);
         $this->emit('refreshUser');
     }
     
     public function RetirerStage(User $user, Stage $stage)
     {
-        $user->detachStage($stage);
+        $transformationService = new GererTransformationService;
+        $transformationService->detachStage($user, $stage);
         $this->emit('refreshUser');
     }
 }

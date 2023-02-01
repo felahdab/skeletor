@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Lab404\Impersonate\Models\Impersonate;
 
 use App\Jobs\CalculateUserTransformationRatios;
+use App\Service\GererTransformationService;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\TransformationHistory;
@@ -381,6 +382,7 @@ class User extends Authenticatable
             return "";
         return $workitem->date_validation;
     }
+    
     public function CommentaireDuStage(Stage $stage)
     {
         $workitem = $this->stages()->find($stage);
@@ -411,265 +413,7 @@ class User extends Authenticatable
         
         return $orphans;
     }
-    
-    /**
-     * Methode necessaire pour eviter d attacher un stage plusieurs fois.
-     *
-     * @param $stage
-     * @return void
-     */
-    public function attachStage(Stage $stage)
-    {
-        if ($this->stages()->get()->contains($stage))
-            return;
-        $this->stages()->attach($stage);
-        CalculateUserTransformationRatios::dispatch($this);
-        $this->logTransformationHistory("ATTRIBUE_STAGE", json_encode(["stage" => $stage]));
-    }
-    
-    /**
-     * Methode necessaire pour eviter de detacher un stage encore necessaire au
-     * titre d'une fonction attribuee a l'utilisateur.
-     *
-     * @param $stage
-     * @return void
-     */
-    public function detachStage(Stage $stage)
-    {
-        if (array_key_exists($stage->id,  $this->stagesLiesAUneFonction()->pluck('id','id')->toArray()))
-            return;
-        $this->stages()->detach($stage);
-        CalculateUserTransformationRatios::dispatch($this);
-        $this->logTransformationHistory("RETIRE_STAGE", json_encode(["stage" => $stage]));
-    }
-    
-    public function validateStage(Stage $stage, $commentaire, $date_validation)
-    {
-        $workitem = $this->stages()->find($stage)->pivot;
-        if ($workitem != null)
-        {
-            $workitem->date_validation = $date_validation;
-            $workitem->commentaire = " " . $commentaire;
-            $workitem->save();
-        }
-        CalculateUserTransformationRatios::dispatch($this);
-        $event_detail = [
-            "stage" => $stage,
-            "commentaire" => $commentaire,
-            "date_validation" => $date_validation,
-        ];
-        $this->logTransformationHistory("VALIDE_STAGE", json_encode($event_detail));
-    }
 
-    public function validateCommentStage(Stage $stage, $commentaire)
-    {
-        $workitem = $this->stages()->find($stage)->pivot;
-        if ($workitem != null)
-        {
-            $workitem->commentaire = $commentaire;
-            $workitem->save();
-        }
-    }
-    
-    public function unValidateStage(Stage $stage)
-    {
-        $workitem = $this->stages()->find($stage)->pivot;
-        if ($workitem != null)
-        {
-            $workitem->date_validation = null;
-            $workitem->save();
-        }
-        CalculateUserTransformationRatios::dispatch($this);
-        $this->logTransformationHistory("DEVALIDE_STAGE", json_encode(["stage" => $stage]));
-    }
-    
-    public function attachFonction(Fonction $fonction)
-    {
-        $fonctions = $this->fonctions()->get();
-        if ( $fonctions->contains($fonction) ){
-            return;
-        }
-
-        $this->fonctions()->attach($fonction);
-        CalculateUserTransformationRatios::dispatch($this);
-        $this->logTransformationHistory("ATTRIBUE_FONCTION", json_encode(["fonction" => $fonction]));
-        foreach($fonction->stages()->get() as $stage)
-            $this->attachStage($stage);
-    }
-    
-    public function detachFonction(Fonction $fonction)
-    {
-        $this->fonctions()->detach($fonction);
-        $this->logTransformationHistory("RETIRE_FONCTION", json_encode(["fonction" => $fonction]));
-        CalculateUserTransformationRatios::dispatch($this);
-        
-        return;
-        ///////////////////////////////////////////////////////
-        // suppression des stages associés
-        // foreach($fonction->stages()->get() as $stage)
-            // $this->detachStage($stage);
-            
-        // suppression des ssobj valides associes 
-        // mais faire attention qu'ils n'appartiennent pas à une autre fonction
-        // la fonc est déja detachee
-
-        // $list_ssobj_asuppr=UserSousObjectif::where ('user_id' , $this->id)->get();
-        
-        // $list_ssobj_restants = collect([]);
-        // foreach($this->fonctions()->get() as $fonction)
-        // {
-            // $list_ssobj_restants=$list_ssobj_restants->merge($fonction->coll_sous_objectifs());
-        // }
-        // $list_ssobj_restants=$list_ssobj_restants->unique();
-        
-        // foreach($list_ssobj_asuppr as $ssobj_asupp)
-        // {
-            // if (!$list_ssobj_restants->contains('id', $ssobj_asupp->sous_objectif_id)){
-                //// dd ($ssobj_asupp->sous_objectif_id);
-                // UserSousObjectif::where ('user_id' , $this->id)->where ('sous_objectif_id' , $ssobj_asupp->sous_objectif_id)->delete();
-            // }
-        // }
-        ///////////////////////////////////////////////////////
-        
-    }
-    
-        
-    public function ValidateSousObjectif(SousObjectif $sous_objectif, $date_validation , $commentaire, $valideur)
-    {
-        $ssobj = $this->sous_objectifs()->find($sous_objectif);
-        if ($ssobj != null){
-        
-        }
-        else{
-            $this->sous_objectifs()->attach($sous_objectif, [
-                'valideur'=> $valideur,
-                'commentaire'=> $commentaire,
-                'date_validation' => $date_validation,
-            ]);
-        }
-        $event_detail = [
-            "sous_objectif" => $sous_objectif,
-            "commentaire" => $commentaire,
-            "date_validation" => $date_validation,
-        ];
-        CalculateUserTransformationRatios::dispatch($this);
-        $this->logTransformationHistory("VALIDE_SOUS_OBJECTIF", json_encode($event_detail));
-    }
-    
-    public function UnValidateSousObjectif(SousObjectif $sous_objectif)
-    {
-        $this->sous_objectifs()->detach($sous_objectif);
-        CalculateUserTransformationRatios::dispatch($this);
-        $this->logTransformationHistory("DEVALIDE_SOUS_OBJECTIF", json_encode(["sous_objectif" => $sous_objectif]));
-    }
-    
-    public function ValidateObjectif(Objectif $objectif, $date_validation , $commentaire, $valideur)
-    {
-        foreach ($objectif->sous_objectifs()->get() as $sous_objectif)
-        {
-            $this->ValidateSousObjectif( $sous_objectif, $date_validation , $commentaire, $valideur);
-        }
-    }
-    
-    public function UnValidateObjectif(Objectif $objectif)
-    {
-        foreach ($objectif->sous_objectifs()->get() as $sous_objectif)
-        {
-            $this->UnValidateSousObjectif( $sous_objectif);
-        }
-    }
-    
-    public function ValidateTache(Tache $tache, $date_validation , $commentaire, $valideur)
-    {
-        $event_detail = [
-            "tache" => $tache,
-            "commentaire" => $commentaire,
-            "date_validation" => $date_validation,
-            "valideur" => $valideur
-        ];
-        $this->logTransformationHistory("VALIDE_TACHE", json_encode($event_detail));
-        
-        foreach ($tache->objectifs()->get() as $objectif)
-        {
-            $this->ValidateObjectif( $objectif, $date_validation , $commentaire, $valideur);
-        }
-        CalculateUserTransformationRatios::dispatch($this);
-    }
-    
-    public function UnValidateTache(Tache $tache)
-    {
-        $event_detail = [
-            "tache" => $tache
-        ];
-        $this->logTransformationHistory("DEVALIDE_TACHE", json_encode($event_detail));
-        
-        foreach ($tache->objectifs()->get() as $objectif)
-        {
-            $this->UnValidateObjectif( $objectif);
-        }
-        CalculateUserTransformationRatios::dispatch($this); 
-    }
-    
-    public function ValideLacheFonction(Fonction $fonction, $date_validation , $commentaire, $valideur)
-    {
-        $userfonc = $this->fonctions->find($fonction);
-        // L'utilisateur a cliqué sur un bouton de validation du lache
-        // Si la fonction necessite un double, il faut que le double soit valide avant le lache
-        if ($userfonc->pivot->date_double != null or !$fonction->fonction_double) 
-        {
-            $userfonc->pivot->commentaire_lache=$commentaire;
-            $userfonc->pivot->valideur_lache=$valideur;
-            $userfonc->pivot->date_lache = $date_validation;
-            $userfonc->pivot->save();
-            $event_detail = [
-                "fonction" => $fonction,
-                "commentaire" => $commentaire,
-                "date_validation" => $date_validation,
-            ];
-            $this->logTransformationHistory("VALIDE_LACHE_FONCTION", json_encode($event_detail));
-        }
-    }
-    
-    public function UnValideLacheFonction(Fonction $fonction)
-    {
-        $userfonc = $this->fonctions->find($fonction);
-        if ($userfonc == null)
-            return;
-        $userfonc->pivot->commentaire_lache=null;
-        $userfonc->pivot->valideur_lache=null;
-        $userfonc->pivot->date_lache = null;
-        $userfonc->pivot->save();
-        $this->logTransformationHistory("ANNULE_LACHE_FONCTION", json_encode(["fonction" => $fonction]));
-    }
-    
-    public function UnValideDoubleFonction(Fonction $fonction)
-    {
-        $userfonc = $this->fonctions->find($fonction);
-        if ($userfonc == null)
-            return;
-        $userfonc->pivot->commentaire_double=null;
-        $userfonc->pivot->valideur_double=null;
-        $userfonc->pivot->date_double = null;
-        $userfonc->pivot->save();
-        $this->logTransformationHistory("ANNULE_DOUBLE_FONCTION", json_encode(["fonction" => $fonction]));
-    }
-    
-    public function ValideDoubleFonction(Fonction $fonction, $date_validation , $commentaire, $valideur)
-    {
-        $userfonc = $this->fonctions->find($fonction);
-        
-        $userfonc->pivot->commentaire_double=$commentaire;
-        $userfonc->pivot->valideur_double=$valideur;
-        $userfonc->pivot->date_double = $date_validation;
-        $userfonc->pivot->save();
-        $event_detail = [
-            "fonction" => $fonction,
-            "commentaire" => $commentaire,
-            "date_validation" => $date_validation,
-        ];
-        $this->logTransformationHistory("VALIDE_DOUBLE_FONCTION", json_encode($event_detail));
-    }
-    
     public function nbSousObjectifsAValider(Fonction $fonction=null)
     {
         if ($fonction != null)
@@ -681,16 +425,6 @@ class User extends Authenticatable
         }
     }
     
-    public function nbSousObjectifsValides(Objectif $objectif)
-    {
-        $count=0;
-        foreach($objectif->sous_objectifs()->get() as $sous_objectif){
-            if ($sous_objectif->users()->find($this) == $this)
-                $count = $count + 1;
-        }
-        return $count;
-    }
-
     public function fonctionAQuai()
     {
         $fonction = $this->fonctions()->where('typefonction_id', 2)->get()->first();
@@ -711,10 +445,7 @@ class User extends Authenticatable
     
     public function coll_sous_objectifs(Fonction $fonction=null)
     {
-        if ($fonction == null)
-            $key="null";
-        else
-            $key=$fonction->id;
+        $key = $fonction == null ? "null": $fonction->id;
         if (array_key_exists($key, $this->colls_sous_objs)){
             return $this->colls_sous_objs[$key];
         }
@@ -754,14 +485,6 @@ class User extends Authenticatable
             $sous_objectifs_valides = $this->sous_objectifs_non_orphelins()->sortBy('pivot_date_validation');
             $sous_objectifs_a_garder = $fonction->coll_sous_objectifs();
             
-            // $workcoll = collect([]);
-            // foreach ($sous_objectifs_a_garder as $sous_obj_a_garder)
-            // {
-                // $trouve = $sous_objectifs_valides->find($sous_obj_a_garder);
-                // if ($trouve != null)
-                    // $workcoll = $workcoll->concat(collect([$trouve]));
-            // }
-            // $sous_objectifs_valides = $workcoll;
             $sous_objectifs_valides = $sous_objectifs_valides->intersect($sous_objectifs_a_garder);
         }
         $liste_des_dates_de_validation = $sous_objectifs_valides->pluck('pivot.date_validation');

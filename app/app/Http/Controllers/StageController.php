@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Service\GererTransformationService;
+
 use App\Http\Requests\StoreStageRequest;
 use App\Http\Requests\UpdateStageRequest;
 use App\Models\Stage;
@@ -64,7 +66,7 @@ class StageController extends Controller
     public function show(Request $request, Stage $stage)
     {
         $stages = Stage::orderBy('stage_libcourt')->get();
-        $users = User::local()->orderBy('name')->get();
+        $users = User::orderBy('name')->get();
         
         $usersdustage = $stage->users()->get();
         
@@ -133,15 +135,16 @@ class StageController extends Controller
     {
         if ($request->has('user_id'))
         {
+            $transformationService = new GererTransformationService;
             $user = User::find(intval($request['user_id']));
-            $user->attachStage($stage);
+            $transformationService->attachStage($user, $stage);
         }
         return redirect()->route('stages.choixmarins', ['stage'=>$stage]);
     }
     
     public function choixmarins(Stage $stage)
     {
-        $users = User::local()->orderBy('name')->get();
+        $users = User::orderBy('name')->get();
         
         $usersdustage = $stage->users()->get();
         

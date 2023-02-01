@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Service\GererTransformationService;
+
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -166,6 +168,7 @@ class UsersController extends Controller
         $fquaiid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'quai')->get()->first()->id;
         $fmetierid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'metier')->get()->first()->id;
         
+        $transformationService = new GererTransformationService;
         if ($fonction->typefonction_id == $fmerid)
         {
             $fonctionsmer = $user->fonctions()->where('typefonction_id', $fmerid)->get();
@@ -176,7 +179,8 @@ class UsersController extends Controller
                     $user->detachFonction($fmer);
                 }
             }
-            $user->attachFonction($fonction);
+            
+            $transformationService->attachFonction($user, $fonction);
         }
         elseif ($fonction->typefonction_id == $fquaiid)
         {
@@ -185,14 +189,14 @@ class UsersController extends Controller
             {
                 foreach ($fonctionsquai as $fquai)
                 {
-                    $user->detachFonction($fquai);
+                    $transformationService->detachFonction($user, $fonction);
                 }
             }
-            $user->attachFonction($fonction);
+            $transformationService->attachFonction($user, $fonction);
         }
         elseif ($fonction->typefonction_id == $fmetierid)
         {
-            $user->attachFonction($fonction);
+            $transformationService->attachFonction($user, $fonction);
         }
         
         $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
@@ -205,17 +209,14 @@ class UsersController extends Controller
         $fonction_id = $request->fonction_id;
         $fonction = Fonction::where('id', $fonction_id)->get()->first();
         
-        $user->detachFonction($fonction);
+        $transformationService = new GererTransformationService;
+        $transformationService->detachFonction($user, $fonction);
         
         $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
         return redirect()->route('users.choisirfonction', ['user' => $user,
                                                            'fonctions' => $fonctions]);
     }
 
-    public function attribuerstage(Request $request, User $user)
-    {
-        
-    }
     /**
      * Update user data
      * 

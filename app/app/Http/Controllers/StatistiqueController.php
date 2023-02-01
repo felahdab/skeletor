@@ -64,7 +64,7 @@ class StatistiqueController extends Controller
     {
         
         $stages = Stage::all();
-        $users = User::local()->with('secteur')->get();
+        $users = User::with('secteur')->get();
         $services = Service::orderBy('service_libcourt')->get();
         $fonctionsaquai = Fonction::where('typefonction_id', 2);
         
@@ -78,7 +78,7 @@ class StatistiqueController extends Controller
     {
         
         $stages = Stage::all();
-        $users = User::local();
+        $users = User::all();
         $services = Service::orderBy('service_libcourt')->get();
         $fonctionsaquai = Fonction::where('typefonction_id', 2);
         

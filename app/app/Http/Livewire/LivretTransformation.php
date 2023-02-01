@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire;
 
+use App\Service\GererTransformationService;
+
 use App\Models\User;
 use App\Models\Fonction;
 use App\Models\Compagnonage;
@@ -41,22 +43,26 @@ class LivretTransformation extends Component
     
     public function ValideLacheFonction(User $user, Fonction $fonction, $date_validation , $commentaire, $valideur)
     {
-        $user->ValideLacheFonction($fonction, $date_validation , $commentaire, $valideur);
+        $transformationService = new GererTransformationService;
+        $transformationService->ValideLacheFonction($user, $fonction, $date_validation , $commentaire, $valideur);
     }
     
     public function UnValideLacheFonction(User $user, Fonction $fonction)
     {
-        $user->UnValideLacheFonction($fonction);
+        $transformationService = new GererTransformationService;
+        $transformationService->UnValideLacheFonction($user, $fonction);
     }
     
     public function ValideDoubleFonction(User $user, Fonction $fonction, $date_validation , $commentaire, $valideur)
     {
-        $user->ValideDoubleFonction($fonction, $date_validation , $commentaire, $valideur);
+        $transformationService = new GererTransformationService;
+        $transformationService->ValideDoubleFonction($user, $fonction, $date_validation , $commentaire, $valideur);
     }
     
     public function UnValideDoubleFonction(User $user, Fonction $fonction)
     {
-        $user->UnValideDoubleFonction($fonction);
+        $transformationService = new GererTransformationService;
+        $transformationService->UnValideDoubleFonction($user, $fonction);
     }
     
     public function ValideElementsDuParcours(User $user, 
@@ -74,22 +80,25 @@ class LivretTransformation extends Component
         foreach($selected_taches as $tacheid )
         {
             $tache = Tache::find($tacheid);
-            $user->ValidateTache($tache, $date_validation , $commentaire, $valideur);
+            $transformationService = new GererTransformationService;
+            $transformationService->ValidateTache($user, $tache, $date_validation , $commentaire, $valideur);
         }
         
         foreach($selected_objectifs as $objectifid)
         {
             $objectif = Objectif::find($objectifid);
+            $transformationService = new GererTransformationService;
             foreach($objectif->sous_objectifs()->get() as $ssobj)
             {
-                $user->ValidateSousObjectif($ssobj, $date_validation , $commentaire, $valideur);
+                $transformationService->ValidateSousObjectif($user, $ssobj, $date_validation , $commentaire, $valideur);
             }
         }
         
         foreach($selected_sous_objectifs as $ssobjid)
         {
             $sous_objectif = SousObjectif::find($ssobjid);
-            $user->ValidateSousObjectif($sous_objectif, $date_validation , $commentaire, $valideur);
+            $transformationService = new GererTransformationService;
+            $transformationService->ValidateSousObjectif($user, $sous_objectif, $date_validation , $commentaire, $valideur);
         }
         $this->dispatchBrowserEvent("resetselection");
     }
@@ -130,22 +139,25 @@ class LivretTransformation extends Component
         foreach($selected_taches as $tacheid)
         {
             $tache = Tache::find($tacheid);
-            $user->UnValidateTache($tache);
+            $transformationService = new GererTransformationService;
+            $transformationService->UnValidateTache($user, $tache);
         }
         
         foreach($selected_objectifs as $objectifid)
         {
             $objectif = Objectif::find($objectifid);
+            $transformationService = new GererTransformationService;
             foreach($objectif->sous_objectifs()->get() as $ssobj)
             {
-                $user->UnValidateSousObjectif($ssobj);
+                $transformationService->UnValidateSousObjectif($user, $ssobj);
             }
         }
         
         foreach($selected_sous_objectifs as $ssobjid)
         {
             $sous_objectif = SousObjectif::find($ssobjid);
-            $user->UnValidateSousObjectif($sous_objectif);
+            $transformationService = new GererTransformationService;
+            $transformationService->UnValidateSousObjectif($user, $sous_objectif);
         }
         $this->dispatchBrowserEvent("resetselection");
     }
