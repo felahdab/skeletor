@@ -88,19 +88,6 @@ class User extends Authenticatable
     private $colls_sous_objs = [];
     private $colls_sous_objs_non_orphelins = null;
 
-    public function scopeLocal($query)
-    {
-        return; 
-        $currentuser = auth()->user();
-        if ($currentuser != null)
-        {
-            if ($currentuser->hasRole("admin"))
-                return;
-            $localunit = $currentuser->unite_id;
-            if ($localunit != null)
-                $query->where('unite_id', $localunit);
-        }
-    }
 
     /**
      * Always encrypt password when it is updated.
@@ -125,86 +112,49 @@ class User extends Authenticatable
     
     public function displayServiceSecteur()
     {
-        $secteur= $this->secteur()->get();
-        if ($secteur->count() == 1)
-            $secteur = $secteur->first();
-        else
+        $secteur= $this->secteur;
+        if ($secteur == null)
             return "NON RENSEIGNE";
-        $service = $secteur->service()->get()->first();
+        $service = $secteur->service;
         
         return $service->service_libcourt . "/" . $secteur->secteur_libcourt;
     }
     
     public function displayGrade()
     {
-        $grade = $this->grade()->get();
-        if ($grade->count() != 0)
-        {
-            $grade = $grade->first();
-            return $grade->grade_libcourt;
-        }
-        return "";
+        return $this->grade ? $this->grade->grade_libcourt : "";
     }
     
     public function displayDiplome()
     {
-        $diplome = $this->diplome()->get();
-        if ($diplome->count() != 0)
-        {
-            $diplome = $diplome->first();
-            return $diplome->diplome_libcourt;
-        }
-        return "";
+        return $this->diplome ? $this->diplome->diplome_libcourt : "";
     }
     
     public function displaySpecialite()
     {
-        $specialite = $this->specialite()->get();
-        if ($specialite->count() != 0)
-        {
-            $specialite = $specialite->first();
-            return $specialite->specialite_libcourt;
-        }
-        return "";
+        return $this->specialite ? $this->specialite->specialite_libcourt : "";
     }
     
     public function displaySecteur()
     {
-        $secteur = $this->secteur()->get();
-        if ($secteur->count() != 0)
-        {
-            $secteur = $secteur->first();
-            return $secteur->secteur_libcourt;
-        }
-        return "";
+        return $this->secteur ? $this->secteur->secteur_libcourt : "";
     }
     
     public function displayService()
     {
-        $secteur= $this->secteur()->get();
-        if ($secteur->count() == 1)
-            $secteur = $secteur->first();
-        else
-            return "NON RENSEIGNE";
-        $service = $secteur->service()->get()->first()->service_libcourt;
-        return $service;
+        if ($this->secteur){
+            return $this->secteur->service?->service_libcourt;
+        }
+        return "NON RENSEIGNE";
     }
     
     public function displayDestination()
     {
-        $unite_destination = $this->unite_destination()->get();
-        if ($unite_destination->count() != 0)
-        {
-            $unite_destination = $unite_destination->first();
-            return $unite_destination->unite_libcourt;
-        }
-        return "";
+        return $this->unite_destination? $this->unite_destination->unitelib_court : "";
     }
     public function displayDateDebarquement()
     {
-        if ($this->date_debarq == null)
-            return "N.C.";
-        return $this->date_debarq;
+        return $this->date_debarq? $this->date_debarq : "N.C.";
     }
     
     public function grade()
@@ -300,27 +250,6 @@ class User extends Authenticatable
             "event" => $event,
             "event_details" => $event_details
         ]);
-    }
-    
-    public function aValideLaFonction(Fonction $fonction)
-    {
-        foreach ($fonction->$compagnonages->get() as $compagnonage)
-        {
-            if ($this->aValideLeCompagnonage($compagnonage) == false)
-                return $false;
-        }
-        $userfonction=$user->fonctions()->find($fonction);
-        if ($fonction->fonction_double)
-        {
-            if ($userfonction->pivot->date_double == null)
-                return false;
-        }
-        if ($fonction->fonction_lache)
-        {
-            if ($userfonction->pivot->date_lache == null)
-                return false;
-        }
-        return true;
     }
     
     public function aValideLeCompagnonage(Compagnonage $compagnonage)
