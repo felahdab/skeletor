@@ -30,9 +30,7 @@ class UsersController extends Controller
      */
     public function index() 
     {
-        $users = User::local()->orderBy('name')->paginate(10);
-
-        return view('users.index', compact('users'));
+        return view('users.index');
     }
 
     /**
