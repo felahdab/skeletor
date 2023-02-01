@@ -99,9 +99,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::get('fonctions/{fonction}/listemarinsfonction', 'FonctionController@listemarinsfonction')->name('fonctions.listemarinsfonction');
 
         
-        Route::get('stages/consulter', 'StageController@consulter')->name('stages.consulter');
         Route::resource('stages',         StageController::class);
-        Route::get('stages/{stage}/validergroupe', 'StageController@choixmarins')->name('stages.choixmarins');
         Route::post('stages/{stage}/validergroupe', 'StageController@validermarins')->name('stages.validermarins');
         Route::post('stages/{stage}/attribuerstage', 'StageController@attribuerstage')->name('stages.attribuerstage');
         Route::post('stages/{stage}/retirerstage', 'StageController@annulermarins')->name('stages.annulermarins');

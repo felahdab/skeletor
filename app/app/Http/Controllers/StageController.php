@@ -19,17 +19,7 @@ class StageController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->has('filter') )
-        {
-            $filter = $request->input('filter');
-            $stages = Stage::where('stage_libcourt', 'LIKE', '%'.$filter.'%')->orderBy('stage_libcourt')->paginate(10);
-        } else {
-            $filter="";
-            $stages = Stage::orderBy('stage_libcourt')->paginate(10);
-        }
-        
-        return view('stages.index', ['stages' => $stages,
-                                    'filter'  => $filter ] );
+        return view('stages.index');
     }
 
     /**
@@ -189,38 +179,5 @@ class StageController extends Controller
             }
         }
         return redirect()->route('stages.show', ['stage'=>$stage]);
-    }
-
-    public function consulter(Request $request)
-    {
-        $stage = null;
-        $marin = null;
-        
-        if ($request->has("stage"))
-        {
-            $stage = Stage::find(intval($request["stage"]));
-        }
-        if ($request->has("marin"))
-        {
-            $marin = User::find(intval($request["marin"]));
-        }
-        
-        if ($stage and $marin)
-            $marin = null;
-        
-        $stages = Stage::orderBy('stage_libcourt')->get();
-        $typelicences = TypeLicence::orderBy('typlicense_libcourt')->get();
-        $users = User::local()->orderBy('name')->get();
-
-        $usersdustage =null;
-        if ($stage != null)
-            $usersdustage = $stage->users()->get();
-        
-        return view('stages.show', ['stage'        => $stage, 
-                                    'marin'        => $marin,
-                                    'stages'       => $stages,
-                                    'typelicences' => $typelicences,
-                                    'users'        => $users,
-                                    'usersdustage' => $usersdustage]);
     }
 }
