@@ -252,16 +252,6 @@ class User extends Authenticatable
         ]);
     }
     
-    public function aValideLeCompagnonage(Compagnonage $compagnonage)
-    {
-        foreach ($compagnonage->$taches->get() as $tache)
-        {
-            if ($this->aValideLaTache($tache) == false)
-                return $false;
-        }
-        return true;
-    }
-
     public function aValideLaTache(Tache $tache)
     {
         foreach ($tache->objectifs()->get() as $objectif)
