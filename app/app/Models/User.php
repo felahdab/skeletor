@@ -305,12 +305,7 @@ class User extends Authenticatable
     public function CommentaireDuStage(Stage $stage)
     {
         $workitem = $this->stages()->find($stage);
-        if ($workitem == null)
-            return "";
-        $workitem = $workitem->pivot;
-        if ($workitem->commentaire == null)
-            return "";
-        return $workitem->commentaire;
+        return $workitem?->pivot->commentaire;
     }
     
     /** Renvoie la liste de stages lies a une fonction.
