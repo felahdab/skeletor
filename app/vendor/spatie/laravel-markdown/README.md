@@ -1,6 +1,3 @@
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
-
 # A highly configurable markdown renderer and Blade component for Laravel
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-markdown.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-markdown)
@@ -51,7 +48,7 @@ app(Spatie\LaravelMarkdown\MarkdownRenderer::class)->toHtml($markdown);
 
 Out of the box, the `x-markdown` component and `MarkdownRenderer` can:
 
-- highlight code blocks correctly (via [Shiki PHP](https://github.com/spatie/shiki-php)) for 100+ languages, including PHP, JS, Blade, [and many more](https://github.com/shikijs/shiki/blob/master/docs/languages.md).
+- highlight code blocks correctly (via [Shiki PHP](https://github.com/spatie/shiki-php)) for 100+ languages, including PHP, JS, Blade, [and many more](https://github.com/shikijs/shiki/blob/main/docs/languages.md).
 - add anchor links to headings
 - cache results to increase performance
 

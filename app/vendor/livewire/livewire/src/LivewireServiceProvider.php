@@ -142,21 +142,20 @@ class LivewireServiceProvider extends ServiceProvider
 
     protected function registerRoutes()
     {
-        $prefix = config('livewire.app_url');
-        RouteFacade::post($prefix . '/livewire/message/{name}', HttpConnectionHandler::class)
+        RouteFacade::post('/livewire/message/{name}', HttpConnectionHandler::class)
             ->name('livewire.message')
             ->middleware(config('livewire.middleware_group', ''));
 
-        RouteFacade::post($prefix . '/livewire/upload-file', [FileUploadHandler::class, 'handle'])
+        RouteFacade::post('/livewire/upload-file', [FileUploadHandler::class, 'handle'])
             ->name('livewire.upload-file')
             ->middleware(config('livewire.middleware_group', ''));
 
-        RouteFacade::get($prefix . '/livewire/preview-file/{filename}', [FilePreviewHandler::class, 'handle'])
+        RouteFacade::get('/livewire/preview-file/{filename}', [FilePreviewHandler::class, 'handle'])
             ->name('livewire.preview-file')
             ->middleware(config('livewire.middleware_group', ''));
 
-        RouteFacade::get($prefix . '/livewire/livewire.js', [LivewireJavaScriptAssets::class, 'source']);
-        RouteFacade::get($prefix . '/livewire/livewire.js.map', [LivewireJavaScriptAssets::class, 'maps']);
+        RouteFacade::get('/livewire/livewire.js', [LivewireJavaScriptAssets::class, 'source']);
+        RouteFacade::get('/livewire/livewire.js.map', [LivewireJavaScriptAssets::class, 'maps']);
     }
 
     protected function registerCommands()
