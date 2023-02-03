@@ -2,15 +2,19 @@
 SCRIPTDIRECTORY="$(dirname "$0")"
 BASEDIRECTORY=$(realpath $SCRIPTDIRECTORY)
 APPDIRECTORY=$BASEDIRECTORY/..
-cd $APPDIRECTORY || exit 1
+cd $APPDIRECTORY
+if [ ! "$?" -eq 0 ]; then
+    echo -e "\n${I_ERROR}${S_ERROR} cd to application directory failed.${RESET}" >&2
+    exit 1
+fi 
 
-PARENTDIR=$(dirname $APPDIRECTORY)
+if [ ! -f ../.env ]; then
+    echo -e "\n${I_ERROR}${S_ERROR} .env file not found!.${RESET}" >&2
+    exit 1
 
-if [ ! -f $PARENTDIR/.env ]; then
-    exit 1;
 fi
 
-source $PARENTDIR/.env
+source ../.env
 echo $DOMAIN
 echo $PREFIX
 echo $ENVIRONNEMENT
@@ -30,3 +34,4 @@ sed -i $SED_CMD .env
 #mv public/assets public/$PREFIX
 cd public
 ln -s ./assets $PREFIX
+
