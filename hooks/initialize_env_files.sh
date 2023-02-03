@@ -1,14 +1,14 @@
 #!/bin/bash
 SCRIPTDIRECTORY="$(dirname "$0")"
 BASEDIRECTORY=$(realpath $SCRIPTDIRECTORY)
-cd $BASEDIRECTORY
+APPDIRECTORY=$BASEDIRECTORY/..
+cd $APPDIRECTORY || exit 1
 
-PARENTDIR=$(dirname $BASEDIRECTORY)
-STACKNAME=$(basename $PARENTDIR)
-# echo $BASEDIRECTORY
-# echo $STACKNAME
+PARENTDIR=$(dirname $APPDIRECTORY)
 
-./reset_app_prefix.sh
+if [ ! -f $PARENTDIR/.env ]; then
+    exit 1;
+fi
 
 source $PARENTDIR/.env
 echo $DOMAIN
