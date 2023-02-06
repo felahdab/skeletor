@@ -1,3 +1,24 @@
+## 1.0.12 (février 06, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.11 –> 1.0.12
+- Reinserted metabase configuration database into app_ffast repository.
+- Adjust .env database settings.
+- Adjust initialize env script
+- Adjust permissions on hooks.
+- Adjusted scripts
+- Purged repository from stack data and moved application to the root.
+- Removed scopeLocal reference in Fonction Model.
+- Add gitignore for vendor autoload files.
+- Reintroduce prefix un livewire routes.
+- Updated vendor folder. Added san-kumar/laravel-crud.
+- Cleanup code
+- Clean up User model
+- Cleanup du code
+- Remove scopeLocal reference in UsersController
+- Restore PermissionSeeder to its original state.
+- Adjusted database seeders to new routes definition.
+- Cree le GererTransformationService qui rassemble le code permettant de gerer les relations entre les donnees en base pour retranscrire le processus de transformation.
+- Cleanup StageController. TODO: cleanup create method.
+
 ## 1.0.11 (janvier 31, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.10 –> 1.0.11
 - Removed useless Event and Listener.
