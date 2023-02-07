@@ -36,7 +36,8 @@ Ce menu permet d’accéder :
 Écran permettant l’attribution et le retrait de fonction à un marin.
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/attribution_fonctions.png' )) }}" width=600px>
 1. Identité du marin concerné
-2. Liste des fonctions attribuées. Le bouton (3) « Retirer cette fonction » retire la fonction au marin.
+2. Liste des fonctions attribuées. 
+3. Le bouton (3) « Retirer cette fonction » retire la fonction au marin.
 4. Sélectionnez dans la liste déroulante la fonction à attribuer puis cliquez sur « Attribuer cette fonction » pour valider.
 5. Une fois les fonctions attribuées, accédez directement au livret de transformation du marin.
 6. Le bouton « Retour » permet de revenir à la liste des marins en transformation.
@@ -60,7 +61,7 @@ Saisir les données nécessaires. Pour enregistrer les validations, cliquer sur 
 > - le valideur est par défaut la personne connectée.
 > - le commentaire n’est pas obligatoire.
 
-Il vous est possible d’annuler des validations en cochant les cases voulues (9, 10, 11))puis en cliquant sur « Annuler la validation des éléments cochés » (4). 
+Il vous est possible d’annuler des validations en cochant les cases voulues (9, 10, 11) puis en cliquant sur « Annuler la validation des éléments cochés » (4). 
 Attention, aucune confirmation de suppression n’est demandée.
 
 Pour valider un double ou un lâcher, cliquer sur le bouton « valider » (12,13) de la ligne concernée. Le même écran de validation s'affiche.
@@ -126,7 +127,7 @@ En cliquant sur le bouton « Situation des marins pour ce stage » (1), vous aff
 
 <a name="recalcul-transfo">
 ## Recalcul des taux de transformation
-Cette page permet de relancer le calcul du taux de transformation pour tous les marins non archivés. Cela peut être nécessaire lors de l'évolution des parcours (modification d'un coefficient d'un sous-objectif ou ajout d'un tâche dans une fonction par exemple).
+Cette page permet de relancer le calcul du taux de transformation pour tous les marins non archivés. Cela peut être nécessaire lors de l'évolution des parcours (modification d'un coefficient d'un sous-objectif ou ajout d'une tâche dans une fonction par exemple).
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/recalcul_transfo.png' )) }}" width=400px>
 
 En cliquant sur le bouton « Lancer le calcul » (1), tous les taux de transformation de tous les marins sont recalculés.

@@ -34,7 +34,7 @@ Page permettant d’afficher un tableau récapitulant le nombre de marins en tra
 
 <a name="indicateurs">
 ## Indicateurs
-Page permettant d’afficher l'ensemble des données brutes pour établir des statistiques. Selectionnez la période que vous souhaitez afficher (1). Par défaut, la période affichée est la plus récente.
+Page permettant d’afficher l'ensemble des données brutes pour établir des statistiques. Sélectionnez la période que vous souhaitez afficher (1). Par défaut, la période affichée est la plus récente.
 
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/statistiques/indicateurs.png' )) }}" width=400px> 
 
@@ -50,8 +50,8 @@ On retrouve 3 onglets :
 
 - Nb marins : nombre de marins concernés.
 - Taux SAE achevé : nombre de stages validés x 100 / nombre de stages à faire.
-- Taux compagnonnage achevé :nombre de sous-objectifs validés x 100 / nombre de sous-objectifs à faire.
-- Taux transformation :(nombre de sous-objectifs validés + nombre de stages validés) x 100 / (nombre de sous-objectifs à faire + nombre de stages à faire).
+- Taux compagnonnage achevé : nombre de sous-objectifs validés x 100 / nombre de sous-objectifs à faire.
+- Taux transformation : (Nombre de sous-objectifs validés + nombre de stages validés) x 100 / (nombre de sous-objectifs à faire + nombre de stages à faire).
 - Nb jours de présence : Nombre de jours entre la date d'embarquement et la date de débarquement.
 - Nb marins lâchés quai : Nombre de marins étant lâchés dans leur fonction à quai.
 - Nb marins lâchés mer : Nombre de marins étant lâchés dans leur fonction à la mer.

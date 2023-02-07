@@ -57,7 +57,7 @@ Vous retrouvez la liste de tous les marins ayant le droit de se connecter à l�
 
 
 (7) « Changer le mot de passe » valable uniquement pour les marins qui n’utilisent pas la connexion Mindef Connect.  
-(8) « Se faire passer pour » permet de prendre la place du marin sélectionné.
+(8) « Se faire passer pour » permet de prendre la place du marin sélectionné. Une fois connecté avec le profil de cet utilisateur, cliquez sur le bouton "Redevenir soi-même" pour quitter ce profil.
 
 
 <a name="roles">
@@ -126,7 +126,7 @@ Cet écran va permettre d'archiver les marins. Vous y retrouvez :
 
 Le bouton "Restaurer" (1) permet de rendre un utilisateur visible s'il a été supprimé dans l'écran "Fiches des marins".
 Le bouton "Télécharger livret" (2) permet d'obtenir le livret du marin au format pdf pour une sauvegarde en local.
-Le bouton "Archivage" (3) supprime l'utilisateur de la visualisation dans l'application. Son livret de transformation est sauvegardé sur le serveur et ses données enregistrées pour établir des statistiques.
+Le bouton "Archivage" (3) supprime l'utilisateur de la visualisation dans l'application. Son livret de transformation est sauvegardé sur le serveur et ses données enregistrées pour établir des statistiques. Il faudra recréer son compte si vous voulez le faire réapparaitre dans vos listes.
 
 <a name="mails">
 ## Mails
