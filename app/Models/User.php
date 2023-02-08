@@ -347,7 +347,7 @@ class User extends Authenticatable
     
     public function fonctionAMer()
     {
-        $fonction = $this->fonctions()->where('typefonction_id', 1)->get()->first();
+        $fonction = $this->fonctions()->where('typefonction_id', 1);
         return $fonction;
     }
     

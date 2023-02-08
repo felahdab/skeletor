@@ -1,11 +1,15 @@
 @php
-   $fonctionAMer = $marin->fonctionAMer();
+    $fonctionAMer = $marin->fonctionAMer()->get();
 @endphp
-@if($fonctionAMer)
-    @php
-        $pourcentage = $fonctionAMer->pivot->taux_de_transformation;
-        $lache = $fonctionAMer->pivot->date_lache != null;
-    @endphp
-    <x-ffast-fonction-text :text="$fonctionAMer->fonction_libcourt" :pourcentage="$pourcentage" :lache="$lache"/>
-@endif
+<div>
+    <ul style='list-style-type : none;' >
+        @foreach($fonctionAMer as $fonction)
+            @php
+                $pourcentage = $fonction->pivot->taux_de_transformation;
+                $lache = $fonction->pivot->date_lache != null;
+            @endphp
+            <x-ffast-fonction-text :text="$fonction->fonction_libcourt" :pourcentage="$pourcentage" :lache="$lache"/>
+        @endforeach
+    </ul>
+</div>
 
