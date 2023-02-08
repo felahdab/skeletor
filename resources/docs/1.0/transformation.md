@@ -64,7 +64,8 @@ Saisir les données nécessaires. Pour enregistrer les validations, cliquer sur 
 Il vous est possible d’annuler des validations en cochant les cases voulues (9, 10, 11) puis en cliquant sur « Annuler la validation des éléments cochés » (4). 
 Attention, aucune confirmation de suppression n’est demandée.
 
-Pour valider un double ou un lâcher, cliquer sur le bouton « valider » (12,13) de la ligne concernée. Le même écran de validation s'affiche.
+Pour valider un double ou un lâcher, cliquer sur le bouton « valider » (12,13) de la ligne concernée. Le même écran de validation s'affiche. 
+**Attention**, le lâcher ne peut pas être validé si le double associé ne l'est pas déjà.
 
 Le bouton « Imprimer » (5) permet d’éditer le livret au format pdf.
 
