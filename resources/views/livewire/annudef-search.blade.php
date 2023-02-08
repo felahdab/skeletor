@@ -1,5 +1,5 @@
 <div>
-    <input wire:model.debounce.200ms="nom" placeholder="Nom..."></input>
+    <input dusk="input-nom" wire:model.debounce.200ms="nom" placeholder="Nom..."></input>
     <input wire:model.debounce.200ms="prenom" placeholder="Prénom..."></input>
     <input wire:model.debounce.200ms="email" placeholder="Email..."></input>
     <input wire:model.debounce.200ms="entite" placeholder="Entite..."></input>
