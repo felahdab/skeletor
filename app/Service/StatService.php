@@ -47,8 +47,13 @@ class StatService
         $nb_jour_mer= 0;
         $fonction_a_mer = $user->fonctionAMer();
         if (!is_null($fonction_a_mer)){
-            if (!is_null($fonction_a_mer->pivot->date_lache)){
-                $date_validation = new Carbon($fonction_a_mer->pivot->date_lache);
+            $latest_validation_date = $fonction_a_mer
+                ->orderBy('pivot_date_lache','desc')
+                ->wherePivotNotNull('date_lache')
+                ->get()->first();
+            
+            if (!is_null($latest_validation_date)){
+                $date_validation = new Carbon($latest_validation_date->pivot->date_lache);
                 $nb_jour_mer= $date_validation->diffInDays($date_embarq);
             }    
         }
@@ -66,6 +71,10 @@ class StatService
                 $nb_jour_metier= $date_validation->diffInDays($date_embarq);
             }
         }
+// voir si unite id toujours utile? 
+        $uniteid= $user->unite_id;       
+        if ($uniteid==Null)
+            $uniteid=2;
         
         $stat = Statistique::create([
             'date_stat'                 => $date_stat,

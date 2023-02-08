@@ -157,6 +157,8 @@ class UsersTable extends DataTableComponent
                 break;
             case "archiv" :
                 return array_merge($basecolumns , [
+                    Column::make('Supprimé', 'deleted_at')
+                        ->deSelected(),
                     Column::make('Débarq.', 'date_debarq')
                         ->searchable(),
                     Column::make('Actions')
