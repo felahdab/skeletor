@@ -163,25 +163,12 @@ class UsersController extends Controller
                                                            'fonctions' => $fonctions])->withError("Merci de selectionner une fonction");
         }
         
-        $fmerid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'mer')->get()->first()->id;
+        //$fmerid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'mer')->get()->first()->id;
         $fquaiid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'quai')->get()->first()->id;
-        $fmetierid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'metier')->get()->first()->id;
+        //$fmetierid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'metier')->get()->first()->id;
         
         $transformationService = new GererTransformationService;
-        if ($fonction->typefonction_id == $fmerid)
-        {
-            $fonctionsmer = $user->fonctions()->where('typefonction_id', $fmerid)->get();
-            if ($fonctionsmer->count() > 0)
-            {
-                foreach ($fonctionsmer as $fmer)
-                {
-                    $user->detachFonction($fmer);
-                }
-            }
-            
-            $transformationService->attachFonction($user, $fonction);
-        }
-        elseif ($fonction->typefonction_id == $fquaiid)
+        if ($fonction->typefonction_id == $fquaiid)
         {
             $fonctionsquai = $user->fonctions()->where('typefonction_id', $fquaiid)->get();
             if ($fonctionsquai->count() > 0)
@@ -193,11 +180,9 @@ class UsersController extends Controller
             }
             $transformationService->attachFonction($user, $fonction);
         }
-        elseif ($fonction->typefonction_id == $fmetierid)
-        {
+        else{
             $transformationService->attachFonction($user, $fonction);
         }
-        
         $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
         // recalcul tx transfo
         CalculateUserTransformationRatios::dispatch($user);
