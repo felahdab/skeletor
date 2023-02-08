@@ -170,8 +170,12 @@
         @endif
         @if ($user->fonctions()->where('typefonction_id', $fmerid)->get()->count() != 0 )
         <tr>
-            <td class='ta-r h-25 fz-18'>Fonction de service en mer : </td>
-            <td class='ta-l fz-18'>{{ $user->fonctions()->where('typefonction_id', $fmerid)->get()->first()->fonction_libcourt }}</td>
+            <td class='ta-r va-t h-25 fz-18'>Fonction de service en mer : </td>
+            <td class='ta-l va-t fz-18'>
+                @foreach($user->fonctions()->where('typefonction_id', $fmerid)->get() as $foncmer)
+                    {{$foncmer->fonction_libcourt}}<br>
+                @endforeach 
+            </td>
         </tr>
         @endif
         @if ($user->fonctions()->where('typefonction_id', $fmetierid)->get()->count() != 0 )
@@ -179,7 +183,7 @@
             <td class='ta-r va-t h-25 fz-18'>Fonction(s) m&eacute;tier : </td>
             <td class='ta-l va-t fz-18'>
                 @foreach($user->fonctions()->where('typefonction_id', $fmetierid)->get() as $foncmet)
-                    {{$foncmet->fonction_libcourt}}<br><br>
+                    {{$foncmet->fonction_libcourt}}<br>
                 @endforeach 
             </td>
         </tr>
