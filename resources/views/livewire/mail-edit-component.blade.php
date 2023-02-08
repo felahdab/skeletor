@@ -3,7 +3,7 @@
     }">
     <div>
         <label>Sujet: </label>
-        <input wire:model='sujet'></input>
+        <input dusk="input-sujet" wire:model='sujet'></input>
     </div>
     <div class='flex'>
         <div style='width: 50%'>
@@ -26,8 +26,8 @@
      <div class="btn-group" role="groupe">
         <button class="btn btn-primary" x-on:click="$wire.sendToUsers()">Envoyer aux utilisateurs sélectionnés</button>
         <button class="btn btn-warning" x-on:click="$wire.sendToAllPriviledgedUsers()">Envoyer aux groupes em/tuteurs/admin/2ps</button>
-        <button class="btn btn-primary" x-on:click="$wire.save()">Enregistrer</button>
-        <a href="{{route('mails.index')}}" class="btn btn-default" >Retour</button>
+        <button dusk='input-enregistrer-btn' class="btn btn-primary" x-on:click="$wire.save()">Enregistrer</button>
+        <a dusk='input-retour-btn' href="{{route('mails.index')}}" class="btn btn-default" >Retour</button>
     </div>
 </div>
 

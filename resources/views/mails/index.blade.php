@@ -10,7 +10,7 @@
         <h2>Mails</h2>
         <div class="lead">
             Mails envoyés précédemment
-            <a href="{{ route('mails.create') }}" class="btn btn-primary btn-sm float-right">Envoyer un nouveau mail</a>
+            <a dusk="create-mail-btn" href="{{ route('mails.create') }}" class="btn btn-primary btn-sm float-right">Envoyer un nouveau mail</a>
         </div>
         
         @livewire('mail-table')
