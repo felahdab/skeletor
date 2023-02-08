@@ -31,7 +31,7 @@
                             <label for="grade" class="form-label">Grade</label>
                             <select class="form-control" 
                                 name="grade_id">
-                                <option value="">Grade</option>
+                                <option value="">Grade *</option>
                                 @foreach($grades as $grade)
                                     <option value="{{ $grade->id }}" {{ $user->grade_id == $grade->id
                                             ? ' selected'
@@ -115,7 +115,7 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
-                            <label for="matricule" class="form-label">Matricule</label>
+                            <label for="matricule" class="form-label">Matricule *</label>
                             {!!Form::text('matricule', $user->matricule , ['class' => 'form-control', 'placeholder'=> "Matricule"]) !!}
                             @if ($errors->has('matricule'))
                                 <span class="text-danger text-left">{{ $errors->first(matricule) }}</span>
@@ -156,6 +156,42 @@
                     </div>
                     <div class="col">
                         <div class="mb-3">
+                            <label for="photo" class="form-label">Photo</label>
+                            <input type="file" 
+                                accept='.jpg, .jpeg, .png'
+                                class="form-control" 
+                                name="photo">
+                        </div>                    
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="date_embarq" class="form-label">Date d'embarquement</label>
+                            {!!Form::date('date_embarq', $user->date_embarq , ['class' => 'form-control', 'placeholder'=> 'Date d\'embarquement', 'required']) !!}
+                            @if ($errors->has('date_embarq'))
+                                <span class="text-danger text-left">{{ $errors->first(date_embarq) }}</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                            <img src="{{asset('public/' . $user->photo)}}" height="75px">
+                        </div>
+                    </div>                        
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="date_debarq" class="form-label">Date de débarquement</label>
+                            {!!Form::date('date_debarq', $user->date_debarq , ['class' => 'form-control', 'placeholder'=> 'Date de debarquement']) !!}
+                            @if ($errors->has('date_debarq'))
+                                <span class="text-danger text-left">{{ $errors->first(date_debarq) }}</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
                             <label for="unite_destination" class="form-label">Unité destination</label>
                             <select class="form-control" 
                                 name="unite_destination_id" >
@@ -171,41 +207,6 @@
                             @if ($errors->has('unite_destination'))
                                 <span class="text-danger text-left">{{ $errors->first(unite_destination) }}</span>
                             @endif
-                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="mb-3">
-                            <label for="date_embarq" class="form-label">Date d'embarquement</label>
-                            {!!Form::date('date_embarq', $user->date_embarq , ['class' => 'form-control', 'placeholder'=> 'Date d\'embarquement', 'required']) !!}
-                            @if ($errors->has('date_embarq'))
-                                <span class="text-danger text-left">{{ $errors->first(date_embarq) }}</span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="mb-3">
-                            <label for="photo" class="form-label">Photo</label>
-                            <input type="file" 
-                                accept='.jpg, .jpeg, .png'
-                                class="form-control" 
-                                name="photo">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="mb-3">
-                            <label for="date_debarq" class="form-label">Date de débarquement</label>
-                            {!!Form::date('date_debarq', $user->date_debarq , ['class' => 'form-control', 'placeholder'=> 'Date de debarquement']) !!}
-                            @if ($errors->has('date_debarq'))
-                                <span class="text-danger text-left">{{ $errors->first(date_debarq) }}</span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="mb-3">
-                            <img src="{{asset('public/' . $user->photo)}}" height="75px">
                         </div>
                     </div>
                 </div>
