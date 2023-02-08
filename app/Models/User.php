@@ -203,7 +203,7 @@ class User extends Authenticatable
             ->withTimeStamps()
             ->withPivot('date_lache','valideur_lache','commentaire_lache',
                     'date_double','valideur_double','commentaire_double',
-                    'validation', 'taux_de_transformation');
+                    'validation', 'taux_de_transformation','nb_jours_pour_validation');
     }
     
     public function stages()
@@ -505,5 +505,14 @@ class User extends Authenticatable
         }
         
         return $this->fonctionscount > 0;
+    }
+    public function NbJoursPresence()
+    {
+        // renvoie le nb de jours de presence diff date embarquement et aujourd'hui
+        $deb = date_create($this->date_embarq);
+        $fin = date_create(date('Y-m-d'));
+        $nbjours = $deb->diff($fin)->format('%a');
+
+        return $nbjours;
     }
 }

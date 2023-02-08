@@ -148,6 +148,11 @@ class UsersTable extends DataTableComponent
                     Column::make('Laché')
                         ->label(
                             fn($row, Column $column) => $row->fonctions()->find($this->fonction)->pivot->date_lache ),
+                    Column::make('Nb jours')
+                        ->label(
+                            fn($row, Column $column) => $row->fonctions()->find($this->fonction)->pivot->nb_jours_pour_validation ),
+                    Column::make('Date Embarq', 'date_embarq')
+                        ->sortable(),                
                 ]);
                 break;
             case "archiv" :
