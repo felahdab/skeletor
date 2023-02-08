@@ -64,17 +64,6 @@
                         <td id='tdFonctionServiceQuaiLache'>{{ $user->fonctionAQuai()->pivot->date_lache ? 'LACHE' : 'NON LACHE'}}</td>
                     </tr>
                     @endif
-                    @if ($user->fonctionAMer() != null)
-                    <tr class='enTeteFicheSynthese'>
-                        <!-- Fonction de quart à la mer -->
-                        <td colspan='2' class='text-right'>Fonction de quart à la mer :</td>
-                        <!--------------------------------------------------->
-                        <!-- un user n'a pas forcement de fonction a la mer-->
-                        <!--------------------------------------------------->
-                        <td id='tdFonctionQuartMer' class='text-left'>{{$user->fonctionAMer()->fonction_libcourt}}</td>
-                        <td id='tdFonctionQuartMerLache'>{{ $user->fonctionAMer()->pivot->date_lache ? 'LACHE' : 'NON LACHE'}}</td>
-                    </tr>
-                    @endif
                     <tr>
                         <td colspan='4'>&nbsp;</td>
                     </tr>
