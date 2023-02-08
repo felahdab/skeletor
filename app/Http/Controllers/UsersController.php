@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Service\GererTransformationService;
+use App\Jobs\CalculateUserTransformationRatios;
 
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -198,6 +199,8 @@ class UsersController extends Controller
         }
         
         $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
+        // recalcul tx transfo
+        CalculateUserTransformationRatios::dispatch($user);
         return redirect()->route('users.choisirfonction', ['user' => $user,
                                                            'fonctions' => $fonctions]);
     }
@@ -211,6 +214,8 @@ class UsersController extends Controller
         $transformationService->detachFonction($user, $fonction);
         
         $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
+        // recalcul tx transfo
+        CalculateUserTransformationRatios::dispatch($user);
         return redirect()->route('users.choisirfonction', ['user' => $user,
                                                            'fonctions' => $fonctions]);
     }

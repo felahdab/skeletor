@@ -120,6 +120,14 @@ class StattuteurTable extends DataTableComponent
             Column::make("Tx transfo", "taux_de_transformation")
                 ->sortable()
                 ->searchable(), 
+            Column::make('Date Embarq', 'date_embarq')
+                ->sortable()
+                ->deSelected(),
+            Column::make('Nb jours')
+                ->sortable()
+                ->label(
+                    fn($row, Column $column) => $row->NbJoursPresence(),
+                    ),
         ];
         return array_merge($basecolumns , [
             Column::make('Actions')
