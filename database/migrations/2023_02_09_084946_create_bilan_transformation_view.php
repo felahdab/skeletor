@@ -101,6 +101,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bilan_transformation_view');
+        DB::statement("DROP VIEW IF EXISTS fanlabdb.bilan_transformation");
     }
 };
