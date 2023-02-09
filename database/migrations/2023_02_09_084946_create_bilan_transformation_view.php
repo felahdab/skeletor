@@ -15,7 +15,7 @@ return new class extends Migration
      */
     public function up()
     {
-        DB::statement("CREATE VIEW fanlabdb.bilan_transformation 
+        DB::statement("CREATE VIEW bilan_transformation 
         
         AS
 
@@ -101,6 +101,6 @@ return new class extends Migration
      */
     public function down()
     {
-        DB::statement("DROP VIEW IF EXISTS fanlabdb.bilan_transformation");
+        DB::statement("DROP VIEW IF EXISTS bilan_transformation");
     }
 };
