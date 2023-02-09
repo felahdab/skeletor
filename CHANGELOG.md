@@ -1,3 +1,16 @@
+## 1.0.13 (février 09, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.12 –> 1.0.13
+- Correct MailsTest test and add some pauses to ensure tests succeeds despite ajax delays.
+- Merge commit '400549f07a1a3e45d282e348062797e79b31c1c6'
+- Created dusk tests; Adjusted dusk selectors in views
+- Merge branch 'master' into modifdoc
+- ajout précision concernant validation double/lacher
+- ajout recalcul tx transfo lors ajout/suppr d'une fonction
+- evolution affichage gestion users
+- modif page accueil des transfos et des affichages pour les tables livewire stattuteur et user
+- Merge branch 'master' into modifdoc
+- amélioration doc
+
 ## 1.0.12 (février 06, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.11 –> 1.0.12
 - Reinserted metabase configuration database into app_ffast repository.
