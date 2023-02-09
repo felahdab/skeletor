@@ -37,17 +37,15 @@ class MailsTest extends DuskTestCase
                   ->click('@create-mail-btn')
                   ->assertPathIs('/' . env('APP_PREFIX') .'/mails/create')
                   ->type('@input-sujet', 'TestTestTest')
+		->pause(1000)
                   ->click('@input-enregistrer-btn')
+		->pause(1000)
                   ->click('@input-retour-btn')
+		->pause(1000)
                   ->assertPathIs('/' . env('APP_PREFIX') .'/mails')
-                  ->assertSee(('TestTestTest'));
+                  ->assertSee('TestTestTest');
         });
         
         $user->forceDelete();
-    }
-
-    public function test_mails_dummy_test()
-    {
-        $this->assertTrue(true);
     }
 }
