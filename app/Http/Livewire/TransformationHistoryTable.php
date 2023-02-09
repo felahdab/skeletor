@@ -3,7 +3,6 @@
 namespace App\Http\Livewire;
 
 use App\Models\TransformationHistory;
-use App\Models\User;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -18,7 +17,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class TransformationHistoryTable extends DataTableComponent
 {
-    // protected $model = TransformationHistory::class;
     
     public function builder(): Builder
     {
@@ -40,10 +38,7 @@ class TransformationHistoryTable extends DataTableComponent
             Column::make('ID', 'id')
                 ->searchable(),
             Column::make('GDH', 'created_at'),
-            Column::make('Qui')
-                ->label(
-                    fn(TransformationHistory $row, Column $column) => view('tables.historytable.user', ['user' => TransformationHistory::find($row->id)->modifyinguser()->get()->first()])
-                    )
+           Column::make('Qui', 'modified_user')
                 ->sortable()
                 ->searchable(),
             Column::make('a fait quoi', 'event')
@@ -53,39 +48,12 @@ class TransformationHistoryTable extends DataTableComponent
                 ->label(
                     fn($row, Column $column) => view('tables.historytable.target')->withRow(TransformationHistory::find($row->id))
                     ),
-            Column::make('de qui')
-                ->label(
-                    fn(TransformationHistory $row, Column $column) => view('tables.historytable.user', ['user' => TransformationHistory::find($row->id)->modifieduser()->get()->first()])
-                    )
+            Column::make('de qui', 'modifying_user')
                 ->sortable()
                 ->searchable(),
             
         ];
         
         return $basecolumns;
-    }
-    
-    public function filters(): array
-    {
-        return [
-             TextFilter::make('Utilisateur agissant')
-                ->config([
-                    'placeholder' => '...'
-                    ])
-                ->filter(function(Builder $builder, string $value) {
-                        $user = User::where('name', 'like', '%' . $value . '%')->get()->first();
-                        if ($user != null)
-                            $builder->where('modifying_user_id', $user->id);
-                }),
-            TextFilter::make('Utilisateur concerné')
-                ->config([
-                    'placeholder' => '...'
-                    ])
-                ->filter(function(Builder $builder, string $value) {
-                        $user = User::where('name', 'like', '%' . $value . '%')->get()->first();
-                        if ($user != null)
-                            $builder->where('modified_user_id', $user->id);
-                }),
-        ];
     }
 }

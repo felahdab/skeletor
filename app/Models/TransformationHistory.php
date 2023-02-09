@@ -15,21 +15,21 @@ class TransformationHistory extends Model
     use HasFactory;
     
     protected $fillable = [
-        'modifying_user_id',
         'event',
         'event_details',
-        'modified_user_id',
+        'modifying_user',
+        'modified_user',
     ];
     
-    public function modifyinguser()
-    {
-        return $this->belongsTo(User::class, 'modifying_user_id');
-    }
+    // public function modifyinguser()
+    // {
+    //     return $this->belongsTo(User::class, 'modifying_user_id');
+    // }
     
-    public function modifieduser()
-    {
-        return $this->belongsTo(User::class, 'modified_user_id');
-    }
+    // public function modifieduser()
+    // {
+    //     return $this->belongsTo(User::class, 'modified_user_id');
+    // }
     
     public function target_element()
     {
