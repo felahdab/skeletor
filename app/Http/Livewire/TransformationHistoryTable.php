@@ -77,7 +77,7 @@ class TransformationHistoryTable extends DataTableComponent
                         if ($user != null)
                             $builder->where('modifying_user_id', $user->id);
                 }),
-            TextFilter::make('Utilisateur concernÃ©')
+            TextFilter::make('Utilisateur concerné')
                 ->config([
                     'placeholder' => '...'
                     ])
