@@ -21,15 +21,15 @@ class TransformationHistory extends Model
         'modified_user',
     ];
     
-    // public function modifyinguser()
-    // {
-    //     return $this->belongsTo(User::class, 'modifying_user_id');
-    // }
+    public function modifyinguser()
+    {
+        return $this->belongsTo(User::class, 'modifying_user_id');
+    }
     
-    // public function modifieduser()
-    // {
-    //     return $this->belongsTo(User::class, 'modified_user_id');
-    // }
+    public function modifieduser()
+    {
+        return $this->belongsTo(User::class, 'modified_user_id');
+    }
     
     public function target_element()
     {

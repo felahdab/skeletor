@@ -38,7 +38,10 @@ class TransformationHistoryTable extends DataTableComponent
             Column::make('ID', 'id')
                 ->searchable(),
             Column::make('GDH', 'created_at'),
-           Column::make('Qui', 'modified_user')
+            Column::make('Qui')
+                ->label(
+                    fn(TransformationHistory $row, Column $column) => view('tables.historytable.user', ['user' => TransformationHistory::find($row->id)->modifyinguser()->get()->first()])
+                    )
                 ->sortable()
                 ->searchable(),
             Column::make('a fait quoi', 'event')
@@ -48,12 +51,39 @@ class TransformationHistoryTable extends DataTableComponent
                 ->label(
                     fn($row, Column $column) => view('tables.historytable.target')->withRow(TransformationHistory::find($row->id))
                     ),
-            Column::make('de qui', 'modifying_user')
+            Column::make('de qui')
+                ->label(
+                    fn(TransformationHistory $row, Column $column) => view('tables.historytable.user', ['user' => TransformationHistory::find($row->id)->modifieduser()->get()->first()])
+                    )
                 ->sortable()
                 ->searchable(),
-            
+
         ];
-        
+
         return $basecolumns;
+    }
+
+    public function filters(): array
+    {
+        return [
+             TextFilter::make('Utilisateur agissant')
+                ->config([
+                    'placeholder' => '...'
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $user = User::where('name', 'like', '%' . $value . '%')->get()->first();
+                        if ($user != null)
+                            $builder->where('modifying_user_id', $user->id);
+                }),
+            TextFilter::make('Utilisateur concernÃ©')
+                ->config([
+                    'placeholder' => '...'
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $user = User::where('name', 'like', '%' . $value . '%')->get()->first();
+                        if ($user != null)
+                            $builder->where('modified_user_id', $user->id);
+                }),
+        ];
     }
 }

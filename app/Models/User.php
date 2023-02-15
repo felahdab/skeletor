@@ -245,8 +245,8 @@ class User extends Authenticatable
         $currentuser = auth()->user();
         
         TransformationHistory::create([
-            "modifying_user" => $currentuser->display_name,
-            "modified_user" => $this->display_name,
+            "modifying_user_id" => $currentuser->id,
+            "modified_user_id" => $this->id,
             "event" => $event,
             "event_details" => $event_details
         ]);
