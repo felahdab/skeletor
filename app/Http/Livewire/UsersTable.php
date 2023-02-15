@@ -107,6 +107,10 @@ class UsersTable extends DataTableComponent
                 ->searchable(),
             Column::make('Groupement', 'secteur.service.groupement.groupement_libcourt')
                 ->searchable(),
+            Column::make('U. dest.', 'unite_destination.unite_libcourt')
+                ->sortable()
+                ->searchable()
+                ->deSelected(),
             Column::make('Comete', 'comete')
                 ->deSelected()
                 ->searchable()

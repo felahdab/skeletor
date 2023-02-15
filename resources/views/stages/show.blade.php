@@ -88,7 +88,7 @@
                             <td>{{$user->displayDestination()}}</td>
                             <td>{{$user->displayDateDebarquement()}}</td>
                             @if(auth()->user()->can('stages.attribuerstage'))
-                                @if ($user->pivot->commentaire == null)
+                                @if ($user->pivot->commentaire == null or $user->pivot->commentaire == ' ')
                                     <td>&nbsp;</td>
                                 @else
                                     <td title="{{$user->pivot->commentaire}}">&#10069;</td>
@@ -134,6 +134,9 @@
                         @if(false)<td>Mat</td>@endif
                         <td>Secteur</td>
                         <td>Date valid</td>
+                        @if(auth()->user()->can('stages.attribuerstage'))
+                                <th scope="col">&#10069;</th>
+                        @endif
                     </tr>
                     <tbody>
                     @foreach($usersdustage as $user)
@@ -151,6 +154,13 @@
                             @if(false)<td>{{$user->matricule}}</td>@endif
                             <td>{{$user->displaySecteur()}} </td>
                             <td>{{$user->pivot->date_validation}}</td>
+                            @if(auth()->user()->can('stages.attribuerstage'))
+                                @if ($user->pivot->commentaire == null or $user->pivot->commentaire == ' ')
+                                    <td>&nbsp;</td>
+                                @else
+                                    <td title="{{$user->pivot->commentaire}}">&#10069;</td>
+                                @endif
+                            @endif
                         </tr>
                         @endif
                     @endforeach
