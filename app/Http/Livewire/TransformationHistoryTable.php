@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\TransformationHistory;
+use App\Models\User;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -17,12 +18,13 @@ use Illuminate\Database\Eloquent\Builder;
 
 class TransformationHistoryTable extends DataTableComponent
 {
-    
+    // protected $model = TransformationHistory::class;
+
     public function builder(): Builder
     {
         return TransformationHistory::query()->orderBy('id', 'desc');
     }
-    
+
     public $mode='gestion';
     public $targetuser = null;
 
