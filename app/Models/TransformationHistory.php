@@ -32,4 +32,5 @@ class TransformationHistory extends Model
             return Stage::find($event_details["stage"]["id"]);
         elseif (array_key_exists("fonction", $event_details))
             return Fonction::find($event_details["fonction"]["id"]);
+    }
 }
