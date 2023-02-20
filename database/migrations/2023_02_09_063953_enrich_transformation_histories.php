@@ -34,6 +34,8 @@ return new class extends Migration
         // }
         // je supprime les champs userid
         Schema::table('transformation_histories', function (Blueprint $table) {
+            $table->dropForeign(['modifying_user_id']);
+            $table->dropForeign(['modified_user_id']);
             $table->dropColumn('modifying_user_id');
             $table->dropColumn('modified_user_id');
         });
@@ -46,4 +48,5 @@ return new class extends Migration
     public function down()
     {    
         // c'est irreversible
-    };
+    }
+};
