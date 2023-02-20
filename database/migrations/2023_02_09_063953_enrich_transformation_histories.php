@@ -16,23 +16,23 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('transformation_histories', function (Blueprint $table) {
-            $table->string('modifying_user', 500)->nullable(true);
-            $table->string('modified_user', 500)->nullable(true);
-        });
+        // Schema::table('transformation_histories', function (Blueprint $table) {
+        //     $table->string('modifying_user', 500)->nullable(true);
+        //     $table->string('modified_user', 500)->nullable(true);
+        // });
 
-        foreach(TransformationHistory::all() as $enreg){
-            $enreg->modifying_user = User::find($enreg->modifying_user_id)?->display_name;
-            $enreg->modified_user = User::find($enreg->modified_user_id)?->display_name;
-            $enreg->save();
-        };
+        // foreach(TransformationHistory::all() as $enreg){
+        //     $enreg->modifying_user = User::find($enreg->modifying_user_id)?->display_name;
+        //     $enreg->modified_user = User::find($enreg->modified_user_id)?->display_name;
+        //     $enreg->save();
+        // };
 
-        Schema::table('transformation_histories', function (Blueprint $table) {
-            $table->dropForeign(['modifying_user_id']);
-            $table->dropForeign(['modified_user_id']);
-            $table->dropColumn('modifying_user_id');
-            $table->dropColumn('modified_user_id');
-        });
+        // Schema::table('transformation_histories', function (Blueprint $table) {
+        //     $table->dropForeign(['modifying_user_id']);
+        //     $table->dropForeign(['modified_user_id']);
+        //     $table->dropColumn('modifying_user_id');
+        //     $table->dropColumn('modified_user_id');
+        // });
     }
     /**
      * Reverse the migrations.

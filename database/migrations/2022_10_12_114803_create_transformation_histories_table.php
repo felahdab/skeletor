@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('transformation_histories', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('modifying_user_id')->nullable(false);
+            $table->string('modifying_user', 500)->nullable(true);
+            $table->string('modified_user', 500)->nullable(true);
             $table->string('event')->nullable(false);
             $table->text('event_details')->nullable(false)->default('');
-            $table->foreignId('modified_user_id')->nullable(false);
         });
     }
 

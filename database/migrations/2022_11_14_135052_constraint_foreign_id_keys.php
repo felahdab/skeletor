@@ -89,11 +89,6 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
         
-        Schema::table('transformation_histories', function (Blueprint $table) {
-            $table->foreign('modifying_user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('modified_user_id')->references('id')->on('users')->onDelete('cascade');
-        });
-        
     }
 
     /**
@@ -103,11 +98,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('transformation_histories', function (Blueprint $table) {
-            $table->dropForeign(['modifying_user_id']);
-            $table->dropForeign(['modified_user_id']);
-        });
-        
         Schema::table('bug_reports', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
         });
