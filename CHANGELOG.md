@@ -1,3 +1,11 @@
+## 1.0.15 (février 20, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.14 –> 1.0.15
+- Commit de merger avec master avant de pouvoir reintegrer la nouvelle version
+- Finalise la migration qui transforme la table d'historique pour retirer les user_id et mettre les displayname a la place.
+- Rajoute un IF EXISTS dans la migration qui cree la vue bilan_transformation.
+- Correct typo dans Modele TransformationHistory
+- changement user id en display name
+
 ## 1.0.14 (février 20, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.13 –> 1.0.14
 - Modifie le nom du parametre pour l'aligner avec la definition des routes pour que le type-binding du Service Container se fasse bien.
