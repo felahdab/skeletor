@@ -40,14 +40,7 @@ return new class extends Migration
      * @return void
      */
     public function down()
-    {
-        Schema::table('transformation_histories', function (Blueprint $table) {
-            $table->dropColumn('modifying_user');
-            $table->dropColumn('modified_user');
-        });
-        Schema::table('transformation_histories', function (Blueprint $table) {
-            $table->string('modifying_user_id')->nullable(false)->change();
-            $table->string('modified_user_id')->nullable(false)->change();
-        });
+    {    
+        // c'est irreversible
     }
 };
