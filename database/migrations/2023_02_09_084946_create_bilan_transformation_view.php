@@ -15,7 +15,7 @@ return new class extends Migration
      */
     public function up()
     {
-        DB::statement("CREATE VIEW bilan_transformation 
+        DB::statement("CREATE VIEW IF NOT EXISTS bilan_transformation 
         
         AS
 
