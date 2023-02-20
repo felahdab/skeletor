@@ -1,3 +1,30 @@
+## 1.0.14 (février 20, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.13 –> 1.0.14
+- Modifie le nom du parametre pour l'aligner avec la definition des routes pour que le type-binding du Service Container se fasse bien.
+- Corrige la migration qui supprime les champs modified_user_id et modifying_user_id de la table transformation_histories.
+- oubli fichier
+- 2eme essai
+- modif enlevees pour pouvoir merger. je les remets dans une autre branche
+- Merge branch 'master' into tuleap-50242-etudier-la-pertinence-de-la-fonction-mer
+- validation inutile car ce fichier est à revoir
+- ajout colonne unite destination libcourt pour les listes de marins
+- ajout du commentaire personnel pour les marins déjà validés
+- remise en place de la vue de la liste des satges à associe à une fonction
+- remise en place de la vue de la liste des satges à associe à une fonction
+- Remove reference to database name which is useless and would generate issues if the name was changed later.
+- modif table hitoriqur pour rendre valeur null possible pour les champs userid
+- Merge branch 'master' into tuleap-50242-etudier-la-pertinence-de-la-fonction-mer
+- modification pour avoir le display name à la place du user id dans la table historique de la transfo
+- Ajuste la migration pour la vue bilan_transformation
+- Cree la vue bilan_transformation qui met a plat toutes les informations relatives aux utilisateurs et a leur transformation.
+- Add version badge in navbar
+- Merge branch 'master' into tuleap-50242-etudier-la-pertinence-de-la-fonction-mer
+- modif page de garde pour plusieurs fonc mer
+- évolution affichage des boutons dans les users à archiver pour ne plus pouvoir archiver quelqu'un qui n'a pas de date de débarquement
+- modif affichage statuteurtable pour mettre toutes les fonc mer
+- suppression affichage de la fonc mer car il peut y en avoir plusieurs
+- attribution de plusieurs fonctions mer possible
+
 ## 1.0.13 (février 09, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.12 –> 1.0.13
 - Correct MailsTest test and add some pauses to ensure tests succeeds despite ajax delays.
