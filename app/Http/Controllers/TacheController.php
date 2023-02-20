@@ -140,9 +140,9 @@ class TacheController extends Controller
      * @param  \App\Models\Tache  $tache
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tache $tache)
+    public function destroy(Tache $tach)
     {
-        $tache->delete();
-        return redirect()->route('taches.index');
+        $tach->delete();
+        return redirect()->route('taches.index')->withSuccess("Tache supprimee");
     }
 }
