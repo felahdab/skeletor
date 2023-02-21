@@ -1,3 +1,10 @@
+## 1.0.16 (février 21, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.15 –> 1.0.16
+- Retire la reference a \Fruitcake\Cors\HandleCors qui est deprecated et a ete introduit dans \Illuminate\Http\Middleware\HandleCors
+- Retirer l'exemple de test remis en place par la mise a jour des packages.
+- Updated all packages.
+- Modification de l'historique des migrations. La table transformation_histories est cree directement dans son etat final afin d'éviter les migrations creant et detruisant des foreignID qui sont incompatibles avec SQLite, et qui cassent donc les tests automatiques.
+
 ## 1.0.15 (février 20, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.14 –> 1.0.15
 - Commit de merger avec master avant de pouvoir reintegrer la nouvelle version
