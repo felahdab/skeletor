@@ -3,6 +3,17 @@ This project versioning adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## 1.14.0 - 2023-02-09
+### Added
+- `PhpWebDriverExceptionInterface` as a common interface to identify all exceptions thrown in php-webdriver
+
+### Changed
+- Require PHP ^7.3.
+- Capabilities must be either explicitly provided or retrievable from Selenium Grid when resuing session with `createBySessionID()`.
+- Throw `UnexpectedResponseException` instead of `UnknownErrorException` in `findElement()` and `findElements()` methods.
+- Throw custom php-webdriver exceptions instead of native PHP SPL exceptions.
+- Do not mix internal non-W3C WebDriver exceptions, separate them into own namespaces.
+
 ## 1.13.1 - 2022-10-11
 ### Fixed
 - Do not fail when using `isDisplayed()` and capabilities are missing in WebDriver instance. (Happens when driver instance was created using `RemoteWebDriver::createBySessionID()`.)

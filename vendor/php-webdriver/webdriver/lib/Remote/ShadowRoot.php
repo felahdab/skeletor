@@ -14,7 +14,7 @@ class ShadowRoot implements WebDriverSearchContext
      *
      * @see https://w3c.github.io/webdriver/#shadow-root
      */
-    const SHADOW_ROOT_IDENTIFIER = 'shadow-6066-11e4-a52e-4f735466cecf';
+    public const SHADOW_ROOT_IDENTIFIER = 'shadow-6066-11e4-a52e-4f735466cecf';
 
     /**
      * @var RemoteExecuteMethod
@@ -33,8 +33,6 @@ class ShadowRoot implements WebDriverSearchContext
     }
 
     /**
-     * @param RemoteExecuteMethod $executor
-     * @param array $response
      * @return self
      */
     public static function createFromResponse(RemoteExecuteMethod $executor, array $response)
@@ -47,7 +45,6 @@ class ShadowRoot implements WebDriverSearchContext
     }
 
     /**
-     * @param WebDriverBy $locator
      * @return RemoteWebElement
      */
     public function findElement(WebDriverBy $locator)
@@ -64,7 +61,6 @@ class ShadowRoot implements WebDriverSearchContext
     }
 
     /**
-     * @param WebDriverBy $locator
      * @return WebDriverElement[]
      */
     public function findElements(WebDriverBy $locator)
