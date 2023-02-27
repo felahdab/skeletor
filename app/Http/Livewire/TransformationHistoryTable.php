@@ -39,7 +39,7 @@ class TransformationHistoryTable extends DataTableComponent
             Column::make('ID', 'id')
                 ->searchable(),
             Column::make('GDH', 'created_at'),
-           Column::make('Qui', 'modified_user')
+           Column::make('Qui', 'modifying_user')
                 ->sortable()
                 ->searchable(),
             Column::make('a fait quoi', 'event')
@@ -49,7 +49,7 @@ class TransformationHistoryTable extends DataTableComponent
                 ->label(
                     fn($row, Column $column) => view('tables.historytable.target')->withRow(TransformationHistory::find($row->id))
                     ),
-            Column::make('de qui', 'modifying_user')
+            Column::make('de qui', 'modified_user')
                 ->sortable()
                 ->searchable(),
 
