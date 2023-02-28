@@ -71,6 +71,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::get('archivage/{user}/restauration', 'ArchivageController@restaurer')->name('archivage.restaurer');
         Route::get('archivage/{user}/impression', 'ArchivageController@imprimer')->name('archivage.imprimer');
         Route::get('archivage/{user}/archivage', 'ArchivageController@archiver')->name('archivage.archiver');
+        Route::get('archivage/{user}/suppr', 'ArchivageController@supprimer')->name('archivage.supprimer');
         
         
         Route::resource('sous-objectifs', SousObjectifController::class);

@@ -48,4 +48,29 @@ class ArchivageController extends Controller
         return redirect()->route('archivage.index')
             ->withSuccess(__('Utilisateur archivé avec succès.'));
     }
+    
+    public function supprimer($id) 
+    {
+        // dd('test');
+        // ce user n'a pas de date de débarquement
+        $user=User::withTrashed()->find($id);
+        // nb fonctions, stages, ssobjs
+        $nb = $user->fonctions->count() + $user->stages->count() + $user->sous_objectifs->count(); 
+        if ($nb == 0){
+            // si le user n'a pas de fonctions ou stages ou ssobjs on le supprime de la table user
+            $user->forceDelete();
+        }
+        else{
+            // si le user a des fonctions ou stages ou ssobjs pas d'impression du livret
+            // en assignant deleted_at si pas fait et date_archivage.
+            $user->date_archivage=Carbon::now();
+            $user->date_debarq=Carbon::now();
+            if (!$user->deleted_at) {$user->deleted_at=Carbon::now();}
+            $user->save();
+            // inscription dans table statistiques
+            StatService::statuser($user);    
+        }
+        return redirect()->route('archivage.index')
+            ->withSuccess(__('Utilisateur supprimé avec succès.'));
+    }
 }

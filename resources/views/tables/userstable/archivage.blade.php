@@ -6,6 +6,8 @@
 <a href="{{ route('archivage.imprimer', $row->id) }}" class="btn btn-primary btn-sm">Télécharger livret</a>
 @can('users.destroy')
     @if ($row->date_debarq)
-        <a href="{{ route('archivage.archiver', $row->id) }}" class="btn btn-danger btn-sm">Archivage</a>
+        <a href="{{ route('archivage.archiver', $row->id) }}" class="btn btn-danger btn-sm">Archiver</a>
+    @else    
+        <a href="{{ route('archivage.supprimer', $row->id) }}" class="btn btn-secondary btn-sm">Supprimer</a>
     @endif
 @endcan
