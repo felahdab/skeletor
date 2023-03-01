@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreMindefConnectUserRequest;
 use App\Http\Requests\UpdateMindefConnectUserRequest;
 use App\Models\MindefConnectUser;
+use Illuminate\Http\Request;
 
 use App\Models\User;
 use Spatie\Permission\Models\Role;
@@ -102,9 +103,9 @@ class MindefConnectUserController extends Controller
         elseif (str_contains($affectation, "GTR BREST"))
             $possibleUnite = Unite::where("unite_libcourt", "GTR/B")->get()->first();
         elseif (str_contains($affectation, "BATIMENTS TOULON/ALSACE"))
-            $possibleUnite = Unite::where("unite_libcourt", "ALS_A")->get()->first();
+            $possibleUnite = Unite::where("unite_libcourt", "ALS")->get()->first();
         elseif (str_contains($affectation, "BATIMENTS TOULON/AUVERGNE"))
-            $possibleUnite = Unite::where("unite_libcourt", "AVG_A")->get()->first();
+            $possibleUnite = Unite::where("unite_libcourt", "AVG")->get()->first();
         elseif (str_contains($affectation, "BATIMENTS TOULON/LANGUEDOC/LANGUEDOC A"))
             $possibleUnite = Unite::where("unite_libcourt", "LGC_A")->get()->first();
         elseif (str_contains($affectation, "BATIMENTS TOULON/LANGUEDOC/LANGUEDOC B"))
@@ -122,9 +123,11 @@ class MindefConnectUserController extends Controller
         elseif (str_contains($affectation, "BATIMENTS BREST/BRETAGNE/BRETAGNE B"))
             $possibleUnite = Unite::where("unite_libcourt", "BTE_B")->get()->first();
         elseif (str_contains($affectation, "BATIMENTS BREST/LORRAINE"))
-            $possibleUnite = Unite::where("unite_libcourt", "LRN_B")->get()->first();
+            $possibleUnite = Unite::where("unite_libcourt", "LRN")->get()->first();
         elseif (str_contains($affectation, "BATIMENTS BREST/NORMANDIE"))
-            $possibleUnite = Unite::where("unite_libcourt", "NMD_A")->get()->first();
+            $possibleUnite = Unite::where("unite_libcourt", "NMD")->get()->first();
+        $cpte_exist=false;
+        if (User::withTrashed()->where ("email", $User->email)->get()->first()) {$cpte_exist=true;}            
         
         return view('mindefconnect.edit', ['mcuser' => $User,
                                     'roles' => Role::latest()->get(),
@@ -134,7 +137,9 @@ class MindefConnectUserController extends Controller
                                     'secteurs' => Secteur::orderBy('secteur_libcourt', 'asc')->get(),
                                     'unites' => Unite::orderBy('unite_libcourt', 'asc')->get(),
                                     'possibleGrade' => $possibleGrade,
-                                    'possibleUnite' => $possibleUnite]);
+                                    'possibleUnite' => $possibleUnite,
+                                    'cpte_exist' => $cpte_exist
+                                ]);
     }
 
     public function comebacklater()
@@ -164,5 +169,21 @@ class MindefConnectUserController extends Controller
     {
         $user->delete();
         return redirect()->route('mindefconnect.index');
+    }
+    public function conservcpte(MindefConnectUser $mcuser)
+    {
+        $user=User::withTrashed()->where ('email', $mcuser->email)->get()->first();
+        $user->date_archivage = null;
+        $user->deleted_at = null;
+        if ($user->save()){$mcuser->delete();}
+        // Que fait-on avec les stats ? Comment ?
+        return redirect()->route('mindefconnect.index');
+    }
+    public function effacecpte(MindefConnectUser $mcuser)
+    {
+        $user=User::withTrashed()->where ('email', $mcuser->email)->get()->first();
+        $user->forceDelete();
+        return redirect()->route('mindefconnect.store', $mcuser);
+        // Que fait-on avec les stats ? Comment ?
     }
 }

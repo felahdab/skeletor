@@ -44,6 +44,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::get('/{user}', 'MindefConnectUserController@edit')->name('mindefconnect.edit');
             Route::post('/{user}', 'MindefConnectUserController@store')->name('mindefconnect.store');
             Route::delete('/{user}', 'MindefConnectUserController@destroy')->name('mindefconnect.destroy');
+            Route::get('/{mcuser}/conservcpte', 'MindefConnectUserController@conservcpte')->name('mindefconnect.conservcpte');
+            Route::get('/{mcuser}/effacecpte', 'MindefConnectUserController@effacecpte')->name('mindefconnect.effacecpte');
         });
         
         /**
