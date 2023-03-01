@@ -17,6 +17,21 @@ class StatService
         $date_embarq = new Carbon($user->date_embarq);
         $date_debarq = new Carbon($user->date_debarq);
         $nb_jour_gtr = $date_debarq->diffInDays($date_embarq);
+        // verif donnees remplies
+        $unite_id = $user->unite_id; if ($unite_id == null) {$unite_id = 19;}
+        $grade = $user->displayGrade(); if ($grade == null) {$grade = ' N.C. ';}
+        $diplome = $user->displayDiplome(); if ($diplome == null) {$diplome = ' N.C. ';}
+        $specialite = $user->displaySpecialite(); if ($specialite == null) {$specialite = ' N.C. ';}
+        $secteur = $user->displaySecteur(); 
+        if ($secteur == null) {
+            $secteur= ' N.C. ';
+            $service= ' N.C. ';
+            $gpmt= ' N.C. ';
+        }
+        else{
+            $service = $user->displayService();
+            $gpmt = $user->groupement()->groupement_libcourt;
+        }
         // tx transfo stage
         $nb_stage_total = 0;
         $nb_stage_total = $user->stages()->get()->count();
@@ -78,17 +93,17 @@ class StatService
         
         $stat = Statistique::create([
             'date_stat'                 => $date_stat,
-            'unite_id'                  => $user->unite_id,
+            'unite_id'                  => $unite_id,
             'name'                      => $user->name,
             'prenom'                    => $user->prenom,
             'date_debarq'               => $user->date_debarq,
             'nb_jour_gtr'               => $nb_jour_gtr,
-            'grade'                     => $user->displayGrade(),
-            'diplome'                   => $user->displayDiplome(),
-            'specialite'                => $user->displaySpecialite(),
-            'secteur'                   => $user->displaySecteur(),
-            'service'                   => $user->displayService(),
-            'gpmt'                      => $user->groupement()->groupement_libcourt,
+            'grade'                     => $grade,
+            'diplome'                   => $diplome,
+            'specialite'                => $specialite,
+            'secteur'                   => $secteur,
+            'service'                   => $service,
+            'gpmt'                      => $gpmt,
             'taux_stage_valides'        => $taux_validation_stage,
             'taux_comp_valides'         => $taux_validation_coeff,
             'taux_de_transformation'    => $user->taux_de_transformation,
