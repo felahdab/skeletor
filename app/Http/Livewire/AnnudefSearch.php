@@ -10,6 +10,7 @@ use App\Http\Controllers\AnnudefController;
 use App\Http\Controllers\UsersController;
 use App\Models\User;
 use App\Models\Grade;
+use App\Models\Unite;
 
 class AnnudefSearch extends Component
 {
@@ -95,13 +96,51 @@ class AnnudefSearch extends Component
         }
         else
             $grade_id = null;
+        ////////////////////////////////////////////////
+        $possibleUnite=null;
+        $affectation = $usertocreate["unites"];
+        if (str_contains($affectation, "GTR FREMM TOULON"))
+            $possibleUnite = Unite::where("unite_libcourt", "GTR/T")->get()->first();
+        elseif (str_contains($affectation, "GTR BREST"))
+            $possibleUnite = Unite::where("unite_libcourt", "GTR/B")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS TOULON/ALSACE"))
+            $possibleUnite = Unite::where("unite_libcourt", "ALS")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS TOULON/AUVERGNE"))
+            $possibleUnite = Unite::where("unite_libcourt", "AVG")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS TOULON/LANGUEDOC/LANGUEDOC A"))
+            $possibleUnite = Unite::where("unite_libcourt", "LGC_A")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS TOULON/LANGUEDOC/LANGUEDOC B"))
+            $possibleUnite = Unite::where("unite_libcourt", "LGC_B")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS TOULON/PROVENCE/PROVENCE A"))
+            $possibleUnite = Unite::where("unite_libcourt", "PCE_A")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS TOULON/PROVENCE/PROVENCE B"))
+            $possibleUnite = Unite::where("unite_libcourt", "PCE_B")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS BREST/AQUITAINE/AQUITAINE A"))
+            $possibleUnite = Unite::where("unite_libcourt", "AQN_A")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS BREST/AQUITAINE/AQUITAINE B"))
+            $possibleUnite = Unite::where("unite_libcourt", "AQN_B")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS BREST/BRETAGNE/BRETAGNE A"))
+            $possibleUnite = Unite::where("unite_libcourt", "BTE_A")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS BREST/BRETAGNE/BRETAGNE B"))
+            $possibleUnite = Unite::where("unite_libcourt", "BTE_B")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS BREST/LORRAINE"))
+            $possibleUnite = Unite::where("unite_libcourt", "LRN")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS BREST/NORMANDIE"))
+            $possibleUnite = Unite::where("unite_libcourt", "NMD")->get()->first();
+        else
+            $possibleUnite = Unite::where("unite_libcourt", "HE")->get()->first();
         
+
+
+
+        /////////////////////////////////////////////////
         $newUser = User::create(["email"    => $usertocreate["email"],
                       "name"     => $usertocreate["nom"],
                       "prenom"   => $usertocreate["prenomusuel"],
                       "nid"      => $usertocreate["nid"],
                       "password" => UsersController::generateRandomString(),
-                      "grade_id" => $grade_id]);
+                      "grade_id" => $grade_id,
+                      "unite_id" => $possibleUnite->id]);
         $newUser->syncRoles(["user"]);
     }
 
