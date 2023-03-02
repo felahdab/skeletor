@@ -211,43 +211,67 @@ class GererTransformationService
     public function ValideLacheFonction(User $user, Fonction $fonction, $date_validation , $commentaire, $valideur, $proposition=false)
     {
         $fieldname=$proposition ? 'date_proposition_lache' : 'date_lache';
+        $logtype = $proposition ? 'PROPOSITION_VALIDATION_LACHE_FONCTION' : 'VALIDE_LACHE_FONCTION';
         
         $userfonc = $user->fonctions->find($fonction);
-        // L'utilisateur a cliqué sur un bouton de validation du lache
-        // Si la fonction necessite un double, il faut que le double soit valide avant le lache
-        if ($userfonc->pivot->date_double != null or !$fonction->fonction_double) 
+        if ($userfonc == null)
+            return;
+
+        if ($proposition && $userfonc->pivot->date_lache == null)
         {
+            // Dans le cas d'une proposition, on ne restreint pas la demande.
+            // Il faut juste que le lache n'ait pas deja ete valide
+            // Charge à celui qui accepte la proposition de s'assurer qu'elle est bien justifiée.
             $userfonc->pivot->commentaire_lache=$commentaire;
             $userfonc->pivot->valideur_lache=$valideur;
-            $userfonc->pivot->{$fieldname} = $date_validation;
-            $userfonc->pivot->save();
-            $event_detail = [
-                "fonction" => $fonction,
-                "commentaire" => $commentaire,
-                $fieldname => $date_validation,
-            ];
-            $user->logTransformationHistory("VALIDE_LACHE_FONCTION", json_encode($event_detail));
+            $userfonc->pivot->date_proposition_lache = $date_validation;
         }
+        elseif (! $proposition && ($userfonc->pivot->date_double != null or !$fonction->fonction_double) )
+        {
+            // L'utilisateur a cliqué sur un bouton de validation du lache
+            // Si la fonction necessite un double, il faut que le double soit valide avant le lache
+            $userfonc->pivot->commentaire_lache=$commentaire;
+            $userfonc->pivot->valideur_lache=$valideur;
+            $userfonc->pivot->date_lache = $date_validation;
+            $userfonc->pivot->date_proposition_lache = null;
+        }
+        $userfonc->pivot->save();
+        $event_detail = [
+            "fonction" => $fonction,
+            "commentaire" => $commentaire,
+            "proposition" => $proposition,
+            $fieldname => $date_validation,
+        ];
+        $user->logTransformationHistory($logtype, json_encode($event_detail));
+
     }
     
     public function UnValideLacheFonction(User $user, Fonction $fonction, $proposition=false)
     {
-        if ($proposition)
-            return;
+        $logtype = $proposition ? 'ANNULE_PROPOSITION_VALIDATION_LACHE_FONCTION' : 'ANNULE_LACHE_FONCTION';
+
 
         $userfonc = $user->fonctions->find($fonction);
         if ($userfonc == null)
             return;
-        $userfonc->pivot->commentaire_lache=null;
-        $userfonc->pivot->valideur_lache=null;
-        $userfonc->pivot->date_lache = null;
+        if ($proposition && $userfonc->pivot->date_lache == null){
+            $userfonc->pivot->commentaire_lache=null;
+            $userfonc->pivot->valideur_lache=null;
+            $userfonc->pivot->date_proposition_lache = null;
+        }
+        elseif (! $proposition){
+            $userfonc->pivot->commentaire_lache=null;
+            $userfonc->pivot->valideur_lache=null;
+            $userfonc->pivot->date_lache = null;
+            $userfonc->pivot->date_proposition_lache = null;
+        }
         $userfonc->pivot->save();
-        $user->logTransformationHistory("ANNULE_LACHE_FONCTION", json_encode(["fonction" => $fonction]));
+        $user->logTransformationHistory($logtype, json_encode(["fonction" => $fonction]));
     }
     
     public function UnValideDoubleFonction(User $user, Fonction $fonction, $proposition=false)
     {
-        $logtype = $proposition ? 'ANNULE_PROPOSE_VALIDATION_DOUBLE_FONCTION' : 'ANNULE_DOUBLE_FONCTION';
+        $logtype = $proposition ? 'ANNULE_PROPOSITION_VALIDATION_DOUBLE_FONCTION' : 'ANNULE_DOUBLE_FONCTION';
 
         $userfonc = $user->fonctions->find($fonction);
         if ($userfonc == null)

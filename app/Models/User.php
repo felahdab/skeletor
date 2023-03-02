@@ -323,9 +323,9 @@ class User extends Authenticatable
         if ($userfonction == null)
             return false;
         
-        if ($userfonction->pivot->date_proposition_lache == null)
-            return false;
-        return true;
+        if ($userfonction->pivot->date_proposition_lache != null)
+            return true;
+        return false;
     }
 
     public function aValideLacheFonction(Fonction $fonction){
@@ -333,9 +333,9 @@ class User extends Authenticatable
         if ($userfonction == null)
             return false;
         
-        if ($userfonction->pivot->date_lache == null)
-            return false;
-        return true;
+        if ($userfonction->pivot->date_lache != null)
+            return true;
+        return false;
     }
     
     public function aValideLeStage(Stage $stage)

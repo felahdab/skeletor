@@ -30,8 +30,10 @@
         @endif
         </td>
         <td>
-        @if ( $user->aProposeDoubleFonction($fonction) || $user->aValideDoubleFonction($fonction) )
+        @if ( $user->aProposeDoubleFonction($fonction) ||  $user->aValideDoubleFonction($fonction) )
             {{ $fonction->pivot->valideur_double }}
+        @endif
+        @if ( $user->aProposeDoubleFonction($fonction) || ($readwrite && $user->aValideDoubleFonction($fonction) ) )
             <button class="btn btn-danger" 
             x-on:click.prevent="$wire.UnValideDoubleFonction( {{ $user->id }}, {{ $fonction->id }} );">
             Annuler</button>
@@ -50,7 +52,7 @@
                     $wire.ValideDoubleFonction( {{$user->id}}, {{$fonction->id}}, date_validation , commentaire, valideur);
                  };"></button>
         @endif
-        @if ( ! $readwrite && ! $user->aProposeDoubleFonction($fonction) )
+        @if ( ! $readwrite && ! $user->aProposeDoubleFonction($fonction) && !$user->aValideDoubleFonction($fonction))
             <button type="submit" 
                 class="btn btn-primary" 
                 name="validation_double"
@@ -72,36 +74,58 @@
     <tr x-data='{ active : false }'>
         <td>LACHER</td>
         <td class="text-start">
-        @if ($fonction->pivot->date_double != null)
+        @if ($user->aProposeLacheFonction($fonction) || $user->aValideLacheFonction($fonction))
             {{ $fonction->pivot->commentaire_lache }}
         @endif
         </td>
         <td>
-        @if ($fonction->pivot->date_lache != null)
+        @if ($user->aValideLacheFonction($fonction))
             <button class='btn btn-success' type='button' disabled>
                 VALIDE {{ $fonction->pivot->date_lache }}
             </button>
         @endif
+        @if ($user->aProposeLacheFonction($fonction))
+            <button class='btn btn-primary' type='button' disabled>
+                PROPOSE {{ $fonction->pivot->date_proposition_lache}}
+            </button>
+        @endif
         </td>
         <td>
-        @if ($fonction->pivot->valideur_lache != null and $readwrite)
+        @if ( $user->aProposeLacheFonction($fonction) || $user->aValideLacheFonction($fonction) )
             {{ $fonction->pivot->valideur_lache }}
+        @endif
+        @if ( $user->aProposeLacheFonction($fonction) || ($readwrite && $user->aValideLacheFonction($fonction) ) )
             <button class="btn btn-danger" 
             x-on:click.prevent="$wire.UnValideLacheFonction( {{ $user->id }}, {{ $fonction->id }} );">
             Annuler</button>
-        @elseif($readwrite)
-        <button type="submit" 
-            class="btn btn-primary" 
-            name="validation_lache"
-            x-on:click.prevent="active  = true; 
+        @endif
+        @if ( $readwrite && ! $user->aValideLacheFonction($fonction) )
+            <button type="submit" 
+                class="btn btn-primary" 
+                name="validation_lache"
+                x-on:click.prevent="active  = true; 
                                buttonid ='validation_lache'; 
-                           opendivvalid =true;">Valider</button>
-            <button x-show="false"  
-                    x-on:uservalidated.window="if (active)
-                    { 
-                        active = false;  
-                        $wire.ValideLacheFonction({{$user->id}}, {{$fonction->id}}, date_validation , commentaire, valideur);
-                    }"></button>
+                               opendivvalid =true;">Valider</button>
+              <button x-show="false" 
+                x-on:uservalidated.window="if (active)
+                {   
+                    active = false;  
+                    $wire.ValideLacheFonction( {{$user->id}}, {{$fonction->id}}, date_validation , commentaire, valideur);
+                 };"></button>
+        @endif
+        @if ( ! $readwrite && ! $user->aProposeLacheFonction($fonction) )
+            <button type="submit" 
+                class="btn btn-primary" 
+                name="validation_lache"
+                x-on:click.prevent="active  = true; 
+                               buttonid ='validation_lache'; 
+                               opendivvalid =true;">Proposer la validation</button>
+              <button x-show="false" 
+                x-on:uservalidated.window="if (active)
+                {   
+                    active = false;  
+                    $wire.ValideLacheFonction( {{$user->id}}, {{$fonction->id}}, date_validation , commentaire, valideur);
+                 };"></button>
         @endif
         </td>
         <td>Bord</td>
