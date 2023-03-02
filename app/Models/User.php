@@ -15,6 +15,7 @@ use Lab404\Impersonate\Models\Impersonate;
 
 use App\Jobs\CalculateUserTransformationRatios;
 use App\Service\GererTransformationService;
+use App\Service\TransformationManagerService;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\TransformationHistory;
@@ -198,6 +199,14 @@ class User extends Authenticatable
     }
     
     // Cette partie concerne le suivi de la transformation.
+    public $transformation_service = null;
+    public function getTransformationManager()
+    {
+        if ($this->transformation_service == null)
+            $this->transformation_service = new TransformationManagerService($this);
+        return $this->transformation_service;
+    }
+
     public function fonctions()
     {
         return $this->belongsToMany(Fonction::class, 'user_fonction')
