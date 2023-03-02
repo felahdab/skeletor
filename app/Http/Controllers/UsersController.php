@@ -43,7 +43,7 @@ class UsersController extends Controller
     {
         return view('users.create', [
             'roles' => Role::latest()->get(),
-            'grades' => Grade::orderBy('ordre_classmt', 'asc')->get(),
+            'grades' => Grade::orderBy('ordre_classmt', 'desc')->get(),
             'specialites' => Specialite::orderBy('specialite_libcourt', 'asc')->get(),
             'diplomes' => Diplome::latest()->get(),
             'secteurs' => Secteur::orderBy('secteur_libcourt', 'asc')->get(),
@@ -138,7 +138,7 @@ class UsersController extends Controller
             'user' => $user,
             'userRole' => $user->roles->pluck('name')->toArray(),
             'roles' => Role::latest()->get(),
-            'grades' => Grade::orderBy('ordre_classmt', 'asc')->get(),
+            'grades' => Grade::orderBy('ordre_classmt', 'desc')->get(),
             'specialites' => Specialite::orderBy('specialite_libcourt', 'asc')->get(),
             'diplomes' => Diplome::latest()->get(),
             'secteurs' => Secteur::orderBy('secteur_libcourt', 'asc')->get(),
