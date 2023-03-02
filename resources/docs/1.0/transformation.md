@@ -69,6 +69,9 @@ Pour valider un double ou un lâcher, cliquer sur le bouton « valider » (12,13
 
 Le bouton « Imprimer » (5) permet d’éditer le livret au format pdf.
 
+**Remarque : **  Le marin concerné a la possibilité de proposer la validation d'élements du parcours. Les éléments proposés par le marin sont marqués d'une pastille "PROPOSE":
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/pastille_proposition.png' )) }}" width=100px>
+
 **Remarque : ** Pour l’imprimer au format livret, sélectionnez l’option d’impression d’Acrobate Reader « brochure ».
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/livret_de_transformation_impression_livret.jpg' )) }}" width=600px> 
 
