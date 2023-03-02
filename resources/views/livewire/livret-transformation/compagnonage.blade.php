@@ -20,11 +20,12 @@
                 @foreach($compagnonage->taches()->get() as $tache)
                 <tr class='ligneTache'>
                     <td rowspan='{{$tache->nb_ssobj()}}'>
-                    @if($readwrite)
+
+                        @if ($readwrite || ! $user->aValideLaTache($tache) )
                         <input type='checkbox' 
                             x-data='{ active: false }'
                             x-model="selected_taches"
-                            value="{{$tache->id}}">@endif 
+                            value="{{$tache->id}}"> @endif
                         {{$tache->tache_liblong }} 
                         @if ($mode=='unique' && $user->aValideLaTache($tache))
                             <button class='btn btn-success' type='button' disabled>VALIDEE</button>
@@ -32,10 +33,11 @@
                     </td>
                     @foreach($tache->objectifs()->get() as $objectif)
                     <td rowspan='{{$objectif->sous_objectifs()->get()->count()}}'> 
+                        @if ($readwrite || ! $user->aValideLObjectif($objectif) )
                         <input type='checkbox' 
                             x-data='{ active: false }'
                             x-model="selected_objectifs"
-                            value="{{$objectif->id}}">
+                            value="{{$objectif->id}}">@endif
                         {{$objectif->objectif_liblong }}
                         @if ($mode=='unique' && $user->aValideLObjectif($objectif))
                             <button class='btn btn-success' type='button' disabled>
@@ -47,7 +49,7 @@
                             <td>{{$sous_objectif->ssobj_lib}}</td>
                             <td>{{$sous_objectif->ssobj_duree}}</td>
                             <td title=''>
-                                @if($readwrite)
+                                    @if ($readwrite || ! $user->aValideLeSousObjectif($sous_objectif) )
                                     <input type='checkbox' 
                                     x-data='{ active: false }'
                                     x-model="selected_sous_objectifs"
@@ -55,6 +57,11 @@
                                 @if ($mode=='unique' && $user->aValideLeSousObjectif($sous_objectif))
                                     <button class='btn btn-success' type='button' disabled>
                                     VALIDE {{ $user->sous_objectifs_non_orphelins()->find($sous_objectif)->pivot->date_validation }}
+                                    </button>
+                                @endif
+                                @if ($mode=='unique' && $user->aProposeLeSousObjectif($sous_objectif))
+                                    <button class='btn btn-primary' type='button' disabled>
+                                    PROPOSE {{ $user->sous_objectifs_non_orphelins()->find($sous_objectif)->pivot->date_proposition_validation }}
                                     </button>
                                 @endif
                             </td>

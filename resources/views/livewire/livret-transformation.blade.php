@@ -7,28 +7,29 @@
         </div>
     </div>
     <div wire:loading.remove x-data="{ opendivvalid : false ,
-                    commentaire : '' ,
-                    valideur : '{{auth()->user()->display_name}}',
-                    date_validation : '{{ date('Y-m-d')}}',
-                    selected_compagnonnages : [],
-                    selected_taches : [],
-                    selected_objectifs : [],
-                    selected_sous_objectifs : [],
-                    selected_marins : []
-                       }"
-                       
-                    x-on:resetselection.window="selected_taches = [];
-                    selected_objectifs = [];
-                    selected_sous_objectifs = [];
-                    selected_marins = [];">
+                                        commentaire : '' ,
+                                        valideur : '{{auth()->user()->display_name}}',
+                                        date_validation : '{{ date('Y-m-d')}}',
+                                        selected_compagnonnages : [],
+                                        selected_taches : [],
+                                        selected_objectifs : [],
+                                        selected_sous_objectifs : [],
+                                        selected_marins : [],
+                                        readwrite : '{{ $readwrite }}'
+                                        }"
+                                        
+                                        x-on:resetselection.window="selected_taches = [];
+                                        selected_objectifs = [];
+                                        selected_sous_objectifs = [];
+                                        selected_marins = [];">
     
-        @if($readwrite)
-            <!-- div avec boutons generaux -->
-            @include('livewire.livret-transformation.boutonsgeneraux')
 
-            <!-- div avec formulaire de validation -->
-            @include('livewire.livret-transformation.divvalid')
-        @endif
+        <!-- div avec boutons generaux -->
+        @include('livewire.livret-transformation.boutonsgeneraux')
+
+        <!-- div avec formulaire de validation -->
+        @include('livewire.livret-transformation.divvalid')
+
         
         <div id='livret' class='div-table-contrat-compagnonnage table'>
             @foreach ($fonctions as $fonction)

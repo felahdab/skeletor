@@ -196,6 +196,7 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Unite::class, 'unite_destination_id');
     }
+    
     // Cette partie concerne le suivi de la transformation.
     public function fonctions()
     {
@@ -203,7 +204,8 @@ class User extends Authenticatable
             ->withTimeStamps()
             ->withPivot('date_lache','valideur_lache','commentaire_lache',
                     'date_double','valideur_double','commentaire_double',
-                    'validation', 'taux_de_transformation','nb_jours_pour_validation');
+                    'validation', 'taux_de_transformation','nb_jours_pour_validation',
+                    'date_proposition_double', 'date_proposition_lache');
     }
     
     public function stages()
@@ -224,7 +226,7 @@ class User extends Authenticatable
         
         $liste_sous_obj_valides = $this->belongsToMany(SousObjectif::class, 'user_sous_objectif')
             ->withTimeStamps()
-            ->withPivot('commentaire', 'date_validation', 'valideur')
+            ->withPivot('commentaire', 'date_validation', 'valideur', 'date_proposition_validation')
             ->get();
             
         $resultat = $liste_sous_obj_valides->intersect($ssobj_du_parcours_de_transformation);
@@ -236,7 +238,7 @@ class User extends Authenticatable
     public function sous_objectifs(){  
         return $this->belongsToMany(SousObjectif::class, 'user_sous_objectif')
             ->withTimeStamps()
-            ->withPivot('commentaire', 'date_validation', 'valideur', 'nb_jours_pour_validation');
+            ->withPivot('commentaire', 'date_validation', 'valideur', 'nb_jours_pour_validation', 'date_proposition_validation');
     }
     
     // Cette partie contient des fonctions d'aide pour le suivi de la transformation
@@ -275,7 +277,63 @@ class User extends Authenticatable
     public function aValideLeSousObjectif(SousObjectif $sous_objectif)
     {
         $workitem = $this->sous_objectifs()->find($sous_objectif);
+
         if ($workitem == null)
+            return false;
+        if ($workitem->pivot->date_validation == null)
+            return false;
+        return true;
+    }
+
+    public function aProposeLeSousObjectif(SousObjectif $sous_objectif)
+    {
+        $workitem = $this->sous_objectifs()->find($sous_objectif);
+
+        if ($workitem == null)
+            return false;
+        if ($workitem->pivot->date_validation != null)
+            return false;
+        if ($workitem->pivot->date_proposition_validation != null)
+            return true;
+        return false;
+    }
+
+    public function aProposeDoubleFonction(Fonction $fonction){
+        $userfonction = $this->fonctions->find($fonction);
+        if ($userfonction == null)
+            return false;
+        
+        if ($userfonction->pivot->date_proposition_double != null)
+            return true;
+        return false;
+    }
+
+    public function aValideDoubleFonction(Fonction $fonction){
+        $userfonction = $this->fonctions->find($fonction);
+        if ($userfonction == null)
+            return false;
+        
+        if ($userfonction->pivot->date_double != null)
+            return true;
+        return false;
+    }
+
+    public function aProposeLacheFonction(Fonction $fonction){
+        $userfonction = $this->fonctions->find($fonction);
+        if ($userfonction == null)
+            return false;
+        
+        if ($userfonction->pivot->date_proposition_lache == null)
+            return false;
+        return true;
+    }
+
+    public function aValideLacheFonction(Fonction $fonction){
+        $userfonction = $this->fonctions->find($fonction);
+        if ($userfonction == null)
+            return false;
+        
+        if ($userfonction->pivot->date_lache == null)
             return false;
         return true;
     }
