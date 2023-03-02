@@ -17,6 +17,7 @@ class ArchivageController extends Controller
     {
         return view('archivage.index');
     }
+
     public function restaurer($id) 
     {
         $user=User::withTrashed()->find($id);
@@ -28,12 +29,14 @@ class ArchivageController extends Controller
         return redirect()->route('archivage.index')
             ->withSuccess(__('Utilisateur restauré avec succès.'));
     }
+
     public function imprimer($id) 
     {
         // telechargement du livret pdf
         $user=User::withTrashed()->find($id);
         LivretPdfService::livretpdf($user, '');
     }
+    
     public function archiver($id) 
     {
         $user=User::withTrashed()->find($id);

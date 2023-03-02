@@ -182,8 +182,30 @@ class MindefConnectUserController extends Controller
     public function effacecpte(MindefConnectUser $mcuser)
     {
         $user=User::withTrashed()->where ('email', $mcuser->email)->get()->first();
+        $olduserdata=collect($user);
+        
         $user->forceDelete();
-        return redirect()->route('mindefconnect.store', $mcuser);
+
+        $newuserdata = $olduserdata->except([
+                                'id', 
+                                'date_archivage', 
+                                'created_at', 
+                                'updated_at', 
+                                'deleted_at', 
+                                'taux_de_transformation', 
+                                'en_transformation', 
+                                'socle', 
+                                'comete'])->toArray();
+        $newuserdata['password'] = $this->generateRandomString();
+
+        $newUser=User::create($newuserdata);
+
+        $roleuser = Role::where("name", "user")->get()->first();
+        $newUser->roles()->attach($roleuser);
+
+        $mcuser->delete();
+
+        return redirect()->route('mindefconnect.index');
         // Que fait-on avec les stats ? Comment ?
     }
 }

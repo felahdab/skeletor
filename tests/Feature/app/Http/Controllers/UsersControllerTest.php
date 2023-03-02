@@ -114,7 +114,6 @@ class UsersControllerTest extends TestCase
         $newUser->date_debarq="maintenant";
         $newUser->save();
 
-
 	    $response = $this->actingAs($user)
 		    ->delete(route('users.destroy', ['user' => $newUser])); 
 	    $this->assertSoftDeleted($newUser);
@@ -125,7 +124,6 @@ class UsersControllerTest extends TestCase
 	    $this->seed();
 
 	    $newUser = User::factory()->create();
-
 
 	    $response = $this->delete(route('users.destroy', ['user' => $newUser])); 
 	    $response->assertRedirect();
