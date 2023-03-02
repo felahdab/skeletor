@@ -227,7 +227,8 @@ class User extends Authenticatable
         $liste_sous_obj_valides = $this->belongsToMany(SousObjectif::class, 'user_sous_objectif')
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation', 'valideur', 'date_proposition_validation')
-            ->get();
+            ->get()
+            ->whereNotNull('pivot.date_validation');
             
         $resultat = $liste_sous_obj_valides->intersect($ssobj_du_parcours_de_transformation);
         
