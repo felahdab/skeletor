@@ -44,20 +44,25 @@ class AnnudefSearch extends Component
                                                         
             foreach($this->users as $key=>$ldapuser)
             {
-                $localuser = User::where('email', $ldapuser['email'])->first();
+                $localuser = User::withTrashed()->where('email', $ldapuser['email'])->first();
                 if ($localuser != null)
                 {
-                    if ($localuser->name != $ldapuser['nom']){
-                        $this->users[$key]['nompasidentique'] = true;
+                    if ($localuser->date_archivage != null){
+                        $this->users[$key]['archive'] = true;
                     }
-                    if ($localuser->prenom != $ldapuser['prenomusuel']){
-                        $this->users[$key]['prenompasidentique'] = true;
-                    }
-                    if ($localuser->nid != $ldapuser['nid']){
-                        $this->users[$key]['nidpasidentique'] = true;
-                    }
-                    if ($localuser->grade()->first()?->grade_libcourt != $ldapuser['gradecourt']){
-                        $this->users[$key]['gradepasidentique'] = true;
+                    else{
+                        if ($localuser->name != $ldapuser['nom']){
+                            $this->users[$key]['nompasidentique'] = true;
+                        }
+                        if ($localuser->prenom != $ldapuser['prenomusuel']){
+                            $this->users[$key]['prenompasidentique'] = true;
+                        }
+                        if ($localuser->nid != $ldapuser['nid']){
+                            $this->users[$key]['nidpasidentique'] = true;
+                        }
+                        if ($localuser->grade()->first()?->grade_libcourt != $ldapuser['gradecourt']){
+                            $this->users[$key]['gradepasidentique'] = true;
+                        }    
                     }
                 }
                 else 
@@ -98,6 +103,27 @@ class AnnudefSearch extends Component
                       "password" => UsersController::generateRandomString(),
                       "grade_id" => $grade_id]);
         $newUser->syncRoles(["user"]);
+    }
+
+    public function conservcpte($index)
+    {
+        $userconserv = $this->users[$index];
+        $user=User::withTrashed()->where ('email', $userconserv["email"])->get()->first();
+        $user->date_archivage = null;
+        $user->deleted_at = null;
+        $user->save();
+        // Que fait-on avec les stats ? Comment ?
+        return view('livewire.annudef-search');
+    }
+
+    public function effacecpte($index)
+    {
+        $userconserv = $this->users[$index];
+        $user=User::withTrashed()->where ('email', $userconserv["email"])->get()->first();
+        $user->forceDelete();
+        AnnudefSearch::createLocalUser($index);
+        return view('livewire.annudef-search');
+        // Que fait-on avec les stats ? Comment ?
     }
     
     public function aligneNom($index)
