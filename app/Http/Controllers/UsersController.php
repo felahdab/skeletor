@@ -257,6 +257,11 @@ class UsersController extends Controller
      */
     public function destroy(User $user) 
     {
+        if ($user->date_debarq == null)
+        {
+            return redirect()->route('users.index')
+            ->withError(__('Vous devez renseigner la date de débarquement avant de supprimer un utilisateur.'));
+        }
         $user->delete();
 
         return redirect()->route('users.index')

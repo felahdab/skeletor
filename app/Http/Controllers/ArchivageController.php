@@ -21,6 +21,8 @@ class ArchivageController extends Controller
     {
         $user=User::withTrashed()->find($id);
         $user->deleted_at = null;
+        $user->date_archivage = null;
+        // TODO: Traiter les statistiques.
         $user->save();
 
         return redirect()->route('archivage.index')
@@ -35,15 +37,15 @@ class ArchivageController extends Controller
     public function archiver($id) 
     {
         $user=User::withTrashed()->find($id);
-        // suppression du user = on le cache mais on le supprime pas vraiment 
-        // en assignant deleted_at si pas fait et date_archivage.
-        $user->date_archivage=Carbon::now();
-        if (!$user->deleted_at) {$user->deleted_at=Carbon::now();}
-        $user->save();
-        // inscription dans table statistiques
+        // Si l'utilisateur a un livret de tranfo: on génère le PDF et on l'enregistre sur le serveur.
+        if ($user->fonctions->count()){
+            LivretPdfService::livretpdf($user, 'archiv');
+        }
+        // On met a jour les statistiques avec ce marin.
         StatService::statuser($user);
-        // impression du livret pdf
-        LivretPdfService::livretpdf($user, 'archiv');
+        // On met a jour la date d'archivage.
+        $user->date_archivage=Carbon::now();
+        $user->save();
 
         return redirect()->route('archivage.index')
             ->withSuccess(__('Utilisateur archivé avec succès.'));
@@ -51,25 +53,8 @@ class ArchivageController extends Controller
     
     public function supprimer($id) 
     {
-        // dd('test');
-        // ce user n'a pas de date de débarquement
         $user=User::withTrashed()->find($id);
-        // nb fonctions, stages, ssobjs
-        $nb = $user->fonctions->count() + $user->stages->count() + $user->sous_objectifs->count(); 
-        if ($nb == 0){
-            // si le user n'a pas de fonctions ou stages ou ssobjs on le supprime de la table user
-            $user->forceDelete();
-        }
-        else{
-            // si le user a des fonctions ou stages ou ssobjs pas d'impression du livret
-            // en assignant deleted_at si pas fait et date_archivage.
-            $user->date_archivage=Carbon::now();
-            $user->date_debarq=Carbon::now();
-            if (!$user->deleted_at) {$user->deleted_at=Carbon::now();}
-            $user->save();
-            // inscription dans table statistiques
-            StatService::statuser($user);    
-        }
+        $user->forceDelete();
         return redirect()->route('archivage.index')
             ->withSuccess(__('Utilisateur supprimé avec succès.'));
     }
