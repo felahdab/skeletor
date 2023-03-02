@@ -46,9 +46,9 @@
     <div>
     @if ($cpte_exist)
         <!-- compte existe déjà -->
-        <p>Ce compte existe déjà mais n'est pas accessible. Que voulez vous faire ??</p>
-        <a href="{{ route('mindefconnect.conservcpte', $mcuser) }}" class="btn btn-primary">Rouvrir le compte aves ses données</a>
-        <a href="{{ route('mindefconnect.effacecpte', $mcuser) }}" class="btn btn-secondary">Rouvrir le compte en effacant toutes les données associées</a> 
+        <p class="lead">Ce compte existe déjà mais n'est pas accessible. Que voulez vous faire ?</p>
+        <a href="{{ route('mindefconnect.conservcpte', $mcuser) }}" class="btn btn-primary">Rouvrir le compte <u><strong>AVEC</strong></u> les données associées</a>
+        <a href="{{ route('mindefconnect.effacecpte', $mcuser) }}" class="btn btn-secondary">Rouvrir le compte <u><strong>SANS</strong></u> les données associées</a> 
         <a href="{{ route('mindefconnect.index') }}" class="btn btn-danger">Retour</a>
     @else
         <!-- compte à créer -->
