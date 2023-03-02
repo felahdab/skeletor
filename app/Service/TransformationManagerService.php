@@ -45,10 +45,7 @@ class TransformationManagerService
 
     public function sous_objectifs_assignes_dans_le_parcours()
     {
-        return $this->parcours->map(function($item, $key) {
-            // return $item->compagnonages?->taches?->objectifs?->sous_objectifs;
-            return $item->compagnonages;
-        });
+        return $this->parcours;
     }
 
     public function sous_objectifs_assignes_dans_le_parcours_valides()  
