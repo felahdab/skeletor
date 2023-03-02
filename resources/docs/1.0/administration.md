@@ -43,6 +43,11 @@ Dans la partie « Attribuer des rôle »:
 (1), sélectionnez le(s) rôle(s) du marin. Enregistrez les données en cliquant sur le bouton (2) "Enregistrer l’utilisateur".
 Le bouton « retour » (3) permet de revenir à la liste des demandes d’activation de compte.
 
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/administration/edition-utilisateur_MC_existant.png' )) }}" width=1000px>
+
+Si le demandeur est en cours d'archivage (supprimé des affichages mais pas de la BDD), il est possible de rouvrir son compte soit en conservant (1) les données déjà associées (transformation et données personnelles) soit en les supprimant (2).
+Le bouton « retour » (3) permet de revenir à la liste des demandes d’activation de compte.
+
 <a name="fiches-des-marins">
 ## Fiches des marins
 Vous retrouvez la liste de tous les marins ayant le droit de se connecter à l’application (1) classés par ordre alphabétique. Des filtres (2) (3) vous permettent d’affiner l’affichage. 
@@ -116,6 +121,9 @@ Pour cela:
 - rechercher l'utilisateur (ou un groupe d'utilisateurs par exemple en utilisant la recherche par entité).
 - aligner les données, soit fiche par fiche, soit en masse grâce aux boutons en tête de liste.
 
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/administration/annudef_marin_existant.png' )) }}" width=1000px>
+Si le marin est en cours d'archivage (supprimé des affichages mais pas de la BDD), il est possible de recréer sa fiche soit en conservant (1) les données déjà associées (transformation et données personnelles) soit en les supprimant (2).
+
 <a name="archivage">
 ## Archivage
 Cet écran va permettre d'archiver les marins. Vous y retrouvez : 
@@ -126,7 +134,7 @@ Cet écran va permettre d'archiver les marins. Vous y retrouvez :
 
 Le bouton "Restaurer" (1) permet de rendre un utilisateur visible s'il a été supprimé dans l'écran "Fiches des marins".
 Le bouton "Télécharger livret" (2) permet d'obtenir le livret du marin au format pdf pour une sauvegarde en local.
-Le bouton "Archivage" (3) supprime l'utilisateur de la visualisation dans l'application. Son livret de transformation est sauvegardé sur le serveur et ses données enregistrées pour établir des statistiques. Il faudra recréer son compte si vous voulez le faire réapparaitre dans vos listes.
+Le bouton "Archivage" (3) supprime l'utilisateur de la visualisation dans l'application. Son livret de transformation est sauvegardé sur le serveur et ses données enregistrées pour établir des statistiques. Il faudra recréer/rouvrir son compte si vous voulez le faire réapparaitre dans vos listes.
 
 <a name="mails">
 ## Mails
