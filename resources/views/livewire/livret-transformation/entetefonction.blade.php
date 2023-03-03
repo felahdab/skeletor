@@ -116,7 +116,7 @@
                     $wire.ValideLacheFonction( {{$user->id}}, {{$fonction->id}}, date_validation , commentaire, valideur);
                  };"></button>
         @endif
-        @if ( ! $readwrite && ! $user->getTransformationManager()->aProposeLacheFonction($fonction) )
+        @if ( ! $readwrite && ! $user->getTransformationManager()->aValideLacheFonction($fonction) && ! $user->getTransformationManager()->aProposeLacheFonction($fonction) )
             <button type="submit" 
                 class="btn btn-primary" 
                 name="validation_lache"
