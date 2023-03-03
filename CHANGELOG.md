@@ -1,3 +1,7 @@
+## 1.1.1 (mars 03, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.1.0 –> 1.1.1
+- Corrige un bug d'affichage sur le livret de transformation lorsque le marin a propose la validation de son lache.
+
 ## 1.1.0 (mars 03, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.17 –> 1.1.0
 
