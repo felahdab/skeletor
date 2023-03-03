@@ -35,7 +35,7 @@
                         <div class='flex'><canvas id='global_canvas' style='width:100%;'></canvas></div>
                         <script>
                         @php
-                            $historique = $user->historique_validation_sous_objectifs_cumulatif();
+                            $historique = $user->getTransformationManager()->historique_validation_sous_objectifs_cumulatif();
                         @endphp
                         
                             var ctx = document.getElementById('global_canvas');
@@ -54,7 +54,7 @@
                                     responsive: true,
                                     scales: {
                                         y: {
-                                            suggestedMax: {{$user->nbSousObjectifsAValider() }}
+                                            suggestedMax: {{$user->getTransformationManager()->sous_objectifs_du_parcours()->count() }}
                                             }
                                         }
                                     }
@@ -69,11 +69,11 @@
                         <div class='card border-primary mb-3' style='width:50%;'>
                             <div class='card-header text-primary'>Stages</div>
                             <div class='card-body '>
-                                @foreach($user->stages()->get() as $stage)
+                                @foreach($user->getTransformationManager()->stages as $stage)
                                  <p class='card-text' style='margin-bottom: 25px;'>
                                     <span style='width:25%;'>{{ $stage->stage_libcourt }}</span>
                                     <span style='width:25%; background-color: transparent; margin-top: 5px;'>
-                                    @if ($user->aValideLeStage($stage))
+                                    @if ($user->getTransformationManager()->aValideLeStage($stage))
                                         <x-ffast-progression-div :pourcentage="100" height="20px" style="span"/>
                                     @else
                                         <x-ffast-progression-div :pourcentage="0" height="20px" style="span"/>
@@ -86,22 +86,20 @@
                         <div class='card border-primary mb-3' style='width:50%;padding-bottom: 20px;'>
                             <div class='card-header text-primary'>Compagnonnages</div>
                             <div class='card-body'>
-                            @foreach($user->fonctions()->with('compagnonages')->get() as $fonction)
-                                @foreach($fonction->compagnonages as $compagnonage)
+                            @foreach($user->getTransformationManager()->compagnonages_du_parcours() as $compagnonage)
                                 <p class='card-text' style='margin-bottom: 25px;'>
                                     <span style='width:25%;'>{{ $compagnonage->comp_libcourt }}</span>
                                     <span style='width:25%; background-color: transparent; margin-top: 5px;'>
-                                        <x-ffast-progression-div :pourcentage="$user->pourcentage_valides_pour_comp($compagnonage)" height="20px"  style="span"/>
+                                        <x-ffast-progression-div :pourcentage="$user->getTransformationManager()->taux_de_transformation(null, $compagnonage)" height="20px"  style="span"/>
                                     </span>
                                 </p>
-                                @endforeach
                             @endforeach
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            @foreach($user->fonctions()->with('stages')->with('compagnonages')->get() as $fonction)
+            @foreach($user->getTransformationManager()->parcours as $fonction)
             <div>
                 <div style='display: flex; padding: 2%; background-color: transparent; justify-content: space-evenly;'>
                     <div style=' width: 48%; background-color: transparent; position: relative; '>
@@ -110,14 +108,14 @@
                         </div>
                         <div class='flex'>
                         @php
-                            $collssobj = $fonction->coll_sous_objectifs();
+                            $collssobj = $user->getTransformationManager()->sous_objectifs_du_parcours($fonction);
                             $collssobjcount = $collssobj->count();
                         @endphp
                         <canvas id='fonc{{$fonction->id}}' 
                         style='width:100%; display:{{ $collssobjcount == 0 ? "none" : ""}}'></canvas></div>
                         <script>
                             @php
-                                $historique = $user->historique_validation_sous_objectifs_cumulatif($fonction);
+                                $historique = $user->getTransformationManager()->historique_validation_sous_objectifs_cumulatif($fonction);
                             @endphp
                             var ctx = document.getElementById('fonc{!!$fonction->id!!}');
                             var chart = new Chart(ctx, {
@@ -153,7 +151,7 @@
                                     <span style='width:25%;'>{{$stage->stage_libcourt}}</span>
                                     <span style='width:25%; background-color: transparent; margin-top: 5px;'>
                                         <span style='display:flex; width: 100%; position: relative; '>
-                                            @if ($user->aValideLeStage($stage))
+                                            @if ($user->getTransformationManager()->aValideLeStage($stage))
                                                 <x-ffast-progression-div :pourcentage="100" height="20px" style="span"/>
                                             @else
                                                 <x-ffast-progression-div :pourcentage="0" height="20px" style="span"/>
@@ -171,7 +169,7 @@
                                 <p class='card-text' style='margin-bottom: 25px;'>
                                     <span style='width:25%;'>{{$compagnonage->comp_libcourt}}</span>
                                     <span style='width:25%; background-color: transparent; margin-top: 5px;'>
-                                        <x-ffast-progression-div :pourcentage="$user->pourcentage_valides_pour_comp($compagnonage)" height="20px" style="span"/>
+                                        <x-ffast-progression-div :pourcentage="$user->getTransformationManager()->taux_de_transformation(null, $compagnonage)" height="20px" style="span"/>
                                     </span>
                                 </p>
                                 @endforeach

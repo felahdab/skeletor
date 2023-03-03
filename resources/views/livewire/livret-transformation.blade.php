@@ -44,13 +44,13 @@
                         <div  class="accordion-body">
                             @includeWhen($mode=='unique', 'livewire.livret-transformation.entetefonction')
                             
-                            @if ($fonction->compagnonages()->get()->count() > 0)
-                                @foreach($fonction->compagnonages()->get() as $compagnonage)
+                            @if ($fonction->compagnonages->count() > 0)
+                                @foreach($fonction->compagnonages as $compagnonage)
                                     @include('livewire.livret-transformation.compagnonage')
                                @endforeach <!-- foreach compagnonage -->
                             @endif
                             
-                            @if ($mode == 'unique' && $fonction->stages()->get()->count() > 0)
+                            @if ($mode == 'unique' && $fonction->stages->count() > 0)
                                 @include('livewire.livret-transformation.stagefonction')
                             @endif
                             
@@ -60,7 +60,7 @@
             </div>
             @endforeach   <!-- foreach fonction -->
             
-            @if ($mode=='unique' && $user->stagesOrphelins()->count() > 0)
+            @if ($mode=='unique' && $user->getTransformationManager()->stages_orphelins()->count() > 0)
                 @include('livewire.livret-transformation.stagesorphelins')
             @endif
         </div>  <!-- fin de la div livret -->

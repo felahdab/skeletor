@@ -567,6 +567,7 @@ class User extends Authenticatable
     
     public function getEnTransformationAttribute()
     {
+        // return $this->getTransformationManager()->parcours->count();
         if ($this->fonctionscount == null){
             $fonctions = $this->fonctions()->get();
             $this->fonctionscount = $fonctions->count();
