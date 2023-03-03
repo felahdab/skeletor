@@ -162,6 +162,28 @@ class TransformationManagerService
         return $this->sous_objectifs_valides->whereIn('id', $this->sous_objectifs_du_parcours($fonction, $compagnonage, $tache, $objectif)->pluck('id'));
     }
 
+    public function taux_de_transformation_avec_stages(Fonction $fonction = null)
+    {
+        $total_des_coeff = $this->sous_objectifs_du_parcours($fonction)->reduce(function($carry, $item){
+            return $carry + $item->ssobj_coeff;
+        });
+
+        $total_des_coeff += $this->stages_du_parcours($fonction)->count();
+
+        if ($total_des_coeff == 0)
+            return 0;
+
+        $coeff_valides = $this->sous_objectifs_du_parcours_valides($fonction)
+                            ->reduce(function($carry, $item){
+                                    return $carry + $item->ssobj_coeff;
+                                });
+
+        $coeff_valides += $this->stages_du_parcours($fonction)->whereNotNull('pivot.date_validation')->count();
+
+        return round(100* $coeff_valides / $total_des_coeff, 2);
+    }
+
+
     public function taux_de_transformation(Fonction $fonction = null, 
                                             Compagnonage $compagnonage = null,
                                             Tache $tache = null,
@@ -280,27 +302,27 @@ class TransformationManagerService
     {
         if (! $this->parcours->pluck('id')->contains($fonction->id))
             return false;
-        return $this->parcours->where('id', $fonction->id)->first()->date_proposition_double != null;
+        return $this->parcours->where('id', $fonction->id)->first()->pivot->date_proposition_double != null;
     }
 
     public function aValideDoubleFonction(Fonction $fonction)
     {
         if (! $this->parcours->pluck('id')->contains($fonction->id))
             return false;
-        return $this->parcours->where('id', $fonction->id)->first()->date_double != null;
+        return $this->parcours->where('id', $fonction->id)->first()->pivot->date_double != null;
     }
 
     public function aProposeLacheFonction(Fonction $fonction)
     {
         if (! $this->parcours->pluck('id')->contains($fonction->id))
             return false;
-        return $this->parcours->where('id', $fonction->id)->first()->date_proposition_lache != null;
+        return $this->parcours->where('id', $fonction->id)->first()->pivot->date_proposition_lache != null;
     }
 
     public function aValideLacheFonction(Fonction $fonction)
     {
         if (! $this->parcours->pluck('id')->contains($fonction->id))
             return false;
-        return $this->parcours->where('id', $fonction->id)->first()->date_lache != null;
+        return $this->parcours->where('id', $fonction->id)->first()->pivot->date_lache != null;
     }
 }

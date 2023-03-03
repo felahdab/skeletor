@@ -13,6 +13,9 @@
     <tr x-data='{ active : false }'>
         <td>DOUBLE</td>
         <td class="text-start">
+            @php
+            //ddd($fonction)
+            @endphp
         @if ($user->getTransformationManager()->aProposeDoubleFonction($fonction) || $user->getTransformationManager()->aValideDoubleFonction($fonction))
             {{ $fonction->pivot->commentaire_double }}
         @endif

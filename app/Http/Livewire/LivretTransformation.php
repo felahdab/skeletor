@@ -51,28 +51,44 @@ class LivretTransformation extends Component
     {
         $transformationService = new GererTransformationService;
         $transformationService->ValideLacheFonction($user, $fonction, $date_validation , $commentaire, $valideur, ! $this->readwrite);
-        $user->getTransformationManager()->forceReload();
+        if ($this->mode == "unique")
+        {
+            $user->getTransformationManager()->forceReload();
+            $this->emit('$refresh');
+        }
     }
     
     public function UnValideLacheFonction(User $user, Fonction $fonction)
     {
         $transformationService = new GererTransformationService;
         $transformationService->UnValideLacheFonction($user, $fonction, ! $this->readwrite);
-        $user->getTransformationManager()->forceReload();
+        if ($this->mode == "unique")
+        {
+            $user->getTransformationManager()->forceReload();
+            $this->emit('$refresh');
+        }
     }
     
     public function ValideDoubleFonction(User $user, Fonction $fonction, $date_validation , $commentaire, $valideur)
     {
         $transformationService = new GererTransformationService;
         $transformationService->ValideDoubleFonction($user, $fonction, $date_validation , $commentaire, $valideur, ! $this->readwrite);
-        $user->getTransformationManager()->forceReload();
+        if ($this->mode == "unique")
+        {
+            $user->getTransformationManager()->forceReload();
+            $this->emit('$refresh');
+        }
     }
     
     public function UnValideDoubleFonction(User $user, Fonction $fonction)
     {
         $transformationService = new GererTransformationService;
         $transformationService->UnValideDoubleFonction($user, $fonction, ! $this->readwrite);
-        $user->getTransformationManager()->forceReload();
+        if ($this->mode == "unique")
+        {
+            $user->getTransformationManager()->forceReload();
+            $this->emit('$refresh');
+        }
     }
     
     public function ValideElementsDuParcours(User $user, 
@@ -110,8 +126,11 @@ class LivretTransformation extends Component
             $transformationService = new GererTransformationService;
             $transformationService->ValidateSousObjectif($user, $sous_objectif, $date_validation , $commentaire, $valideur, ! $this->readwrite);
         }
-        $user->getTransformationManager()->forceReload();
-        $this->emit('$refresh');
+        if ($this->mode == "unique")
+        {
+            $user->getTransformationManager()->forceReload();
+            $this->emit('$refresh');
+        }
         $this->dispatchBrowserEvent("resetselection");
     }
     
@@ -171,8 +190,11 @@ class LivretTransformation extends Component
             $transformationService = new GererTransformationService;
             $transformationService->UnValidateSousObjectif($user, $sous_objectif, ! $this->readwrite);
         }
-        $user->getTransformationManager()->forceReload();
-        $this->emit('$refresh');
+        if ($this->mode == "unique")
+        {
+            $user->getTransformationManager()->forceReload();
+            $this->emit('$refresh');
+        }
         $this->dispatchBrowserEvent("resetselection");
     }
 }
