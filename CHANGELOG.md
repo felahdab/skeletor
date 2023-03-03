@@ -1,3 +1,15 @@
+## 1.0.17 (mars 03, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.16 –> 1.0.17
+- Ajustements.
+- Finalisation de l'optimisation des performances de l'application.
+- WIP
+- Travail en cours sur l'optimisation des performances.
+- Mise a jour de la documentation pour la partir proposition d'elements a valider.
+- Mise a jour de la documentation pour signaler la possibilite de proposer la validation d'elements du parcours de transformation.
+- Poursuite de la modification pour permettre la proposition de validation des double et lache dans les fonctions par les marins eux memes.
+- Premiere modification pour prendre en compte les propositions de validation de sous objectifs, objectifs et taches du parcours ainsi que du double d'une fonction.
+- inversion modified/modifying pour rectifier l'affichage
+
 ## 1.0.16 (février 21, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.15 –> 1.0.16
 - Retire la reference a \Fruitcake\Cors\HandleCors qui est deprecated et a ete introduit dans \Illuminate\Http\Middleware\HandleCors
