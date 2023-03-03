@@ -1,3 +1,6 @@
+## 1.1.0 (mars 03, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.17 –> 1.1.0
+
 ## 1.0.17 (mars 03, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.16 –> 1.0.17
 - Ajustements.
