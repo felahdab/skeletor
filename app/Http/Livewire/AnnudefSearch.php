@@ -6,6 +6,8 @@ use Livewire\Component;
 
 use Illuminate\Http\Client\ConnectionException;
 
+use App\Service\ArchivRestaurService;
+
 use App\Http\Controllers\AnnudefController;
 use App\Http\Controllers\UsersController;
 use App\Models\User;
@@ -48,7 +50,7 @@ class AnnudefSearch extends Component
                 $localuser = User::withTrashed()->where('email', $ldapuser['email'])->first();
                 if ($localuser != null)
                 {
-                    if ($localuser->date_archivage != null){
+                    if ($localuser->deleted_at != null){
                         $this->users[$key]['archive'] = true;
                     }
                     else{
@@ -147,22 +149,17 @@ class AnnudefSearch extends Component
     public function conservcpte($index)
     {
         $userconserv = $this->users[$index];
-        $user=User::withTrashed()->where ('email', $userconserv["email"])->get()->first();
-        $user->date_archivage = null;
-        $user->deleted_at = null;
-        $user->save();
-        // Que fait-on avec les stats ? Comment ?
-        return view('livewire.annudef-search');
+        ArchivRestaurService::restauravecdonnees($userconserv,'annudef');
+        return redirect()->route('livewire.annudef-search')
+                ->withSuccess(__('Utilisateur restauré avec succès.'));
     }
 
     public function effacecpte($index)
     {
         $userconserv = $this->users[$index];
-        $user=User::withTrashed()->where ('email', $userconserv["email"])->get()->first();
-        $user->forceDelete();
-        AnnudefSearch::createLocalUser($index);
-        return view('livewire.annudef-search');
-        // Que fait-on avec les stats ? Comment ?
+        ArchivRestaurService::restaursansdonnees($userconserv,'annudef');
+        return redirect()->route('livewire.annudef-search')
+            ->withSuccess(__('Utilisateur restauré avec succès.'));
     }
     
     public function aligneNom($index)

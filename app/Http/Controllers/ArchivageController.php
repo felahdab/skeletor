@@ -9,6 +9,7 @@ use App\Models\User;
 
 use App\Service\LivretPdfService;
 use App\Service\StatService;
+use App\Service\ArchivRestaurService;
 
 
 class ArchivageController extends Controller
@@ -18,14 +19,18 @@ class ArchivageController extends Controller
         return view('archivage.index');
     }
 
-    public function restaurer($id) 
+    public function conservcpte($user) 
     {
-        $user=User::withTrashed()->find($id);
-        $user->deleted_at = null;
-        $user->date_archivage = null;
-        // TODO: Traiter les statistiques.
-        $user->save();
+        $user = User::withTrashed()->find($user);
+        ArchivRestaurService::restauravecdonnees($user,'archivage');
+        return redirect()->route('archivage.index')
+            ->withSuccess(__('Utilisateur restauré avec succès.'));
+    }
 
+    public function effacecpte($id) 
+    {
+        $user = User::withTrashed()->find($user);
+        ArchivRestaurService::restaursansdonnees($user,'archivage');
         return redirect()->route('archivage.index')
             ->withSuccess(__('Utilisateur restauré avec succès.'));
     }

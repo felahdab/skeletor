@@ -7,6 +7,8 @@ use App\Http\Requests\UpdateMindefConnectUserRequest;
 use App\Models\MindefConnectUser;
 use Illuminate\Http\Request;
 
+use App\Service\ArchivRestaurService;
+
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use App\Models\Secteur;
@@ -172,40 +174,14 @@ class MindefConnectUserController extends Controller
     }
     public function conservcpte(MindefConnectUser $mcuser)
     {
-        $user=User::withTrashed()->where ('email', $mcuser->email)->get()->first();
-        $user->date_archivage = null;
-        $user->deleted_at = null;
-        if ($user->save()){$mcuser->delete();}
-        // Que fait-on avec les stats ? Comment ?
-        return redirect()->route('mindefconnect.index');
+        ArchivRestaurService::restauravecdonnees($mcuser,'mindefconnect');
+        return redirect()->route('mindefconnect.index')
+                ->withSuccess(__('Utilisateur restauré avec succès.'));
     }
     public function effacecpte(MindefConnectUser $mcuser)
     {
-        $user=User::withTrashed()->where ('email', $mcuser->email)->get()->first();
-        $olduserdata=collect($user);
-        
-        $user->forceDelete();
-
-        $newuserdata = $olduserdata->except([
-                                'id', 
-                                'date_archivage', 
-                                'created_at', 
-                                'updated_at', 
-                                'deleted_at', 
-                                'taux_de_transformation', 
-                                'en_transformation', 
-                                'socle', 
-                                'comete'])->toArray();
-        $newuserdata['password'] = $this->generateRandomString();
-
-        $newUser=User::create($newuserdata);
-
-        $roleuser = Role::where("name", "user")->get()->first();
-        $newUser->roles()->attach($roleuser);
-
-        $mcuser->delete();
-
-        return redirect()->route('mindefconnect.index');
-        // Que fait-on avec les stats ? Comment ?
+        ArchivRestaurService::restaursansdonnees($mcuser,'mindefconnect');
+        return redirect()->route('mindefconnect.index')
+            ->withSuccess(__('Utilisateur restauré avec succès.'));
     }
 }
