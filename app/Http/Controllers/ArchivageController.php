@@ -25,7 +25,7 @@ class ArchivageController extends Controller
         ArchivRestaurService::restauravecdonnees($user,'archivage');
         return redirect()->route('archivage.index')
             ->withSuccess(__('Utilisateur restauré avec succès.'));
-    }
+        }
 
     public function effacecpte($id) 
     {

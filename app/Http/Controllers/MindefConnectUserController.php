@@ -176,7 +176,7 @@ class MindefConnectUserController extends Controller
     {
         ArchivRestaurService::restauravecdonnees($mcuser,'mindefconnect');
         return redirect()->route('mindefconnect.index')
-                ->withSuccess(__('Utilisateur restauré avec succès.'));
+            ->withSuccess(__('Utilisateur restauré avec succès.'));
     }
     public function effacecpte(MindefConnectUser $mcuser)
     {
