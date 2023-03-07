@@ -1,5 +1,10 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-dark sticky-top ">
-<!--nav class="navbar navbar-expand-lg navbar-light bg-secondary sticky-top "-->
+@if (env('APP_ENV') == 'dev')
+  <nav class="navbar navbar-expand-lg navbar-light sticky-top " style="background-color: rebeccapurple;">
+@else
+  <nav class="navbar navbar-expand-lg navbar-light bg-dark sticky-top ">
+@endif
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon bg-light"></span>
     </button>
