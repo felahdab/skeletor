@@ -126,15 +126,13 @@ Si le marin est en cours d'archivage (supprimé des affichages mais pas de la BD
 
 <a name="archivage">
 ## Archivage
-Cet écran va permettre d'archiver les marins. Vous y retrouvez : 
-- les marins pour lesquels la date de débarquement a été renseignée. 
-- les marins supprimés dans le menu "Fiches des marins".
+Cet écran va permettre d'archiver les marins. Vous y retrouvez les marins supprimés dans le menu "Fiches des marins".
 
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/administration/archivage.png' )) }}" width=1000px>
 
-Le bouton "Restaurer" (1) permet de rendre un utilisateur visible s'il a été supprimé dans l'écran "Fiches des marins".
-Le bouton "Télécharger livret" (2) permet d'obtenir le livret du marin au format pdf pour une sauvegarde en local.
-Le bouton "Archivage" (3) supprime l'utilisateur de la visualisation dans l'application. Son livret de transformation est sauvegardé sur le serveur et ses données enregistrées pour établir des statistiques. Il faudra recréer/rouvrir son compte si vous voulez le faire réapparaitre dans vos listes.
+Le bouton "Restaurer AVEC données" (1) permet de recréer la fiche du marin en conservant toutes les données liées à sa transformation. Le bouton "Restaurer SANS données" (2) permet de recréer la fiche du marin en supprimant toutes les données liées à sa transformation.
+Le bouton "Télécharger livret" (3) permet d'obtenir le livret du marin au format pdf pour une sauvegarde en local.
+Le bouton "Archivage" (4) supprime le marin de l'application. Son livret de transformation est sauvegardé sur le serveur et ses données enregistrées pour établir des statistiques. Il faudra restaurer son compte avec les menus annudef ou mindefconnect si vous voulez le faire réapparaitre dans vos listes.
 
 <a name="mails">
 ## Mails
