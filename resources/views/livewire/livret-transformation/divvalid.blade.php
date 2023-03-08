@@ -10,10 +10,10 @@
             <input type='date' class='form-control'name='date_validation' id='date_validation' required x-model="date_validation">
             </div>
         </div>
-        <div class='form-group row  pl-3' >
+        <div class='form-group row  pl-3' x-show='readwrite'>
             <label for='valideur' class='col-sm-5 col-form-label '>Valideur</label>
             <div class='col-sm-5'>
-                <input type='text' class='form-control' name='valideur' id='valideur' placeholder=' Valideur' x-model="valideur">
+                <input type='text' class='form-control' name='valideur' id='valideur' placeholder='Valideur' x-model="valideur">
             </div>
         </div>
         <div class='form-group row  pl-3' >

@@ -17,21 +17,27 @@ class LivretTransformation extends Component
 {
     
     public $mode="unique";
+    public $readwrite;
+
     public $fonctions;
     
     public $user;
     
     public $fonction;
     public $usersfonction;
-    
-    public $readwrite;
-    
+
+    protected $listeners=['$refresh'];
+
+    public function mount()
+    {
+        $this->user->getTransformationManager();
+    }
     
     public function render()
     {
         if ($this->mode == "unique")
         {
-            $this->fonctions = $this->user->fonctions()->orderBy('typefonction_id')->get();
+            $this->fonctions = $this->user->getTransformationManager()->parcours->sortBy('typefonction_id');
         }
         elseif ($this->mode == "multiple")
         {
@@ -44,25 +50,45 @@ class LivretTransformation extends Component
     public function ValideLacheFonction(User $user, Fonction $fonction, $date_validation , $commentaire, $valideur)
     {
         $transformationService = new GererTransformationService;
-        $transformationService->ValideLacheFonction($user, $fonction, $date_validation , $commentaire, $valideur);
+        $transformationService->ValideLacheFonction($user, $fonction, $date_validation , $commentaire, $valideur, ! $this->readwrite);
+        if ($this->mode == "unique")
+        {
+            $user->getTransformationManager()->forceReload();
+            $this->emit('$refresh');
+        }
     }
     
     public function UnValideLacheFonction(User $user, Fonction $fonction)
     {
         $transformationService = new GererTransformationService;
-        $transformationService->UnValideLacheFonction($user, $fonction);
+        $transformationService->UnValideLacheFonction($user, $fonction, ! $this->readwrite);
+        if ($this->mode == "unique")
+        {
+            $user->getTransformationManager()->forceReload();
+            $this->emit('$refresh');
+        }
     }
     
     public function ValideDoubleFonction(User $user, Fonction $fonction, $date_validation , $commentaire, $valideur)
     {
         $transformationService = new GererTransformationService;
-        $transformationService->ValideDoubleFonction($user, $fonction, $date_validation , $commentaire, $valideur);
+        $transformationService->ValideDoubleFonction($user, $fonction, $date_validation , $commentaire, $valideur, ! $this->readwrite);
+        if ($this->mode == "unique")
+        {
+            $user->getTransformationManager()->forceReload();
+            $this->emit('$refresh');
+        }
     }
     
     public function UnValideDoubleFonction(User $user, Fonction $fonction)
     {
         $transformationService = new GererTransformationService;
-        $transformationService->UnValideDoubleFonction($user, $fonction);
+        $transformationService->UnValideDoubleFonction($user, $fonction, ! $this->readwrite);
+        if ($this->mode == "unique")
+        {
+            $user->getTransformationManager()->forceReload();
+            $this->emit('$refresh');
+        }
     }
     
     public function ValideElementsDuParcours(User $user, 
@@ -81,7 +107,7 @@ class LivretTransformation extends Component
         {
             $tache = Tache::find($tacheid);
             $transformationService = new GererTransformationService;
-            $transformationService->ValidateTache($user, $tache, $date_validation , $commentaire, $valideur);
+            $transformationService->ValidateTache($user, $tache, $date_validation , $commentaire, $valideur, ! $this->readwrite);
         }
         
         foreach($selected_objectifs as $objectifid)
@@ -90,7 +116,7 @@ class LivretTransformation extends Component
             $transformationService = new GererTransformationService;
             foreach($objectif->sous_objectifs()->get() as $ssobj)
             {
-                $transformationService->ValidateSousObjectif($user, $ssobj, $date_validation , $commentaire, $valideur);
+                $transformationService->ValidateSousObjectif($user, $ssobj, $date_validation , $commentaire, $valideur, ! $this->readwrite);
             }
         }
         
@@ -98,12 +124,17 @@ class LivretTransformation extends Component
         {
             $sous_objectif = SousObjectif::find($ssobjid);
             $transformationService = new GererTransformationService;
-            $transformationService->ValidateSousObjectif($user, $sous_objectif, $date_validation , $commentaire, $valideur);
+            $transformationService->ValidateSousObjectif($user, $sous_objectif, $date_validation , $commentaire, $valideur, ! $this->readwrite);
+        }
+        if ($this->mode == "unique")
+        {
+            $user->getTransformationManager()->forceReload();
+            $this->emit('$refresh');
         }
         $this->dispatchBrowserEvent("resetselection");
     }
     
-     public function ValideElementsDuParcoursMultiple($users = null, 
+     public function ValideElementsDuParcoursMultiple($users, 
                                     $date_validation , $commentaire, $valideur,
                                     $selected_compagnonnages = null,
                                     $selected_taches = null,
@@ -140,7 +171,7 @@ class LivretTransformation extends Component
         {
             $tache = Tache::find($tacheid);
             $transformationService = new GererTransformationService;
-            $transformationService->UnValidateTache($user, $tache);
+            $transformationService->UnValidateTache($user, $tache, ! $this->readwrite);
         }
         
         foreach($selected_objectifs as $objectifid)
@@ -149,7 +180,7 @@ class LivretTransformation extends Component
             $transformationService = new GererTransformationService;
             foreach($objectif->sous_objectifs()->get() as $ssobj)
             {
-                $transformationService->UnValidateSousObjectif($user, $ssobj);
+                $transformationService->UnValidateSousObjectif($user, $ssobj, ! $this->readwrite);
             }
         }
         
@@ -157,7 +188,12 @@ class LivretTransformation extends Component
         {
             $sous_objectif = SousObjectif::find($ssobjid);
             $transformationService = new GererTransformationService;
-            $transformationService->UnValidateSousObjectif($user, $sous_objectif);
+            $transformationService->UnValidateSousObjectif($user, $sous_objectif, ! $this->readwrite);
+        }
+        if ($this->mode == "unique")
+        {
+            $user->getTransformationManager()->forceReload();
+            $this->emit('$refresh');
         }
         $this->dispatchBrowserEvent("resetselection");
     }
