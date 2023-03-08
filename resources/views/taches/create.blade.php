@@ -16,15 +16,15 @@
         {!! Form::open(['method' => 'POST','route' => 'taches.store' ]) !!}
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
-                    <label for='libelle_court_objectif' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
+                    <label class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control'  name='tache[tache_libcourt]' id='tache[tache_libcourt]' placeholder='Libell&eacute; court' value="" >
+                        <input type='text' maxlength='100' class='form-control'  name='tache[tache_libcourt]' id='tache[tache_libcourt]' placeholder='Libell&eacute; court' value="" >
                     </div>
                 </div>
                 <div class='form-group row' >
-                    <label for='libelle_long_objectif' class='col-sm-5 col-form-label'>Libell&eacute; long *</label>
+                    <label class='col-sm-5 col-form-label'>Libell&eacute; long *</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control' name='tache[tache_liblong]' id='tache[tache_liblong]' placeholder='Libell&eacute; long' value="" >
+                        <input type='text' maxlength='256' class='form-control' name='tache[tache_liblong]' id='tache[tache_liblong]' placeholder='Libell&eacute; long' value="" >
                     </div>
                 </div>
                 <div>
