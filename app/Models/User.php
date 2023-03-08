@@ -491,8 +491,8 @@ class User extends Authenticatable
     {
         if (! $fullcalc){
             //je crois que cette partie ne marche pas.
-            $workitem = $this->fonctions()->find($fonction);
-            return $workitem->taux_de_transformation;
+            $workitem = $this->fonctions()->find($fonction); 
+            return $workitem->pivot->taux_de_transformation;
         }
         else
         {
