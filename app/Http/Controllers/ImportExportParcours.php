@@ -29,9 +29,11 @@ class ImportExportParcours extends Controller
         $sheet->setCellValue([$column++, $row ] , 'Tache ID');
         $sheet->getColumnDimensionByColumn($column-1)->setVisible(false);
         $sheet->setCellValue([$column++, $row ] , 'Tache');
+        $sheet->setCellValue([$column++, $row ] , 'Tache (lib long)');
         $sheet->setCellValue([$column++, $row ] , 'Objectif ID');
         $sheet->getColumnDimensionByColumn($column-1)->setVisible(false);
         $sheet->setCellValue([$column++, $row ] , 'Objectif');
+        $sheet->setCellValue([$column++, $row ] , 'Objectif (lib long)');
         $sheet->setCellValue([$column++, $row ] , 'SousObjectif ID');
         $sheet->getColumnDimensionByColumn($column-1)->setVisible(false);
         $sheet->setCellValue([$column++, $row ] , 'SousObjectif');
@@ -51,6 +53,8 @@ class ImportExportParcours extends Controller
             $sheet->getColumnDimensionByColumn($column - 1)->setWidth(10);
             $sheet->setCellValue([$column++, $row ] , $tache->tache_libcourt);
             $sheet->getColumnDimensionByColumn($column - 1)->setAutoSize(true);
+            $sheet->setCellValue([$column++, $row ] , $tache->tache_liblong);
+            $sheet->getColumnDimensionByColumn($column - 1)->setAutoSize(true);
             $objcolumn = $column;
             foreach($tache->objectifs as $objectif)
             {
@@ -58,6 +62,8 @@ class ImportExportParcours extends Controller
                 $sheet->setCellValue([$column++, $row ] , $objectif->id);
                 $sheet->getColumnDimensionByColumn($column - 1)->setWidth(10);
                 $sheet->setCellValue([$column++, $row ] , $objectif->objectif_libcourt);
+                $sheet->getColumnDimensionByColumn($column - 1)->setAutoSize(true);
+                $sheet->setCellValue([$column++, $row ] , $objectif->objectif_liblong);
                 $sheet->getColumnDimensionByColumn($column - 1)->setAutoSize(true);
                 $sobjcolumn = $column;
                 foreach ($objectif->sous_objectifs as $sousobj)
