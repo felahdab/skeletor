@@ -53,15 +53,15 @@
                         <td id='tdTauxTransformation' class='text-left'>{{round($user->taux_de_transformation, 2)}}%</td>
                         <td></td>
                     </tr>
-                    @if ($user->fonctionAQuai() != null)
+                    @if ($user->getTransformationManager()->fonctionAQuai() != null)
                     <tr class='enTeteFicheSynthese'>
                         <!-- Fonction de service à quai -->
                         <td colspan='2' class='text-right'>Fonction de service à quai :</td>
                         <!------------------------------------------------->
                         <!-- un user n'a pas forcement de fonction a quai-->
                         <!------------------------------------------------->
-                        <td id='tdFonctionServiceQuai' class='text-left'>{{$user->fonctionAQuai()->fonction_libcourt}}</td>
-                        <td id='tdFonctionServiceQuaiLache'>{{ $user->fonctionAQuai()->pivot->date_lache ? 'LACHE' : 'NON LACHE'}}</td>
+                        <td id='tdFonctionServiceQuai' class='text-left'>{{$user->getTransformationManager()->fonctionAQuai()->fonction_libcourt}}</td>
+                        <td id='tdFonctionServiceQuaiLache'>{{ $user->getTransformationManager()->fonctionAQuai()->pivot->date_lache ? 'LACHE' : 'NON LACHE'}}</td>
                     </tr>
                     @endif
                     <tr>
@@ -83,7 +83,7 @@
                                 <td style='width:25%;'>{{$comp->comp_libcourt}}</td>
                                 
                                 @php 
-                                    $pourcentage = $user->pourcentage_valides_pour_comp($comp);
+                                    $pourcentage = $user->getTransformationManager()->taux_de_transformation(null, $comp, null, null);
                                 @endphp
                                 <x-ffast-progression-div :pourcentage="$pourcentage" height="whatever" style="td"/>
                             @endif
@@ -94,7 +94,7 @@
                                 <td style='width:25%;'></td>
                             @else
                                 <td style='width:25%;'>{{$stage->stage_libcourt}}</td>
-                                @if ($user->aValideLeStage($stage))
+                                @if ($user->getTransformationManager()->aValideLeStage($stage))
                                     <x-ffast-progression-div :pourcentage="100" height="whatever" style="td"  text="VALIDE"/>
                                 @else
                                     <x-ffast-progression-div :pourcentage="0" height="whatever" style="td" text="NON VALIDE"/>

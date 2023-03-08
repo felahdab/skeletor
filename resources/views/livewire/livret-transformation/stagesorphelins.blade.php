@@ -8,15 +8,15 @@
         <div id="collapseStages" class="accordion-collapse collapse">
             <div  class="accordion-body">
                 <table class='table'>
-                    @foreach($user->stagesOrphelins() as $stage)
+                    @foreach($user->getTransformationManager()->stages_orphelins() as $stage)
                         <tr class='bg-secondary bg-opacity-25 div-table-contrat-compagnonnage'>
                             <th colspan='2'>{{$stage->stage_libcourt }}</th>
                         </tr>
                         <tr class='ligneTache'>
                             <td>
-                                @if ($user->aValideLeStage($stage))
+                                @if ($user->getTransformationManager()->aValideLeStage($stage))
                                     <button class='btn btn-success' type='button' disabled>
-                                    VALIDE {{ $user->stages()->find($stage)->pivot->date_validation }}
+                                    VALIDE {{ $user->getTransformationManager()->dateDeValidationDuStage($stage) }}
                                     </button>
                                 @else
                                     <button class='btn btn-warning' type='button' disabled>

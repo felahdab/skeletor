@@ -17,13 +17,13 @@
                 <div class='form-group row' >
                     <label for='fonction[fonction_libcourt]' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control'  name='fonction[fonction_libcourt]' id='fonction[fonction_libcourt]' placeholder='Libell&eacute; court' value="" >
+                        <input type='text' maxlength='100' class='form-control'  name='fonction[fonction_libcourt]' id='fonction[fonction_libcourt]' placeholder='Libell&eacute; court' value="" >
                     </div>
                 </div>
                 <div class='form-group row' >
                     <label for='fonction[fonction_liblong]' class='col-sm-5 col-form-label'>Libell&eacute; long *</label>
                     <div class='col-sm-5'>
-                        <input type='text' class='form-control' name='fonction[fonction_liblong]' id='fonction[fonction_liblong]' placeholder='Libell&eacute; long' value="" >
+                        <input type='text' maxlength='256' class='form-control' name='fonction[fonction_liblong]' id='fonction[fonction_liblong]' placeholder='Libell&eacute; long' value="" >
                     </div>
                 </div>
                 <div class="form-group row">

@@ -18,6 +18,8 @@ class HomeController extends Controller
                 return redirect()->route("statistiques.pourtuteurs");
             elseif ($user->hasRole("em"))
                 return redirect()->route("statistiques.pourem");
+            elseif ($user->hasRole("bord"))
+                return redirect()->route("transformation.index");
         }
         $liens= Lien::orderBy('lien_lib')->get();
         $user = auth()->user();

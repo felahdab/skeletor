@@ -109,140 +109,215 @@ class GererTransformationService
     }
     
         
-    public function ValidateSousObjectif(User $user, SousObjectif $sous_objectif, $date_validation , $commentaire, $valideur)
+    public function ValidateSousObjectif(User $user, SousObjectif $sous_objectif, $date_validation , $commentaire, $valideur, $proposition=false)
     {
+        $fieldname = $proposition ? 'date_proposition_validation' : 'date_validation';
+        $logtype = $proposition ? 'PROPOSE_VALIDATION_SOUS_OBJECTIF' : 'VALIDE_SOUS_OBJECTIF';
+
         $ssobj = $user->sous_objectifs()->find($sous_objectif);
         if ($ssobj != null){
-        
+            $workitem = $ssobj->pivot;
+            $workitem->date_proposition_validation=null;
+            $workitem->valideur=$valideur;
+            $workitem->date_validation=$date_validation;
+            $workitem->commentaire=$commentaire;
+            $workitem->save();
         }
         else{
             $user->sous_objectifs()->attach($sous_objectif, [
                 'valideur'=> $valideur,
                 'commentaire'=> $commentaire,
-                'date_validation' => $date_validation,
+                $fieldname => $date_validation
             ]);
         }
         $event_detail = [
             "sous_objectif" => $sous_objectif,
             "commentaire" => $commentaire,
-            "date_validation" => $date_validation,
+            $fieldname => $date_validation
         ];
         CalculateUserTransformationRatios::dispatch($user);
-        $user->logTransformationHistory("VALIDE_SOUS_OBJECTIF", json_encode($event_detail));
+        $user->logTransformationHistory($logtype, json_encode($event_detail));
     }
     
-    public function UnValidateSousObjectif(User $user, SousObjectif $sous_objectif)
+    public function UnValidateSousObjectif(User $user, SousObjectif $sous_objectif, $proposition=false)
     {
+        $logtype = $proposition ? 'ANNULE_PROPOSITION_DE_VALIDATION_SOUS_OBJECTIF' : 'DEVALIDE_SOUS_OBJECTIF';
+
+        if ($proposition)
+        {
+            $ssobj = $user->sous_objectifs->find($sous_objectif);
+            if ($ssobj?->pivot->date_validation != null)
+                return;
+        }    
+        
         $user->sous_objectifs()->detach($sous_objectif);
         CalculateUserTransformationRatios::dispatch($user);
-        $user->logTransformationHistory("DEVALIDE_SOUS_OBJECTIF", json_encode(["sous_objectif" => $sous_objectif]));
+        $user->logTransformationHistory($logtype, json_encode(["sous_objectif" => $sous_objectif]));
     }
     
-    public function ValidateObjectif(User $user, Objectif $objectif, $date_validation , $commentaire, $valideur)
+    public function ValidateObjectif(User $user, Objectif $objectif, $date_validation , $commentaire, $valideur, $proposition=false)
     {
         foreach ($objectif->sous_objectifs()->get() as $sous_objectif)
         {
-            $this->ValidateSousObjectif($user, $sous_objectif, $date_validation , $commentaire, $valideur);
+            $this->ValidateSousObjectif($user, $sous_objectif, $date_validation , $commentaire, $valideur, $proposition);
         }
     }
     
-    public function UnValidateObjectif(User $user, Objectif $objectif)
+    public function UnValidateObjectif(User $user, Objectif $objectif, $proposition=false)
     {
         foreach ($objectif->sous_objectifs()->get() as $sous_objectif)
         {
-            $this->UnValidateSousObjectif($user, $sous_objectif);
+            $this->UnValidateSousObjectif($user, $sous_objectif, $proposition);
         }
     }
     
-    public function ValidateTache(User $user, Tache $tache, $date_validation , $commentaire, $valideur)
+    public function ValidateTache(User $user, Tache $tache, $date_validation , $commentaire, $valideur, $proposition=false)
     {
+        $fieldname=$proposition ? 'date_proposition_validation' : 'date_validation';
+        $logtype = $proposition ? 'PROPOSE_VALIDATION_TACHE' : 'VALIDE_TACHE';
+
         $event_detail = [
             "tache" => $tache,
             "commentaire" => $commentaire,
-            "date_validation" => $date_validation,
-            "valideur" => $valideur
+            $fieldname => $date_validation,
+            "valideur" => $valideur,
+            "proposition" => $proposition
         ];
-        $user->logTransformationHistory("VALIDE_TACHE", json_encode($event_detail));
+        $user->logTransformationHistory($logtype, json_encode($event_detail));
         
         foreach ($tache->objectifs()->get() as $objectif)
         {
-            $this->ValidateObjectif($user, $objectif, $date_validation , $commentaire, $valideur);
+            $this->ValidateObjectif($user, $objectif, $date_validation , $commentaire, $valideur, $proposition);
         }
         CalculateUserTransformationRatios::dispatch($user);
     }
     
-    public function UnValidateTache(User $user, Tache $tache)
+    public function UnValidateTache(User $user, Tache $tache, $proposition=false)
     {
+        $logtype = $proposition ? 'ANNULE_PROPOSITION_VALIDATION_TACHE' : 'DEVALIDE_TACHE';
+
         $event_detail = [
             "tache" => $tache
         ];
-        $user->logTransformationHistory("DEVALIDE_TACHE", json_encode($event_detail));
+        $user->logTransformationHistory($logtype, json_encode($event_detail));
         
         foreach ($tache->objectifs()->get() as $objectif)
         {
-            $this->UnValidateObjectif($user, $objectif);
+            $this->UnValidateObjectif($user, $objectif, $proposition);
         }
         CalculateUserTransformationRatios::dispatch($user); 
     }
     
-    public function ValideLacheFonction(User $user, Fonction $fonction, $date_validation , $commentaire, $valideur)
+    public function ValideLacheFonction(User $user, Fonction $fonction, $date_validation , $commentaire, $valideur, $proposition=false)
     {
+        $fieldname=$proposition ? 'date_proposition_lache' : 'date_lache';
+        $logtype = $proposition ? 'PROPOSITION_VALIDATION_LACHE_FONCTION' : 'VALIDE_LACHE_FONCTION';
+        
         $userfonc = $user->fonctions->find($fonction);
-        // L'utilisateur a cliqué sur un bouton de validation du lache
-        // Si la fonction necessite un double, il faut que le double soit valide avant le lache
-        if ($userfonc->pivot->date_double != null or !$fonction->fonction_double) 
+        if ($userfonc == null)
+            return;
+
+        if ($proposition && $userfonc->pivot->date_lache == null)
         {
+            // Dans le cas d'une proposition, on ne restreint pas la demande.
+            // Il faut juste que le lache n'ait pas deja ete valide
+            // Charge à celui qui accepte la proposition de s'assurer qu'elle est bien justifiée.
+            $userfonc->pivot->commentaire_lache=$commentaire;
+            $userfonc->pivot->valideur_lache=$valideur;
+            $userfonc->pivot->date_proposition_lache = $date_validation;
+        }
+        elseif (! $proposition && ($userfonc->pivot->date_double != null or !$fonction->fonction_double) )
+        {
+            // L'utilisateur a cliqué sur un bouton de validation du lache
+            // Si la fonction necessite un double, il faut que le double soit valide avant le lache
             $userfonc->pivot->commentaire_lache=$commentaire;
             $userfonc->pivot->valideur_lache=$valideur;
             $userfonc->pivot->date_lache = $date_validation;
-            $userfonc->pivot->save();
-            $event_detail = [
-                "fonction" => $fonction,
-                "commentaire" => $commentaire,
-                "date_validation" => $date_validation,
-            ];
-            $user->logTransformationHistory("VALIDE_LACHE_FONCTION", json_encode($event_detail));
+            $userfonc->pivot->date_proposition_lache = null;
         }
-    }
-    
-    public function UnValideLacheFonction(User $user, Fonction $fonction)
-    {
-        $userfonc = $user->fonctions->find($fonction);
-        if ($userfonc == null)
-            return;
-        $userfonc->pivot->commentaire_lache=null;
-        $userfonc->pivot->valideur_lache=null;
-        $userfonc->pivot->date_lache = null;
-        $userfonc->pivot->save();
-        $user->logTransformationHistory("ANNULE_LACHE_FONCTION", json_encode(["fonction" => $fonction]));
-    }
-    
-    public function UnValideDoubleFonction(User $user, Fonction $fonction)
-    {
-        $userfonc = $user->fonctions->find($fonction);
-        if ($userfonc == null)
-            return;
-        $userfonc->pivot->commentaire_double=null;
-        $userfonc->pivot->valideur_double=null;
-        $userfonc->pivot->date_double = null;
-        $userfonc->pivot->save();
-        $user->logTransformationHistory("ANNULE_DOUBLE_FONCTION", json_encode(["fonction" => $fonction]));
-    }
-    
-    public function ValideDoubleFonction(User $user, Fonction $fonction, $date_validation , $commentaire, $valideur)
-    {
-        $userfonc = $user->fonctions->find($fonction);
-        
-        $userfonc->pivot->commentaire_double=$commentaire;
-        $userfonc->pivot->valideur_double=$valideur;
-        $userfonc->pivot->date_double = $date_validation;
         $userfonc->pivot->save();
         $event_detail = [
             "fonction" => $fonction,
             "commentaire" => $commentaire,
-            "date_validation" => $date_validation,
+            "proposition" => $proposition,
+            $fieldname => $date_validation,
         ];
-        $user->logTransformationHistory("VALIDE_DOUBLE_FONCTION", json_encode($event_detail));
+        $user->logTransformationHistory($logtype, json_encode($event_detail));
+
+    }
+    
+    public function UnValideLacheFonction(User $user, Fonction $fonction, $proposition=false)
+    {
+        $logtype = $proposition ? 'ANNULE_PROPOSITION_VALIDATION_LACHE_FONCTION' : 'ANNULE_LACHE_FONCTION';
+
+
+        $userfonc = $user->fonctions->find($fonction);
+        if ($userfonc == null)
+            return;
+        if ($proposition && $userfonc->pivot->date_lache == null){
+            $userfonc->pivot->commentaire_lache=null;
+            $userfonc->pivot->valideur_lache=null;
+            $userfonc->pivot->date_proposition_lache = null;
+        }
+        elseif (! $proposition){
+            $userfonc->pivot->commentaire_lache=null;
+            $userfonc->pivot->valideur_lache=null;
+            $userfonc->pivot->date_lache = null;
+            $userfonc->pivot->date_proposition_lache = null;
+        }
+        $userfonc->pivot->save();
+        $user->logTransformationHistory($logtype, json_encode(["fonction" => $fonction]));
+    }
+    
+    public function UnValideDoubleFonction(User $user, Fonction $fonction, $proposition=false)
+    {
+        $logtype = $proposition ? 'ANNULE_PROPOSITION_VALIDATION_DOUBLE_FONCTION' : 'ANNULE_DOUBLE_FONCTION';
+
+        $userfonc = $user->fonctions->find($fonction);
+        if ($userfonc == null)
+            return;
+        if ($proposition && $userfonc->pivot->date_double == null){
+            $userfonc->pivot->commentaire_double=null;
+            $userfonc->pivot->valideur_double=null;
+            $userfonc->pivot->date_proposition_double = null;
+        }
+        elseif (! $proposition){
+            $userfonc->pivot->commentaire_double=null;
+            $userfonc->pivot->valideur_double=null;
+            $userfonc->pivot->date_double = null;
+            $userfonc->pivot->date_proposition_double = null;
+        }
+        
+        $userfonc->pivot->save();
+        $user->logTransformationHistory($logtype, json_encode(["fonction" => $fonction]));
+    }
+    
+    public function ValideDoubleFonction(User $user, Fonction $fonction, $date_validation , $commentaire, $valideur, $proposition=false)
+    {
+        $fieldname=$proposition ? 'date_proposition_double' : 'date_double';
+        $logtype = $proposition ? 'PROPOSE_VALIDATION_DOUBLE_FONCTION' : 'VALIDE_DOUBLE_FONCTION';
+
+        $userfonc = $user->fonctions->find($fonction);
+        
+        $userfonc->pivot->commentaire_double=$commentaire;
+        $userfonc->pivot->valideur_double=$valideur;
+        if ($proposition && $userfonc->pivot->date_double==null ){
+            $userfonc->pivot->date_proposition_double = $date_validation;
+        }
+        else{
+            $userfonc->pivot->date_double = $date_validation;
+            $userfonc->pivot->date_proposition_double = null;
+        }
+        $userfonc->pivot->save();
+
+        $event_detail = [
+            "fonction" => $fonction,
+            "commentaire" => $commentaire,
+            $fieldname => $date_validation,
+            'proposition' => $proposition
+        ];
+
+        $user->logTransformationHistory($logtype, json_encode($event_detail));
     }
     
 

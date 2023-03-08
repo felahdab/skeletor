@@ -15,6 +15,7 @@ use Lab404\Impersonate\Models\Impersonate;
 
 use App\Jobs\CalculateUserTransformationRatios;
 use App\Service\GererTransformationService;
+use App\Service\TransformationManagerService;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\TransformationHistory;
@@ -196,14 +197,24 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Unite::class, 'unite_destination_id');
     }
+    
     // Cette partie concerne le suivi de la transformation.
+    public $transformation_service = null;
+    public function getTransformationManager()
+    {
+        if ($this->transformation_service == null)
+            $this->transformation_service = new TransformationManagerService($this);
+        return $this->transformation_service;
+    }
+
     public function fonctions()
     {
         return $this->belongsToMany(Fonction::class, 'user_fonction')
             ->withTimeStamps()
             ->withPivot('date_lache','valideur_lache','commentaire_lache',
                     'date_double','valideur_double','commentaire_double',
-                    'validation', 'taux_de_transformation','nb_jours_pour_validation');
+                    'validation', 'taux_de_transformation','nb_jours_pour_validation',
+                    'date_proposition_double', 'date_proposition_lache');
     }
     
     public function stages()
@@ -224,8 +235,9 @@ class User extends Authenticatable
         
         $liste_sous_obj_valides = $this->belongsToMany(SousObjectif::class, 'user_sous_objectif')
             ->withTimeStamps()
-            ->withPivot('commentaire', 'date_validation', 'valideur')
-            ->get();
+            ->withPivot('commentaire', 'date_validation', 'valideur', 'date_proposition_validation')
+            ->get()
+            ->whereNotNull('pivot.date_validation');
             
         $resultat = $liste_sous_obj_valides->intersect($ssobj_du_parcours_de_transformation);
         
@@ -236,7 +248,7 @@ class User extends Authenticatable
     public function sous_objectifs(){  
         return $this->belongsToMany(SousObjectif::class, 'user_sous_objectif')
             ->withTimeStamps()
-            ->withPivot('commentaire', 'date_validation', 'valideur', 'nb_jours_pour_validation');
+            ->withPivot('commentaire', 'date_validation', 'valideur', 'nb_jours_pour_validation', 'date_proposition_validation');
     }
     
     // Cette partie contient des fonctions d'aide pour le suivi de la transformation
@@ -275,9 +287,65 @@ class User extends Authenticatable
     public function aValideLeSousObjectif(SousObjectif $sous_objectif)
     {
         $workitem = $this->sous_objectifs()->find($sous_objectif);
+
         if ($workitem == null)
             return false;
+        if ($workitem->pivot->date_validation == null)
+            return false;
         return true;
+    }
+
+    public function aProposeLeSousObjectif(SousObjectif $sous_objectif)
+    {
+        $workitem = $this->sous_objectifs()->find($sous_objectif);
+
+        if ($workitem == null)
+            return false;
+        if ($workitem->pivot->date_validation != null)
+            return false;
+        if ($workitem->pivot->date_proposition_validation != null)
+            return true;
+        return false;
+    }
+
+    public function aProposeDoubleFonction(Fonction $fonction){
+        $userfonction = $this->fonctions->find($fonction);
+        if ($userfonction == null)
+            return false;
+        
+        if ($userfonction->pivot->date_proposition_double != null)
+            return true;
+        return false;
+    }
+
+    public function aValideDoubleFonction(Fonction $fonction){
+        $userfonction = $this->fonctions->find($fonction);
+        if ($userfonction == null)
+            return false;
+        
+        if ($userfonction->pivot->date_double != null)
+            return true;
+        return false;
+    }
+
+    public function aProposeLacheFonction(Fonction $fonction){
+        $userfonction = $this->fonctions->find($fonction);
+        if ($userfonction == null)
+            return false;
+        
+        if ($userfonction->pivot->date_proposition_lache != null)
+            return true;
+        return false;
+    }
+
+    public function aValideLacheFonction(Fonction $fonction){
+        $userfonction = $this->fonctions->find($fonction);
+        if ($userfonction == null)
+            return false;
+        
+        if ($userfonction->pivot->date_lache != null)
+            return true;
+        return false;
     }
     
     public function aValideLeStage(Stage $stage)
@@ -423,8 +491,8 @@ class User extends Authenticatable
     {
         if (! $fullcalc){
             //je crois que cette partie ne marche pas.
-            $workitem = $this->fonctions()->find($fonction);
-            return $workitem->taux_de_transformation;
+            $workitem = $this->fonctions()->find($fonction); 
+            return $workitem->pivot->taux_de_transformation;
         }
         else
         {
@@ -499,6 +567,7 @@ class User extends Authenticatable
     
     public function getEnTransformationAttribute()
     {
+        // return $this->getTransformationManager()->parcours->count();
         if ($this->fonctionscount == null){
             $fonctions = $this->fonctions()->get();
             $this->fonctionscount = $fonctions->count();

@@ -69,6 +69,9 @@ Pour valider un double ou un lâcher, cliquer sur le bouton « valider » (12,13
 
 Le bouton « Imprimer » (5) permet d’éditer le livret au format pdf.
 
+**Remarque : **  Le marin concerné a la possibilité de proposer la validation d'élements du parcours. Les éléments proposés par le marin sont marqués d'une pastille "PROPOSE":
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/pastille_proposition.png' )) }}" width=100px>
+
 **Remarque : ** Pour l’imprimer au format livret, sélectionnez l’option d’impression d’Acrobate Reader « brochure ».
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/livret_de_transformation_impression_livret.jpg' )) }}" width=600px> 
 
@@ -144,3 +147,10 @@ Il y retrouve sur le même modèle que dans le menu « Transformation » :
 - ses diagrammes de progression,
 - sa fiche bilan.
 
+Dans le livret de transformation, le marin peut sélectionner les éléments du parcours dont il veut proposer la validation à ses tuteurs.
+La sélection et la validation se font sur les mêmes écrans détaillés ci-dessus.
+Lorsqu'un marin propose la validation d'un élément du parcours, cet élément est associé à une pastile "PROPOSE" associée à la date de proposition.
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/pastille_proposition.png' )) }}" width=100px>
+Le marin peut renseigner un commentaire qui est accessible sur l'élément considéré en laissant la souris sur la pastille.
+
+Dans le livret de transformation, les tuteurs sont libres de valider ou de refuser les propositions faites par le marin.

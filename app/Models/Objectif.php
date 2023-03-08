@@ -15,7 +15,8 @@ class Objectif extends Model
     
     public function sous_objectifs()
     {
-        return $this->hasMany(SousObjectif::class);
+        return $this->hasMany(SousObjectif::class)
+                    ->with('lieu');
     }
     
     public function taches()
