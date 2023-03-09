@@ -77,6 +77,7 @@
                 @can('statistiques.pour2ps')<a class="dropdown-item" href="{{route('statistiques.pour2ps')}}">Bilan par stage</a>@endcan
                 @can('statistiques.pourem')<a class="dropdown-item" href="{{route('statistiques.pourem')}}">Bilan global</a>@endcan
                 @can('statistiques.index')<a class="dropdown-item" href="{{route('statistiques.index')}}">Indicateurs</a>@endcan
+                @can('statistiques.dashboard')<a class="dropdown-item" href="{{route('statistiques.dashboard')}}">Tableau de bord</a>@endcan
                 
               </div>
             </div>
