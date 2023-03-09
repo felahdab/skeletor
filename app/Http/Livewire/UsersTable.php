@@ -20,6 +20,7 @@ use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 use Barryvdh\Debugbar\Facades\Debugbar;
 
@@ -32,6 +33,10 @@ class UsersTable extends DataTableComponent
         switch ($this->mode){
             case "listmarin" :
                 $userlist = User::query()->join('user_fonction','users.id','=','user_id')->Where('fonction_id', $this->fonction->id)->get()->pluck('user_id', 'id');
+                return User::query()->whereIn('users.id', $userlist);
+                break;
+            case "dashboard" :
+                $userlist = DB::table('user_fonction')->get()->pluck('user_id')->unique();
                 return User::query()->whereIn('users.id', $userlist);
                 break;
             case "archiv" :

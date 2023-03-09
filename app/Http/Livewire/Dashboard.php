@@ -57,8 +57,10 @@ class Dashboard extends Component
             }
 
             $charts[]= [
-                'type' =>'livewire-column-chart',
-                'data' => $columnChartModel
+                'type'  =>'livewire-column-chart',
+                'data'  => $columnChartModel,
+                'title' => 'Nombre de fonctions attribuées',
+                'id'    => 'nbre_fonctions'
             ];
                         
             $columnChartModel2 = 
@@ -71,7 +73,9 @@ class Dashboard extends Component
                 $columnChartModel2->addColumn($user->name, $user->taux_de_transformation, $color);
             }
             $charts[] = ['type' =>'livewire-column-chart',
-                         'data' => $columnChartModel2 ];
+                         'data' => $columnChartModel2,
+                         'title' => 'Taux de transformation',
+                         'id'    => 'tx_de_transformation' ];
 
         }
 
