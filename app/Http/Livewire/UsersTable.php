@@ -19,6 +19,9 @@ use Rappasoft\LaravelLivewireTables\Views\Filters\TextFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
+
+use Barryvdh\Debugbar\Facades\Debugbar;
 
 class UsersTable extends DataTableComponent
 {
@@ -49,6 +52,7 @@ class UsersTable extends DataTableComponent
     
     public $mode='gestion';
     public $fonction = null;
+    public $userids = null;
 
     public function configure(): void
     {
@@ -68,6 +72,9 @@ class UsersTable extends DataTableComponent
                 break;
             case "archiv" :
                 return view('tables.userstable.archivage');
+                break;
+            case "dashboard" :
+                return view('tables.userstable.dashboard');
                 break;
         }
     }
@@ -154,7 +161,13 @@ class UsersTable extends DataTableComponent
                             fn($row, Column $column) => $row->fonctions()->find($this->fonction)->pivot->date_lache ),
                     Column::make('Nb jours')
                         ->label(
-                            fn($row, Column $column) => $row->fonctions()->find($this->fonction)->pivot->nb_jours_pour_validation ),
+                            'toto') 
+                        ->sortable(
+                            function (Builder $query, string $direction) use ($row)
+                            {
+                                return $query->orderBy($row->date_embarq);
+                            }
+                        ),
                     Column::make('Date Embarq', 'date_embarq')
                         ->sortable(),                
                 ]);
@@ -268,5 +281,17 @@ class UsersTable extends DataTableComponent
         ];
         
         return $basefilters;
+    }
+
+    public function render()
+    {
+        $this->userids = $this->getCurrentItems();
+        $this->emitUp("userListUpdated", $this->userids);
+        return parent::render();
+    }
+
+    public function getCurrentItems()
+    {
+        return (clone $this->baseQuery())->pluck($this->getPrimaryKey())->map(fn ($item) => (string)$item)->toArray();
     }
 }

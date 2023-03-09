@@ -14,8 +14,6 @@ use App\Models\User;
 use App\Models\Service;
 use App\Models\Fonction;
 
-use Barryvdh\Debugbar\Facades\Debugbar;
-
 class StatistiqueController extends Controller
 {
     public function index(Request $request) 
@@ -67,11 +65,16 @@ class StatistiqueController extends Controller
         $users = User::with('secteur')->get();
         $services = Service::orderBy('service_libcourt')->get();
         $fonctionsaquai = Fonction::where('typefonction_id', 2);
-        
+
         return view('statistiques.pourem', ['stages'   => $stages,
                                    'services' => $services,
                                    'fonctionsaquai' => $fonctionsaquai,
                                    'users'    => $users]);
+    }
+
+    public function dashboard()
+    {
+        return view('statistiques.dashboard');
     }
     
     public function pour2ps()
