@@ -160,14 +160,8 @@ class UsersTable extends DataTableComponent
                         ->label(
                             fn($row, Column $column) => $row->fonctions()->find($this->fonction)->pivot->date_lache ),
                     Column::make('Nb jours')
-                        ->label(
-                            'toto') 
-                        ->sortable(
-                            function (Builder $query, string $direction) use ($row)
-                            {
-                                return $query->orderBy($row->date_embarq);
-                            }
-                        ),
+                    ->label(
+                        fn($row, Column $column) => $row->fonctions()->find($this->fonction)->pivot->nb_jours_pour_validation ),
                     Column::make('Date Embarq', 'date_embarq')
                         ->sortable(),                
                 ]);
