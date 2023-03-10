@@ -1,10 +1,11 @@
 <?php
 namespace App\Service;
 
-
-
 use App\Models\User;
 use App\Models\MindefConnectUser;
+use Spatie\Permission\Models\Role;
+
+use App\Service\RandomPasswordGeneratorService;
 
 class ArchivRestaurService
 {
@@ -49,7 +50,7 @@ class ArchivRestaurService
                                 'en_transformation', 
                                 'socle', 
                                 'comete'])->toArray();
-        $newuserdata['password'] = $this->generateRandomString();
+        $newuserdata['password'] = RandomPasswordGeneratorService::generateRandomString();
 
         $newUser=User::create($newuserdata);
 

@@ -150,16 +150,16 @@ class AnnudefSearch extends Component
     {
         $userconserv = $this->users[$index];
         ArchivRestaurService::restauravecdonnees($userconserv,'annudef');
-        return redirect()->route('livewire.annudef-search')
-                ->withSuccess(__('Utilisateur restauré avec succès.'));
+        return redirect()->route('annudef.index')
+                ->with(['success' => __('Utilisateur restauré avec succès.') ] );
     }
 
     public function effacecpte($index)
     {
         $userconserv = $this->users[$index];
         ArchivRestaurService::restaursansdonnees($userconserv,'annudef');
-        return redirect()->route('livewire.annudef-search')
-            ->withSuccess(__('Utilisateur restauré avec succès.'));
+        return redirect()->route('annudef.index')
+                ->with(['success' => __('Utilisateur restauré avec succès.') ] );
     }
     
     public function aligneNom($index)
