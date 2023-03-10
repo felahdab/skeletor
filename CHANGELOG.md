@@ -1,3 +1,39 @@
+## 1.1.2 (mars 10, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.1.1 –> 1.1.2
+- Retire l'acces aux Dashboard pour le moment.
+- Ajout de tests browser pour les fonctions de recherche des utilisateurs et pour les fonctions d'archivage et de suppression.
+- Corrige quelques bugs dans les fonctions d'archivage. Cree le service de generation de mot de passe aleatoire.
+- Merge branch 'master' into tuleap-62250-inserer-une-solution-legere-pour-generer-des-graphiques-et-dashboard
+- Modifie le master mayout pour inclure le javascript permettant de generer les graphiques des tableaux de bord.
+- Merge branch 'master' into tuleap-62250-inserer-une-solution-legere-pour-generer-des-graphiques-et-dashboard
+- Modifie le Dashboard pour placer chaque graphique dans un onglet.
+- Add link to dashboard page in the navbar.
+- Include asantibanez livewire-charts module. Create first dashboard setup.
+- Merge branch 'master' into tuleap-61329-gerer-la-suppression-archivage-des-users
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast
+- modification page accueil du profil bord
+- prise en compte des noms avec apostrophe dans stat etat major+ correction pour afficher les taux de transfo par fonction
+- verification de la longueur du champ libelle court et libelle long
+- ajout des colonnes libellé long pour la tache et l'objectif
+- changement couleur navbar en fonction  APP_ENV est dev ou prod
+- evolution de la doc
+- correction syntaxe
+- modif pour uniformisation des restauration avec creation d'un service
+- Modifications dans MindefConnect et Annudef pour uniformiser la restauration d'un marin avec ou sans ses donnees.
+- Mise a jour du test du controlleur User. Un utilisateur ne doit pas pouvoir etre supprimer si une date de debarquement n'a pas ete renseignee.
+- Modification des processus d'archivage et de suppression.
+- ajout unite_id lors de la création d'un user
+- correction affichage liste grade ajout modif
+- erreur
+- correction affichage
+- partie documentation
+- correction affichage bouton retour
+- correction affichage
+- partie annudef
+- partie mindefconnect
+- verification si service rempli pour eviter affichage erreur sql à l'ecran
+- partie qui concerne l'archivage
+
 ## 1.1.1 (mars 03, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.1.0 –> 1.1.1
 - Corrige un bug d'affichage sur le livret de transformation lorsque le marin a propose la validation de son lache.
