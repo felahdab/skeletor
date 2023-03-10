@@ -1,3 +1,7 @@
+## 1.1.4 (mars 10, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.1.3 –> 1.1.4
+- Creation du service de recuperation des photos depuis l'annudef. Modification des vues users.edit et transformation.fichebilan pour utiliser cette photo plutot que la photo stockee sur le serveur. TODO: retirer les fonctionnalites de gestion des photos.
+
 ## 1.1.3 (mars 10, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.1.2 –> 1.1.3
 - Corrige un bug introduit par erreur dans UsersTable. Definit un test Browser pour verifier la non regression sur ce point ulterieurement.
