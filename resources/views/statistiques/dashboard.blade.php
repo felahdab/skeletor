@@ -6,11 +6,12 @@
 
 
 @section('content')
-        <div style='text-align: center;margin-top: 25px;margin-bottom: 25px;'>
-            <h1>Dashboard</h1>
-        </div>
-        <div>
-            <livewire:dashboard>
+    <div class="bg-light p-4 rounded">
+        <h2>Tableaux de bord</h2>
+        <div class="lead">
+            Affinez la liste des marins en effectuant une recherche ou en filtrant les données.
         </div>
         
+        <livewire:dashboard>
+    </div>
 @endsection

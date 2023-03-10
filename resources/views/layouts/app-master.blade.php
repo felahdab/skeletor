@@ -74,7 +74,7 @@ Vous avez également la possibilité de télécharger directement une version po
     </main>
      
     @livewireScripts
-    @livewireChartsScripts
+    <script src="{!! asset('/vendor/livewire-charts/app.js') !!}"></script>
     <script src="{!! asset('assets/js/alpine.js') !!}"></script>
     <script src="{!! asset('assets/js/jsfile.js') !!}"></script>
     <script src="{!! asset('assets/js/apexcharts.js') !!}"></script>
