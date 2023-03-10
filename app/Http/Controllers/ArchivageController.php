@@ -29,7 +29,7 @@ class ArchivageController extends Controller
 
     public function effacecpte($id) 
     {
-        $user = User::withTrashed()->find($user);
+        $user = User::withTrashed()->find($id);
         ArchivRestaurService::restaursansdonnees($user,'archivage');
         return redirect()->route('archivage.index')
             ->withSuccess(__('Utilisateur restauré avec succès.'));
