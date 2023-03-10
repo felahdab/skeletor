@@ -65,12 +65,13 @@ Vous avez également la possibilité de télécharger directement une version po
 </head>
 <body>
     
-    @include('layouts.partials.messages')
+    
     @include('layouts.partials.navbar')
     @include('layouts.partials.bugreport')
     
     <main class="container">
-        @yield('content')
+      @include('layouts.partials.messages')
+      @yield('content')
     </main>
      
     @livewireScripts

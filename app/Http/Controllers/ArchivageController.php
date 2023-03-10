@@ -9,6 +9,7 @@ use App\Models\User;
 
 use App\Service\LivretPdfService;
 use App\Service\StatService;
+use App\Service\ArchivRestaurService;
 
 
 class ArchivageController extends Controller
@@ -17,35 +18,52 @@ class ArchivageController extends Controller
     {
         return view('archivage.index');
     }
-    public function restaurer($id) 
-    {
-        $user=User::withTrashed()->find($id);
-        $user->deleted_at = null;
-        $user->save();
 
+    public function conservcpte($user) 
+    {
+        $user = User::withTrashed()->find($user);
+        ArchivRestaurService::restauravecdonnees($user,'archivage');
+        return redirect()->route('archivage.index')
+            ->withSuccess(__('Utilisateur restauré avec succès.'));
+        }
+
+    public function effacecpte($id) 
+    {
+        $user = User::withTrashed()->find($user);
+        ArchivRestaurService::restaursansdonnees($user,'archivage');
         return redirect()->route('archivage.index')
             ->withSuccess(__('Utilisateur restauré avec succès.'));
     }
+
     public function imprimer($id) 
     {
         // telechargement du livret pdf
         $user=User::withTrashed()->find($id);
         LivretPdfService::livretpdf($user, '');
     }
+    
     public function archiver($id) 
     {
         $user=User::withTrashed()->find($id);
-        // suppression du user = on le cache mais on le supprime pas vraiment 
-        // en assignant deleted_at si pas fait et date_archivage.
-        $user->date_archivage=Carbon::now();
-        if (!$user->deleted_at) {$user->deleted_at=Carbon::now();}
-        $user->save();
-        // inscription dans table statistiques
+        // Si l'utilisateur a un livret de tranfo: on génère le PDF et on l'enregistre sur le serveur.
+        if ($user->fonctions->count()){
+            LivretPdfService::livretpdf($user, 'archiv');
+        }
+        // On met a jour les statistiques avec ce marin.
         StatService::statuser($user);
-        // impression du livret pdf
-        LivretPdfService::livretpdf($user, 'archiv');
+        // On met a jour la date d'archivage.
+        $user->date_archivage=Carbon::now();
+        $user->save();
 
         return redirect()->route('archivage.index')
             ->withSuccess(__('Utilisateur archivé avec succès.'));
+    }
+    
+    public function supprimer($id) 
+    {
+        $user=User::withTrashed()->find($id);
+        $user->forceDelete();
+        return redirect()->route('archivage.index')
+            ->withSuccess(__('Utilisateur supprimé avec succès.'));
     }
 }

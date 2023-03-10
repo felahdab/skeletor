@@ -6,10 +6,13 @@ use Livewire\Component;
 
 use Illuminate\Http\Client\ConnectionException;
 
+use App\Service\ArchivRestaurService;
+
 use App\Http\Controllers\AnnudefController;
 use App\Http\Controllers\UsersController;
 use App\Models\User;
 use App\Models\Grade;
+use App\Models\Unite;
 
 class AnnudefSearch extends Component
 {
@@ -44,20 +47,25 @@ class AnnudefSearch extends Component
                                                         
             foreach($this->users as $key=>$ldapuser)
             {
-                $localuser = User::where('email', $ldapuser['email'])->first();
+                $localuser = User::withTrashed()->where('email', $ldapuser['email'])->first();
                 if ($localuser != null)
                 {
-                    if ($localuser->name != $ldapuser['nom']){
-                        $this->users[$key]['nompasidentique'] = true;
+                    if ($localuser->deleted_at != null){
+                        $this->users[$key]['archive'] = true;
                     }
-                    if ($localuser->prenom != $ldapuser['prenomusuel']){
-                        $this->users[$key]['prenompasidentique'] = true;
-                    }
-                    if ($localuser->nid != $ldapuser['nid']){
-                        $this->users[$key]['nidpasidentique'] = true;
-                    }
-                    if ($localuser->grade()->first()?->grade_libcourt != $ldapuser['gradecourt']){
-                        $this->users[$key]['gradepasidentique'] = true;
+                    else{
+                        if ($localuser->name != $ldapuser['nom']){
+                            $this->users[$key]['nompasidentique'] = true;
+                        }
+                        if ($localuser->prenom != $ldapuser['prenomusuel']){
+                            $this->users[$key]['prenompasidentique'] = true;
+                        }
+                        if ($localuser->nid != $ldapuser['nid']){
+                            $this->users[$key]['nidpasidentique'] = true;
+                        }
+                        if ($localuser->grade()->first()?->grade_libcourt != $ldapuser['gradecourt']){
+                            $this->users[$key]['gradepasidentique'] = true;
+                        }    
                     }
                 }
                 else 
@@ -90,14 +98,68 @@ class AnnudefSearch extends Component
         }
         else
             $grade_id = null;
+        ////////////////////////////////////////////////
+        $possibleUnite=null;
+        $affectation = $usertocreate["unites"];
+        if (str_contains($affectation, "GTR FREMM TOULON"))
+            $possibleUnite = Unite::where("unite_libcourt", "GTR/T")->get()->first();
+        elseif (str_contains($affectation, "GTR BREST"))
+            $possibleUnite = Unite::where("unite_libcourt", "GTR/B")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS TOULON/ALSACE"))
+            $possibleUnite = Unite::where("unite_libcourt", "ALS")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS TOULON/AUVERGNE"))
+            $possibleUnite = Unite::where("unite_libcourt", "AVG")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS TOULON/LANGUEDOC/LANGUEDOC A"))
+            $possibleUnite = Unite::where("unite_libcourt", "LGC_A")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS TOULON/LANGUEDOC/LANGUEDOC B"))
+            $possibleUnite = Unite::where("unite_libcourt", "LGC_B")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS TOULON/PROVENCE/PROVENCE A"))
+            $possibleUnite = Unite::where("unite_libcourt", "PCE_A")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS TOULON/PROVENCE/PROVENCE B"))
+            $possibleUnite = Unite::where("unite_libcourt", "PCE_B")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS BREST/AQUITAINE/AQUITAINE A"))
+            $possibleUnite = Unite::where("unite_libcourt", "AQN_A")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS BREST/AQUITAINE/AQUITAINE B"))
+            $possibleUnite = Unite::where("unite_libcourt", "AQN_B")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS BREST/BRETAGNE/BRETAGNE A"))
+            $possibleUnite = Unite::where("unite_libcourt", "BTE_A")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS BREST/BRETAGNE/BRETAGNE B"))
+            $possibleUnite = Unite::where("unite_libcourt", "BTE_B")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS BREST/LORRAINE"))
+            $possibleUnite = Unite::where("unite_libcourt", "LRN")->get()->first();
+        elseif (str_contains($affectation, "BATIMENTS BREST/NORMANDIE"))
+            $possibleUnite = Unite::where("unite_libcourt", "NMD")->get()->first();
+        else
+            $possibleUnite = Unite::where("unite_libcourt", "HE")->get()->first();
         
+
+
+
+        /////////////////////////////////////////////////
         $newUser = User::create(["email"    => $usertocreate["email"],
                       "name"     => $usertocreate["nom"],
                       "prenom"   => $usertocreate["prenomusuel"],
                       "nid"      => $usertocreate["nid"],
                       "password" => UsersController::generateRandomString(),
-                      "grade_id" => $grade_id]);
+                      "grade_id" => $grade_id,
+                      "unite_id" => $possibleUnite->id]);
         $newUser->syncRoles(["user"]);
+    }
+
+    public function conservcpte($index)
+    {
+        $userconserv = $this->users[$index];
+        ArchivRestaurService::restauravecdonnees($userconserv,'annudef');
+        return redirect()->route('livewire.annudef-search')
+                ->withSuccess(__('Utilisateur restauré avec succès.'));
+    }
+
+    public function effacecpte($index)
+    {
+        $userconserv = $this->users[$index];
+        ArchivRestaurService::restaursansdonnees($userconserv,'annudef');
+        return redirect()->route('livewire.annudef-search')
+            ->withSuccess(__('Utilisateur restauré avec succès.'));
     }
     
     public function aligneNom($index)

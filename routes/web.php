@@ -44,6 +44,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::get('/{user}', 'MindefConnectUserController@edit')->name('mindefconnect.edit');
             Route::post('/{user}', 'MindefConnectUserController@store')->name('mindefconnect.store');
             Route::delete('/{user}', 'MindefConnectUserController@destroy')->name('mindefconnect.destroy');
+            Route::get('/{mcuser}/conservcpte', 'MindefConnectUserController@conservcpte')->name('mindefconnect.conservcpte');
+            Route::get('/{mcuser}/effacecpte', 'MindefConnectUserController@effacecpte')->name('mindefconnect.effacecpte');
         });
         
         /**
@@ -66,11 +68,13 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
 
         Route::resource('roles',          RolesController::class);
         Route::resource('permissions',    PermissionsController::class);
-        // Route::resource('archivage',    ArchivageController::class);
+        
         Route::get('archivage', 'ArchivageController@index')->name('archivage.index');
-        Route::get('archivage/{user}/restauration', 'ArchivageController@restaurer')->name('archivage.restaurer');
+        Route::get('archivage/{user}/restauravecdonnees', 'ArchivageController@conservcpte')->name('archivage.conservcpte');
+        Route::get('archivage/{user}/restaursansdonnees', 'ArchivageController@effacecpte')->name('archivage.effacecpte');
         Route::get('archivage/{user}/impression', 'ArchivageController@imprimer')->name('archivage.imprimer');
         Route::get('archivage/{user}/archivage', 'ArchivageController@archiver')->name('archivage.archiver');
+        Route::get('archivage/{user}/suppr', 'ArchivageController@supprimer')->name('archivage.supprimer');
         
         
         Route::resource('sous-objectifs', SousObjectifController::class);

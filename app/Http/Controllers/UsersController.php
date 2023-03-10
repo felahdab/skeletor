@@ -43,7 +43,7 @@ class UsersController extends Controller
     {
         return view('users.create', [
             'roles' => Role::latest()->get(),
-            'grades' => Grade::orderBy('ordre_classmt', 'desc')->get(),
+            'grades' => Grade::orderBy('ordre_classmt', 'asc')->get(),
             'specialites' => Specialite::orderBy('specialite_libcourt', 'asc')->get(),
             'diplomes' => Diplome::latest()->get(),
             'secteurs' => Secteur::orderBy('secteur_libcourt', 'asc')->get(),
@@ -138,7 +138,7 @@ class UsersController extends Controller
             'user' => $user,
             'userRole' => $user->roles->pluck('name')->toArray(),
             'roles' => Role::latest()->get(),
-            'grades' => Grade::orderBy('ordre_classmt', 'desc')->get(),
+            'grades' => Grade::orderBy('ordre_classmt', 'asc')->get(),
             'specialites' => Specialite::orderBy('specialite_libcourt', 'asc')->get(),
             'diplomes' => Diplome::latest()->get(),
             'secteurs' => Secteur::orderBy('secteur_libcourt', 'asc')->get(),
@@ -257,6 +257,11 @@ class UsersController extends Controller
      */
     public function destroy(User $user) 
     {
+        if ($user->date_debarq == null)
+        {
+            return redirect()->route('users.index')
+            ->withError(__('Vous devez renseigner la date de débarquement avant de supprimer un utilisateur.'));
+        }
         $user->delete();
 
         return redirect()->route('users.index')

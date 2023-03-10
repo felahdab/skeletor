@@ -40,13 +40,8 @@ class UsersTable extends DataTableComponent
                 return User::query()->whereIn('users.id', $userlist);
                 break;
             case "archiv" :
-                $today=date('d/m/Y');
-                $userlist =User::withTrashed()->whereNull('users.date_archivage')
-                ->where(function($query)
-                {
-                   $query->whereNotNull('users.deleted_at')
-                         ->OrWhereNotNull('users.date_debarq'); 
-                });
+                $userlist =User::withTrashed()
+                    ->whereNotNull('users.deleted_at');  // qui ont ete supprime depuis la liste des utilisateurs
                 return $userlist;
                 break;
             default :
@@ -183,6 +178,9 @@ class UsersTable extends DataTableComponent
                         ->deSelected(),
                     Column::make('Débarq.', 'date_debarq')
                         ->searchable(),
+                    Column::make("Date d'archivage", 'date_archivage')
+                        ->searchable()
+                        ->deselected(),
                     Column::make('Actions')
                         ->label(
                             fn($row, Column $column) => $this->userActions()->withRow($row)

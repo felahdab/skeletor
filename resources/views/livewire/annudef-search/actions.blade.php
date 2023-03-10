@@ -2,6 +2,10 @@
 @if (array_key_exists('nexistepas', $user))
     <button x-on:click="$wire.createLocalUser('{{ $loop->index }}')" class='btn btn-primary'>Créer la fiche</button>
 @endif
+@if (array_key_exists('archive', $user))
+    <button x-on:click="$wire.conservcpte('{{ $loop->index }}')"  class="btn btn-success">Restaurer <u><strong>AVEC</strong></u> données</button>
+    <button x-on:click="$wire.effacecpte('{{ $loop->index }}')" class="btn btn-info">Restaurer <u><strong>SANS</strong></u> données</button>
+@endif
 @if (array_key_exists('nompasidentique', $user))
     <button x-on:click="$wire.aligneNom('{{ $loop->index }}')" class='btn btn-warning'>Ajuster le nom</button>
 @endif

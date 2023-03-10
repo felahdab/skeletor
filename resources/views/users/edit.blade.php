@@ -28,10 +28,10 @@
                     </div>
                     <div class="col">
                         <div class="mb-3">
-                            <label for="grade" class="form-label">Grade</label>
+                            <label for="grade" class="form-label">Grade *</label>
                             <select class="form-control" 
                                 name="grade_id">
-                                <option value="">Grade *</option>
+                                <option value="">Grade</option>
                                 @foreach($grades as $grade)
                                     <option value="{{ $grade->id }}" {{ $user->grade_id == $grade->id
                                             ? ' selected'
