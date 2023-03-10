@@ -210,10 +210,20 @@ class TransformationManagerService
 
     public function historique_validation_sous_objectifs(Fonction $fonction=null)
     {
-        return array_count_values($this->sous_objectifs_du_parcours_valides($fonction)
-                ->sortBy('pivot_date_validation')
-                ->pluck('pivot.date_validation')
-                ->all());
+        $firstpoint = [];
+        if ($this->user->date_embarq != null)
+            $firstpoint = [$this->user->date_embarq => 0];
+        
+        $otherpoints = array_count_values($this->sous_objectifs_du_parcours_valides($fonction)
+                        ->sortBy('pivot_date_validation')
+                        ->pluck('pivot.date_validation')
+                        ->all()) ; 
+        
+        ksort($otherpoints, SORT_STRING);
+
+        $result = array_merge( $firstpoint,        
+                                $otherpoints);
+        return $result;
     }
     
     public function historique_validation_sous_objectifs_cumulatif(Fonction $fonction=null)
