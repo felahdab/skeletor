@@ -176,7 +176,7 @@
                     </div>
                     <div class="col">
                         <div class="mb-3">
-                            <img src="{{asset('public/' . $user->photo)}}" height="75px">
+                            <img src="{{ $user->getAnnudefPictureUrl() }}" height="75px">
                         </div>
                     </div>                        
                 </div>

@@ -35,7 +35,7 @@
                     <tr class='enTeteFicheSynthese'>
                         <td colspan='2'><h1>{{$user->display_name}}</h1></td>
                         <td></td>
-                        <td rowspan='4 '><img src="{{url(asset('public/' . $user->photo))}}" </td>
+                        <td rowspan='4 '><img src="{{ $user->getAnnudefPictureUrl() }}" </td>
                     </tr>
 
                     <tr class='enTeteFicheSynthese '>

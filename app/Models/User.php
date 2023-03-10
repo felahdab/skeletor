@@ -16,6 +16,7 @@ use Lab404\Impersonate\Models\Impersonate;
 use App\Jobs\CalculateUserTransformationRatios;
 use App\Service\GererTransformationService;
 use App\Service\TransformationManagerService;
+use App\Service\AnnudefAjaxRequestService;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\TransformationHistory;
@@ -196,6 +197,12 @@ class User extends Authenticatable
     public function unite_destination()
     {
         return $this->belongsTo(Unite::class, 'unite_destination_id');
+    }
+
+    public function getAnnudefPictureUrl()
+    {
+        $url = AnnudefAjaxRequestService::searchPictureForEmail($this->email);
+        return $url;
     }
     
     // Cette partie concerne le suivi de la transformation.
