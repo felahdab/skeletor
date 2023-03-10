@@ -1,3 +1,7 @@
+## 1.1.3 (mars 10, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.1.2 –> 1.1.3
+- Corrige un bug introduit par erreur dans UsersTable. Definit un test Browser pour verifier la non regression sur ce point ulterieurement.
+
 ## 1.1.2 (mars 10, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.1.1 –> 1.1.2
 - Retire l'acces aux Dashboard pour le moment.
