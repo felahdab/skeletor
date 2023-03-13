@@ -95,9 +95,9 @@
       @auth
         @impersonating()
             <a href="{{ route('impersonate.leave') }}" class="btn btn-outline-danger me-2">Redevenir soit meme</a>
-	@endImpersonating
-	<span class="badge bg-primary">{{'v' . env('APP_VERSION')}}</span>
-	@yield('helplink')
+	      @endImpersonating
+        <span class="badge bg-primary">{{'v' . env('APP_VERSION')}}</span>&nbsp;
+        @yield('helplink')
         <button class='btn btn-warning' onclick='affichage("bugreport");'>Signaler un problème</button>
         
       
@@ -106,6 +106,7 @@
           {{ auth()->user()->display_name }}
           </button>
           <div class="dropdown-menu" style="position:absolute;left:-90px" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="{{ route('changepasswd.show', auth()->user()) }}">Changer mot de passe</a>
           @if (count(auth()->user()->roles) > 1 )
             <a class="dropdown-item" href="{{ route('currentrole.show') }}">Changer de role</a>
           @endif
@@ -116,7 +117,8 @@
 
       @guest
         <div class="text-end">
-          <a href="{{ route('keycloak.login.redirect') }}" class="btn btn-outline-light me-2">Login</a>
+          <a href="{{ route('login.show') }}" class="btn btn-outline-light me-2">Login local</a>
+          <a href="{{ route('keycloak.login.redirect') }}" class="btn btn-outline-light me-2">Login auto</a>
         </div>
       @endguest
       
