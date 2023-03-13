@@ -3,6 +3,8 @@ namespace App\Service;
 
 use App\Jobs\CalculateUserTransformationRatios;
 
+use Illuminate\Support\Carbon;
+
 use App\Models\TransformationHistory;
 use App\Models\Stage;
 use App\Models\Fonction;
@@ -114,6 +116,9 @@ class GererTransformationService
         $fieldname = $proposition ? 'date_proposition_validation' : 'date_validation';
         $logtype = $proposition ? 'PROPOSE_VALIDATION_SOUS_OBJECTIF' : 'VALIDE_SOUS_OBJECTIF';
 
+        $date_validation = new Carbon($date_validation);
+        $nbjours=$date_validation->diffInDays($user->date_embarq);
+
         $ssobj = $user->sous_objectifs()->find($sous_objectif);
         if ($ssobj != null){
             $workitem = $ssobj->pivot;
@@ -121,12 +126,14 @@ class GererTransformationService
             $workitem->valideur=$valideur;
             $workitem->date_validation=$date_validation;
             $workitem->commentaire=$commentaire;
+            $workitem->nb_jours_pour_validation=$nbjours;
             $workitem->save();
         }
         else{
             $user->sous_objectifs()->attach($sous_objectif, [
                 'valideur'=> $valideur,
                 'commentaire'=> $commentaire,
+                'nb_jours_pour_validation' => $nbjours,
                 $fieldname => $date_validation
             ]);
         }
@@ -222,18 +229,23 @@ class GererTransformationService
             // Dans le cas d'une proposition, on ne restreint pas la demande.
             // Il faut juste que le lache n'ait pas deja ete valide
             // Charge à celui qui accepte la proposition de s'assurer qu'elle est bien justifiée.
-            $userfonc->pivot->commentaire_lache=$commentaire;
-            $userfonc->pivot->valideur_lache=$valideur;
+            $userfonc->pivot->commentaire_lache = $commentaire;
+            $userfonc->pivot->valideur_lache = $valideur;
             $userfonc->pivot->date_proposition_lache = $date_validation;
         }
         elseif (! $proposition && ($userfonc->pivot->date_double != null or !$fonction->fonction_double) )
         {
             // L'utilisateur a cliqué sur un bouton de validation du lache
             // Si la fonction necessite un double, il faut que le double soit valide avant le lache
-            $userfonc->pivot->commentaire_lache=$commentaire;
-            $userfonc->pivot->valideur_lache=$valideur;
+            $userfonc->pivot->commentaire_lache = $commentaire;
+            $userfonc->pivot->valideur_lache = $valideur;
             $userfonc->pivot->date_lache = $date_validation;
             $userfonc->pivot->date_proposition_lache = null;
+            // il manque le calcul du nb de jour avant lacher
+            $date_validation = new Carbon($date_validation);
+            $nbjours=$date_validation->diffInDays($user->date_embarq);
+            $userfonc->pivot->nb_jours_pour_validation = $nbjours;
+    
         }
         $userfonc->pivot->save();
         $event_detail = [
@@ -255,15 +267,17 @@ class GererTransformationService
         if ($userfonc == null)
             return;
         if ($proposition && $userfonc->pivot->date_lache == null){
-            $userfonc->pivot->commentaire_lache=null;
-            $userfonc->pivot->valideur_lache=null;
+            $userfonc->pivot->commentaire_lache = null;
+            $userfonc->pivot->valideur_lache = null;
             $userfonc->pivot->date_proposition_lache = null;
         }
         elseif (! $proposition){
-            $userfonc->pivot->commentaire_lache=null;
-            $userfonc->pivot->valideur_lache=null;
+            $userfonc->pivot->commentaire_lache = null;
+            $userfonc->pivot->valideur_lache = null;
             $userfonc->pivot->date_lache = null;
             $userfonc->pivot->date_proposition_lache = null;
+            // il faut aussi remettre à 0 le nb de jours
+            $userfonc->pivot->nb_jours_pour_validation = 0;
         }
         $userfonc->pivot->save();
         $user->logTransformationHistory($logtype, json_encode(["fonction" => $fonction]));

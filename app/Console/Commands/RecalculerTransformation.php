@@ -34,24 +34,23 @@ class RecalculerTransformation extends Command
             if ($user->date_archivage != null)
                 continue;
             $this->info("Cal du nombre de jour pour les validations de sous objectifs pour: " . $user->id);
-            $date_embarq = new Carbon($user->date_embarq);
             foreach($user->sous_objectifs as $sousobj){
                 $workitem = $sousobj->pivot;
-                if ($workitem->date_validation != null) {
-                    $date_validation = new Carbon($workitem->date_validation);
-                    
-                    $nb_jours = $date_validation->diffInDays($date_embarq);
-                    
-                    $workitem->nb_jours_pour_validation=$nb_jours;
-                    $workitem->save();
-                }
-                else {
-                    $workitem->nb_jours_pour_validation=0;
-                    $workitem->save();
-                }
+                // if ($workitem->date_validation != null) {
+                //     $date_embarq = new Carbon($user->date_embarq);
+                //     $date_validation = new Carbon($workitem->date_validation);                   
+                //     $nb_jours = $date_validation->diffInDays($date_embarq);                    
+                //     $workitem->nb_jours_pour_validation=$nb_jours;
+                // }
+                // else {
+                //     $workitem->nb_jours_pour_validation=0;
+                // }
+                $date_embarq = new Carbon($user->date_embarq);
+                $date_validation = new Carbon($workitem->date_validation);                   
+                $workitem->nb_jours_pour_validation=$date_validation->diffInDays($date_embarq);
+                $workitem->save();
             }
         }
-        
         foreach (User::withTrashed()->get() as $user) {
             if ($user->date_archivage != null)
                 continue;
