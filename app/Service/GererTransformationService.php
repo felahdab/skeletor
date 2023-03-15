@@ -117,7 +117,7 @@ class GererTransformationService
         $logtype = $proposition ? 'PROPOSE_VALIDATION_SOUS_OBJECTIF' : 'VALIDE_SOUS_OBJECTIF';
 
         $date_validation = new Carbon($date_validation);
-        $nbjours=$date_validation->diffInDays($user->date_embarq);
+        $nbjours=$date_embarq->diffInDays($user->date_validation, false);
         if ($nbjours<0) $nbjours=0;
 
         $ssobj = $user->sous_objectifs()->find($sous_objectif);
