@@ -118,6 +118,7 @@ class GererTransformationService
 
         $date_validation = new Carbon($date_validation);
         $nbjours=$date_validation->diffInDays($user->date_embarq);
+        if ($nbjours<0) $nbjours=0;
 
         $ssobj = $user->sous_objectifs()->find($sous_objectif);
         if ($ssobj != null){
