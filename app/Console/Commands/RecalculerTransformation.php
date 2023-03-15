@@ -7,6 +7,8 @@ use App\Jobs\CalculateUserTransformationRatios;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 
+use Illuminate\Support\Facades\DB;
+
 class RecalculerTransformation extends Command
 {
     /**
@@ -30,50 +32,47 @@ class RecalculerTransformation extends Command
      */
     public function handle()
     {
-        foreach (User::withTrashed()->get() as $user) {
+        ini_set("memory_limit", "512000000");
+        $users=User::withTrashed()->get();
+        
+        foreach ($users as $user) {
+
             if ($user->date_archivage != null)
                 continue;
+                
             $this->info("Cal du nombre de jour pour les validations de sous objectifs pour: " . $user->id);
+
             foreach($user->sous_objectifs as $sousobj){
                 $workitem = $sousobj->pivot;
-                // if ($workitem->date_validation != null) {
-                //     $date_embarq = new Carbon($user->date_embarq);
-                //     $date_validation = new Carbon($workitem->date_validation);                   
-                //     $nb_jours = $date_validation->diffInDays($date_embarq);                    
-                //     $workitem->nb_jours_pour_validation=$nb_jours;
-                // }
-                // else {
-                //     $workitem->nb_jours_pour_validation=0;
-                // }
-                $date_embarq = new Carbon($user->date_embarq);
-                $date_validation = new Carbon($workitem->date_validation);                   
-                $workitem->nb_jours_pour_validation=$date_validation->diffInDays($date_embarq);
+                $workitem->nb_jours_pour_validation=0;
+                if ($workitem->date_validation != null) {
+                    $date_embarq = new Carbon($user->date_embarq);
+                    $date_validation = new Carbon($workitem->date_validation);                   
+                    $nb_jours = $date_validation->diffInDays($date_embarq);
+                    if ($nb_jours > 0) $workitem->nb_jours_pour_validation=$nb_jours;
+                }
                 $workitem->save();
             }
-        }
-        foreach (User::withTrashed()->get() as $user) {
+        }        
+
+        foreach ($users as $user) {
             if ($user->date_archivage != null)
                 continue;
             $this->info("Cal du nombre de jour pour les validations des fonctions pour: " . $user->id);
-            $date_embarq = new Carbon($user->date_embarq);
+            $workitem->nb_jours_pour_validation=0;
             foreach($user->fonctions as $fonction){
                 $workitem = $fonction->pivot;
                 if ($workitem->date_lache != null){
                     $date_lache   = new Carbon($workitem->date_lache );
-                    
-                    $nb_jours = $date_lache->diffInDays($date_embarq);
-                    
+                    $date_embarq = new Carbon($user->date_embarq);                    
+                    $nb_jours = $date_lache->diffInDays($date_embarq);                    
                     $workitem->nb_jours_pour_validation=$nb_jours;
-                    $workitem->save();
                 }
-                else {
-                    $workitem->nb_jours_pour_validation=0;
-                    $workitem->save();
-                }
+                $workitem->save();
             }
         }
         
-        foreach (User::withTrashed()->get() as $user) {
+        foreach ($users as $user) {
             if ($user->date_archivage != null)
                 continue;
             $this->info("Dispatching: " . $user->id);
