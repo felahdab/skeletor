@@ -1,10 +1,11 @@
 @php
      $nb_ssobj_attente = $marin->sous_objectifs()->whereNotNull('date_proposition_validation')->count();
-     //$nb_lache_attente = 
+     $nb_lache_attente = $marin->fonctions()->whereNotNull('date_proposition_lache')->count();
+     $nb_double_attente = $marin->fonctions()->whereNotNull('date_proposition_double')->count();
+     $nb_attente = $nb_lache_attente + $nb_ssobj_attente + $nb_double_attente;
 @endphp
-@if($nb_ssobj_attente >0 )
-     <span>&#9993;</span><!--enveloppe-->
-     <span><img src='{{ asset("assets/images/enveloppe.png") }}' alt="enveloppe" ></span>
+@if($nb_attente >0 )
+     <span><img src='{{ asset("public/images/enveloppe.png") }}' alt="enveloppe" style='width: 30px;'></span>
 @else
-     <span></span><!-- -->
+     &nbsp;
 @endif
