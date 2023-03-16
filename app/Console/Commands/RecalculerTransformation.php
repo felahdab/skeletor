@@ -66,7 +66,7 @@ class RecalculerTransformation extends Command
                     $date_lache   = new Carbon($workitem->date_lache );
                     $date_embarq = new Carbon($user->date_embarq);                    
                     $nb_jours = $date_embarq->diffInDays($date_lache, false);                    
-                    $workitem->nb_jours_pour_validation=$nb_jours;
+                    if ($nb_jours > 0) $workitem->nb_jours_pour_validation=$nb_jours;
                 }
                 $workitem->save();
             }

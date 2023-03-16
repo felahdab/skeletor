@@ -242,10 +242,11 @@ class GererTransformationService
             $userfonc->pivot->valideur_lache = $valideur;
             $userfonc->pivot->date_lache = $date_validation;
             $userfonc->pivot->date_proposition_lache = null;
+            $userfonc->pivot->nb_jours_pour_validation =0;
             // il manque le calcul du nb de jour avant lacher
             $date_validation = new Carbon($date_validation);
-            $nbjours=$date_validation->diffInDays($user->date_embarq);
-            $userfonc->pivot->nb_jours_pour_validation = $nbjours;
+            $nbjours=$date_embarq->diffInDays($user->date_validation, false);
+            if ($nb_jours > 0) $userfonc->pivot->nb_jours_pour_validation = $nbjours;
     
         }
         $userfonc->pivot->save();
