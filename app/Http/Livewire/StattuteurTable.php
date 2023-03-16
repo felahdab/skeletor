@@ -128,7 +128,12 @@ class StattuteurTable extends DataTableComponent
                 ->label(
                     fn($row, Column $column) => $row->NbJoursPresence(),
                     ),
-        ];
+            Column::make(' ')
+                ->label(
+                    fn($row, Column $column) => view('tables.stattable.attentevalid', ['marin' => $row])
+                    )
+                ->searchable(),
+            ];
         return array_merge($basecolumns , [
             Column::make('Actions')
                 ->label(
