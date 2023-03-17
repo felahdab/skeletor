@@ -73,9 +73,6 @@ class UsersTable extends DataTableComponent
             case "archiv" :
                 return view('tables.userstable.archivage');
                 break;
-            case "dashboard" :
-                return view('tables.userstable.dashboard');
-                break;
         }
     }
 

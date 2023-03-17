@@ -2,6 +2,7 @@
 namespace App\Service;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
 
 class AnnudefAjaxRequestService
 {
@@ -23,10 +24,17 @@ class AnnudefAjaxRequestService
             'entite'        => '',
         ];
 
-        $response = Http::acceptJson()
+        try{
+            $response = Http::acceptJson()
+            ->timeout(1)
             ->asForm()
             ->post("http://annudef-consultation.intradef.gouv.fr/index.php?c=AJAXpagesjaunesbl&a=Recherche", $request_params );
-
+        }
+        catch (ConnectionException $e)
+        {
+            return null;
+        }
+        
         if ($response->json()["success"])
         {
             if ($response->json()["data"]["total"] == 1)
@@ -43,9 +51,16 @@ class AnnudefAjaxRequestService
 
     public static function searchPictureForUid($uid) 
     {
-        $response = Http::acceptJson()
+        try{
+            $response = Http::acceptJson()
+            ->timeout(1)
             ->asForm()
             ->post("http://annudef-consultation.intradef.gouv.fr/index.php?c=AJAXparcourir&a=RemplirFicheIndividuelle&type=user&uid=" . $uid, null );
+        }
+        catch (ConnectionException $e)
+        {
+            return null;
+        }
 
         // return $response;
         if ($response->json()["success"])
