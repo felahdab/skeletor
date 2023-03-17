@@ -251,7 +251,7 @@ class User extends Authenticatable
         $this->colls_sous_objs_non_orphelins = $resultat;
         return $resultat;
     }
-    
+
     public function sous_objectifs(){  
         return $this->belongsToMany(SousObjectif::class, 'user_sous_objectif')
             ->withTimeStamps()
@@ -497,32 +497,14 @@ class User extends Authenticatable
     public function pourcentage_valides_pour_fonction(Fonction $fonction, bool $fullcalc=false)
     {
         if (! $fullcalc){
-            //je crois que cette partie ne marche pas.
             $workitem = $this->fonctions()->find($fonction); 
             return $workitem->pivot->taux_de_transformation;
         }
         else
-        {
-            
+        {            
             $fcoll= $fonction->coll_sous_objectifs();
             $workcoll = $this->sous_objectifs_non_orphelins()->intersect($fcoll);
             return round(100.0 * $workcoll->sum('ssobj_coeff') / $fcoll->sum('ssobj_coeff'),2);
-            
-            /////////////////////////////////////
-            // $tempcoll = $this->sous_objectifs()->get();
-            
-            // $fcoll= $fonction->coll_sous_objectifs();
-            
-            // $workcoll = collect([]);
-            // foreach ($fcoll as $sous_obj_a_garder)
-            // {
-                // $trouve = $tempcoll->find($sous_obj_a_garder);
-                // if ($trouve != null)
-                    // $workcoll = $workcoll->concat(collect([$trouve]));
-            // }
-            // if ($fcoll->count()==0)
-                // return 0;
-            // return round(100.0 * $workcoll->count() / $fcoll->count(), 2);
         }
     }
     
@@ -536,22 +518,7 @@ class User extends Authenticatable
         
         $nb_stage_valides = 0;
         $nb_stage_valides = $this->stages()->wherePivotNotNull('date_validation')->get()->count();
-        /////////////////////////////////////////////////////////// a revoir 
-        // $sous_objs = $this->coll_sous_objectifs()->unique();
-        // $total_des_coeff = $sous_objs->sum('ssobj_coeff');
-        
-        // $sous_objs_valides = $this->sous_objectifs()
-                            // ->whereNotNull('date_validation')->get();
-        // $workcoll = collect([]);
-            // foreach ($sous_objs as $sous_obj_a_garder)
-            // {
-                // $trouve = $sous_objs_valides->find($sous_obj_a_garder);
-                // if ($trouve != null)
-                    // $workcoll = $workcoll->concat(collect([$trouve]));
-            // }
-        // $coeff_valides = $workcoll->count();
-        ////////////////////////////////
-        
+
         $coll_sous_objs_valides = $this->sous_objectifs_non_orphelins();
         $coeff_valides = $coll_sous_objs_valides->sum('ssobj_coeff');
         $coll_sous_objs = $this->coll_sous_objectifs();

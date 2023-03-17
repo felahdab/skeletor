@@ -5,7 +5,7 @@
      $nb_attente = $nb_lache_attente + $nb_ssobj_attente + $nb_double_attente;
 @endphp
 @if($nb_attente >0 )
-     <span><img src='{{ asset("public/images/enveloppe.png") }}' alt="enveloppe" style='width: 30px;'></span>
+     <span>&#128232;</span>
 @else
      &nbsp;
 @endif

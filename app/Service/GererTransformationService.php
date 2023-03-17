@@ -117,7 +117,7 @@ class GererTransformationService
         $logtype = $proposition ? 'PROPOSE_VALIDATION_SOUS_OBJECTIF' : 'VALIDE_SOUS_OBJECTIF';
 
         $date_validation = new Carbon($date_validation);
-        $date_emb = $user->date_embarq;
+        $date_emb = new Carbon($user->date_embarq);
         $nbjours=$date_emb->diffInDays($date_validation, false);
         if ($nbjours<0) $nbjours=0;
 
@@ -246,8 +246,9 @@ class GererTransformationService
             $userfonc->pivot->nb_jours_pour_validation =0;
             // il manque le calcul du nb de jour avant lacher
             $date_validation = new Carbon($date_validation);
-            $nbjours=$date_embarq->diffInDays($user->date_validation, false);
-            if ($nb_jours > 0) $userfonc->pivot->nb_jours_pour_validation = $nbjours;
+            $date_emb = new Carbon($user->date_embarq);
+            $nbjours=$date_emb->diffInDays($date_validation, false);
+            if ($nbjours > 0) $userfonc->pivot->nb_jours_pour_validation = $nbjours;
     
         }
         $userfonc->pivot->save();

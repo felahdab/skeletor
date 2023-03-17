@@ -162,6 +162,14 @@ class TransformationManagerService
         return $this->sous_objectifs_valides->whereIn('id', $this->sous_objectifs_du_parcours($fonction, $compagnonage, $tache, $objectif)->pluck('id'));
     }
 
+    public function sous_objectifs_du_parcours_proposes(Fonction $fonction = null, 
+                                                                    Compagnonage $compagnonage = null,
+                                                                    Tache $tache = null,
+                                                                    Objectif $objectif = null)  
+    {
+        return $this->sous_objectifs_proposes->whereIn('id', $this->sous_objectifs_du_parcours($fonction, $compagnonage, $tache, $objectif)->pluck('id'));
+    }
+
     public function taux_de_transformation_avec_stages(Fonction $fonction = null)
     {
         $total_des_coeff = $this->sous_objectifs_du_parcours($fonction)->reduce(function($carry, $item){

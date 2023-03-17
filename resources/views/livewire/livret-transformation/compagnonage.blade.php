@@ -2,7 +2,12 @@
     <div class="accordion-item">
         <div class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComp_{{$compagnonage->id}}">
-            <h5>{{$compagnonage->comp_libcourt}}</h5>
+            <h5>
+                @if ($user->getTransformationManager()->sous_objectifs_du_parcours_proposes($fonction, $compagnonage)->count() > 0)
+                &#128232;
+                @endif
+                {{$compagnonage->comp_libcourt}}
+            </h5>
             </button>
         </div>
         <div id="collapseComp_{{$compagnonage->id}}" class="accordion-collapse collapse">
