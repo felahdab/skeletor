@@ -59,9 +59,10 @@ class RecalculerTransformation extends Command
             if ($user->date_archivage != null)
                 continue;
             $this->info("Cal du nombre de jour pour les validations des fonctions pour: " . $user->id);
-            $workitem->nb_jours_pour_validation=0;
+            
             foreach($user->fonctions as $fonction){
                 $workitem = $fonction->pivot;
+                $workitem->nb_jours_pour_validation=0;
                 if ($workitem->date_lache != null){
                     $date_lache   = new Carbon($workitem->date_lache );
                     $date_embarq = new Carbon($user->date_embarq);                    
