@@ -1,3 +1,7 @@
+## 1.1.5a (mars 17, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.1.5 –> 1.1.5a
+- Corrige un bug dans ffast:recaculetransformation
+
 ## 1.1.5 (mars 17, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.1.4 –> 1.1.5
 - Merge branch 'master' into tuleap-62052
