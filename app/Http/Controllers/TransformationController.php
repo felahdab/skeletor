@@ -141,4 +141,9 @@ class TransformationController extends Controller
         }
         return view('transformation.recalcultransfo');
     }
+
+    public function parcoursfichebilan()
+    {
+        return view('transformation.parcoursfichebilan');
+    }
 }
