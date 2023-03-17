@@ -1,3 +1,26 @@
+## 1.1.5 (mars 17, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.1.4 –> 1.1.5
+- Merge branch 'master' into tuleap-62052
+- mise a jour pour afficher dans livret et page stat par service une icone enveloppe si il y a des demandes en attente de validation.
+- Retire une copie de vue inutile. Ajuste le service de recuperation des photos Annudef pour eviter les exceptions en cas de probleme de connexion. Simplifie legerement la datatables des utilisateurs pour le cas de l'utilisation dans un composant composite.
+- mieux mais pas fini
+- pas fini mais sauv pour ce soir
+- prise en compte des lachers anterieurs a la date embarquement
+- correction pour nombre jours negatif
+- prise en compte des ssobj validés avant d'embarquer => nb jour à 0 2eme essai
+- prise en compte des ssobj validés avant d'embarquer => nb jour à 0
+-  ajout d'une augmentation de la memory_limit car le traitement bloquait
+- Retire le composant Blade de la fiche bilan, devenu inutile.
+- Modification du parcours des fiches bilan. Remplacement du composant Blade par un composant Livewire.
+- remise en place du changement de mot de passe local + bouton sur page d'accueil du site
+- calcul du nb de jour validation pour les lachers fonction et sous obj lors de la validation
+- Definit une route vers le point d'entree pour le parcours des fiches bilan.
+- Cree un point d'entre du controlleur de la transformation pour afficher le nouveau composant de parcours des fiches bilan.
+- Cree un composant Livewire pour parcourir les fiches bilan d'un ensemble de marins sélectionnés via une datatable.
+- Modifier la vue fiche bilan pour utiliser le nouveau composant.
+- Cree un composant Blade pour afficher la fiche bilan d'un marin.
+- Ajoute le point date_embarq,0 dans l'historique de validation, des lors que la date_embarq est definie. S'assure que les dates sont bien rangees dans l'ordre chronologique.
+
 ## 1.1.4 (mars 10, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.1.3 –> 1.1.4
 - Creation du service de recuperation des photos depuis l'annudef. Modification des vues users.edit et transformation.fichebilan pour utiliser cette photo plutot que la photo stockee sur le serveur. TODO: retirer les fonctionnalites de gestion des photos.
