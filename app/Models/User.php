@@ -50,7 +50,6 @@ class User extends Authenticatable
         'matricule',
         'date_embarq',
         'date_debarq',
-        'photo',
         'grade_id',
         'specialite_id',
         'diplome_id',
