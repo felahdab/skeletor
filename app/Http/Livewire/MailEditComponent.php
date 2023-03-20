@@ -50,7 +50,7 @@ class MailEditComponent extends Component
     {
         $newMail = new ManualMail($this->corps, $this->sujet);
         SupportMail::to($this->recipients)
-                ->bcc('florian.el-ahdab@intradef.gouv.fr')
+                ->bcc('ffast.notification.tec@intradef.gouv.fr')
                 ->queue($newMail);
     }
     
@@ -60,7 +60,7 @@ class MailEditComponent extends Component
         $recipients = User::role($roles)->get();
         $newMail = new ManualMail($this->corps, $this->sujet);
         SupportMail::to($recipients)
-            ->bcc('florian.el-ahdab@intradef.gouv.fr')
+            ->bcc('ffast.notification.tec@intradef.gouv.fr')
             ->queue($newMail);
     }
     
