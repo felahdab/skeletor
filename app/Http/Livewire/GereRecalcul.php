@@ -19,10 +19,14 @@ class GereRecalcul extends Component
         {
             $nb_jours_batch   = Bus::findBatch($this->nb_jours_batch_id);
             $tx_transfo_batch = Bus::findBatch($this->tx_transfo_batch_id);
+            
             if ($nb_jours_batch != null && $tx_transfo_batch != null)
             {
-                return view('livewire.gere-recalcul', ['nb_jours_batch' => $nb_jours_batch,
+                if (! $nb_jours_batch->finished() ||  ! $tx_transfo_batch->finished())
+                {
+                    return view('livewire.gere-recalcul', ['nb_jours_batch' => $nb_jours_batch,
                                                    'tx_transfo_batch' => $tx_transfo_batch]);
+                }
             }
         }
         $this->inProgress=false;
