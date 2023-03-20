@@ -1,3 +1,7 @@
+## 1.1.5b (mars 20, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.1.5a –> 1.1.5b
+- Bugfix: tient compte du fait que l'unite identifiee peut etre nulle s'il n'y a pas de concordance.
+
 ## 1.1.5a (mars 17, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.1.5 –> 1.1.5a
 - Corrige un bug dans ffast:recaculetransformation
