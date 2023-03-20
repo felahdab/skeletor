@@ -14,7 +14,8 @@
             Calcul de tous les taux de transformation pour tous les marins.
         </div>
         <p class="mt-5 mb-5"><b><u>Attention</u></b> : Ce traitement peut durer quelques minutes.</p>
-        <a href="{{route('transformation.recalcultransfo', ['mode' =>true])}}" class="btn btn-primary " id="lanc_calcul" name="lanc_calcul">Lancer le calcul</a>
+
+        <livewire:gere-recalcul>
 
     </div>
 @endsection

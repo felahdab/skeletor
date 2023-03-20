@@ -1,1 +1,1 @@
-<td style='width:25%; background-color:{{ $color }}'>{{ $text }}</b></td>
+<td style='width:25%; background-color:{{ $color }}'>{{ $finaltext}}</b></td>

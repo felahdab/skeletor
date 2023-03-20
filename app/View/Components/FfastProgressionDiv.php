@@ -40,22 +40,24 @@ class FfastProgressionDiv extends Component
             $color = 'red';
         $pourcentagestr = round($this->pourcentage, 2);
         if ($this->text == "")
-            $this->text = $pourcentagestr . "%";
+            $finaltext = $pourcentagestr . "%";
+        else
+            $finaltext = $this->text . ": " . $pourcentagestr . "%";
         switch ($this->style){
             case "div":
             $result = view('components.ffast-progression-div', ['color' => $color,
                                                     'pourcentagestr' => $pourcentagestr,
-                                                    'text' => $this->text]);
+                                                    'finaltext' => $finaltext]);
             break;
             case "span":
             $result = view('components.ffast-progression-span', ['color' => $color,
                                                     'pourcentagestr' => $pourcentagestr,
-                                                    'text' => $this->text]);
+                                                    'finaltext' => $finaltext]);
             break;
             case "td":
             $result = view('components.ffast-progression-td', ['color' => $color,
                                                     'pourcentagestr' => $pourcentagestr,
-                                                    'text' => $this->text]);
+                                                    'finaltext' => $finaltext]);
             break;
         }
         return $result;
