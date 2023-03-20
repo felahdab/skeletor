@@ -142,7 +142,7 @@ class AnnudefSearch extends Component
                       "nid"      => $usertocreate["nid"],
                       "password" => UsersController::generateRandomString(),
                       "grade_id" => $grade_id,
-                      "unite_id" => $possibleUnite->id]);
+                      "unite_id" => $possibleUnite?->id]);
         $newUser->syncRoles(["user"]);
     }
 
