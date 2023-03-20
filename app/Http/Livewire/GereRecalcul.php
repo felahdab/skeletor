@@ -40,4 +40,26 @@ class GereRecalcul extends Component
         $this->nb_jours_batch_id   = $ids['nb_jours_batch_id'];
         $this->tx_transfo_batch_id = $ids['tx_transfo_batch_id'];
     }
+
+    public function cancelCalcul()
+    {
+        if ($this->inProgress)
+        {
+            $nb_jours_batch   = Bus::findBatch($this->nb_jours_batch_id);
+            $tx_transfo_batch = Bus::findBatch($this->tx_transfo_batch_id);
+            
+            if ($nb_jours_batch != null && $tx_transfo_batch != null)
+            { 
+                if (! $nb_jours_batch->finished() )
+                {
+                    $nb_jours_batch->cancel();
+                }
+                if ( ! $tx_transfo_batch->finished())
+                {
+                    $tx_transfo_batch->cancel();
+                }
+            }
+            $this->inProgress=false;
+        }
+    }
 }
