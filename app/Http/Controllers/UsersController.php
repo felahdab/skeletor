@@ -66,15 +66,6 @@ class UsersController extends Controller
     {        
         $user = $user->create(array_merge($request->validated(), [ "password" =>$this->generateRandomString()]));
         // partie photo //
-        if ($request->file('photo')){
-            $filename = $user->id.'.'.$request->file('photo')->extension(); 
-            $path = $request->file('photo')->storeAs(
-                                                'photos', //repertoire
-                                                $filename , //nom fichier
-                                                'public' // espace de stockage
-                                            );
-            $user->photo=$path;
-        }
         if ($request->has('socle'))
             $user->socle = true;
         else
@@ -215,17 +206,6 @@ class UsersController extends Controller
      */
     public function update(User $user, UpdateUserRequest $request) 
     {
-        // partie photo //
-        if ($request->file('photo')){
-            $filename = $user->id.'.'.$request->file('photo')->extension(); 
-            $path = $request->file('photo')->storeAs(
-                                                'photos', //repertoire
-                                                $filename , //nom fichier
-                                                'public' // espace de stockage
-                                            );
-            $user->photo=$path;
-        }
-        
         if ($request->has('socle'))
             $user->socle = true;
         else
