@@ -135,13 +135,6 @@
                          </div>
                     </div>
                     <div class="col">
-                        <div class="mb-3">
-                            <label for="photo" class="form-label">Photo</label>
-                            <input type="file" 
-                                class="form-control" 
-                                accept='.jpg, .jpeg, .png'
-                                name="photo">
-                        </div>
                     </div>
                 </div>
                 <div class="row">
