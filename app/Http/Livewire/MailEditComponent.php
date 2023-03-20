@@ -51,18 +51,17 @@ class MailEditComponent extends Component
         $newMail = new ManualMail($this->corps, $this->sujet);
         SupportMail::to($this->recipients)
                 ->bcc('florian.el-ahdab@intradef.gouv.fr')
-                ->send($newMail);
+                ->queue($newMail);
     }
     
     public function sendToAllPriviledgedUsers()
     {
-        
         $roles = Role::whereNotIn('name', ['user', 'transfo'])->get();
         $recipients = User::role($roles)->get();
         $newMail = new ManualMail($this->corps, $this->sujet);
         SupportMail::to($recipients)
             ->bcc('florian.el-ahdab@intradef.gouv.fr')
-            ->send($newMail);
+            ->queue($newMail);
     }
     
     public function save()

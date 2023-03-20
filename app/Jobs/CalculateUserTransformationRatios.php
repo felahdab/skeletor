@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Bus\Batchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -14,7 +15,7 @@ use App\Models\Fonction;
 
 class CalculateUserTransformationRatios implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, Batchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $user;
 
@@ -35,6 +36,10 @@ class CalculateUserTransformationRatios implements ShouldQueue
      */
     public function handle()
     {
+        if ($this->batch()->cancelled())
+        {
+            return;
+        }
         
         $user = $this->user;
         $fonctions = $user->fonctions()->get();

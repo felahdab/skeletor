@@ -2,9 +2,15 @@
 
 namespace App\Console\Commands;
 use App\Models\User;
+
 use App\Jobs\CalculateUserTransformationRatios;
+use App\Jobs\CalculateUserNbJoursValidation;
 
 use Illuminate\Console\Command;
+use Illuminate\Bus\Batch;
+use Illuminate\Support\Facades\Bus;
+use Throwable;
+
 use Illuminate\Support\Carbon;
 
 use Illuminate\Support\Facades\DB;
@@ -33,52 +39,56 @@ class RecalculerTransformation extends Command
     public function handle()
     {
         ini_set("memory_limit", "512000000");
+        
         $users=User::withTrashed()->get();
         
-        foreach ($users as $user) {
-
-            if ($user->date_archivage != null)
-                continue;
-                
-            $this->info("Cal du nombre de jour pour les validations de sous objectifs pour: " . $user->id);
-
-            foreach($user->sous_objectifs as $sousobj){
-                $workitem = $sousobj->pivot;
-                $workitem->nb_jours_pour_validation=0;
-                if ($workitem->date_validation != null) {
-                    $date_embarq = new Carbon($user->date_embarq);
-                    $date_validation = new Carbon($workitem->date_validation);                   
-                    $nb_jours = $date_embarq->diffInDays($date_validation, false);
-                    if ($nb_jours > 0) $workitem->nb_jours_pour_validation=$nb_jours;
-                }
-                $workitem->save();
-            }
-        }        
+        $joblist=[];
 
         foreach ($users as $user) {
-            if ($user->date_archivage != null)
-                continue;
-            $this->info("Cal du nombre de jour pour les validations des fonctions pour: " . $user->id);
-            
-            foreach($user->fonctions as $fonction){
-                $workitem = $fonction->pivot;
-                $workitem->nb_jours_pour_validation=0;
-                if ($workitem->date_lache != null){
-                    $date_lache   = new Carbon($workitem->date_lache );
-                    $date_embarq = new Carbon($user->date_embarq);                    
-                    $nb_jours = $date_embarq->diffInDays($date_lache, false);                    
-                    if ($nb_jours > 0) $workitem->nb_jours_pour_validation=$nb_jours;
-                }
-                $workitem->save();
-            }
-        }
+            $this->info("Job d'arriere plan: calcul du nombre de jours pour validation des sous objectifs et des fonctions: " . $user->id);
+            $joblist[]= new CalculateUserNbJoursValidation($user);
+        } 
+
+        $batch_nb_jours=Bus::batch($joblist)
+            ->then(function(Batch $batch)
+            {
+                return;
+            })
+            ->catch(function(Batch $batch, Throwable $e)
+            {
+                return;
+            })
+            ->finally(function(Batch $batch)
+            {
+                return;
+            })
+            ->name("Calcul des durees de validation.")
+            ->dispatch();
+
+        $joblist=[];
         
         foreach ($users as $user) {
             if ($user->date_archivage != null)
                 continue;
-            $this->info("Dispatching: " . $user->id);
-            CalculateUserTransformationRatios::dispatch($user);
+            $this->info("Job d'arriere plan: calcul du taux de transformation: " . $user->id);
+            $joblist[]= new CalculateUserTransformationRatios($user);
         }
+
+        $batch_tx_transfo=Bus::batch($joblist)
+            ->then(function(Batch $batch)
+            {
+                return;
+            })
+            ->catch(function(Batch $batch, Throwable $e)
+            {
+                return;
+            })
+            ->finally(function(Batch $batch)
+            {
+                return;
+            })
+            ->name("Calcul des taux de transformation.")
+            ->dispatch();
         
         return Command::SUCCESS;
     }
