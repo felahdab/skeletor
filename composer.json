@@ -10,6 +10,7 @@
         "barryvdh/laravel-debugbar": "^3.7",
         "binarytorch/larecipe": "^2.5",
         "carlos-meneses/laravel-mpdf": "^2.1",
+        "darkaonline/l5-swagger": "^8.5",
         "doctrine/dbal": "^3.3",
         "guzzlehttp/guzzle": "^7.2",
         "hisorange/browser-detect": "^4.5",
