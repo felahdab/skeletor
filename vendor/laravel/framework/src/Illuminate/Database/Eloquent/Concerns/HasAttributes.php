@@ -114,15 +114,6 @@ trait HasAttributes
     ];
 
     /**
-     * The attributes that should be mutated to dates.
-     *
-     * @deprecated Use the "casts" property
-     *
-     * @var array
-     */
-    protected $dates = [];
-
-    /**
      * The storage format of the model's date columns.
      *
      * @var string
@@ -1387,7 +1378,7 @@ trait HasAttributes
         // that is returned back out to the developers after we convert it here.
         try {
             $date = Date::createFromFormat($format, $value);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException) {
             $date = false;
         }
 
@@ -1449,16 +1440,10 @@ trait HasAttributes
      */
     public function getDates()
     {
-        if (! $this->usesTimestamps()) {
-            return $this->dates;
-        }
-
-        $defaults = [
+        return $this->usesTimestamps() ? [
             $this->getCreatedAtColumn(),
             $this->getUpdatedAtColumn(),
-        ];
-
-        return array_unique(array_merge($this->dates, $defaults));
+        ] : [];
     }
 
     /**
@@ -1607,9 +1592,7 @@ trait HasAttributes
             return false;
         }
 
-        if (function_exists('enum_exists') && enum_exists($castType)) {
-            return true;
-        }
+        return enum_exists($castType);
     }
 
     /**

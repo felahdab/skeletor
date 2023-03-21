@@ -15,8 +15,8 @@
         "guzzlehttp/guzzle": "^7.2",
         "hisorange/browser-detect": "^4.5",
         "lab404/laravel-impersonate": "^1.7",
-        "laravel/framework": "^9.0",
-        "laravel/sanctum": "^2.14",
+        "laravel/framework": "^10.0",
+        "laravel/sanctum": "^3.2",
         "laravel/socialite": "^5.5",
         "laravel/tinker": "^2.7",
         "laravelcollective/html": "^6.3",
@@ -37,7 +37,7 @@
         "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.5.10",
         "san-kumar/laravel-crud": "^1.01",
-        "spatie/laravel-ignition": "^1.0"
+        "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
         "psr-4": {
