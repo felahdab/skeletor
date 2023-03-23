@@ -12,7 +12,7 @@ return [
                 /*
                  * Route for accessing api documentation interface
                 */
-                'api' => 'api/documentation',
+                'api' => env('APP_PREFIX'). '/api/documentation',
             ],
             'paths' => [
                 /*
@@ -50,12 +50,12 @@ return [
             /*
              * Route for accessing parsed swagger annotations.
             */
-            'docs' => 'docs',
+            'docs' => env('APP_PREFIX'). '/api/docs',
 
             /*
              * Route for Oauth2 authentication callback.
             */
-            'oauth2_callback' => 'api/oauth2-callback',
+            'oauth2_callback' => env('APP_PREFIX'). '/api/oauth2-callback',
 
             /*
              * Middleware allows to prevent unexpected access to API documentation
@@ -87,7 +87,8 @@ return [
             /*
              * Edit to set the api's base path
             */
-            'base' => env('L5_SWAGGER_BASE_PATH', null),
+            // 'base' => env('APP_PREFIX', null),
+            'base' => null,
 
             /*
              * Edit to set path where swagger ui assets should be stored
@@ -295,6 +296,8 @@ return [
          */
         'constants' => [
             'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://my-default-host.com'),
+            'L5_SWAGGER_BASE_PATH' => env('APP_URL') . "/" . env('APP_PREFIX'),
+            'L5_SWAGGER_PREFIX' => "/" . env('APP_PREFIX'),
         ],
     ],
 ];

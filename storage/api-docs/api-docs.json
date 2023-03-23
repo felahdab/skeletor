@@ -1,0 +1,24 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "FFAST API",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "https://pprod-ffast.intradef.gouv.fr/florian"
+        }
+    ],
+    "paths": {
+        "/api/user": {
+            "get": {
+                "operationId": "d6bbb7b8b2d110b75acda107a80c945d",
+                "responses": {
+                    "200": {
+                        "description": "Renvoie l'utilisateur pour le compte duquel la requete a ete faite."
+                    }
+                }
+            }
+        }
+    }
+}

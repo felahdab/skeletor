@@ -22,13 +22,21 @@ use App\Models\Unite;
 use App\Models\Fonction;
 use App\Models\TypeFonction;
 
+use OpenApi\Annotations as OA;
+
+/**
+* @OA\Server(url=L5_SWAGGER_BASE_PATH)
+* @OA\Info(title="FFAST API", version= "1.0")
+*/
 class UsersController extends Controller
 {
+    
     /**
-     * Display all users
-     * 
-     * @return \Illuminate\Http\Response
-     */
+     * @OA\Get(
+     *       path= "/api/user",
+    *        @OA\Response(response= 200, description= "Renvoie l'utilisateur pour le compte duquel la requete a ete faite.")
+    * )
+    */
     public function index() 
     {
         return view('users.index');
