@@ -10,14 +10,56 @@
         }
     ],
     "paths": {
-        "/api/user": {
+        "/api/v1/user": {
             "get": {
-                "operationId": "d6bbb7b8b2d110b75acda107a80c945d",
                 "responses": {
                     "200": {
                         "description": "Renvoie l'utilisateur pour le compte duquel la requete a ete faite."
                     }
-                }
+                },
+                "security": [
+                    {
+                        "api token": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/fonctions": {
+            "get": {
+                "operationId": "8343ac52ee5a64666144b1d0033196c6",
+                "responses": {
+                    "200": {
+                        "description": "Renvoie la liste des fonctions."
+                    }
+                },
+                "security": [
+                    {
+                        "api token": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/marins": {
+            "get": {
+                "operationId": "4740be32ec1355023a80d5475c6053af",
+                "responses": {
+                    "200": {
+                        "description": "Renvoie la liste des marins en transformation."
+                    }
+                },
+                "security": [
+                    {
+                        "api token": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "api token": {
+                "type": "http",
+                "scheme": "bearer"
             }
         }
     }
