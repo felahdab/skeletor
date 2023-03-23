@@ -27,11 +27,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
     
     Route::get('/', 'HomeController@index')->name('home.index');
 
-    Route::group(['middleware' => ['guest']], function() {
-        Route::get('/login', 'LoginController@show')->name('login.show');
-        Route::post('/login', 'LoginController@locallogin')->name('login.perform');
-
-    });
+    Route::get('/login', 'LoginController@show')->name('login.show');
+    Route::post('/login', 'LoginController@locallogin')->name('login.perform');
 
     Route::group(['middleware' => ['auth', 'permission']], function() {
         /**

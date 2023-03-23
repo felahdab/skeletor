@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['namespace' => 'App\Api\v1' , 'prefix' => 'v1', 'middleware' => ['auth:sanctum']], function() 
+Route::group(['namespace' => 'App\Api\v1' , 'prefix' => 'v1', 'middleware' => ['forcejson', 'auth:sanctum']], function() 
     {
     Route::get('/user', function (Request $request) 
     {
