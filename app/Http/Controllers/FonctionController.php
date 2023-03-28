@@ -12,6 +12,8 @@ use App\Models\SousObjectif;
 use App\Models\Stage;
 use App\Models\User;
 
+use App\Service\GererTransformationService;
+
 use Illuminate\Http\Request;
 
 class FonctionController extends Controller
@@ -144,7 +146,14 @@ class FonctionController extends Controller
         {
             $stage = $query->first();
             $fonction->stages()->attach($stage);
-        }
+            // association du stage aux users ayant cette fonction
+            $users=$fonction->users()->get();
+            foreach ($users as $user){
+                $transformationService = new GererTransformationService;
+                // dd($query);
+                $transformationService->attachStage($user, $stage);
+            }
+         }
         $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
         return redirect()->route('fonctions.edit', ['fonction'   => $fonction,
                                                     'typefonctions' => $typefonctions]);
