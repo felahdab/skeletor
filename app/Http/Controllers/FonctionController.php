@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\CalculateUserTransformationRatios;
-
 use App\Http\Requests\StoreFonctionRequest;
 use App\Http\Requests\UpdateFonctionRequest;
 use App\Models\Fonction;
