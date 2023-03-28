@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Service\GererTransformationService;
+use App\Service\RecalculerTransformationService;
 
 use App\Http\Requests\StoreStageRequest;
 use App\Http\Requests\UpdateStageRequest;
@@ -128,6 +129,7 @@ class StageController extends Controller
     public function destroy(Stage $stage)
     {
         $stage->delete();
+        RecalculerTransformationService::handle();
         return redirect()->route('stages.index');
     }
     
@@ -165,6 +167,7 @@ class StageController extends Controller
                 $workitem->commentaire .= ' ' . $request["commentaire"];
                 $workitem->save();
             }
+            RecalculerTransformationService::handle();
         }
         return redirect()->route('stages.show', ['stage'=>$stage]);
     }
@@ -180,6 +183,7 @@ class StageController extends Controller
                 $workitem->date_validation = null;
                 $workitem->save();
             }
+            RecalculerTransformationService::handle();
         }
         return redirect()->route('stages.show', ['stage'=>$stage]);
     }

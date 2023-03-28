@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Service\RecalculerTransformationService;
+
 use App\Http\Requests\StoreTacheRequest;
 use App\Http\Requests\UpdateTacheRequest;
 use App\Models\Tache;
@@ -95,6 +97,7 @@ class TacheController extends Controller
         {
             $objectif = $query->first();
             $tach->objectifs()->attach($objectif);
+            RecalculerTransformationService::handle();
         }
         $tache = $tach;
         return redirect()->route('taches.edit', $tache);
@@ -108,6 +111,7 @@ class TacheController extends Controller
         {
             $objectif = $query->first();
             $tach->objectifs()->detach($objectif);
+            RecalculerTransformationService::handle();
         }
         $tache = $tach;
         return redirect()->route('taches.edit', $tache);
@@ -143,6 +147,7 @@ class TacheController extends Controller
     public function destroy(Tache $tach)
     {
         $tach->delete();
+        RecalculerTransformationService::handle();
         return redirect()->route('taches.index')->withSuccess("Tache supprimee");
     }
 }

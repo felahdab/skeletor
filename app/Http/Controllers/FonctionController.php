@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\CalculateUserTransformationRatios;
+
 use App\Http\Requests\StoreFonctionRequest;
 use App\Http\Requests\UpdateFonctionRequest;
 use App\Models\Fonction;
@@ -12,6 +14,7 @@ use App\Models\SousObjectif;
 use App\Models\Stage;
 use App\Models\User;
 
+use App\Service\RecalculerTransformationService;
 use App\Service\GererTransformationService;
 
 use Illuminate\Http\Request;
@@ -111,6 +114,7 @@ class FonctionController extends Controller
         {
             $compagnonage = $query->first();
             $fonction->compagnonages()->attach($compagnonage);
+            RecalculerTransformationService::handle();            
         }
         $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
         return redirect()->route('fonctions.edit', ['fonction'   => $fonction,
@@ -125,6 +129,7 @@ class FonctionController extends Controller
         {
             $compagnonage = $query->first();
             $fonction->compagnonages()->detach($compagnonage);
+            RecalculerTransformationService::handle();            
         }
         return redirect()->route('fonctions.edit', ['fonction'   => $fonction]);
     }
@@ -167,6 +172,13 @@ class FonctionController extends Controller
         {
             $stage = $query->first();
             $fonction->stages()->detach($stage);
+            // suppression du stage pour users ayant cette fonction
+            $users=$fonction->users()->get();
+            foreach ($users as $user){
+                $transformationService = new GererTransformationService;
+                // dd($query);
+                $transformationService->detachStage($user, $stage);
+            }
         }
         $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
         return redirect()->route('fonctions.edit', ['fonction'   => $fonction,
@@ -207,6 +219,7 @@ class FonctionController extends Controller
     public function destroy(Fonction $fonction)
     {
         $fonction->delete();
+        RecalculerTransformationService::handle();           
         return redirect()->route('fonctions.index');
     }
     

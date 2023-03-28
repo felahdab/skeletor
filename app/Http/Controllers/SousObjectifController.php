@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Service\RecalculerTransformationService;
+
 use Illuminate\Http\Request;
 
 use App\Http\Requests\StoreSousObjectifRequest;
@@ -57,6 +59,7 @@ class SousObjectifController extends Controller
         $ssobj->lieu_id = 3; // par défaut...
         
         $ssobj->save();
+        RecalculerTransformationService::handle();
         return redirect()->route('objectifs.edit', $request['objectif_id']);
     }
 
@@ -100,6 +103,7 @@ class SousObjectifController extends Controller
         {
             $current_ssobj = SousObjectif::where('id', $ssobj['id']);
             $current_ssobj->update($ssobj);
+            RecalculerTransformationService::handle();
         }
         return redirect()->route('objectifs.edit', $request['objectif_id']);
     }
@@ -114,6 +118,7 @@ class SousObjectifController extends Controller
     public function destroy(Request $request, SousObjectif $sousObjectif)
     {
         $sousObjectif->delete();
+        RecalculerTransformationService::handle();
         return redirect()->route('objectifs.edit', $request['objectif_id']);
     }
 }

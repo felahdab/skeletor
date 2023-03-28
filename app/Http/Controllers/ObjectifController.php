@@ -115,6 +115,7 @@ class ObjectifController extends Controller
     public function destroy(Objectif $objectif)
     {
         $objectif->delete();
-		return redirect()->route('objectifs.index');
+        RecalculerTransformationService::handle();
+        return redirect()->route('objectifs.index');
     }
 }

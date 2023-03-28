@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Service\RecalculerTransformationService;
+
 use App\Http\Requests\StoreCompagnonageRequest;
 use App\Http\Requests\UpdateCompagnonageRequest;
 use App\Models\Compagnonage;
@@ -96,6 +98,7 @@ class CompagnonageController extends Controller
         {
             $tache = $query->first();
             $compagnonage->taches()->attach($tache);
+            RecalculerTransformationService::handle();
         }
         return redirect()->route('compagnonages.edit', ['compagnonage'   => $compagnonage]);
         // return view('compagnonages.edit', ['compagnonage'   => $compagnonage] );
@@ -109,6 +112,7 @@ class CompagnonageController extends Controller
         {
             $tache = $query->first();
             $compagnonage->taches()->detach($tache);
+            RecalculerTransformationService::handle();
         }
         return redirect()->route('compagnonages.edit', ['compagnonage'   => $compagnonage]);
         // return view('compagnonages.edit', ['compagnonage'   => $compagnonage] );
@@ -144,6 +148,7 @@ class CompagnonageController extends Controller
     public function destroy(Compagnonage $compagnonage)
     {
         $compagnonage->delete();
+        RecalculerTransformationService::handle();
         return redirect()->route('compagnonages.index');
     }
 }
