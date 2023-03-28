@@ -10,6 +10,8 @@ use App\Models\Tache;
 use App\Models\Objectif;
 use App\Models\SousObjectif;
 
+use Illuminate\Support\Str;
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Table;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -99,7 +101,7 @@ class ImportExportParcours extends Controller
                 $sheet = $spreadsheet->getActivesheet();
             else
                 $sheet= $spreadsheet->createSheet();
-            $sheet->setTitle(substr($comp->comp_libcourt, 0, 31));
+            $sheet->setTitle(Str::ascii(substr($comp->comp_libcourt, 0, 31)));
             $this->exportCompagnonageToExcelSheet($comp, $sheet);
         }
         
