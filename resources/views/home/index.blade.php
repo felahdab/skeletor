@@ -41,9 +41,12 @@
             @endforeach
             </div>
     @else
+        <div>&nbsp;</div>
         <div>
-            <img src='{!! asset("assets/images/InsigneEscouade.jpg") !!}' alt="Logo de l'escouade" style="height:450px; display: block; margin-left:auto; margin-right: auto; ">
+            <img src='{!! asset("assets/images/logo_FFAST.png") !!}' alt="Logo" style="height:450px; display: block; margin-left:auto; margin-right: auto; ">
         </div>
+        <div style="height: 50px;">&nbsp;</div>
+        <footer style="display:flex;justify-content:space-between;"><span>&#9786;FFAST&#xAE;</span><span style="font-size:x-small;">Version : {{env('APP_VERSION')}}</span></footer>
     @endif
 
 @endsection

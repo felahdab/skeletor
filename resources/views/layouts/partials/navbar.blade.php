@@ -8,13 +8,13 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon bg-light"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+    <div class="collapse navbar-collapse container-fluid" id="navbarTogglerDemo01">
         <ul class="navbar-nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 mr-auto mt-2 mt-lg-0">
              <a href="{{ route('home.index') }}" class="btn btn-outline-light me-2">Accueil</a>
             @auth
             @can('users.index')
             <div class="dropdown nav-item" >
-              <button dusk="administration-button" class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <button dusk="administration-button" class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               Administration
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -32,7 +32,7 @@
             @endcan
             @can('fonctions.index')
             <div class="dropdown" >
-              <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Parcours
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -48,7 +48,7 @@
             @endcan
             @can('transformation.index')
             <div class="dropdown" >
-              <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Transformation
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
@@ -62,7 +62,7 @@
             @endcan
             @if(auth()->user()->en_transformation)
             <div class="dropdown" >
-              <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Ma transformation
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -75,7 +75,7 @@
             
             @if (auth()->user()->can('statistiques.index') or auth()->user()->can('statistiques.pourtuteurs') or auth()->user()->can('statistiques.pour2ps') or auth()->user()->can('statistiques.pourem'))
             <div class="dropdown" >
-              <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Statistiques
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -97,21 +97,20 @@
         @impersonating()
             <a href="{{ route('impersonate.leave') }}" class="btn btn-outline-danger me-2">Redevenir soit meme</a>
 	      @endImpersonating
-        <span class="badge bg-primary">{{'v' . env('APP_VERSION')}}</span>&nbsp;
-        @yield('helplink')
-        <button class='btn btn-warning' onclick='affichage("bugreport");'>Signaler un problème</button>
+        
         
       
         <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{ auth()->user()->display_name }}
           </button>
-          <div class="dropdown-menu" style="position:absolute;left:-90px" aria-labelledby="dropdownMenuButton">
+          <div class="dropdown-menu" style="position:absolute;right:0; left:auto;" aria-labelledby="dropdownMenuButton">
+            @yield('helplink')
+             <button class='dropdown-item' onclick='affichage("bugreport");'><!--&#9888;-->  Signaler un problème</button> 
             <a class="dropdown-item" href="{{ route('changepasswd.show', auth()->user()) }}">Changer mot de passe</a>
-          @if (count(auth()->user()->roles) > 1 )
-            <a class="dropdown-item" href="{{ route('currentrole.show') }}">Changer de role</a>
-          @endif
             <a class="dropdown-item" href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2">Logout</a>
+            <hr>
+            <span class="dropdown-item">Version : {{env('APP_VERSION')}}</span>
           </div>
         </div>
       @endauth
