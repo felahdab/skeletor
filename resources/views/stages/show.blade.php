@@ -8,6 +8,9 @@
 @section('content')
     <div class="bg-light p-4 rounded">
         <h2>Situation des marins pour le stage : {{$stage->stage_libcourt}}</h2>
+        @if(auth()->user()->can('stages.attribuerstage'))
+            Commentaire : {{$stage->commentaire}}
+        @endif
     </div>
 <div x-data="{ opendivvalid : false ,
 	       date_validation : '{{date('Y-m-d') }}',
@@ -47,7 +50,14 @@
         <input type='hidden' id='valideur'        name='valideur'        x-model="valideur">
         
         <div>
-            <div class='lead'>Liste des marins <b>en attente</b> du stage {{$stage->stage_libcourt}}</div>
+            @php
+                $nbmarinsattente=0;
+                foreach($usersdustage as $user){
+                        if ($user->pivot->date_validation == null) 
+                            $nbmarinsattente++;
+                }
+            @endphp
+            <div class='lead'>Liste des <b>{{$nbmarinsattente}}</b> marins <b>en attente</b> du stage {{$stage->stage_libcourt}}</div>
             <div class='table-responsive'>
                 <table class='table table-striped'>
                     <thead>
@@ -65,6 +75,7 @@
                             <th scope="col">Date mut</th>
                             @if(auth()->user()->can('stages.attribuerstage'))
                                 <th scope="col">&#10069;</th>
+                                <th scope="col">&#128822;</th>
                             @endif
                             <th scope="col">Email</th>
                         </tr>
@@ -93,7 +104,13 @@
                                 @else
                                     <td title="{{$user->pivot->commentaire}}">&#10069;</td>
                                 @endif
+                                @if ($user->user_comment == null or $user->user_comment == ' ')
+                                    <td>&nbsp;</td>
+                                @else
+                                    <td title="{{$user->user_comment}}"> 	&#128822;</td>
+                                @endif
                             @endif
+                            
                             <td>{{$user->email}}</td>
                         </tr>
                         @endif
@@ -136,6 +153,7 @@
                         <td>Date valid</td>
                         @if(auth()->user()->can('stages.attribuerstage'))
                                 <th scope="col">&#10069;</th>
+                                <th scope="col">&#128822;</th>
                         @endif
                     </tr>
                     <tbody>
@@ -159,6 +177,11 @@
                                     <td>&nbsp;</td>
                                 @else
                                     <td title="{{$user->pivot->commentaire}}">&#10069;</td>
+                                @endif
+                                @if ($user->user_comment == null or $user->user_comment == ' ')
+                                    <td>&nbsp;</td>
+                                @else
+                                    <td title="{{$user->user_comment}}">&#128822;</td>
                                 @endif
                             @endif
                         </tr>

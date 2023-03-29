@@ -65,15 +65,10 @@ class StageController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, Stage $stage)
-    {
-        $stages = Stage::orderBy('stage_libcourt')->get();
-        $users = User::orderBy('name')->get();
-        
-        $usersdustage = $stage->users()->get();
-        
+    {    
+        $usersdustage = $stage->users()->orderBy('name')->get();
         return view('stages.show', ['stage'        => $stage, 
-                                    'stages'       => $stages,
-                                    'usersdustage' => $usersdustage] );
+                                    'usersdustage' => $usersdustage]);
     }
 
     /**
