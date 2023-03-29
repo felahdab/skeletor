@@ -1,4 +1,4 @@
-@if (env('APP_ENV') == 'dev')
+@if (env('APP_ENV') != 'dev')
   <nav class="navbar navbar-expand-lg navbar-light sticky-top " style="background-color: rebeccapurple;">
 @else
   <nav class="navbar navbar-expand-lg navbar-light bg-dark sticky-top ">
@@ -108,7 +108,7 @@
             @yield('helplink')
              <button class='dropdown-item' onclick='affichage("bugreport");'><!--&#9888;-->  Signaler un problème</button> 
             <a class="dropdown-item" href="{{ route('changepasswd.show', auth()->user()) }}">Changer mot de passe</a>
-            <a class="dropdown-item" href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2">Logout</a>
+            <a class="dropdown-item" href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2">Déconnexion</a>
             <hr>
             <span class="dropdown-item">Version : {{env('APP_VERSION')}}</span>
           </div>
