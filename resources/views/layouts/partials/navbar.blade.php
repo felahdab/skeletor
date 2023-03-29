@@ -1,4 +1,4 @@
-@if (env('APP_ENV') != 'dev')
+@if (env('APP_ENV') == 'dev')
   <nav class="navbar navbar-expand-lg navbar-light sticky-top " style="background-color: rebeccapurple;">
 @else
   <nav class="navbar navbar-expand-lg navbar-light bg-dark sticky-top ">
