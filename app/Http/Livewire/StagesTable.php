@@ -47,6 +47,7 @@ class StagesTable extends DataTableComponent
         $this->setPrimaryKey('id');
         $this->setFilterLayoutSlideDown();
         $this->setDefaultSort('stage_libcourt', 'asc');
+        $this->setPerPage(50);
     }
 
     public function stageActions()
