@@ -20,6 +20,9 @@ use App\Models\Unite;
 use App\Models\Fonction;
 use App\Models\TypeFonction;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail;
+
 
 class MindefConnectUserController extends Controller
 {
@@ -72,7 +75,10 @@ class MindefConnectUserController extends Controller
         }
         
         $user->delete();
-        
+
+        Mail::to($newUser->email)
+            ->queue(new WelcomeMail($newUser));
+
         return redirect()->route('mindefconnect.index');
     }
 
@@ -175,12 +181,16 @@ class MindefConnectUserController extends Controller
     public function conservcpte(MindefConnectUser $mcuser)
     {
         ArchivRestaurService::restauravecdonnees($mcuser,'mindefconnect');
+        $mcuser->delete();
+
         return redirect()->route('mindefconnect.index')
             ->withSuccess(__('Utilisateur restauré avec succès.'));
     }
     public function effacecpte(MindefConnectUser $mcuser)
     {
         ArchivRestaurService::restaursansdonnees($mcuser,'mindefconnect');
+        $mcuser->delete();
+        
         return redirect()->route('mindefconnect.index')
             ->withSuccess(__('Utilisateur restauré avec succès.'));
     }

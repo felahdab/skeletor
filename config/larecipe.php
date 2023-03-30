@@ -16,7 +16,7 @@ return [
     'docs'        => [
         'route'   => '/' . env('APP_PREFIX') . '/docs',
         'path'    => '/resources/docs',
-        'landing' => 'overview',
+        'landing' => 'generalites',
         'middleware' => ['web'],
     ],
 
