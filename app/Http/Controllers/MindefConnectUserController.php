@@ -20,6 +20,9 @@ use App\Models\Unite;
 use App\Models\Fonction;
 use App\Models\TypeFonction;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail;
+
 
 class MindefConnectUserController extends Controller
 {
@@ -71,8 +74,11 @@ class MindefConnectUserController extends Controller
             $newUser->roles()->attach($roletransfo);
         }
         
-        $user->delete();
-        
+        // $user->delete();
+
+        Mail::to($newUser->email)
+            ->queue(new WelcomeMail($newUser));
+
         return redirect()->route('mindefconnect.index');
     }
 

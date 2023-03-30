@@ -24,6 +24,8 @@ use App\Models\TypeFonction;
 
 use OpenApi\Annotations as OA;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail;
 
 class UsersController extends Controller
 {
@@ -85,6 +87,10 @@ class UsersController extends Controller
             $roletransfo = Role::where("name", "user")->get()->first();
             $user->roles()->attach($roletransfo);
         }
+
+        Mail::to($user->email)
+        ->queue(new WelcomeMail($user));
+
 
         if ($request["buttonid"] == "users.index")
             return redirect()->route("users.index")

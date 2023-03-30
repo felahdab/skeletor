@@ -14,6 +14,9 @@ use App\Models\User;
 use App\Models\Grade;
 use App\Models\Unite;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail;
+
 class AnnudefSearch extends Component
 {
     
@@ -144,6 +147,9 @@ class AnnudefSearch extends Component
                       "grade_id" => $grade_id,
                       "unite_id" => $possibleUnite?->id]);
         $newUser->syncRoles(["user"]);
+
+        Mail::to($newUser->email)
+            ->queue(new WelcomeMail($newUser));
     }
 
     public function conservcpte($index)
