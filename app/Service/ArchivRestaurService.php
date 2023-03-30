@@ -6,35 +6,34 @@ use App\Models\MindefConnectUser;
 use Spatie\Permission\Models\Role;
 
 use App\Service\RandomPasswordGeneratorService;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail;
 
 class ArchivRestaurService
 {
     public static function restauravecdonnees($restauruser, $type)
     {
-        if ($type == 'annudef'){
-            $email= $restauruser['email'];
-        }
-        else{
-            $email=$restauruser->email;
-        }
+        if (is_object($restauruser))
+            $email = $restauruser->email;
+        elseif (is_array($restauruser) && array_key_exists("email", $restauruser))
+            $email = $restauruser['email'];
+
         $user=User::withTrashed()->where ('email', $email)->get()->first();
         $user->date_archivage = null;
         $user->deleted_at = null;
         $user->save();
-        if ($type=='mindefconnect'){
-            MindefConnectUser::find($restauruser->id)->delete();
-        }
         
+        Mail::to($user->email)
+            ->queue(new WelcomeMail($user));
         // Que fait-on avec les stats ? Comment ?            
     }
     public static function restaursansdonnees($restauruser, $type)
     {
-        if ($type == 'annudef'){
-            $email= $restauruser['email'];
-        }
-        else{
-            $email=$restauruser->email;
-        }
+        if (is_object($restauruser))
+            $email = $restauruser->email;
+        elseif (is_array($restauruser) && array_key_exists("email", $restauruser))
+            $email = $restauruser['email'];
+        
         $user=User::withTrashed()->where ('email', $email)->get()->first();
         $olduserdata=collect($user);
         
@@ -57,8 +56,8 @@ class ArchivRestaurService
         $roleuser = Role::where("name", "user")->get()->first();
         $newUser->roles()->attach($roleuser);
 
-        if ($type=='mindefconnect'){
-            MindefConnectUser::find($restauruser->id)->delete();
-        }
+        Mail::to($newUser->email)
+            ->queue(new WelcomeMail($newUser));
+
     }
 }

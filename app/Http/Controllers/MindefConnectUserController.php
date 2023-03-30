@@ -74,7 +74,7 @@ class MindefConnectUserController extends Controller
             $newUser->roles()->attach($roletransfo);
         }
         
-        // $user->delete();
+        $user->delete();
 
         Mail::to($newUser->email)
             ->queue(new WelcomeMail($newUser));
@@ -181,12 +181,16 @@ class MindefConnectUserController extends Controller
     public function conservcpte(MindefConnectUser $mcuser)
     {
         ArchivRestaurService::restauravecdonnees($mcuser,'mindefconnect');
+        $mcuser->delete();
+
         return redirect()->route('mindefconnect.index')
             ->withSuccess(__('Utilisateur restauré avec succès.'));
     }
     public function effacecpte(MindefConnectUser $mcuser)
     {
         ArchivRestaurService::restaursansdonnees($mcuser,'mindefconnect');
+        $mcuser->delete();
+        
         return redirect()->route('mindefconnect.index')
             ->withSuccess(__('Utilisateur restauré avec succès.'));
     }
