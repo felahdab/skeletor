@@ -46,6 +46,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'calebporzio/sushi' => array(
+            'pretty_version' => 'v2.4.4',
+            'version' => '2.4.4.0',
+            'reference' => '8eeafda290e9a09abe6b102c3925c9434d1c87a5',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../calebporzio/sushi',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'carlos-meneses/laravel-mpdf' => array(
             'pretty_version' => '2.1.11',
             'version' => '2.1.11.0',
@@ -1069,8 +1078,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0|3.0',
-                1 => '3.0.0',
+                0 => '3.0.0',
+                1 => '1.0|2.0|3.0',
             ),
         ),
         'psr/simple-cache' => array(

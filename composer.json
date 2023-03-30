@@ -9,6 +9,7 @@
         "asantibanez/livewire-charts": "^2.5",
         "barryvdh/laravel-debugbar": "^3.7",
         "binarytorch/larecipe": "^2.5",
+        "calebporzio/sushi": "^2.4",
         "carlos-meneses/laravel-mpdf": "^2.1",
         "darkaonline/l5-swagger": "^8.5",
         "doctrine/dbal": "^3.3",
