@@ -24,11 +24,31 @@ use App\Models\Stage;
 use App\Models\Fonction;
 use App\Models\UserSousObjectif;
 
+use Glorand\Model\Settings\Traits\HasSettingsTable;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
     use SoftDeletes;
     use Impersonate;
+
+    use HasSettingsTable;
+
+    public array $defaultSettings = [
+        'ffast' => [
+            'notifications' => [
+                'pour_fonctions' => [
+                    'daily'           => false,
+                    'weekly'          => false,
+                    'liste_fonctions' => [] 
+                ],
+                'pour_service' => [
+                    'daily'           => false,
+                    'weekly'          => false
+                ],
+            ]
+        ]
+    ];
 
     /**
      * The database table used by the model.
