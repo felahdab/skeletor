@@ -41,13 +41,14 @@
             @endforeach
             </div>
     @else
-        <div>&nbsp;</div>
-        <div>
-            <img src='{!! asset("assets/images/logo_FFAST.png") !!}' alt="Logo" style="height:500px; display: block; margin-left:auto; margin-right: auto; ">
+        <div style="display: flex; flex-direction:column; justify-content:space-between; min-height:90vh;">
+            <div></div>
+            <div>
+                <img src='{!! asset("assets/images/logo_FFAST_bleu.png") !!}' alt="Logo" style="height:400px; display: block; margin-left:auto; margin-right: auto; ">
+            </div>
+            <footer style="display:flex;justify-content:space-between;"><span>&#9786;FFAST&#xAE;</span><span style="font-size:x-small;">Version : {{env('APP_VERSION')}}</span></footer>
         </div>
-        <div style="height: 50px;">&nbsp;</div>
-        <footer style="display:flex;justify-content:space-between;"><span>&#9786;FFAST&#xAE;</span><span style="font-size:x-small;">Version : {{env('APP_VERSION')}}</span></footer>
-    @endif
+        @endif
 
 @endsection
 

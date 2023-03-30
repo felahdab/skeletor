@@ -75,15 +75,15 @@ Ce principe est également appliqué dans tous les écrans de l'application: si 
   - Statistiques : tableaux récapitulatifs des taux de transformation des marins.
 2. Le nom de l’utilisateur connecté est aussi un menu qui permet d'accéder à :
   - Aide : consulter la documentation en ligne correspondant à la page depuis laquelle il clique sur le lien.
-  - Signaler un problème : envoyer un message (en décrivant le plus précisément possible le problème rencontré) à l'équipe d'administration technique qui s'efforcera de l'aider ou de résoudre le problème.
   - Changer de mot de passe : changer le mot de passe d'accès à l'application en mode local.
   - Déconnexion : quitter l'application.
 
-** Remarque : ** les menus 1 et 2 sont accessibles depuis n’importe quel écran de l’application.
+<u>Remarques</u> : 
+  - les menus 1 et 2 sont accessibles depuis n’importe quel écran de l’application.
+  - le bouton "Signaler un problème" permet d'envoyer un message (en décrivant le plus précisément possible le problème rencontré) à l'équipe d'administration technique qui s'efforcera de l'aider ou de résoudre le problème.
 
 
-> {info} Retrouvez dans le menu "Nom" (2) :
-> - le bouton d'aide qui permet à l'utilisateur de rejoindre la page de documentation en ligne correspondant à la page depuis laquelle il clique sur le lien.
-> - le bouton "Signaler un problème" qui permet à l'utilisateur de faire part de ses remarques ou de ses difficultés à l'équipe d'administration technique qui s'efforcera de l'aider ou de résoudre le problème.
+> {info} Retrouvez dans le menu "Nom" (2) le bouton d'aide qui permet à l'utilisateur de rejoindre la page de documentation en ligne correspondant à la page depuis laquelle il clique sur le lien.
+
 
 

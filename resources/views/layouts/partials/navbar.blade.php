@@ -1,4 +1,10 @@
-@if (env('APP_ENV') == 'dev')
+@section('helplink')
+  <x-documentation-link page="connexion"/>
+@endsection
+
+
+
+@if (env('APP_ENV') != 'dev')
   <nav class="navbar navbar-expand-lg navbar-light sticky-top " style="background-color: rebeccapurple;">
 @else
   <nav class="navbar navbar-expand-lg navbar-light bg-dark sticky-top ">
@@ -98,15 +104,14 @@
             <a href="{{ route('impersonate.leave') }}" class="btn btn-outline-danger me-2">Redevenir soit meme</a>
 	      @endImpersonating
         
+        <button class='btn btn-warning' onclick='affichage("bugreport");'> Signaler un problème</button> 
         
-      
         <div class="dropdown">
           <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{ auth()->user()->display_name }}
           </button>
           <div class="dropdown-menu" style="position:absolute;right:0; left:auto;" aria-labelledby="dropdownMenuButton">
             @yield('helplink')
-             <button class='dropdown-item' onclick='affichage("bugreport");'><!--&#9888;-->  Signaler un problème</button> 
             <a class="dropdown-item" href="{{ route('changepasswd.show', auth()->user()) }}">Changer mot de passe</a>
             <a class="dropdown-item" href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2">Déconnexion</a>
             <hr>
@@ -117,6 +122,7 @@
 
       @guest
         <div class="text-end">
+          <span class="btn btn-outline-light me-2">@yield('helplink')</span>
           <a href="{{ route('login.show') }}" class="btn btn-outline-light me-2">Login local</a>
           <a href="{{ route('keycloak.login.redirect') }}" class="btn btn-outline-light me-2">Login auto</a>
         </div>

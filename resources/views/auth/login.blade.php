@@ -2,9 +2,10 @@
 
 
 @section('content')
-    <div>
-        <img src='{!! asset("assets/images/InsigneEscouade.jpg") !!}' alt="Logo de l'escouade" style="height:450px; display: block; margin-left:auto; margin-right: auto; ">
+    <div style="margin-top:1.5rem;">
+        <img src='{!! asset("assets/images/logo_FFAST_bleu.png") !!}' alt="Logo FFAST" style="height:250px; display: block; margin-left:auto; margin-right: auto; ">
     </div>
+    <div>&nbsp;</div>
     <div class="bg-light p-4 rounded" style="max-width: 400px; margin-left:auto; margin-right: auto;">
     <form method="post" action="{{ route('login.perform') }}">
         
