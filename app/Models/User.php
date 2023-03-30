@@ -42,9 +42,10 @@ class User extends Authenticatable
                     'weekly'          => false,
                     'liste_fonctions' => [] 
                 ],
-                'pour_service' => [
+                'pour_services' => [
                     'daily'           => false,
-                    'weekly'          => false
+                    'weekly'          => false,
+                    'liste_services' => []
                 ],
             ]
         ]
