@@ -1,3 +1,49 @@
+## 1.2.0 (mars 30, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.1.5b –> 1.2.0
+- Desactive l'envoi de mail dans les tests browser du module d'archivage.
+- Merge branch 'master' into tuleap-62052
+- Envoi un mail lorsque le compte d'une utilisateur est reactive.
+- oubli
+- ajout/modif doc pour mot de passe local
+- Modification du test du controlleur User pour eviter l'envoi de mails intempestifs lors des tests.
+- Un mail de bienvenue sera envoye lor de la creation d'un utilisateur en direct, par une recherche Annudef, ou par une demande Mindef Connect validee.
+- Ajustement du lien vers la documentation de connexion.
+- Ajustement de la configuration Larecipe pour que l'utilisateur arrive par defaut sur les generalites.
+- Creation du mail de bienvenue.
+- oubli de rechanger != en == pour test
+- evolution doc : page accueil, nouvelle navbar, parcours fiches bilan, recalcul transfo
+- evolution de la navbar pour uniformisation
+- changement du nombre de lignes a l'affichage car le bouton annuler ne fonctionne pas directement sans F5 sur les autres pages que la premiere dans la table livewire
+- amelioration de l'affichage pour gestion des stages par 2ps (permission attribuer stage)
+- dernieres corrections
+- ajout du recalcul en arriere plan des tx de transfo des modification d'un morceau de parcours
+- gestion des noms d'onglets excel avec des accents
+- modification pour associer tous les users à un nouveau stage lors de l'ajoutd'un stage à une fonction
+- Re installe le driver chrome pour dusk suite a la mise a jour du framework.
+- Change la definition des routes des API pour eviter les conflits avec les routes standard
+- Retire un test inutile.
+- Implemente un middleware pour forcer l'entete accept a application/json. Gere la priorite des middleware pour s'assurer que ce middleware est execute avant celui de l'autorisation. Tout ceci afin que les appels aux api non authentifies recoivent un message d'erreur en json et ne soient pas rediriges vers la page d'accueil de l'instance. Simplifie en outre les routes web pour retirer la redirection vers / lorsqu'un utilisateur authentifie demande la page de login.
+- Cree un espace Api pour recueillir les controleurs. Documente le mecanisme de securite pour toutes les API. Cree la resource User pour faciliter la conversion des User vers le Json.
+- Ajoute une migration pour ajuster la table des tokens.
+- Corrige Livewire pour ajouter le prefixe aux routes. Configure l5-swagger pour adapter la génération des documentations de l'API aux specificites des deploiements FANLAB.
+- Publish l5-swagger config and view
+- Upgraded laravel to v10.
+- composer update
+- Install L5 swagger from DarkaOnLine to document API
+- Add sanctum middleware to api group.
+- Retire la reference au champs photo.
+- Retire le code relatif a l'upload de la photo du controlleur des Utilisateurs.
+- Retire le champs photo des pages de creation et d'edition des utilisateurs.
+- Ajoute la possibilite d'arreter le recalcul des elements de la transformation en cours de route.
+- Desactive le polling lors les jobs ont tous ete traites.
+- Cree la table cache en base de donnees. Modifier la configuration du cache pour utiliser la base. Programme une tache recurrent pour nettoyer la liste des jobs toutes les heures.
+- Ajoute la migration pour creer la table job_batches
+- Merge branch 'master' into tuleap-63825-configurer-le-moteur-d-execution-des-jobs-d-arriere-plan
+- Deplacement des calculs dans le service RecalculerTransformationService. Ajustement des composants Blade ffast-pprogression. Creation composant Livewire GererRecalcul.
+- Changement de l'adresse de bcc des mails envoyes depuis FFAST.
+- Convertit le calcul du nb de jours de validation en job d'arriere plan. Ajuste l'envoi des mails egalement.
+- Switch queue driver to database.
+
 ## 1.1.5b (mars 20, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.1.5a –> 1.1.5b
 - Bugfix: tient compte du fait que l'unite identifiee peut etre nulle s'il n'y a pas de concordance.
