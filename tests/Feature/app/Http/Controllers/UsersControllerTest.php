@@ -6,6 +6,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail;
+
 use App\Models\User;
 
 class UsersControllerTest extends TestCase
@@ -38,6 +41,9 @@ class UsersControllerTest extends TestCase
     public function test_user_creation_when_admin_succeeds()
     {
 	    $this->seed();
+
+        Mail::fake();
+
 	    $user=User::find(1);
 	    $response = $this->actingAs($user)
 		      ->post(route('users.create'), [
@@ -50,6 +56,8 @@ class UsersControllerTest extends TestCase
 
 	    $response->assertStatus(200);
 	    $this->assertDatabaseHas('users', ['name' => 'NOM']);
+
+        Mail::assertQueued(WelcomeMail::class);
 
 	    return 'NOM';
     }
@@ -88,6 +96,8 @@ class UsersControllerTest extends TestCase
     public function test_created_user_has_user_role()
     {
 	    $this->seed();
+        Mail::fake();
+
 	    $user=User::find(1);
 	    $response = $this->actingAs($user)
 		      ->post(route('users.create'), [
