@@ -253,6 +253,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'glorand/laravel-model-settings' => array(
+            'pretty_version' => '6.0.0',
+            'version' => '6.0.0.0',
+            'reference' => 'ec76eb314d01ebfa02fe58a8356ac8093cf52926',
+            'type' => 'laravel-package',
+            'install_path' => __DIR__ . '/../glorand/laravel-model-settings',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'graham-campbell/result-type' => array(
             'pretty_version' => 'v1.1.1',
             'version' => '1.1.1.0',

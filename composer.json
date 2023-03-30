@@ -13,6 +13,7 @@
         "carlos-meneses/laravel-mpdf": "^2.1",
         "darkaonline/l5-swagger": "^8.5",
         "doctrine/dbal": "^3.3",
+        "glorand/laravel-model-settings": "^6.0",
         "guzzlehttp/guzzle": "^7.2",
         "hisorange/browser-detect": "^4.5",
         "lab404/laravel-impersonate": "^1.7",
