@@ -5,6 +5,7 @@ namespace Tests\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
+use Illuminate\Support\Facades\Mail;
 
 use App\Models\User;
 
@@ -49,6 +50,8 @@ class ArchivageTest extends DuskTestCase
 
     public function test_soft_deleted_user_is_restored_with_data()
     {
+        Mail::fake();
+
         $user=User::factory()->create();
         $user->assignRole("admin");
 
@@ -80,6 +83,8 @@ class ArchivageTest extends DuskTestCase
 
     public function test_soft_deleted_user_is_restored_without_data()
     {
+        Mail::fake();
+        
         $user=User::factory()->create();
         $user->assignRole("admin");
 
