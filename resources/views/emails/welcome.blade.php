@@ -23,7 +23,7 @@ La documentation de l'application est disponible à l'adresse suivante:
 Nous vous conseillons de définir un mot de passe local après votre première connexion.
 
 La documentation relative à ce mot de passe local est disponible ici:
-<a href="{{route('larecipe.index')}}">Documentation consacrée aux méthodes d'authentification</a>
+<a href="{{route('larecipe.show', ['version' => env('DOC_VERSION'), 'page' => 'connexion'])}}">Documentation consacrée aux méthodes de connexion</a>
 
 ### Obtenir de l'aide
 Si la documentation ne vous permet pas de trouver les réponses à vos questions, n'hésitez pas à le signaler avec le gros bouton jaune situé en haut de chaque page. 
