@@ -26,21 +26,14 @@
             </div>
             <div id="accordeon_fonctions" class="accordion-collapse collapse">
                 <div  class="accordion-body">
-                <table>
-                    <th>
-                        <td>Fonction</td>
-                    </th>
-                    <td>
                     @foreach($fonctions as $fonction)
-                    <tr>           
+                    <div>           
                         <input type='checkbox' 
                         wire:model="settings.ffast.notifications.pour_fonctions.liste_fonctions.{{ $fonction->id }}"
                             value="{{$fonction->id}}">
                         {{ $fonction->fonction_libcourt }}
-                    </tr>
+                    </div>
                     @endforeach
-                    </td>
-                </table>
                 </div>
             </div>
         </div>
@@ -65,21 +58,14 @@
             </div>
             <div id="accordeon_services" class="accordion-collapse collapse">
                 <div  class="accordion-body">
-                <table>
-                    <th>
-                        <td>Fonction</td>
-                    </th>
-                    <td>
                     @foreach($services as $service)
-                    <tr>           
+                    <div>
                         <input type='checkbox' 
                             wire:model="settings.ffast.notifications.pour_services.liste_services.{{ $service->id }}"
                             value="{{$service->id}}" />
                         {{ $service->service_libcourt }}
-                    </tr>
+                    </div>
                     @endforeach
-                    </td>
-                </table>
                 </div>
             </div>
         </div>
