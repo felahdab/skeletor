@@ -30,7 +30,10 @@ class LivretTransformation extends Component
 
     public function mount()
     {
-        $this->user->getTransformationManager();
+        if ($this->mode == "unique")
+        {
+            $this->user->getTransformationManager();
+        }
     }
     
     public function render()
