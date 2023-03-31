@@ -32,7 +32,7 @@ class User extends Authenticatable
     use SoftDeletes;
     use Impersonate;
 
-    use HasSettingsTable;
+    use HasSettingsTable; # provides the ->settings() methods
 
     public array $defaultSettings = [
         'ffast' => [
@@ -49,7 +49,7 @@ class User extends Authenticatable
                 ],
             ]
         ]
-    ];
+    ]; # for Glorand\Model\Settings\Traits\HasSettingsTable
 
     /**
      * The database table used by the model.

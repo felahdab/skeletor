@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
+
+use App\Http\Livewire\UserPreferencesComponent;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,6 +22,10 @@ Route::get('/auth/redirect', function(){
     return Socialite::driver('keycloak')->stateless()->redirect();
 })->name('keycloak.login.redirect');
 
+
+Route::group(['middleware' => ['auth', 'permission']], function() {
+    Route::get('/mespreferences', UserPreferencesComponent::class)->name('mespreferences');
+});
 
 Route::group(['namespace' => 'App\Http\Controllers'], function()
 {   

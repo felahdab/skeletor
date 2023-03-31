@@ -65,12 +65,14 @@ Vous avez également la possibilité de télécharger directement une version po
 </head>
 <body>
     
-    
     @include('layouts.partials.navbar')
     @include('layouts.partials.bugreport')
     
     <main class="container">
       @include('layouts.partials.messages')
+      @if (isset($slot))
+        {{ $slot }}
+      @endif
       @yield('content')
     </main>
      

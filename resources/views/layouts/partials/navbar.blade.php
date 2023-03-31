@@ -113,6 +113,7 @@
           <div class="dropdown-menu" style="position:absolute;right:0; left:auto;" aria-labelledby="dropdownMenuButton">
             @yield('helplink')
             <a class="dropdown-item" href="{{ route('changepasswd.show', auth()->user()) }}">Changer mot de passe</a>
+            <a class="dropdown-item" href="{{ route('mespreferences') }}">Préférences</a>
             <a class="dropdown-item" href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2">Déconnexion</a>
             <hr>
             <span class="dropdown-item">Version : {{env('APP_VERSION')}}</span>
