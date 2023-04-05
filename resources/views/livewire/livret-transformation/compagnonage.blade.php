@@ -3,9 +3,11 @@
         <div class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComp_{{$compagnonage->id}}">
             <h5>
+            @if ($mode== "unique")
                 @if ($user->getTransformationManager()->sous_objectifs_du_parcours_proposes($fonction, $compagnonage)->count() > 0)
                 &#128232;
                 @endif
+            @endif
                 {{$compagnonage->comp_libcourt}}
             </h5>
             </button>
@@ -24,13 +26,17 @@
                 </tr>
                 @foreach($compagnonage->taches as $tache)
                 <tr class='ligneTache'>
-                    <td rowspan='{{ $user->getTransformationManager()->sous_objectifs_du_parcours(null, null, $tache, null)->count() }}'>
-
-                        @if ($readwrite || ! $user->getTransformationManager()->aValideLaTache($tache) )
-                        <input type='checkbox' 
-                            x-data='{ active: false }'
-                            x-model="selected_taches"
-                            value="{{$tache->id}}"> @endif
+                    @if ($mode=='unique')
+                        <td rowspan='{{ $user->getTransformationManager()->sous_objectifs_du_parcours(null, null, $tache, null)->count() }}'>
+                    @else
+                        <td rowspan='{{ $tache->coll_sous_objectifs()->count() }}'>
+                    @endif
+                            @if ($readwrite || ! $user->getTransformationManager()->aValideLaTache($tache) )
+                            <input type='checkbox' 
+                                x-data='{ active: false }'
+                                x-model="selected_taches"
+                                value="{{$tache->id}}">
+                            @endif
                         {{$tache->tache_liblong }} 
                         @if ($mode=='unique' && $user->getTransformationManager()->aValideLaTache($tache))
                             <button class='btn btn-success' type='button' disabled>VALIDEE</button>
@@ -38,11 +44,12 @@
                     </td>
                     @foreach($tache->objectifs as $objectif)
                     <td rowspan='{{$objectif->sous_objectifs->count()}}'> 
-                        @if ($readwrite || ! $user->getTransformationManager()->aValideLObjectif($objectif) )
-                        <input type='checkbox' 
-                            x-data='{ active: false }'
-                            x-model="selected_objectifs"
-                            value="{{$objectif->id}}">@endif
+                            @if ($readwrite || ! $user->getTransformationManager()->aValideLObjectif($objectif) )
+                            <input type='checkbox' 
+                                x-data='{ active: false }'
+                                x-model="selected_objectifs"
+                                value="{{$objectif->id}}">
+                            @endif
                         {{$objectif->objectif_liblong }}
                         @if ($mode=='unique' && $user->getTransformationManager()->aValideLObjectif($objectif))
                             <button class='btn btn-success' type='button' disabled>
@@ -54,11 +61,14 @@
                             <td>{{$sous_objectif->ssobj_lib}}</td>
                             <td>{{$sous_objectif->ssobj_duree}}</td>
                             <td title=''>
+                                @if ($mode=='unique')
                                     @if ($readwrite || ! $user->getTransformationManager()->aValideLeSousObjectif($sous_objectif) )
                                     <input type='checkbox' 
                                     x-data='{ active: false }'
                                     x-model="selected_sous_objectifs"
-                                    value="{{$sous_objectif->id}}">@endif
+                                    value="{{$sous_objectif->id}}">
+                                    @endif
+                                @endif
                                 @if ($mode=='unique' && $user->getTransformationManager()->aValideLeSousObjectif($sous_objectif))
                                     <button class='btn btn-success' type='button' disabled>
                                     VALIDE {{ $user->getTransformationManager()->dateDeValidationDuSousObjectif($sous_objectif) }}

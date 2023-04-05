@@ -38,13 +38,15 @@
                     <div class="accordion-header bg-primary">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFonction_{{$fonction->id}}">
                             <h3>
-                                @if ($fonction->pivot->date_lache != null)
-                                    &#10004;
-                                @endif
-                                @if ($fonction->pivot->date_proposition_lache != null
-                                    OR $fonction->pivot->date_proposition_double != null
-                                    OR $user->getTransformationManager()->sous_objectifs_du_parcours_proposes($fonction)->count() > 0)
-                                    &#128232;
+                                @if ($mode== "unique")
+                                    @if ($fonction->pivot->date_lache != null)
+                                        &#10004;
+                                    @endif
+                                    @if ($fonction->pivot->date_proposition_lache != null
+                                        OR $fonction->pivot->date_proposition_double != null
+                                        OR $user->getTransformationManager()->sous_objectifs_du_parcours_proposes($fonction)->count() > 0)
+                                        &#128232;
+                                    @endif
                                 @endif
                                 {{ $fonction->fonction_liblong }} 
                             </h3>
