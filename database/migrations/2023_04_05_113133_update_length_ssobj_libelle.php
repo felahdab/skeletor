@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('sous_objectifs', function (Blueprint $table) {
-            $table->string('ssobj_lib', 750)->change();
+            $table->string('ssobj_lib', 1000)->change();
             });
     
     }
