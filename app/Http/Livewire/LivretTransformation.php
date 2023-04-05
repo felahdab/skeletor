@@ -40,7 +40,6 @@ class LivretTransformation extends Component
         {
             $this->fonctions = [ $this->fonction ];
             $this->usersfonction = $this->fonction->users()->orderBy('name')->get();
-            $this->provider = $this->fonction;
         }
     }
     

@@ -35,6 +35,7 @@ $wire.UnValideElementsDuParcours( {{$user->id}} , selected_compagnonnages , sele
     <button type="submit" 
     class="btn btn-primary" 
     name="validation"
+    dusk="livret-multiple-enregistrer"
     x-on:click.prevent='active = true ;;
                         opendivvalid=true'>Enregistrer les validations</button>
     <a href="{{ url()->previous() }}" class="btn btn-light">Retour</a>
