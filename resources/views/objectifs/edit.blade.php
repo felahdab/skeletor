@@ -69,7 +69,7 @@
                     <label class='col-sm-5 col-form-label '>Sous-objectif </label>
                     <input type='hidden' name='sous_objectifs[{{$count}}][id]' id='sous_objectifs[{{$count}}][id]'  value='{{ $ssobj->id }}'>
                     <div class='col-sm-5'>
-                        <textarea maxlength='750' cols='40' rows='6' name='sous_objectifs[{{$count}}][ssobj_lib]' id='sous_objectifs[{{$count}}][ssobj_lib]' placeholder='Libell&eacute;' >{{ $ssobj->ssobj_lib }}</textarea>
+                        <textarea maxlength='1000' cols='40' rows='6' name='sous_objectifs[{{$count}}][ssobj_lib]' id='sous_objectifs[{{$count}}][ssobj_lib]' placeholder='Libell&eacute;' >{{ $ssobj->ssobj_lib }}</textarea>
                     </div>
                 </div>
                 <div class='form-group row' >
