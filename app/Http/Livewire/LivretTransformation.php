@@ -27,12 +27,20 @@ class LivretTransformation extends Component
     public $usersfonction;
 
     protected $listeners=['$refresh'];
+    protected $provider=null;
 
     public function mount()
     {
         if ($this->mode == "unique")
         {
-            $this->user->getTransformationManager();
+            $this->provider = $this->user->getTransformationManager();
+            $this->fonctions = $this->user->getTransformationManager()->parcours->sortBy('typefonction_id');
+        }
+        elseif ($this->mode == "multiple")
+        {
+            $this->fonctions = [ $this->fonction ];
+            $this->usersfonction = $this->fonction->users()->orderBy('name')->get();
+            $this->provider = $this->fonction;
         }
     }
     
