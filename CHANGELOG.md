@@ -1,3 +1,17 @@
+## 1.2.1 (April 06, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.0 –> 1.2.1
+- Ajuste le livret de transformation multiple pour permettre un test dusk elementaire. Implemente un test dusk elementaire sur le livret de transformation multiple.
+- Merge branch 'tuleap-67148' into tuleap-67148-remettre-en-fonction-de-livret-de-transformation-multiple
+- Correction du livret de transformation pour permettre les validations collectives.
+- Pour le mode multiple, il n'y a pas de user passe en parametre.
+- Implemente un composant permettant de regler les preferences utilisateur. Declare la route y conduisant. Rajoute l'entree dans la NAVBAR.
+- Correction des settings par defaut pour FFAST.
+- Attribue des settings au modele User. Definit les premiers settings par default pour l'application FFAST.
+- Migration pour creer la table des settings.
+- composer require glorand/laravel-model-settings
+- Update packages
+- Composer require calebporzio/sushi
+
 ## 1.2.0 (mars 30, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.1.5b –> 1.2.0
 - Desactive l'envoi de mail dans les tests browser du module d'archivage.
