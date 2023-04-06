@@ -1,3 +1,10 @@
+## 1.2.2 (avril 06, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.1 –> 1.2.2
+- Disable user preferences. Allow bump-version execution by owner.
+- Merge branch 'master' into tuleap-66980-implementer-une-solution-des-preferences-utilisateur
+- Ajuste le composant de gestion des preferences utilisateur pour eviter que l'accordeon se referme tout seul quand l'utilisateur change un parametre
+- Ajustement de l'affichage des fonctions.
+
 ## 1.2.1 (April 06, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.0 –> 1.2.1
 - Ajuste le livret de transformation multiple pour permettre un test dusk elementaire. Implemente un test dusk elementaire sur le livret de transformation multiple.
