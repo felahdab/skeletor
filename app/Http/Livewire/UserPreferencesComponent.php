@@ -11,6 +11,9 @@ class UserPreferencesComponent extends Component
 {
     public array $settings=[];
 
+    public $fonctions_collapse=true;
+    public $services_collapse=true;
+
     public function mount()
     {
         $this->settings = auth()->user()->settings()->all();
