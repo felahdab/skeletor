@@ -22,6 +22,8 @@ Entrez votre l’identifiant DR-CTP (en général premier lettre du prénom.nom 
   - pour les **marins** à terre (disposant d'une station Intradef normale), il s’agit du mot de passe de la session windows.
   - pour le **bord**, il s’agit du mot de passe associé au compte DR-CPT.
 
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/connexion/MindefConnect.png' )) }}">
+
 >{info} Lors de la première connexion, FFAST indiquera que la demande d’accès a été enregistrée, et que l’action d’un administrateur est nécessaire pour valider l’ouverture des droits. 
 
 >Un mail confirmant votre autorisation d'accès vous sera envoyé dès que votre compte sera actif.
@@ -39,7 +41,7 @@ Pour pallier le fait que certains marins n'ont pas de session Windows lors de le
 
 Afin de disposer d'identifiants locaux, vous devez initialiser votre mot de passe local en passant par le menu "GD prénom NOM/changer le mot de passe" lors de votre première connexion "automatique". Ce mot de passe doit contenir au moins 8 caractères.
 <p>&nbsp;</p>
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/connexion/login_local.png' )) }}" width=500px>
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/connexion/login_local.png' )) }}" width="500px">
 <p>&nbsp;</p>
 Dans le cas ou le "login auto" n'est pas possible, vous saisissez votre adresse mail intradef complète et le mot de passe choisi (1). Après validation (2), vous pourrez accéder à l'application comme si vous vous étiez connecté de façon automatique.
 
