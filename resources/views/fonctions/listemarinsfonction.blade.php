@@ -13,7 +13,7 @@
             Liste des marins étant {{$fonction->fonction_liblong}}
         </div>
         <div class="mt-3">
-             @livewire('users-table', ['mode' => 'listmarin', 'fonction'=> $fonction ])
+             @livewire('sushi-users-table', ['mode' => 'listmarin', 'fonction'=> $fonction ])
         </div>
 
     </div>
