@@ -103,7 +103,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime'
     ];
     
-    protected $appends = ['en_transformation'];
+    // protected $appends = ['en_transformation'];
     
     private $fonctionscount=null;
 
@@ -563,7 +563,7 @@ class User extends Authenticatable
     {
         // return $this->getTransformationManager()->parcours->count();
         if ($this->fonctionscount == null){
-            $fonctions = $this->fonctions()->get();
+            $fonctions = $this->fonctions;
             $this->fonctionscount = $fonctions->count();
         }
         

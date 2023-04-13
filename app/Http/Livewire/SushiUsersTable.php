@@ -29,36 +29,67 @@ use Barryvdh\Debugbar\Facades\Debugbar;
 
 class SushiUsersTable extends DataTableComponent
 {
-   
+    public $mode='gestion';
+    public $fonction = null;
+
+    public $userids = null;
+    private $userlist = null;
+    public $baseusers=[];
+
+    public array $perPageAccepted = [10, 25, 50, 100];
+
+    public function mount()
+    {
+        $relevant_userids=DB::table('user_fonction')
+                        ->select('user_id')
+                        ->where('fonction_id', $this->fonction->id)
+                        ->get()
+                        ->pluck('user_id')
+                        ->all();
+
+        $this->userlist = User::query()
+                    ->whereIn('id', $relevant_userids)
+                    ->with('secteur.service.groupement')
+                    ->with('grade')
+                    ->with('specialite')
+                    ->with('diplome')
+                    ->with('fonctions')
+                    ->get();
+
+        $fonction=$this->fonction;
+        $this->baseusers = $this->userlist
+            ->map(function($user) { $user->diplomelibcourt=$user->diplome?->diplome_libcourt; return $user;})
+            ->map(function($user) { $user->gradelibcourt=$user->grade?->grade_libcourt; return $user;})
+            ->map(function($user) { $user->secteurlibcourt=$user->secteur?->secteur_libcourt; return $user;})
+            ->map(function($user) { $user->servicelibcourt=$user->secteur?->service->service_libcourt; return $user;})
+            ->map(function($user) { $user->groupementlibcourt=$user->secteur?->service->groupement->groupement_libcourt; return $user;})
+            ->map(function($user) { $user->specialitelibcourt=$user->specialite?->specialite_libcourt; return $user;})
+            ->map(function($user) use ($fonction) { 
+                                    $w=$user->fonctions->where('id', $fonction->id)->first()->pivot; 
+                                    $user->taux_de_transformation_fonction = $w?->taux_de_transformation; 
+                                    $user->nb_jours_pour_validation_fonction = $w?->nb_jours_pour_validation;
+                                    $user->lache_dans_fonction = $w?->date_lache ? true: false; 
+                                    return $user;
+                                }
+                    )
+            
+            ->map(function($user) { unset($user["grade"]); 
+                                    unset($user["secteur"]);
+                                    unset($user["specialite"]);
+                                    unset($user["diplome"]);
+                                    unset($user["fonctions"]);
+                                    return $user;
+                                }
+                )
+            ->map(function($user) { return $user->toArray();})
+            ->all();
+    }
+
     public function builder(): Builder
     {
         switch ($this->mode){
             case "listmarin" :
-                $userlist = User::query()->join('user_fonction','users.id','=','user_id')->Where('fonction_id', $this->fonction->id)->get()->pluck('user_id', 'id');
-                $fonction=$this->fonction;
-                $baseusers = User::query()->whereIn('users.id', $userlist)
-                    ->get()
-                    ->map(function($user) { $user->diplomelibcourt=$user->diplome->diplome_libcourt; return $user;})
-                    ->map(function($user) { $user->gradelibcourt=$user->grade->grade_libcourt; return $user;})
-                    ->map(function($user) { $user->secteurlibcourt=$user->secteur?->secteur_libcourt; return $user;})
-                    ->map(function($user) { $user->servicelibcourt=$user->secteur?->service->service_libcourt; return $user;})
-                    ->map(function($user) { $user->groupementlibcourt=$user->secteur?->service->groupement->groupement_libcourt; return $user;})
-                    ->map(function($user) { $user->specialitelibcourt=$user->specialite?->specialite_libcourt; return $user;})
-                    ->map(function($user) use ($fonction) { $w=$user->fonctions()->find($fonction)->pivot; 
-                                            $user->taux_de_transformation_fonction = $w->taux_de_transformation; 
-                                            $user->nb_jours_pour_validation_fonction = $w->nb_jours_pour_validation;
-                                            $user->lache_dans_fonction = $w->date_lache ? true: false; 
-                                            return $user;})
-                    ->map(function($user) { return $user->toArray();})
-                    ->map(function($user) { unset($user["grade"]); 
-                                            unset($user["secteur"]);
-                                            unset($user["specialite"]);
-                                            unset($user["diplome"]);
-                                            unset($user["fonctions"]);
-                                            return $user;})
-                    ->all();
-                    // ddd($baseusers);
-                SushiUser::setUsers($baseusers);
+                SushiUser::setUsers($this->baseusers);
                 return SushiUser::query();
                 break;
             default :
@@ -66,12 +97,6 @@ class SushiUsersTable extends DataTableComponent
                 break;
         }
     }
-    
-    public $mode='gestion';
-    public $fonction = null;
-    public $userids = null;
-
-    public array $perPageAccepted = [10, 25, 50, 100];
 
     public function configure(): void
     {
@@ -88,7 +113,6 @@ class SushiUsersTable extends DataTableComponent
                 break;
         }
     }
-
 
     public function columns(): array
     {
