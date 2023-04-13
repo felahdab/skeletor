@@ -43,7 +43,7 @@ class SushiUsersTable extends DataTableComponent
                     ->map(function($user) { $user->secteurlibcourt=$user->secteur?->secteur_libcourt; return $user;})
                     ->map(function($user) { $user->servicelibcourt=$user->secteur?->service->service_libcourt; return $user;})
                     ->map(function($user) { $user->groupementlibcourt=$user->secteur?->service->groupement->groupement_libcourt; return $user;})
-                    ->map(function($user) { $user->specialitelibcourt=$user->specialite->specialite_libcourt; return $user;})
+                    ->map(function($user) { $user->specialitelibcourt=$user->specialite?->specialite_libcourt; return $user;})
                     ->map(function($user) use ($fonction) { $w=$user->fonctions()->find($fonction)->pivot; 
                                             $user->taux_de_transformation_fonction = $w->taux_de_transformation; 
                                             $user->nb_jours_pour_validation_fonction = $w->nb_jours_pour_validation;
@@ -142,6 +142,7 @@ class SushiUsersTable extends DataTableComponent
                 ->format(
                     fn($value, $row, Column $column) => view('tables.userstable.socle')->withRow($row)),
         ];
+        
         switch ($this->mode){
             case "listmarin" :
                 return array_merge($basecolumns , [
