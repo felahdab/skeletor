@@ -126,7 +126,7 @@ class GererTransformationService
             $workitem = $ssobj->pivot;
             $workitem->date_proposition_validation=null;
             $workitem->valideur=$valideur;
-            $workitem->date_validation=$date_validation;
+            $workitem->$fieldname=$date_validation;
             $workitem->commentaire=$commentaire;
             $workitem->nb_jours_pour_validation=$nbjours;
             $workitem->save();
