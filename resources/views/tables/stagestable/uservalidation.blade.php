@@ -35,8 +35,9 @@
 @endcan
 
 <a href="{{route('stages.show', $row->id)}}" class="btn btn-primary">Situation des marins pour ce stage</a>
-
-@if ( ! array_key_exists($row->id,  $user->stagesLiesAUneFonction()->pluck('id','id')->toArray() ) )
-<button wire:click.prevent="RetirerStage( {{$user->id}}, {{$row->id}} );"
-        class="btn btn-danger">Retirer ce stage</button>
-@endif
+@can('stages.attribuerstage')
+    @if ( ! array_key_exists($row->id,  $user->stagesLiesAUneFonction()->pluck('id','id')->toArray() ) )
+    <button wire:click.prevent="RetirerStage( {{$user->id}}, {{$row->id}} );"
+            class="btn btn-danger">Retirer ce stage</button>
+    @endif
+@endcan

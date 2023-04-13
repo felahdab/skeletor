@@ -8,7 +8,7 @@
     </div>
     <div wire:loading.remove x-data="{ opendivvalid : false ,
                                         commentaire : '' ,
-                                        valideur : '{{auth()->user()->display_name}}',
+                                        valideur : '{{htmlspecialchars(auth()->user()->display_name)}}',
                                         date_validation : '{{ date('Y-m-d')}}',
                                         selected_compagnonnages : [],
                                         selected_taches : [],
@@ -25,8 +25,9 @@
     
 
         <!-- div avec boutons generaux -->
-        @include('livewire.livret-transformation.boutonsgeneraux')
-
+        @if (count(auth()->user()->roles()->where('name','visiteur')->get())==0)
+            @include('livewire.livret-transformation.boutonsgeneraux')
+        @endif
         <!-- div avec formulaire de validation -->
         @include('livewire.livret-transformation.divvalid')
 
