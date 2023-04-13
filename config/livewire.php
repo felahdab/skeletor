@@ -72,6 +72,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Livewire Route Prefix
+    |--------------------------------------------------------------------------
+    |
+    | Les routes Livewire seront prefixees par ce prefixe.
+    |
+    | Examples: "prefixe/avec/lequel/prefixer/les/routes/livewire"
+    |
+    */
+
+    'route_prefix' => env('APP_PREFIX'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Livewire Endpoint Middleware Group
     |--------------------------------------------------------------------------
     |
