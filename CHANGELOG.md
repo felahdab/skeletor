@@ -1,3 +1,25 @@
+## 1.2.3 (avril 14, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.2 –> 1.2.3
+- Report le calcul des utilisateurs pertinents dans la methode mount de la SushiUserTable pour diminuer le nombre de requete lors des changements de filtre et d'ordre.
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast into tuleap-68233-convertir-les-tableaux-de-bilan-par-fonction-avec-sushi-pour-permettre-les-tris-et-autres-fonctions
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast into tuleap-62052
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast into tuleap-68233-convertir-les-tableaux-de-bilan-par-fonction-avec-sushi-pour-permettre-les-tris-et-autres-fonctions
+- Cree le PrefixedLivewireServiceProvider. Retire livewire/livewire des package autoloades. Inscrit le nouveau ServiceProvider aux providers a charger par Laravel. Rajouter la prefixe de route au fichier de configuration de Livewire.
+- Simplification du SushiUser.
+- Modification pour gerer les cas de marins dont les informations ne sont pas toutes renseignees.
+- 3eme changement de longueur de champ lib sous objectif
+-  modif: 2 demandes de proposition de validation du meme objectif validait l'objectif
+- Change le composant livewire utilise pour afficher les liste de marins par fonction.
+- Cree le SushiUser pour disposer des donnees pour les tableaux de suivi des fonctions.
+- maj livret pour prise en compte du role visiteur et htmlspecialchr pour le nom du valideur
+- Merge branch 'master' into tuleap-62052
+- ajout restriction pour que bouton retirer stage ne s'affiche que quand permission attribuerstage est ok
+- ajout capture ecran mindefconnect dans la doc
+- correction saisie longueur libssobj en 1000
+- correction longueur libssobj en 1000
+- modification de la longueur de 500 à 750 pour le sous objectif
+- ajout bouton retour haut de page sur le livret transfo
+
 ## 1.2.2 (avril 06, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.1 –> 1.2.2
 - Disable user preferences. Allow bump-version execution by owner.
