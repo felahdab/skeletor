@@ -101,7 +101,7 @@
 
       @auth
         @impersonating()
-            <a href="{{ route('impersonate.leave') }}" class="btn btn-outline-danger me-2">Redevenir soit meme</a>
+            <a href="{{ route('impersonate.leave') }}" class="btn btn-outline-danger me-2">Redevenir soi-m&ecirc;me</a>
 	      @endImpersonating
         
         <button class='btn btn-warning' onclick='affichage("bugreport");'> Signaler un problème</button> 
