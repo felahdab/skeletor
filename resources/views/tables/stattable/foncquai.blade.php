@@ -1,11 +1,14 @@
 @php
-   $fonctionAQuai = $marin->fonctionAQuai();
+    $fonctionsAQuai = $marin->fonctionAQuai()->get();
 @endphp
-@if($fonctionAQuai)
-    @php
-        $pourcentage = $fonctionAQuai->pivot->taux_de_transformation;
-        $lache = $fonctionAQuai->pivot->date_lache != null;
-    @endphp
-
-    <x-ffast-fonction-text :text="$fonctionAQuai->fonction_libcourt" :pourcentage="$pourcentage" :lache="$lache"/>
-@endif
+<div>
+    <ul style='list-style-type : none;' >
+        @foreach($fonctionsAQuai as $fonction)
+            @php
+                $pourcentage = $fonction->pivot->taux_de_transformation;
+                $lache = $fonction->pivot->date_lache != null;
+            @endphp
+            <x-ffast-fonction-text :text="$fonction->fonction_libcourt" :pourcentage="$pourcentage" :lache="$lache"/>
+        @endforeach
+    </ul>
+</div>

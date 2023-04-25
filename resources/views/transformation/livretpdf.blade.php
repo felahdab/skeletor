@@ -165,7 +165,11 @@
         @if ($user->fonctions()->where('typefonction_id', $fquaiid)->get()->count() != 0 )
         <tr>
             <td  class='ta-r va-b h-25 fz-18'>Fonction de service &agrave; quai : </td>
-            <td class='ta-l va-b fz-18'>{{ $user->fonctions()->where('typefonction_id', $fquaiid)->get()->first()->fonction_libcourt }}</td>
+            <td class='ta-l va-b fz-18'>
+                @foreach($user->fonctions()->where('typefonction_id', $fquaiid)->get() as $foncquai)
+                    {{ $foncquai->fonction_libcourt }}
+                @endforeach 
+            </td>
         </tr>
         @endif
         @if ($user->fonctions()->where('typefonction_id', $fmerid)->get()->count() != 0 )

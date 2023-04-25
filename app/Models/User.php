@@ -436,7 +436,7 @@ class User extends Authenticatable
     
     public function fonctionAQuai()
     {
-        $fonction = $this->fonctions()->where('typefonction_id', 2)->get()->first();
+        $fonction = $this->fonctions()->where('typefonction_id', 2)->get();
         return $fonction;
     }
     

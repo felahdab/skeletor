@@ -85,7 +85,7 @@ class TransformationManagerService
 
     public function fonctionAQuai()
     {
-        return $this->parcours->where('typefonction_id', 2)->first();
+        return $this->parcours->where('typefonction_id', 2);
     }
     
     public function fonctionAMer()
