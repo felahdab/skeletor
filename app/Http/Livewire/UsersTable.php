@@ -130,6 +130,14 @@ class UsersTable extends DataTableComponent
                     fn($value, $row, Column $column) => view('tables.userstable.socle')->withRow($row)),
         ];
         switch ($this->mode){
+            case "dashboard":
+                return array_merge($basecolumns ,[
+                    Column::make('Rôles')
+                        ->label(
+                            fn($row, Column $column) => view('tables.userstable.roles')->withRow($row)
+                            ),
+                        ]);
+                break;
             case "gestion" :
                 return array_merge($basecolumns ,[
                     Column::make('Rôles')
@@ -277,22 +285,25 @@ class UsersTable extends DataTableComponent
                 }),
         ];
         
-        if ($this->mode =="gestion")
+        switch ($this->mode)
         {
-            $basefilters[]= MultiSelectFilter::make('Roles')
-            ->options(
-                Role::query()
-                ->orderBy('name')
-                ->get()
-                ->keyBy('id')
-                ->map(fn($role) => $role->name)
-                ->toArray()
-            )
-            // ->setFirstOption('Tous') // Pour MultiSelectDropdownFilter
-            ->filter(function(Builder $builder, array $values) {
-                    $roles = Role::whereIn('id',  $values )->get();
-                    $builder->role($roles);
-            });
+            case "gestion":
+            case "dashboard":
+                $basefilters[]= MultiSelectFilter::make('Roles')
+                ->options(
+                    Role::query()
+                    ->orderBy('name')
+                    ->get()
+                    ->keyBy('id')
+                    ->map(fn($role) => $role->name)
+                    ->toArray()
+                )
+                // ->setFirstOption('Tous') // Pour MultiSelectDropdownFilter
+                ->filter(function(Builder $builder, array $values) {
+                        $roles = Role::whereIn('id',  $values )->get();
+                        $builder->role($roles);
+                });
+                break;
         }
 
         return $basefilters;
