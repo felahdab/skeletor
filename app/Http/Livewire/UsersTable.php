@@ -8,6 +8,7 @@ use App\Models\Diplome;
 use App\Models\Specialite;
 use App\Models\Service;
 use App\Models\Groupement;
+use Spatie\Permission\Models\Role;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -17,6 +18,8 @@ use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\TextFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
+use Rappasoft\LaravelLivewireTables\Views\Filters\MultiSelectFilter;
+use Rappasoft\LaravelLivewireTables\Views\Filters\MultiSelectDropdownFilter;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -274,6 +277,24 @@ class UsersTable extends DataTableComponent
                 }),
         ];
         
+        if ($this->mode =="gestion")
+        {
+            $basefilters[]= MultiSelectFilter::make('Roles')
+            ->options(
+                Role::query()
+                ->orderBy('name')
+                ->get()
+                ->keyBy('id')
+                ->map(fn($role) => $role->name)
+                ->toArray()
+            )
+            // ->setFirstOption('Tous') // Pour MultiSelectDropdownFilter
+            ->filter(function(Builder $builder, array $values) {
+                    $roles = Role::whereIn('id',  $values )->get();
+                    $builder->role($roles);
+            });
+        }
+
         return $basefilters;
     }
 
