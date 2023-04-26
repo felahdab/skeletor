@@ -11,7 +11,7 @@
             nom : null,
             prenom: null,
             email: null,
-            nid: null
+            nid: null,
 
             aideannudef  : false ,
             offcanvas_el : null ,
