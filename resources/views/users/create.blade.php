@@ -6,11 +6,53 @@
 
 
 @section('content')
-    <div class="bg-light p-4 rounded">
+    <div class="bg-light p-4 rounded" 
+        x-data='{
+            nom : null,
+            prenom: null,
+            email: null,
+            nid: null,
+
+            aideannudef  : false ,
+            offcanvas_el : null ,
+            offcanvas    : null ,
+            
+            toggle() {
+                this.aideannudef = ! this.aideannudef;
+                this.aideannudef ? this.offcanvas.show() : this.offcanvas.hide() ;
+            },
+        }'
+
+       @preset-this-user="email = $event.detail.email;
+                            nom = $event.detail.nom;
+                            prenom = $event.detail.prenom;
+                            nid = $event.detail.nid;"
+
+        x-init='
+            offcanvas_el = document.getElementById("offcanvasannudef");
+            offcanvas = new bootstrap.Offcanvas(offcanvas_el, {backdrop: false});'>
         <h2>Ajouter un marin</h2>
         <div style='text-align:right;'>* champs obligatoires </div>
-<div x-data='{ allChecked : false }'>
-        <div class="container mt-4" x-data="{ buttonid : '' }">
+        <div class="d-flex flex-row-reverse">
+            <div class="btn btn-primary" x-on:click="toggle()">Aide Annudef</div>
+        </div>
+
+        <div x-data='{ allChecked : false }'>
+            <div class="container mt-4" x-data="{ buttonid : '' }">
+                <div class="offcanvas offcanvas-start bg-light w-30" tabindex="-1" id="offcanvasannudef">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title">Recherche dans Annudef</h5>
+                        <button type="button" 
+                                class="btn-close text-reset" 
+                                x-on:click="toggle()" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <div> Effectuez une recherche dans Annudef ci-dessous </div>
+                        <livewire:annudef-search mode="aide">
+                    </div>
+                </div>
+            </div>
+
             <form method="POST" action="" enctype="multipart/form-data">
                 <input type='hidden' id='buttonid' name='buttonid' x-model="buttonid">
                 @csrf
@@ -22,7 +64,9 @@
                                 type="email" 
                                 class="form-control" 
                                 name="email" 
-                                placeholder="Email" required>
+                                placeholder="Email" 
+                                x-model="email" 
+                                required>
                             @if ($errors->has('email'))
                                 <span class="text-danger text-left">{{ $errors->first('email') }}</span>
                             @endif
@@ -51,8 +95,9 @@
                                 type="text" 
                                 class="form-control" 
                                 name="name" 
-                                placeholder="NOM" required>
-
+                                placeholder="NOM" 
+                                x-model="nom"
+                                required>
                             @if ($errors->has('name'))
                                 <span class="text-danger text-left">{{ $errors->first('name') }}</span>
                             @endif
@@ -81,7 +126,9 @@
                                 type="text" 
                                 class="form-control" 
                                 name="prenom" 
-                                placeholder="Pr&eacute;nom" required>
+                                placeholder="Pr&eacute;nom" 
+                                x-model="prenom"
+                                required>
                         </div>
                     </div>
                     <div class="col">
@@ -131,7 +178,8 @@
                             <input type="text" 
                                 class="form-control" 
                                 name="nid" 
-                                placeholder="NID">
+                                placeholder="NID"
+                                x-model="nid">
                          </div>
                     </div>
                     <div class="col">
@@ -197,7 +245,6 @@
                                 <input type="checkbox" 
                                 name="role[{{ $role->name }}]"
                                 value="{{ $role->name }}"
-                class='role'
                                 x-on:toggleallroles.window="$el.checked = allChecked;">
                             </td>
                             <td>{{ $role->name }}</td>

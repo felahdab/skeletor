@@ -1,5 +1,5 @@
 @php
-    $fonctionsAQuai = $marin->fonctionAQuai()->get();
+    $fonctionsAQuai = $marin->fonctionAQuai();
 @endphp
 <div>
     <ul style='list-style-type : none;' >
