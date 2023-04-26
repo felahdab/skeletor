@@ -39,8 +39,8 @@ class Dashboardarchive extends Component
             $charts[]= [
                 'id'    => 'moyenne_globale',
                 'title' => 'Moyenne globale',
-                'txtransfo'    => $archive->avg("tauxdetransformation"),
-                'duree'    => $archive->avg("duree"),
+                'txtransfo'    => round($archive->avg("tauxdetransformation"), 2),
+                'duree'    => round($archive->avg("duree")),
                 'nbmarins'    => count($archive),
             ];
         }
