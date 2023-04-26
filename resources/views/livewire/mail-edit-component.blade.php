@@ -16,18 +16,18 @@
             </x-markdown>
         </div>
     </div>
-    <div class="mt-2 mb-2">
-        <label>Rechercher un/des utilisateurs</label>
-        <input wire:model='query'></input>
-        @foreach ($recipients as $recipient)
-            <li> {{ $recipient->display_name }} </li>
-        @endforeach
+    <div>
+        {{ count($recipients) }} destinataires sélectionnés.
     </div>
+
      <div class="btn-group" role="groupe">
         <button class="btn btn-primary" x-on:click="$wire.sendToUsers()">Envoyer aux utilisateurs sélectionnés</button>
-        <button class="btn btn-warning" x-on:click="$wire.sendToAllPriviledgedUsers()">Envoyer aux groupes em/tuteurs/admin/2ps</button>
-        <button dusk='input-enregistrer-btn' class="btn btn-primary" x-on:click="$wire.save()">Enregistrer</button>
-        <a dusk='input-retour-btn' href="{{route('mails.index')}}" class="btn btn-default" >Retour</button>
+        
+        <button dusk='input-enregistrer-btn' class="btn btn-secondary" x-on:click="$wire.save()">Enregistrer</button>
+        <a dusk='input-retour-btn' href="{{route('mails.index')}}" class="btn btn-warning" >Retour</a>
+    </div>
+    <div class="mt-4">
+        <livewire:users-table mode="dashboard">
     </div>
 </div>
 

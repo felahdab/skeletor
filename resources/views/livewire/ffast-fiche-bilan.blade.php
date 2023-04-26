@@ -28,15 +28,32 @@
             </tr>
             @if($readyToLoad)
                 @if ($user->getTransformationManager()->fonctionAQuai() != null)
-                <tr class='enTeteFicheSynthese'>
-                    <!-- Fonction de service à quai -->
-                    <td colspan='2' class='text-right'>Fonction de service à quai :</td>
-                    <!------------------------------------------------->
-                    <!-- un user n'a pas forcement de fonction a quai-->
-                    <!------------------------------------------------->
-                    <td id='tdFonctionServiceQuai' class='text-left'>{{$user->getTransformationManager()->fonctionAQuai()->fonction_libcourt}}</td>
-                    <td id='tdFonctionServiceQuaiLache'>{{ $user->getTransformationManager()->fonctionAQuai()->pivot->date_lache ? 'LACHE' : 'NON LACHE'}}</td>
-                </tr>
+                    @foreach($user->getTransformationManager()->fonctionAQuai() as $fonctionAquai)
+                        <tr class='enTeteFicheSynthese'>
+                            <!-- Fonction de service à quai -->
+                            <td colspan='2' class='text-right'>Fonction de service à quai :</td>
+                            <!------------------------------------------------->
+                            <!-- un user n'a pas forcement de fonction a quai-->
+                            <!-- mail il peut aussi en avoir plusieur-->
+                            <!------------------------------------------------->
+                            <td id='tdFonctionServiceQuai' class='text-left'>{{$fonctionAquai->fonction_libcourt}}</td>
+                            <td id='tdFonctionServiceQuaiLache'>{{ $fonctionAquai->pivot->date_lache ? 'LACHE' : 'NON LACHE'}}</td>
+                        </tr>
+                    @endforeach
+                @endif
+                @if ($user->getTransformationManager()->fonctionAMer() != null)
+                    @foreach($user->getTransformationManager()->fonctionAMer() as $fonctionAmer)
+                        <tr class='enTeteFicheSynthese'>
+                            <!-- Fonction de service à quai -->
+                            <td colspan='2' class='text-right'>Fonction de service à la mer :</td>
+                            <!------------------------------------------------->
+                            <!-- un user n'a pas forcement de fonction a quai-->
+                            <!-- mail il peut aussi en avoir plusieur-->
+                            <!------------------------------------------------->
+                            <td id='tdFonctionMer' class='text-left'>{{$fonctionAmer->fonction_libcourt}}</td>
+                            <td id='tdFonctionMerLache'>{{ $fonctionAmer->pivot->date_lache ? 'LACHE' : 'NON LACHE'}}</td>
+                        </tr>
+                    @endforeach
                 @endif
                 <tr>
                     <td colspan='4'>&nbsp;</td>
