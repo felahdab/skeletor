@@ -3,8 +3,6 @@ namespace App\Service;
 
 use App\Jobs\CalculateUserTransformationRatios;
 
-use Illuminate\Support\Arr;
-
 use App\Models\TransformationHistory;
 use App\Models\Stage;
 use App\Models\Fonction;
