@@ -48,7 +48,7 @@
                 <td>{{ $user['email'] }}</td>
                 <td>{{ $user['unites'] }}</td>
                 <td>
-                    @include('livewire.annudef-search.actions', ['user' => $user])
+                    @include('livewire.annudef-search-recherche.actions', ['user' => $user])
                 </td>
             </tr>
             @endforeach
