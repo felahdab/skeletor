@@ -77,6 +77,11 @@ class StatistiqueController extends Controller
         return view('statistiques.dashboard');
     }
     
+    public function dashboardarchive()
+    {
+        return view('statistiques.dashboardarchive');
+    }
+
     public function pour2ps()
     {
         
