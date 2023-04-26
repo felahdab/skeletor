@@ -3,6 +3,8 @@ namespace App\Service;
 
 use App\Jobs\CalculateUserTransformationRatios;
 
+use Illuminate\Support\Arr;
+
 use App\Models\TransformationHistory;
 use App\Models\Stage;
 use App\Models\Fonction;
@@ -342,5 +344,85 @@ class TransformationManagerService
         if (! $this->parcours->pluck('id')->contains($fonction->id))
             return false;
         return $this->parcours->where('id', $fonction->id)->first()->pivot->date_lache != null;
+    }
+
+    public function  etat_parcours()
+    {
+        $parcours_initial=$this->parcours;     
+
+        $parcours_modifie = $parcours_initial->each(function($fonc){
+            // j'ajoute les donnees
+            // libelle court type fonction
+            $fonc->typefonction_lib = $fonc->type_fonction->value('typfonction_libcourt');
+            //taux de transfo global pour la fonction
+            $fonc->tx_transfo_fonc_stage= $this->taux_de_transformation_avec_stages($fonc);
+            //taux de transfo pour la fonction sans stages
+            $fonc->tx_transfo_fonc = $fonc->pivot->taux_de_transformation;
+            //date lacher
+            $fonc->date_lache = $fonc->pivot->date_lache;
+            //date double
+            $fonc->date_double = $fonc->pivot->date_double;
+            //nb_jours_pour_validation
+            $fonc->nb_jours_pour_validation = $fonc->pivot->nb_jours_pour_validation;
+            
+            //je modifie la collection des comp
+            $fonc->compagnonages = $fonc->compagnonages->each(function($comp){
+                // j'ajoute les donnees
+                //taux de transfo comp
+                $comp->tx_transfo_comp= $this->taux_de_transformation(null, $comp, null, null);
+                //j'enleve les donnees non utiles
+                // Arr::except($comp, ['id','created_at','updated_at']);
+                $comp->setHidden(['id','created_at','updated_at', 'pivot']);
+                
+                // dd($comp->toJson());
+                $comp->taches = $comp->taches->each(function($tach){
+                    // j'ajoute les donnees
+                    //taux de transfo tache
+                    $tach->tx_transfo_tach = $this->taux_de_transformation(null, null, $tach, null);
+                    //j'enleve les donnees non utiles
+                    $tach->setHidden(['id','created_at','updated_at', 'pivot']);
+                    $tach->objectifs = $tach->objectifs->each(function($obj){
+                        // j'ajoute les donnees
+                        //taux de transfo objectif
+                        $obj->tx_transfo_obj = $this->taux_de_transformation(null, null, null, $obj);
+                        //j'enleve les donnees non utiles
+                        $obj->setHidden(['id','created_at','updated_at','pivot']);
+                        $obj->sous_objectifs = $obj->sous_objectifs->each(function($ssobj){
+                            // j'ajoute les donnees
+                            //date validation
+                            $ssobj->date_valid_ssobj = $this->dateDeValidationDuSousObjectif($ssobj);
+                            //j'enleve les donnees non utiles
+                            $ssobj->setHidden(['id','created_at','updated_at','ssobj_duree','objectif_id','lieu_id','lieu' ]);
+                        });
+                    });
+                });
+            });
+
+            //je modifie la collection des stages
+            $fonc->stages = $fonc->stages->each(function($stage){
+                // j'ajoute les donnees
+                $stage->date_valid_stage=$this->dateDeValidationDuStage($stage);
+                //j'enleve les donnees non utiles
+                $stage->setHidden(['id','created_at','updated_at','transverse','typelicence_id',
+                                    'stage_duree','stage_lieu','stage_capamax','stage_date_fin_licence',
+                                    'stage_commentaire','pivot' ]);
+            });
+
+            //j'enleve les donnees non utiles
+            $fonc->setHidden(['id','created_at','updated_at','fonction_lache','fonction_double',
+            'typefonction_id','pivot','type_fonction' ]);
+        });
+
+        // stages orphelins
+        $stages_orphelins = $this->stages_orphelins()->each(function($stageorph){
+                // j'ajoute les donnees
+                $stageorph->date_valid_stage=$stageorph->pivot->date_validation;
+                //j'enleve les donnees non utiles
+                $stageorph->setHidden(['id','created_at','updated_at','transverse','typelicence_id',
+                                    'stage_duree','stage_lieu','stage_capamax','stage_date_fin_licence',
+                                    'stage_commentaire','pivot' ]);
+        });
+        $parcours_modifie->push($stages_orphelins);
+        return $parcours_modifie;
     }
 }
