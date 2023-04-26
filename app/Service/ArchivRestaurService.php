@@ -70,12 +70,10 @@ class ArchivRestaurService
     public static function archivageuser(User $user)
     {
         $transfoManager = $user->getTransformationManager();
-       // nb de jours passés au GTR
         $date_embarq = new Carbon($user->date_embarq);
         $date_debarq = new Carbon($user->date_debarq);
         $nb_jour_gtr = $date_debarq->diffInDays($date_embarq);
 
-        //creation du tableau des données du marin
         $userdata=array('grade' => $user->displayGrade(),
                         'specialite' => $user->displaySpecialite(),
                         'brevet' => $user->displayDiplome(),
@@ -85,17 +83,16 @@ class ArchivRestaurService
                         'nb_jour_presence' => $nb_jour_gtr,
                     );
 
-        //creation du tableau du parcours du marin
         $etat_parcours=$transfoManager->etat_parcours()->toJson();
+        $etat_parcours = json_encode(json_decode($etat_parcours), JSON_PRETTY_PRINT);
 
-        //insertion dans archive des données à sauvegarder
         $archive= new Archive;
         $archive->name = $user->name;
         $archive->prenom = $user->prenom;
         $archive->email = $user->email;
         $archive->matricule = $user->matricule;
         $archive->nid = $user->nid;
-        $archive->userdata = json_encode($userdata);
+        $archive->userdata = json_encode($userdata, JSON_PRETTY_PRINT);
         $archive->etat_parcours = $etat_parcours;
         $archive->save();
 
