@@ -30,8 +30,7 @@
 
         x-init='
             offcanvas_el = document.getElementById("offcanvasannudef");
-            offcanvas = new bootstrap.Offcanvas(offcanvas_el, {backdrop: false});
-            offcanvas_el.addEventListener("hide.bs.offcanvas", function() { aideannudef = false });'>
+            offcanvas = new bootstrap.Offcanvas(offcanvas_el, {backdrop: false});'>
         <h2>Ajouter un marin</h2>
         <div style='text-align:right;'>* champs obligatoires </div>
         <div class="d-flex flex-row-reverse">
@@ -43,7 +42,9 @@
                 <div class="offcanvas offcanvas-start bg-light w-30" tabindex="-1" id="offcanvasannudef">
                     <div class="offcanvas-header">
                         <h5 class="offcanvas-title">Recherche dans Annudef</h5>
-                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        <button type="button" 
+                                class="btn-close text-reset" 
+                                x-on:click="toggle()" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
                         <div> Effectuez une recherche dans Annudef ci-dessous </div>
