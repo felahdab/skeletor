@@ -1,6 +1,6 @@
 <div class="btn-group" role="groupe">
     <button @click="$dispatch('preset-this-user', { nom: '{{ $user['nom'] }}', 
-                                                    prenom: '{{ $user['prenom'] }}', 
+                                                    prenom: '{{ $user['prenomusuel'] }}', 
                                                     nid: '{{ $user['nid'] }}',
                                                     email: '{{ $user['email'] }}' });
                     toggle()"
