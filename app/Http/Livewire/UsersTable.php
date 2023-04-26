@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Grade;
 use App\Models\Diplome;
 use App\Models\Specialite;
+use App\Models\Secteur;
 use App\Models\Service;
 use App\Models\Groupement;
 use Spatie\Permission\Models\Role;
@@ -132,11 +133,14 @@ class UsersTable extends DataTableComponent
         switch ($this->mode){
             case "dashboard":
                 return array_merge($basecolumns ,[
+                    Column::make('Taux de transformation', 'taux_de_transformation')
+                            ->view('tables.userstable.tx_transfo')
+                            ->sortable(),
                     Column::make('Rôles')
                         ->label(
                             fn($row, Column $column) => view('tables.userstable.roles')->withRow($row)
                             ),
-                        ]);
+                ]);
                 break;
             case "gestion" :
                 return array_merge($basecolumns ,[
@@ -234,6 +238,16 @@ class UsersTable extends DataTableComponent
                         $specialite = Specialite::where('specialite_libcourt', 'like', '%' . $value . '%')->get()->first();
                         if ($specialite != null)
                             $builder->where('specialite_id', $specialite->id);
+                }),
+            TextFilter::make('Secteur')
+                ->config([
+                    'placeholder' => 'DEM...',
+                    'maxlength'   => 5
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $secteur = Secteur::where('secteur_libcourt', 'like', '%' . $value . '%')->get()->first();
+                        if ($secteur != null)
+                            $builder->where('secteur_id', $secteur->id);
                 }),
             TextFilter::make('Service')
                 ->config([
