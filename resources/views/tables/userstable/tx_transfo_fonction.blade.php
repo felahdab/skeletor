@@ -1,0 +1,1 @@
+<x-ffast-fonction-text :text="$row->taux_de_transformation_fonction" :pourcentage="$row->taux_de_transformation_fonction" :lache="$row->lache_dans_fonction"/>

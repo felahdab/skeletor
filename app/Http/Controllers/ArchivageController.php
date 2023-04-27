@@ -50,7 +50,7 @@ class ArchivageController extends Controller
         $user->specialite_id == null || $user->diplome_id == null || $user->date_debarq == null || 
         $user->unite_destination_id == null  )
         {
-            dd($user->date_debarq);
+            //dd($user->date_debarq);
             return redirect()->route('archivage.index')
             ->withError(__('Ce marin ne peut être archivé car ses données ne sont pas complètes (nid, matricule, date débarquement, grade, spécialité, brevet, unite de destination).'));
         }
