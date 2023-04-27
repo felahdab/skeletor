@@ -12,7 +12,8 @@
             Gérer les stages
             <a href="{{ route('stages.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un stage</a>
         </div>
-        
-        @livewire('stages-table', ['mode' => "gestion"])
+        <div class="mt-4">
+            @livewire('stages-table', ['mode' => "gestion"])
+        </div>
     </div>
 @endsection
