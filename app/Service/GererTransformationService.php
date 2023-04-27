@@ -123,7 +123,7 @@ class GererTransformationService
 
         $ssobj = $user->sous_objectifs()->find($sous_objectif);
         if ($ssobj != null){
-            if($ssobj->pivot->date_validation == null){
+            if ($fieldname == 'date_validation' || $ssobj->pivot->date_validation == null){
                 $workitem = $ssobj->pivot;
                 $workitem->date_proposition_validation=null;
                 $workitem->valideur=$valideur;
