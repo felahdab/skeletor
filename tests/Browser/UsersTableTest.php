@@ -21,7 +21,8 @@ class UsersTableTest extends DuskTestCase
         $user->assignRole("admin");
         
         $this->browse(function ($browser)  use ($user){
-            $browser->loginAs($user)
+            $browser->maximize()
+                  ->loginAs($user)
                   ->visit(route('users.index'))
                   ->assertSee('Marins');
         });
@@ -35,10 +36,11 @@ class UsersTableTest extends DuskTestCase
         $user->assignRole("admin");
         
         $this->browse(function ($browser)  use ($user){
-            $browser->loginAs($user)
+            $browser->maximize()
+                ->loginAs($user)
                   ->visit(route('users.index'))
                   ->assertSee('Marins')
-                  ->keys(".form-control", "ADMIN")
+                  ->keys("div.input-group:nth-child(1) > input:nth-child(1)", "ADMIN")
                   ->pause(1000)
                   ->assertSee("Admin")
                   ->assertDontSee("ZA");
@@ -58,10 +60,11 @@ class UsersTableTest extends DuskTestCase
         $otheruser->save();
 
         $this->browse(function ($browser)  use ($user){
-            $browser->loginAs($user)
+            $browser->maximize()
+                    ->loginAs($user)
                     ->visit(route('users.index'))
                     ->assertSee('Marins')
-                    ->keys(".form-control", "TOTO")
+                    ->keys("div.input-group:nth-child(1) > input:nth-child(1)", "TOTO")
                     ->pause(1000)
                     ->assertSee("toto")
                     ->assertDontSee("ZA")
@@ -85,10 +88,11 @@ class UsersTableTest extends DuskTestCase
         $otheruser->save();
        
         $this->browse(function ($browser)  use ($user){
-            $browser->loginAs($user)
+            $browser->maximize()
+                    ->loginAs($user)
                     ->visit(route('users.index'))
                     ->assertSee('Marins')
-                    ->keys(".form-control", "TOTO")
+                    ->keys("div.input-group:nth-child(1) > input:nth-child(1)", "TOTO")
                     ->pause(1000)
                     ->assertSee("toto")
                     ->click("@delete-btn")

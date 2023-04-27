@@ -16,7 +16,8 @@ class PhpmyadminTest extends DuskTestCase
     public function test_phpmyadin_homepage_displays()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit(env('APP_PREFIX') . '/pma')
+            $browser->maximize()
+                    ->visit(env('APP_PREFIX') . '/pma')
                     ->assertSee('phpMyAdmin');
         });
     }

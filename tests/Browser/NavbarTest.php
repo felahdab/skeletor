@@ -16,7 +16,8 @@ class NavbarTest extends DuskTestCase
         $user->assignRole("admin");
         
         $this->browse(function ($browser) use ($user){
-            $browser->loginAs($user)
+            $browser->maximize()
+                    ->loginAs($user)
                   ->visit(route('home.index'))
                   ->assertSee('Accueil');
         });
@@ -30,7 +31,8 @@ class NavbarTest extends DuskTestCase
         $user->assignRole("admin");
         
         $this->browse(function ($browser)  use ($user){
-            $browser->loginAs($user)
+            $browser->maximize()
+                    ->loginAs($user)
                   ->visit(route('home.index'))
                   ->assertSee('Accueil')
                   ->click("@administration-button")

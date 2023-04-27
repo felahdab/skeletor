@@ -18,7 +18,8 @@ class LocalLoginTest extends DuskTestCase
     public function test_local_login_page()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit(route('login.show'))
+            $browser->maximize()
+                    ->visit(route('login.show'))
                     ->assertSee('Login');
         });
     }
@@ -31,7 +32,8 @@ class LocalLoginTest extends DuskTestCase
         $user->assignRole("admin");
         
         $this->browse(function (Browser $browser) use($user) {
-            $browser->visit(route('login.show'))
+            $browser->maximize()
+                    ->visit(route('login.show'))
                     ->assertSee('Login')
                     ->type('@login-email', $user->email)
                     ->type('@login-password', 'admin123')

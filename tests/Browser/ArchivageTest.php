@@ -18,7 +18,8 @@ class ArchivageTest extends DuskTestCase
         $user->assignRole("admin");
         
         $this->browse(function ($browser)  use ($user){
-            $browser->loginAs($user)
+            $browser->maximize()
+                ->loginAs($user)
                   ->visit(route('archivage.index'))
                   ->assertSee('Marins à archiver');
         });
@@ -39,7 +40,8 @@ class ArchivageTest extends DuskTestCase
         $otheruser->delete();
         
         $this->browse(function ($browser)  use ($user, $otheruser){
-            $browser->loginAs($user)
+            $browser->maximize()
+                ->loginAs($user)
                   ->visit(route('archivage.index'))
                   ->assertSee($otheruser->name);
         });
@@ -63,9 +65,10 @@ class ArchivageTest extends DuskTestCase
         $otheruser->delete();
         
         $this->browse(function ($browser)  use ($user, $otheruser){
-            $browser->loginAs($user)
+            $browser->maximize()
+                ->loginAs($user)
                   ->visit(route('archivage.index'))
-                  ->keys(".form-control", $otheruser->name)
+                  ->keys("div.input-group:nth-child(1) > input:nth-child(1)", $otheruser->name)
                   ->pause(1000)
                   ->assertSee($otheruser->name)
                   ->click('@restaurer-avec-btn')
@@ -96,9 +99,10 @@ class ArchivageTest extends DuskTestCase
         $otheruser->delete();
         
         $this->browse(function ($browser)  use ($user, $otheruser){
-            $browser->loginAs($user)
+            $browser->maximize()
+                ->loginAs($user)
                   ->visit(route('archivage.index'))
-                  ->keys(".form-control", $otheruser->name)
+                  ->keys("div.input-group:nth-child(1) > input:nth-child(1)", $otheruser->name)
                   ->pause(1000)
                   ->assertSee($otheruser->name)
                   ->click('@restaurer-sans-btn')
@@ -122,16 +126,17 @@ class ArchivageTest extends DuskTestCase
 
         $otheruser=User::factory()->create();
         $otheruser->assignRole("user");
-        $otheruser->name="sansarchivage";
+        $otheruser->name="sansarchivage1";
         $otheruser->date_debarq="2022/01/01";
         $otheruser->date_archivage=null;
         $otheruser->save();
         $otheruser->delete();
         
         $this->browse(function ($browser)  use ($user, $otheruser){
-            $browser->loginAs($user)
+            $browser->maximize()
+                ->loginAs($user)
                   ->visit(route('archivage.index'))
-                  ->keys(".form-control", $otheruser->name)
+                  ->keys("div.input-group:nth-child(1) > input:nth-child(1)", $otheruser->name)
                   ->pause(1000)
                   ->assertSee($otheruser->name)
                   ->assertDontSee("Supprimer totalement");
@@ -148,8 +153,10 @@ class ArchivageTest extends DuskTestCase
 
         $otheruser=User::factory()->create();
         $otheruser->assignRole("user");
-        $otheruser->name="sansarchivage";
+        $otheruser->name="sansarchivage2";
         $otheruser->date_debarq="2022/01/01";
+        $otheruser->matricule="1";
+        $otheruser->nid="1";
         $otheruser->date_archivage=null;
         $otheruser->unite_destination_id=2;
         
@@ -157,9 +164,10 @@ class ArchivageTest extends DuskTestCase
         $otheruser->delete();
         
         $this->browse(function ($browser)  use ($user, $otheruser){
-            $browser->loginAs($user)
+            $browser->maximize()
+                ->loginAs($user)
                   ->visit(route('archivage.index'))
-                  ->keys(".form-control", $otheruser->name)
+                  ->keys("div.input-group:nth-child(1) > input:nth-child(1)", $otheruser->name)
                   ->pause(1000)
                   ->assertSee($otheruser->name)
                   ->assertDontSee("Supprimer totalement")
@@ -179,16 +187,17 @@ class ArchivageTest extends DuskTestCase
 
         $otheruser=User::factory()->create();
         $otheruser->assignRole("user");
-        $otheruser->name="sansarchivage";
+        $otheruser->name="sansarchivage3";
         $otheruser->date_debarq="2022/01/01";
         $otheruser->date_archivage="2022/01/01";
         $otheruser->save();
         $otheruser->delete();
         
         $this->browse(function ($browser)  use ($user, $otheruser){
-            $browser->loginAs($user)
+            $browser->maximize()
+                ->loginAs($user)
                   ->visit(route('archivage.index'))
-                  ->keys(".form-control", $otheruser->name)
+                  ->keys("div.input-group:nth-child(1) > input:nth-child(1)", $otheruser->name)
                   ->pause(1000)
                   ->assertSee($otheruser->name)
                   ->assertSee("Supprimer totalement")
@@ -199,5 +208,6 @@ class ArchivageTest extends DuskTestCase
 
         $this->assertDatabaseMissing('users', ['name' => "sansarchivage" ]);        
         $user->forceDelete();
+        $otheruser->forceDelete();
     }
 }
