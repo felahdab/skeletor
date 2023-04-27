@@ -151,6 +151,8 @@ class ArchivageTest extends DuskTestCase
         $otheruser->name="sansarchivage";
         $otheruser->date_debarq="2022/01/01";
         $otheruser->date_archivage=null;
+        $otheruser->unite_destination_id=2;
+        
         $otheruser->save();
         $otheruser->delete();
         
