@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <input type='hidden' id='url' name='url' value='{{ Request::url() }}'>
                 <div class='form-group row  pl-3' >
-                        <textarea class="w-100" cols='40' rows='10' name='message' id='message' placeholder='Commentaire'></textarea>
+                        <textarea class="form-control" cols='40' rows='10' name='message' id='message' placeholder='Commentaire'></textarea>
                 </div>
             </div>
             <div class="modal-footer">
