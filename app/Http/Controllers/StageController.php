@@ -141,6 +141,7 @@ class StageController extends Controller
     
     public function choixmarins(Stage $stage)
     {
+        // TODO: verifier inutile.
         $users = User::orderBy('name')->get();
         
         $usersdustage = $stage->users()->get();
