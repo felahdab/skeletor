@@ -25,14 +25,14 @@
             </div>
             <div class="modal-body">
                 <input type='hidden' id='formtosubmit' name='formtosubmit' value=''>
-                <div class='form-group row pl-3 mt-2' >
-                    <label for='datvalid' class='col-sm-5 col-form-label '>Date validation</label>
-                    <div class='col-sm-5'>
+                <div class='form-group row  mt-2' >
+                    <label for='datvalid' class='col-sm-3 col-form-label '>Date validation</label>
+                    <div class='col-sm-9'>
                     <input type='date' class='form-control'name='date_validation' id='date_validation' x-model="date_validation">
                     </div>
                 </div>
-                <div class='form-group row  pl-3' >
-                        <textarea class="w-100"  rows='4' name='commentaire' id='commentaire' placeholder='Commentaire' x-model="commentaire"></textarea>
+                <div class='form-group row  mt-4' >
+                        <textarea class="form-control w-100"  rows='4' name='commentaire' id='commentaire' placeholder='Commentaire' x-model="commentaire"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
