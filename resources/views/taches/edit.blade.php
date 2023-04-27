@@ -59,7 +59,7 @@
                 <label class='col-sm-5 col-form-label '>Objectif </label>
                 <input type='hidden' name='sous_objectifs[{{$count}}][id]' id='sous_objectifs[{{$count}}][id]'  value='{{ $objectif->id }}'>
                 <div class='col-sm-5'>
-                    <textarea cols='60' rows='2' name='objectifs[{{$count}}][objectif_libcourt]' id='objectifs[{{$count}}][objectif_libcourt]' placeholder='Libell&eacute;' >{{ $objectif->objectif_libcourt }}</textarea>
+                    <textarea class="form-control" cols='60' rows='2' name='objectifs[{{$count}}][objectif_libcourt]' id='objectifs[{{$count}}][objectif_libcourt]' placeholder='Libell&eacute;' >{{ $objectif->objectif_libcourt }}</textarea>
                 </div>
             </div>
             @can("objectifs.destroy")
