@@ -37,7 +37,7 @@ Vous avez également la possibilité de télécharger directement une version po
 
     <!-- Bootstrap core CSS -->
     @livewireStyles
-    <!-- <link href="{!! asset('assets/css/feuilleDeStyle.css') !!}" rel="stylesheet"> -->
+    <link href="{!! asset('assets/css/feuilleDeStyle.css') !!}" rel="stylesheet">
     <link href="{!! asset('assets/bootstrap/css/bootstrap.css') !!}" rel="stylesheet">
     <script src="{!! asset('assets/js/jscharts.js') !!}"></script>
     
