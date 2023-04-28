@@ -302,6 +302,7 @@ class UsersTable extends DataTableComponent
         switch ($this->mode)
         {
             case "gestion":
+            case "listmarins":
             case "dashboard":
                 $basefilters[]= MultiSelectFilter::make('Roles')
                 ->options(
