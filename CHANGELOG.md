@@ -1,3 +1,10 @@
+## 1.2.4a (April 28, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.4 –> 1.2.4a
+- Changement de forme page recherche Annudef.
+- Reactivation de la feuille de style CSS.
+- Remet en place les bordures de tables dans le livret.
+- Remet en place les 2 colones
+
 ## 1.2.4 (April 28, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.3 –> 1.2.4
 - Merge branch 'master' into tuleap-62052
