@@ -28,7 +28,7 @@
         <a dusk='input-retour-btn' href="{{route('mails.index')}}" class="btn btn-warning" >Retour</a>
     </div>
     <div class="mt-4">
-        <livewire:users-table mode="dashboard">
+        <livewire:users-table mode="listmarins">
     </div>
 </div>
 
