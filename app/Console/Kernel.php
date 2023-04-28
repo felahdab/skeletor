@@ -18,7 +18,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('queue:prune-batches')->hourly();
-        $schedule->job(new AdjustDisplayNames)->everyFiveMinutes();
+        $schedule->job(new AdjustDisplayNames)->daily();
     }
 
     /**
