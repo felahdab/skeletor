@@ -24,7 +24,7 @@
     </div>
 
     <table class="table table-sm table-hover table-striped table-bordered mt-4">
-        <thead class="text-center align-middle">
+        <thead class="text-center align-middle table-light ">
             <tr>
                 <th scope="col">Titre</th>
                 <th scope="col">Nom</th>
