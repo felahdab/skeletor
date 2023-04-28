@@ -139,18 +139,6 @@ class StageController extends Controller
         return redirect()->route('stages.choixmarins', ['stage'=>$stage]);
     }
     
-    public function choixmarins(Stage $stage)
-    {
-        // TODO: verifier inutile.
-        $users = User::orderBy('name')->get();
-        
-        $usersdustage = $stage->users()->get();
-        
-        return view('stages.choisirmarins', ['stage'=>$stage ,
-                                             'users' => $users,
-                                             'usersdustage' => $usersdustage]);
-    }
-    
     public function validermarins(Request $request, Stage $stage)
     {
         if ($request->has('user')){
