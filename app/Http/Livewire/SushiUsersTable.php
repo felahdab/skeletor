@@ -171,6 +171,7 @@ class SushiUsersTable extends DataTableComponent
             case "listmarin" :
                 return array_merge($basecolumns , [
                     Column::make('Tx transfo', 'taux_de_transformation_fonction')
+                            ->view('tables.userstable.tx_transfo_fonction')
                             ->sortable(),
                     Column::make('Laché', 'lache_dans_fonction')
                     ->format(
