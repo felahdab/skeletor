@@ -1,4 +1,4 @@
-<table class='table'>
+<table class='table table-bordered'>
     <!--tr class='lignecomp div-table-contrat-compagnonnage'>
         <th colspan='5'>{{$fonction->fonction_liblong }}</th>
     </tr-->
