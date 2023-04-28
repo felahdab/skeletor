@@ -7,7 +7,8 @@
     class="btn btn-primary" 
     name="validation"
     x-on:click.prevent="active = true ;
-                        opendivvalid = true ;
+                        validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
+                        validModal.show();
                         buttonid = 'validation' ;">@if($readwrite)
                         Valider les éléments cochés
                         @else
@@ -33,11 +34,13 @@ $wire.UnValideElementsDuParcours( {{$user->id}} , selected_compagnonnages , sele
     @elseif($mode=='multiple')
     
     <button type="submit" 
-    class="btn btn-primary" 
-    name="validation"
-    dusk="livret-multiple-enregistrer"
-    x-on:click.prevent='active = true ;;
-                        opendivvalid=true'>Enregistrer les validations</button>
+            class="btn btn-primary" 
+            name="validation"
+            dusk="livret-multiple-enregistrer"
+            x-on:click.prevent="active = true ;
+                                validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
+                                validModal.show();
+                                opendivvalid=true">Enregistrer les validations</button>
     <a href="{{ url()->previous() }}" class="btn btn-light">Retour</a>
     <button x-show="false" 
         x-on:uservalidated.window="if (active)

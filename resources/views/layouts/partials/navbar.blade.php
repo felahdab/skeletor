@@ -105,7 +105,7 @@
             <a href="{{ route('impersonate.leave') }}" class="btn btn-outline-danger me-2">Redevenir soi-m&ecirc;me</a>
 	      @endImpersonating
         
-        <button class='btn btn-warning' onclick='affichage("bugreport");'> Signaler un problème</button> 
+        <button type= "button" class='btn btn-warning' data-bs-toggle="modal" data-bs-target="#bugreport-modal"> Signaler un problème</button> 
         
         <div class="dropdown">
           <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

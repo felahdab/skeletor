@@ -15,33 +15,37 @@
 <div x-data="{ opendivvalid : false ,
 	       date_validation : '{{date('Y-m-d') }}',
                commentaire : '' }">    
-    <div x-cloak x-show="opendivvalid" id='divvalid' class='popupvalidcontrat' >
-        <div class='titrenavbarvert'>
-            <h5>Validation</h5>
-        </div>
-        <input type='hidden' id='formtosubmit' name='formtosubmit' value=''>
-        <div class='form-group row pl-3 mt-2' >
-            <label for='datvalid' class='col-sm-5 col-form-label '>Date validation</label>
-            <div class='col-sm-5'>
-            <input type='date' class='form-control'name='date_validation' id='date_validation' x-model="date_validation">
+
+    <div class="modal fade" id="divvalid" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Validation</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-        </div>
-        <div class='form-group row  pl-3' >
-            <label for='comment' class='col-sm-5 col-form-label '>Commentaire</label>
-            <div class='col-sm-5'>
-                <textarea cols='40' rows='4' name='commentaire' id='commentaire' placeholder='Commentaire' x-model="commentaire"></textarea>
+            <div class="modal-body">
+                <input type='hidden' id='formtosubmit' name='formtosubmit' value=''>
+                <div class='form-group row  mt-2' >
+                    <label for='datvalid' class='col-sm-3 col-form-label '>Date validation</label>
+                    <div class='col-sm-9'>
+                    <input type='date' class='form-control'name='date_validation' id='date_validation' x-model="date_validation">
+                    </div>
+                </div>
+                <div class='form-group row  mt-4' >
+                        <textarea class="form-control w-100"  rows='4' name='commentaire' id='commentaire' placeholder='Commentaire' x-model="commentaire"></textarea>
+                </div>
             </div>
-        </div>
-        <div class='text-center'>
-            <button class='btn btn-primary w-25 mt-4 mr-2 mb-2' 
-            id='btnvalidobj' 
-	    name='btnvalidobj'
-            x-on:click="opendivvalid=false;
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" 
+                        class="btn btn-primary"
+                        x-on:click="opendivvalid=false;
                         $dispatch('uservalidated');">Valider</button>
-            <button class='btn btn-primary w-25 mt-4 mb-2' type='reset' form='formlivret' id='btnresetobj' name='btnresetobj' x-on:click='opendivvalid = false;'>Annuler</button>
+            </div>
+            </div>
         </div>
     </div>
-    
+
     <div id='divconsultstage'>
         @if ($stage != null)
         {!! Form::open(['method' => 'POST','route' => ['stages.validermarins', $stage->id], 'id' => 'form']) !!}
@@ -123,8 +127,9 @@
             <div class="text-center">
                 <button type="submit" 
                     class="btn btn-primary w-50" 
-            name="validation_double"
-                    x-on:click.prevent="opendivvalid=true">Valider les marins sélectionnés ci-dessus</button>
+                    name="validation_double"
+                    x-on:click.prevent="validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
+                    validModal.show();">Valider les marins sélectionnés ci-dessus</button>
                 <button x-show="false" type="submit" class="btn btn-primary w-50" 
             name="validation_double"
                     x-on:uservalidated.window="$el.click()"></button>
