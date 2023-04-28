@@ -37,24 +37,24 @@ Vous avez également la possibilité de télécharger directement une version po
 
     <!-- Bootstrap core CSS -->
     @livewireStyles
-    <link href="{!! asset('assets/css/feuilleDeStyle.css') !!}" rel="stylesheet">
+    <!-- <link href="{!! asset('assets/css/feuilleDeStyle.css') !!}" rel="stylesheet"> -->
     <link href="{!! asset('assets/bootstrap/css/bootstrap.css') !!}" rel="stylesheet">
     <script src="{!! asset('assets/js/jscharts.js') !!}"></script>
     
     <style>
-      .bd-placeholder-img {
+      /* .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
         -webkit-user-select: none;
         -moz-user-select: none;
         user-select: none;
-      }
+      } */
 
-      @media (min-width: 768px) {
+      /* @media (min-width: 768px) {
         .bd-placeholder-img-lg {
           font-size: 3.5rem;
-        }
-      }
+        } */
+      /* } */
     </style>
     <style>
         [x-cloak] {
