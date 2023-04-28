@@ -1,3 +1,7 @@
+## 1.2.4b (April 28, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.4a –> 1.2.4b
+- Rajoute le filtre par role a la table de selection des utilisateurs pour les mails
+
 ## 1.2.4a (April 28, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.4 –> 1.2.4a
 - Changement de forme page recherche Annudef.
