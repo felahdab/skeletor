@@ -2,15 +2,15 @@
     selected_users : []
     }">
     
-    <div class='flex'>
-        <div style='width: 50%'>
+    <div class='row'>
+        <div class='col'>
             <div>
                 <label>Sujet: </label>
                 <input dusk="input-sujet" class="form-control" wire:model='sujet'></input>
             </div>
             <textarea class="form-control mt-4" wire:model='corps' cols='40' rows='20'></textarea>
         </div>
-        <div style='width: 50%'>
+        <div class='col'>
             <label>Aperçu: </label>
             <x-markdown>
                 {!! $corps !!}
