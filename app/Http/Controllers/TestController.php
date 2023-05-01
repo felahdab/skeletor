@@ -24,9 +24,9 @@ class TestController extends Controller
         
     }
 
-    public function test()
+    public function test_jspreadsheet()
     {
-        return view('test.test');
+        return view('test.test_jspreadsheet');
         
     }
 }
