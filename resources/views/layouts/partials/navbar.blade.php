@@ -1,5 +1,5 @@
 @section('helplink')
-  <x-documentation-link page="connexion"/>
+  < x-help-link page="connexion"/>
 @endsection
 
 

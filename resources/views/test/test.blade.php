@@ -1,6 +1,5 @@
 @extends('layouts.app-master')
 
 @section('content')
-    None
+    <x-help-link page="toto"/>
 @endsection
-
