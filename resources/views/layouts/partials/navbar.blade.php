@@ -12,7 +12,7 @@
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon bg-light"></span>
+        <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse container-fluid" id="navbarTogglerDemo01">
         <ul class="navbar-nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 mr-auto mt-2 mt-lg-0">
@@ -114,6 +114,11 @@
           <div class="dropdown-menu" style="position:absolute;right:0; left:auto;" aria-labelledby="dropdownMenuButton">
             @yield('helplink')
             <a class="dropdown-item" href="{{ route('changepasswd.show', auth()->user()) }}">Changer mot de passe</a>
+            <div class="dropdown-item">Mes rôles:
+              @foreach(auth()->user()->roles as $role)
+                <span class="badge bg-primary">{{ $role->name }}</span>
+              @endforeach
+            </div>
             @if(false)<a class="dropdown-item" href="{{ route('mespreferences') }}">Préférences</a>@endif
             <a class="dropdown-item" href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2">Déconnexion</a>
             <hr>

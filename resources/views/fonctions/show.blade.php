@@ -6,10 +6,10 @@
 
 
 @section('content')
-    <div class="bg-light p-4 rounded">
+    <div class="p-4 rounded">
         <h2>Fonctions</h2>
     </div>
-    <div id='divmodifobj' class='card bg-light ml-3 w-100' >
+    <div id='divmodifobj' class='card ml-3 w-100' >
         <div class='card-header' >Consulter fonction </div>
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >

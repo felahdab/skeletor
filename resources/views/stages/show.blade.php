@@ -6,7 +6,7 @@
 
 
 @section('content')
-    <div class="bg-light p-4 rounded">
+    <div class="  p-4 rounded">
         <h2>Situation des marins pour le stage : {{$stage->stage_libcourt}}</h2>
         @if(auth()->user()->can('stages.attribuerstage'))
             Commentaire : {{$stage->commentaire}}

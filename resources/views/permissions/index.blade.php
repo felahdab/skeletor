@@ -7,7 +7,7 @@
 
 @section('content')
 
-    <div class="bg-light p-4 rounded">
+    <div class="  p-4 rounded">
         <h2>Permissions</h2>
         <div class="lead">
             Gérer les permissions.

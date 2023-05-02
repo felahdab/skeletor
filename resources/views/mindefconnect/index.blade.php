@@ -6,7 +6,7 @@
 
 
 @section('content')
- <div class="bg-light p-4 rounded">
+ <div class="p-4 rounded">
     <h2>Demandes Mindef Connect</h2>
     <div class="lead">
         Gestion des demandes d'activation de compte Mindef Connect
