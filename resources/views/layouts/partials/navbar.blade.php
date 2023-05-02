@@ -114,6 +114,11 @@
           <div class="dropdown-menu" style="position:absolute;right:0; left:auto;" aria-labelledby="dropdownMenuButton">
             @yield('helplink')
             <a class="dropdown-item" href="{{ route('changepasswd.show', auth()->user()) }}">Changer mot de passe</a>
+            <div class="dropdown-item">Mes rôles:
+              @foreach(auth()->user()->roles as $role)
+                <span class="badge bg-primary">{{ $role->name }}</span>
+              @endforeach
+            </div>
             @if(false)<a class="dropdown-item" href="{{ route('mespreferences') }}">Préférences</a>@endif
             <a class="dropdown-item" href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2">Déconnexion</a>
             <hr>
