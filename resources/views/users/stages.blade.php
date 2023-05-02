@@ -6,7 +6,7 @@
 
 
 @section('content')
-    <div class="bg-light p-4 rounded">
+    <div class="  p-4 rounded">
         <h1>Transformation</h1>
         <div class="lead">
             Stages de {{$marin->display_name}}
@@ -27,7 +27,7 @@
                 opendivvalid : false,
                 opendivvalidcomment : false }">
 
-        <div id='divconsultstage' class='card bg-light ml-3 w-100'>
+        <div id='divconsultstage' class='card   ml-3 w-100'>
             @if ( $marin != null)
             <div class='mt-2 mb-2' style='margin-left:50%; text-align: center;'> </div>
 

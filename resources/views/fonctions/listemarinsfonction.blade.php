@@ -6,7 +6,7 @@
 
 
 @section('content')
-    <div class="bg-light p-4 rounded">
+    <div class="p-4 rounded">
         <h2>Transformation pour la fonction <b>{{$fonction->fonction_liblong}}</b></h2>
             <a href="{{ url()->previous() }}" class="btn btn-primary">Retour</a>
         <div class="lead">
