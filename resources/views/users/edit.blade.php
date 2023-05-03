@@ -31,7 +31,7 @@
                 </div>
                 <div class="row mt-4">
                     <div class="col">
-                        <x-form::input name="name" label="Nom *" placeholder="Nom..." type="text" :value="$user->name" required/>                        
+                        <x-form::input name="name" label="Nom *" placeholder="Nom..." type="text" :value="$user->name" required/>
                     </div>
                     <div class="col">
                         <x-form::model-select name="specialite_id" 
