@@ -1727,6 +1727,17 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'tomsix/laravel-components-library' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '29fe6cc51d1ce8ee2c45cfe9d08389fcfeeb3bb5',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../tomsix/laravel-components-library',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'dev_requirement' => false,
+        ),
         'ua-parser/uap-php' => array(
             'pretty_version' => 'v3.9.14',
             'version' => '3.9.14.0',

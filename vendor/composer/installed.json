@@ -11701,6 +11701,72 @@
             "install-path": "../tijsverkoyen/css-to-inline-styles"
         },
         {
+            "name": "tomsix/laravel-components-library",
+            "version": "dev-master",
+            "version_normalized": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tomsix/laravel-components-library.git",
+                "reference": "29fe6cc51d1ce8ee2c45cfe9d08389fcfeeb3bb5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tomsix/laravel-components-library/zipball/29fe6cc51d1ce8ee2c45cfe9d08389fcfeeb3bb5",
+                "reference": "29fe6cc51d1ce8ee2c45cfe9d08389fcfeeb3bb5",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^8.0|^9.0|^10.0",
+                "php": "^7.4|^8.0|^8.1"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0",
+                "phpunit/phpunit": "^9.0",
+                "spatie/laravel-ray": "^1.25"
+            },
+            "time": "2023-03-06T08:05:41+00:00",
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "TomSix\\Components\\LibraryServiceProvider"
+                    ]
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "TomSix\\Components\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tom Six",
+                    "email": "tom@webatvantage.be",
+                    "homepage": "https://www.webatvantage.be/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A collection of pre-made Blade components for Laravel 7.x and up",
+            "homepage": "https://github.com/tomsix/laravel-blade-components",
+            "keywords": [
+                "blade",
+                "components",
+                "form",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/tomsix/laravel-components-library/issues",
+                "source": "https://github.com/tomsix/laravel-components-library/tree/master"
+            },
+            "install-path": "../tomsix/laravel-components-library"
+        },
+        {
             "name": "ua-parser/uap-php",
             "version": "v3.9.14",
             "version_normalized": "3.9.14.0",
