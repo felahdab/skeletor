@@ -6,7 +6,7 @@
 
 
 @section('content')
-    <div class="bg-light p-4 rounded">
+    <div class="  p-4 rounded">
         <h1>Transformation</h1>
         <div class="lead">
             Suivi de la progression de {{$user->prenom}} {{$user->name}}

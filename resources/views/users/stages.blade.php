@@ -6,7 +6,7 @@
 
 
 @section('content')
-    <div class="bg-light p-4 rounded">
+    <div class="  p-4 rounded">
         <h1>Transformation</h1>
         <div class="lead">
             Stages de {{$marin->display_name}}
@@ -27,7 +27,7 @@
                 opendivvalid : false,
                 opendivvalidcomment : false }">
 
-        <div id='divconsultstage' class='card bg-light ml-3 w-100'>
+        <div id='divconsultstage' class='card   ml-3 w-100'>
             @if ( $marin != null)
             <div class='mt-2 mb-2' style='margin-left:50%; text-align: center;'> </div>
 
@@ -40,51 +40,63 @@
                                             else
                                                 $el.innerHTML='Rajouter un stage supplémentaire';">Rajouter un stage supplémentaire</button>
                 @endcan
-
-                <div x-cloak x-show="opendivvalid" class='popupvalidcontrat' >
-                <!-- div qui permet de valider un stage pour un user-->
-                    <div class='titrenavbarvert'>
-                        <h5>Validation</h5>
-                    </div>
-                    <div class='form-group row pl-3 mt-2' >
-                        <label class='col-sm-5 col-form-label '>Date validation</label>
-                        <div class='col-sm-5'>
-                        <input type='date' class='form-control' x-model="date_validation">
+                <div class="modal fade" id="divvalid" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Validation</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                    </div>
-                    <div class='form-group row  pl-3' >
-                        <label class='col-sm-5 col-form-label '>Commentaire</label>
-                        <div class='col-sm-5'>
-                            <textarea cols='40' rows='4' placeholder='Commentaire' x-model="commentaire"></textarea>
+                        <div class="modal-body">
+                            <input type='hidden' id='formtosubmit' name='formtosubmit' value=''>
+                            <div class='form-group row mt-4' >
+                                <label for='datvalid' class='col-sm-5 col-form-label '>Date validation</label>
+                                <div class='col-sm-5'>
+                                    <input type='date' class='form-control'name='date_validation' id='date_validation' x-model="date_validation">
+                                </div>
+                            </div>
+                            <div class='form-group row  mt-4' >
+                                    <textarea class="form-control"  rows='4' name='commentaire' id='commentaire' placeholder='Commentaire' x-model="commentaire"></textarea>
+                            </div>
                         </div>
-                    </div>
-                    <div class='text-center'>
-                        <button class='btn btn-primary w-25 mt-4 mr-2 mb-2' 
-                             x-on:click.prevent="$dispatch('uservalidated');
-                                                     opendivvalid=false;"> Valider </button>
-                        <button class='btn btn-primary w-25 mt-4 mb-2' 
-                            x-on:click.prevent='opendivvalid = false ;'>Annuler</button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="button" 
+                                    class="btn btn-primary"
+                                    data-bs-dismiss="modal"
+                                    x-on:click="opendivvalid=false;
+                                    $dispatch('uservalidated');">Valider</button>
+                        </div>
+                        </div>
                     </div>
                 </div>
-                <div x-cloak x-show="opendivvalidcomment" class='popupvalidcontrat' >
-                <!-- div qui permet maj commentaire d'un stage pour un user-->
-                    <div class='titrenavbarvert'>
-                        <h5>Validation</h5>
-                        <input class='text-center' x-model="libstage" disabled>
-                        <input class='text-center' x-model="nommarin" disabled>
-                    </div>
-                    <div class='form-group row  pl-3' >
-                        <label class='col-sm-5 col-form-label '>Commentaire</label>
-                        <div class='col-sm-5'>
-                            <textarea cols='40' rows='4' placeholder='Commentaire' x-model="commentaire"></textarea>
+
+                <div class="modal fade" id="divvalidcomment" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Commentaire associé au stage</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                    </div>
-                    <div class='text-center'>
-                        <button class='btn btn-primary w-25 mt-4 mr-2 mb-2' 
-                             x-on:click.prevent="$dispatch('usercommentvalidated');
-                                                     opendivvalidcomment=false;"> Valider </button>
-                        <button class='btn btn-primary w-25 mt-4 mb-2' 
-                            x-on:click.prevent='opendivvalidcomment = false ;'>Annuler</button>
+                        <div class="modal-body">
+                            <input type='hidden' id='formtosubmit' name='formtosubmit' value=''>
+                            <div class="row">
+                                <input class='form-control text-center col' x-model="libstage" disabled>
+                                <input class='form-control text-center col' x-model="nommarin" disabled>
+                            </div>
+                            <div class='form-group row  mt-4' >
+                                    <textarea class="form-control"  rows='4' name='commentaire' id='commentaire' placeholder='Commentaire' x-model="commentaire"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="button" 
+                                    class="btn btn-primary"
+                                    data-bs-dismiss="modal"
+                                    x-on:click="opendivvalid=false;
+                                    $dispatch('usercommentvalidated');">Valider</button>
+                        </div>
+                        </div>
                     </div>
                 </div>
 

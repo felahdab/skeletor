@@ -6,7 +6,7 @@
 
 
 @section('content')
- <div class="bg-light p-4 rounded">
+ <div class="p-4 rounded">
     <h1>Utilisateurs</h1>
     <div class="lead">
         Valider une demande d'accès

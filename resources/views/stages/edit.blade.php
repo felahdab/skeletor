@@ -6,10 +6,10 @@
 
 
 @section('content')
-    <div class="bg-light p-4 rounded">
+    <div class="  p-4 rounded">
         <h2>Modifier un stage</h2>
     </div>
-    <div id='divmodifobj' class='card bg-light ml-3 w-100' >
+    <div id='divmodifobj' class='card   ml-3 w-100' >
         <div class='card-header' >Modification d'un stage </div>
 		<div style='text-align:right;'>* champs obligatoires </div>
         {!! Form::open(['method' => 'PATCH','route' => ['stages.update', $stage->id] ]) !!}

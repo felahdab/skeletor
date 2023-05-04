@@ -6,31 +6,51 @@
 
 
 @section('content')
-    <div class="bg-light p-4 rounded" 
+    <div class="  p-4 rounded" 
         x-data='{
-            nom : null,
-            prenom: null,
-            email: null,
-            nid: null,
+            nom     : null,
+            prenom  : null,
+            email   : null,
+            nid     : null,
+            grade   : null,
 
             aideannudef  : false ,
             offcanvas_el : null ,
             offcanvas    : null ,
+            grade_select : null,
             
             toggle() {
                 this.aideannudef = ! this.aideannudef;
                 this.aideannudef ? this.offcanvas.show() : this.offcanvas.hide() ;
             },
+
+            decode(str){
+                let txt = document.createElement("textarea");
+                txt.innerHTML = str;
+                return txt.value;
+            }
         }'
 
-       @preset-this-user="email = $event.detail.email;
-                            nom = $event.detail.nom;
-                            prenom = $event.detail.prenom;
-                            nid = $event.detail.nid;"
+       @preset-this-user = "email = decode($event.detail.email);
+                            nom = decode($event.detail.nom);
+                            prenom = decode($event.detail.prenom);
+                            nid = decode($event.detail.nid);
+                            grade = decode($event.detail.grade);
+                            
+                            for (i=0; i < grade_select.options.length; i++){
+                                var option = grade_select.options[i]; 
+                                console.log(grade.trim().toUpperCase());
+                                if (grade.trim().toUpperCase() == option.childNodes[0].textContent.trim().toUpperCase()) 
+                                {
+                                    option.selected = true;
+                                }
+                            }"
 
         x-init='
             offcanvas_el = document.getElementById("offcanvasannudef");
-            offcanvas = new bootstrap.Offcanvas(offcanvas_el, {backdrop: false});'>
+            offcanvas = new bootstrap.Offcanvas(offcanvas_el, {backdrop: false});
+            grade_select = document.getElementById("grade_select");'>
+
         <h2>Ajouter un marin</h2>
         <div style='text-align:right;'>* champs obligatoires </div>
         <div class="d-flex flex-row-reverse">
@@ -76,7 +96,8 @@
                         <div class="mb-3">
                             <label for="grade" class="form-label">Grade *</label>
                             <select class="form-control" 
-                                name="grade_id">
+                                name="grade_id"
+                                id="grade_select">
                                 <option value="">Grade</option>
                                 @foreach($grades as $grade)
                                     <option value="{{ $grade->id }}">

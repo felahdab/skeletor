@@ -343,4 +343,52 @@ class TransformationManagerService
             return false;
         return $this->parcours->where('id', $fonction->id)->first()->pivot->date_lache != null;
     }
+
+    public function etat_parcours()
+    {
+        $parcours_initial=$this->parcours;     
+
+        $parcours_modifie = $parcours_initial->each(function($fonc){
+            $fonc->typefonction_lib = $fonc->type_fonction->value('typfonction_libcourt');
+            $fonc->tx_transfo_fonc_stage= $this->taux_de_transformation_avec_stages($fonc);
+            $fonc->tx_transfo_fonc = $fonc->pivot->taux_de_transformation;
+            $fonc->date_lache = $fonc->pivot->date_lache;
+            $fonc->date_double = $fonc->pivot->date_double;
+            $fonc->nb_jours_pour_validation = $fonc->pivot->nb_jours_pour_validation;
+            
+            $fonc->compagnonages = $fonc->compagnonages->each(function($comp){
+                $comp->tx_transfo_comp= $this->taux_de_transformation(null, $comp, null, null);
+                $comp->setHidden(['id','created_at','updated_at', 'pivot']);                
+                $comp->taches = $comp->taches->each(function($tach){
+                    $tach->tx_transfo_tach = $this->taux_de_transformation(null, null, $tach, null);
+                    $tach->setHidden(['id','created_at','updated_at', 'pivot']);
+                    $tach->objectifs = $tach->objectifs->each(function($obj){
+                        $obj->tx_transfo_obj = $this->taux_de_transformation(null, null, null, $obj);
+                        $obj->setHidden(['id','created_at','updated_at','pivot']);
+                        $obj->sous_objectifs = $obj->sous_objectifs->each(function($ssobj){
+                            $ssobj->date_valid_ssobj = $this->dateDeValidationDuSousObjectif($ssobj);
+                            $ssobj->setHidden(['id','created_at','updated_at','ssobj_duree','objectif_id','lieu_id','lieu' ]);
+                        });
+                    });
+                });
+            });
+
+            $fonc->stages = $fonc->stages->each(function($stage){
+                $stage->date_valid_stage=$this->dateDeValidationDuStage($stage);
+                $stage->setHidden(['id','created_at','updated_at','transverse','typelicence_id',
+                                    'stage_duree','stage_lieu','stage_capamax','stage_date_fin_licence',
+                                    'stage_commentaire','pivot' ]);
+            });
+            $fonc->setHidden(['id','created_at','updated_at','fonction_lache','fonction_double',
+            'typefonction_id','pivot','type_fonction' ]);
+        });
+        $stages_orphelins = array_values($this->stages_orphelins()->each(function($stageorph){
+                $stageorph->date_valid_stage=$stageorph->pivot->date_validation;
+                $stageorph->setHidden(['id','created_at','updated_at','transverse','typelicence_id',
+                                    'stage_duree','stage_lieu','stage_capamax','stage_date_fin_licence',
+                                    'stage_commentaire','pivot' ]);
+        })->all());
+        $parcours_modifie->put('stages_orphelins', $stages_orphelins);
+        return $parcours_modifie;
+    }
 }

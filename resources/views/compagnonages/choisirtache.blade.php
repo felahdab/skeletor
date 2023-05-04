@@ -7,7 +7,7 @@
 
 @section('content')
 
-    <div class="bg-light p-4 rounded">
+    <div class="p-4 rounded">
         <h2>Tâches</h2>
         <div class='lead'>Ajout d'une tâche pour le compagnonnage : {!!$compagnonage->comp_libcourt !!} </div>
     </div>

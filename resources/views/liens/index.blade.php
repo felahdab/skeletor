@@ -7,7 +7,7 @@
 
 @section('content')
 
-    <div class="bg-light p-4 rounded">
+    <div class="p-4 rounded">
         <h2>Liens</h2>
         <div class="lead">
             Gérer les liens de la page d'accueil des marins en transformation

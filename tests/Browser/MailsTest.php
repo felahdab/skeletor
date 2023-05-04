@@ -17,7 +17,8 @@ class MailsTest extends DuskTestCase
         $user->assignRole("admin");
         
         $this->browse(function ($browser)  use ($user){
-            $browser->loginAs($user)
+            $browser->maximize()
+                    ->loginAs($user)
                   ->visit(route('mails.index'))
                   ->assertSee('Mails');
         });
@@ -32,7 +33,8 @@ class MailsTest extends DuskTestCase
         $user->assignRole("admin");
         
         $this->browse(function ($browser)  use ($user){
-            $browser->loginAs($user)
+            $browser->maximize()
+                    ->loginAs($user)
                   ->visit(route('mails.index'))
                   ->click('@create-mail-btn')
                   ->assertPathIs('/' . env('APP_PREFIX') .'/mails/create')

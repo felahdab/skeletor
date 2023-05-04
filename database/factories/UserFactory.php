@@ -38,11 +38,11 @@ class UserFactory extends Factory
             'email'      => $email,
             //'password'   => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'password'   => 'password',
-            'secteur_id' => Secteur::factory()->create()->id,
-            'specialite_id' => Specialite::factory()->create()->id,
-            'grade_id'    => Grade::factory()->create()->id,
+            'secteur_id' => Secteur::query()->inRandomOrder()->first()->id,
+            'specialite_id' => Specialite::query()->inRandomOrder()->first()->id,
+            'grade_id'    => Grade::query()->inRandomOrder()->first()->id,
             'unite_id'   => 2,
-            'diplome_id'  => Diplome::factory()->create()->id,
+            'diplome_id'  => Diplome::query()->inRandomOrder()->first()->id,
             'unite_destination_id' => null,
             'date_embarq'   => $date_embarq->toDateString(),
         ];

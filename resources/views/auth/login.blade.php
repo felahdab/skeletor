@@ -6,7 +6,7 @@
         <img src='{!! asset("assets/images/logo_FFAST_bleu.png") !!}' alt="Logo FFAST" style="height:250px; display: block; margin-left:auto; margin-right: auto; ">
     </div>
     <div>&nbsp;</div>
-    <div class="bg-light p-4 rounded" style="max-width: 400px; margin-left:auto; margin-right: auto;">
+    <div class="p-4 rounded" style="max-width: 400px; margin-left:auto; margin-right: auto;">
     <form method="post" action="{{ route('login.perform') }}">
         
         <input type="hidden" name="_token" value="{{ csrf_token() }}" />

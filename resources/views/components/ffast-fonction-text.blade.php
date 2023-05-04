@@ -1,3 +1,3 @@
 <div style="color: {{$color}}">
-    {{ $text }} ( {{$pourcentage}}% ) 
+    {{ $caption }} 
 </div>
