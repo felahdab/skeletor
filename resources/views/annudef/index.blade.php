@@ -6,13 +6,9 @@
 
 
 @section('content')
-    
-
-    <div class="p-4 rounded">
-        <h2>Recherche Annudef</h2>
-        <div class="mt-3">
-            <livewire:annudef-search mode="recherche">
-        </div>
-
+<x-content-div heading="Recherche Annudef">
+    <div class="mt-3">
+        <livewire:annudef-search mode="recherche">
     </div>
+</x-content-div>
 @endsection
