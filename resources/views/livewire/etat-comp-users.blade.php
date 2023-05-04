@@ -3,13 +3,14 @@
     <!-- div avec formulaire de validation -->
     @include('livewire.livret-transformation.divvalid', ['mode' => "parcomp"])
     <button type="submit" 
-    form="ssobjs"
+    form="ssobjsusers"
     class="btn btn-primary" 
     name="validation"
     x-on:click.prevent="active = true ;
-                        opendivvalid = true ;
+                        validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
+                        validModal.show();
                         buttonid = 'validation' ;">Valider les éléments cochés
-                        </button>
+            </button>
     <button x-show="false" 
             x-on:uservalidated.window="if (active)
             { 
@@ -91,7 +92,10 @@ $wire.ValideElementsDuParcoursParcomp( date_validation , commentaire, valideur, 
                             <td class="text-center">&#10004;
                         @elseif ($cell=='false')
                             <td class="text-center">&#10060;
-                            <input type="checkbox" id="['ssobjid' => {{$ligne['ssobj']->id}}, 'userid' => {{$key}}]" >
+                            <input type="checkbox" 
+                                    x-data='{ active: false }'
+                                    x-model="selected_parcomp"
+                                    value="'ssobjid'-{{$ligne['ssobj']->id}}-'userid'-{{$key}}">                                   
                         @else
                             @if ($key == "ssobj")
                                 <td style="font-size:x-small;" title="{{$cell->ssobj_lib}}">{{substr($cell->ssobj_lib, 0, 40)}}
