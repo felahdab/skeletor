@@ -81,7 +81,13 @@ class StatistiqueController extends Controller
     {
         return view('statistiques.dashboardarchive');
     }
+    
+    public function parcomp()
+    {
+        return view('statistiques.parcomp');
+    }
 
+ 
     public function pour2ps()
     {
         
