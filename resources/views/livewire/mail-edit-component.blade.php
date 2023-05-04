@@ -1,15 +1,16 @@
 <div x-data="{
     selected_users : []
     }">
-    <div>
-        <label>Sujet: </label>
-        <input dusk="input-sujet" wire:model='sujet'></input>
-    </div>
-    <div class='flex'>
-        <div style='width: 50%'>
-            <textarea wire:model='corps' cols='40' rows='20'></textarea>
+    
+    <div class='row'>
+        <div class='col'>
+            <div>
+                <label>Sujet: </label>
+                <input dusk="input-sujet" class="form-control" wire:model='sujet'></input>
+            </div>
+            <textarea class="form-control mt-4" wire:model='corps' cols='40' rows='20'></textarea>
         </div>
-        <div style='width: 50%'>
+        <div class='col'>
             <label>Aperçu: </label>
             <x-markdown>
                 {!! $corps !!}
@@ -27,7 +28,7 @@
         <a dusk='input-retour-btn' href="{{route('mails.index')}}" class="btn btn-warning" >Retour</a>
     </div>
     <div class="mt-4">
-        <livewire:users-table mode="dashboard">
+        <livewire:users-table mode="listmarins">
     </div>
 </div>
 

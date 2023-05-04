@@ -6,7 +6,7 @@
 
 
 @section('content')
-    <div class="bg-light p-4 rounded" x-data="{ opendivvalid : false,
+    <div class="  p-4 rounded" x-data="{ opendivvalid : false,
                                                 commentaire : '',
                                                 date_validation : '{{ date('Y-m-d') }}', 
                                                 valideur : '{{auth()->user()->display_name}}',

@@ -7,7 +7,6 @@
 
 @section('content')
     
-
     <div class="p-4">
         <h2>Transformation - Marins</h2>
         <div class="lead">

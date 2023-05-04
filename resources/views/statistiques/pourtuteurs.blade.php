@@ -6,7 +6,7 @@
 
 
 @section('content')
-    <div class="bg-light p-4 rounded">
+    <div class="  p-4 rounded">
         <h2>SUIVI TRANSFORMATION </h2>
         
         @if (auth()->user()->secteur_id != 0)

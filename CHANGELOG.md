@@ -1,3 +1,78 @@
+## 1.2.4b (April 28, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.4a –> 1.2.4b
+- Rajoute le filtre par role a la table de selection des utilisateurs pour les mails
+
+## 1.2.4a (April 28, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.4 –> 1.2.4a
+- Changement de forme page recherche Annudef.
+- Reactivation de la feuille de style CSS.
+- Remet en place les bordures de tables dans le livret.
+- Remet en place les 2 colones
+
+## 1.2.4 (April 28, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.3 –> 1.2.4
+- Merge branch 'master' into tuleap-62052
+- Gere le conflit de merge
+- Merge branch 'master' into tuleap-71454-ajouter-un-utilisateur-faire-la-recherche-annudef
+- Ajustement de l'affichage du bandeau de recherche Annudef pour la création de nouveaux utilisateurs.
+- Modification de l'ordre d'inclusion des librairies Javascript.
+- Desactivation du CSS custom.
+- Alpinisation du javacsript de la page Statistiques.
+- Suppression code inutile.
+- Ajustement du mode de la table de selection des destinataires des mails.
+- Modernisation de la forme de la page de recherche Annudef.
+- Corrections de forme dans les listes d'Objectif, Stages, Taches.
+- Correction de forme liste des compagnonages.
+- Correction de forme liste des fonctions
+- Utilisation Bootstrap pour colones du bilan global
+- Utilisation Bootstrap pour les colones du bilan des stages
+- Ajustement de forme dans la situation des marins pour un stage
+- Conversion des divvalid et divvalidcomment en modal dans la validation des stages
+- Ajustement de forme sur les formulaire de gestion des Taches
+- Ajustement de forme sur les formulaire de gestion des Objectifs
+- Ajustement de forme sur le MailEditComponent
+- Mise à jour de tous les tests pour maximiser la fenetre du browser et tenir compte de la modification de la div bugreport.
+- Interversion de l'ordre de chargement des librairies javascript.
+- Changement de la classe dans le modal bugreport.
+- Modification des boutons du livret pour activer les nouveaux dialogues modaux
+- Conversion des divvalid du livret de transformation en modal bootstrap.
+- Conversion divvalid en modal bootstrap pour la validation des stages.
+- Modification du bouton Signaler un problème pour activer le model de bugreport.
+- Convertion de la div de bugreport en model bootstrap standard.
+- 2eme essai : la proposition de validation d'une tache avec un ssobj deja valide remplissait la date proposition.
+- Merge branch 'tuleap-62052' of ssh://forge.intradef.gouv.fr/ffast/app_ffast into tuleap-62052
+- correction bug : la proposition de validation d'une tache avec un ssobj deja valide remplissait la date proposition.
+- Ajustement de l'utilisateur créé pour être dans les conditions de succes du test.
+- Ajout filtre par secteur et colonne taux de transformation à la table des utilisateurs pour le parcours des fiches bilan.
+- Particularisation de la vue du taux de transformation par fonction.
+- Active la nouvelle présentation du taux de transformation
+- Remplace le taux de transfo brut par un texte colore comme il faut.
+- Merge commit '58187b54236a93d98135b0001c434836349e105a'
+- Retrait d'un dd orphelin..
+- Ajuste l'asciisation des grades
+- arrondi des chiffres affichés
+- decode les chaines htmlspecialchar encodees.
+- htmlspecialchars des informations de Annudef pour éviter les apostrophes notamment.
+- suppression ligne inutile
+- Merge branch 'master' into tuleap-62052
+- acces dashboard possible et creation dashboardarchive .
+- Simplification des event pour la fermeture du panneau Annudef
+- Prendre le prenom usuel et non tous les prenoms
+- BUGFIX + collapse aide on click
+- Implemente une aide Annudef dans la creation d'utilisateur.
+- Rajout des boutons vers les éléments individuels de suivi de la transfo au parcours des fiches bilan.
+- Rajoute d'un filtre par fonction à StattuteurTable
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast into tuleap-62052
+- nouvelle table archive qui va remplacer la table statistique, modid des pgms pour prise en compte.
+- BUGFIX: la table des utilisateurs ne tenait pas compte des modification sur les fonctions à quai.
+- Passe la selection des destinataires en mode usertable dashboard.
+- Rajoute les fonctions mer à l'entete de la fiche bilan.
+- Retire la contrainte d'unicité de la fonction a quai
+- Cree une tache pour corriger les display_name des utilisateurs. Planifie cette tache toutes les 5 minutes.
+- Rajoute un filtre sur les roles détenus dans la UsersTable. Ce filtre permet de sélectionner les utilisateurs affichés en fonction des rôles détenus.
+- creation nouvelle table archives
+- correction fote d'orthographe
+
 ## 1.2.3 (avril 14, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.2 –> 1.2.3
 - Report le calcul des utilisateurs pertinents dans la methode mount de la SushiUserTable pour diminuer le nombre de requete lors des changements de filtre et d'ordre.

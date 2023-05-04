@@ -8,7 +8,7 @@
 @section('content')
     
 
-    <div class="bg-light p-4 rounded">
+    <div class="  p-4 rounded">
         <h2>Marins</h2>
         <div class="lead">
             Gestion des marins

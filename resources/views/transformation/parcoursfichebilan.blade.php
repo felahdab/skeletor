@@ -6,7 +6,7 @@
 
 
 @section('content')
-    <div class="bg-light p-4 rounded">
+    <div class="  p-4 rounded">
         <h2>Parcours des fiches bilans</h2>
         <div class="lead">
             Affinez la liste des marins en effectuant une recherche ou en filtrant les données.

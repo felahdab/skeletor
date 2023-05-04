@@ -6,7 +6,6 @@
 
 
 @section('content')
-
     <div  class="p-4">
         <h2>Transformation - Fonctions</h2>
         <div class="lead">

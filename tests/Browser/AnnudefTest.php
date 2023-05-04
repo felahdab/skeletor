@@ -17,7 +17,8 @@ class AnnudefTest extends DuskTestCase
         $user->assignRole("admin");
         
         $this->browse(function ($browser)  use ($user){
-            $browser->loginAs($user)
+            $browser->maximize()
+                    ->loginAs($user)
                   ->visit(route('annudef.index'))
                   ->assertSee('Annudef');
         });
@@ -31,7 +32,8 @@ class AnnudefTest extends DuskTestCase
         $user->assignRole("admin");
         
         $this->browse(function ($browser)  use ($user){
-            $browser->loginAs($user)
+            $browser->maximize()
+                    ->loginAs($user)
                   ->visit(route('annudef.index'))
                   ->type('@input-nom', 'EL-AHDAB')
                   ->pause(1000)

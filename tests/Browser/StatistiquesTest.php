@@ -17,7 +17,8 @@ class StatistiquesTest extends DuskTestCase
         $user->assignRole("admin");
         
         $this->browse(function ($browser)  use ($user){
-            $browser->loginAs($user)
+            $browser->maximize()
+                    ->loginAs($user)
                   ->visit(route('statistiques.pourem'))
                   ->assertSee('Nb total de marins en transformation');
         });
@@ -31,7 +32,8 @@ class StatistiquesTest extends DuskTestCase
         $user->assignRole("admin");
         
         $this->browse(function ($browser)  use ($user){
-            $browser->loginAs($user)
+            $browser->maximize()
+                    ->loginAs($user)
                   ->visit(route('statistiques.pourem'))
                   ->assertSee('Nb total de marins en transformation')
                   ->click('@listemarins-fct-lien-0')
