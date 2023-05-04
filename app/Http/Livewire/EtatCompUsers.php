@@ -50,15 +50,16 @@ class EtatCompUsers extends Component
         $entete_ssobjectifs=[];
         foreach($this->comp->taches as $tache){
             //nb de colspan
-            $nbcoltach = $tache->coll_sous_objectifs()->count();
+            $nbcoltach = $tache->nb_ssobj();
             $tabtach=['colspantach' => $nbcoltach, 'libtach' =>  $tache->tache_liblong ];
             array_push($entete_taches, $tabtach);
             foreach($tache->objectifs as $objectif){
+                $listssobj=$objectif->sous_objectifs;
                 //nb de colspan
-                $nbcolobj =$objectif->coll_sous_objectifs()->count();
+                $nbcolobj =count($listssobj);
                 $tabobj=['colspanobj' => $nbcolobj, 'libobj' => $objectif->objectif_liblong ];
                 array_push($entete_objectifs, $tabobj);
-                foreach($objectif->sous_objectifs as $sous_objectif){
+                foreach($listssobj as $sous_objectif){
                     $tabssobj=['ssobj' => $sous_objectif ];
                     array_push($entete_ssobjectifs, $tabssobj);
                 }
@@ -69,7 +70,10 @@ class EtatCompUsers extends Component
         $usersssobjs=[];
         foreach ($listusers as $user){
             $txcompuser=$user->pourcentage_valides_pour_comp($this->comp);
-            $ligne=['id' => $user->id, 'name' => $user->display_name, 'txtransfo' => $txcompuser];
+            $ligne=['id' => $user->id, 
+                    'name' => $user->display_name, 
+                    'txtransfo' => $txcompuser
+                ];
             foreach($entete_ssobjectifs as $ssobj){
                 $idssobj=$ssobj['ssobj']->id;
                 if ($user->aValideLeSousObjectif($ssobj['ssobj']) ){
@@ -81,50 +85,10 @@ class EtatCompUsers extends Component
             }
             array_push($usersssobjs, $ligne);
         }
-        
-        ///////////////////////
-        //2eme présentation
-        ///////////////////////
-        //entete du tableau
-        $entete_users=[];
-        foreach ($listusers as $user){
-            $txcompuser=$user->pourcentage_valides_pour_comp($this->comp);
-            $col=['id' => $user->id, 'name' => $user->display_name, 'txtransfo' => $txcompuser];
-            array_push($entete_users, $col);
-        }
-
-        //body du tableau
-        $ssobjsusers=[];
-        foreach($this->comp->taches as $tache){
-            $libtach=$tache->tache_liblong;
-            foreach($tache->objectifs as $objectif){
-                $libobj=$objectif->objectif_liblong;
-                foreach($objectif->sous_objectifs as $sous_objectif){
-                    $ligne=['tache' => $libtach, 
-                            'obj' => $libobj, 
-                            'ssobj' => $sous_objectif];
-
-                    $libtach='';
-                    $libobj='';
-                    $idssobj = $sous_objectif->id;                    
-                    foreach ($listusers as $user){
-                        if ($user->aValideLeSousObjectif($sous_objectif) ){
-                            $ligne[$user->id] = 'true';
-                        }
-                        else{
-                            $ligne[$user->id] = 'false';
-                        }     
-                    }
-                    array_push($ssobjsusers, $ligne);
-                }
-            }
-        }
         return view('livewire.etat-comp-users',['entete_taches' => $entete_taches,
                                                 'entete_objectifs' => $entete_objectifs,
                                                 'entete_ssobjectifs' => $entete_ssobjectifs,
                                                 'usersssobjs' => $usersssobjs,
-                                                'entete_users' => $entete_users,
-                                                'ssobjsusers' => $ssobjsusers,
                                             ]);
     }
     public function ValideElementsDuParcoursParcomp( 

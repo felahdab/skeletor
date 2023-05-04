@@ -18,7 +18,6 @@ class StatParComp extends Component
     {
         $this->comp=Compagnonage::find($id);
         $this->tabresult=true;
-        $this->emitSelf('$refresh');
     }
 
     public function render()

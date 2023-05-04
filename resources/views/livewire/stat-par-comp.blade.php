@@ -4,6 +4,7 @@
                                         valideur : '{{htmlspecialchars(auth()->user()->display_name)}}',
                                         date_validation : '{{ date('Y-m-d')}}',
                                         selected_parcomp : [],
+                                        readwrite : true,
                                        }"
                                         
                                         x-on:resetselection.window="selected_parcomp = [];">
