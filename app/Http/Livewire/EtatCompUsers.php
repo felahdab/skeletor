@@ -48,7 +48,7 @@ class EtatCompUsers extends Component
         $entete_taches=[];
         $entete_objectifs=[];
         $entete_ssobjectifs=[];
-        foreach($this->comp->taches as $tache){
+        foreach($this->comp->taches()->with('objectifs.sous_objectifs')->get() as $tache){
             //nb de colspan
             $nbcoltach = $tache->nb_ssobj();
             $tabtach=['colspantach' => $nbcoltach, 'libtach' =>  $tache->tache_liblong ];
@@ -76,7 +76,7 @@ class EtatCompUsers extends Component
                 ];
             foreach($entete_ssobjectifs as $ssobj){
                 $idssobj=$ssobj['ssobj']->id;
-                if ($user->aValideLeSousObjectif($ssobj['ssobj']) ){
+                if ($user->aValideLeSousObjectif($ssobj['ssobj']) ){ // N requetes...
                     $ligne[$idssobj] = 'true';
                 }
                 else{
@@ -104,7 +104,7 @@ class EtatCompUsers extends Component
             $transformationService = new GererTransformationService;
             $transformationService->ValidateSousObjectif($user, $sous_objectif, $date_validation , $commentaire, $valideur);
         }
-        $this->emit('$refresh');
+        // $this->emit('$refresh');
         $this->dispatchBrowserEvent("resetselection");
     }
 }
