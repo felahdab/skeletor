@@ -311,6 +311,15 @@ class User extends Authenticatable
         return true;
     }
     
+    public function getEtatDeValidationDesSsojbsAttribute($liste_id_ssobs)
+    {
+        return $this->sous_objectifs()
+                    ->whereIn('sous_objectif_id', $liste_id_ssobs)
+                    ->get()
+                    ->pluck('pivot.date_validation', 'id')
+                    ->all();
+    }
+
     public function aValideLeSousObjectif(SousObjectif $sous_objectif)
     {
         $workitem = $this->sous_objectifs()->find($sous_objectif);
