@@ -49,7 +49,7 @@ class EtatCompUsers extends Component
         $entete_objectifs=[];
         $entete_ssobjectifs=[];
 
-        $liste_id_ssobs = [];
+        $liste_id_ssobs = $this->comp->coll_sous_objectifs()->pluck('id');
 
         foreach($this->comp->cached_taches as $tache){
             //nb de colspan
@@ -65,7 +65,6 @@ class EtatCompUsers extends Component
                 foreach($listssobj as $sous_objectif){
                     $tabssobj=['ssobj' => $sous_objectif ];
                     array_push($entete_ssobjectifs, $tabssobj);
-                    array_push($liste_id_ssobs, $sous_objectif->id );
                 }
             }
         }
