@@ -22,6 +22,14 @@ class Compagnonage extends Model
     {
         return $this->belongsToMany(Fonction::class, 'compagnonage_fonction')->withTimestamps();
     }
+
+    public function getCachedTachesAttribute()
+    {
+        $result = Cache::remember($this->cacheKey() . ':getCachedTachesAttribute', 60*5, function () {
+            return $this->taches()->with('objectifs.sous_objectifs')->get();
+        });
+        return $result;
+    }
     
     public function coll_sous_objectifs()
     {
