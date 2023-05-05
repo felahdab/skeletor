@@ -48,7 +48,10 @@ class EtatCompUsers extends Component
         $entete_taches=[];
         $entete_objectifs=[];
         $entete_ssobjectifs=[];
-        foreach($this->comp->taches()->with('objectifs.sous_objectifs')->get() as $tache){
+
+        $liste_id_ssobs = [];
+
+        foreach($this->comp->cached_taches as $tache){
             //nb de colspan
             $nbcoltach = $tache->nb_ssobj();
             $tabtach=['colspantach' => $nbcoltach, 'libtach' =>  $tache->tache_liblong ];
@@ -62,6 +65,7 @@ class EtatCompUsers extends Component
                 foreach($listssobj as $sous_objectif){
                     $tabssobj=['ssobj' => $sous_objectif ];
                     array_push($entete_ssobjectifs, $tabssobj);
+                    array_push($liste_id_ssobs, $sous_objectif->id );
                 }
             }
         }
@@ -74,9 +78,13 @@ class EtatCompUsers extends Component
                     'name' => $user->display_name, 
                     'txtransfo' => $txcompuser
                 ];
+            $etat_de_validation = $user->getEtatDeValidationDesSsojbsAttribute($liste_id_ssobs);
+
             foreach($entete_ssobjectifs as $ssobj){
                 $idssobj=$ssobj['ssobj']->id;
-                if ($user->aValideLeSousObjectif($ssobj['ssobj']) ){ // N requetes...
+                // if ($user->aValideLeSousObjectif($ssobj['ssobj']) ){ // N requetes...
+                if (array_key_exists($idssobj, $etat_de_validation) && $etat_de_validation[$idssobj] != null)
+                {
                     $ligne[$idssobj] = 'true';
                 }
                 else{
