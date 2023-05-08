@@ -54,7 +54,7 @@ return [
      * These extensions should be added to the markdown environment. A valid
      * extension implements League\CommonMark\Extension\ExtensionInterface
      *
-     * More info: https://commonmark.thephpleague.com/2.1/extensions/overview/
+     * More info: https://commonmark.thephpleague.com/2.4/extensions/overview/
      */
     'extensions' => [
         //
@@ -64,29 +64,29 @@ return [
      * These block renderers should be added to the markdown environment. A valid
      * renderer implements League\CommonMark\Renderer\NodeRendererInterface;
      *
-     * More info: https://commonmark.thephpleague.com/2.1/customization/rendering/
+     * More info: https://commonmark.thephpleague.com/2.4/customization/rendering/
      */
     'block_renderers' => [
-        // ['class' => FencedCode::class, 'renderer' => new MyCustomCodeRenderer(), 'priority' => 0]
+        // ['class' => FencedCode::class, 'renderer' => MyCustomCodeRenderer::class, 'priority' => 0]
     ],
 
     /*
      * These inline renderers should be added to the markdown environment. A valid
      * renderer implements League\CommonMark\Renderer\NodeRendererInterface;
      *
-     * More info: https://commonmark.thephpleague.com/2.1/customization/rendering/
+     * More info: https://commonmark.thephpleague.com/2.4/customization/rendering/
      */
     'inline_renderers' => [
-        // ['class' => FencedCode::class, 'renderer' => new MyCustomCodeRenderer(), 'priority' => 0]
+        // ['class' => FencedCode::class, 'renderer' => MyCustomCodeRenderer::class, 'priority' => 0]
     ],
 
     /*
      * These inline parsers should be added to the markdown environment. A valid
      * parser implements League\CommonMark\Renderer\InlineParserInterface;
      *
-     * More info: https://commonmark.thephpleague.com/2.3/customization/inline-parsing/
+     * More info: https://commonmark.thephpleague.com/2.4/customization/inline-parsing/
      */
     'inline_parsers' => [
-        // ['parser' => new MyCustomInlineParser(), 'priority' => 0]
+        // ['parser' => MyCustomInlineParser::class, 'priority' => 0]
     ],
 ];
