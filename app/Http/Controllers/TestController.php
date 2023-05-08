@@ -19,12 +19,15 @@ use App\Jobs\CalculateUserTransformationRatios;
 
 class TestController extends Controller
 {
-    public function test()
+    public function test_gantt()
     {
-        // Mail::to("florian.el-ahdab@intradef.gouv.fr")->queue(new EssaiMail());
-        // return redirect()->route("home.index")->withSuccess("Mail sent");
+        return view('test.test_gantt');
         
-        return view("test.test", ["grades" => Grade::orderBy('ordre_classmt')->get()]);
+    }
+
+    public function test_jspreadsheet()
+    {
+        return view('test.test_jspreadsheet');
         
     }
 }
