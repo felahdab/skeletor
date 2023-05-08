@@ -10,9 +10,20 @@ use Illuminate\Http\Client\ConnectionException;
 
 class AnnudefController extends Controller
 {
-    public static function searchUsersRequest($tel ='', $nom='' ,$prenom='' ,$mail='' , $bdd='' , $zone='' ,$localite ='' ,
-            $entite='' ,$fonction='' , $nid='' , $login='', $password ='')
-    {
+    public static function searchUsersRequest(
+        $tel = '',
+        $nom = '',
+        $prenom = '',
+        $mail = '',
+        $bdd = '',
+        $zone = '',
+        $localite = '',
+        $entite = '',
+        $fonction = '',
+        $nid = '',
+        $login = '',
+        $password = ''
+    ) {
         $template = '<?xml version="1.0" encoding="UTF-8"?>
         <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://ldap3.intradef.gouv.fr/LdapWS/Ws_srpcl_annusi_siclient/">
             <SOAP-ENV:Body>
@@ -32,7 +43,7 @@ class AnnudefController extends Controller
                 </ns1:searchUsers>
             </SOAP-ENV:Body>
         </SOAP-ENV:Envelope>';
-        $request = str_replace("TEL", $tel,$template);
+        $request = str_replace("TEL", $tel, $template);
         $request = str_replace("PRENOM", $prenom, $request);
         $request = str_replace("NOM", $nom, $request);
         $request = str_replace("MAIL", $mail, $request);
@@ -46,46 +57,64 @@ class AnnudefController extends Controller
         $request = str_replace("PASSWORD", $password, $request);
         return $request;
     }
-    
-    public static function searchUsers($tel ='', $nom='' ,$prenom='' ,$mail='' , $bdd='' , $zone='' ,$localite ='' ,
-            $entite='' ,$fonction='' , $nid='')
-    {
-        
+
+    public static function searchUsers(
+        $tel = '',
+        $nom = '',
+        $prenom = '',
+        $mail = '',
+        $bdd = '',
+        $zone = '',
+        $localite = '',
+        $entite = '',
+        $fonction = '',
+        $nid = ''
+    ) {
+
         $LDAPSERVER   = env("LDAPSERVER");
         $LDAPLOGIN   = env("LDAPLOGIN");
         $LDAPPASSWORD   = env("LDAPPASSWORD");
         $LDAPANNUURL = env("LDAPANNUURL");
-        
-        $ANNUBASEURL = "https://" . $LDAPSERVER ."/" . $LDAPANNUURL;
-        
-        $request = AnnudefController::searchUsersRequest($tel , $nom ,$prenom ,$mail , $bdd , $zone ,$localite  ,
-            $entite ,$fonction , $nid , $LDAPLOGIN, $LDAPPASSWORD );
-        
-        $response=Http::timeout(intval(env("LDAPTIMEOUT")))
-                ->withBody($request, 'application/soap+xml')
-                ->post($ANNUBASEURL);
-                
+
+        $ANNUBASEURL = "https://" . $LDAPSERVER . "/" . $LDAPANNUURL;
+
+        $request = AnnudefController::searchUsersRequest(
+            $tel,
+            $nom,
+            $prenom,
+            $mail,
+            $bdd,
+            $zone,
+            $localite,
+            $entite,
+            $fonction,
+            $nid,
+            $LDAPLOGIN,
+            $LDAPPASSWORD
+        );
+
+        $response = Http::timeout(intval(env("LDAPTIMEOUT")))
+            ->withBody($request, 'application/soap+xml')
+            ->post($ANNUBASEURL);
+
         $result = new SimpleXMLElement($response->body(), null, 0, "http://schemas.xmlsoap.org/soap/envelope/");
         $returncode = intval($result->Body->children("ns1", true)->children()->response->codeErreur);
         $results = [];
-        
-        if ($returncode == 0)
-        {
+
+        if ($returncode == 0) {
             $xmlstr = $result
                 ->Body
                 ->children("ns1", true)
                 ->children()
                 ->response
-                ->xml
-                ;
+                ->xml;
             // $this->info($xmlstr);
-                
+
             $xmlresult = new SimpleXMLElement($xmlstr);
-           
-            foreach ($xmlresult->children() as $userdata)
-            {
+
+            foreach ($xmlresult->children() as $userdata) {
                 // var_dump($userdata);
-                $userdatatbl=[
+                $userdatatbl = [
                     'titre' => trim($userdata->titre),
                     'nom' => trim($userdata->nom),
                     'prenom' => trim($userdata->prenom),
@@ -102,21 +131,19 @@ class AnnudefController extends Controller
                     'categorystatus' => trim($userdata->categorystatus),
                     'categoryrank' => trim($userdata->categoryrank),
                     'familyname' => trim($userdata->familyname),
-                
+
                 ];
                 // $this->info(json_encode($userdatatbl)); 
                 array_push($results, $userdatatbl);
             }
-        }
-        else
-        {
+        } else {
             // $this->error("Error code: " . $returncode . "\n");
             // $this->info("Request: \n");
             // $this->info($request . "\n");
         }
         return $results;
     }
-    
+
     public function index()
     {
         return view('annudef.index');

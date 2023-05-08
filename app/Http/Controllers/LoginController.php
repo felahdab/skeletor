@@ -37,8 +37,7 @@ class LoginController extends Controller
         $MCuser = Socialite::driver('keycloak')->stateless()->user();
         
         $user = User::where('email', $MCuser->email)->get()->first();
-        if ($user != null)
-        {
+        if ($user != null) {
             Auth::login($user);
             return $this->authenticated($request, $user);
         }
@@ -49,7 +48,8 @@ class LoginController extends Controller
         
         // The, we create a new entry:
 
-        $user = MindefConnectUser::create([
+        $user = MindefConnectUser::create(
+            [
                 'email' => $MCuser->email,
                 'name' => $MCuser->user['usual_name'],
                 'prenom' => $MCuser->user['usual_forename'],
@@ -58,18 +58,21 @@ class LoginController extends Controller
                 'rank'=> $MCuser->user['rank'],
                 'short_rank'=> $MCuser->user['short_rank'],
                 'display_name'=> $MCuser->user['display_name'],
-            ]);
+            ]
+        );
             
         $response = Http::withoutVerifying()
             ->withHeaders(["X-Auth-AccessKey" => env("TULEAP_TOKEN")])
-            ->post(env("TULEAP_URL") . "api/artifacts", [
+            ->post(
+                env("TULEAP_URL") . "api/artifacts", [
                 "tracker" =>  ["id" => env('TULEAP_TRACKER_MINDEFCONNECT') ],
                 "values_by_field" => [
                     "affectation"=>  ["value"  => $MCuser->user['main_department_number'] ],
                     "user"=> ["value" => $MCuser->user['display_name']] ,
                     "instance" => ["value" => env("APP_PREFIX") ]
                 ]
-            ]);
+                ]
+            );
             
             
         return view('auth.comebacklater');
@@ -79,9 +82,10 @@ class LoginController extends Controller
     {
         $credentials = $request->getCredentials();
         
-        if (!Auth::validate($credentials))
+        if (!Auth::validate($credentials)) {
             return redirect()->to(route('login.show'))
-                    ->withErrors(trans('auth.failed'));
+                ->withErrors(trans('auth.failed'));
+        }
         
         $user = Auth::getProvider()->retrieveByCredentials($credentials);
         
@@ -89,8 +93,8 @@ class LoginController extends Controller
         if ($user->roles->count() != 0) {;    
             $userRole = $user->roles[0];
             $request->session()->put('current_role', $userRole->id);
-	    $request->session()->save();
-	}
+            $request->session()->save();
+        }
         return $this->authenticated($request, $user);
     }
 
@@ -98,7 +102,7 @@ class LoginController extends Controller
      * Handle response after user authenticated
      * 
      * @param Request $request
-     * @param Auth $user
+     * @param Auth    $user
      * 
      * @return \Illuminate\Http\Response
      */
