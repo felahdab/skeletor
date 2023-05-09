@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Service\GererTransformationService;
 use App\Service\RecalculerTransformationService;
 
+use Illuminate\Support\Carbon;
+
 use App\Http\Requests\StoreStageRequest;
 use App\Http\Requests\UpdateStageRequest;
 use App\Models\Stage;
@@ -50,7 +52,12 @@ class StageController extends Controller
         $stage->transverse = array_key_exists('transverse', $request->stage) ;
         $stage->typelicence_id=$request->stage['typelicence_id'];
         $stage->stage_lieu = $request->stage['stage_lieu'];
-        $stage->stage_duree = $request->stage['stage_duree'];
+        if(is_numeric($request->stage['stage_duree'])){
+            $stage->stage_duree = $request->stage['stage_duree'];
+        }
+        if(is_numeric($request->stage['duree_validite'])){
+            $stage->duree_validite = $request->stage['duree_validite'];
+        }
         $stage->stage_capamax = $request->stage['stage_capamax'];
         $stage->stage_date_fin_licence = $request->stage['stage_date_fin_licence'];
         $stage->stage_commentaire = $request->stage['stage_commentaire'];
@@ -106,7 +113,12 @@ class StageController extends Controller
         else
             $stage->transverse = false;
         $stage->stage_lieu = $request->stage['stage_lieu'];
-        $stage->stage_duree = $request->stage['stage_duree'];
+        if(is_numeric($request->stage['stage_duree'])){
+            $stage->stage_duree = $request->stage['stage_duree'];
+        }
+        if(is_numeric($request->stage['duree_validite'])){
+            $stage->duree_validite = $request->stage['duree_validite'];
+        }
         $stage->stage_capamax = $request->stage['stage_capamax'];
         $stage->stage_date_fin_licence = $request->stage['stage_date_fin_licence'];
         $stage->stage_commentaire = $request->stage['stage_commentaire'];
@@ -143,11 +155,15 @@ class StageController extends Controller
     {
         if ($request->has('user')){
             $userlist = $request['user'];
+            $nbmois= $stage->duree_validite;
             foreach (array_keys($userlist) as $userid)
             {
                 $user = User::find($userid);
                 $workitem = $user->stages()->find($stage)->pivot;
                 $workitem->date_validation = $request["date_validation"];
+                $date_validite= new Carbon($workitem->date_validation);
+                $date_validite = $date_validite->addMonth($nbmois);
+                $workitem->date_validite = $date_validite;
                 $workitem->commentaire .= ' ' . $request["commentaire"];
                 $workitem->save();
             }
@@ -165,6 +181,7 @@ class StageController extends Controller
                 $user = User::find($userid);
                 $workitem = $user->stages()->find($stage)->pivot;
                 $workitem->date_validation = null;
+                $workitem->date_validite = null;
                 $workitem->save();
             }
             RecalculerTransformationService::handle();

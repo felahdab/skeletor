@@ -60,6 +60,7 @@
                         if ($user->pivot->date_validation == null) 
                             $nbmarinsattente++;
                 }
+                $datejour=date('Y-m-d');
             @endphp
             <div class='lead'>Liste des <b>{{$nbmarinsattente}}</b> marins <b>en attente</b> du stage {{$stage->stage_libcourt}}</div>
             <div class='table-responsive'>
@@ -86,7 +87,7 @@
                     </thead>
                     <tbody>
                     @foreach($usersdustage as $user)
-                        @if ($user->pivot->date_validation == null)
+                        @if ($user->pivot->date_validation == null || $user->pivot->date_validite < $datejour)
                         <tr title="{{$user->user_comment}}">
                             <td> <input type='checkbox' 
                                     id='user[{{ $user->id }}]' 
@@ -155,7 +156,8 @@
                         <td>Pr&eacute;nom</td>
                         @if(false)<td>Mat</td>@endif
                         <td>Secteur</td>
-                        <td>Date valid</td>
+                        <td>Date validation</td>
+                        <td>Date validité</td>
                         @if(auth()->user()->can('stages.attribuerstage'))
                                 <th scope="col">&#10069;</th>
                                 <th scope="col">&#128822;</th>
@@ -163,7 +165,7 @@
                     </tr>
                     <tbody>
                     @foreach($usersdustage as $user)
-                        @if ($user->pivot->date_validation != null)
+                        @if ($user->pivot->date_validation != null && $user->pivot->date_validite >= $datejour)
                         <tr title='' style='color:black; '>
                             <td> <input type='checkbox' 
                                     id='usercancel[{{ $user->id }}]' 
@@ -177,6 +179,7 @@
                             @if(false)<td>{{$user->matricule}}</td>@endif
                             <td>{{$user->displaySecteur()}} </td>
                             <td>{{$user->pivot->date_validation}}</td>
+                            <td>{{$user->pivot->date_validite}}</td>
                             @if(auth()->user()->can('stages.attribuerstage'))
                                 @if ($user->pivot->commentaire == null or $user->pivot->commentaire == ' ')
                                     <td>&nbsp;</td>

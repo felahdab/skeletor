@@ -52,6 +52,10 @@ class GererTransformationService
         $workitem = $user->stages()->find($stage)->pivot;
         if ($workitem != null)
         {
+            $nbmois= $stage->duree_validite;
+            $date_validite= new Carbon($workitem->date_validation);
+            $date_validite = $date_validite->addMonth($nbmois);
+            $workitem->date_validite = $date_validite;
             $workitem->date_validation = $date_validation;
             $workitem->commentaire = " " . $commentaire;
             $workitem->save();
@@ -80,6 +84,7 @@ class GererTransformationService
         $workitem = $user->stages()->find($stage)->pivot;
         if ($workitem != null)
         {
+            $workitem->date_validite = null;
             $workitem->date_validation = null;
             $workitem->save();
         }

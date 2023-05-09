@@ -27,6 +27,6 @@ class Stage extends Model
     {
         return $this->belongsToMany(User::class, 'user_stage')
             ->withTimeStamps()
-            ->withPivot('commentaire', 'date_validation');
+            ->withPivot('commentaire', 'date_validation', 'date_validite');
     }
 }
