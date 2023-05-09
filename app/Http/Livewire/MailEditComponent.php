@@ -18,8 +18,17 @@ class MailEditComponent extends Component
     public $sujet;
     public $corps;
     
-    public $query="";
+    public $userids=[];
     public $recipients=[];
+
+    protected $listeners = ['userListUpdated', '$refresh'];
+
+    public function userListUpdated($userids)
+    {
+        $this->userids = $userids;
+        $this->makeQuery();
+        $this->emitSelf('$refresh');
+    }
     
     public function mount($mail)
     {
@@ -34,10 +43,7 @@ class MailEditComponent extends Component
     
     public function makeQuery()
     {
-        if ($this->query=="")
-            $this->recipients=[];
-        else
-            $this->recipients= User::where('display_name', 'LIKE', '%' . $this->query . '%')->get();
+        $this->recipients = User::whereIn('id', $this->userids)->get() ?: [];
     }
     
     public function render()
@@ -48,20 +54,11 @@ class MailEditComponent extends Component
     
     public function sendToUsers()
     {
+        $this->makeQuery();
         $newMail = new ManualMail($this->corps, $this->sujet);
         SupportMail::to($this->recipients)
                 ->bcc('ffast.notification.tec@intradef.gouv.fr')
                 ->queue($newMail);
-    }
-    
-    public function sendToAllPriviledgedUsers()
-    {
-        $roles = Role::whereNotIn('name', ['user', 'transfo'])->get();
-        $recipients = User::role($roles)->get();
-        $newMail = new ManualMail($this->corps, $this->sujet);
-        SupportMail::to($recipients)
-            ->bcc('ffast.notification.tec@intradef.gouv.fr')
-            ->queue($newMail);
     }
     
     public function save()

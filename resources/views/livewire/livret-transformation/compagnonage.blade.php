@@ -14,7 +14,7 @@
         </div>
         <div id="collapseComp_{{$compagnonage->id}}" class="accordion-collapse collapse">
             <div class="accordion-body">
-            <table class='table' x-data='{ active : false }'>
+            <table class='table table-bordered' x-data='{ active : false }'>
                 <tr class='table-active text-center'>
                     <th style='width:20%;'>Tâche</td>
                     <th style='width:25%;'>Objectif</td>

@@ -6,7 +6,7 @@
 
 
 @section('content')
-    <div class="bg-light p-4 rounded">
+    <div class="  p-4 rounded">
         <h2>Stages - Validation ou annulation collective du stage {{$stage->stage_libcourt}}</h2>
     </div>
 <div x-data="{ opendivvalid : false ,

@@ -26,7 +26,8 @@ class LivretMultipleTest extends DuskTestCase
         $user->fonctions()->attach($fonction);
 
         $this->browse(function ($browser)  use ($user, $fonction){
-            $browser->loginAs($user)
+            $browser->maximize()
+                    ->loginAs($user)
                   ->visit(route('fonctions.choixmarins', ["fonction" => $fonction]))
                   ->assertSee('Validation collective');
         });
@@ -44,7 +45,8 @@ class LivretMultipleTest extends DuskTestCase
         $user->fonctions()->attach($fonction);
         
         $this->browse(function ($browser)  use ($user, $fonction){
-            $browser->loginAs($user)
+            $browser->maximize()
+                ->loginAs($user)
                 ->visit(route('fonctions.choixmarins', ["fonction" => $fonction]))
                 ->assertSee('Validation collective')
                 ->click("@livret-multiple-enregistrer")

@@ -6,7 +6,8 @@
 
 
 @section('content')
-    <div class="bg-light p-4 rounded">
+<div x-data='{indic: true, durspe: false, durmarin: false}'>
+    <div class="  p-4 rounded">
         <h2>Indicateurs</h2>
         <div class='mb-2 mt-2 me-2 w-25'>
             <select name='listdates' id='listdates' class='custom-select w-100' onchange='modifparam("period","listdates");'>
@@ -23,12 +24,12 @@
         </div>
     </div>
     <div class='ms-4'>
-        <a class='btn btn-secondary btn-sm' href='#' onclick='affichage("indic");annuler("durspe");annuler("durmarin");'>Indicateurs</a>
-        <a class='btn btn-primary btn-sm' href='#' onclick='annuler("indic");annuler("durspe");affichage("durmarin");'>Temps de l&acirc;cher par marin</a>
-        <a class='btn btn-info btn-sm' href='#' onclick='annuler("indic");affichage("durspe");annuler("durmarin");'>Temps de l&acirc;cher par sp&eacute;</a>
+        <a class='btn btn-secondary btn-sm' href='#' x-on:click='indic=true; durspe=false; durmarin=false;'>Indicateurs</a>
+        <a class='btn btn-primary btn-sm' href='#' x-on:click='indic=false; durspe=true; durmarin=false;'>Temps de l&acirc;cher par marin</a>
+        <a class='btn btn-info btn-sm' href='#' x-on:click='indic=false; durspe=false; durmarin=true;'>Temps de l&acirc;cher par sp&eacute;</a>
     </div>
     <div class='flex' style='justify-content: start;'>
-        <div id='indic' class='card bg-light w-100' style=''>
+        <div id='indic' class='card   w-100' x-show='indic'>
             <div>
                 <table class='table table-hover'>
                     <tr class='card-header'>
@@ -116,13 +117,13 @@
                 </table>
             </div>
         </div>
-        <div id='durmarin' class='card bg-light w-100' style='display:none;'>
+        <div id='durmarin' class='card   w-100' x-show='durmarin' x-cloak>
             <div class='card-header'>Dur&eacute;e moyenne (jour) avant l&acirc;cher par marin </div>
             <div class="mt-3">
                 <livewire:statistique-table period="{{$period}}">
             </div>
         </div>
-        <div id='durspe' class='card bg-light w-50' style='display:none;'>
+        <div id='durspe' class='card   w-50' x-show='durspe' x-cloak>
             <div class='card-header'>Dur&eacute;e moyenne (jour) avant l&acirc;cher par brevet/sp&eacute;cialit&eacute; </div>
             <table class='table table-hover'>
                 <tr>
@@ -153,4 +154,5 @@
             </table>
         </div>
     </div>
+</div>
 @endsection

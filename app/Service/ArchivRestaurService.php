@@ -1,6 +1,8 @@
 <?php
 namespace App\Service;
 
+use Illuminate\Support\Carbon;
+
 use App\Models\User;
 use App\Models\MindefConnectUser;
 use Spatie\Permission\Models\Role;
@@ -8,6 +10,8 @@ use Spatie\Permission\Models\Role;
 use App\Service\RandomPasswordGeneratorService;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeMail;
+
+use App\Models\Archive;
 
 class ArchivRestaurService
 {
@@ -58,6 +62,39 @@ class ArchivRestaurService
 
         Mail::to($newUser->email)
             ->queue(new WelcomeMail($newUser));
+
+    }
+
+
+
+    public static function archivageuser(User $user)
+    {
+        $transfoManager = $user->getTransformationManager();
+        $date_embarq = new Carbon($user->date_embarq);
+        $date_debarq = new Carbon($user->date_debarq);
+        $nb_jour_gtr = $date_debarq->diffInDays($date_embarq);
+
+        $userdata=array('grade' => $user->displayGrade(),
+                        'specialite' => $user->displaySpecialite(),
+                        'brevet' => $user->displayDiplome(),
+                        'date_deb' => $user->date_debarq,
+                        'date_emb' => $user->date_embarq,
+                        'tx_transfo' => $user->taux_de_transformation,  
+                        'nb_jour_presence' => $nb_jour_gtr,
+                    );
+
+        $etat_parcours=$transfoManager->etat_parcours()->toJson();
+        $etat_parcours = json_encode(json_decode($etat_parcours), JSON_PRETTY_PRINT);
+
+        $archive= new Archive;
+        $archive->name = $user->name;
+        $archive->prenom = $user->prenom;
+        $archive->email = $user->email;
+        $archive->matricule = $user->matricule;
+        $archive->nid = $user->nid;
+        $archive->userdata = json_encode($userdata, JSON_PRETTY_PRINT);
+        $archive->etat_parcours = $etat_parcours;
+        $archive->save();
 
     }
 }

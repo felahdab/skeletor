@@ -1,7 +1,7 @@
 @extends('layouts.app-master')
 
 @section('content')
-<div class="bg-light p-4 rounded">
+<div class="p-4 rounded">
         <h1>Changer de role</h1>
 	<div class="container mt-4">
 	<form method="post" action="{{ route('currentrole.store', $user->id) }}">
