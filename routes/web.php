@@ -179,7 +179,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
 
         // if (env('APP_ENV') == "local")
         // {
-        Route::get('/test', [TestController::class, 'test'])->name('test.test');
+            Route::get('/test_gantt', 'TestController@test_gantt')->name('test.test_gantt');
+            Route::get('/test_jspreadsheet', 'TestController@test_jspreadsheet')->name('test.test_jspreadsheet');
         // }
     });
 });
