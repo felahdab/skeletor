@@ -158,7 +158,7 @@ class StageController extends Controller
             $nbmois= $stage->duree_validite;
             $date_validite= NULL;
             if($nbmois != NULL){
-                $date_validite= new Carbon($workitem->date_validation);
+                $date_validite= new Carbon($request["date_validation"]);
                 $date_validite = $date_validite->addMonth($nbmois);
             }
             foreach (array_keys($userlist) as $userid)
