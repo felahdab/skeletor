@@ -156,13 +156,16 @@ class StageController extends Controller
         if ($request->has('user')){
             $userlist = $request['user'];
             $nbmois= $stage->duree_validite;
+            $date_validite= NULL;
+            if($nbmois != NULL){
+                $date_validite= new Carbon($workitem->date_validation);
+                $date_validite = $date_validite->addMonth($nbmois);
+            }
             foreach (array_keys($userlist) as $userid)
             {
                 $user = User::find($userid);
                 $workitem = $user->stages()->find($stage)->pivot;
                 $workitem->date_validation = $request["date_validation"];
-                $date_validite= new Carbon($workitem->date_validation);
-                $date_validite = $date_validite->addMonth($nbmois);
                 $workitem->date_validite = $date_validite;
                 $workitem->commentaire .= ' ' . $request["commentaire"];
                 $workitem->save();

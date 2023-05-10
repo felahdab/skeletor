@@ -75,17 +75,16 @@
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Commentaire associé au stage</h1>
+                            <p class="modal-title fs-5" id="exampleModalLabel">
+                                Commentaire du stage : <input x-model="libstage" disabled class="mb-1 text-dark w-100" > 
+                                <br>Pour le marin : <input x-model="nommarin" disabled class="mt-1 text-dark w-100" >
+                            </p>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <input type='hidden' id='formtosubmit' name='formtosubmit' value=''>
-                            <div class="row">
-                                <input class='form-control text-center col' x-model="libstage" disabled>
-                                <input class='form-control text-center col' x-model="nommarin" disabled>
-                            </div>
-                            <div class='form-group row  mt-4' >
-                                    <textarea class="form-control"  rows='4' name='commentaire' id='commentaire' placeholder='Commentaire' x-model="commentaire"></textarea>
+                            <div class='form-group row  mt-2' >
+                                <textarea class="form-control" rows='4' name='commentaire' id='commentaire' placeholder="Commentaire" x-model="commentaire"></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
