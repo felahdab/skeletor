@@ -10,8 +10,8 @@
 - [Suivi de la transformation par compagnonnage](#suivi-par-compagnonnage)
 - [Suivi de la transformation par stage](#suivi-par-stage)
 - [Recalcul des taux de transformation](#recalcul-transfo)
-- [Ma transformation](#ma-transformation)
 - [Parcours des fiches bilan](#parcours-fiche-bilan)
+- [Ma transformation](#ma-transformation)
 
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/menu_transformation.png' )) }}" width=400px>
 Ce menu permet d’accéder : 
@@ -80,7 +80,7 @@ Le bouton « Imprimer » (5) permet d’éditer le livret au format pdf.
 **Remarque : **  Le marin concerné a la possibilité de proposer la validation d'élements du parcours. Les éléments proposés par le marin sont marqués d'une pastille "PROPOSE":
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/pastille_proposition.png' )) }}" width=100px>
 
-**Remarque : ** Pour l’imprimer au format livret, sélectionnez l’option d’impression d’Acrobate Reader « brochure ».
+**Remarque : ** Pour imprimer au format livret, sélectionnez l’option d’impression d’Acrobate Reader « brochure ».
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/livret_de_transformation_impression_livret.jpg' )) }}" width=400px> 
 
 <a name="progression">
@@ -142,7 +142,7 @@ Pour changer de compagnonnage, revenez sur l'onglet "Sélection" (5).
 Cette page permet de consulter la situation des marins pour un stage.
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/suivi_par_stage.png' )) }}"> 
 
-En cliquant sur le bouton « Situation des marins pour ce stage » (1), vous affichez deux listes. La première recense les marins en attente du stage (2), la deuxième (3), ceux l’ayant déjà validé. En cliquant sur un nom (4), vous revenez au détail des stages du marin.
+En cliquant sur le bouton « Situation des marins pour ce stage » (1), vous affichez deux listes. La première recense les marins en attente du stage ou dont le stage est périmé (2), la deuxième (3), ceux l’ayant déjà validé et dont la validité est encore en cours. En cliquant sur un nom (4), vous revenez au détail des stages du marin.
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/situation_marin_pour_stage.png' )) }}"> 
  
 ** Remarque : ** pour exporter ce tableau sous Excel, sélectionner toutes les cases voulues en maintenant enfoncée la touche « Ctrl » de votre clavier puis copier et coller.
@@ -156,6 +156,14 @@ En cliquant sur le bouton « Lancer le calcul » (1), tous les taux de transform
 
 > {info} ** Remarque : ** Plus il y a de marins plus le calcul peut être long. 
 
+
+<a name="parcours-fiche-bilan">
+# Parcours des fiches bilan
+Ce menu va vous permettre de consulter toutes les fiches bilan en fonction des critères sélectionnés. Vous devez saisir au moins 1 critère pour pouvoir afficher les fiches.
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/filtres_fiches_bilan.png' )) }}">
+Saisissez les critères de filtre (1) dans l'onglet "Sélection" et consulter les fiches associées dans l'onglet "Fiches bilan" (2).
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/liste_fiches_bilan.png' )) }}">
+Naviguez entre les fiches avec les boutons "Précédent et Suivant" (1). Vous pouvez revenir sur l'onglet "Sélection" pour modifier vos critères.
 
 <a name="ma-transformation">
 # Ma Transformation
@@ -172,12 +180,3 @@ Lorsqu'un marin propose la validation d'un élément du parcours, cet élément 
 Le marin peut renseigner un commentaire qui est accessible sur l'élément considéré en laissant la souris sur la pastille.
 
 Dans le livret de transformation, les tuteurs sont libres de valider ou de refuser les propositions faites par le marin.
-
-
-<a name="parcours-fiche-bilan">
-# Parcours des fiches bilan
-Ce menu va vous permettre de consulter toutes les fiches bilan en fonction des critères sélectionnés. Vous devez saisir au moins 1 critère pour pouvoir afficher les fiches.
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/filtres_fiches_bilan.png' )) }}">
-Saisissez les critères de filtre (1) dans l'onglet "Sélection" et consulter les fiches associées dans l'onglet "Fiches bilan" (2).
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/liste_fiches_bilan.png' )) }}">
-Naviguez entre les fiches avec les boutons "Précédent et Suivant" (1). Vous pouvez revenir sur l'onglet "Sélection" pour modifier vos critères.

@@ -87,7 +87,6 @@
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 @can('statistiques.pourtuteurs')<a class="dropdown-item" href="{{route('statistiques.pourtuteurs')}}">Bilan par service</a>@endcan
-                @can('statistiques.parcomp')<a class="dropdown-item" href="{{route('statistiques.parcomp')}}">Bilan par compagnonnage</a>@endcan
                 @can('statistiques.pour2ps')<a class="dropdown-item" href="{{route('statistiques.pour2ps')}}">Bilan par stage</a>@endcan
                 @can('statistiques.pourem')<a class="dropdown-item" href="{{route('statistiques.pourem')}}">Bilan global</a>@endcan
                 @can('statistiques.index')<!--a class="dropdown-item" href="{{route('statistiques.index')}}">Indicateurs</a-->@endcan
