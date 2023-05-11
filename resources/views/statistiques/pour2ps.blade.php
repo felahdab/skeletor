@@ -23,7 +23,7 @@
                             <tbody>
                                 @foreach($stagelics as $stagelic)
                                     <tr>
-                                        <td>{{$stagelic['libstage']}}</td>
+                                        <td><a href="{{ route('stages.show', $stagelic['idstage']) }}">{{$stagelic['libstage']}}</a></td>
                                         <td class="text-end">{{$stagelic['nbmarinsavalider']}}</td>
                                     </tr>
                                 @endforeach
@@ -48,7 +48,7 @@
                             <tbody>
                                 @foreach($stageexts as $stageext)
                                     <tr>
-                                        <td>{{$stageext['libstage']}}</td>
+                                        <td><a href="{{ route('stages.show', $stageext['idstage']) }}">{{$stageext['libstage']}}</a></td>
                                         <td class="text-end">{{$stageext['nbmarinsavalider']}}</td>
                                     </tr>
                                 @endforeach

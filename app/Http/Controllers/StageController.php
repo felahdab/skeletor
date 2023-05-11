@@ -102,6 +102,7 @@ class StageController extends Controller
      */
     public function update(UpdateStageRequest $request, Stage $stage)
     {
+        $olddureevalidite=$stage->duree_validite;
         $stage->stage_libcourt=$request->stage['stage_libcourt'];
         if ($request->stage['stage_liblong'] == null)
             $stage->stage_liblong="";
@@ -113,17 +114,20 @@ class StageController extends Controller
         else
             $stage->transverse = false;
         $stage->stage_lieu = $request->stage['stage_lieu'];
-        if(is_numeric($request->stage['stage_duree'])){
+        if($request->stage['stage_duree'] == null || is_numeric($request->stage['stage_duree'])){
             $stage->stage_duree = $request->stage['stage_duree'];
         }
-        if(is_numeric($request->stage['duree_validite'])){
+        if($request->stage['duree_validite'] == null || (is_numeric($request->stage['duree_validite']) && $request->stage['duree_validite'] > 0 )){
             $stage->duree_validite = $request->stage['duree_validite'];
         }
         $stage->stage_capamax = $request->stage['stage_capamax'];
         $stage->stage_date_fin_licence = $request->stage['stage_date_fin_licence'];
         $stage->stage_commentaire = $request->stage['stage_commentaire'];
-        $stage->save();
-        
+        if($stage->save() && $stage->duree_validite != $olddureevalidite){
+            if($stage->duree_validite != $olddureevalidite){
+                $stage->miseajourdatevalidite();
+            }
+        }
         return redirect()->route('stages.edit', $stage);
     }
 
@@ -157,7 +161,7 @@ class StageController extends Controller
             $userlist = $request['user'];
             $nbmois= $stage->duree_validite;
             $date_validite= NULL;
-            if($nbmois != NULL){
+            if($nbmois){
                 $date_validite= new Carbon($request["date_validation"]);
                 $date_validite = $date_validite->addMonth($nbmois);
             }
@@ -190,5 +194,5 @@ class StageController extends Controller
             RecalculerTransformationService::handle();
         }
         return redirect()->route('stages.show', ['stage'=>$stage]);
-    }
+    }  
 }

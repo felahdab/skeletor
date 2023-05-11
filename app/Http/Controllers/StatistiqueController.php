@@ -65,7 +65,6 @@ class StatistiqueController extends Controller
         $users = User::with('secteur')->get();
         $services = Service::orderBy('service_libcourt')->get();
         $fonctionsaquai = Fonction::where('typefonction_id', 2);
-
         return view('statistiques.pourem', ['stages'   => $stages,
                                    'services' => $services,
                                    'fonctionsaquai' => $fonctionsaquai,
@@ -86,71 +85,23 @@ class StatistiqueController extends Controller
     {
         return view('statistiques.parcomp');
     }
-
  
     public function pour2ps()
     {
-        
         $stages = Stage::all();
-    //crer la liste des stages sous licence [idstage, libstage, nbmarinsavalider]
-    //     $stagelic = [];
-    //     foreach($stages as $stage){
-    //         // dd($stage);
-    //         if($stage->typelicence_id < 4){
-    //             $idstage = $stage->id;
-    //             $libstage = $stage->stage_libcourt;
-    //             $nbmarinsavalider = $stage->users()->wherePivotNull('date_validation')
-    //                                                 ->orWhere(function($query){
-    //                                                     $query->whereNotNull('user_stage.date_validite')
-    //                                                             ->where('user_stage.date_validite', '<' , now());
-    //                                                 })
-    //                                                 ->get()->count();
-    //         $ligne=[$idstage, $libstage, $nbmarinsavalider];
-    //             if($nbmarinsavalider > 0){
-    //                 array_push($stagelic, $ligne);
-    //             }
-    //         }
-    //     }
-    //   //dd($stagelic);
-        
-
-
-    //         //creer la liste des stages ext [idstage, libstage, nbmarinsavalider]
-    //         $stageext = [];
-    //         foreach($stages as $stage){
-    //             // dd($stage);
-    //             if($stage->typelicence_id == 4){
-    //                 $idstage = $stage->id;
-    //                 $libstage = $stage->stage_libcourt;
-                
-    //                 $nbmarinsavalider = $stage->users()
-    //                                             ->wherePivotNull('date_validation')
-    //                                             ->orWhere(function($query) use ($idstage){
-    //                                                 $query  ->where ('user_stage.stage_id', $idstage)
-    //                                                         ->whereNotNull('user_stage.date_validite')
-    //                                                         ->where('user_stage.date_validite', '<' , now());
-    //                                             })
-    //                                             ->get()
-    //                                             ->count();
-
-    //                 $ligne=[$idstage, $libstage, $nbmarinsavalider];
-    //                 array_push($stageext, $ligne);
-    //             }
-    //         }
-            // dd($stageext);   
         $stageext = [];
         $stagelic = [];
         foreach($stages as $stage){
             $idstage = $stage->id;
             $libstage = $stage->stage_libcourt;
             $nbmarinsavalider = $stage->users()
-            ->wherePivotNull('date_validation')
-            ->orWhere(function($query) use ($idstage){
-                $query  ->where ('user_stage.stage_id', $idstage)
-                        ->whereNotNull('user_stage.date_validite')
-                        ->where('user_stage.date_validite', '<' , now());})
-            ->get()
-            ->count();
+                                    ->wherePivotNull('date_validation')
+                                    ->orWhere(function($query) use ($idstage){
+                                        $query  ->where ('user_stage.stage_id', $idstage)
+                                                ->whereNotNull('user_stage.date_validite')
+                                                ->where('user_stage.date_validite', '<' , now());})
+                                    ->get()
+                                    ->count();
             if($nbmarinsavalider > 0){
                 $ligne=['idstage' => $idstage, 'libstage' => $libstage, 'nbmarinsavalider' =>$nbmarinsavalider];
                 if($stage->typelicence_id < 4){
@@ -161,7 +112,6 @@ class StatistiqueController extends Controller
                 }
             }
         }
-         //   dd($stagelic);
         return view('statistiques.pour2ps', ['stageexts' => $stageext,
                                             'stagelics' => $stagelic,
                                             'stages'=> $stages,
