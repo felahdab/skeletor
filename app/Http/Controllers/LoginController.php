@@ -40,7 +40,6 @@ class LoginController extends Controller
         $driver->setHttpClient(new Client(["verify" => false]));
 
         $MCuser = $driver->stateless()->user();
-        ddd($MCuser);
         
         $user = User::where('email', $MCuser->email)->get()->first();
         if ($user != null) {
