@@ -120,7 +120,7 @@
                 <span class="badge bg-primary">{{ $role->name }}</span>
               @endforeach
             </div>
-            @if(false)<a class="dropdown-item" href="{{ route('mespreferences') }}">Préférences</a>@endif
+            @can('mespreferences')<a class="dropdown-item" href="{{ route('mespreferences') }}">Préférences</a>@endcan
             <a class="dropdown-item" href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2">Déconnexion</a>
             <hr>
             <span class="dropdown-item">Version : {{env('APP_VERSION')}}</span>
