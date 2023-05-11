@@ -58,7 +58,7 @@
                             @elseif (is_numeric($cell))
                                 <td class="text-center">{{$cell}}
                             @else
-                                <td class="text-center" style="position: sticky; left: 0;z-index: 1;background: white;">{{$cell}}
+                                <td class="text-center" style="position: sticky; left: 0;z-index: 1;background: white;"><a href="{{ route('transformation.livret', $ligne['id'] )}}">{{$cell}}</a>
                             @endif
                             </td>
                     @endif
