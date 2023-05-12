@@ -36,16 +36,16 @@
               </div>
             </div>
             @endcan
-            @can('fonctions.index')
+            @can('transformation.exportparcours')
             <div class="dropdown" >
               <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Parcours
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="{{ route('fonctions.index')}}">Fonctions</a>
-                <a class="dropdown-item" href="{{ route('compagnonages.index')}}">Compagnonnages</a>
-                <a class="dropdown-item" href="{{ route('taches.index')}}">Tâches</a>
-                <a class="dropdown-item" href="{{ route('objectifs.index')}}">Objectifs</a>
+                @can('fonctions.index')<a class="dropdown-item" href="{{ route('fonctions.index')}}">Fonctions</a>@endcan
+                @can('compagnonages.index')<a class="dropdown-item" href="{{ route('compagnonages.index')}}">Compagnonnages</a>@endcan
+                @can('taches.index')<a class="dropdown-item" href="{{ route('taches.index')}}">Tâches</a>@endcan
+                @can('objectifs.index')<a class="dropdown-item" href="{{ route('objectifs.index')}}">Objectifs</a>@endcan
                 @can('stages.index')<a class="dropdown-item" href="{{ route('stages.index')}}">Stages</a>@endcan
                 <a class="dropdown-item" href="{{ route('transformation.exportparcours')}}">Exporter les parcours</a>
                 <!--a class="dropdown-item" href="{{ route('sous-objectifs.index')}}">Sous-Objectifs</a-->
