@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Fonction;
 use App\Models\User;
+use App\Models\Grade;
 use App\Mail\EssaiMail;
 use Illuminate\Support\Facades\Mail;
 
@@ -18,19 +19,15 @@ use App\Jobs\CalculateUserTransformationRatios;
 
 class TestController extends Controller
 {
-    public function test()
+    public function test_gantt()
     {
-        // Mail::to("florian.el-ahdab@intradef.gouv.fr")->queue(new EssaiMail());
-        // return redirect()->route("home.index")->withSuccess("Mail sent");
+        return view('test.test_gantt');
         
-        // $spreadsheet = new Spreadsheet();
-        // $sheet= $spreadsheet->getActivesheet();
-        // $sheet->setCellValue('A1', 'Helo world!');
-        // $writer = new Xlsx($spreadsheet);
-        // header('Content-Type: application/vnc.openxmlformats-officedocument.spreadsheetml.sheet');
-        // header('Content-Disposition: attachment; filename="test.xlsx"');
-        // $writer->save('php://output');
-        // exit();
-        return view("test.test");
+    }
+
+    public function test_jspreadsheet()
+    {
+        return view('test.test_jspreadsheet');
+        
     }
 }

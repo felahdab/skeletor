@@ -129,6 +129,15 @@ class MarkdownRenderer
         return $this->getMarkdownConverter()->convert($markdown);
     }
 
+    protected function getClassInstance($class)
+    {
+        if (is_string($class) && class_exists($class)) {
+            $class = new $class();
+        }
+
+        return $class;
+    }
+
     protected function configureCommonMarkEnvironment(EnvironmentBuilderInterface $environment): void
     {
         $environment->addExtension(new CommonMarkCoreExtension());
@@ -141,28 +150,35 @@ class MarkdownRenderer
         }
 
         foreach ($this->extensions as $extension) {
-            if (is_string($extension) && class_exists($extension)) {
-                $extension = new $extension();
-            }
-            $environment->addExtension($extension);
+            $environment->addExtension($this->getClassInstance($extension));
         }
 
         foreach ($this->blockRenderers as $blockRenderer) {
-            $environment->addRenderer($blockRenderer['class'], $blockRenderer['renderer'], $blockRenderer['priority'] ?? 0);
+            $environment->addRenderer($blockRenderer['class'], $this->getClassInstance($blockRenderer['renderer']), $blockRenderer['priority'] ?? 0);
         }
 
         foreach ($this->inlineRenderers as $inlineRenderer) {
-            $environment->addRenderer($inlineRenderer['class'], $inlineRenderer['renderer'], $inlineRenderer['priority'] ?? 0);
+            $environment->addRenderer($inlineRenderer['class'], $this->getClassInstance($inlineRenderer['renderer']), $inlineRenderer['priority'] ?? 0);
         }
 
         foreach ($this->inlineParsers as $inlineParser) {
-            $environment->addInlineParser($inlineParser['parser'], $inlineParser['priority'] ?? 0);
+            $environment->addInlineParser($this->getClassInstance($inlineParser['parser']), $inlineParser['priority'] ?? 0);
         }
     }
 
     private function getMarkdownConverter(): MarkdownConverter
     {
-        $environment = new Environment($this->commonmarkOptions);
+        $commonmarkOptions = $this->commonmarkOptions;
+
+        if (isset($commonmarkOptions['embed'])) {
+            $commonmarkOptions['embed']['adapter'] = $this->getClassInstance($commonmarkOptions['embed']['adapter']);
+        }
+
+        foreach ($commonmarkOptions['embeds'] ?? [] as $i => $embed) {
+            $commonmarkOptions['embeds'][$i] = $this->getClassInstance($embed);
+        }
+
+        $environment = new Environment($commonmarkOptions);
         $this->configureCommonMarkEnvironment($environment);
 
         return new MarkdownConverter(
