@@ -4,12 +4,12 @@
               $wire.markAsRead()
             })">
         <div class="toast-header">
-          <strong class="me-auto">{{ $notification->data["title"] }}</strong>
-          @if(array_key_exists("marin", $notification->data))<small>{{ $notification->data["marin"] }}</small> @endif
+          <strong class="me-auto">{{ $notification->data["titre"] }}</strong>
+          @if(array_key_exists("mention", $notification->data))<small>{{ $notification->data["mention"] }}</small> @endif
           <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
         <div class="toast-body">
-          {{ $notification->data["body"] }}
+          {{ $notification->data["texte"] }}
         </div>
       </div>
 </div>
