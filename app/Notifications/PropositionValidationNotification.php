@@ -12,7 +12,8 @@ class PropositionValidationNotification extends Notification // implements Shoul
     use Queueable;
 
     public $titre = "";
-    public $body = "";
+    public $texte = "";
+    public $mention="";
 
     /**
      * Create a new notification instance.
@@ -20,6 +21,24 @@ class PropositionValidationNotification extends Notification // implements Shoul
     public function __construct()
     {
         //
+    }
+
+    public function withTitre($title="")
+    {
+        $this->titre=$title;
+        return $this;
+    }
+
+    public function withTexte($texte="")
+    {
+        $this->texte=$texte;
+        return $this;
+    }
+
+    public function withMention($mention="")
+    {
+        $this->mention=$mention;
+        return $this;
     }
 
     /**
@@ -51,8 +70,9 @@ class PropositionValidationNotification extends Notification // implements Shoul
     public function toArray(object $notifiable): array
     {
         return [
-            'title' => $this->titre,
-            'body' => $this->body
+            'titre' => $this->titre,
+            'texte' => $this->texte,
+            'mention' => $this->mention
         ];
     }
 }
