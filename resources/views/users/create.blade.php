@@ -31,11 +31,11 @@
             }
         }'
 
-       @preset-this-user = "email = decode($event.detail.email);
-                            nom = decode($event.detail.nom);
+       @preset-this-user = "email  = decode($event.detail.email);
+                            nom    = decode($event.detail.nom);
                             prenom = decode($event.detail.prenom);
-                            nid = decode($event.detail.nid);
-                            grade = decode($event.detail.grade);
+                            nid    = decode($event.detail.nid);
+                            grade  = decode($event.detail.grade);
                             
                             for (i=0; i < grade_select.options.length; i++){
                                 var option = grade_select.options[i]; 
