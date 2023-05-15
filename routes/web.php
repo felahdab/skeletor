@@ -137,6 +137,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         Route::group(['prefix' => 'transformation'], function () {
             Route::get('/', [TransformationController::class, 'index'])->name('transformation.index');
             Route::get('/parfonction', [TransformationController::class, 'indexparfonction'])->name('transformation.indexparfonction');
+            Route::get('/parcomp', [TransformationController::class, 'indexparcomp'])->name('transformation.indexparcomp');
             Route::get('/parstage', [TransformationController::class, 'indexparstage'])->name('transformation.indexparstage');
             Route::get('/{user}/choisirfonction', [UsersController::class, 'choisirfonction'])->name('users.choisirfonction');
             Route::post('/{user}/choisirfonction', [UsersController::class, 'attribuerfonction'])->name('users.attribuerfonction');
@@ -158,13 +159,13 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         });
 
         Route::get('statistiques/', [StatistiqueController::class, 'index'])->name('statistiques.index');
-        Route::get('statistiques/pourtuteurs', [StatistiqueController::class, 'pourtuteurs'])->name('statistiques.pourtuteurs');
+        Route::get('statistiques/parservice', [StatistiqueController::class, 'pourtuteurs'])->name('statistiques.pourtuteurs');
         Route::get('statistiques/parservice/{service}', [StatistiqueController::class, 'parservice'])->name('statistiques.parservice');
-        Route::get('statistiques/pourem', [StatistiqueController::class, 'pourem'])->name('statistiques.pourem');
-        Route::get('statistiques/pour2ps', [StatistiqueController::class, 'pour2ps'])->name('statistiques.pour2ps');
+        Route::get('statistiques/global', [StatistiqueController::class, 'pourem'])->name('statistiques.pourem');
+        Route::get('statistiques/stages', [StatistiqueController::class, 'pour2ps'])->name('statistiques.pour2ps');
         Route::get('statistiques/dashboard', [StatistiqueController::class, 'dashboard'])->name('statistiques.dashboard');
         Route::get('statistiques/dashboardarchive', [StatistiqueController::class, 'dashboardarchive'])->name('statistiques.dashboardarchive');
-        Route::get('statistiques/parcomp', [StatistiqueController::class, 'parcomp'])->name('statistiques.parcomp');
+        //Route::get('statistiques/parcomp', [StatistiqueController::class, 'parcomp'])->name('statistiques.parcomp');
         //Route::get('/{compagnonage}/statistiques.transfoparcomp', 'StatistiqueController@transfoparcomp')->name('statistiques.transfoparcomp');
 
         Route::resource('liens',          LienController::class);
