@@ -6,10 +6,10 @@
 
 
 @section('content')
-    <div class="  p-4 rounded">
-        <h2>Situation des marins pour le stage : {{$stage->stage_libcourt}}</h2>
+    <div class="mt-4 mb-4 rounded">
+        <h2>Situation des marins pour le stage : <span class="font-weight-light">{{$stage->stage_libcourt}}</span></h2>
         @if(auth()->user()->can('stages.attribuerstage'))
-            Commentaire : {{$stage->commentaire}}
+            <b>COMMENTAIRE :</b> {{$stage->stage_commentaire}}
         @endif
     </div>
 <div x-data="{ opendivvalid : false ,
@@ -55,17 +55,18 @@
         
         <div>
             @php
+                $datejour=date('Y-m-d');
                 $nbmarinsattente=0;
                 foreach($usersdustage as $user){
-                        if ($user->pivot->date_validation == null) 
+                        if ($user->pivot->date_validation == null || $user->pivot->date_validite < $datejour) 
                             $nbmarinsattente++;
                 }
             @endphp
-            <div class='lead'>Liste des <b>{{$nbmarinsattente}}</b> marins <b>en attente</b> du stage {{$stage->stage_libcourt}}</div>
+            <div class='lead mb-2'>Liste des <span style="color:orangered;"><b>{{$nbmarinsattente}}</b></span> marins <span style="color:orangered;"><b>en attente</b></span> du stage {{$stage->stage_libcourt}}</div>
             <div class='table-responsive'>
                 <table class='table table-striped'>
                     <thead>
-                        <tr style='background-color:silver; font-weight: bold;'>
+                        <tr style='background-color:silver;'>
                             <th scope="col">&#10003;</th>
                             <th scope="col">Grd</th>
                             <th scope="col">Bvt</th>
@@ -86,7 +87,7 @@
                     </thead>
                     <tbody>
                     @foreach($usersdustage as $user)
-                        @if ($user->pivot->date_validation == null)
+                        @if ($user->pivot->date_validation == null || ($user->pivot->date_validite != null && $user->pivot->date_validite < $datejour))
                         <tr title="{{$user->user_comment}}">
                             <td> <input type='checkbox' 
                                     id='user[{{ $user->id }}]' 
@@ -95,7 +96,7 @@
                             <td style='height:40px;'>{{$user->displayGrade()}} </td>
                             <td>{{$user->displayDiplome()}} </td>
                             <td>{{$user->displaySpecialite()}} </td>
-                            <td><a href='{{ route("users.stages", $user->id) }}'>{{$user->name}} </a></td>
+                            <td><a href='{{ route("users.stages", $user->id) }}'>{{$user->name}}</a></td>
                             <td>{{$user->prenom}} </td>
                             <td>{{$user->matricule}}</td>
                             <td>{{$user->nid}}</td>
@@ -126,11 +127,11 @@
         @can('stages.validermarins')
             <div class="text-center">
                 <button type="submit" 
-                    class="btn btn-primary w-50" 
+                    class="btn btn-primary" 
                     name="validation_double"
                     x-on:click.prevent="validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
                     validModal.show();">Valider les marins sélectionnés ci-dessus</button>
-                <button x-show="false" type="submit" class="btn btn-primary w-50" 
+                <button x-show="false" type="submit" class="btn btn-primary" 
             name="validation_double"
                     x-on:uservalidated.window="$el.click()"></button>
             </div>
@@ -142,10 +143,10 @@
         <input type='hidden' id='commentaire' name='commentaire' value=''>
         <input type='hidden' id='valideur' name='valideur' value=''>
         
-        <div  class='card border-primary mb-3 mt-3'>
-            <div class='card-header'>Liste des marins ayant <b>valid&eacute;</b> le stage {{$stage->stage_libcourt}}</div>
-            <div class='card-body'>
-                <table class='table table-striped' style='width:100%;'>
+        <div>
+            <div class='lead mb-2 mt-2'>Liste des marins ayant <span style="color:green;"><b>valid&eacute;</b></span> le stage {{$stage->stage_libcourt}}</div>
+            <div class='table-responsive'>
+                <table class='table table-striped'>
                     <tr style='background-color:silver; font-weight: bold;'>
                         <td>&#10003;</td>
                         <td style='height:40px;'>Grd</td>
@@ -155,7 +156,8 @@
                         <td>Pr&eacute;nom</td>
                         @if(false)<td>Mat</td>@endif
                         <td>Secteur</td>
-                        <td>Date valid</td>
+                        <td>Date validation</td>
+                        <td>Date validité</td>
                         @if(auth()->user()->can('stages.attribuerstage'))
                                 <th scope="col">&#10069;</th>
                                 <th scope="col">&#128822;</th>
@@ -163,7 +165,7 @@
                     </tr>
                     <tbody>
                     @foreach($usersdustage as $user)
-                        @if ($user->pivot->date_validation != null)
+                        @if ($user->pivot->date_validation != null && ($user->pivot->date_validite == null || $user->pivot->date_validite >= $datejour))
                         <tr title='' style='color:black; '>
                             <td> <input type='checkbox' 
                                     id='usercancel[{{ $user->id }}]' 
@@ -177,6 +179,7 @@
                             @if(false)<td>{{$user->matricule}}</td>@endif
                             <td>{{$user->displaySecteur()}} </td>
                             <td>{{$user->pivot->date_validation}}</td>
+                            <td>{{$user->pivot->date_validite}}</td>
                             @if(auth()->user()->can('stages.attribuerstage'))
                                 @if ($user->pivot->commentaire == null or $user->pivot->commentaire == ' ')
                                     <td>&nbsp;</td>
@@ -206,6 +209,6 @@
         {!! Form::close() !!}
         @endif
     </div>
-        <a href="{{ url()->previous() }}" class="btn btn-primary btn-sm">Annuler</a>
+        <a href="{{ url()->previous() }}" class="btn btn-secondary btn-sm">Retour</a>
 </div>
 @endsection

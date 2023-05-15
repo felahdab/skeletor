@@ -164,6 +164,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         Route::get('statistiques/pour2ps', [StatistiqueController::class, 'pour2ps'])->name('statistiques.pour2ps');
         Route::get('statistiques/dashboard', [StatistiqueController::class, 'dashboard'])->name('statistiques.dashboard');
         Route::get('statistiques/dashboardarchive', [StatistiqueController::class, 'dashboardarchive'])->name('statistiques.dashboardarchive');
+        Route::get('statistiques/parcomp', [StatistiqueController::class, 'parcomp'])->name('statistiques.parcomp');
+        //Route::get('/{compagnonage}/statistiques.transfoparcomp', 'StatistiqueController@transfoparcomp')->name('statistiques.transfoparcomp');
 
         Route::resource('liens',          LienController::class);
 

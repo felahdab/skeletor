@@ -6,7 +6,7 @@
 
 
 @section('content')
-    <div class="  p-4 rounded">
+    <div class="p-4">
         <h2>Transformation - Stages</h2>
         <div class="lead">
             Liste des stages pour validation collective

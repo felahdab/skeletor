@@ -25,9 +25,9 @@ class Tache extends Model
     public function nb_ssobj()
     {
         $count=0;
-        foreach($this->objectifs()->get() as $objectif)
+        foreach($this->objectifs as $objectif)
         {
-            $count = $count + $objectif->sous_objectifs()->get()->count();
+            $count = $count + $objectif->sous_objectifs->count();
         }
         return $count;
     }
@@ -35,7 +35,7 @@ class Tache extends Model
     public function coll_sous_objectifs()
     {
         $coll = collect([]);
-        foreach ($this->objectifs()->get() as $objectif)
+        foreach ($this->objectifs as $objectif)
         {
             $coll = $coll->concat($objectif->coll_sous_objectifs());
         }

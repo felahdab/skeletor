@@ -22,7 +22,7 @@
                         name='stage[stage_libcourt]' 
                         id='stage[stage_libcourt]' 
                         placeholder='Libell&eacute; court' 
-                        value="" >
+                        value="" required>
                     </div>
                 </div>
                 <div class='form-group row' >
@@ -33,7 +33,7 @@
                         name='stage[stage_liblong]' 
                         id='stage[stage_liblong]' 
                         placeholder='Libell&eacute; long' 
-                        value="" >
+                        value="" required>
                     </div>
                 </div>
                 @if (false)
@@ -67,7 +67,7 @@
                         <input type="date" 
                             class="form-control" 
                             name="stage[stage_date_fin_licence]" 
-                            placeholder="Date fin licence" required>
+                            placeholder="Date fin licence" >
                     </div>
                 </div>
                 <div class='form-group row' >
@@ -89,6 +89,17 @@
                         name='stage[stage_duree]' 
                         id='stage[stage_duree]' 
                         placeholder='Durée' 
+                        value="" >
+                    </div>
+                </div>
+                <div class='form-group row' >
+                    <label for='stage[duree_validite]' class='col-sm-5 col-form-label'>Durée de validité (mois)</label>
+                    <div class='col-sm-5'>
+                        <input type='text' 
+                        class='form-control' 
+                        name='stage[duree_validite]' 
+                        id='stage[duree_validite]' 
+                        placeholder='Durée de validité' 
                         value="" >
                     </div>
                 </div>

@@ -40,9 +40,7 @@
                         <th>Nb lâché</th>
                     </tr>
                     @foreach($fonctionsaquai->get() as $fonction)
-                        <tr title='@foreach($fonction->users()->get() as $marin)
-                            {!! htmlspecialchars($marin->display_name) . "(" . round($marin->pourcentage_valides_pour_fonction($fonction), 2) . ")" !!}
-                            @endforeach'>
+                        <tr>
                             <td><a dusk="listemarins-fct-lien-{{$loop->index}}" href="{{route ('fonctions.listemarinsfonction', $fonction->id ) }}">{{$fonction->fonction_libcourt}}</a></td>
                             <td>{{$fonction->users()->count()}}</td>
                             <td>{{$fonction->users()->get()->whereNotNull('pivot.date_lache')->count()}}</td>

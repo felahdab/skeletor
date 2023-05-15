@@ -26,6 +26,6 @@ class Objectif extends Model
     
     public function coll_sous_objectifs()
     {
-        return $this->sous_objectifs()->get();
+        return $this->sous_objectifs;
     }
 }
