@@ -106,7 +106,7 @@
         
         <button class='btn btn-warning' onclick='affichage("bugreport");'> Signaler un problème</button> 
         
-        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationPanel" aria-controls="offcanvasRight">Notifications</button>
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationPanel" aria-controls="offcanvasRight"><x-bootstrap-icon iconname='bell.svg' /></button>
 
         <div class="dropdown">
           <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
