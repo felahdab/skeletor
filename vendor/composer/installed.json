@@ -11838,6 +11838,48 @@
             "install-path": "../tomsix/laravel-components-library"
         },
         {
+            "name": "twbs/bootstrap-icons",
+            "version": "v1.10.5",
+            "version_normalized": "1.10.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twbs/icons.git",
+                "reference": "648aa8238437d9da9227f6273cc163ec5841382d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twbs/icons/zipball/648aa8238437d9da9227f6273cc163ec5841382d",
+                "reference": "648aa8238437d9da9227f6273cc163ec5841382d",
+                "shasum": ""
+            },
+            "time": "2023-04-26T19:56:04+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Otto",
+                    "email": "markdotto@gmail.com"
+                }
+            ],
+            "description": "Official open source SVG icon library for Bootstrap",
+            "homepage": "https://icons.getbootstrap.com/",
+            "keywords": [
+                "bootstrap",
+                "icon font",
+                "icons",
+                "svg"
+            ],
+            "support": {
+                "issues": "https://github.com/twbs/icons/issues",
+                "source": "https://github.com/twbs/icons/tree/v1.10.5"
+            },
+            "install-path": "../twbs/bootstrap-icons"
+        },
+        {
             "name": "ua-parser/uap-php",
             "version": "v3.9.14",
             "version_normalized": "3.9.14.0",
