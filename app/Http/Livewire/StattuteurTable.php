@@ -8,6 +8,8 @@ use App\Models\Diplome;
 use App\Models\Secteur;
 use App\Models\Service;
 
+use App\Models\Fonction;
+
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -18,6 +20,7 @@ use Rappasoft\LaravelLivewireTables\Views\Filters\TextFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class StattuteurTable extends DataTableComponent
 {
@@ -146,7 +149,24 @@ class StattuteurTable extends DataTableComponent
         $currentuser=auth()->user();
         
         $filter = [
-             TextFilter::make('Secteur')
+            TextFilter::make('Fonction')
+                ->config([
+                    'placeholder' => 'OCDQ...',
+                    'maxlength'   => 50
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $fonction_ids = Fonction::where('fonction_libcourt', 'like', '%' . $value . '%')
+                                        ->orWhere('fonction_liblong', 'like', '%' . $value . '%')
+                                        ->get()
+                                        ->pluck('id');
+                        $userids = DB::table('user_fonction')
+                                    ->whereIn('fonction_id', $fonction_ids)
+                                    ->get()
+                                    ->pluck('user_id');
+                        if ($userids != null)
+                            $builder->whereIn('users.id', $userids);
+                }),
+            TextFilter::make('Secteur')
                 ->config([
                     'placeholder' => 'RESEAU...',
                     'maxlength'   => 10
@@ -155,7 +175,8 @@ class StattuteurTable extends DataTableComponent
                         $secteur = Secteur::where('secteur_libcourt', 'like', '%' . $value . '%')->get()->first();
                         if ($secteur != null)
                             $builder->where('secteur_id', $secteur->id);
-                })
+                }),
+                
                 ];
                 
         if ($currentuser->hasRole("em")){

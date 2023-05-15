@@ -1,12 +1,12 @@
 @extends('layouts.app-master')
 
 @section('helplink')
-<x-documentation-link page="parcours"/>
+< x-help-link page="parcours"/>
 @endsection
 
 
 @section('content')
-    <div class="bg-light p-4 rounded">
+    <div class="p-4 rounded">
         <h2>Compagnonnages</h2>
         <div class='lead'>Ajout d'un compagnonnage pour la fonction : {!!$fonction->fonction_libcourt !!} </div>
     </div>

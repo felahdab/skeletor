@@ -93,7 +93,8 @@ class AnnudefController extends Controller
             $LDAPPASSWORD
         );
 
-        $response = Http::timeout(intval(env("LDAPTIMEOUT")))
+        $response = Http::withoutVerifying()
+            ->timeout(intval(env("LDAPTIMEOUT")))
             ->withBody($request, 'application/soap+xml')
             ->post($ANNUBASEURL);
 

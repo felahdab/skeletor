@@ -1,12 +1,12 @@
 @extends('layouts.app-master')
 
 @section('helplink')
-<x-documentation-link page="transformation"/>
+< x-help-link page="transformation"/>
 @endsection
 
 
 @section('content')
-    <div class="bg-light p-4 rounded" x-data="{ opendivvalid : false,
+    <div class="  p-4 rounded" x-data="{ opendivvalid : false,
                                                 commentaire : '',
                                                 date_validation : '{{ date('Y-m-d') }}', 
                                                 valideur : '{{auth()->user()->display_name}}',

@@ -1,7 +1,7 @@
 @extends('layouts.app-master')
 
 @section('helplink')
-<x-documentation-link page="statistiques"/>
+< x-help-link page="statistiques"/>
 @endsection
 
 
@@ -9,8 +9,8 @@
         <div style='text-align: center;margin-top: 25px;margin-bottom: 25px;'>
             <h1>Nb total de marins en transformation : {{$users->where("en_transformation", true)->count()}}</h1>
         </div>
-        <div class='flex'>
-            <div style='width: 50%; background-color: transparent;'>
+        <div class='flex row'>
+            <div class="col" style='background-color: transparent;'>
                 <table class='table table-hover' style='width:80%;'>
                     <tr style='background-color:lightgray;'>
                         <th style='width:80%;'>Service</th>
@@ -32,7 +32,7 @@
                     @endforeach
                 </table>
             </div>
-            <div style='width: 50%; background-color: transparent;'>
+            <div class="col" style='width: 50%; background-color: transparent;'>
                 <table class='table table-hover' style='width:80%;'>
                     <tr style='background-color:lightgray;'>
                         <th style='width:80%;'>Fonction quai</th>

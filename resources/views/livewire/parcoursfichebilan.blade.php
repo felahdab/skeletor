@@ -16,8 +16,14 @@
                 <div id="carouselDesFiches" class="carousel slide" style='height: 400px;'>
                     <div class="carousel-inner">
                     @if(! is_null($fiches) && sizeof($fiches))
-                        @foreach($fiches as $fiche)
-                        <div class="carousel-item @if($loop->first) active @endif" >
+                        @foreach($fiches as $fiche)                        
+                        <div class="carousel-item @if($loop->first) active @endif mt-4" >
+                            <a href="{{ route('transformation.livret', $fiche['user']->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
+                            <a href="{{ route('transformation.progression', $fiche['user']->id) }}" class="btn btn-primary btn-sm">Progression</a>
+                            @can('users.stages')
+                                <a href="{{ route('users.stages', $fiche['user']->id) }}" class="btn btn-danger btn-sm">Stages</a>
+                            @endcan
+
                             <livewire:ffast-fiche-bilan :user="$fiche['user']" :wire:key="$fiche['id']" />
                         </div>
                         @endforeach

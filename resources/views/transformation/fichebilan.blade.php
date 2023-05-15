@@ -1,12 +1,12 @@
 @extends('layouts.app-master')
 
 @section('helplink')
-<x-documentation-link page="transformation"/>
+< x-help-link page="transformation"/>
 @endsection
 
 
 @section('content')
-    <div class="bg-light p-4 rounded">
+    <div class="  p-4 rounded">
         <h1>Transformation</h1>
         <div class="lead">
             Fiche bilan de {{$user->display_name}}

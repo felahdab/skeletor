@@ -1,13 +1,13 @@
 @extends('layouts.app-master')
 
 @section('helplink')
-<x-documentation-link page="statistiques"/>
+< x-help-link page="statistiques"/>
 @endsection
 
 
 @section('content')
-        <div class='flex'>
-            <div style='width: 50%; background-color: transparent;'>
+        <div class='flex row mt-4'>
+            <div class="col" style='background-color: transparent;'>
                 <div class='ml-4' style='width:80%; border: 1px solid darkgrey'>
                     <p class='card-header border' style='height: 48px; text-align:center;'> STAGES SOUS LICENCE</p>
                     <div>
@@ -35,7 +35,7 @@
                     </div>
                 </div>
             </div>
-            <div style='width: 50%; background-color: transparent;'>
+            <div class="col" style='background-color: transparent;'>
                 <div style='width:80%; border: 1px solid darkgrey'>
                     <p class='card-header border' style='height: 48px; text-align:center;'> STAGES EXT&Eacute;RIEURS</p>
                     <div>

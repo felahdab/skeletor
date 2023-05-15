@@ -7,6 +7,8 @@
 @can('stages.attribuerstage')
     <!-- ajout d'un bouton pour pouvoir mettre à jour le commentaire associé a un stage pour un user-->
     <button class="btn btn-info" 
+            data-bs-toggle="modal"
+            data-bs-target="#divvalidcomment"
             x-on:click.prevent='stageid= {{ $row->id }};
                                 commentaire = "{{ $user->CommentaireDuStage($row) }}";
                                 opendivvalidcomment = true;
@@ -23,6 +25,8 @@
             class="btn btn-danger">Annuler ce stage</button>
     @else
     <button class="btn btn-success" 
+            data-bs-toggle="modal"
+            data-bs-target="#divvalid"
             x-on:click.prevent="stageid= {{ $row->id }};
                             date_validation = '{{ date('Y-m-d') }}'; 
                             commentaire = '{{ $user->CommentaireDuStage($row) }}';
@@ -35,8 +39,9 @@
 @endcan
 
 <a href="{{route('stages.show', $row->id)}}" class="btn btn-primary">Situation des marins pour ce stage</a>
-
-@if ( ! array_key_exists($row->id,  $user->stagesLiesAUneFonction()->pluck('id','id')->toArray() ) )
-<button wire:click.prevent="RetirerStage( {{$user->id}}, {{$row->id}} );"
-        class="btn btn-danger">Retirer ce stage</button>
-@endif
+@can('stages.attribuerstage')
+    @if ( ! array_key_exists($row->id,  $user->stagesLiesAUneFonction()->pluck('id','id')->toArray() ) )
+    <button wire:click.prevent="RetirerStage( {{$user->id}}, {{$row->id}} );"
+            class="btn btn-danger">Retirer ce stage</button>
+    @endif
+@endcan

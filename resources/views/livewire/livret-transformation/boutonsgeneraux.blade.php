@@ -1,4 +1,4 @@
-<div class='text-center mt-1 sticky-top' style="top:3.5rem" x-data='{ active : false }'>
+<div class='text-center mt-1 sticky-top' style="top:3.5rem;width: max-content;margin: auto;" x-data='{ active : false }'>
     @if($mode=='unique')
         
     
@@ -7,7 +7,8 @@
     class="btn btn-primary" 
     name="validation"
     x-on:click.prevent="active = true ;
-                        opendivvalid = true ;
+                        validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
+                        validModal.show();
                         buttonid = 'validation' ;">@if($readwrite)
                         Valider les éléments cochés
                         @else
@@ -16,7 +17,7 @@
     <button x-show="false" 
             x-on:uservalidated.window="if (active)
             { 
-                active = false;  
+                active = false; 
 $wire.ValideElementsDuParcours( {{$user->id}} , date_validation , commentaire, valideur, selected_compagnonnages , selected_taches , selected_objectifs ,selected_sous_objectifs );
             }"></button>
     <button class="btn btn-danger" 
@@ -33,11 +34,13 @@ $wire.UnValideElementsDuParcours( {{$user->id}} , selected_compagnonnages , sele
     @elseif($mode=='multiple')
     
     <button type="submit" 
-    class="btn btn-primary" 
-    name="validation"
-    dusk="livret-multiple-enregistrer"
-    x-on:click.prevent='active = true ;;
-                        opendivvalid=true'>Enregistrer les validations</button>
+            class="btn btn-primary" 
+            name="validation"
+            dusk="livret-multiple-enregistrer"
+            x-on:click.prevent="active = true ;
+                                validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
+                                validModal.show();
+                                opendivvalid=true">Enregistrer les validations</button>
     <a href="{{ url()->previous() }}" class="btn btn-light">Retour</a>
     <button x-show="false" 
         x-on:uservalidated.window="if (active)
@@ -47,4 +50,7 @@ $wire.ValideElementsDuParcoursMultiple( selected_marins , date_validation , comm
         }"></button>
         
     @endif
+    <a href="#" style="text-decoration: none;">
+        <img src='{!! asset("assets/images/fleche_haut.png") !!}' alt="haut page" width="40px">
+    </a>
 </div><!-- fin de la div avec boutons speciaux -->

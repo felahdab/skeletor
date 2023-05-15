@@ -123,13 +123,15 @@ class GererTransformationService
 
         $ssobj = $user->sous_objectifs()->find($sous_objectif);
         if ($ssobj != null){
-            $workitem = $ssobj->pivot;
-            $workitem->date_proposition_validation=null;
-            $workitem->valideur=$valideur;
-            $workitem->date_validation=$date_validation;
-            $workitem->commentaire=$commentaire;
-            $workitem->nb_jours_pour_validation=$nbjours;
-            $workitem->save();
+            if ($fieldname == 'date_validation' || $ssobj->pivot->date_validation == null){
+                $workitem = $ssobj->pivot;
+                $workitem->date_proposition_validation=null;
+                $workitem->valideur=$valideur;
+                $workitem->$fieldname=$date_validation;
+                $workitem->commentaire=$commentaire;
+                $workitem->nb_jours_pour_validation=$nbjours;
+                $workitem->save();
+            }
         }
         else{
             $user->sous_objectifs()->attach($sous_objectif, [
@@ -144,6 +146,7 @@ class GererTransformationService
             "commentaire" => $commentaire,
             $fieldname => $date_validation
         ];
+
         CalculateUserTransformationRatios::dispatch($user);
         $user->logTransformationHistory($logtype, json_encode($event_detail));
     }

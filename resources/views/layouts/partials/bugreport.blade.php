@@ -1,18 +1,22 @@
-<div id='bugreport' class="border mx-auto w-50" style='display:none;'>
+<div class="modal fade" id="bugreport-modal" tabindex=-1>
     {!! Form::open(['method' => 'POST','route' => ['bugreports.store'], 'style'=>'display:inline']) !!}
-    <div class='titrenavbarvert'>
-        <h5>Rapport d'anomalie</h5>
-    </div>
-    <input type='hidden' id='url' name='url' value='{{ Request::url() }}'>
-    <div class='form-group row  pl-3' >
-        <label for='comment' class='col-sm-5 col-form-label '>Commentaire</label>
-        <div class='col-sm-5'>
-            <textarea cols='40' rows='4' name='message' id='message' placeholder='Commentaire'></textarea>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Rapport d'anomalie ou suggestion</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type='hidden' id='url' name='url' value='{{ Request::url() }}'>
+                <div class='form-group row  pl-3' >
+                        <textarea class="form-control" cols='40' rows='10' name='message' id='message' placeholder='Commentaire'></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-primary">Valider</button>
+            </div>
         </div>
-    </div>
-    <div  class='text-center'>
-        <button class='btn btn-primary w-25 mt-4 mb-2' type="submit">Valider</button>
-        <button class='btn btn-primary w-25 mt-4 mb-2' onclick='annuler("bugreport");return false;'>Annuler</button>
     </div>
     {!! Form::close() !!}
 </div>

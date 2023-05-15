@@ -1,11 +1,11 @@
 @extends('layouts.app-master')
 
 @section('helplink')
-<x-documentation-link page="generalites"/>
+< x-help-link page="generalites"/>
 @endsection
 
 @section('content')
-<div class="bg-light p-4 rounded">
+<div class="p-4 rounded">
     <h1>Changement de mot de passe pour {{ $user->name }}</h1>
     <div class="lead">
         Le mot de passe que vous enregistrez ici vous permettra d'accéder à FFAST en cliquant sur "Login local" deuis la page d'accueil du site. Votre identifiant est votre adresse mail intradef complete (prenom.nom@intradef.gouv.fr).

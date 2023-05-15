@@ -1,4 +1,4 @@
-<div>
+<div class="mt-4">
     <input wire:model='filter' type="text" placeholder="Filtrer...">
 
     <div wire:loading>

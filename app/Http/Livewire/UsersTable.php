@@ -6,8 +6,10 @@ use App\Models\User;
 use App\Models\Grade;
 use App\Models\Diplome;
 use App\Models\Specialite;
+use App\Models\Secteur;
 use App\Models\Service;
 use App\Models\Groupement;
+use Spatie\Permission\Models\Role;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -17,6 +19,8 @@ use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\TextFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
+use Rappasoft\LaravelLivewireTables\Views\Filters\MultiSelectFilter;
+use Rappasoft\LaravelLivewireTables\Views\Filters\MultiSelectDropdownFilter;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -127,6 +131,17 @@ class UsersTable extends DataTableComponent
                     fn($value, $row, Column $column) => view('tables.userstable.socle')->withRow($row)),
         ];
         switch ($this->mode){
+            case "dashboard":
+                return array_merge($basecolumns ,[
+                    Column::make('Taux de transformation', 'taux_de_transformation')
+                            ->view('tables.userstable.tx_transfo')
+                            ->sortable(),
+                    Column::make('Rôles')
+                        ->label(
+                            fn($row, Column $column) => view('tables.userstable.roles')->withRow($row)
+                            ),
+                ]);
+                break;
             case "gestion" :
                 return array_merge($basecolumns ,[
                     Column::make('Rôles')
@@ -224,6 +239,16 @@ class UsersTable extends DataTableComponent
                         if ($specialite != null)
                             $builder->where('specialite_id', $specialite->id);
                 }),
+            TextFilter::make('Secteur')
+                ->config([
+                    'placeholder' => 'DEM...',
+                    'maxlength'   => 5
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $secteur = Secteur::where('secteur_libcourt', 'like', '%' . $value . '%')->get()->first();
+                        if ($secteur != null)
+                            $builder->where('secteur_id', $secteur->id);
+                }),
             TextFilter::make('Service')
                 ->config([
                     'placeholder' => 'LAS...',
@@ -274,6 +299,28 @@ class UsersTable extends DataTableComponent
                 }),
         ];
         
+        switch ($this->mode)
+        {
+            case "gestion":
+            case "listmarins":
+            case "dashboard":
+                $basefilters[]= MultiSelectFilter::make('Roles')
+                ->options(
+                    Role::query()
+                    ->orderBy('name')
+                    ->get()
+                    ->keyBy('id')
+                    ->map(fn($role) => $role->name)
+                    ->toArray()
+                )
+                // ->setFirstOption('Tous') // Pour MultiSelectDropdownFilter
+                ->filter(function(Builder $builder, array $values) {
+                        $roles = Role::whereIn('id',  $values )->get();
+                        $builder->role($roles);
+                });
+                break;
+        }
+
         return $basefilters;
     }
 

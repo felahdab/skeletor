@@ -1,12 +1,12 @@
 @extends('layouts.app-master')
 
 @section('helplink')
-<x-documentation-link page="transformation"/>
+< x-help-link page="transformation"/>
 @endsection
 
 
 @section('content')
-    <div class="bg-light p-4 rounded">
+    <div class="  p-4 rounded">
         <h1>Attribution des fonctions à l'utilisateur</h1>
         <h3>{{ $user->display_name }}</h3>
             

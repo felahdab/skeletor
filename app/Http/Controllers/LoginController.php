@@ -13,6 +13,8 @@ use Spatie\Permission\Models\Role;
 
 use Illuminate\Support\Facades\Http;
 
+use GuzzleHttp\Client;
+
 class LoginController extends Controller
 {
     /**
@@ -34,7 +36,10 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        $MCuser = Socialite::driver('keycloak')->stateless()->user();
+        $driver = Socialite::driver('keycloak');
+        $driver->setHttpClient(new Client(["verify" => false]));
+
+        $MCuser = $driver->stateless()->user();
         
         $user = User::where('email', $MCuser->email)->get()->first();
         if ($user != null) {

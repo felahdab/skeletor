@@ -16,7 +16,8 @@ class CodeEditorTest extends DuskTestCase
     public function test_code_editor_login_displays()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit(env('APP_PREFIX') . '/code-editor')
+            $browser->maximize()
+                    ->visit(env('APP_PREFIX') . '/code-editor')
                     ->assertSee('code-server');
         });
     }

@@ -31,6 +31,8 @@ class AnnudefSearch extends Component
     public $error='';
     
     public $users;
+
+    public $mode="recherche";
     
     public function render()
     {
@@ -47,7 +49,22 @@ class AnnudefSearch extends Component
                                                         $this->fonction,
                                                         $this->nid
                                                         );
-                                                        
+            // [ "titre" => "M."
+            // "nom" => "EL-AHDAB"
+            // "prenom" => "Florian,Rémy"
+            // "gradelong" => "Capitaine de vaisseau"
+            // "gradecourt" => "CV"
+            // "nid" => "0012030028"
+            // "nomcomplet" => "EL-AHDAB Florian"
+            // "nomaffiche" => "EL-AHDAB Florian CV"
+            // "uid" => "florian.el-ahdab"
+            // "email" => "florian.el-ahdab@intradef.gouv.fr"
+            // "unites" => "MARINE/ALFAN/GTR FREMM TOULON/COMMANDEMENT"
+            // "status" => "EL-AHDAB"
+            // "prenomusuel" => "Florian"
+            // "categorystatus" => "Officiers de marine"
+            // "categoryrank" => "Officier"
+            // "familyname" => "EL-AHDAB" ]
             foreach($this->users as $key=>$ldapuser)
             {
                 $localuser = User::withTrashed()->where('email', $ldapuser['email'])->first();
@@ -84,7 +101,13 @@ class AnnudefSearch extends Component
             $this->users =collect([]);
             $this->error='La requête a pris trop de temps et a été abandonnée.';
         }
-        return view('livewire.annudef-search')->withError($this->error);
+        switch ($this->mode){
+            case "recherche":
+                return view('livewire.annudef-search-recherche')->withError($this->error);
+            case "aide":
+                return view('livewire.annudef-search-aide')->withError($this->error);
+        }
+        
     }
     
     public function createLocalUser($index)

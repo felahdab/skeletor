@@ -1,5 +1,5 @@
 @section('helplink')
-  <x-documentation-link page="connexion"/>
+  < x-help-link page="connexion"/>
 @endsection
 
 
@@ -12,7 +12,7 @@
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon bg-light"></span>
+        <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse container-fluid" id="navbarTogglerDemo01">
         <ul class="navbar-nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 mr-auto mt-2 mt-lg-0">
@@ -88,8 +88,9 @@
                 @can('statistiques.pourtuteurs')<a class="dropdown-item" href="{{route('statistiques.pourtuteurs')}}">Bilan par service</a>@endcan
                 @can('statistiques.pour2ps')<a class="dropdown-item" href="{{route('statistiques.pour2ps')}}">Bilan par stage</a>@endcan
                 @can('statistiques.pourem')<a class="dropdown-item" href="{{route('statistiques.pourem')}}">Bilan global</a>@endcan
-                @can('statistiques.index')<a class="dropdown-item" href="{{route('statistiques.index')}}">Indicateurs</a>@endcan
-                @if(false) @can('statistiques.dashboard')<a class="dropdown-item" href="{{route('statistiques.dashboard')}}">Tableau de bord</a>@endcan @endif
+                @can('statistiques.index')<!--a class="dropdown-item" href="{{route('statistiques.index')}}">Indicateurs</a-->@endcan
+                @can('statistiques.dashboard')<a class="dropdown-item" href="{{route('statistiques.dashboard')}}">Tableau de bord</a>@endcan
+                @can('statistiques.dashboard')<a class="dropdown-item" href="{{route('statistiques.dashboardarchive')}}">Archives</a>@endcan
                 
               </div>
             </div>
@@ -101,10 +102,10 @@
 
       @auth
         @impersonating()
-            <a href="{{ route('impersonate.leave') }}" class="btn btn-outline-danger me-2">Redevenir soit meme</a>
+            <a href="{{ route('impersonate.leave') }}" class="btn btn-outline-danger me-2">Redevenir soi-m&ecirc;me</a>
 	      @endImpersonating
         
-        <button class='btn btn-warning' onclick='affichage("bugreport");'> Signaler un problème</button> 
+        <button type= "button" class='btn btn-warning' data-bs-toggle="modal" data-bs-target="#bugreport-modal"> Signaler un problème</button> 
         
         <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationPanel" aria-controls="offcanvasRight"><x-bootstrap-icon iconname='bell.svg' /></button>
 
@@ -115,6 +116,11 @@
           <div class="dropdown-menu" style="position:absolute;right:0; left:auto;" aria-labelledby="dropdownMenuButton">
             @yield('helplink')
             <a class="dropdown-item" href="{{ route('changepasswd.show', auth()->user()) }}">Changer mot de passe</a>
+            <div class="dropdown-item">Mes rôles:
+              @foreach(auth()->user()->roles as $role)
+                <span class="badge bg-primary">{{ $role->name }}</span>
+              @endforeach
+            </div>
             @if(false)<a class="dropdown-item" href="{{ route('mespreferences') }}">Préférences</a>@endif
             <a class="dropdown-item" href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2">Déconnexion</a>
             <hr>
