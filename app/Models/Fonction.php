@@ -40,30 +40,46 @@ class Fonction extends Model
     
     public function nbObjectifsAValider()
     {
-        $count = 0;
-        foreach ($this->compagnonages()->get() as $compagnonage)
-        {
-            foreach ($compagnonage->taches()->get() as $tache)
+        $result = Cache::remember($this->cacheKey() . ':nb_objectifs_a_valider', 60*5, function () {
+            $count = 0;
+            foreach ($this->compagnonages()->get() as $compagnonage)
             {
-                $count = $count + $tache->objectifs()->get()->count();
+                foreach ($compagnonage->taches()->get() as $tache)
+                {
+                    $count = $count + $tache->objectifs()->get()->count();
+                }
             }
-        }
-        return $count;
+            return $count;
+        });
+        return $result;
     }
     
     public function coll_sous_objectifs()
     {
-        $coll = collect([]);
-        foreach ($this->compagnonages()->with('taches.objectifs.sous_objectifs')->get() as $compagnonage)
-        {
-            foreach ($compagnonage->taches as $tache)
+        $result = Cache::remember($this->cacheKey() . ':coll_sous_objectifs', 60*5, function () {
+            $coll = collect([]);
+            foreach ($this->compagnonages()->with('taches.objectifs.sous_objectifs')->get() as $compagnonage)
             {
-                foreach ($tache->objectifs as $objectif)
+                foreach ($compagnonage->taches as $tache)
                 {
-                    $coll = $coll->concat($objectif->sous_objectifs);
+                    foreach ($tache->objectifs as $objectif)
+                    {
+                        $coll = $coll->concat($objectif->sous_objectifs);
+                    }
                 }
             }
-        }
-        return $coll;
+            return $coll;
+        });
+        return $result;
+    }
+
+    public function cacheKey()
+    {
+        return sprintf(
+            "%s/%s-%s",
+            $this->getTable(),
+            $this->getKey(),
+            $this->updated_at->timestamp
+        );
     }
 }

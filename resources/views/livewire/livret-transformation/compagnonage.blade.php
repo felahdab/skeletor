@@ -61,13 +61,11 @@
                             <td>{{$sous_objectif->ssobj_lib}}</td>
                             <td>{{$sous_objectif->ssobj_duree}}</td>
                             <td title=''>
-                                @if ($mode=='unique')
-                                    @if ($readwrite || ! $user->getTransformationManager()->aValideLeSousObjectif($sous_objectif) )
+                                @if ($readwrite || ! $user->getTransformationManager()->aValideLeSousObjectif($sous_objectif) )
                                     <input type='checkbox' 
                                     x-data='{ active: false }'
                                     x-model="selected_sous_objectifs"
                                     value="{{$sous_objectif->id}}">
-                                    @endif
                                 @endif
                                 @if ($mode=='unique' && $user->getTransformationManager()->aValideLeSousObjectif($sous_objectif))
                                     <button class='btn btn-success' type='button' disabled>

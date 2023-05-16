@@ -1,13 +1,12 @@
 @extends('layouts.app-master')
 
 @section('helplink')
-<x-documentation-link page="transformation"/>
+< x-help-link page="transformation"/>
 @endsection
 
 
 @section('content')
-
-    <div class="  p-4 rounded">
+    <div  class="p-4">
         <h2>Transformation - Fonctions</h2>
         <div class="lead">
             Liste des fonctions pour validation collective

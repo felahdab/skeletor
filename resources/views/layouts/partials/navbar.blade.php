@@ -1,5 +1,5 @@
 @section('helplink')
-  <x-documentation-link page="connexion"/>
+  < x-help-link page="connexion"/>
 @endsection
 
 
@@ -36,16 +36,16 @@
               </div>
             </div>
             @endcan
-            @can('fonctions.index')
+            @can('transformation.exportparcours')
             <div class="dropdown" >
               <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Parcours
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="{{ route('fonctions.index')}}">Fonctions</a>
-                <a class="dropdown-item" href="{{ route('compagnonages.index')}}">Compagnonnages</a>
-                <a class="dropdown-item" href="{{ route('taches.index')}}">Tâches</a>
-                <a class="dropdown-item" href="{{ route('objectifs.index')}}">Objectifs</a>
+                @can('fonctions.index')<a class="dropdown-item" href="{{ route('fonctions.index')}}">Fonctions</a>@endcan
+                @can('compagnonages.index')<a class="dropdown-item" href="{{ route('compagnonages.index')}}">Compagnonnages</a>@endcan
+                @can('taches.index')<a class="dropdown-item" href="{{ route('taches.index')}}">Tâches</a>@endcan
+                @can('objectifs.index')<a class="dropdown-item" href="{{ route('objectifs.index')}}">Objectifs</a>@endcan
                 @can('stages.index')<a class="dropdown-item" href="{{ route('stages.index')}}">Stages</a>@endcan
                 <a class="dropdown-item" href="{{ route('transformation.exportparcours')}}">Exporter les parcours</a>
                 <!--a class="dropdown-item" href="{{ route('sous-objectifs.index')}}">Sous-Objectifs</a-->
@@ -60,6 +60,7 @@
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
                 <a class="dropdown-item" href="{{route('transformation.index')}}">Suivi de la transformation par marin</a>
                 @can('transformation.indexparfonction')<a class="dropdown-item" href="{{route('transformation.indexparfonction')}}">Suivi de la transformation par fonction</a>@endcan
+                @can('transformation.indexparcomp')<a class="dropdown-item" href="{{route('transformation.indexparcomp')}}">Suivi de la transformation par compagnonnage</a>@endcan
                 @can('transformation.indexparstage')<a class="dropdown-item" href="{{route('transformation.indexparstage')}}">Suivi de la transformation par stage</a>@endcan
                 @can('transformation.recalcultransfo')<a class="dropdown-item" href="{{route('transformation.recalcultransfo')}}">Recalcul des taux transformation</a>@endcan
                 @can('transformation.parcoursfichebilan')<a class="dropdown-item" href="{{route('transformation.parcoursfichebilan')}}">Parcours des fiches bilan</a>@endif
@@ -90,7 +91,7 @@
                 @can('statistiques.pourem')<a class="dropdown-item" href="{{route('statistiques.pourem')}}">Bilan global</a>@endcan
                 @can('statistiques.index')<!--a class="dropdown-item" href="{{route('statistiques.index')}}">Indicateurs</a-->@endcan
                 @can('statistiques.dashboard')<a class="dropdown-item" href="{{route('statistiques.dashboard')}}">Tableau de bord</a>@endcan
-                @can('statistiques.dashboard')<a class="dropdown-item" href="{{route('statistiques.dashboardarchive')}}">Archives</a>@endcan
+                @can('statistiques.dashboardarchive')<a class="dropdown-item" href="{{route('statistiques.dashboardarchive')}}">Archives</a>@endcan
                 
               </div>
             </div>
@@ -107,6 +108,8 @@
         
         <button type= "button" class='btn btn-warning' data-bs-toggle="modal" data-bs-target="#bugreport-modal"> Signaler un problème</button> 
         
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationPanel" aria-controls="offcanvasRight"><x-bootstrap-icon iconname='bell.svg' /></button>
+
         <div class="dropdown">
           <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{ auth()->user()->display_name }}
@@ -119,7 +122,7 @@
                 <span class="badge bg-primary">{{ $role->name }}</span>
               @endforeach
             </div>
-            @if(false)<a class="dropdown-item" href="{{ route('mespreferences') }}">Préférences</a>@endif
+            @can('mespreferences')<a class="dropdown-item" href="{{ route('mespreferences') }}">Préférences</a>@endcan
             <a class="dropdown-item" href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2">Déconnexion</a>
             <hr>
             <span class="dropdown-item">Version : {{env('APP_VERSION')}}</span>

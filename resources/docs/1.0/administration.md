@@ -24,6 +24,8 @@ Ce menu permet d’accéder :
 5. Gestion des liens disponibles sur la page d’accueil des marins uniquement en transformation.
 6. Historique des actions concernant la transformation.
 7. Recherche des marins grâce à l’annuaire défense.
+8. Liste des marins archivables.
+9. Rédaction de mail.
 
 
 <a name="demandes-mindef-connect">
@@ -137,4 +139,4 @@ Le bouton "Archivage" (4) supprime le marin de l'application. Son livret de tran
 <a name="mails">
 ## Mails
 
-TODO...
+Ce menu, réservé à l'administrateur de l'application, permet d'envoyer des mails (format markdown) aux utilisateurs de l'application.
