@@ -14,8 +14,8 @@
             nid     : null,
             grade   : null,
 
-            offcanvas_el : null ,
-            offcanvas    : null ,
+            offcanvas_el : null,
+            offcanvas    : null,
             grade_select : null,
             
             hide() {
