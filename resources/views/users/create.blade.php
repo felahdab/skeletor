@@ -13,6 +13,7 @@
             email   : null,
             nid     : null,
             grade   : null,
+            buttonid : null,
 
             offcanvas_el : null,
             offcanvas    : null,
@@ -113,8 +114,22 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="mb-3">
+                            <label for="grade" class="form-label">Grade *</label>
+                            <select class="form-control" 
+                                name="grade_id"
+                                id="grade_select">
+                                <option value="">Grade</option>
+                                @foreach($grades as $grade)
+                                    <option value="{{ $grade->id }}">
+                                        {{ $grade->grade_liblong }}
+                                        </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
+                <div class="row">
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
@@ -130,8 +145,33 @@
                                 <span class="text-danger text-left">{{ $errors->first('name') }}</span>
                             @endif
                         </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nom *</label>
+                            <input value="" 
+                                type="text" 
+                                class="form-control" 
+                                name="name" 
+                                placeholder="NOM" 
+                                x-model="nom"
+                                required>
+                            @if ($errors->has('name'))
+                                <span class="text-danger text-left">{{ $errors->first('name') }}</span>
+                            @endif
+                        </div>
                     </div>
                     <div class="col">
+                        <div class="mb-3">
+                            <label for="specialite_id" class="form-label">Sp&eacute;cialit&eacute;</label>
+                            <select class="form-control" 
+                                name="specialite_id" >
+                                <option value="">Sp&eacute;cialit&eacute;</option>
+                                @foreach($specialites as $specialite)
+                                    <option value="{{ $specialite->id }}"}>
+                                        {{ $specialite->specialite_libcourt }}
+                                        </option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="mb-3">
                             <label for="specialite_id" class="form-label">Sp&eacute;cialit&eacute;</label>
                             <select class="form-control" 
