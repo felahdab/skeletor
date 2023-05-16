@@ -48,7 +48,8 @@
                     name="validation_double"
                     x-on:click.prevent="active  = true; 
                                 buttonid ='validation_double'; 
-                                opendivvalid =true;">Valider</button>
+                                validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
+                        validModal.show();">Valider</button>
                 <button x-show="false" 
                     x-on:uservalidated.window="if (active)
                     {   
@@ -62,7 +63,8 @@
                     name="validation_double"
                     x-on:click.prevent="active  = true; 
                                 buttonid ='validation_double'; 
-                                opendivvalid =true;">Proposer la validation</button>
+                                validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
+                        validModal.show();">Proposer la validation</button>
                 <button x-show="false" 
                     x-on:uservalidated.window="if (active)
                     {   
@@ -111,7 +113,8 @@
                     name="validation_lache"
                     x-on:click.prevent="active  = true; 
                                 buttonid ='validation_lache'; 
-                                opendivvalid =true;">Valider</button>
+                                validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
+                        validModal.show();">Valider</button>
                 <button x-show="false" 
                     x-on:uservalidated.window="if (active)
                     {   
@@ -125,7 +128,8 @@
                     name="validation_lache"
                     x-on:click.prevent="active  = true; 
                                 buttonid ='validation_lache'; 
-                                opendivvalid =true;">Proposer la validation</button>
+                                validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
+                        validModal.show();">Proposer la validation</button>
                 <button x-show="false" 
                     x-on:uservalidated.window="if (active)
                     {   
