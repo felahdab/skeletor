@@ -180,10 +180,5 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             Route::get('/create', [MailController::class, 'create'])->name('mails.create');
         });
 
-        // if (env('APP_ENV') == "local")
-        // {
-            Route::get('/test_gantt', [TestController::class, 'test_gantt'])->name('test.test_gantt');
-            Route::get('/test_jspreadsheet', [TestController::class, 'test_jspreadsheet'])->name('test.test_jspreadsheet');
-        // }
     });
 });
