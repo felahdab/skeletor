@@ -9,10 +9,10 @@ use App\Models\Service;
 
 class UserPreferencesComponent extends Component
 {
-    public array $settings=[];
+    public array $settings = [];
 
-    public $fonctions_collapse=true;
-    public $services_collapse=true;
+    public $fonctions_collapse = true;
+    public $services_collapse = true;
 
     public function mount()
     {
@@ -23,7 +23,7 @@ class UserPreferencesComponent extends Component
     {
         auth()->user()->settings()->apply($this->settings);
         $fonctions = Fonction::all();
-        $services= Service::all();
+        $services = Service::all();
 
         return view('livewire.user-preferences-component')
             ->layout('layouts.app-master')
