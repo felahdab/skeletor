@@ -14,14 +14,16 @@
             nid     : null,
             grade   : null,
 
-            aideannudef  : false ,
             offcanvas_el : null ,
             offcanvas    : null ,
             grade_select : null,
             
-            toggle() {
-                this.aideannudef = ! this.aideannudef;
-                this.aideannudef ? this.offcanvas.show() : this.offcanvas.hide() ;
+            hide() {
+                this.offcanvas.hide();
+            },
+
+            show() {
+                this.offcanvas.show();
             },
 
             decode(str){
@@ -44,17 +46,22 @@
                                 {
                                     option.selected = true;
                                 }
-                            }"
+                            };
+                            hide();"
 
         x-init='
             offcanvas_el = document.getElementById("offcanvasannudef");
-            offcanvas = new bootstrap.Offcanvas(offcanvas_el, {backdrop: false});
+            offcanvas_el.addEventListener("hidden.bs.offcanvas", event => {
+                aideannudef = false;
+            });
+              
+            offcanvas = new bootstrap.Offcanvas(offcanvas_el, {backdrop: true});
             grade_select = document.getElementById("grade_select");'>
 
         <h2>Ajouter un marin</h2>
         <div style='text-align:right;'>* champs obligatoires </div>
         <div class="d-flex flex-row-reverse">
-            <div class="btn btn-primary" x-on:click="toggle()">Aide Annudef</div>
+            <div class="btn btn-primary" x-on:click="show()">Aide Annudef</div>
         </div>
 
         <div x-data='{ allChecked : false }'>
@@ -64,7 +71,7 @@
                         <h5 class="offcanvas-title">Recherche dans Annudef</h5>
                         <button type="button" 
                                 class="btn-close text-reset" 
-                                x-on:click="toggle()" aria-label="Close"></button>
+                                x-on:click="hide()" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
                         <div> Effectuez une recherche dans Annudef ci-dessous </div>
