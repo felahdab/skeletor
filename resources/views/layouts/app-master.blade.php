@@ -67,6 +67,8 @@ Vous avez également la possibilité de télécharger directement une version po
     
     @include('layouts.partials.navbar')
     @include('layouts.partials.bugreport')
+    @include('layouts.partials.notifications')
+    
     
     <main class="container">
       @include('layouts.partials.messages')

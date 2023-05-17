@@ -98,7 +98,7 @@ class AnnudefController extends Controller
             ->withBody($request, 'application/soap+xml')
             ->post($ANNUBASEURL);
 
-        $result = new SimpleXMLElement($response->body(), null, 0, "http://schemas.xmlsoap.org/soap/envelope/");
+        $result = new SimpleXMLElement($response->body(), 0, 0, "http://schemas.xmlsoap.org/soap/envelope/");
         $returncode = intval($result->Body->children("ns1", true)->children()->response->codeErreur);
         $results = [];
 

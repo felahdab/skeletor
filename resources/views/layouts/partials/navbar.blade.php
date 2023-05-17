@@ -1,5 +1,5 @@
 @section('helplink')
-  <x-documentation-link page="connexion"/>
+  < x-help-link page="connexion"/>
 @endsection
 
 
@@ -60,7 +60,7 @@
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
                 <a class="dropdown-item" href="{{route('transformation.index')}}">Suivi de la transformation par marin</a>
                 @can('transformation.indexparfonction')<a class="dropdown-item" href="{{route('transformation.indexparfonction')}}">Suivi de la transformation par fonction</a>@endcan
-                @can('statistiques.parcomp')<a class="dropdown-item" href="{{route('statistiques.parcomp')}}">Suivi de la transformation par compagnonnage</a>@endcan
+                @can('transformation.indexparcomp')<a class="dropdown-item" href="{{route('transformation.indexparcomp')}}">Suivi de la transformation par compagnonnage</a>@endcan
                 @can('transformation.indexparstage')<a class="dropdown-item" href="{{route('transformation.indexparstage')}}">Suivi de la transformation par stage</a>@endcan
                 @can('transformation.recalcultransfo')<a class="dropdown-item" href="{{route('transformation.recalcultransfo')}}">Recalcul des taux transformation</a>@endcan
                 @can('transformation.parcoursfichebilan')<a class="dropdown-item" href="{{route('transformation.parcoursfichebilan')}}">Parcours des fiches bilan</a>@endif
@@ -108,6 +108,8 @@
         
         <button type= "button" class='btn btn-warning' data-bs-toggle="modal" data-bs-target="#bugreport-modal"> Signaler un problème</button> 
         
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationPanel" aria-controls="offcanvasRight"><x-bootstrap-icon iconname='bell.svg' /></button>
+
         <div class="dropdown">
           <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{ auth()->user()->display_name }}

@@ -1,7 +1,7 @@
 @extends('layouts.app-master')
 
 @section('helplink')
-<x-documentation-link page="transformation"/>
+< x-help-link page="transformation"/>
 @endsection
 
 

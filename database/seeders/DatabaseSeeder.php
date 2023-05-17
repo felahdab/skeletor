@@ -39,6 +39,7 @@ class DatabaseSeeder extends Seeder
                     CompagnonageFonction::class,
                     CompagnonageTache::class,
                     TacheObjectif::class,
+                    CorrectUpdatedAtNullTimestamp::class
                 ]);
 
     }

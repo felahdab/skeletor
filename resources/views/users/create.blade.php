@@ -1,7 +1,7 @@
 @extends('layouts.app-master')
 
 @section('helplink')
-<x-documentation-link page="administration"/>
+<x-help-link page="administration"/>
 @endsection
 
 
@@ -15,14 +15,16 @@
             grade   : null,
             buttonid : null,
 
-            aideannudef  : false ,
-            offcanvas_el : null ,
-            offcanvas    : null ,
+            offcanvas_el : null,
+            offcanvas    : null,
             grade_select : null,
             
-            toggle() {
-                this.aideannudef = ! this.aideannudef;
-                this.aideannudef ? this.offcanvas.show() : this.offcanvas.hide() ;
+            hide() {
+                this.offcanvas.hide();
+            },
+
+            show() {
+                this.offcanvas.show();
             },
 
             decode(str){
@@ -32,11 +34,11 @@
             }
         }'
 
-       @preset-this-user = "email = decode($event.detail.email);
-                            nom = decode($event.detail.nom);
+       @preset-this-user = "email  = decode($event.detail.email);
+                            nom    = decode($event.detail.nom);
                             prenom = decode($event.detail.prenom);
-                            nid = decode($event.detail.nid);
-                            grade = decode($event.detail.grade);
+                            nid    = decode($event.detail.nid);
+                            grade  = decode($event.detail.grade);
                             
                             for (i=0; i < grade_select.options.length; i++){
                                 var option = grade_select.options[i]; 
@@ -45,17 +47,22 @@
                                 {
                                     option.selected = true;
                                 }
-                            }"
+                            };
+                            hide();"
 
         x-init='
             offcanvas_el = document.getElementById("offcanvasannudef");
-            offcanvas = new bootstrap.Offcanvas(offcanvas_el, {backdrop: false});
-            grade_select = document.getElementById("grade_select");'>
+            offcanvas_el.addEventListener("hidden.bs.offcanvas", event => {
+                aideannudef = false;
+            });
+              
+            offcanvas = new bootstrap.Offcanvas(offcanvas_el, {backdrop: true});
+            grade_select = document.getElementById("grade_id");'>
 
         <h2>Ajouter un marin</h2>
         <div style='text-align:right;'>* champs obligatoires </div>
         <div class="d-flex flex-row-reverse">
-            <div class="btn btn-primary" x-on:click="toggle()">Aide Annudef</div>
+            <div class="btn btn-primary" x-on:click="show()">Aide Annudef</div>
         </div>
 
         <div x-data='{ allChecked : false }'>
@@ -65,7 +72,7 @@
                         <h5 class="offcanvas-title">Recherche dans Annudef</h5>
                         <button type="button" 
                                 class="btn-close text-reset" 
-                                x-on:click="toggle()" aria-label="Close"></button>
+                                x-on:click="hide()" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
                         <div> Effectuez une recherche dans Annudef ci-dessous </div>
@@ -74,205 +81,114 @@
                 </div>
             </div>
 
-            <form method="POST" action="" enctype="multipart/form-data">
+            <x-form::form method="POST" action="">
                 <input type='hidden' id='buttonid' name='buttonid' x-model="buttonid">
-                @csrf
-                <div class="row">
+                
+                <div class="row mt-4">
                     <div class="col">
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email *</label>
-                            <input value=""
-                                type="email" 
-                                class="form-control" 
-                                name="email" 
-                                placeholder="Email" 
-                                x-model="email" 
-                                required>
-                            @if ($errors->has('email'))
-                                <span class="text-danger text-left">{{ $errors->first('email') }}</span>
-                            @endif
-                        </div>
+                        <x-form::input name="email" label="Email *" placeholder="Email..." type="email" x-model="email" required/>
                     </div>
                     <div class="col">
-                        <div class="mb-3">
-                            <label for="grade" class="form-label">Grade *</label>
-                            <select class="form-control" 
-                                name="grade_id"
-                                id="grade_select">
-                                <option value="">Grade</option>
-                                @foreach($grades as $grade)
-                                    <option value="{{ $grade->id }}">
-                                        {{ $grade->grade_liblong }}
-                                        </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <x-form::model-select name="grade_id" 
+                            :models="$grades" 
+                            label="Grade *" 
+                            key-attribute="id" 
+                            value-attribute="grade_liblong"
+                            required>
+                            <option value="">Grade</option>
+                        </x-form::model-select>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-4">
                     <div class="col">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Nom *</label>
-                            <input value="" 
-                                type="text" 
-                                class="form-control" 
-                                name="name" 
-                                placeholder="NOM" 
-                                x-model="nom"
-                                required>
-                            @if ($errors->has('name'))
-                                <span class="text-danger text-left">{{ $errors->first('name') }}</span>
-                            @endif
-                        </div>
+                        <x-form::input name="name" label="Nom *" placeholder="Nom..." type="text" x-model="nom" required/>
                     </div>
                     <div class="col">
-                        <div class="mb-3">
-                            <label for="specialite_id" class="form-label">Sp&eacute;cialit&eacute;</label>
-                            <select class="form-control" 
-                                name="specialite_id" >
-                                <option value="">Sp&eacute;cialit&eacute;</option>
-                                @foreach($specialites as $specialite)
-                                    <option value="{{ $specialite->id }}"}>
-                                        {{ $specialite->specialite_libcourt }}
-                                        </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <x-form::model-select name="specialite_id" 
+                                :models="$specialites" 
+                                label="Spécialité" 
+                                key-attribute="id" 
+                                value-attribute="specialite_libcourt">
+                                <option value="">Specialite</option>
+                        </x-form::model-select>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-4">
                     <div class="col">
-                        <div class="mb-3">
-                            <label for="prenom" class="form-label">Pr&eacute;nom *</label>
-                            <input value="" 
-                                type="text" 
-                                class="form-control" 
-                                name="prenom" 
-                                placeholder="Pr&eacute;nom" 
-                                x-model="prenom"
-                                required>
-                        </div>
+                        <x-form::input name="prenom" label="Prénom *" placeholder="Prénom..." type="text" x-model="prenom" required/>
                     </div>
                     <div class="col">
-                        <div class="mb-3">
-                            <label for="secteur_id" class="form-label">Secteur</label>
-                            <select class="form-control" 
-                                name="secteur_id" >
-                                <option value="">Secteur</option>
-                                @foreach($secteurs as $secteur)
-                                    <option value="{{ $secteur->id }}">
-                                        {{ $secteur->displayName() }}
-                                        </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <x-form::model-select name="secteur_id" 
+                            :models="$secteurs" 
+                            label="Secteur" 
+                            key-attribute="id" 
+                            value-attribute="secteur_libcourt">
+                            <option value="">Secteur</option>
+                        </x-form::model-select>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-4">
                     <div class="col">
-                        <div class="mb-3">
-                            <label for="matricule" class="form-label">Matricule *</label>
-                            <input type="text" 
-                                class="form-control" 
-                                name="matricule" 
-                                placeholder="Matricule">
-                        </div>
+                        <x-form::input name="matricule" label="Matricule *" placeholder="Matricule..." type="text" required/>
                     </div>
                     <div class="col">
-                        <div class="mb-3">
-                            <label for="diplome_id" class="form-label">Brevet</label>
-                            <select class="form-control" 
-                                name="diplome_id" >
-                                <option value="">Brevet</option>
-                                @foreach($diplomes as $diplome)
-                                    <option value="{{ $diplome->id }}">
-                                        {{ $diplome->diplome_libcourt }}
-                                        </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <x-form::model-select name="diplome_id" 
+                            :models="$diplomes" 
+                            label="Brevet" 
+                            key-attribute="id" 
+                            value-attribute="diplome_libcourt">
+                            <option value="">Brevet</option>
+                        </x-form::model-select>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-4">
                     <div class="col">
-                        <div class="mb-3">
-                            <label for="nid" class="form-label">NID</label>
-                            <input type="text" 
-                                class="form-control" 
-                                name="nid" 
-                                placeholder="NID"
-                                x-model="nid">
-                         </div>
+                       <x-form::input name="nid" label="NID" placeholder="NID..." type="text" x-model="nid"/>
                     </div>
                     <div class="col">
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-4">
                     <div class="col">
-                        <div class="mb-3">
-                            <label for="date_embarq" class="form-label">Date d'embarquement *</label>
-                            <input value="{{ date('Y-m-d') }}" 
-                                type="date" 
-                                class="form-control" 
-                                name="date_embarq" 
-                                placeholder="Date d'embarquement" required>
-                        </div>
+                        <x-form::input name="date_embarq" label="Date d'embarquement *" type="date" required/>
                     </div>
                     <div class="col">
-                        <!--div class="mb-3">
-                            <label for="unite_destination_id" class="form-label">Unité destination (informatif uniquement)</label>
-                            <select class="form-control" 
-                                name="unite_destination_id" >
-                                <option value="">Unité destination</option>
-                                @foreach($unites as $unite)
-                                    <option value="{{ $unite->id }}">
-                                        {{ $unite->unite_liblong }}
-                                        </option>
-                                @endforeach
-                            </select>
-                        </div-->
-                        </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="mb-3">
-                            <input type="checkbox" name="comete" value="1">
-                            <label for="comete" class="form-label">Embarqué COMETE</label>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="mb-3">
-                            <input type="checkbox" name="socle" value="1">
-                            <label for="socle" class="form-label">Socle</label>
-                         </div>
                     </div>
                 </div>
-                <div class="row">
-                <!-- espace pour ajouter le commentaire-->
-                    <label for='user_comment' class='form-label' style='max-width: 21.6%;'>Commentaire</label>
-                    <textarea class="form-control" cols='100' rows='3' name='user_comment' id='user_comment' placeholder='Commentaire'></textarea>
+                <div class="row mt-4">
+                    <div class="col">
+                        <x-form::checkbox name="comete" value="1" label="Embarqué COMETE" />
+                    </div>
+                    <div class="col">
+                        <x-form::checkbox name="socle" value="1" label="Socle" />
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <x-form::textarea name="user_comment" label="Commentaire" placeholder="Commentaire..." type="textarea" cols=100 rows=3/>
                 </div>
                 
-                <label for="roles" class="form-label">Attribuer des r&ocirc;les</label>
+                <div class="row mt-4" x-data='{ allchecked : false }' >
+                    <label for="roles" class="form-label">Attribuer des r&ocirc;les</label>
+                    <table class="table table-striped">
+                        <thead>
+                            <th scope="col" width="1%"><input type="checkbox" x-on:click="allChecked = ! allChecked; $dispatch('toggleallroles');"></th>
+                            <th scope="col" width="20%">Sélectionner les r&ocirc;les</th>
+                        </thead>
 
-                <table class="table table-striped">
-                    <thead>
-                        <th scope="col" width="1%"><input type="checkbox" x-on:click="allChecked = ! allChecked; $dispatch('toggleallroles');"></th>
-                        <th scope="col" width="20%">Sélectionner les r&ocirc;les</th>
-                    </thead>
-
-                    @foreach($roles as $role)
-                        <tr>
-                            <td>
-                                <input type="checkbox" 
-                                name="role[{{ $role->name }}]"
-                                value="{{ $role->name }}"
-                                x-on:toggleallroles.window="$el.checked = allChecked;">
-                            </td>
-                            <td>{{ $role->name }}</td>
-                        </tr>
-                    @endforeach
-                </table>
+                        @foreach($roles as $role)
+                            <tr>
+                                <td>
+                                    <input type="checkbox" 
+                                    name="role[{{ $role->name }}]"
+                                    value="{{ $role->name }}"
+                                    class='role'
+                                    x-on:toggleallroles.window="$el.checked = allChecked;">
+                                </td>
+                                <td>{{ $role->name }}</td>
+                            </tr>
+                        @endforeach
+                    </table>
+                </div>
                 <div class="btn-group" role="groupe">
                     <button type="submit" 
                             class="btn btn-primary" 
@@ -282,9 +198,8 @@
                             x-on:click='buttonid ="users.choisirfonction";'>Ajouter et attribuer des fonctions</button>
                 </div>
                 <a href="{{ route('users.index') }}" class="btn btn-default">Annuler</a>
-            </form>
+            </x-form:::form>
         </div>
-</div>
     </div>
 @endsection
 
