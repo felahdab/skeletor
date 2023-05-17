@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\Event;
 
 use SocialiteProviders\Keycloak\KeycloakExtendSocialite;
 
-use App\Events\UserTransformationUpdated;
-use App\Listeners\UpdateUserTransformationRatio;
-
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -20,14 +17,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
-        Registered::class => [
-            SendEmailVerificationNotification::class,
-        ],
         \SocialiteProviders\Manager\SocialiteWasCalled::class => [
             'SocialiteProviders\Keycloak\KeycloakExtendSocialite@handle',
         ],
-        UserTransformationUpdated::class => [
-            UpdateUserTransformationRatio::class,
+        \App\Events\UserProposedSomeValidationEvent::class => [
+            [\App\Listeners\HandleUserProposedSomeValidationEvent::class, "handle"]
         ]
     ];
 

@@ -1,7 +1,7 @@
 @extends('layouts.app-master')
 
 @section('helplink')
-<x-documentation-link page="parcours"/>
+< x-help-link page="parcours"/>
 @endsection
 
 
@@ -87,6 +87,19 @@
                         value="{{ $stage->stage_duree }}" >
                     </div>
                 </div>
+
+                <div class='form-group row' >
+                    <label for='stage[duree_validite]' class='col-sm-5 col-form-label'>Durée de validité (mois)</label>
+                    <div class='col-sm-5'>
+                        <input type='text' 
+                        class='form-control' 
+                        name='stage[duree_validite]' 
+                        id='stage[duree_validite]' 
+                        placeholder='Durée de validité' 
+                        value="{{ $stage->duree_validite }}" >
+                    </div>
+                </div>
+
                 <div class='form-group row' >
                     <label for='stage[stage_lieu]' class='col-sm-5 col-form-label'>Lieu</label>
                     <div class='col-sm-5'>

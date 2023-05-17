@@ -50,6 +50,11 @@ class TransformationController extends Controller
         return view('transformation.indexparstage');
     }
 
+    public function indexparcomp()
+    {
+        return view('transformation.indexparcomp');
+    }
+
     /**
      * Show form for creating user
      * 

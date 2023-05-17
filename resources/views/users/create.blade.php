@@ -1,27 +1,30 @@
 @extends('layouts.app-master')
 
 @section('helplink')
-<x-documentation-link page="administration"/>
+<x-help-link page="administration"/>
 @endsection
 
 
 @section('content')
-    <div class="  p-4 rounded" 
+    <div class="bg-light p-4 rounded" 
         x-data='{
             nom     : null,
             prenom  : null,
             email   : null,
             nid     : null,
             grade   : null,
+            buttonid : null,
 
-            aideannudef  : false ,
-            offcanvas_el : null ,
-            offcanvas    : null ,
+            offcanvas_el : null,
+            offcanvas    : null,
             grade_select : null,
             
-            toggle() {
-                this.aideannudef = ! this.aideannudef;
-                this.aideannudef ? this.offcanvas.show() : this.offcanvas.hide() ;
+            hide() {
+                this.offcanvas.hide();
+            },
+
+            show() {
+                this.offcanvas.show();
             },
 
             decode(str){
@@ -31,11 +34,11 @@
             }
         }'
 
-       @preset-this-user = "email = decode($event.detail.email);
-                            nom = decode($event.detail.nom);
+       @preset-this-user = "email  = decode($event.detail.email);
+                            nom    = decode($event.detail.nom);
                             prenom = decode($event.detail.prenom);
-                            nid = decode($event.detail.nid);
-                            grade = decode($event.detail.grade);
+                            nid    = decode($event.detail.nid);
+                            grade  = decode($event.detail.grade);
                             
                             for (i=0; i < grade_select.options.length; i++){
                                 var option = grade_select.options[i]; 
@@ -44,23 +47,46 @@
                                 {
                                     option.selected = true;
                                 }
-                            }"
+                            };
+                            hide();"
 
         x-init='
             offcanvas_el = document.getElementById("offcanvasannudef");
-            offcanvas = new bootstrap.Offcanvas(offcanvas_el, {backdrop: false});
-            grade_select = document.getElementById("grade_select");'>
+            offcanvas_el.addEventListener("hidden.bs.offcanvas", event => {
+                aideannudef = false;
+            });
+              
+            offcanvas = new bootstrap.Offcanvas(offcanvas_el, {backdrop: true});
+            grade_select = document.getElementById("grade_id");'>
 
         <h2>Ajouter un marin</h2>
         <div style='text-align:right;'>* champs obligatoires </div>
-<div x-data='{ allChecked : false }'>
-        <div class="container mt-4" x-data="{ buttonid : '' }">
-            <x-form::form method="POST" action="" enctype='multipart/form-data'>
+        <div class="d-flex flex-row-reverse">
+            <div class="btn btn-primary" x-on:click="show()">Aide Annudef</div>
+        </div>
+
+        <div x-data='{ allChecked : false }'>
+            <div class="container mt-4" x-data="{ buttonid : '' }">
+                <div class="offcanvas offcanvas-start bg-light w-30" tabindex="-1" id="offcanvasannudef">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title">Recherche dans Annudef</h5>
+                        <button type="button" 
+                                class="btn-close text-reset" 
+                                x-on:click="hide()" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <div> Effectuez une recherche dans Annudef ci-dessous </div>
+                        <livewire:annudef-search mode="aide">
+                    </div>
+                </div>
+            </div>
+
+            <x-form::form method="POST" action="">
                 <input type='hidden' id='buttonid' name='buttonid' x-model="buttonid">
-                @csrf
+                
                 <div class="row mt-4">
                     <div class="col">
-                        <x-form::input name="email" label="Email *" placeholder="Email..." type="email" required/>
+                        <x-form::input name="email" label="Email *" placeholder="Email..." type="email" x-model="email" required/>
                     </div>
                     <div class="col">
                         <x-form::model-select name="grade_id" 
@@ -75,7 +101,7 @@
                 </div>
                 <div class="row mt-4">
                     <div class="col">
-                        <x-form::input name="name" label="Nom *" placeholder="Nom..." type="text" required/>
+                        <x-form::input name="name" label="Nom *" placeholder="Nom..." type="text" x-model="nom" required/>
                     </div>
                     <div class="col">
                         <x-form::model-select name="specialite_id" 
@@ -89,7 +115,7 @@
                 </div>
                 <div class="row mt-4">
                     <div class="col">
-                        <x-form::input name="prenom" label="Prénom *" placeholder="Prénom..." type="text" required/>
+                        <x-form::input name="prenom" label="Prénom *" placeholder="Prénom..." type="text" x-model="prenom" required/>
                     </div>
                     <div class="col">
                         <x-form::model-select name="secteur_id" 
@@ -117,7 +143,7 @@
                 </div>
                 <div class="row mt-4">
                     <div class="col">
-                       <x-form::input name="nid" label="NID" placeholder="NID..." type="text" />
+                       <x-form::input name="nid" label="NID" placeholder="NID..." type="text" x-model="nid"/>
                     </div>
                     <div class="col">
                     </div>
@@ -174,7 +200,6 @@
                 <a href="{{ route('users.index') }}" class="btn btn-default">Annuler</a>
             </x-form:::form>
         </div>
-</div>
     </div>
 @endsection
 

@@ -45,6 +45,8 @@ Chaque rôle se voit attribuer 0, 1 ou plusieurs de ces permissions.
 Et chaque utilisateur se voit attribuer 0, 1 ou plusieurs rôles.
 Les actions qu'un utilisateur peut accomplir sont donc la somme de toutes les permissions dont il bénéficie au travers des rôles qu'on lui attribue.
 
+> {info} Vous retrouvez la liste des rôles qui vous sont attribués dans le menu qui porte votre nom.
+
 <a name="interface-utilisateur">
 ## Interface utilisateur
 

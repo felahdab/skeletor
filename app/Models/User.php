@@ -248,7 +248,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Stage::class, 'user_stage')
             ->withTimeStamps()
-            ->withPivot('commentaire', 'date_validation');
+            ->withPivot('commentaire', 'date_validation', 'date_validite');
     }
     
     // Doit renvoyer la liste des sous objectifs que l'utilisateur a valide
@@ -311,6 +311,15 @@ class User extends Authenticatable
         return true;
     }
     
+    public function getEtatDeValidationDesSsojbsAttribute($liste_id_ssobs)
+    {
+        return $this->sous_objectifs()
+                    ->whereIn('sous_objectif_id', $liste_id_ssobs)
+                    ->get()
+                    ->pluck('pivot.date_validation', 'id')
+                    ->all();
+    }
+
     public function aValideLeSousObjectif(SousObjectif $sous_objectif)
     {
         $workitem = $this->sous_objectifs()->find($sous_objectif);
@@ -395,6 +404,17 @@ class User extends Authenticatable
         if ($workitem->date_validation == null)
             return "";
         return $workitem->date_validation;
+    }
+
+     public function dateValiditeDuStage(Stage $stage)
+    {
+        $workitem = $this->stages()->find($stage);
+        if ($workitem == null)
+            return "";
+        $workitem = $workitem->pivot;
+        if ($workitem->date_validite == null)
+            return "";
+        return $workitem->date_validite;
     }
     
     public function CommentaireDuStage(Stage $stage)

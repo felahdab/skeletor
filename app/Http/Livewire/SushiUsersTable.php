@@ -270,7 +270,7 @@ class SushiUsersTable extends DataTableComponent
                         $builder->where('comete', false);
                     }
                 }),
-            SelectFilter::make('Socle')
+                SelectFilter::make('Socle')
                 ->options([
                     '' => 'Tous',
                     '1' => 'Socle',
@@ -282,6 +282,20 @@ class SushiUsersTable extends DataTableComponent
                     } 
                     elseif ($value === '0') {
                         $builder->where('socle', false);
+                    }
+                }),
+                SelectFilter::make('Lâché')
+                ->options([
+                    '' => 'Tous',
+                    '1' => 'Lâché',
+                    '0' => 'Non lâché',
+                ])
+                ->filter(function(Builder $builder, string $value) {
+                    if ($value === '1') {
+                        $builder->where('lache_dans_fonction', true);
+                    } 
+                    elseif ($value === '0') {
+                        $builder->where('lache_dans_fonction', false);
                     }
                 }),
         ];
