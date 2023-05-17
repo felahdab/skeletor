@@ -2,7 +2,6 @@
     $fonctionsAQuai = $marin->fonctionAQuai();
 @endphp
 <div>
-    <ul style='list-style-type : none;' >
         @foreach($fonctionsAQuai as $fonction)
             @php
                 $pourcentage = $fonction->pivot->taux_de_transformation;
@@ -10,5 +9,4 @@
             @endphp
             <x-ffast-fonction-text :text="$fonction->fonction_libcourt" :pourcentage="$pourcentage" :lache="$lache"/>
         @endforeach
-    </ul>
 </div>
