@@ -23,6 +23,10 @@ class CorrectUpdatedAtNullTimestamp extends Seeder
                 $object->updated_at = "2022/09/01";
                 $object->save();
             }
+            foreach ($className::where('created_at', null)->get() as $object) {
+                $object->updated_at = "2022/09/01";
+                $object->save();
+            }
         }
     }
 }
