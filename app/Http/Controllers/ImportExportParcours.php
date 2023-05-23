@@ -9,6 +9,7 @@ use App\Models\Compagnonage;
 use App\Models\Tache;
 use App\Models\Objectif;
 use App\Models\SousObjectif;
+use App\Models\Stage;
 
 use Illuminate\Support\Str;
 
@@ -88,13 +89,98 @@ class ImportExportParcours extends Controller
         // $table = new Table([ $firstColumn , 4, $column, $row ], "Table_" . $comp->id);
         // $sheet->addTable($table);
     }
-    
+
+    public function exportFoncStageCompToExcelSheet($sheet)
+    {
+        $stylebordures=[
+            'borders' => [
+                'top' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'bottom' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'right' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'left' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ]
+        ];
+        $stylefonction=[
+            'fill' => [
+                'font' => [
+                    'bold' => true,
+                ],
+                'color' => [
+                    'argb' => 'c2c2c2',
+                ],
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+            ]
+        ];
+        $stylelache=[
+            'fill' => [
+                'color' => [
+                    'argb' => '0F8CD6',
+                ],
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+            ]
+        ];
+        $firstColumn = 2;
+        $firstRow = 2;
+        $row = $firstRow;
+        foreach (Fonction::orderBy('fonction_libcourt')->get() as $fonc){
+            $column = $firstColumn;
+            $sheet->setCellValue([$column, $row ] , $fonc->fonction_liblong.' ('.$fonc->fonction_libcourt.')');
+            $sheet->getStyle([$column, $row ])->applyFromArray($stylefonction);
+            $column ++;
+            $double_lach='';
+            if ($fonc->fonction_double == 1) $double_lach.='Double/';
+            if ($fonc->fonction_lache == 1) $double_lach.='Lâcher';
+            $sheet->setCellValue([$column, $row ] , $double_lach);
+            $sheet->getStyle([$column, $row ])->applyFromArray($stylelache);
+            $column --;
+            $row ++;
+            $sheet->setCellValue([$column, $row ] , 'Compagnonnages : ');
+            $sheet->getStyle([$column, $row ])->applyFromArray($stylebordures);
+        foreach ($fonc->compagnonages()->get() as $comp)
+            {
+                $column ++;
+                $sheet->setCellValue([$column, $row ] , $comp->comp_libcourt);
+                $sheet->getColumnDimensionByColumn($column - 1)->setAutoSize(true);  
+                $sheet->getStyle([$column, $row ])->applyFromArray($stylebordures);
+          
+            }
+            $row ++;
+            $column = $firstColumn;
+            $sheet->setCellValue([$column, $row ] , 'Stages : ');
+            $sheet->getStyle([$column, $row ])->applyFromArray($stylebordures);
+        foreach ($fonc->stages()->get() as $stage)
+            {
+                $column ++;
+                $sheet->setCellValue([$column, $row ] , $stage->stage_libcourt);
+                $sheet->getColumnDimensionByColumn($column - 1)->setAutoSize(true);            
+                $sheet->getStyle([$column, $row ])->applyFromArray($stylebordures);
+            }
+            $row = $row + 2;
+        }
+
+    }
+
     public function ExportParcoursVersExcel()
     {
         $spreadsheet = new Spreadsheet();
         $sheet= null;
         
+        if (! $sheet)
+        $sheet = $spreadsheet->getActivesheet();
+        else
+            $sheet= $spreadsheet->createSheet();
+        $sheet->setTitle('Liste Fonctions');
+        $this->exportFoncStageCompToExcelSheet($sheet);
         
+
         foreach (Compagnonage::with('taches.objectifs.sous_objectifs')->get() as $comp)
         {
             if (! $sheet)

@@ -1,3 +1,133 @@
+## 1.2.5 (May 22, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.4b –> 1.2.5
+- Ajoute la correction du champs created_at au seeder de correction du parcours.
+- Merge branch 'tuleap-62052'
+- ajout onglet liste des fonctions avec leurs comps et stages
+- Merge branch 'master' into tuleap-62052
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast
+- inutile mais besoin pour pouvoir pulller master
+- modif seeders pour éviter les dates à null dans created et updated
+- retouche des affichages
+- Re-conversion de users.create pour utiliser les composants Tomsix.
+- Nettoyage du panneau d'aide Annudef de création d'utilisateur
+- Les boutons de double et de lacher n'avaient pas ete convertis pour utiliser le modal bootstrap...
+- Rajout de quelques fichiers à ignorer pour git.
+- Merge branch 'tuleap-62052'
+- ajout filtre lache/nonlache dans le suivi par fonction a quai
+- Suppression du controlleur et des vues de test. Tout ceci n'a rien à faire dans master.
+- Retrait des routes de test.
+- Petite remise en forme du javascript dans users.create
+- Changement de méthode d'appel de SimpleXMLElement dans AnnudefController pour tenir compte de la deprecation.
+- Simplification de la partie javascript de la page users.create
+- debug : le bouton ajouter et attribuer fonction dans le create user ne fonctionnait pas
+- Merge remote-tracking branch 'internet/master'
+- resolution du conflit de merge master
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast
+- Modification des références aux routes pour utiliser le controlleur de la Transformation.
+- Création des methode et vue pour le suivi par compagnonnage dans la transformation.
+- Creation d'un test Dusk elementaire pour les pages de suivi de la transfo.
+- Correction vue users.create
+- Merge branch 'tuleap-71454-ajouter-un-utilisateur-faire-la-recherche-annudef'
+- Adjust javascript alignment
+- Inscription du nouveau seeder pour les nouvelles instances.
+- Creation d'un seeder pour corriger les champs updated_at null.
+- Correction du lien vers la documentation pour la page de statistiques par compagnonage.
+- Merge remote-tracking branch 'intradef/tuleap-62052' into test-notifications
+- Merge remote-tracking branch 'intradef/simplification-composants-blade' into test-notifications
+- Use new bootstrap-icon component to display a bell icon in the notification button.
+- Rename public property of bootstrap-icon component.
+- Creation d'un composant Blade permettant d'utiliser simplement les icones Bootstrap.
+- Renommage du modele de notification de base.
+- Install twbs/bootstrap-icons package
+- Utilisation de la nouvelle vue Blade pour inclure les notifications dans le layout général.
+- Creation d'une view Blade pour le panneau des nofications.
+- Adaptation du toaster au nouveau format des notifications.
+- Francisation. Une notification comporte un titre, une mention et un texte.
+- Modification du panneau des notifications pour utiliser les NotificationToaster. Création d'un evenement javascript pour fermer toutes les notifications.
+- Création d'un notification toaster qui affiche une notification.
+- Activation du backdrop sur le panneau des notifications
+- Renommage des notifications
+- Association de l'evenement au listener pour les proposition de validation.
+- Creation du Listener lorsqu'une proposition de validation arrive.
+- Creation de l'evenement devant signaaler une proposition de validation.
+- La panneau des notifications affiche les notifications sous forme de toaster. Lorque l'on ferme une notification, celle-ci est marquée comme lue en base.
+- Premiers essais de notification
+- Create migration for notifications table.
+- Retrait du nettoyage du cache des permissions depuis le seeder.
+- Merge branch 'master' into simplification-composants-blade
+- Insertion du Chrome Driver pour dusk
+- modif pour que export parcours soit accessible au role etatmajor
+- correction affichage pour validation multiple par fonction : la checkbox pour les sous objectifs est de nouveau accessible
+- ajout lien vers livret de transfo pour chaque marin
+- menu preference rendu accessible
+- fin des modifs pour date_validite d'u stage
+- Retrait d'un ddd orphelin.
+- Modification pour ignorer les certificats SSL invalides de Mindef Connect.
+- bilan global : retrait de l'infobulle (liste marins ayant cette fonction)
+- suite modif doc
+- suite des modifs de la doc
+- oubli pour modif ecran stat2ps
+- suite mise a jour de la doc
+- evolution ecran stat2ps pour prise en compte date validite dans calcul du nb de marins a valider
+- correction pour date validite nulle et amélioration affichage
+- ajout d'une date validité pour les stages
+- evolution de la doc en cours
+- Insertion du Chrome Driver pour Dusk.
+- Ajout de la non verification SSL pour les recherches Annudef.
+- Merge remote-tracking branch 'origin/packages_upgrade' into essais_de_mise_en_forme_automatique_et_javascript
+- Merge branch 'master' into essais_de_mise_en_forme_automatique_et_javascript
+- Update TestController call method in routes file.
+- Merge branch 'packages_upgrade'
+- Merge branch 'master' into packages_upgrade
+- Upgrade all packages.
+- Merge branch 'master' into essai-composants-blade-tomsix
+- Merge branch 'master' into essai_frappe_gantt
+- Insertion des classes PHP canoniques pour faciliter le parcours des sources depuis VS Code.
+- Remise en forme automatique pour essai
+- Remise en forme automatique pour essai
+- Remise en forme automatique pour essai.
+- Remise en forme automatique pour essai
+- Construction de la liste des sous objectifs du compagnonage d'un coup plutot que de facon iterative
+- Utilisation des méthodes précédentes pour diminuer le nombre de requetes.
+- Mise en cache des taches, objectifs et sous objectifs d'un compagnonnage.
+- Introduction d'une méthode permettant de connaitre l'état de validation d'une liste de sous objectifs dans le modele User.
+- Recours au eager loading pour diminuer le nombre de requetes nécessaires au chargement des donnees du parcours de transformation.
+- Mise en cache de la collection des sous objectifs d'une fonction, et du nombre d'objectifs a valider, pour essayer d'améliorer les performances.
+- Modification de la methode d'acces aux sous objectifs d'un Objectif pour reutiliser les donnees deja chargees s'il y en a.
+- Changement de methode d'appel aux objectifs d'une tache pour reutiliser les donnees deja chargees s'il y en a.
+- Mise en cache de la collection des sous objectifs d'un compagnonnage.
+- Essai de composant blade.
+- suivi  par comp change de menu
+- amelioration affichage tranfo par comp
+- suite ajout suivi transfo par compagnonnage
+- je refais
+- obligé pour tenter le merge master
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast
+- ne me parait pas necessaire
+- ajout d'un tableau permettant d'afficher l'etat transfo pour tous les marins d'un compagonnage
+- changement affichage pour enlever fond gris
+- Conversion de users.create aux composants tomsix.
+- Suppression d'espaces superflus
+- Conversion de users.edit vers les controles tomsix.
+- Test des composant tomsix
+- Installation de tomsix/laravel-components-library et publication de la configuration
+- Suppression de l'ancier x-documentation-link
+- Remplacement du composant x-documentation-link par le nouveau x-help-link
+- Creation du lien vers la doc sous forme de composant Blade anonyme
+- Modification affichage taux de transformation.
+- Merge branch 'master' into tuleap-72206-faire-en-sorte-que-les-tests-n-envoient-pas-de-veritable-mail
+- Interdiction d'envoyer des mails lorsque l'environnement n'est pas production.
+- Améliorations du design de la page de préférences.
+- Oubli
+- Retire le fond bg-light de toutes les pages ou presque.
+- Rajout des badges des roles détenus dans la barre de navigation.
+- Ajout d'un test jspreadsheet-ce
+- Mise en place d'un test pour GANTT
+- Download of javascript libraries and dependencies
+- Merge branch 'master' into tuleap-72285-ameliorer-la-generation-d-utilisateurs-factices
+- Passage à un déclenchement quotidien
+- Choisit aléatoirement le secteur, la spe, le grade et le diplome des utilisateurs factice parmi les elements en base (évite de crééer des faux éléments pour celà)
+
 ## 1.2.4b (April 28, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.4a –> 1.2.4b
 - Rajoute le filtre par role a la table de selection des utilisateurs pour les mails
