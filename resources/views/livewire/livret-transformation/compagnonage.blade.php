@@ -57,7 +57,7 @@
                             </button>
                         @endif
                         </td>
-                        @foreach($objectif->sous_objectifs as $sous_objectif)
+                        @foreach($objectif->sous_objectifs->sortBy('ordre') as $sous_objectif)
                             <td>
                                 @if($sous_objectif->ssobj_lienurl != NULL)
                                     <a href="{{$sous_objectif->ssobj_lienurl}}" target="_blank"><x-bootstrap-icon iconname='link-45deg.svg'/></a>
