@@ -5,6 +5,8 @@ namespace App\Listeners;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
+use App\Events\UserProposedSomeValidationEvent;
+
 class HandleUserProposedSomeValidationEvent
 {
     /**
@@ -18,7 +20,7 @@ class HandleUserProposedSomeValidationEvent
     /**
      * Handle the event.
      */
-    public function handle(object $event): void
+    public function handle(UserProposedSomeValidationEvent $event): void
     {
         //
     }

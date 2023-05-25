@@ -26,8 +26,6 @@ use App\Models\Stage;
 
 use Illuminate\Support\Facades\Storage;
 
-use App\Jobs\CalculateUserTransformationRatios;
-
 class TransformationController extends Controller
 {
     /**
