@@ -20,6 +20,7 @@ use App\Http\Controllers\StageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\ObjectifController;
 use App\Http\Controllers\SousObjectifController;
 use App\Http\Controllers\BugReportController;
 use App\Http\Controllers\ImportExportParcours;
