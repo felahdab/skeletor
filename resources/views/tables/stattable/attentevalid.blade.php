@@ -5,7 +5,7 @@
      $nb_attente = $nb_lache_attente + $nb_ssobj_attente + $nb_double_attente;
 @endphp
 @if($nb_attente >0 )
-     <span>&#128232;</span>
+     <span class="text-info"><x-bootstrap-icon iconname='envelope-paper-fill.svg' /></span>
 @else
      &nbsp;
 @endif

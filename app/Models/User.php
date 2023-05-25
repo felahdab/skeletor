@@ -172,7 +172,7 @@ class User extends Authenticatable
 
     public function displayDestination()
     {
-        return $this->unite_destination ? $this->unite_destination->unitelib_court : "";
+        return $this->unite_destination? $this->unite_destination->unite_libcourt : "";
     }
     public function displayDateDebarquement()
     {
@@ -594,8 +594,10 @@ class User extends Authenticatable
         // renvoie le nb de jours de presence diff date embarquement et aujourd'hui
         $deb = date_create($this->date_embarq);
         $fin = date_create(date('Y-m-d'));
-        $nbjours = $deb->diff($fin)->format('%a');
-
+        $nbjours = 0;
+        if ($deb < $fin){
+            $nbjours = $deb->diff($fin)->format('%a');
+        }
         return $nbjours;
     }
 }

@@ -73,6 +73,12 @@
                     </div>
                 </div>
                 <div class='form-group row' >
+                    <label class='col-sm-5 col-form-label '>Lien externe</label>
+                    <div class='col-sm-5'>
+                        <input type='text' class='form-control' name='sous_objectifs[{{$count}}][ssobj_lienurl]' id='sous_objectifs[{{$count}}][ssobj_lienurl]' placeholder='Lien externe' value='{{ $ssobj->ssobj_lienurl }}'>
+                    </div>
+                </div>
+                <div class='form-group row' >
                     <label class='col-sm-5 col-form-label '>Coefficient</label>
                     <div class='col-sm-5'>
                         <input type='text' class='form-control' name='sous_objectifs[{{$count}}][ssobj_coeff]' id='sous_objectifs[{{$count}}][ssobj_coeff]' placeholder='Coefficient' value='{{ $ssobj->ssobj_coeff }}'>

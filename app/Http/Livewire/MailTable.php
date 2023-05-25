@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Mail;
+use Illuminate\Contracts\View\View;
 
 class MailTable extends DataTableComponent
 {
@@ -13,9 +14,11 @@ class MailTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setTableRowUrl(function($row) {
-            return route('mails.edit', $row);
-        });
+    }
+
+    public function userActions(): View
+    {
+        return view('tables.mailstable.gestion');
     }
 
     public function columns(): array
@@ -35,6 +38,16 @@ class MailTable extends DataTableComponent
                 ->sortable(),
             Column::make("Date d'envoie", "date_envoi")
                 ->sortable(),
+            Column::make('Actions')
+                ->label(
+                    fn($row, Column $column) => $this->userActions()->with("row", $row)
+                    ),
         ];
+    }
+
+    public function deleteMail($rowid)
+    {
+        $mail = Mail::find($rowid);
+        $mail->delete();
     }
 }

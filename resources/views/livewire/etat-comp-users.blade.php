@@ -48,9 +48,9 @@
                     @foreach($ligne as $key => $cell)
                         @if ($key != 'id')
                             @if($cell=='true')
-                                <td class="text-center">&#10004;
+                                <td class="text-center text-success"><x-bootstrap-icon iconname='check-circle.svg'/>
                             @elseif ($cell=='false')
-                                <td class="text-center">&#10060;
+                                <td class="text-center text-danger"><x-bootstrap-icon iconname='x-circle.svg'/>
                                 <input type="checkbox" 
                                         x-data='{ active: false }'
                                         x-model="selected_parcomp"

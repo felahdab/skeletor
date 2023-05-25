@@ -115,6 +115,12 @@
                     </div>
                 </div>
                 <div class='form-group row' >
+                    <label for='stage[stage_lienurl]' class='col-sm-5 col-form-label'> Lien externe</label>
+                    <div class='col-sm-5'>
+                        <input type='text' class='form-control'  name='stage[stage_lienurl]' id='stage[stage_lienurl]' placeholder='Lien externe'>
+                    </div>
+                </div>
+                <div class='form-group row' >
                     <label for='stage[stage_commentaire]' class='col-sm-5 col-form-label'>Commentaire</label>
                     <div class='col-sm-5'>
                         <textarea class="form-control" 

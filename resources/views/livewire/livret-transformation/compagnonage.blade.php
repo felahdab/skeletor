@@ -5,7 +5,7 @@
             <h5>
             @if ($mode== "unique")
                 @if ($user->getTransformationManager()->sous_objectifs_du_parcours_proposes($fonction, $compagnonage)->count() > 0)
-                &#128232;
+                    <span class="text-info"><x-bootstrap-icon iconname='envelope-paper-fill.svg' /></span>
                 @endif
             @endif
                 {{$compagnonage->comp_libcourt}}
@@ -58,7 +58,12 @@
                         @endif
                         </td>
                         @foreach($objectif->sous_objectifs as $sous_objectif)
-                            <td>{{$sous_objectif->ssobj_lib}}</td>
+                            <td>
+                                @if($sous_objectif->ssobj_lienurl != NULL)
+                                    <a href="{{$sous_objectif->ssobj_lienurl}}" target="_blank"><x-bootstrap-icon iconname='link-45deg.svg'/></a>
+                                @endif
+                                {{$sous_objectif->ssobj_lib}}
+                            </td>
                             <td>{{$sous_objectif->ssobj_duree}}</td>
                             <td title=''>
                                 @if ($readwrite || ! $user->getTransformationManager()->aValideLeSousObjectif($sous_objectif) )

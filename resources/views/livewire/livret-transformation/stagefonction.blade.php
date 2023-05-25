@@ -11,7 +11,12 @@
                     @foreach($fonction->stages as $stage)
 
                     <tr class='bg-secondary bg-opacity-25 div-table-contrat-compagnonnage'>
-                        <th colspan='2'>{{$stage->stage_libcourt }}</th>
+                        <th colspan='2'>
+                            @if($stage->stage_lienurl != NULL)
+                                <a href="{{$stage->stage_lienurl}}" target="_blank"><x-bootstrap-icon iconname='link-45deg.svg'/></a>
+                            @endif
+                            {{$stage->stage_libcourt }}
+                        </th>
                     </tr>
                     <tr class='ligneTache'>
                         <td>

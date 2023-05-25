@@ -18,7 +18,7 @@
                 {
                $wire.ValidateCommentStage( {{ $user->id }} , {{ $row->id }}, commentaire);
                 }"
-            title="{{$user->CommentaireDuStage($row)}}">&#169;</button>
+            title="{{$user->CommentaireDuStage($row)}}"><x-bootstrap-icon iconname='chat-left-quote.svg' /></button>
     <!----------------------------------------------->
     @if ($user->aValideLeStage($row))
     <button wire:click.prevent="UnvalidateStage( {{$user->id}}, {{$row->id}} );"
