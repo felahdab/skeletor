@@ -17,16 +17,10 @@
             <input type='hidden' id='objectif[id]' name='objectif[id]' value='{{ $objectif->id }}'>
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
-                    <label for='libelle_court_objectif' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
-                    <div class='col-sm-5'>
-                        <input type='text'  maxlength='100' class='form-control'  name='objectif[objectif_libcourt]' id='objectif[objectif_libcourt]' placeholder='Libell&eacute; court' value="{{ $objectif->objectif_libcourt }}" >
-                    </div>
+                    <x-form::input name="objectif[objectif_libcourt]" label="Libellé court *" type="text" :value="$objectif->objectif_libcourt"/>
                 </div>
-                <div class='form-group row' >
-                    <label for='libelle_long_objectif' class='col-sm-5 col-form-label'>Libell&eacute; long *</label>
-                    <div class='col-sm-5'>
-                        <input type='text' maxlength='256' class='form-control' name='objectif[objectif_liblong]' id='objectif[objectif_liblong]' placeholder='Libell&eacute; long' value="{{ $objectif->objectif_liblong }}" >
-                    </div>
+                <div class='form-group row'>
+                    <x-form::input name="objectif[objectif_liblong]" label="Libellé long *" type="text" :value="$objectif->objectif_liblong" />
                 </div>
                 <div style='text-align:right;'>
                     <ul  class='navbar-nav mr-auto' >
@@ -58,71 +52,67 @@
                 {!! Form::submit('Ajouter un nouveau sous objectif', ['class' => 'btn btn-primary btn-sm']) !!}
                 {!! Form::close() !!}
             </div>
-            {!! Form::open(['method' => 'POST','route' => 'sous-objectifs.multipleupdate' ]) !!}
+            <x-form::form method="POST" :action="route('sous-objectifs.multipleupdate')">
             <input type='hidden' name='objectif_id' id='objectif_id'  value='{{ $objectif->id }}'>
             
-
+        <x-sortable name="sort_order">
             @php $count = 1 @endphp
-            @foreach ($objectif->sous_objectifs()->get() as $ssobj)
-            <div class='cadressobj'>
-                <div class='form-group row' >
-                    <label class='col-sm-5 col-form-label '>Sous-objectif </label>
-                    <input type='hidden' name='sous_objectifs[{{$count}}][id]' id='sous_objectifs[{{$count}}][id]'  value='{{ $ssobj->id }}'>
-                    <div class='col-sm-5'>
-                        <textarea class="form-control" maxlength='1500' cols='40' rows='6' name='sous_objectifs[{{$count}}][ssobj_lib]' id='sous_objectifs[{{$count}}][ssobj_lib]' placeholder='Libell&eacute;' >{{ $ssobj->ssobj_lib }}</textarea>
+            @foreach ($objectif->sous_objectifs->sortBy('ordre') as $ssobj)
+            <x-sortable-item sort-key="{{$ssobj->id}}">
+                <div class='cadressobj mt-4'>
+                    <div class='form-group row' >
+                        <div class="col-sm-8">
+                            <label class='col-form-label '>Sous-objectif </label>
+                            <input type='hidden' name='sous_objectifs[{{$count}}][id]' id='sous_objectifs[{{$count}}][id]'  value='{{ $ssobj->id }}'>
+                            <div class='col'>
+                                <textarea class="form-control" maxlength='1500' cols='40' rows='6' name='sous_objectifs[{{$count}}][ssobj_lib]' id='sous_objectifs[{{$count}}][ssobj_lib]' placeholder='Libell&eacute;' >{{ $ssobj->ssobj_lib }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class='form-group row' >
+                                <x-form::input name="sous_objectifs[{{$count}}][ssobj_lienurl]" label="Lien externe" type="text" value="{{ $ssobj->ssobj_lienurl }}"/>
+                            </div>
+                            <div class='form-group row' >
+                                <x-form::input name="sous_objectifs[{{$count}}][ssobj_coeff]" label="Coefficient" type="text" value="{{ $ssobj->ssobj_coeff }}"/>
+                            </div>
+                            <div class='form-group row' >
+                                <x-form::input name="sous_objectifs[{{$count}}][ssobj_duree]" label="Durée (heure)" type="text" value="{{ $ssobj->ssobj_duree }}"/>
+                            </div>
+                            <div class='form-group row' >
+                                <x-form::model-select name="sous_objectifs[{{$count}}][lieu_id]" 
+                                    :models="$lieux" 
+                                    label="Lieu" 
+                                    key-attribute="id" 
+                                    value-attribute="lieu_libcourt"
+                                    value="{{ $ssobj->lieu_id }}">
+                                </x-form::model-select>
+                            </div>
+                        </div>
                     </div>
+                    
+                    @can("sousobjectifs.destroy")
+                        <input class="btn btn-danger btn-sm mb-2" value="Supprimer ce sous objectif" onclick="document.getElementById('deleteform[{{ $count }}]').submit();">
+                    @endcan
                 </div>
-                <div class='form-group row' >
-                    <label class='col-sm-5 col-form-label '>Lien externe</label>
-                    <div class='col-sm-5'>
-                        <input type='text' class='form-control' name='sous_objectifs[{{$count}}][ssobj_lienurl]' id='sous_objectifs[{{$count}}][ssobj_lienurl]' placeholder='Lien externe' value='{{ $ssobj->ssobj_lienurl }}'>
-                    </div>
-                </div>
-                <div class='form-group row' >
-                    <label class='col-sm-5 col-form-label '>Coefficient</label>
-                    <div class='col-sm-5'>
-                        <input type='text' class='form-control' name='sous_objectifs[{{$count}}][ssobj_coeff]' id='sous_objectifs[{{$count}}][ssobj_coeff]' placeholder='Coefficient' value='{{ $ssobj->ssobj_coeff }}'>
-                    </div>
-                </div>
-                <div class='form-group row' >
-                    <label class='col-sm-5 col-form-label '>Dur&eacute;e (heure)</label>
-                    <div class='col-sm-5'>
-                        <input type='text' class='form-control' name='sous_objectifs[{{$count}}][ssobj_duree]' id='sous_objectifs[{{$count}}][ssobj_duree]' placeholder='Durée' value='{{ $ssobj->ssobj_duree }}'>
-                    </div>
-                </div>
-                <div class='form-group row' >
-                    <label class='col-sm-5 col-form-label '>Lieu </label>
-                    <div class='col-sm-5'>
-                        <select name='sous_objectifs[{{$count}}][lieu_id]' id='sous_objectifs[{{$count}}][lieu_id]' class='custom-select  w-50'>
-                            @foreach ($lieux as $lieu)
-                                <option value='{{ $lieu->id }}' {{ $lieu->id == $ssobj->lieu_id
-                                ? ' selected'
-                                : '' }}> {{ $lieu->lieu_libcourt }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                @can("sousobjectifs.destroy")
-                
-                <input class="btn btn-danger btn-sm" value="Supprimer ce sous objectif" onclick="document.getElementById('deleteform[{{ $count }}]').submit();">
-                @endcan
-            </div>
+            </x-sortable-item>
             @php $count = $count +1 @endphp
+        
             @endforeach
             <div>
-                <button class='btn btn-primary w-100 mt-4' type='submit' id='btnmodifobjssobj' name='btnmodifobjssobj'>Enregistrer les sous objectifs associ&eacute;s</button>
+                <button class='btn btn-primary w-100 mt-4 mb-4' type='submit' id='btnmodifobjssobj' name='btnmodifobjssobj'>Enregistrer les sous objectifs associ&eacute;s</button>
             </div>
-            {!! Form::close() !!}
+        </x-sortable>
+    </x-form:::form>
             <!-- Cette partie contient les formulaires actives par javascript pour provoquer la suppression
             d'un sous-objectif-->
             @php $count = 1 @endphp
             @foreach ($objectif->sous_objectifs()->get() as $ssobj)
-            <form method="POST" action="{{ route('sous-objectifs.destroy', $ssobj) }}" accept-charset="UTF-8" style="display:inline" id="deleteform[{{ $count }}]">
-            @csrf
-            <input name="_method" type="hidden" value="DELETE">
-            <input type='hidden' name='objectif_id' id='objectif_id'  value='{{ $objectif->id }}'>
-            {!! Form::close() !!}
-            @php $count = $count +1 @endphp
+                <form method="POST" action="{{ route('sous-objectifs.destroy', $ssobj) }}" accept-charset="UTF-8" style="display:inline" id="deleteform[{{ $count }}]">
+                @csrf
+                <input name="_method" type="hidden" value="DELETE">
+                <input type='hidden' name='objectif_id' id='objectif_id'  value='{{ $objectif->id }}'>
+                {!! Form::close() !!}
+                @php $count = $count +1 @endphp
             @endforeach
             <!-- Fin de partie -->
         </div>
