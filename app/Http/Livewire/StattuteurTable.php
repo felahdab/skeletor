@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\User;
+use App\Models\Unite;
 use App\Models\Grade;
 use App\Models\Diplome;
 use App\Models\Secteur;
@@ -136,6 +137,10 @@ class StattuteurTable extends DataTableComponent
                     fn($row, Column $column) => view('tables.stattable.attentevalid', ['marin' => $row])
                     )
                 ->searchable(),
+            Column::make('U-dest', 'unite_destination.unite_libcourt')
+                ->sortable()
+                ->searchable()
+                ->deSelected(),
             ];
         return array_merge($basecolumns , [
             Column::make('Actions')
@@ -155,16 +160,26 @@ class StattuteurTable extends DataTableComponent
                     'maxlength'   => 50
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                        $fonction_ids = Fonction::where('fonction_libcourt', 'like', '%' . $value . '%')
-                                        ->orWhere('fonction_liblong', 'like', '%' . $value . '%')
-                                        ->get()
-                                        ->pluck('id');
-                        $userids = DB::table('user_fonction')
-                                    ->whereIn('fonction_id', $fonction_ids)
+                    $fonction_ids = Fonction::where('fonction_libcourt', 'like', '%' . $value . '%')
+                                    ->orWhere('fonction_liblong', 'like', '%' . $value . '%')
                                     ->get()
-                                    ->pluck('user_id');
-                        if ($userids != null)
-                            $builder->whereIn('users.id', $userids);
+                                    ->pluck('id');
+                    $userids = DB::table('user_fonction')
+                                ->whereIn('fonction_id', $fonction_ids)
+                                ->get()
+                                ->pluck('user_id');
+                    if ($userids != null)
+                        $builder->whereIn('users.id', $userids);
+            }),
+            TextFilter::make('U-dest')
+                ->config([
+                    'placeholder' => 'LGC...',
+                    'maxlength'   => 5
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $unite = Unite::where('unite_libcourt', 'like', '%' . $value . '%')->get()->pluck('id');
+                        if ($unite != null)
+                            $builder->whereIn('unite_destination_id', $unite);
                 }),
             TextFilter::make('Secteur')
                 ->config([
@@ -172,12 +187,11 @@ class StattuteurTable extends DataTableComponent
                     'maxlength'   => 10
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                        $secteur = Secteur::where('secteur_libcourt', 'like', '%' . $value . '%')->get()->first();
-                        if ($secteur != null)
-                            $builder->where('secteur_id', $secteur->id);
-                }),
-                
-                ];
+                    $secteur = Secteur::where('secteur_libcourt', 'like', '%' . $value . '%')->get()->first();
+                    if ($secteur != null)
+                        $builder->where('secteur_id', $secteur->id);
+            }),
+        ];
                 
         if ($currentuser->hasRole("em")){
             $servicefilter = [ TextFilter::make('Service')

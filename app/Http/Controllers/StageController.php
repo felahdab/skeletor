@@ -60,6 +60,7 @@ class StageController extends Controller
         }
         $stage->stage_capamax = $request->stage['stage_capamax'];
         $stage->stage_date_fin_licence = $request->stage['stage_date_fin_licence'];
+        $stage->stage_lienurl = $request->stage['stage_lienurl'];
         $stage->stage_commentaire = $request->stage['stage_commentaire'];
         $stage->save();
         return redirect()->route('stages.edit', $stage);
@@ -123,6 +124,7 @@ class StageController extends Controller
         $stage->stage_capamax = $request->stage['stage_capamax'];
         $stage->stage_date_fin_licence = $request->stage['stage_date_fin_licence'];
         $stage->stage_commentaire = $request->stage['stage_commentaire'];
+        $stage->stage_lienurl = $request->stage['stage_lienurl'];
         if($stage->save() && $stage->duree_validite != $olddureevalidite){
             if($stage->duree_validite != $olddureevalidite){
                 $stage->miseajourdatevalidite();

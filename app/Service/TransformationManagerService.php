@@ -1,8 +1,6 @@
 <?php
 namespace App\Service;
 
-use App\Jobs\CalculateUserTransformationRatios;
-
 use App\Models\TransformationHistory;
 use App\Models\Stage;
 use App\Models\Fonction;

@@ -113,6 +113,10 @@ class StagesTable extends DataTableComponent
                     Column::make('Lieu', 'stage_lieu')
                         ->sortable()
                         ->searchable(),
+                    Column::make('Lien', 'stage_lienurl')
+                        ->sortable()
+                        ->deSelected()
+                        ->searchable(),
                     Column::make('Commentaire', 'stage_commentaire')
                         ->deSelected()
                         ->searchable(),

@@ -51,8 +51,8 @@ class SuiviTransformationTest extends DuskTestCase
         $this->browse(function ($browser)  use ($user) {
             $browser->maximize()
                 ->loginAs($user)
-                ->visit(route('transformation.indexparstage'))
-                ->assertSee('Liste des stages pour validation collective');
+                ->visit(route('transformation.indexparcomp'))
+                ->assertSee('Transformation par compagnonnage');
         });
 
         $user->forceDelete();

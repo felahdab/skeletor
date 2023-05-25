@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Service\GererTransformationService;
-use App\Jobs\CalculateUserTransformationRatios;
+use App\Dto\ChangementLivretDeTransformationDto;
+use App\Events\UnLivretDeTransformationAChangeEvent;
 
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -152,36 +153,18 @@ class UsersController extends Controller
     public function attribuerfonction(Request $request, User $user)
     {
         $fonction_id = $request->fonction_id;
-        $fonction = Fonction::where('id', $fonction_id)->get()->first();
+        $fonction = Fonction::find($fonction_id);
         if ($fonction == null){
             $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
             return redirect()->route('users.choisirfonction', ['user' => $user,
                                                            'fonctions' => $fonctions])->withError("Merci de selectionner une fonction");
         }
         
-        //$fmerid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'mer')->get()->first()->id;
-        $fquaiid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'quai')->get()->first()->id;
-        //$fmetierid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'metier')->get()->first()->id;
-        
         $transformationService = new GererTransformationService;
-        if ($fonction->typefonction_id == $fquaiid)
-        {
-            $fonctionsquai = $user->fonctions()->where('typefonction_id', $fquaiid)->get();
-            if ($fonctionsquai->count() > 0)
-            {
-                foreach ($fonctionsquai as $fquai)
-                {
-                    $transformationService->detachFonction($user, $fonction);
-                }
-            }
-            $transformationService->attachFonction($user, $fonction);
-        }
-        else{
-            $transformationService->attachFonction($user, $fonction);
-        }
+        $transformationService->attachFonction($user, $fonction);
+
         $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
-        // recalcul tx transfo
-        CalculateUserTransformationRatios::dispatch($user);
+        
         return redirect()->route('users.choisirfonction', ['user' => $user,
                                                            'fonctions' => $fonctions]);
     }
@@ -189,14 +172,13 @@ class UsersController extends Controller
     public function retirerfonction(Request $request, User $user)
     {
         $fonction_id = $request->fonction_id;
-        $fonction = Fonction::where('id', $fonction_id)->get()->first();
+        $fonction = Fonction::find($fonction_id);
         
         $transformationService = new GererTransformationService;
         $transformationService->detachFonction($user, $fonction);
         
         $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
-        // recalcul tx transfo
-        CalculateUserTransformationRatios::dispatch($user);
+
         return redirect()->route('users.choisirfonction', ['user' => $user,
                                                            'fonctions' => $fonctions]);
     }
