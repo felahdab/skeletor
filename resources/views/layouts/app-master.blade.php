@@ -40,6 +40,8 @@ Vous avez également la possibilité de télécharger directement une version po
     <link href="{!! asset('assets/css/feuilleDeStyle.css') !!}" rel="stylesheet">
     <link href="{!! asset('assets/bootstrap/css/bootstrap.css') !!}" rel="stylesheet">
     <script src="{!! asset('assets/js/jscharts.js') !!}"></script>
+    <script src="{!! asset('assets/js/Sortable.js') !!}"></script>
+    <x-sortable-scripts/>
     
     <style>
       /* .bd-placeholder-img {

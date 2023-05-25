@@ -173,19 +173,10 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\PrefixedLivewireServiceProvider::class,
-
-        // Meneses\LaravelMpdf\LaravelMpdfServiceProvider::class,
-
-        // Laravel\Socialite\SocialiteServiceProvider::class,
-        // \SocialiteProviders\Manager\ServiceProvider::class,
-        
-        // hisorange\BrowserDetect\ServiceProvider::class,
-        
-        // Lab404\Impersonate\ImpersonateServiceProvider::class,
+        App\Providers\LaravelBladeSortableServiceProvider::class,
     ],
 
     /*
