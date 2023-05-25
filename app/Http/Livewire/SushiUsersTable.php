@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\User;
 use App\Models\SushiUser;
 
+use App\Models\Unite;
 use App\Models\Grade;
 use App\Models\Diplome;
 use App\Models\Specialite;
@@ -54,6 +55,7 @@ class SushiUsersTable extends DataTableComponent
                     ->with('specialite')
                     ->with('diplome')
                     ->with('fonctions')
+                    ->with('unite_destination')
                     ->get();
 
         $fonction=$this->fonction;
@@ -64,6 +66,7 @@ class SushiUsersTable extends DataTableComponent
             ->map(function($user) { $user->servicelibcourt=$user->secteur?->service->service_libcourt; return $user;})
             ->map(function($user) { $user->groupementlibcourt=$user->secteur?->service->groupement->groupement_libcourt; return $user;})
             ->map(function($user) { $user->specialitelibcourt=$user->specialite?->specialite_libcourt; return $user;})
+            ->map(function($user) { $user->unitedestinationlibcourt=$user->unite_destination?->unite_libcourt; return $user;})
             ->map(function($user) use ($fonction) { 
                                     $w=$user->fonctions->where('id', $fonction->id)->first()->pivot; 
                                     $user->taux_de_transformation_fonction = $w?->taux_de_transformation; 
@@ -78,6 +81,7 @@ class SushiUsersTable extends DataTableComponent
                                     unset($user["specialite"]);
                                     unset($user["diplome"]);
                                     unset($user["fonctions"]);
+                                    unset($user["unite_destination"]);
                                     return $user;
                                 }
                 )
@@ -89,6 +93,7 @@ class SushiUsersTable extends DataTableComponent
     {
         switch ($this->mode){
             case "listmarin" :
+                // dd($this->baseusers);
                 SushiUser::setUsers($this->baseusers);
                 return SushiUser::query();
                 break;
@@ -155,6 +160,10 @@ class SushiUsersTable extends DataTableComponent
             Column::make('Groupement', 'groupementlibcourt')
                 ->searchable()
                 ->sortable(),
+            Column::make('U-dest', 'unitedestinationlibcourt')
+                ->sortable()
+                ->searchable()
+                ->deSelected(),
             Column::make('Comete', 'comete')
                 ->deSelected()
                 ->searchable()
@@ -196,15 +205,15 @@ class SushiUsersTable extends DataTableComponent
     public function filters(): array
     {
         $basefilters= [
-             TextFilter::make('Grade')
+            TextFilter::make('Grade')
                 ->config([
                     'placeholder' => 'SM...',
                     'maxlength'   => 3
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                        $grade = Grade::where('grade_libcourt', 'like', '%' . $value . '%')->get()->first();
-                        if ($grade != null)
-                            $builder->where('grade_id', $grade->id);
+                    $grade = Grade::where('grade_libcourt', 'like', '%' . $value . '%')->get()->first();
+                    if ($grade != null)
+                        $builder->where('grade_id', $grade->id);
                 }),
             TextFilter::make('Brevet')
                 ->config([
@@ -212,9 +221,9 @@ class SushiUsersTable extends DataTableComponent
                     'maxlength'   => 3
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                        $diplome = Diplome::where('diplome_libcourt', 'like', '%' . $value . '%')->get()->first();
-                        if ($diplome != null)
-                            $builder->where('diplome_id', $diplome->id);
+                    $diplome = Diplome::where('diplome_libcourt', 'like', '%' . $value . '%')->get()->first();
+                    if ($diplome != null)
+                        $builder->where('diplome_id', $diplome->id);
                 }),
             TextFilter::make('Spé')
                 ->config([
@@ -232,9 +241,9 @@ class SushiUsersTable extends DataTableComponent
                     'maxlength'   => 5
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                        $secteur = Secteur::where('secteur_libcourt', 'like', '%' . $value . '%')->get()->first();
-                        if ($secteur != null)
-                            $builder->where('secteur_id', $secteur->id);
+                    $secteur = Secteur::where('secteur_libcourt', 'like', '%' . $value . '%')->get()->first();
+                    if ($secteur != null)
+                        $builder->where('secteur_id', $secteur->id);
                 }),
             TextFilter::make('Service')
                 ->config([
@@ -242,9 +251,9 @@ class SushiUsersTable extends DataTableComponent
                     'maxlength'   => 5
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                        $service = Service::where('service_libcourt', 'like', '%' . $value . '%')->get()->first();
-                        if ($service != null)
-                            $builder->where('servicelibcourt', $service->service_libcourt);
+                    $service = Service::where('service_libcourt', 'like', '%' . $value . '%')->get()->first();
+                    if ($service != null)
+                        $builder->where('servicelibcourt', $service->service_libcourt);
                 }),
             TextFilter::make('Gpmt')
                 ->config([
@@ -252,9 +261,19 @@ class SushiUsersTable extends DataTableComponent
                     'maxlength'   => 5
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                        $gpmt = Groupement::where('groupement_libcourt', 'like', '%' . $value . '%')->get()->first();
-                        if ($gpmt != null)
-                            $builder->where('groupementlibcourt', $gpmt->groupement_libcourt);
+                    $gpmt = Groupement::where('groupement_libcourt', 'like', '%' . $value . '%')->get()->first();
+                    if ($gpmt != null)
+                        $builder->where('groupementlibcourt', $gpmt->groupement_libcourt);
+                }),
+            TextFilter::make('U-dest')
+                ->config([
+                    'placeholder' => 'LGC...',
+                    'maxlength'   => 5
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $unite = Unite::where('unite_libcourt', 'like', '%' . $value . '%')->get()->pluck('id');
+                        if ($unite != null)
+                            $builder->whereIn('unite_destination_id', $unite);
                 }),
             SelectFilter::make('Comete')
                 ->options([
@@ -270,7 +289,7 @@ class SushiUsersTable extends DataTableComponent
                         $builder->where('comete', false);
                     }
                 }),
-                SelectFilter::make('Socle')
+            SelectFilter::make('Socle')
                 ->options([
                     '' => 'Tous',
                     '1' => 'Socle',
@@ -284,7 +303,7 @@ class SushiUsersTable extends DataTableComponent
                         $builder->where('socle', false);
                     }
                 }),
-                SelectFilter::make('Lâché')
+            SelectFilter::make('Lâché')
                 ->options([
                     '' => 'Tous',
                     '1' => 'Lâché',

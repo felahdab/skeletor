@@ -15,7 +15,7 @@
         {!! Form::open(['method' => 'PATCH','route' => ['stages.update', $stage->id] ]) !!}
             <input type='hidden' id='stage[id]' name='stage[id]' value='{{ $stage->id }}'>
             <div style='padding-left: 15px;'>
-                                <div class='form-group row' >
+                <div class='form-group row' >
                     <label for='stage[stage_libcourt]' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
                     <div class='col-sm-5'>
                         <input type='text' class='form-control'  name='stage[stage_libcourt]' id='stage[stage_libcourt]' placeholder='Libell&eacute; court' value="{{ $stage->stage_libcourt }}" >
@@ -109,6 +109,12 @@
                         id='stage[stage_lieu]' 
                         placeholder='Lieu' 
                         value="{{ $stage->stage_lieu }}" >
+                    </div>
+                </div>
+                <div class='form-group row' >
+                    <label for='stage[stage_lienurl]' class='col-sm-5 col-form-label'> Lien externe</label>
+                    <div class='col-sm-5'>
+                        <input type='text' class='form-control'  name='stage[stage_lienurl]' id='stage[stage_lienurl]' placeholder='Lien externe' value="{{ $stage->stage_lienurl }}" >
                     </div>
                 </div>
                 <div class='form-group row' >

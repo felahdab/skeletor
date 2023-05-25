@@ -1,5 +1,5 @@
 @if ($row->lache_dans_fonction)
-     <span>&#10004;</span><!--coche verte-->
+     <span class="text-success"><x-bootstrap-icon iconname='check-circle.svg'/></span><!--coche verte-->
 @else
-     <span>&#10060;</span><!--croix rouge-->
+     <span class="text-danger"><x-bootstrap-icon iconname='x-circle.svg'/></span><!--croix rouge-->
 @endif

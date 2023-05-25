@@ -10,6 +10,10 @@
         <h2>Situation des marins pour le stage : <span class="font-weight-light">{{$stage->stage_libcourt}}</span></h2>
         @if(auth()->user()->can('stages.attribuerstage'))
             <b>COMMENTAIRE :</b> {{$stage->stage_commentaire}}
+            <small>
+                <p><br><x-bootstrap-icon iconname='chat-left-quote.svg' /> Commentaire du marin pour ce stage
+                <br><x-bootstrap-icon iconname='person.svg' /> Commentaire du marin</p>
+            </small>
         @endif
     </div>
 <div x-data="{ opendivvalid : false ,
@@ -58,8 +62,9 @@
                 $datejour=date('Y-m-d');
                 $nbmarinsattente=0;
                 foreach($usersdustage as $user){
-                        if ($user->pivot->date_validation == null || $user->pivot->date_validite < $datejour) 
+                        if ($user->pivot->date_validation == null || ($user->pivot->date_validite != null && $user->pivot->date_validite < $datejour)){ 
                             $nbmarinsattente++;
+                        }
                 }
             @endphp
             <div class='lead mb-2'>Liste des <span style="color:orangered;"><b>{{$nbmarinsattente}}</b></span> marins <span style="color:orangered;"><b>en attente</b></span> du stage {{$stage->stage_libcourt}}</div>
@@ -79,8 +84,8 @@
                             <th scope="col">Mut</th>
                             <th scope="col">Date mut</th>
                             @if(auth()->user()->can('stages.attribuerstage'))
-                                <th scope="col">&#10069;</th>
-                                <th scope="col">&#128822;</th>
+                                <th scope="col"><x-bootstrap-icon iconname='chat-left-quote.svg' /></th>
+                                <th scope="col"><x-bootstrap-icon iconname='person.svg' /></th>
                             @endif
                             <th scope="col">Email</th>
                         </tr>
@@ -107,12 +112,12 @@
                                 @if ($user->pivot->commentaire == null or $user->pivot->commentaire == ' ')
                                     <td>&nbsp;</td>
                                 @else
-                                    <td title="{{$user->pivot->commentaire}}">&#10069;</td>
+                                    <td title="{{$user->pivot->commentaire}}"><x-bootstrap-icon iconname='chat-left-quote.svg' /></td>
                                 @endif
                                 @if ($user->user_comment == null or $user->user_comment == ' ')
                                     <td>&nbsp;</td>
                                 @else
-                                    <td title="{{$user->user_comment}}"> 	&#128822;</td>
+                                    <td title="{{$user->user_comment}}"><x-bootstrap-icon iconname='person.svg' /></td>
                                 @endif
                             @endif
                             
@@ -159,8 +164,8 @@
                         <td>Date validation</td>
                         <td>Date validité</td>
                         @if(auth()->user()->can('stages.attribuerstage'))
-                                <th scope="col">&#10069;</th>
-                                <th scope="col">&#128822;</th>
+                                <th scope="col"><x-bootstrap-icon iconname='chat-left-quote.svg' /></th>
+                                <th scope="col"><x-bootstrap-icon iconname='person.svg' /></th>
                         @endif
                     </tr>
                     <tbody>
@@ -184,12 +189,12 @@
                                 @if ($user->pivot->commentaire == null or $user->pivot->commentaire == ' ')
                                     <td>&nbsp;</td>
                                 @else
-                                    <td title="{{$user->pivot->commentaire}}">&#10069;</td>
+                                    <td title="{{$user->pivot->commentaire}}"><x-bootstrap-icon iconname='chat-left-quote.svg' /></td>
                                 @endif
                                 @if ($user->user_comment == null or $user->user_comment == ' ')
                                     <td>&nbsp;</td>
                                 @else
-                                    <td title="{{$user->user_comment}}">&#128822;</td>
+                                    <td title="{{$user->user_comment}}"><x-bootstrap-icon iconname='person.svg' /></td>
                                 @endif
                             @endif
                         </tr>

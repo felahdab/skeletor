@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\User;
+use App\Models\Unite;
 use App\Models\Grade;
 use App\Models\Diplome;
 use App\Models\Specialite;
@@ -115,7 +116,7 @@ class UsersTable extends DataTableComponent
                 ->searchable(),
             Column::make('Groupement', 'secteur.service.groupement.groupement_libcourt')
                 ->searchable(),
-            Column::make('U. dest.', 'unite_destination.unite_libcourt')
+            Column::make('U-dest', 'unite_destination.unite_libcourt')
                 ->sortable()
                 ->searchable()
                 ->deSelected(),
@@ -209,7 +210,7 @@ class UsersTable extends DataTableComponent
     public function filters(): array
     {
         $basefilters= [
-             TextFilter::make('Grade')
+            TextFilter::make('Grade')
                 ->config([
                     'placeholder' => 'SM...',
                     'maxlength'   => 3
@@ -268,6 +269,16 @@ class UsersTable extends DataTableComponent
                         $gpmt = Groupement::where('groupement_libcourt', 'like', '%' . $value . '%')->get()->first();
                         if ($gpmt != null)
                             $builder->where('groupement_id', $gpmt->id);
+                }),
+            TextFilter::make('U-dest')
+                ->config([
+                    'placeholder' => 'LGC...',
+                    'maxlength'   => 5
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $unite = Unite::where('unite_libcourt', 'like', '%' . $value . '%')->get()->pluck('id');
+                        if ($unite != null)
+                            $builder->whereIn('unite_destination_id', $unite);
                 }),
             SelectFilter::make('Comete')
                 ->options([

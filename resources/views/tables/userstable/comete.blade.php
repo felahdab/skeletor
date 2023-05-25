@@ -1,5 +1,5 @@
 @if ($row->comete == 0)
-     <span>&#10060;</span><!--croix rouge-->
+     <span class="text-danger"><x-bootstrap-icon iconname='x-circle.svg'/></span><!--croix rouge-->
 @else
-     <span>&#10004;</span><!--coche verte-->
+     <span class="text-success"><x-bootstrap-icon iconname='check-circle.svg'/></span><!--coche verte-->
 @endif
