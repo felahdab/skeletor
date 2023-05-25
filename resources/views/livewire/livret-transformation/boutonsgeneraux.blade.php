@@ -1,9 +1,4 @@
 <div class='text-center mt-1 sticky-top' x-data='{ active : false }'>
-@if(auth()->user()->can('transformation.empecherupdatelivret') && !auth()->user()->hasrole('admin'))
-    <a href="#" style="text-decoration: none;">
-        <img src='{!! asset("assets/images/fleche_haut.png") !!}' alt="haut page" width="40px">
-    </a>
-@else
     @if($mode=='unique')
         <button type="submit" form="ssobjs" class="btn btn-primary" name="validation"
         x-on:click.prevent="active = true ;
@@ -55,5 +50,4 @@
     <a href="#" style="text-decoration: none;">
         <img src='{!! asset("assets/images/fleche_haut.png") !!}' alt="haut page" width="40px">
     </a>
-@endif
 </div><!-- fin de la div avec boutons speciaux -->

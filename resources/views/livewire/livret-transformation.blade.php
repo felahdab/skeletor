@@ -25,9 +25,7 @@
     
 
         <!-- div avec boutons generaux -->
-        @if (count(auth()->user()->roles()->where('name','visiteur')->get())==0)
-            @include('livewire.livret-transformation.boutonsgeneraux')
-        @endif
+        @include('livewire.livret-transformation.boutonsgeneraux')
         <!-- div avec formulaire de validation -->
         @include('livewire.livret-transformation.divvalid')
 
