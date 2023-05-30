@@ -3,7 +3,7 @@
         <div class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComp_{{$compagnonage->id}}">
             <h5>
-            @if ($mode== "unique")
+            @if ($mode== "proposition" || $mode== "modification")
                 @if ($user->getTransformationManager()->sous_objectifs_du_parcours_proposes($fonction, $compagnonage)->count() > 0)
                     <span class="text-info"><x-bootstrap-icon iconname='envelope-paper-fill.svg' /></span>
                 @endif
@@ -26,72 +26,41 @@
                 </tr>
                 @foreach($compagnonage->taches as $tache)
                 <tr class='ligneTache'>
-                    @if ($mode=='unique')
+                    @if ($mode!='modificationmultiple')
                         <td rowspan='{{ $user->getTransformationManager()->sous_objectifs_du_parcours(null, null, $tache, null)->count() }}'>
                     @else
                         <td rowspan='{{ $tache->coll_sous_objectifs()->count() }}'>
                     @endif
-                            @if ($readwrite || ! $user->getTransformationManager()->aValideLaTache($tache) )
-                            <input type='checkbox' 
-                                x-data='{ active: false }'
-                                x-model="selected_taches"
-                                value="{{$tache->id}}">
+                            @if ($mode == "consultation" || ($mode== 'proposition' && $user->getTransformationManager()->aValideLaTache($tache) )  )
+                            @else
+                                <input type='checkbox' 
+                                    x-data='{ active: false }'
+                                    x-model="selected_taches"
+                                    value="{{$tache->id}}">
                             @endif
-                        {{$tache->tache_liblong }} 
-                        @if ($mode=='unique' && $user->getTransformationManager()->aValideLaTache($tache))
-                            <button class='btn btn-success' type='button' disabled>VALIDEE</button>
-                        @endif
-                    </td>
+                            {{$tache->tache_liblong }} 
+                            @if ($mode!='modificationmultiple' && $user->getTransformationManager()->aValideLaTache($tache))
+                                <button class='btn btn-success' type='button' disabled>VALIDEE</button>
+                            @endif
+                        </td>
                     @foreach($tache->objectifs as $objectif)
-                    <td rowspan='{{$objectif->sous_objectifs->count()}}'> 
-                            @if ($readwrite || ! $user->getTransformationManager()->aValideLObjectif($objectif) )
+                        <td rowspan='{{$objectif->sous_objectifs->count()}}'> 
+                            @if ($mode == "consultation" || ($mode== 'proposition' && $user->getTransformationManager()->aValideLObjectif($objectif) )  )
+                            @else
                             <input type='checkbox' 
                                 x-data='{ active: false }'
                                 x-model="selected_objectifs"
                                 value="{{$objectif->id}}">
                             @endif
                         {{$objectif->objectif_liblong }}
-                        @if ($mode=='unique' && $user->getTransformationManager()->aValideLObjectif($objectif))
+                        @if ($mode!='modificationmultiple' && $user->getTransformationManager()->aValideLObjectif($objectif))
                             <button class='btn btn-success' type='button' disabled>
                             VALIDE
                             </button>
                         @endif
                         </td>
                         @foreach($objectif->sous_objectifs as $sous_objectif)
-                            <td>
-                                @if($sous_objectif->ssobj_lienurl != NULL)
-                                    <a href="{{$sous_objectif->ssobj_lienurl}}" target="_blank"><x-bootstrap-icon iconname='link-45deg.svg'/></a>
-                                @endif
-                                {{$sous_objectif->ssobj_lib}}
-                            </td>
-                            <td>{{$sous_objectif->ssobj_duree}}</td>
-                            <td title=''>
-                                @if ($readwrite || ! $user->getTransformationManager()->aValideLeSousObjectif($sous_objectif) )
-                                    <input type='checkbox' 
-                                    x-data='{ active: false }'
-                                    x-model="selected_sous_objectifs"
-                                    value="{{$sous_objectif->id}}">
-                                @endif
-                                @if ($mode=='unique' && $user->getTransformationManager()->aValideLeSousObjectif($sous_objectif))
-                                    <button class='btn btn-success' type='button' disabled>
-                                    VALIDE {{ $user->getTransformationManager()->dateDeValidationDuSousObjectif($sous_objectif) }}
-                                    </button>
-                                @endif
-                                @if ($mode=='unique' && $user->getTransformationManager()->aProposeLeSousObjectif($sous_objectif))
-                                    <button class='btn btn-primary' type='button' disabled>
-                                    PROPOSE {{ $user->getTransformationManager()->dateDePropositionDeValidationDuSousObjectif($sous_objectif) }}
-                                    </button>
-                                @endif
-                            </td>
-                            @if ($mode=='unique' && ( $user->getTransformationManager()->aValideLeSousObjectif($sous_objectif) || $user->getTransformationManager()->aProposeLeSousObjectif($sous_objectif) ) )
-                                <td title="{{$user->getTransformationManager()->commentaireDeValidationDuSousObjectif($sous_objectif)  }}">
-                                        {{ $user->getTransformationManager()->valideurDeValidationDuSousObjectif($sous_objectif) }}
-                                </td>
-                            @else
-                                <td>&nbsp;</td>
-                            @endif
-                            <td>{{$sous_objectif->lieu->lieu_libcourt}}</td>
-                           </tr>
+                            @include('livewire.livret-transformation.sous-objectif')
                         @endforeach <!-- foreach sous objectif -->
                     @endforeach <!-- foreach objectif -->
                 @endforeach <!-- foreach tache -->

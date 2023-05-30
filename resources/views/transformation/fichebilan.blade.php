@@ -12,7 +12,7 @@
             Fiche bilan de {{$user->display_name}}
         </div>
         
-        @if($readwrite)
+        @if($mode !="proposition")
             <a href="{{ route('transformation.livret', $user->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
             <a href="{{ route('transformation.progression', $user->id) }}" class="btn btn-primary btn-sm">Progression</a>
             <a href="{{ route('transformation.fichebilan', $user->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
@@ -25,7 +25,6 @@
             <a href="{{ route('transformation.maprogression') }}" class="btn btn-primary btn-sm">Ma progression</a>
             <a href="{{ route('transformation.mafichebilan') }}" class="btn btn-secondary btn-sm">Ma fiche bilan</a>
         @endif
-
         <livewire:ffast-fiche-bilan :user="$user"/>
         
 @endsection
