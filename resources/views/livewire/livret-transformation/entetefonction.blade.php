@@ -1,7 +1,4 @@
 <table class='table table-bordered'>
-    <!--tr class='lignecomp div-table-contrat-compagnonnage'>
-        <th colspan='5'>{{$fonction->fonction_liblong }}</th>
-    </tr-->
     <tr  class="table-active text-center">
             <th style='width:5%;'>&nbsp;</td>
             <th style='width:70%;'>Commentaire</td>
@@ -13,9 +10,6 @@
     <tr x-data='{ active : false }'>
         <td>DOUBLE</td>
         <td class="text-start">
-            @php
-            //ddd($fonction)
-            @endphp
         @if ($user->getTransformationManager()->aProposeDoubleFonction($fonction) || $user->getTransformationManager()->aValideDoubleFonction($fonction))
             {{ $fonction->pivot->commentaire_double }}
         @endif
@@ -36,13 +30,13 @@
         @if ( $user->getTransformationManager()->aProposeDoubleFonction($fonction) ||  $user->getTransformationManager()->aValideDoubleFonction($fonction) )
             {{ $fonction->pivot->valideur_double }}
         @endif
-        @if (count(auth()->user()->roles()->where('name','visiteur')->get())==0)
-            @if ( $user->getTransformationManager()->aProposeDoubleFonction($fonction) || ($readwrite && $user->getTransformationManager()->aValideDoubleFonction($fonction) ) )
+        @if ($mode == "modification" || $mode == "proposition")
+            @if ( $user->getTransformationManager()->aProposeDoubleFonction($fonction) ||  $user->getTransformationManager()->aValideDoubleFonction($fonction) )
                 <button class="btn btn-danger" 
                 x-on:click.prevent="$wire.UnValideDoubleFonction( {{ $user->id }}, {{ $fonction->id }} );">
                 Annuler</button>
             @endif
-            @if ( $readwrite && ! $user->getTransformationManager()->aValideDoubleFonction($fonction) )
+            @if ( $mode=="modification" && ! $user->getTransformationManager()->aValideDoubleFonction($fonction) )
                 <button type="submit" 
                     class="btn btn-primary" 
                     name="validation_double"
@@ -57,7 +51,7 @@
                         $wire.ValideDoubleFonction( {{$user->id}}, {{$fonction->id}}, date_validation , commentaire, valideur);
                     };"></button>
             @endif
-            @if ( ! $readwrite && ! $user->getTransformationManager()->aProposeDoubleFonction($fonction) && !$user->getTransformationManager()->aValideDoubleFonction($fonction))
+            @if ( $mode=="proposition"  && ! $user->getTransformationManager()->aProposeDoubleFonction($fonction) && !$user->getTransformationManager()->aValideDoubleFonction($fonction))
                 <button type="submit" 
                     class="btn btn-primary" 
                     name="validation_double"
@@ -101,13 +95,14 @@
         @if ( $user->getTransformationManager()->aProposeLacheFonction($fonction) || $user->getTransformationManager()->aValideLacheFonction($fonction) )
             {{ $fonction->pivot->valideur_lache }}
         @endif
-        @if (count(auth()->user()->roles()->where('name','visiteur')->get())==0)
-            @if ( $user->getTransformationManager()->aProposeLacheFonction($fonction) || ($readwrite && $user->getTransformationManager()->aValideLacheFonction($fonction) ) )
+
+        @if ($mode =="modification" || $mode=="proposition")
+            @if ( $user->getTransformationManager()->aProposeLacheFonction($fonction) || $user->getTransformationManager()->aValideLacheFonction($fonction) )
                 <button class="btn btn-danger" 
                 x-on:click.prevent="$wire.UnValideLacheFonction( {{ $user->id }}, {{ $fonction->id }} );">
                 Annuler</button>
             @endif
-            @if ( $readwrite && ! $user->getTransformationManager()->aValideLacheFonction($fonction) )
+            @if ( $mode =="modification" && ! $user->getTransformationManager()->aValideLacheFonction($fonction) )
                 <button type="submit" 
                     class="btn btn-primary" 
                     name="validation_lache"
@@ -122,7 +117,8 @@
                         $wire.ValideLacheFonction( {{$user->id}}, {{$fonction->id}}, date_validation , commentaire, valideur);
                     };"></button>
             @endif
-            @if ( ! $readwrite && ! $user->getTransformationManager()->aValideLacheFonction($fonction) && ! $user->getTransformationManager()->aProposeLacheFonction($fonction) )
+            
+            @if ($mode =="proposition" && ! $user->getTransformationManager()->aValideLacheFonction($fonction) && ! $user->getTransformationManager()->aProposeLacheFonction($fonction) )
                 <button type="submit" 
                     class="btn btn-primary" 
                     name="validation_lache"

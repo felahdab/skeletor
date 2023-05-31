@@ -15,7 +15,7 @@
                                         selected_objectifs : [],
                                         selected_sous_objectifs : [],
                                         selected_marins : [],
-                                        readwrite : '{{ $readwrite }}'
+                                        mode : '{{ $mode }}'
                                         }"
                                         
                                         x-on:resetselection.window="selected_taches = [];
@@ -23,15 +23,11 @@
                                         selected_sous_objectifs = [];
                                         selected_marins = [];">
     
-
         <!-- div avec boutons generaux -->
-        @if (count(auth()->user()->roles()->where('name','visiteur')->get())==0)
-            @include('livewire.livret-transformation.boutonsgeneraux')
-        @endif
+        @include('livewire.livret-transformation.boutonsgeneraux')
         <!-- div avec formulaire de validation -->
         @include('livewire.livret-transformation.divvalid')
 
-        
         <div id='livret' class='div-table-contrat-compagnonnage table'>
             @foreach ($fonctions as $fonction)
              <div class="accordion">
@@ -39,23 +35,13 @@
                     <div class="accordion-header bg-primary">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFonction_{{$fonction->id}}">
                             <h3>
-                                @if ($mode== "unique")
-                                    @if ($fonction->pivot->date_lache != null)
-                                        <span class="text-success"><x-bootstrap-icon iconname='check-circle.svg'/></span>
-                                    @endif
-                                    @if ($fonction->pivot->date_proposition_lache != null
-                                        OR $fonction->pivot->date_proposition_double != null
-                                        OR $user->getTransformationManager()->sous_objectifs_du_parcours_proposes($fonction)->count() > 0)
-                                        <span class="text-info"><x-bootstrap-icon iconname='envelope-paper-fill.svg' /></span>
-                                    @endif
-                                @endif
-                                {{ $fonction->fonction_liblong }} 
+                                @include('livewire.livret-transformation.titrefonction')
                             </h3>
                         </button>
                     </div>
                     <div id="collapseFonction_{{$fonction->id}}" class="accordion-collapse collapse">
                         <div  class="accordion-body">
-                            @includeWhen($mode=='unique', 'livewire.livret-transformation.entetefonction')
+                            @includeWhen($mode!='modificationmultiple', 'livewire.livret-transformation.entetefonction')
                             
                             @if ($fonction->compagnonages->count() > 0)
                                 @foreach($fonction->compagnonages as $compagnonage)
@@ -63,7 +49,7 @@
                                @endforeach <!-- foreach compagnonage -->
                             @endif
                             
-                            @if ($mode == 'unique' && $fonction->stages->count() > 0)
+                            @if ($mode != 'modificationmultiple' && $fonction->stages->count() > 0)
                                 @include('livewire.livret-transformation.stagefonction')
                             @endif
                             
@@ -73,7 +59,7 @@
             </div>
             @endforeach   <!-- foreach fonction -->
             
-            @if ($mode=='unique' && $user->getTransformationManager()->stages_orphelins()->count() > 0)
+            @if ($mode != 'modificationmultiple' && $user->getTransformationManager()->stages_orphelins()->count() > 0)
                 @include('livewire.livret-transformation.stagesorphelins')
             @endif
         </div>  <!-- fin de la div livret -->
