@@ -31,7 +31,7 @@ class EtatCompUsers extends Component
         // liste des users ayant ces fonc donc ce comp
         $listusers=collect();
         foreach($listfoncs as $fonc){
-            $users=$fonc->users;
+            $users=$fonc->users->sortBy('name');
             if ($users->isNotEmpty()){
                 foreach($users as $user){
                     $listusers->push($user);
@@ -39,10 +39,6 @@ class EtatCompUsers extends Component
             }
         }
         $listusers=$listusers->unique('id');
-
-        ///////////////////////
-        //1ere présentation
-        ///////////////////////
 
         //entete du tableau
         $entete_taches=[];
