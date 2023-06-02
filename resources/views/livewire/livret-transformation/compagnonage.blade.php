@@ -4,7 +4,6 @@
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComp_{{$compagnonage->id}}">
             <h5>
             @if ($mode== "proposition" || $mode== "modification")
-            @if ($mode== "proposition" || $mode== "modification")
                 @if ($user->getTransformationManager()->sous_objectifs_du_parcours_proposes($fonction, $compagnonage)->count() > 0)
                     <span class="text-info"><x-bootstrap-icon iconname='envelope-paper-fill.svg' /></span>
                 @endif
@@ -28,17 +27,10 @@
                 @foreach($compagnonage->taches->sortBy('pivot.ordre') as $tache)
                 <tr class='ligneTache'>
                     @if ($mode!='modificationmultiple')
-                    @if ($mode!='modificationmultiple')
                         <td rowspan='{{ $user->getTransformationManager()->sous_objectifs_du_parcours(null, null, $tache, null)->count() }}'>
                     @else
                         <td rowspan='{{ $tache->coll_sous_objectifs()->count() }}'>
                     @endif
-                            @if ($mode == "consultation" || ($mode== 'proposition' && $user->getTransformationManager()->aValideLaTache($tache) )  )
-                            @else
-                                <input type='checkbox' 
-                                    x-data='{ active: false }'
-                                    x-model="selected_taches"
-                                    value="{{$tache->id}}">
                             @if ($mode == "consultation" || ($mode== 'proposition' && $user->getTransformationManager()->aValideLaTache($tache) )  )
                             @else
                                 <input type='checkbox' 
@@ -61,7 +53,6 @@
                                 value="{{$objectif->id}}">
                             @endif
                         {{$objectif->objectif_liblong }}
-                        @if ($mode!='modificationmultiple' && $user->getTransformationManager()->aValideLObjectif($objectif))
                         @if ($mode!='modificationmultiple' && $user->getTransformationManager()->aValideLObjectif($objectif))
                             <button class='btn btn-success' type='button' disabled>
                             VALIDE
