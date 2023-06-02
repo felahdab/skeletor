@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Database\Eloquent\Builder;
 
 use App\Models\Objectif;
 
@@ -22,11 +23,27 @@ class ObjectifList extends Component
     }
     
     public function render()
-    {
+    { 
+        if ($this->mode == "gestion")
+        {
+            $objectifs=Objectif::where(function (Builder $query) {
+                $query->where('objectif_libcourt', 'like', '%'. $this->filter . '%')
+                ->orWhere('objectif_liblong', 'like', '%'. $this->filter . '%');
+            })
+            ->paginate(10);
+        }
+        elseif ($this->mode == "selection")
+        {
+            $objectifs=Objectif::whereNotIn('id', $this->tache->objectifs->pluck('id'))
+            ->where(function (Builder $query) {
+                $query->where('objectif_libcourt', 'like', '%'. $this->filter . '%')
+                ->orWhere('objectif_liblong', 'like', '%'. $this->filter . '%');
+            })
+            ->paginate(10);
+        }
+
         return view('livewire.objectif-list', [
-            'objectifs' => Objectif::where('objectif_libcourt', 'like', '%'. $this->filter . '%')
-                    ->orWhere('objectif_liblong', 'like', '%'. $this->filter . '%')
-                    ->paginate(10),
+            'objectifs' => $objectifs,
             'mode' => $this->mode,
             'tache' => $this->tache
         ]);

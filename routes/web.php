@@ -20,6 +20,7 @@ use App\Http\Controllers\StageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\ObjectifController;
 use App\Http\Controllers\SousObjectifController;
 use App\Http\Controllers\BugReportController;
 use App\Http\Controllers\ImportExportParcours;
@@ -93,12 +94,12 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         Route::resource('roles',          RolesController::class);
         Route::resource('permissions',    PermissionsController::class);
 
-        Route::get('archivage', [ArchivageController::class , 'index'])->name('archivage.index');
-        Route::get('archivage/{user}/restauravecdonnees', [ArchivageController::class , 'conservcpte'])->name('archivage.conservcpte');
-        Route::get('archivage/{user}/restaursansdonnees', [ArchivageController::class , 'effacecpte'])->name('archivage.effacecpte');
-        Route::get('archivage/{user}/impression', [ArchivageController::class , 'imprimer'])->name('archivage.imprimer');
-        Route::get('archivage/{user}/archivage', [ArchivageController::class , 'archiver'])->name('archivage.archiver');
-        Route::get('archivage/{user}/suppr', [ArchivageController::class , 'supprimer'])->name('archivage.supprimer');
+        Route::get('archivage', [ArchivageController::class, 'index'])->name('archivage.index');
+        Route::get('archivage/{user}/restauravecdonnees', [ArchivageController::class, 'conservcpte'])->name('archivage.conservcpte');
+        Route::get('archivage/{user}/restaursansdonnees', [ArchivageController::class, 'effacecpte'])->name('archivage.effacecpte');
+        Route::get('archivage/{user}/impression', [ArchivageController::class, 'imprimer'])->name('archivage.imprimer');
+        Route::get('archivage/{user}/archivage', [ArchivageController::class, 'archiver'])->name('archivage.archiver');
+        Route::get('archivage/{user}/suppr', [ArchivageController::class, 'supprimer'])->name('archivage.supprimer');
 
 
         Route::resource('sous-objectifs', SousObjectifController::class);
@@ -106,25 +107,25 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
 
         Route::resource('objectifs', ObjectifController::class);
         Route::resource('compagnonages',  CompagnonageController::class);
-        Route::get('compagnonages/{compagnonage}/ajoutetache', [CompagnonageController::class , 'choisirtache'])->name('compagnonages.choisirtache');
-        Route::post('compagnonages/{compagnonage}/ajoutetache', [CompagnonageController::class , 'ajoutertache'])->name('compagnonages.ajoutertache');
-        Route::post('compagnonages/{compagnonage}/removetache', [CompagnonageController::class ,'removetache'])->name('compagnonages.removetache');
+        Route::get('compagnonages/{compagnonage}/ajoutetache', [CompagnonageController::class, 'choisirtache'])->name('compagnonages.choisirtache');
+        Route::post('compagnonages/{compagnonage}/ajoutetache', [CompagnonageController::class, 'ajoutertache'])->name('compagnonages.ajoutertache');
+        Route::post('compagnonages/{compagnonage}/removetache/{tache}', [CompagnonageController::class, 'removetache'])->name('compagnonages.removetache');
 
         Route::resource('taches',         TacheController::class);
         Route::get('taches/{tach}/ajouteobjectif', [TacheController::class, 'choisirobjectif'])->name('taches.choisirobjectif');
-        Route::post('taches/{tach}/ajouteobjectif', [TacheController::class, 'ajouterobjectif'])->name('taches.ajouterobjectif');
-        Route::post('taches/{tach}/removeobjectif', [TacheController::class, 'removeobjectif'])->name('taches.removeobjectif');
+        Route::post('taches/{tach}/ajouteobjectif/{objectif}', [TacheController::class, 'ajouterobjectif'])->name('taches.ajouterobjectif');
+        Route::post('taches/{tach}/removeobjectif/{objectif}', [TacheController::class, 'removeobjectif'])->name('taches.removeobjectif');
 
         Route::resource('fonctions',      FonctionController::class);
-        Route::get('fonctions/{fonction}/ajoutecompagnonage', [ FonctionController::class, 'choisircompagnonage'])->name('fonctions.choisircompagnonage');
-        Route::post('fonctions/{fonction}/ajoutecompagnonage', [ FonctionController::class, 'ajoutercompagnonage'])->name('fonctions.ajoutercompagnonage');
-        Route::post('fonctions/{fonction}/removecompagnonage', [ FonctionController::class, 'removecompagnonage'])->name('fonctions.removecompagnonage');
-        Route::get('fonctions/{fonction}/ajoutestage', [ FonctionController::class, 'choisirstage'])->name('fonctions.choisirstage');
-        Route::post('fonctions/{fonction}/ajoutestage', [ FonctionController::class, 'ajouterstage'])->name('fonctions.ajouterstage');
-        Route::post('fonctions/{fonction}/removestage', [ FonctionController::class, 'removestage'])->name('fonctions.removestage');
-        Route::get('fonctions/{fonction}/validergroupe', [ FonctionController::class, 'choixmarins'])->name('fonctions.choixmarins');
-        Route::post('fonctions/{fonction}/validergroupe', [ FonctionController::class, 'validermarins'])->name('fonctions.validermarins');
-        Route::get('fonctions/{fonction}/listemarinsfonction', [ FonctionController::class, 'listemarinsfonction'])->name('fonctions.listemarinsfonction');
+        Route::get('fonctions/{fonction}/ajoutecompagnonage', [FonctionController::class, 'choisircompagnonage'])->name('fonctions.choisircompagnonage');
+        Route::post('fonctions/{fonction}/ajoutecompagnonage', [FonctionController::class, 'ajoutercompagnonage'])->name('fonctions.ajoutercompagnonage');
+        Route::post('fonctions/{fonction}/removecompagnonage/{compagnonage}', [FonctionController::class, 'removecompagnonage'])->name('fonctions.removecompagnonage');
+        Route::get('fonctions/{fonction}/ajoutestage', [FonctionController::class, 'choisirstage'])->name('fonctions.choisirstage');
+        Route::post('fonctions/{fonction}/ajoutestage', [FonctionController::class, 'ajouterstage'])->name('fonctions.ajouterstage');
+        Route::post('fonctions/{fonction}/removestage/{stage}', [FonctionController::class, 'removestage'])->name('fonctions.removestage');
+        Route::get('fonctions/{fonction}/validergroupe', [FonctionController::class, 'choixmarins'])->name('fonctions.choixmarins');
+        Route::post('fonctions/{fonction}/validergroupe', [FonctionController::class, 'validermarins'])->name('fonctions.validermarins');
+        Route::get('fonctions/{fonction}/listemarinsfonction', [FonctionController::class, 'listemarinsfonction'])->name('fonctions.listemarinsfonction');
 
 
         Route::resource('stages',         StageController::class);
@@ -168,7 +169,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         //Route::get('statistiques/parcomp', [StatistiqueController::class, 'parcomp'])->name('statistiques.parcomp');
         //Route::get('/{compagnonage}/statistiques.transfoparcomp', 'StatistiqueController@transfoparcomp')->name('statistiques.transfoparcomp');
 
-        Route::resource('liens',          LienController::class);
+        Route::resource('liens', LienController::class);
 
         Route::group(['prefix' => 'annudef'], function () {
             Route::get('/', [AnnudefController::class, 'index'])->name('annudef.index');
@@ -179,6 +180,5 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             Route::get('/edit/{mail}', [MailController::class, 'edit'])->name('mails.edit');
             Route::get('/create', [MailController::class, 'create'])->name('mails.create');
         });
-
     });
 });

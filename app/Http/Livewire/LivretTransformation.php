@@ -15,193 +15,190 @@ use Livewire\Component;
 
 class LivretTransformation extends Component
 {
-    
-    public $mode="unique";
-    public $readwrite;
 
+    public $mode = "consultation";
     public $fonctions;
-    
+
     public $user;
-    
+
     public $fonction;
     public $usersfonction;
 
-    protected $listeners=['$refresh'];
-    protected $provider=null;
+    protected $listeners = ['$refresh'];
+    protected $provider = null;
 
     public function mount()
     {
-        if ($this->mode == "unique")
-        {
-            $this->provider = $this->user->getTransformationManager();
-            $this->fonctions = $this->user->getTransformationManager()->parcours->sortBy('typefonction_id');
-        }
-        elseif ($this->mode == "multiple")
-        {
-            $this->fonctions = [ $this->fonction ];
-            $this->usersfonction = $this->fonction->users()->orderBy('name')->get();
+        switch ($this->mode) {
+            case "modification":
+            case "consultation":
+            case "proposition":
+                $this->provider = $this->user->getTransformationManager();
+                $this->fonctions = $this->user->getTransformationManager()->parcours->sortBy('typefonction_id');
+                break;
+            case "modificationmultiple":
+                $this->fonctions = [$this->fonction];
+                $this->usersfonction = $this->fonction->users()->orderBy('name')->get();
+                break;
         }
     }
-    
+
     public function render()
     {
-        if ($this->mode == "unique")
-        {
-            $this->fonctions = $this->user->getTransformationManager()->parcours->sortBy('typefonction_id');
-        }
-        elseif ($this->mode == "multiple")
-        {
-            $this->fonctions = [ $this->fonction ];
-            $this->usersfonction = $this->fonction->users()->orderBy('name')->get();
+        switch ($this->mode) {
+            case "modification":
+            case "consultation":
+            case "proposition":
+                $this->provider = $this->user->getTransformationManager();
+                $this->fonctions = $this->user->getTransformationManager()->parcours->sortBy('typefonction_id');
+                break;
+            case "modificationmultiple":
+                $this->fonctions = [$this->fonction];
+                $this->usersfonction = $this->fonction->users()->orderBy('name')->get();
+                break;
         }
         return view('livewire.livret-transformation');
     }
-    
-    public function ValideLacheFonction(User $user, Fonction $fonction, $date_validation , $commentaire, $valideur)
+
+    public function ValideLacheFonction(User $user, Fonction $fonction, $date_validation, $commentaire, $valideur)
     {
         $transformationService = new GererTransformationService;
-        $transformationService->ValideLacheFonction($user, $fonction, $date_validation , $commentaire, $valideur, ! $this->readwrite);
-        if ($this->mode == "unique")
-        {
+        $transformationService->ValideLacheFonction($user, $fonction, $date_validation, $commentaire, $valideur, $this->mode == "proposition");
+
+        if ($this->mode != "modificationmultiple") {
             $user->getTransformationManager()->forceReload();
             $this->emit('$refresh');
         }
     }
-    
+
     public function UnValideLacheFonction(User $user, Fonction $fonction)
     {
         $transformationService = new GererTransformationService;
-        $transformationService->UnValideLacheFonction($user, $fonction, ! $this->readwrite);
-        if ($this->mode == "unique")
-        {
+        $transformationService->UnValideLacheFonction($user, $fonction, $this->mode == "proposition");
+        if ($this->mode != "modificationmultiple") {
             $user->getTransformationManager()->forceReload();
             $this->emit('$refresh');
         }
     }
-    
-    public function ValideDoubleFonction(User $user, Fonction $fonction, $date_validation , $commentaire, $valideur)
+
+    public function ValideDoubleFonction(User $user, Fonction $fonction, $date_validation, $commentaire, $valideur)
     {
         $transformationService = new GererTransformationService;
-        $transformationService->ValideDoubleFonction($user, $fonction, $date_validation , $commentaire, $valideur, ! $this->readwrite);
-        if ($this->mode == "unique")
-        {
+        $transformationService->ValideDoubleFonction($user, $fonction, $date_validation, $commentaire, $valideur, $this->mode == "proposition");
+        if ($this->mode != "modificationmultiple") {
             $user->getTransformationManager()->forceReload();
             $this->emit('$refresh');
         }
     }
-    
+
     public function UnValideDoubleFonction(User $user, Fonction $fonction)
     {
         $transformationService = new GererTransformationService;
-        $transformationService->UnValideDoubleFonction($user, $fonction, ! $this->readwrite);
-        if ($this->mode == "unique")
-        {
+        $transformationService->UnValideDoubleFonction($user, $fonction, $this->mode == "proposition");
+        if ($this->mode != "modificationmultiple") {
             $user->getTransformationManager()->forceReload();
             $this->emit('$refresh');
         }
     }
-    
-    public function ValideElementsDuParcours(User $user, 
-                                    $date_validation , $commentaire, $valideur,
-                                    $selected_compagnonnages = null,
-                                    $selected_taches = null,
-                                    $selected_objectifs = null,
-                                    $selected_sous_objectifs = null)
-    {
-        foreach($selected_compagnonnages as $compid)
-        {
+
+    public function ValideElementsDuParcours(
+        User $user,
+        $date_validation,
+        $commentaire,
+        $valideur,
+        $selected_compagnonnages = null,
+        $selected_taches = null,
+        $selected_objectifs = null,
+        $selected_sous_objectifs = null
+    ) {
+        foreach ($selected_compagnonnages as $compid) {
             $compagnonage = Compagnonage::find($compid);
         }
-        
-        foreach($selected_taches as $tacheid )
-        {
+
+        foreach ($selected_taches as $tacheid) {
             $tache = Tache::find($tacheid);
             $transformationService = new GererTransformationService;
-            $transformationService->ValidateTache($user, $tache, $date_validation , $commentaire, $valideur, ! $this->readwrite);
+            $transformationService->ValidateTache($user, $tache, $date_validation, $commentaire, $valideur, $this->mode == "proposition");
         }
-        
-        foreach($selected_objectifs as $objectifid)
-        {
+
+        foreach ($selected_objectifs as $objectifid) {
             $objectif = Objectif::find($objectifid);
             $transformationService = new GererTransformationService;
-            foreach($objectif->sous_objectifs()->get() as $ssobj)
-            {
-                $transformationService->ValidateSousObjectif($user, $ssobj, $date_validation , $commentaire, $valideur, ! $this->readwrite);
+            foreach ($objectif->sous_objectifs()->get() as $ssobj) {
+                $transformationService->ValidateSousObjectif($user, $ssobj, $date_validation, $commentaire, $valideur, $this->mode == "proposition");
             }
         }
-        
-        foreach($selected_sous_objectifs as $ssobjid)
-        {
+
+        foreach ($selected_sous_objectifs as $ssobjid) {
             $sous_objectif = SousObjectif::find($ssobjid);
             $transformationService = new GererTransformationService;
-            $transformationService->ValidateSousObjectif($user, $sous_objectif, $date_validation , $commentaire, $valideur, ! $this->readwrite);
+            $transformationService->ValidateSousObjectif($user, $sous_objectif, $date_validation, $commentaire, $valideur, $this->mode == "proposition");
         }
-        if ($this->mode == "unique")
-        {
+        if ($this->mode != "modificationmultiple") {
             $user->getTransformationManager()->forceReload();
             $this->emit('$refresh');
         }
         $this->dispatchBrowserEvent("resetselection");
     }
-    
-     public function ValideElementsDuParcoursMultiple($users, 
-                                    $date_validation , $commentaire, $valideur,
-                                    $selected_compagnonnages = null,
-                                    $selected_taches = null,
-                                    $selected_objectifs = null,
-                                    $selected_sous_objectifs = null)
-    {
-        foreach ($users as $userid)
-        {
+
+    public function ValideElementsDuParcoursMultiple(
+        $users,
+        $date_validation,
+        $commentaire,
+        $valideur,
+        $selected_compagnonnages = null,
+        $selected_taches = null,
+        $selected_objectifs = null,
+        $selected_sous_objectifs = null
+    ) {
+        foreach ($users as $userid) {
             $user = User::find($userid);
-            if ($user != null)
-            {
-                $this->ValideElementsDuParcours($user, 
-                                    $date_validation , $commentaire, $valideur,
-                                    $selected_compagnonnages ,
-                                    $selected_taches ,
-                                    $selected_objectifs ,
-                                    $selected_sous_objectifs);
+            if ($user != null) {
+                $this->ValideElementsDuParcours(
+                    $user,
+                    $date_validation,
+                    $commentaire,
+                    $valideur,
+                    $selected_compagnonnages,
+                    $selected_taches,
+                    $selected_objectifs,
+                    $selected_sous_objectifs
+                );
             }
         }
     }
-    
-     public function UnValideElementsDuParcours(User $user, 
-                                    $selected_compagnonnages = null,
-                                    $selected_taches = null,
-                                    $selected_objectifs = null,
-                                    $selected_sous_objectifs = null)
-    {
-        foreach($selected_compagnonnages as $compid)
-        {
+
+    public function UnValideElementsDuParcours(
+        User $user,
+        $selected_compagnonnages = null,
+        $selected_taches = null,
+        $selected_objectifs = null,
+        $selected_sous_objectifs = null
+    ) {
+        foreach ($selected_compagnonnages as $compid) {
             $compagnonage = Compagnonage::find($compid);
         }
-        
-        foreach($selected_taches as $tacheid)
-        {
+
+        foreach ($selected_taches as $tacheid) {
             $tache = Tache::find($tacheid);
             $transformationService = new GererTransformationService;
-            $transformationService->UnValidateTache($user, $tache, ! $this->readwrite);
+            $transformationService->UnValidateTache($user, $tache, $this->mode == "proposition");
         }
-        
-        foreach($selected_objectifs as $objectifid)
-        {
+
+        foreach ($selected_objectifs as $objectifid) {
             $objectif = Objectif::find($objectifid);
             $transformationService = new GererTransformationService;
-            foreach($objectif->sous_objectifs()->get() as $ssobj)
-            {
-                $transformationService->UnValidateSousObjectif($user, $ssobj, ! $this->readwrite);
+            foreach ($objectif->sous_objectifs()->get() as $ssobj) {
+                $transformationService->UnValidateSousObjectif($user, $ssobj, $this->mode == "proposition");
             }
         }
-        
-        foreach($selected_sous_objectifs as $ssobjid)
-        {
+
+        foreach ($selected_sous_objectifs as $ssobjid) {
             $sous_objectif = SousObjectif::find($ssobjid);
             $transformationService = new GererTransformationService;
-            $transformationService->UnValidateSousObjectif($user, $sous_objectif, ! $this->readwrite);
+            $transformationService->UnValidateSousObjectif($user, $sous_objectif, $this->mode == "proposition");
         }
-        if ($this->mode == "unique")
-        {
+        if ($this->mode != "modificationmultiple") {
             $user->getTransformationManager()->forceReload();
             $this->emit('$refresh');
         }

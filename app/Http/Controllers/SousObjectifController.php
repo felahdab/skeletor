@@ -99,10 +99,14 @@ class SousObjectifController extends Controller
     
     public function multipleupdate(Request $request)
     {
-        foreach ($request->sous_objectifs as $ssobj)
+        $sort_order = array_flip($request->input('sort_order'));
+
+        foreach ($request->sous_objectifs as $ordre => $ssobj)
         {
             $current_ssobj = SousObjectif::where('id', $ssobj['id']);
+            $ssobj["ordre"]=$sort_order[$ssobj['id']];
             $current_ssobj->update($ssobj);
+
             RecalculerTransformationService::handle();
         }
         return redirect()->route('objectifs.edit', $request['objectif_id']);

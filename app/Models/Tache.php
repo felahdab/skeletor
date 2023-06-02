@@ -14,7 +14,9 @@ class Tache extends Model
     
     public function objectifs()
     {
-        return $this->belongsToMany(Objectif::class, 'tache_objectif')->withTimestamps();
+        return $this->belongsToMany(Objectif::class, 'tache_objectif')
+            ->withTimestamps()
+            ->withPivot('ordre');
     }
     
     public function compagnonages()

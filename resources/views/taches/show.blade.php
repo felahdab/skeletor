@@ -26,6 +26,9 @@
                     </div>
                 </div>
                 <div>
+                    @can('taches.edit')
+                    <a href="{{ route('taches.edit', $tache) }}" class="btn btn-info mt-4">Modifier</a>
+                    @endcan
                     <a href="{{ route('taches.index') }}" class="btn btn-primary mt-4">Retour</a>
                     <br>&nbsp;
                 </div>

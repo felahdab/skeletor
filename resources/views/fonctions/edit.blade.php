@@ -65,53 +65,59 @@
                     </div>
                 </div>
                 <div>
-                    <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Modifier</button>
+                    <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Enregistrer</button>
                     <a href="{{ route('fonctions.index') }}" class="btn btn-default mt-4">Annuler</a>
                     <br>&nbsp;
                 </div>
             </div>
-        {!! Form::close() !!}
+        
 
         <div style='padding-left: 15px;'>
-            <div class='card-header ml-n3 mr-n4 mb-3' >Compagnonnage(s) associ&eacute;(s)</div>
+            <div class='card-header ml-n3 mr-n4 mb-3' >Compagnonnage(s) associ&eacute;(s) <span style="font-size:x-small;">(Glissez/déplacez les compagnonnages puis enregistrez pour modifier leur ordre d'affichage dans l'application)</span></div>
             <input type='hidden' name='fonction_id' id='fonction_id'  value='{{ $fonction->id }}'>
-            
-            @php $count = 1 @endphp
-            @foreach ($fonction->compagnonages()->get() as $compagnonage)
-            <div class='cadressobj'>
-            <div class='form-group row' >
-                <label class='col-sm-5 col-form-label '>Compagnonnage </label>
-            </div>
-            <div class='form-group row' >
-                <label class='col-sm-5 col-form-label '>Libellé court</label>
-                <div class='col-sm-5'>
-                    <input type='text' class='form-control' name='compagnonages[{{$count}}][comp_libcourt]' id='compagnonages[{{$count}}][comp_libcourt]' placeholder='Libellé court' value='{{ $compagnonage->comp_libcourt }}'>
-                </div>
-            </div>
-            <div class='form-group row' >
-                <label class='col-sm-5 col-form-label '>Libellé long</label>
-                <div class='col-sm-5'>
-                    <input type='text' class='form-control' name='compagnonages[{{$count}}][comp_libclong]' id='compagnonages[{{$count}}][comp_libclong]' placeholder='Libellé long' value='{{ $compagnonage->comp_liblong }}'>
-                </div>
-            </div>
-            @can("fonctions.removecompagnonage")
-            {!! Form::open(['method' => 'POST','route' => ['fonctions.removecompagnonage', $fonction ],'style'=>'display:inline']) !!}
-            <input type='hidden' name='compagnonage_id' id='compagnonage_id'  value='{{ $compagnonage->id }}'>
-            {!! Form::submit('Retirer ce compagnonnage', ['class' => 'btn btn-danger btn-sm']) !!}
-            {!! Form::close() !!}
-            @endcan
-            </div>
-            @php $count = $count +1 @endphp
-            @endforeach
-            
+            <x-sortable name="sort_order">
+                @foreach ($fonction->compagnonages->sortBy('pivot.ordre') as $compagnonage)
+                    <x-sortable-item sort_key="{{ $compagnonage->id }}">
+                    <div class='cadressobj'>
+                    <div class='form-group row' >
+                        <label class='col-sm-5 col-form-label '>Compagnonnage </label>
+                    </div>
+                    <div class='form-group row' >
+                        <label class='col-sm-5 col-form-label '>Libellé court</label>
+                        <div class='col-sm-5'>
+                            <input type='text' class='form-control' name='compagnonages[{{$compagnonage->id}}][comp_libcourt]' id='compagnonages[{{$compagnonage->id}}][comp_libcourt]' placeholder='Libellé court' value='{{ $compagnonage->comp_libcourt }}'>
+                        </div>
+                    </div>
+                    <div class='form-group row' >
+                        <label class='col-sm-5 col-form-label '>Libellé long</label>
+                        <div class='col-sm-5'>
+                            <input type='text' class='form-control' name='compagnonages[{{$compagnonage->id}}][comp_libclong]' id='compagnonages[{{$compagnonage->id}}][comp_libclong]' placeholder='Libellé long' value='{{ $compagnonage->comp_liblong }}'>
+                        </div>
+                    </div>
+                    @can("fonctions.removecompagnonage")
+                        <button type="button" class="btn btn-danger btn-sm w-25" onclick="document.getElementById('removecompagnonage[{{ $compagnonage->id }}]').submit()">Retirer ce compagnonnage</button>
+                    @endcan
+                    </div>
+                    </x-sortable-item>
+                @endforeach
+            </x-sortable>
+
             @can("fonctions.choisircompagnonage")
-            <div style='text-align: center;'>
-                {!! Form::open(['method' => 'GET','route' => ['fonctions.choisircompagnonage', $fonction->id],'style'=>'display:inline']) !!}
-                {!! Form::submit('Ajouter un nouveau compagnonnage', ['class' => 'btn btn-primary btn-sm']) !!}
-                {!! Form::close() !!}
-            </div>
+                <div style='text-align: center;'>
+                    <a class='btn btn-primary btn-sm' href="{{route('fonctions.choisircompagnonage', $fonction->id)}}">Ajouter un nouveau compagnonnage</a>
+                </div>
             @endcan
         </div>
+        {!! Form::close() !!}
+
+        @can("fonctions.removecompagnonage")
+            @foreach ($fonction->compagnonages->sortBy('pivot.ordre') as $compagnonage)
+                <form method="POST" action="{{ route('fonctions.removecompagnonage', [$fonction , $compagnonage]) }}" id="removecompagnonage[{{ $compagnonage->id }}]">
+                    @csrf
+                </form>
+            @endforeach
+        @endcan
+
         <div style='padding-left: 15px;'>
             <div class='card-header ml-n3 mr-n4 mb-3' >Stage(s) associ&eacute;(s)</div>
             <input type='hidden' name='fonction_id' id='fonction_id'  value='{{ $fonction->id }}'>
@@ -135,7 +141,7 @@
                 </div>
             </div>
             @can("fonctions.removestage")
-            {!! Form::open(['method' => 'POST','route' => ['fonctions.removestage', $fonction ],'style'=>'display:inline']) !!}
+            {!! Form::open(['method' => 'POST','route' => ['fonctions.removestage', $fonction , $stage],'style'=>'display:inline']) !!}
             <input type='hidden' name='stage_id' id='stage_id'  value='{{ $stage->id }}'>
             {!! Form::submit('Retirer ce stage', ['class' => 'btn btn-danger btn-sm']) !!}
             {!! Form::close() !!}

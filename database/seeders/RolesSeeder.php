@@ -18,7 +18,7 @@ class RolesSeeder extends Seeder
     public function run()
     {
         $role = Role::findOrCreate('admin');
-        $rolepermissions = Permission::pluck('id','id')->all();
+        $rolepermissions = Permission::pluck('id', 'id')->all();
         $role->syncPermissions($rolepermissions);
 
         // All users should be assigned the user role, which includes the basic permissions to login, logout, change your
@@ -36,57 +36,61 @@ class RolesSeeder extends Seeder
             'bugreports.store',
         ];
         $role->syncPermissions($rolepermissions);
-        
+
         $role = Role::findOrCreate('tuteur');
         $rolepermissions = [
-                'fonctions.choixmarins',
-                'fonctions.validermarins',
-                'stages.show',
-                'transformation.index',
-                'transformation.indexparfonction',
-                'transformation.indexparstage',
-                'transformation.livret',
-                'transformation.livretpdf',
-                'transformation.progression',
-                'transformation.fichebilan',
-                'statistiques.pourtuteurs'];
+            'fonctions.choixmarins',
+            'fonctions.validermarins',
+            'stages.show',
+            'transformation.index',
+            'transformation.indexparfonction',
+            'transformation.indexparstage',
+            'transformation.livret',
+            'transformation.livretpdf',
+            'transformation.progression',
+            'transformation.fichebilan',
+            'statistiques.pourtuteurs',
+            'transformation.updatelivret'
+        ];
         $role->syncPermissions($rolepermissions);
-        
+
         $role = Role::findOrCreate('em');
         $rolepermissions = [
-                'users.index',
-                'users.create',
-                'users.store',
-                'users.show',
-                'users.edit',
-                'users.update',
-                'stages.show',
-                'transformation.index',
-                'transformation.indexparfonction',
-                'transformation.indexparstage',
-                'users.choisirfonction',
-                'users.attribuerfonction',
-                'users.retirerfonction',
-                'transformation.livret',
-                'transformation.livretpdf',
-                'transformation.progression',
-                'transformation.fichebilan',
-                'statistiques.pourem',
-                'statistiques.index',
+            'users.index',
+            'users.create',
+            'users.store',
+            'users.show',
+            'users.edit',
+            'users.update',
+            'stages.show',
+            'transformation.index',
+            'transformation.indexparfonction',
+            'transformation.indexparstage',
+            'users.choisirfonction',
+            'users.attribuerfonction',
+            'users.retirerfonction',
+            'transformation.livret',
+            'transformation.livretpdf',
+            'transformation.progression',
+            'transformation.fichebilan',
+            'statistiques.pourem',
+            'statistiques.index',
+            'transformation.updatelivret'
 
         ];
         $role->syncPermissions($rolepermissions);
-        
-        $role = Role::findOrCreate( 'bord');
+
+        $role = Role::findOrCreate('bord');
         $rolepermissions = [
             'transformation.index',
             'transformation.livret',
             'transformation.livretpdf',
             'transformation.progression',
             'transformation.fichebilan',
+            'transformation.updatelivret'
         ];
         $role->syncPermissions($rolepermissions);
-        
+
         $role = Role::findOrCreate('2ps');
         $rolepermissions = [
             'mindefconnect.index',
@@ -174,6 +178,17 @@ class RolesSeeder extends Seeder
             'statistiques.pourtuteurs',
             'statistiques.pourem',
             'statistiques.pour2ps',
+            'transformation.updatelivret'
+        ];
+        $role->syncPermissions($rolepermissions);
+
+        $role = Role::findOrCreate('visiteur');
+        $rolepermissions = [
+            'fonctions.listemarinsfonction',
+            'transformation.exportparcours',
+            'transformation.fichebilan',
+            'transformation.index',
+            'transformation.livret'
         ];
         $role->syncPermissions($rolepermissions);
     }

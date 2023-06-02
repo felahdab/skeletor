@@ -4,6 +4,7 @@
 - [Compagnonnages](#compagnonnages)
 - [Tâches](#taches)
 - [Objectifs](#objectifs)
+- [Ordre d'afficgage](#ordre-affichage)
 - [Stages](#stages)
 - [Exporter les parcours](#export_parcours)
 
@@ -74,6 +75,21 @@ Vous retrouvez la liste de tous les objectifs (1). Un filtre (2) permet d’affi
 > {info} ** Remarques: **
 > - Ajout : Il faut compléter et valider le formulaire avant de pouvoir associer des sous-objectifs à l'objectif.
 > - Suppression : La suppression d'un objectif **entraine la suppression** des sous objectifs qui lui sont associés.
+
+<a name="ordre-affichage">
+## Ordre d'afficgage
+
+Pour chaque élément du parcours de transformation (Fonction, Compagnonnage, Tache et Objectif), la page d'édition permet de
+définir l'ordre d'affichage des éléments constitutifs dans les différentes pages de l'application (notamment dans le livret
+de transformation et la page de suivi par compagnonage).
+
+Pour cela, il suffit de déplacer les éléments avec la souris (cliquer sur l'élément à déplacer puis, tout en maintenant le
+bouton de la souris enfoncé, déplacer l'élément vers le haut ou vers le bas puis relacher le bouton).
+Une fois l'ordre désiré obtenu à l'écran, cliquer sur le bouton "Enregistrer" pour sauvegarder l'ordre en base de donnée.  
+
+Cette possibilité est rappelée dans chacune des pages concernée (voir ci-dessous la page de mofification des objectifs).  
+
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/parcours/modification-ordre-elements-du-parcours.png' )) }}">
 
 <a name="stages">
 ## Stages

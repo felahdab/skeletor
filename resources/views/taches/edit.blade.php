@@ -41,43 +41,51 @@
                     </ul>
                 </div>
                 <div>
-                    <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Modifier</button>
+                    <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Enregistrer</button>
                     <a href="{{ route('taches.index') }}" class="btn btn-default mt-4">Annuler</a>
                     <br>&nbsp;
                 </div>
             </div>
-        {!! Form::close() !!}
+        
 
         <div style='padding-left: 15px;'>
-            <div class='card-header ml-n3 mr-n4 mb-3' >Objectif(s) associ&eacute;(s)</div>
+            <div class='card-header ml-n3 mr-n4 mb-3' >Objectif(s) associ&eacute;(s) <span style="font-size:x-small;">(Glissez/déplacez les objectifs puis enregistrez pour modifier leur ordre d'affichage dans l'application)</span></div>
             <input type='hidden' name='tache_id' id='tache_id'  value='{{ $tache->id }}'>
             
-            @php $count = 1 @endphp
-            @foreach ($tache->objectifs()->get() as $objectif)
-            <div class='cadressobj'>
-            <div class='form-group row' >
-                <label class='col-sm-5 col-form-label '>Objectif </label>
-                <input type='hidden' name='sous_objectifs[{{$count}}][id]' id='sous_objectifs[{{$count}}][id]'  value='{{ $objectif->id }}'>
-                <div class='col-sm-5'>
-                    <textarea class="form-control" cols='60' rows='2' name='objectifs[{{$count}}][objectif_libcourt]' id='objectifs[{{$count}}][objectif_libcourt]' placeholder='Libell&eacute;' >{{ $objectif->objectif_libcourt }}</textarea>
-                </div>
-            </div>
-            @can("objectifs.destroy")
-            {!! Form::open(['method' => 'POST','route' => ['taches.removeobjectif', $tache ],'style'=>'display:inline']) !!}
-            <input type='hidden' name='objectif_id' id='objectif_id'  value='{{ $objectif->id }}'>
-            {!! Form::submit('Retirer cet objectif', ['class' => 'btn btn-danger btn-sm']) !!}
-            {!! Form::close() !!}
-            @endcan
-            </div>
-            @php $count = $count +1 @endphp
-            @endforeach
-            
+            <x-sortable name="sort_order">
+                @php $count = 1 @endphp
+                @foreach ($tache->objectifs->sortBy('pivot.ordre') as $objectif)
+                    <x-sortable-item sort-key="{{$objectif->id}}">
+                        <div class='card mt-4'>
+                            <div class='form-group row' >
+                                <label class='col-sm-5 col-form-label '>Objectif </label>
+                                <div class='col-sm-5'>
+                                    <textarea class="form-control" cols='60' rows='2'>{{ $objectif->objectif_libcourt }}</textarea>
+                                </div>
+                            </div>
+                            @can("objectifs.destroy")
+                                <button type="button" class="btn btn-danger btn-sm w-25" onclick="document.getElementById('removeobj[{{ $objectif->id }}]').submit()">Retirer cet objectif</button>
+                            @endcan
+                        </div>
+                        @php $count = $count +1 @endphp
+                    </x-sortable-item>
+                @endforeach
+            </x-sortable>
         
-            <div style='text-align: center;'>
-                {!! Form::open(['method' => 'GET','route' => ['taches.choisirobjectif', $tache->id],'style'=>'display:inline']) !!}
-                {!! Form::submit('Ajouter un nouvel objectif', ['class' => 'btn btn-primary btn-sm']) !!}
-                {!! Form::close() !!}
+            <div class="mt-4 mb-4 text-center">
+                <a class='btn btn-primary btn-sm' href="{{ route('taches.choisirobjectif', $tache->id) }}">Ajouter un nouvel objectif</a>
             </div>
         </div>
+        {!! Form::close() !!}
+        <!-- Cette partie contient les formulaires actives par javascript pour provoquer la suppression
+            d'un objectif-->
+            @can("objectifs.destroy")
+                @foreach ($tache->objectifs as $objectif)
+                <form method="POST" action="{{ route('taches.removeobjectif', [$tache, $objectif]) }}" id="removeobj[{{ $objectif->id }}]">
+                    @csrf
+                </form>
+                @endforeach
+            @endcan
+            <!-- Fin de partie -->
     </div>
 @endsection

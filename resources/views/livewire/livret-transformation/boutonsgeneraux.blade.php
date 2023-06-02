@@ -1,38 +1,7 @@
 <div class='text-center mt-1 sticky-top' x-data='{ active : false }'>
-@if(auth()->user()->can('transformation.empecherupdatelivret') && !auth()->user()->hasrole('admin'))
-    <a href="#" style="text-decoration: none;">
-        <img src='{!! asset("assets/images/fleche_haut.png") !!}' alt="haut page" width="40px">
-    </a>
-@else
-    @if($mode=='unique')
-        <button type="submit" form="ssobjs" class="btn btn-primary" name="validation"
-        x-on:click.prevent="active = true ;
-                            validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
-                            validModal.show();
-                            buttonid = 'validation' ;">
-        @if($readwrite)
-            Valider les éléments cochés
-        @else
-            Indiquer à mes tuteurs que je pense avoir validé les sous objectifs sélectionnés
-        @endif</button>
-        <button x-show="false" 
-                x-on:uservalidated.window="if (active){ 
-                    active = false; 
-                    $wire.ValideElementsDuParcours( {{$user->id}} , date_validation , commentaire, 
-                                                    valideur, selected_compagnonnages , selected_taches , 
-                                                    selected_objectifs ,selected_sous_objectifs );
-                }"></button>
-        <button class="btn btn-danger" 
-        name="annulation_validation"
-        x-on:click="$wire.UnValideElementsDuParcours( {{$user->id}} , selected_compagnonnages , selected_taches , 
-                                                        selected_objectifs ,selected_sous_objectifs );">
-        @if($readwrite)
-            Annuler la validation des éléments cochés
-        @else
-            Retirer les sous objectifs sélectionnés de ma proposition de validation
-        @endif</button>
-        <a href="{{ route('transformation.livretpdf', $user->id) }}" class="btn btn-info">Imprimer</a>
-    @elseif($mode=='multiple')
+
+    @switch ($mode)
+    @case ('modificationmultiple')
         <button type="submit" 
                 class="btn btn-primary" 
                 name="validation"
@@ -50,10 +19,51 @@
                                     commentaire, valideur, selected_compagnonnages , selected_taches , 
                                     selected_objectifs ,selected_sous_objectifs );
             }"></button>
-            
-    @endif
+        @break
+    @case ('modification')
+        <button type="submit" form="ssobjs" class="btn btn-primary" name="validation"
+                x-on:click.prevent="active = true ;
+                            validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
+                            validModal.show();
+                            buttonid = 'validation' ;">
+                Valider les éléments cochés</button>
+        <button x-show="false" 
+                x-on:uservalidated.window="if (active){ 
+                    active = false; 
+                    $wire.ValideElementsDuParcours( {{$user->id}} , date_validation , commentaire, 
+                                            valideur, selected_compagnonnages , selected_taches , 
+                                            selected_objectifs ,selected_sous_objectifs );}"></button>
+        <button class="btn btn-danger" 
+                name="annulation_validation"
+                x-on:click="$wire.UnValideElementsDuParcours( {{$user->id}} , 
+                                                            selected_compagnonnages , selected_taches , 
+                                                            selected_objectifs ,selected_sous_objectifs );">
+                Annuler la validation des éléments cochés</button>
+        <a href="{{ route('transformation.livretpdf', $user->id) }}" class="btn btn-info">Imprimer</a>
+        @break
+    @case ('proposition')
+        <button type="submit" form="ssobjs" class="btn btn-primary" name="validation"
+                x-on:click.prevent="active = true ;
+                            validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
+                            validModal.show();
+                            buttonid = 'validation' ;">
+                Indiquer à mes tuteurs que je pense avoir validé les sous objectifs sélectionnés</button>
+        <button x-show="false" 
+                x-on:uservalidated.window="if (active){ 
+                    active = false; 
+                    $wire.ValideElementsDuParcours( {{$user->id}} , date_validation , commentaire, 
+                                            valideur, selected_compagnonnages , selected_taches , 
+                                            selected_objectifs ,selected_sous_objectifs );}"></button>
+        <button class="btn btn-danger" 
+                name="annulation_validation"
+                x-on:click="$wire.UnValideElementsDuParcours( {{$user->id}} , 
+                                                            selected_compagnonnages , selected_taches , 
+                                                            selected_objectifs ,selected_sous_objectifs );">
+                Retirer les sous objectifs sélectionnés de ma proposition de validation</button>
+        <a href="{{ route('transformation.livretpdf', $user->id) }}" class="btn btn-info">Imprimer</a>
+        @break
+    @endswitch
     <a href="#" style="text-decoration: none;">
         <img src='{!! asset("assets/images/fleche_haut.png") !!}' alt="haut page" width="40px">
     </a>
-@endif
-</div><!-- fin de la div avec boutons speciaux -->
+</div>

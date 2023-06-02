@@ -119,16 +119,12 @@ class FonctionController extends Controller
                                                     'typefonctions' => $typefonctions]);
     }
     
-    public function removecompagnonage(Request $request, Fonction $fonction)
+    public function removecompagnonage(Request $request, Fonction $fonction, Compagnonage $compagnonage)
     {
-        $comp_id = intval($request->input('compagnonage_id', 0));
-        $query = Compagnonage::where('id', $comp_id)->get();
-        if ($query->count() == 1)
-        {
-            $compagnonage = $query->first();
-            $fonction->compagnonages()->detach($compagnonage);
-            RecalculerTransformationService::handle();            
-        }
+        ddd($compagnonage);
+        $fonction->compagnonages()->detach($compagnonage);
+        RecalculerTransformationService::handle();            
+        
         return redirect()->route('fonctions.edit', ['fonction'   => $fonction]);
     }
 
@@ -162,21 +158,15 @@ class FonctionController extends Controller
                                                     'typefonctions' => $typefonctions]);
     }
     
-    public function removestage(Request $request, Fonction $fonction)
+    public function removestage(Request $request, Fonction $fonction, Stage $stage)
     {
-        $stage_id = intval($request->input('stage_id', 0));
-        $query = Stage::where('id', $stage_id)->get();
-        if ($query->count() == 1)
-        {
-            $stage = $query->first();
-            $fonction->stages()->detach($stage);
-            // suppression du stage pour users ayant cette fonction
-            $users=$fonction->users()->get();
-            foreach ($users as $user){
-                $transformationService = new GererTransformationService;
-                // dd($query);
-                $transformationService->detachStage($user, $stage);
-            }
+        $fonction->stages()->detach($stage);
+        // suppression du stage pour users ayant cette fonction
+        $users=$fonction->users()->get();
+        foreach ($users as $user){
+            $transformationService = new GererTransformationService;
+            // dd($query);
+            $transformationService->detachStage($user, $stage);
         }
         $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
         return redirect()->route('fonctions.edit', ['fonction'   => $fonction,
@@ -191,7 +181,6 @@ class FonctionController extends Controller
      */
     public function update(UpdateFonctionRequest $request, Fonction $fonction)
     {
-        // var_dump($request);
         $fonction->fonction_libcourt=$request->fonction['fonction_libcourt'];
         $fonction->fonction_liblong=$request->fonction['fonction_liblong'];
         $fonction->typefonction_id = $request->fonction['typefonction_id'];
@@ -203,6 +192,17 @@ class FonctionController extends Controller
             $fonction->fonction_double = true;
         else
             $fonction->fonction_double = false;
+
+
+        $comps = $fonction->compagnonages;
+        //ddd(array_flip($request->sort_order));
+        foreach(array_flip($request->sort_order) as $id => $ordre)
+        {
+            $w = $comps->find($id)->pivot;
+            $w->ordre = $ordre;
+            $w->save();
+        }
+        
         $fonction->save();
         
         return redirect()->route('fonctions.edit', $fonction);
