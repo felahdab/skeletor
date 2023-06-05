@@ -86,8 +86,12 @@
                                 <td style='width:25%;'></td>
                             @else
                                 <td style='width:25%;'>{{$stage->stage_libcourt}}</td>
-                                @if ($user->getTransformationManager()->aValideLeStage($stage))
-                                    <x-ffast-progression-div :pourcentage="100" height="whatever" style="td"  text="VALIDE"/>
+                                @if ($datvalid=$user->getTransformationManager()->dateDeValidationDuStage($stage) )
+                                    @if($datvalid> date('Y-m-d'))
+                                        <x-ffast-progression-div :pourcentage="50" height="whatever" style="td"  text="INSCRIT"/>
+                                    @else
+                                        <x-ffast-progression-div :pourcentage="100" height="whatever" style="td"  text="VALIDE"/>
+                                    @endif
                                 @else
                                     <x-ffast-progression-div :pourcentage="0" height="whatever" style="td" text="NON VALIDE"/>
                                 @endif

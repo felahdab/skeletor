@@ -1,6 +1,10 @@
 
 @if ($datvalid=$user->dateValidationDuStage($row))
-    <span class="badge bg-success" style="width: 80px;">{{$datvalid}}</span>
+    @if($datvalid > date('Y-m-d'))
+        <span class="badge" style="width: 80px; background-color:orange;">{{$datvalid}}</span>
+    @else
+        <span class="badge bg-success" style="width: 80px;">{{$datvalid}}</span>
+    @endif
 @else
     <span class="badge bg-danger" style="width: 80px;">N.C.</span>
 @endif

@@ -20,10 +20,16 @@
                     </tr>
                     <tr class='ligneTache'>
                         <td>
-                            @if ($user->getTransformationManager()->aValideLeStage($stage) )
-                                <button class='btn btn-success' type='button' disabled>
-                                VALIDE {{ $user->getTransformationManager()->dateDeValidationDuStage($stage) }}
-                                </button>
+                            @if ($datvalid=$user->getTransformationManager()->dateDeValidationDuStage($stage) )
+                                @if($datvalid> date('Y-m-d'))
+                                    <button class='btn' type='button' disabled style="background-color:orangered;">
+                                    INSCRIT {{ $user->getTransformationManager()->dateDeValidationDuStage($stage) }}
+                                    </button>
+                                @else
+                                    <button class='btn btn-success' type='button' disabled>
+                                    VALIDE {{ $user->getTransformationManager()->dateDeValidationDuStage($stage) }}
+                                    </button>
+                                @endif
                             @else
                                 <button class='btn btn-warning' type='button' disabled>
                                 NON VALIDE A CE JOUR
