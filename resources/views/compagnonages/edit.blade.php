@@ -40,45 +40,54 @@
                     </ul>
                 </div>
                 <div>
-                    <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Modifier</button>
+                    <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Enregistrer</button>
                     <a href="{{ route('compagnonages.index') }}" class="btn btn-default mt-4">Annuler</a>
                     <br>&nbsp;
                 </div>
             </div>
-        {!! Form::close() !!}
+        
 
         <div style='padding-left: 15px;'>
-            <div class='card-header ml-n3 mr-n4 mb-3' >Tâche(s) associ&eacute;e(s)</div>
+            <div class='card-header ml-n3 mr-n4 mb-3' >Tâche(s) associ&eacute;e(s) <span style="font-size:x-small;">(Glissez/déplacez les taches puis enregistrez pour modifier leur ordre d'affichage dans l'application)</span></div>
             <input type='hidden' name='compagnonage_id' id='compagnonage_id'  value='{{ $compagnonage->id }}'>
             
-            @php $count = 1 @endphp
-            @foreach ($compagnonage->taches()->get() as $tache)
-            <div class='cadressobj'>
-            <div class='form-group row' >
-                <label class='col-sm-5 col-form-label '>Tâche </label>
-            </div>
-            <div class='form-group row' >
-                <label class='col-sm-5 col-form-label '>Libellé court</label>
-                <div class='col-sm-5'>
-                    <input type='text' class='form-control' name='taches[{{$count}}][tache_libcourt]' id='taches[{{$count}}][tache_libcourt]' placeholder='Libelle court' value='{{ $tache->tache_libcourt }}'>
+            <x-sortable name="sort_order">
+            @foreach ($compagnonage->taches->sortBy('pivot.ordre') as $tache)
+            <x-sortable-item sort_key="{{$tache->id}}">
+                <div class='cadressobj'>
+                <div class='form-group row' >
+                    <label class='col-sm-5 col-form-label '>Tâche </label>
                 </div>
-            </div>
-            <div class='form-group row' >
-                <label class='col-sm-5 col-form-label '>Libellé long</label>
-                <div class='col-sm-5'>
-                    <input type='text' class='form-control' name='taches[{{$count}}][tache_liblong]' id='taches[{{$count}}][tache_liblong]' placeholder='Libelle long' value='{{ $tache->tache_liblong }}'>
+                <div class='form-group row' >
+                    <label class='col-sm-5 col-form-label '>Libellé court</label>
+                    <div class='col-sm-5'>
+                        <input type='text' class='form-control' name='taches[{{$tache->id}}][tache_libcourt]' id='taches[{{$tache->id}}][tache_libcourt]' placeholder='Libelle court' value='{{ $tache->tache_libcourt }}'>
+                    </div>
                 </div>
-            </div>
-            @can("compagnonages.removetache")
-            {!! Form::open(['method' => 'POST','route' => ['compagnonages.removetache', $compagnonage ],'style'=>'display:inline']) !!}
-            <input type='hidden' name='tache_id' id='tache_id'  value='{{ $tache->id }}'>
-            {!! Form::submit('Retirer cette tâche', ['class' => 'btn btn-danger btn-sm']) !!}
-            {!! Form::close() !!}
-            @endcan
-            </div>
-            @php $count = $count +1 @endphp
+                <div class='form-group row' >
+                    <label class='col-sm-5 col-form-label '>Libellé long</label>
+                    <div class='col-sm-5'>
+                        <input type='text' class='form-control' name='taches[{{$tache->id}}][tache_liblong]' id='taches[{{$tache->id}}][tache_liblong]' placeholder='Libelle long' value='{{ $tache->tache_liblong }}'>
+                    </div>
+                </div>
+
+                @can("compagnonages.removetache")
+                    <button type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('removetache[{{ $tache->id }}]').submit()">Retirer cette tâche</button>
+                @endcan
+                </div>
+            </x-sortable-item>
             @endforeach
+            </x-sortable>
+            {!! Form::close() !!}
             
+            @can("compagnonages.removetache")
+                @foreach ($compagnonage->taches->sortBy('pivot.ordre') as $tache)
+                    <form method="POST" action="{{ route('compagnonages.removetache', [$compagnonage, $tache]) }}" id="removetache[{{ $tache->id }}]">
+                        @csrf
+                    </form>
+                @endforeach
+            @endcan
+
             @can("compagnonages.choisirtache")
             <div style='text-align: center;'>
                 {!! Form::open(['method' => 'GET','route' => ['compagnonages.choisirtache', $compagnonage->id],'style'=>'display:inline']) !!}

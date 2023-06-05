@@ -15,7 +15,9 @@ class Compagnonage extends Model
     
     public function taches()
     {
-        return $this->belongsToMany(Tache::class, 'compagnonage_tache')->withTimestamps();
+        return $this->belongsToMany(Tache::class, 'compagnonage_tache')
+            ->withTimestamps()
+            ->withPivot('ordre');
     }
     
     public function fonctions()
