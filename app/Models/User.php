@@ -551,7 +551,7 @@ class User extends Authenticatable
     public function taux_de_transformation(bool $fullcalc = false)
     {
         if (!$fullcalc)
-            return user->taux_de_transformation;
+            return $this->taux_de_transformation;
 
         $nb_stage_total = 0;
         $nb_stage_total = $this->stages()->get()->count();
