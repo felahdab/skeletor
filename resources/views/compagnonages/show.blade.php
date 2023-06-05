@@ -25,6 +25,9 @@
                     </div>
                 </div>
                 <div>
+                    @can('compagnonages.edit')
+                    <a href="{{ route('compagnonages.edit', $compagnonage) }}" class="btn btn-info mt-4">Modifier</a>
+                    @endcan
                     <a href="{{ route('compagnonages.index') }}" class="btn btn-primary mt-4">Retour</a>
                     <br>&nbsp;
                 </div>

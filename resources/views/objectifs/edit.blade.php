@@ -35,7 +35,7 @@
                     </ul>
                 </div>
                 <div>
-                    <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Modifier</button>
+                    <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Enregistrer</button>
                     <a href="{{ route('objectifs.index') }}" class="btn btn-default mt-4">Annuler</a>
                     <br>&nbsp;
                 </div>
@@ -43,7 +43,7 @@
         {!! Form::close() !!}
 
         <div style='padding-left: 15px;'>
-            <div class='card-header ml-n3 mr-n4 mb-3' >Sous-objectif(s) associ&eacute;(s)</div>
+            <div class='card-header ml-n3 mr-n4 mb-3' >Sous-objectif(s) associ&eacute;(s) <span style="font-size:x-small;">(Glissez/déplacez les sous objectifs puis enregistrez pour modifier leur ordre d'affichage dans l'application)</span></div>
             
 
             <div style='text-align: center;'>

@@ -17,7 +17,9 @@ class Fonction extends Model
     
     public function compagnonages()
     {
-        return $this->belongsToMany(Compagnonage::class, 'compagnonage_fonction')->withTimestamps();
+        return $this->belongsToMany(Compagnonage::class, 'compagnonage_fonction')
+                ->withTimestamps()
+                ->withPivot('ordre');
     }
     
     public function type_fonction()

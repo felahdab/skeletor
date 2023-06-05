@@ -33,8 +33,7 @@
                             @endcan
                          @elseif ($mode == "selection")
                             <td>
-                                {!! Form::open(['method' => 'POST','route' => ['taches.ajouterobjectif', $tache->id] ]) !!}
-                                <input type='hidden' id='objectif_id' name='objectif_id' value='{{ $objectif->id }}'>
+                                {!! Form::open(['method' => 'POST','route' => ['taches.ajouterobjectif', $tache, $objectif] ]) !!}
                                 <button type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
                                 {!! Form::close() !!}
                             </td>

@@ -82,37 +82,22 @@ class TacheController extends Controller
     
     public function choisirobjectif(Request $request, Tache $tach)
     {
-        $objectifs = Objectif::orderBy('objectif_libcourt')->get();
-        $objectifs = $objectifs->diff($tach->objectifs()->get());
-        
-        return view('taches.choisirobjectif', [ 'tache'     => $tach,
-                                                'objectifs' => $objectifs]);
+        return view('taches.choisirobjectif', [ 'tache' => $tach]);
     }
     
-    public function ajouterobjectif(Request $request, Tache $tach)
+    public function ajouterobjectif(Request $request, Tache $tach, Objectif $objectif)
     {
-        $objectif_id = intval($request->input('objectif_id', 0));
-        $query = Objectif::where('id', $objectif_id)->get();
-        if ($query->count() == 1)
-        {
-            $objectif = $query->first();
-            $tach->objectifs()->attach($objectif);
-            RecalculerTransformationService::handle();
-        }
+        $tach->objectifs()->attach($objectif);
+        RecalculerTransformationService::handle();
         $tache = $tach;
         return redirect()->route('taches.edit', $tache);
     }
     
-    public function removeobjectif(Request $request, Tache $tach)
+    public function removeobjectif(Request $request, Tache $tach, Objectif $objectif)
     {
-        $objectif_id = intval($request->input('objectif_id', 0));
-        $query = Objectif::where('id', $objectif_id)->get();
-        if ($query->count() == 1)
-        {
-            $objectif = $query->first();
-            $tach->objectifs()->detach($objectif);
-            RecalculerTransformationService::handle();
-        }
+        
+        $tach->objectifs()->detach($objectif);
+        RecalculerTransformationService::handle();
         $tache = $tach;
         return redirect()->route('taches.edit', $tache);
     }
@@ -124,18 +109,19 @@ class TacheController extends Controller
      * @param  \App\Models\Tache  $tache
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTacheRequest $request, Tache $tache)
+    public function update(UpdateTacheRequest $request, Tache $tach)
     {
-        $tache_id= intval($request->input('tache')['id']);
-        $query=Tache::where('id', $tache_id);
-        if ( $query->count() == 1)
+        $tach->tache_libcourt = $request->tache['tache_libcourt'];
+        $tach->tache_liblong  = $request->tache['tache_liblong'];
+        $objectifs = $tach->objectifs;
+        foreach(array_flip($request->sort_order) as $id => $ordre)
         {
-            $tache = $query->first();
-            $tache->tache_libcourt=$request->tache['tache_libcourt'];
-            $tache->tache_liblong=$request->tache['tache_liblong'];
-            $tache->save();
+            $w = $objectifs->find($id)->pivot;
+            $w->ordre = $ordre;
+            $w->save();
         }
-        return redirect()->route('taches.edit', $tache);
+        $tach->save();
+        return redirect()->route('taches.edit', $tach);
     }
 
     /**

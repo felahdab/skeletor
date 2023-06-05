@@ -36,7 +36,7 @@
             </tr>   
             <tr class="table-info">
                 <th>Marin</th>
-                <th>Tx transfo (%)</th>
+                <th>Taux</th>
                 @foreach($entete_ssobjectifs as $entete_ssobjectif)
                     <td style="font-size:x-small;" title="{{$entete_ssobjectif['ssobj']->ssobj_lib}}">{{substr($entete_ssobjectif['ssobj']->ssobj_lib, 0, 40)}}...</td>
                 @endforeach
@@ -45,23 +45,20 @@
             <tbody>
                 @foreach($usersssobjs as $ligne)
                 <tr>
+                    <td class="text-center" style="position: sticky; left: 0;z-index: 1;background: white;"><a href="{{ route('transformation.livret', $ligne['id'] )}}">{{$ligne['name']}}</a>
+                    <td>{{$ligne['txtransfo']}}</td>
                     @foreach($ligne as $key => $cell)
-                        @if ($key != 'id')
-                            @if($cell=='true')
-                                <td class="text-center text-success"><x-bootstrap-icon iconname='check-circle.svg'/>
-                            @elseif ($cell=='false')
-                                <td class="text-center text-danger"><x-bootstrap-icon iconname='x-circle.svg'/>
-                                <input type="checkbox" 
-                                        x-data='{ active: false }'
-                                        x-model="selected_parcomp"
-                                        value="'ssobjid'-{{$key}}-'userid'-{{$ligne['id']}}">                                   
-                            @elseif (is_numeric($cell))
-                                <td class="text-center">{{$cell}}
-                            @else
-                                <td class="text-center" style="position: sticky; left: 0;z-index: 1;background: white;"><a href="{{ route('transformation.livret', $ligne['id'] )}}">{{$cell}}</a>
-                            @endif
-                            </td>
-                    @endif
+                        @if ($cell == 'true')
+                            <td class="text-center text-success"><x-bootstrap-icon iconname='check-circle.svg'/></td>
+                        @endif
+                        @if ($cell == 'false')
+                            <td class="text-center text-danger"><x-bootstrap-icon iconname='x-circle.svg'/>
+                            <input type="checkbox" 
+                                    x-data='{ active: false }'
+                                    x-model="selected_parcomp"
+                                    value="'ssobjid'-{{$key}}-'userid'-{{$ligne['id']}}">
+                            </td>                                   
+                        @endif
                     @endforeach
                 </tr>   
                 @endforeach

@@ -31,7 +31,7 @@ class EtatCompUsers extends Component
         // liste des users ayant ces fonc donc ce comp
         $listusers=collect();
         foreach($listfoncs as $fonc){
-            $users=$fonc->users->sortBy('name');
+            $users=$fonc->users;
             if ($users->isNotEmpty()){
                 foreach($users as $user){
                     $listusers->push($user);
@@ -39,7 +39,7 @@ class EtatCompUsers extends Component
             }
         }
         $listusers=$listusers->unique('id');
-
+        $listusers=$listusers->sortBy('name');
         //entete du tableau
         $entete_taches=[];
         $entete_objectifs=[];
@@ -68,24 +68,23 @@ class EtatCompUsers extends Component
         //body du tableau
         $usersssobjs=[];
         foreach ($listusers as $user){
-            $txcompuser=$user->pourcentage_valides_pour_comp($this->comp);
-            $ligne=['id' => $user->id, 
-                    'name' => $user->display_name, 
-                    'txtransfo' => $txcompuser
-                ];
             $etat_de_validation = $user->getEtatDeValidationDesSsojbsAttribute($liste_id_ssobs);
-
+            $nbssobjvalid=0;
             foreach($entete_ssobjectifs as $ssobj){
                 $idssobj=$ssobj['ssobj']->id;
-                // if ($user->aValideLeSousObjectif($ssobj['ssobj']) ){ // N requetes...
                 if (array_key_exists($idssobj, $etat_de_validation) && $etat_de_validation[$idssobj] != null)
                 {
                     $ligne[$idssobj] = 'true';
+                    $nbssobjvalid ++;
                 }
                 else{
                     $ligne[$idssobj] = 'false';
                 }
             }
+            $txcompuser=$nbssobjvalid.' / '.count($entete_ssobjectifs);
+            $ligne['id'] = $user->id;
+            $ligne['name'] = $user->display_name;
+            $ligne['txtransfo'] = $txcompuser;
             array_push($usersssobjs, $ligne);
         }
         return view('livewire.etat-comp-users',['entete_taches' => $entete_taches,

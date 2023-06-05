@@ -48,7 +48,10 @@
                 </div>
             </div>
             <div>
-                <a href="{{ route('fonctions.index') }}" class="btn btn-primary mt-4 ms-4">Retour</a>
+                @can('fonctions.edit')
+                    <a href="{{ route('fonctions.edit', $fonction) }}" class="btn btn-info mt-4 mx-1">Modifier</a>
+                    @endcan
+                <a href="{{ route('fonctions.index') }}" class="btn btn-primary mt-4  mx-1">Retour</a>
                 <br>&nbsp;
             </div>
 

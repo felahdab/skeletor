@@ -104,16 +104,16 @@ class CompagnonageController extends Controller
         // return view('compagnonages.edit', ['compagnonage'   => $compagnonage] );
     }
     
-    public function removetache(Request $request, Compagnonage $compagnonage)
+    public function removetache(Request $request, Compagnonage $compagnonage, Tache $tache)
     {
-        $tache_id = intval($request->input('tache_id', 0));
-        $query = Tache::where('id', $tache_id)->get();
-        if ($query->count() == 1)
-        {
-            $tache = $query->first();
+        // $tache_id = intval($request->input('tache_id', 0));
+        // $query = Tache::where('id', $tache_id)->get();
+        // if ($query->count() == 1)
+        // {
+        //     $tache = $query->first();
             $compagnonage->taches()->detach($tache);
             RecalculerTransformationService::handle();
-        }
+        // }
         return redirect()->route('compagnonages.edit', ['compagnonage'   => $compagnonage]);
         // return view('compagnonages.edit', ['compagnonage'   => $compagnonage] );
     }
@@ -125,17 +125,22 @@ class CompagnonageController extends Controller
      * @param  \App\Models\Compagnonage  $compagnonage
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateCompagnonageRequest $request, Compagnonage $compagnonage)
+    public function update(Request $request, Compagnonage $compagnonage)
     {
-        $comp_id= intval($request->input('comp')['id']);
-        $query=Compagnonage::where('id', $comp_id);
-        if ( $query->count() == 1)
+        
+        $compagnonage->comp_libcourt=$request->comp['comp_libcourt'];
+        $compagnonage->comp_liblong=$request->comp['comp_liblong'];
+
+        $taches = $compagnonage->taches;
+        //ddd(array_flip($request->sort_order));
+        foreach(array_flip($request->sort_order) as $id => $ordre)
         {
-            $comp = $query->first();
-            $comp->comp_libcourt=$request->comp['comp_libcourt'];
-            $comp->comp_liblong=$request->comp['comp_liblong'];
-            $comp->save();
+            $w = $taches->find($id)->pivot;
+            $w->ordre = $ordre;
+            $w->save();
         }
+        $compagnonage->save();
+        
         return redirect()->route('compagnonages.edit', $compagnonage);
     }
 

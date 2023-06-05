@@ -44,7 +44,7 @@
                             @includeWhen($mode!='modificationmultiple', 'livewire.livret-transformation.entetefonction')
                             
                             @if ($fonction->compagnonages->count() > 0)
-                                @foreach($fonction->compagnonages as $compagnonage)
+                                @foreach($fonction->compagnonages->sortBy('pivot.ordre') as $compagnonage)
                                     @include('livewire.livret-transformation.compagnonage')
                                @endforeach <!-- foreach compagnonage -->
                             @endif

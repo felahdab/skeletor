@@ -4,6 +4,7 @@
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComp_{{$compagnonage->id}}">
             <h5>
             @if ($mode== "proposition" || $mode== "modification")
+            @if ($mode== "proposition" || $mode== "modification")
                 @if ($user->getTransformationManager()->sous_objectifs_du_parcours_proposes($fonction, $compagnonage)->count() > 0)
                     <span class="text-info"><x-bootstrap-icon iconname='envelope-paper-fill.svg' /></span>
                 @endif
@@ -24,13 +25,20 @@
                     <th style='width:10%;'>Viseur</td>
                     <th style='width:5%;'>Lieu de formation</td>
                 </tr>
-                @foreach($compagnonage->taches as $tache)
+                @foreach($compagnonage->taches->sortBy('pivot.ordre') as $tache)
                 <tr class='ligneTache'>
+                    @if ($mode!='modificationmultiple')
                     @if ($mode!='modificationmultiple')
                         <td rowspan='{{ $user->getTransformationManager()->sous_objectifs_du_parcours(null, null, $tache, null)->count() }}'>
                     @else
                         <td rowspan='{{ $tache->coll_sous_objectifs()->count() }}'>
                     @endif
+                            @if ($mode == "consultation" || ($mode== 'proposition' && $user->getTransformationManager()->aValideLaTache($tache) )  )
+                            @else
+                                <input type='checkbox' 
+                                    x-data='{ active: false }'
+                                    x-model="selected_taches"
+                                    value="{{$tache->id}}">
                             @if ($mode == "consultation" || ($mode== 'proposition' && $user->getTransformationManager()->aValideLaTache($tache) )  )
                             @else
                                 <input type='checkbox' 
@@ -43,7 +51,7 @@
                                 <button class='btn btn-success' type='button' disabled>VALIDEE</button>
                             @endif
                         </td>
-                    @foreach($tache->objectifs as $objectif)
+                    @foreach($tache->objectifs->sortBy("pivot.ordre") as $objectif)
                         <td rowspan='{{$objectif->sous_objectifs->count()}}'> 
                             @if ($mode == "consultation" || ($mode== 'proposition' && $user->getTransformationManager()->aValideLObjectif($objectif) )  )
                             @else
@@ -54,12 +62,13 @@
                             @endif
                         {{$objectif->objectif_liblong }}
                         @if ($mode!='modificationmultiple' && $user->getTransformationManager()->aValideLObjectif($objectif))
+                        @if ($mode!='modificationmultiple' && $user->getTransformationManager()->aValideLObjectif($objectif))
                             <button class='btn btn-success' type='button' disabled>
                             VALIDE
                             </button>
                         @endif
                         </td>
-                        @foreach($objectif->sous_objectifs->sortBy('ordre') as $sous_objectif)   
+                        @foreach($objectif->sous_objectifs->sortBy("pivot.ordre") as $sous_objectif)
                             @include('livewire.livret-transformation.sous-objectif')
                         @endforeach <!-- foreach sous objectif -->
                     @endforeach <!-- foreach objectif -->
