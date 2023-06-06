@@ -10,7 +10,8 @@
 @endif
 @can('stages.attribuerstage')
     <!-- ajout d'un bouton pour pouvoir mettre à jour le commentaire associé a un stage pour un user-->
-    <button class="btn btn-info" 
+    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="{{trim($user->CommentaireDuStage($row))}}">
+        <button class="btn btn-info" 
             data-bs-toggle="modal"
             data-bs-target="#divvalidcomment"
             x-on:click.prevent='stageid= {{ $row->id }};
@@ -22,13 +23,14 @@
                 {
                $wire.ValidateCommentStage( {{ $user->id }} , {{ $row->id }}, commentaire);
                 }"
-            title="{{$user->CommentaireDuStage($row)}}"><x-bootstrap-icon iconname='chat-left-quote.svg' /></button>
+            ><x-bootstrap-icon iconname='chat-left-quote.svg' /></button></span>
     <!----------------------------------------------->
     @if ($user->aValideLeStage($row))
     <button wire:click.prevent="UnvalidateStage( {{$user->id}}, {{$row->id}} );"
             class="btn btn-danger">Annuler ce stage</button>
     @else
-    <button class="btn btn-success" 
+
+        <button class="btn btn-success" 
             data-bs-toggle="modal"
             data-bs-target="#divvalid"
             x-on:click.prevent="stageid= {{ $row->id }};
@@ -49,3 +51,10 @@
             class="btn btn-danger">Retirer ce stage</button>
     @endif
 @endcan
+
+@section('scripts')
+<script>
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>
+@endsection

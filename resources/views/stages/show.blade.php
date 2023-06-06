@@ -4,7 +4,6 @@
 < x-help-link page="transformation"/>
 @endsection
 
-
 @section('content')
     <div class="mt-4 mb-4 rounded">
         <h2>Situation des marins pour le stage : <span class="font-weight-light">{{$stage->stage_libcourt}}</span></h2>
@@ -93,7 +92,7 @@
                     <tbody>
                     @foreach($usersdustage as $user)
                         @if ($user->pivot->date_validation == null || ($user->pivot->date_validite != null && $user->pivot->date_validite < $datejour))
-                        <tr title="{{$user->user_comment}}">
+                        <tr>
                             <td> <input type='checkbox' 
                                     id='user[{{ $user->id }}]' 
                                     name='user[{{ $user->id }}]' 
@@ -109,15 +108,25 @@
                             <td>{{$user->displayDestination()}}</td>
                             <td>{{$user->displayDateDebarquement()}}</td>
                             @if(auth()->user()->can('stages.attribuerstage'))
-                                @if ($user->pivot->commentaire == null or $user->pivot->commentaire == ' ')
+                                @if ($user->pivot->commentaire == null or trim($user->pivot->commentaire) == '')
                                     <td>&nbsp;</td>
                                 @else
-                                    <td title="{{$user->pivot->commentaire}}"><x-bootstrap-icon iconname='chat-left-quote.svg' /></td>
+                                    <td>
+                                        <span class="d-inline-block" data-bs-toggle="popover" data-bs-placement="left" 
+                                                 data-bs-content="{{$user->pivot->commentaire}}">
+                                            <x-bootstrap-icon iconname='chat-left-quote.svg' />
+                                        </span>
+                                    </td>
                                 @endif
-                                @if ($user->user_comment == null or $user->user_comment == ' ')
+                                @if ($user->user_comment == null or trim($user->user_comment) == '')
                                     <td>&nbsp;</td>
                                 @else
-                                    <td title="{{$user->user_comment}}"><x-bootstrap-icon iconname='person.svg' /></td>
+                                    <td>
+                                        <span class="d-inline-block" data-bs-toggle="popover" data-bs-placement="right" 
+                                                data-bs-content="{{$user->user_comment}}">
+                                            <x-bootstrap-icon iconname='person.svg' />
+                                        </span>
+                                    </td>
                                 @endif
                             @endif
                             
@@ -186,15 +195,25 @@
                             <td>{{$user->pivot->date_validation}}</td>
                             <td>{{$user->pivot->date_validite}}</td>
                             @if(auth()->user()->can('stages.attribuerstage'))
-                                @if ($user->pivot->commentaire == null or $user->pivot->commentaire == ' ')
-                                    <td>&nbsp;</td>
+                            @if ($user->pivot->commentaire == null or trim($user->pivot->commentaire) == '')
+                                <td>&nbsp;</td>
                                 @else
-                                    <td title="{{$user->pivot->commentaire}}"><x-bootstrap-icon iconname='chat-left-quote.svg' /></td>
+                                    <td>
+                                        <span class="d-inline-block" data-bs-toggle="popover" data-bs-placement="left" 
+                                                data-bs-content="{{$user->pivot->commentaire}}">
+                                            <x-bootstrap-icon iconname='chat-left-quote.svg' />
+                                        </span>
+                                    </td>
                                 @endif
-                                @if ($user->user_comment == null or $user->user_comment == ' ')
+                                @if ($user->user_comment == null or trim($user->user_comment) == '')
                                     <td>&nbsp;</td>
                                 @else
-                                    <td title="{{$user->user_comment}}"><x-bootstrap-icon iconname='person.svg' /></td>
+                                    <td>
+                                        <span class="d-inline-block" data-bs-toggle="popover" data-bs-placement="right" 
+                                                data-bs-content="{{$user->user_comment}}">
+                                            <x-bootstrap-icon iconname='person.svg' />
+                                        </span>
+                                    </td>
                                 @endif
                             @endif
                         </tr>
@@ -216,4 +235,11 @@
     </div>
         <a href="{{ url()->previous() }}" class="btn btn-secondary btn-sm">Retour</a>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+</script>
 @endsection
