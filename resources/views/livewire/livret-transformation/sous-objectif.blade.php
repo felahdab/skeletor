@@ -13,6 +13,21 @@
         x-model="selected_sous_objectifs"
         value="{{$sous_objectif->id}}">
     @endif
+    @php
+        $comment=null;
+        if (trim($user->getTransformationManager()->commentaireDeValidationDuSousObjectif($sous_objectif))){
+            $comment=$user->getTransformationManager()->commentaireDeValidationDuSousObjectif($sous_objectif);
+        }
+        elseif (trim($user->getTransformationManager()->commentaireDePropositionDeValidationDuSousObjectif($sous_objectif))){
+            $comment=$user->getTransformationManager()->commentaireDePropositionDeValidationDuSousObjectif($sous_objectif);
+        }
+    @endphp
+    @if ($mode!='consultation' && $comment)
+        <span class="d-inline-block" data-bs-toggle="popover" data-bs-placement="right" 
+                data-bs-content="{{$comment}}">
+            <x-bootstrap-icon iconname='chat-left-quote.svg' />
+        </span>
+    @endif
     @if ($mode!='modificationmultiple'  && $user->getTransformationManager()->aValideLeSousObjectif($sous_objectif))
         <button class='btn btn-success' type='button' disabled>
         VALIDE {{ $user->getTransformationManager()->dateDeValidationDuSousObjectif($sous_objectif) }}
@@ -25,13 +40,9 @@
     @endif
 </td>
 @if ($mode!='modificationmultiple' && ( $user->getTransformationManager()->aValideLeSousObjectif($sous_objectif) || $user->getTransformationManager()->aProposeLeSousObjectif($sous_objectif) ) )
-    @if ($mode=='consultation')
-        <td>
-    @else
-        <td title="{{$user->getTransformationManager()->commentaireDeValidationDuSousObjectif($sous_objectif) }}">
-    @endif
-            {{ $user->getTransformationManager()->valideurDeValidationDuSousObjectif($sous_objectif) }}
-        </td>
+    <td>
+        {{ $user->getTransformationManager()->valideurDeValidationDuSousObjectif($sous_objectif) }}
+    </td>
 @else
     <td>&nbsp;</td>
 @endif
