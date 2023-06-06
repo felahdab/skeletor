@@ -15,11 +15,13 @@
     @endif
     @php
         $comment=null;
-        if (trim($user->getTransformationManager()->commentaireDeValidationDuSousObjectif($sous_objectif))){
-            $comment=$user->getTransformationManager()->commentaireDeValidationDuSousObjectif($sous_objectif);
-        }
-        elseif (trim($user->getTransformationManager()->commentaireDePropositionDeValidationDuSousObjectif($sous_objectif))){
-            $comment=$user->getTransformationManager()->commentaireDePropositionDeValidationDuSousObjectif($sous_objectif);
+        if ($mode!='modificationmultiple'){
+            if (trim($user->getTransformationManager()->commentaireDeValidationDuSousObjectif($sous_objectif))){
+                $comment=$user->getTransformationManager()->commentaireDeValidationDuSousObjectif($sous_objectif);
+            }
+            elseif (trim($user->getTransformationManager()->commentaireDePropositionDeValidationDuSousObjectif($sous_objectif))){
+                $comment=$user->getTransformationManager()->commentaireDePropositionDeValidationDuSousObjectif($sous_objectif);
+            }
         }
     @endphp
     @if ($mode!='consultation' && $comment)
