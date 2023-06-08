@@ -100,22 +100,22 @@ class CompagnonageController extends Controller
             $compagnonage->taches()->attach($tache);
             RecalculerTransformationService::handle();
         }
+        //maj du pivot pour ordre  
+        $nb_ordre = $compagnonage->taches()->count() + 1;
+        $maj = $compagnonage->taches()
+                        ->where('tache_id',$tache_id)
+                        ->where('compagnonage_id',$compagnonage->id)
+                        ->update(["ordre" => $nb_ordre]);
+
         return redirect()->route('compagnonages.edit', ['compagnonage'   => $compagnonage]);
-        // return view('compagnonages.edit', ['compagnonage'   => $compagnonage] );
     }
     
     public function removetache(Request $request, Compagnonage $compagnonage, Tache $tache)
     {
-        // $tache_id = intval($request->input('tache_id', 0));
-        // $query = Tache::where('id', $tache_id)->get();
-        // if ($query->count() == 1)
-        // {
-        //     $tache = $query->first();
-            $compagnonage->taches()->detach($tache);
-            RecalculerTransformationService::handle();
-        // }
+        $compagnonage->taches()->detach($tache);
+        RecalculerTransformationService::handle();
+
         return redirect()->route('compagnonages.edit', ['compagnonage'   => $compagnonage]);
-        // return view('compagnonages.edit', ['compagnonage'   => $compagnonage] );
     }
 
     /**
@@ -132,7 +132,6 @@ class CompagnonageController extends Controller
         $compagnonage->comp_liblong=$request->comp['comp_liblong'];
 
         $taches = $compagnonage->taches;
-        //ddd(array_flip($request->sort_order));
         foreach(array_flip($request->sort_order) as $id => $ordre)
         {
             $w = $taches->find($id)->pivot;

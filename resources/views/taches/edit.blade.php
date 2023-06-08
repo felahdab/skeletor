@@ -14,65 +14,63 @@
         <div class='card-header' >Modification tâche </div>
         <div style='text-align:right;'>* champs obligatoires </div>
         {!! Form::open(['method' => 'PATCH','route' => ['taches.update', $tache->id] ]) !!}
-            <input type='hidden' id='tache[id]' name='tache[id]' value='{{ $tache->id }}'>
-            <div style='padding-left: 15px;'>
-                <div class='form-group row' >
-                    <label class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
-                    <div class='col-sm-5'>
-                        <input type='text' maxlength='100' class='form-control'  name='tache[tache_libcourt]' id='tache[tache_libcourt]' placeholder='Libell&eacute; court' value="{{ $tache->tache_libcourt }}" >
-                    </div>
-                </div>
-                <div class='form-group row' >
-                    <label class='col-sm-5 col-form-label'>Libell&eacute; long *</label>
-                    <div class='col-sm-5'>
-                        <input type='text' maxlength='256' class='form-control' name='tache[tache_liblong]' id='tache[tache_liblong]' placeholder='Libell&eacute; long' value="{{ $tache->tache_liblong }}" >
-                    </div>
-                </div>
-                <div style='text-align:right;'>
-                    <ul  class='navbar-nav mr-auto' >
-                        <li class='dropdown'>
-                            <a href='#' class='dropdown-toogle' data-bs-toggle='dropdown'>Compagnonnage(s) associé(s)</a>
-                            <div class='dropdown-menu'>
-                                @foreach ($tache->compagnonages()->get() as $comp)
-                                    <a class="dropdown-item" href="{{ route('compagnonages.show', $comp->id) }}">{{ $comp->comp_libcourt }}</a>
-                                @endforeach
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Enregistrer</button>
-                    <a href="{{ route('taches.index') }}" class="btn btn-default mt-4">Annuler</a>
-                    <br>&nbsp;
+        <input type='hidden' id='tache[id]' name='tache[id]' value='{{ $tache->id }}'>
+        <div style='padding-left: 15px;'>
+            <div class='form-group row' >
+                <label class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
+                <div class='col-sm-5'>
+                    <input type='text' maxlength='100' class='form-control'  name='tache[tache_libcourt]' id='tache[tache_libcourt]' placeholder='Libell&eacute; court' value="{{ $tache->tache_libcourt }}" >
                 </div>
             </div>
-        
-
-        <div style='padding-left: 15px;'>
-            <div class='card-header ml-n3 mr-n4 mb-3' >Objectif(s) associ&eacute;(s) <span style="font-size:x-small;">(Glissez/déplacez les objectifs puis enregistrez pour modifier leur ordre d'affichage dans l'application)</span></div>
+            <div class='form-group row' >
+                <label class='col-sm-5 col-form-label'>Libell&eacute; long *</label>
+                <div class='col-sm-5'>
+                    <input type='text' maxlength='256' class='form-control' name='tache[tache_liblong]' id='tache[tache_liblong]' placeholder='Libell&eacute; long' value="{{ $tache->tache_liblong }}" >
+                </div>
+            </div>
+            <div>
+                <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Enregistrer</button>
+                <a href="{{ route('taches.index') }}" class="btn btn-outline-dark mt-4">Annuler</a>
+                <br>&nbsp;
+            </div>
+            <div style='text-align:right;'>
+                <ul  class='navbar-nav mr-auto' >
+                    <li class='dropdown'>
+                        <a href='#' class='dropdown-toogle' data-bs-toggle='dropdown'>Compagnonnage(s) associé(s)</a>
+                        <div class='dropdown-menu'>
+                            @foreach ($tache->compagnonages()->get() as $comp)
+                                <a class="dropdown-item" href="{{ route('compagnonages.show', $comp->id) }}">{{ $comp->comp_libcourt }}</a>
+                            @endforeach
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class='card ml-3 w-100'>
+            <div class='card-header ml-n3 mr-n4 mb-3' ><b>Objectif(s) associ&eacute;(s)</b> <span style="font-size:x-small;">(Glissez/déplacez les objectifs puis enregistrez pour modifier leur ordre d'affichage dans l'application)</span></div>
             <input type='hidden' name='tache_id' id='tache_id'  value='{{ $tache->id }}'>
             
             <x-sortable name="sort_order">
-                @php $count = 1 @endphp
                 @foreach ($tache->objectifs->sortBy('pivot.ordre') as $objectif)
                     <x-sortable-item sort-key="{{$objectif->id}}">
-                        <div class='card mt-4'>
-                            <div class='form-group row' >
-                                <label class='col-sm-5 col-form-label '>Objectif </label>
-                                <div class='col-sm-5'>
-                                    <textarea class="form-control" cols='60' rows='2'>{{ $objectif->objectif_libcourt }}</textarea>
+                        <div class="card m-1">
+                            <div class="card-body">
+                                <div class="d-flex flex-row mb-1 justify-content-between">
+                                    <div class="p-2 h4 w-50" >{{ $objectif->objectif_libcourt }}</div>
+                                    <div class="p-2 w-25"> => {{ $objectif->objectif_liblong }} </div>
+                                    <div class="p-2 w-25 text-end">
+                                        @can("objectifs.destroy")
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('removeobj[{{ $objectif->id }}]').submit()">Retirer cet objectif</button>
+                                        @endcan
+                                    </div>
                                 </div>
                             </div>
-                            @can("objectifs.destroy")
-                                <button type="button" class="btn btn-danger btn-sm w-25" onclick="document.getElementById('removeobj[{{ $objectif->id }}]').submit()">Retirer cet objectif</button>
-                            @endcan
                         </div>
-                        @php $count = $count +1 @endphp
                     </x-sortable-item>
                 @endforeach
             </x-sortable>
         
-            <div class="mt-4 mb-4 text-center">
+            <div  class='text-center mt-1 mb-1'>
                 <a class='btn btn-primary btn-sm' href="{{ route('taches.choisirobjectif', $tache->id) }}">Ajouter un nouvel objectif</a>
             </div>
         </div>

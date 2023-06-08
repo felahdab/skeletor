@@ -53,11 +53,13 @@ class SousObjectifController extends Controller
      */
     public function store(StoreSousObjectifRequest $request)
     {
+        $nb_ordre = SousObjectif::where('objectif_id', $request->objectif_id)->count();
         $ssobj = new SousObjectif;
         $ssobj->objectif_id = intval($request['objectif_id']);
         $ssobj->ssobj_lib = 'Nouveau sous objectif a configurer';
         $ssobj->lieu_id = 3; // par défaut...
-        
+        $ssobj->ordre = $nb_ordre + 1;
+
         $ssobj->save();
         RecalculerTransformationService::handle();
         return redirect()->route('objectifs.edit', $request['objectif_id']);
@@ -97,20 +99,21 @@ class SousObjectifController extends Controller
         //
     }
     
-    public function multipleupdate(Request $request)
-    {
-        $sort_order = array_flip($request->input('sort_order'));
+    // plus utile car intégré dans update d'un objectif
+    // public function multipleupdate(Request $request)
+    // {
+    //     $sort_order = array_flip($request->input('sort_order'));
 
-        foreach ($request->sous_objectifs as $ordre => $ssobj)
-        {
-            $current_ssobj = SousObjectif::where('id', $ssobj['id']);
-            $ssobj["ordre"]=$sort_order[$ssobj['id']];
-            $current_ssobj->update($ssobj);
+    //     foreach ($request->sous_objectifs as $ordre => $ssobj)
+    //     {
+    //         $current_ssobj = SousObjectif::where('id', $ssobj['id']);
+    //         $ssobj["ordre"]=$sort_order[$ssobj['id']];
+    //         $current_ssobj->update($ssobj);
 
-            RecalculerTransformationService::handle();
-        }
-        return redirect()->route('objectifs.edit', $request['objectif_id']);
-    }
+    //         RecalculerTransformationService::handle();
+    //     }
+    //     return redirect()->route('objectifs.edit', $request['objectif_id']);
+    // }
 
 
     /**

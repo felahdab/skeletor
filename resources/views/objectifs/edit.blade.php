@@ -10,20 +10,29 @@
     <div class="p-4 rounded">
         <h2>Objectifs</h2>
     </div>
-    <div id='divmodifobj' class='card ml-3 w-100' >
+    <div id='divmodifobj' class='card w-100'>
         <div class='card-header' >Modification objectif </div>
-        <div style='text-align:right;'>* champs obligatoires </div>
-        {!! Form::open(['method' => 'PATCH','route' => ['objectifs.update', $objectif->id] ]) !!}
+        <div class='text-end '>* champs obligatoires </div>
+        <x-form::form method="PATCH" :action="route('objectifs.update', $objectif->id)">
             <input type='hidden' id='objectif[id]' name='objectif[id]' value='{{ $objectif->id }}'>
             <div style='padding-left: 15px;'>
-                <div class='form-group row' >
-                    <x-form::input name="objectif[objectif_libcourt]" label="Libellé court *" type="text" :value="$objectif->objectif_libcourt"/>
+                <div class="p-2">
+                    <div class="d-flex flex-row ">
+                        <div class="p-2 w-25">Libellé court *</div>
+                        <div class="p-2 w-75"><x-form::input name="objectif[objectif_libcourt]" type="text" :value="$objectif->objectif_libcourt"/></div>
+                    </div>
+                    <div class="d-flex flex-row "">
+                        <div class="p-2 w-25">Libellé long *</div>
+                        <div class="p-2 w-75"><x-form::input name="objectif[objectif_liblong]" type="text" :value="$objectif->objectif_liblong" /></div>                                  
+                    </div>
                 </div>
-                <div class='form-group row'>
-                    <x-form::input name="objectif[objectif_liblong]" label="Libellé long *" type="text" :value="$objectif->objectif_liblong" />
+                <div>
+                    <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Enregistrer</button>
+                    <a href="{{ route('objectifs.index') }}" class="btn btn-outline-dark mt-4">Annuler</a>
+                    <br>&nbsp;
                 </div>
                 <div style='text-align:right;'>
-                    <ul  class='navbar-nav mr-auto' >
+                    <ul class='navbar-nav mr-auto' >
                         <li class='dropdown'>
                             <a href='#' class='dropdown-toogle' data-bs-toggle='dropdown'>Tâche(s) associée(s)</a>
                             <div class='dropdown-menu'>
@@ -34,87 +43,76 @@
                         </li>
                     </ul>
                 </div>
-                <div>
-                    <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Enregistrer</button>
-                    <a href="{{ route('objectifs.index') }}" class="btn btn-default mt-4">Annuler</a>
-                    <br>&nbsp;
-                </div>
             </div>
-        {!! Form::close() !!}
 
-        <div style='padding-left: 15px;'>
-            <div class='card-header ml-n3 mr-n4 mb-3' >Sous-objectif(s) associ&eacute;(s) <span style="font-size:x-small;">(Glissez/déplacez les sous objectifs puis enregistrez pour modifier leur ordre d'affichage dans l'application)</span></div>
-            
-
-            <div style='text-align: center;'>
-                {!! Form::open(['method' => 'POST','route' => 'sous-objectifs.store','style'=>'display:inline']) !!}
+            <div class='card w-100'>
+                <div class='card-header ml-n3 mr-n4 mb-3' >Sous-objectif(s) associ&eacute;(s) <span style="font-size:x-small;">(Glissez/déplacez les sous objectifs puis enregistrez pour modifier leur ordre d'affichage dans l'application)</span></div>
                 <input type='hidden' name='objectif_id' id='objectif_id'  value='{{ $objectif->id }}'>
-                {!! Form::submit('Ajouter un nouveau sous objectif', ['class' => 'btn btn-primary btn-sm']) !!}
-                {!! Form::close() !!}
-            </div>
-            <x-form::form method="POST" :action="route('sous-objectifs.multipleupdate')">
-            <input type='hidden' name='objectif_id' id='objectif_id'  value='{{ $objectif->id }}'>
-            
-        <x-sortable name="sort_order">
-            @php $count = 1 @endphp
-            @foreach ($objectif->sous_objectifs->sortBy('ordre') as $ssobj)
-            <x-sortable-item sort-key="{{$ssobj->id}}">
-                <div class='cadressobj mt-4'>
-                    <div class='form-group row' >
-                        <div class="col-sm-8">
-                            <label class='col-form-label '>Sous-objectif </label>
-                            <input type='hidden' name='sous_objectifs[{{$count}}][id]' id='sous_objectifs[{{$count}}][id]'  value='{{ $ssobj->id }}'>
-                            <div class='col'>
-                                <textarea class="form-control" maxlength='1500' cols='40' rows='6' name='sous_objectifs[{{$count}}][ssobj_lib]' id='sous_objectifs[{{$count}}][ssobj_lib]' placeholder='Libell&eacute;' >{{ $ssobj->ssobj_lib }}</textarea>
+                <x-sortable name="sort_order">
+                    @foreach ($objectif->sous_objectifs->sortBy('ordre') as $ssobj)
+                    <x-sortable-item sort-key="{{$ssobj->id}}">    
+                        <div class="card m-1">
+                            <div class="card-body">
+                                <div class="d-flex flex-row mb-1 justify-content-between">
+                                    <div class="p-2 w-50 " >
+                                        <div>
+                                            <input type='hidden' name='sous_objectifs[{{$ssobj->id}}][id]' id='sous_objectifs[{{$ssobj->id}}][id]'  value='{{ $ssobj->id }}'>
+                                            <textarea class="form-control" maxlength='1500' cols='40' rows='6' name='sous_objectifs[{{$ssobj->id}}][ssobj_lib]' placeholder='Libell&eacute;' >{{ $ssobj->ssobj_lib }}</textarea>
+                                        </div>
+                                        <div class="mt-3 text-center">
+                                            @can("sousobjectifs.destroy")
+                                                <input class="btn btn-danger" value="Supprimer ce sous objectif" onclick="document.getElementById('deleteform[{{ $ssobj->id }}]').submit();">
+                                            @endcan        
+                                        </div>
+                                    </div>
+                                    <div class="p-2 w-50 ml-bs-5">
+                                        <div class="d-flex flex-row ">
+                                            <div class="p-2 w-25">Lien externe</div>
+                                            <div class="p-2 w-75"><x-form::input name="sous_objectifs[{{$ssobj->id}}][ssobj_lienurl]" type="text" value="{{ $ssobj->ssobj_lienurl }}"/></div>
+                                        </div>
+                                        <div class="d-flex flex-row "">
+                                            <div class="p-2 w-25">Coefficient</div>
+                                            <div class="p-2 w-75"><x-form::input name="sous_objectifs[{{$ssobj->id}}][ssobj_coeff]" type="text" value="{{ $ssobj->ssobj_coeff }}"/></div>                                  
+                                        </div>
+                                        <div class="d-flex flex-row "">
+                                            <div class="p-2 w-25">Durée (h)</div>
+                                            <div class="p-2 w-75"><x-form::input name="sous_objectifs[{{$ssobj->id}}][ssobj_duree]" type="text" value="{{ $ssobj->ssobj_duree }}"/></div>                                   
+                                        </div>
+                                        <div class="d-flex flex-row "">
+                                            <div class="p-2 w-25">Lieu</div>
+                                            <div class="p-2 w-75">
+                                                <x-form::model-select name="sous_objectifs[{{$ssobj->id}}][lieu_id]" 
+                                                :models="$lieux"
+                                                key-attribute="id" 
+                                                value-attribute="lieu_libcourt"
+                                                value="{{ $ssobj->lieu_id }}">
+                                                </x-form::model-select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-sm-3">
-                            <div class='form-group row' >
-                                <x-form::input name="sous_objectifs[{{$count}}][ssobj_lienurl]" label="Lien externe" type="text" value="{{ $ssobj->ssobj_lienurl }}"/>
-                            </div>
-                            <div class='form-group row' >
-                                <x-form::input name="sous_objectifs[{{$count}}][ssobj_coeff]" label="Coefficient" type="text" value="{{ $ssobj->ssobj_coeff }}"/>
-                            </div>
-                            <div class='form-group row' >
-                                <x-form::input name="sous_objectifs[{{$count}}][ssobj_duree]" label="Durée (heure)" type="text" value="{{ $ssobj->ssobj_duree }}"/>
-                            </div>
-                            <div class='form-group row' >
-                                <x-form::model-select name="sous_objectifs[{{$count}}][lieu_id]" 
-                                    :models="$lieux" 
-                                    label="Lieu" 
-                                    key-attribute="id" 
-                                    value-attribute="lieu_libcourt"
-                                    value="{{ $ssobj->lieu_id }}">
-                                </x-form::model-select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    @can("sousobjectifs.destroy")
-                        <input class="btn btn-danger btn-sm mb-2" value="Supprimer ce sous objectif" onclick="document.getElementById('deleteform[{{ $count }}]').submit();">
-                    @endcan
+                    </x-sortable-item>            
+                    @endforeach
+                </x-sortable>
+        </x-form:::form>
+                <div class='text-center mb-1'>
+                    <x-form::form method="POST" :action="route('sous-objectifs.store')">
+                        <input type='hidden' name='objectif_id' id='objectif_id'  value='{{ $objectif->id }}'>
+                        <button class='btn btn-primary btn-sm' type='submit' >Ajouter un nouveau sous objectif</button>
+                    </x-form:::form>
                 </div>
-            </x-sortable-item>
-            @php $count = $count +1 @endphp
-        
-            @endforeach
-            <div>
-                <button class='btn btn-primary w-100 mt-4 mb-4' type='submit' id='btnmodifobjssobj' name='btnmodifobjssobj'>Enregistrer les sous objectifs associ&eacute;s</button>
+                <!-- Cette partie contient les formulaires actives par javascript pour provoquer la suppression
+                d'un sous-objectif-->
+                @foreach ($objectif->sous_objectifs()->get() as $ssobj)
+                    <x-form::form method="POST" :action="route('sous-objectifs.destroy', $ssobj)" id="deleteform[{{ $ssobj->id }}]">
+                        @csrf
+                        <input name="_method" type="hidden" value="DELETE">
+                        <input type='hidden' name='objectif_id' id='objectif_id' value='{{ $objectif->id }}'>
+                    </x-form:::form>
+                @endforeach
+                <!-- Fin de partie -->
             </div>
-        </x-sortable>
-    </x-form:::form>
-            <!-- Cette partie contient les formulaires actives par javascript pour provoquer la suppression
-            d'un sous-objectif-->
-            @php $count = 1 @endphp
-            @foreach ($objectif->sous_objectifs()->get() as $ssobj)
-                <form method="POST" action="{{ route('sous-objectifs.destroy', $ssobj) }}" accept-charset="UTF-8" style="display:inline" id="deleteform[{{ $count }}]">
-                @csrf
-                <input name="_method" type="hidden" value="DELETE">
-                <input type='hidden' name='objectif_id' id='objectif_id'  value='{{ $objectif->id }}'>
-                {!! Form::close() !!}
-                @php $count = $count +1 @endphp
-            @endforeach
-            <!-- Fin de partie -->
-        </div>
     </div>
 @endsection

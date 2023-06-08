@@ -96,15 +96,22 @@ class ObjectifController extends Controller
      */
     public function update(UpdateObjectifRequest $request, Objectif $objectif)
     {
-        $objectif_id= intval($request->input('objectif')['id']);
-        $query=Objectif::where('id', $objectif_id);
-        if ( $query->count() == 1)
+        $objectif->objectif_libcourt=$request->objectif['objectif_libcourt'];
+        $objectif->objectif_liblong=$request->objectif['objectif_liblong'];
+        $sous_objectifs = $objectif->sous_objectifs;
+        foreach(array_flip($request->sort_order) as $id => $ordre)
         {
-            $objectif = $query->first();
-            $objectif->objectif_libcourt=$request->objectif['objectif_libcourt'];
-            $objectif->objectif_liblong=$request->objectif['objectif_liblong'];
-            $objectif->save();
+            $ssobj = $sous_objectifs->find($id);
+            $ssobj->ordre = $ordre;
+            $ssobj->ssobj_lib = $request->sous_objectifs[$id]['ssobj_lib'];
+            $ssobj->ssobj_lienurl = $request->sous_objectifs[$id]['ssobj_lienurl'];
+            $ssobj->ssobj_coeff = $request->sous_objectifs[$id]['ssobj_coeff'];
+            $ssobj->ssobj_duree = $request->sous_objectifs[$id]['ssobj_duree'];
+            $ssobj->lieu_id = $request->sous_objectifs[$id]['lieu_id'];
+            $ssobj->save();
         }
+        $objectif->save();
+
         return redirect()->route('objectifs.edit', $objectif);
     }
 
