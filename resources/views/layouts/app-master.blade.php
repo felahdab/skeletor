@@ -37,7 +37,6 @@ Vous avez également la possibilité de télécharger directement une version po
 
     <!-- Bootstrap core CSS -->
     @livewireStyles
-    <link href="{!! asset('assets/css/feuilleDeStyle.css') !!}" rel="stylesheet">
     <link href="{!! asset('assets/bootstrap/css/bootstrap.css') !!}" rel="stylesheet">
     <script src="{!! asset('assets/js/jscharts.js') !!}"></script>
     <script src="{!! asset('assets/js/Sortable.js') !!}"></script>
@@ -84,7 +83,6 @@ Vous avez également la possibilité de télécharger directement une version po
     <script src="{!! asset('assets/bootstrap/js/bootstrap.bundle.js') !!}"></script>
     <script src="{!! asset('/vendor/livewire-charts/app.js') !!}"></script>
     <script src="{!! asset('assets/js/alpine.js') !!}"></script>
-    <script src="{!! asset('assets/js/jsfile.js') !!}"></script>
     <script src="{!! asset('assets/js/apexcharts.js') !!}"></script>
     
     
