@@ -10,6 +10,7 @@ class MindefConnectUser extends Model
     use HasFactory;
     
     protected $fillable = [
+        'sub',
         'email',
         'name',
         'prenom',
@@ -18,5 +19,6 @@ class MindefConnectUser extends Model
         'rank',
         'short_rank',
         'display_name',
+        'commentaire',
         ];
 }

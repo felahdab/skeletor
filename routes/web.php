@@ -57,6 +57,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
 
     Route::get('/login', [LoginController::class, 'show'])->name('login.show');
     Route::post('/login', [LoginController::class, 'locallogin'])->name('login.perform');
+    Route::post('/login/{MCuserexist:sub}/newMdc', [LoginController::class, 'newMdcLogin'])->name('login.newMdcLogin');
 
     Route::group(['middleware' => ['auth', 'permission']], function () {
         /**
