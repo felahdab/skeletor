@@ -28,7 +28,7 @@
         </td>
         <td>
         @if ( $user->getTransformationManager()->aProposeDoubleFonction($fonction) ||  $user->getTransformationManager()->aValideDoubleFonction($fonction) )
-            {{ $fonction->pivot->valideur_double }}
+            {{ htmlspecialchars_decode($fonction->pivot->valideur_double) }}
         @endif
         @if ($mode == "modification" || $mode == "proposition")
             @if ( $user->getTransformationManager()->aProposeDoubleFonction($fonction) ||  $user->getTransformationManager()->aValideDoubleFonction($fonction) )
@@ -93,7 +93,7 @@
         </td>
         <td>
         @if ( $user->getTransformationManager()->aProposeLacheFonction($fonction) || $user->getTransformationManager()->aValideLacheFonction($fonction) )
-            {{ $fonction->pivot->valideur_lache }}
+            {{ htmlspecialchars_decode($fonction->pivot->valideur_lache) }}
         @endif
 
         @if ($mode =="modification" || $mode=="proposition")
