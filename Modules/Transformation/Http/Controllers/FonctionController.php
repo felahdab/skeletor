@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreFonctionRequest;
 use App\Http\Requests\UpdateFonctionRequest;
 use Modules\Transformation\Entities\Fonction;
-use App\Models\TypeFonction;
+use Modules\Transformation\Entities\TypeFonction;
 use Modules\Transformation\Entities\Compagnonage;
 use Modules\Transformation\Entities\Tache;
 use Modules\Transformation\Entities\SousObjectif;
