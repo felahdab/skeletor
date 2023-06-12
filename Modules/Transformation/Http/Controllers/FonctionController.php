@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Transformation\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreFonctionRequest;
 use App\Http\Requests\UpdateFonctionRequest;
-use App\Models\Fonction;
+use Modules\Transformation\Entities\Fonction;
 use App\Models\TypeFonction;
 use App\Models\Compagnonage;
 use App\Models\Tache;
@@ -35,7 +36,7 @@ class FonctionController extends Controller
             $fonctions = Fonction::with('type_fonction')->orderBy('fonction_libcourt')->paginate(10);
         }
         
-        return view('fonctions.index', ['fonctions' => $fonctions ,
+        return view('transformation::fonctions.index', ['fonctions' => $fonctions ,
                                         'filter'    => $filter] );
     }
 
@@ -47,7 +48,7 @@ class FonctionController extends Controller
     public function create()
     {
         $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
-        return view('fonctions.create' , ['typefonctions' => $typefonctions]);
+        return view('transformation::fonctions.create' , ['typefonctions' => $typefonctions]);
     }
 
     /**
@@ -78,7 +79,7 @@ class FonctionController extends Controller
     public function show(Fonction $fonction)
     {
         $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
-        return view('fonctions.show', ['fonction'       => $fonction, 
+        return view('transformation::fonctions.show', ['fonction'       => $fonction, 
                                         'typefonctions' => $typefonctions] );
     }
 
@@ -91,7 +92,7 @@ class FonctionController extends Controller
     public function edit(Fonction $fonction)
     {
         $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
-        return view('fonctions.edit', ['fonction'       => $fonction, 
+        return view('transformation::fonctions.edit', ['fonction'       => $fonction, 
                                         'typefonctions' => $typefonctions] );
     }
     
@@ -100,7 +101,7 @@ class FonctionController extends Controller
         $compagnonages = Compagnonage::orderBy('comp_libcourt')->get();
         $compagnonages = $compagnonages->diff($fonction->compagnonages()->get());
         
-        return view('fonctions.choisircompagnonage', [ 'fonction' => $fonction,
+        return view('transformation::fonctions.choisircompagnonage', [ 'fonction' => $fonction,
                                                        'compagnonages' => $compagnonages]);
     }
     
@@ -133,7 +134,7 @@ class FonctionController extends Controller
         $stages = Stage::orderBy('stage_libcourt')->get();
         $stages = $stages->diff($fonction->stages()->get());
         
-        return view('fonctions.choisirstage', [ 'fonction' => $fonction,
+        return view('transformation::fonctions.choisirstage', [ 'fonction' => $fonction,
                                                 'stages' => $stages]);
     }
     

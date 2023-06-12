@@ -21,7 +21,7 @@ use App\Service\AnnudefAjaxRequestService;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\TransformationHistory;
 use App\Models\Stage;
-use App\Models\Fonction;
+use Modules\Transformation\Entities\Fonction;
 use App\Models\UserSousObjectif;
 
 use Glorand\Model\Settings\Traits\HasSettingsTable;

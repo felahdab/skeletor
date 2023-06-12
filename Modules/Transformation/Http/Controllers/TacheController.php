@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Transformation\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Service\RecalculerTransformationService;
 
 use App\Http\Requests\StoreTacheRequest;
 use App\Http\Requests\UpdateTacheRequest;
-use App\Models\Tache;
+use Modules\Transformation\Entities\Tache;
 use App\Models\Objectif;
 
 use Illuminate\Http\Request;
@@ -29,7 +30,7 @@ class TacheController extends Controller
             $taches = Tache::orderBy('tache_libcourt')->paginate(10);
         }
         
-        return view('taches.index', ['taches' => $taches,
+        return view('transformation::taches.index', ['taches' => $taches,
                                      'filter' => $filter] );
     }
 
@@ -40,7 +41,7 @@ class TacheController extends Controller
      */
     public function create()
     {
-        return view('taches.create');
+        return view('transformation::taches.create');
     }
 
     /**
@@ -66,7 +67,7 @@ class TacheController extends Controller
      */
     public function show(Tache $tach)
     {
-        return view('taches.show',   ['tache'   => $tach ]  );
+        return view('transformation::taches.show',   ['tache'   => $tach ]  );
     }
 
     /**
@@ -77,12 +78,12 @@ class TacheController extends Controller
      */
     public function edit(Tache $tach)
     {
-        return view('taches.edit', ['tache'   => $tach] );
+        return view('transformation::taches.edit', ['tache'   => $tach] );
     }
     
     public function choisirobjectif(Request $request, Tache $tach)
     {
-        return view('taches.choisirobjectif', [ 'tache' => $tach]);
+        return view('transformation::taches.choisirobjectif', [ 'tache' => $tach]);
     }
     
     public function ajouterobjectif(Request $request, Tache $tach, Objectif $objectif)

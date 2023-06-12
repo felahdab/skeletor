@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Transformation\Entities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+
+use Modules\Transformation\Traits\HasTablePrefix;
 
 use App\Models\Compagnonage;
 use App\Models\TypeFonction;
@@ -14,6 +16,7 @@ use App\Models\User;
 class Fonction extends Model
 {
     use HasFactory;
+    use HasTablePrefix;
     
     public function compagnonages()
     {

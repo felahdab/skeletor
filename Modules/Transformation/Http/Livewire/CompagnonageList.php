@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace Modules\Transformation\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
 
-use App\Models\Compagnonage;
+use Modules\Transformation\Entities\Compagnonage;
 
 class CompagnonageList extends Component
 {
@@ -23,7 +23,7 @@ class CompagnonageList extends Component
     
     public function render()
     {
-        return view('livewire.compagnonage-list', [
+        return view('transformation::livewire.compagnonage-list', [
             'compagnonages' => Compagnonage::where('comp_libcourt', 'like', '%'. $this->filter . '%')
                     ->orWhere('comp_liblong', 'like', '%'. $this->filter . '%')
                     ->paginate(10),

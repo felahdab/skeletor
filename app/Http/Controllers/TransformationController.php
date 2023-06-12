@@ -19,7 +19,7 @@ use App\Models\Grade;
 use App\Models\Unite;
 
 use App\Models\Tache;
-use App\Models\Fonction;
+use Modules\Transformation\Entities\Fonction;
 use App\Models\SousObjectif;
 use App\Models\TypeFonction;
 use App\Models\Stage;

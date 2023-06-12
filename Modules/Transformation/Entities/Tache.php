@@ -1,16 +1,19 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Transformation\Entities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Objectif;
-use App\Models\Compagnonage;
+use Modules\Transformation\Entities\Compagnonage;
+
+use Modules\Transformation\Traits\HasTablePrefix;
 
 class Tache extends Model
 {
     use HasFactory;
+    use HasTablePrefix;
     
     public function objectifs()
     {

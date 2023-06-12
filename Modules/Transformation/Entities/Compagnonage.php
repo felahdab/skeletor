@@ -1,17 +1,20 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Transformation\Entities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
+use Modules\Transformation\Traits\HasTablePrefix;
+
 use App\Models\Tache;
-use App\Models\Fonction;
+use Modules\Transformation\Entities\Fonction;
 
 class Compagnonage extends Model
 {
     use HasFactory;
+    use HasTablePrefix;
     
     public function taches()
     {

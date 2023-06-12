@@ -13,6 +13,6 @@
             Gérer les compagnonnages
             <a href="{{ route('compagnonages.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un compagnonnage</a>
         </div>
-        @livewire('compagnonage-list')
+        @livewire('transformation::compagnonage-list')
     </div>
 @endsection

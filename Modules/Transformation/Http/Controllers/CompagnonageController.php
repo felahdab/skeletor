@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Transformation\Http\Controllers;
 
 use App\Service\RecalculerTransformationService;
 
-use App\Http\Requests\StoreCompagnonageRequest;
-use App\Http\Requests\UpdateCompagnonageRequest;
-use App\Models\Compagnonage;
+use Modules\Transformation\Http\Requests\StoreCompagnonageRequest;
+use Modules\Transformation\Entities\Compagnonage;
+use App\Http\Controllers\Controller;
 use App\Models\Tache;
 
 use Illuminate\Http\Request;
@@ -29,7 +29,7 @@ class CompagnonageController extends Controller
             $comps = Compagnonage::orderBy('comp_libcourt')->paginate(10);
         }
         
-        return view('compagnonages.index', ['compagnonages' => $comps ,
+        return view('transformation::compagnonages.index', ['compagnonages' => $comps ,
                                             'filter'        => $filter] );
     }
 
@@ -40,7 +40,7 @@ class CompagnonageController extends Controller
      */
     public function create()
     {
-        return view('compagnonages.create' );
+        return view('transformation::compagnonages.create' );
     }
 
     /**
@@ -67,7 +67,7 @@ class CompagnonageController extends Controller
     public function show(Compagnonage $compagnonage)
     {
        
-        return view('compagnonages.show', ['compagnonage'   => $compagnonage] );
+        return view('transformation::compagnonages.show', ['compagnonage'   => $compagnonage] );
     }
 
     /**
@@ -78,7 +78,7 @@ class CompagnonageController extends Controller
      */
     public function edit(Compagnonage $compagnonage)
     {
-        return view('compagnonages.edit', ['compagnonage'   => $compagnonage] );
+        return view('transformation::compagnonages.edit', ['compagnonage'   => $compagnonage] );
     }
     public function choisirtache(Request $request, Compagnonage $compagnonage)
     {
@@ -86,7 +86,7 @@ class CompagnonageController extends Controller
         $taches = Tache::orderBy('tache_libcourt')->get();
         $taches = $taches->diff($compagnonage->taches()->get());
         
-        return view('compagnonages.choisirtache', [ 'compagnonage' => $compagnonage,
+        return view('transformation::compagnonages.choisirtache', [ 'compagnonage' => $compagnonage,
                                                 'taches' => $taches]);
     }
     

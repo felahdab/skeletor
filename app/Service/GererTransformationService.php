@@ -10,7 +10,7 @@ use Illuminate\Support\Carbon;
 
 use App\Models\TransformationHistory;
 use App\Models\Stage;
-use App\Models\Fonction;
+use Modules\Transformation\Entities\Fonction;
 use App\Models\Objectif;
 use App\Models\SousObjectif;
 use App\Models\Tache;

@@ -12,6 +12,6 @@
             Gérer les fonctions
             <a href="{{ route('fonctions.create') }}" class="btn btn-primary btn-sm float-right">Ajouter une fonction</a>
         </div>
-        @livewire('fonction-list', ['mode' => 'gestion'])
+        @livewire('transformation::fonction-list', ['mode' => 'gestion'])
     </div>
 @endsection

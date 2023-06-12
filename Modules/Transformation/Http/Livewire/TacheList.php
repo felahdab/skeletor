@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace Modules\Transformation\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
 
-use App\Models\Tache;
+use Modules\Transformation\Entities\Tache;
 
 class TacheList extends Component
 {
@@ -23,7 +23,7 @@ class TacheList extends Component
     
     public function render()
     {
-        return view('livewire.tache-list', [
+        return view('transformation::livewire.tache-list', [
             'taches' => Tache::where('tache_libcourt', 'like', '%'. $this->filter . '%')
                     ->orWhere('tache_liblong', 'like', '%'. $this->filter . '%')
                     ->paginate(10),

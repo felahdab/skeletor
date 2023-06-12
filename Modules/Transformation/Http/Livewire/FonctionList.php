@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace Modules\Transformation\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
 
-use App\Models\Fonction;
+use Modules\Transformation\Entities\Fonction;
 
 class FonctionList extends Component
 {
@@ -22,7 +22,7 @@ class FonctionList extends Component
     
     public function render()
     {
-        return view('livewire.fonction-list', [
+        return view('transformation::livewire.fonction-list', [
             'fonctions' => Fonction::where('fonction_libcourt', 'like', '%'. $this->filter . '%')
                     ->orWhere('fonction_liblong', 'like', '%'. $this->filter . '%')
                     ->OrderBy('fonction_libcourt')

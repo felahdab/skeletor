@@ -13,6 +13,6 @@
             Gérer les tâches
             <a href="{{ route('taches.create') }}" class="btn btn-primary btn-sm float-right">Ajouter une tâche</a>
         </div>
-        @livewire('tache-list')
+        @livewire('transformation::tache-list')
     </div>
 @endsection
