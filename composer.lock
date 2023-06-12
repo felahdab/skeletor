@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aa7f16d2c3b08b10e3387679cb235d3e",
+    "content-hash": "101ded0ec040035de7264db075d1fdce",
     "packages": [
         {
             "name": "asantibanez/livewire-charts",
@@ -3829,6 +3829,65 @@
                 "source": "https://github.com/maximebf/php-debugbar/tree/v1.18.2"
             },
             "time": "2023-02-04T15:27:00+00:00"
+        },
+        {
+            "name": "mhmiton/laravel-modules-livewire",
+            "version": "v1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mhmiton/laravel-modules-livewire.git",
+                "reference": "0123a413a4ac3fbea0fec85e4b7795fd034e2f5d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mhmiton/laravel-modules-livewire/zipball/0123a413a4ac3fbea0fec85e4b7795fd034e2f5d",
+                "reference": "0123a413a4ac3fbea0fec85e4b7795fd034e2f5d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.3"
+            },
+            "require-dev": {
+                "laravel/framework": "^7.0|^8.0|^9.0|^10.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Mhmiton\\LaravelModulesLivewire\\LaravelModulesLivewireServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Mhmiton\\LaravelModulesLivewire\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mehediul Hassan Miton",
+                    "email": "mhmiton.dev@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Using Laravel Livewire in Laravel Modules package with automatically registered livewire components for every modules.",
+            "keywords": [
+                "laravel",
+                "livewire",
+                "mhmiton",
+                "module",
+                "modules",
+                "nwidart"
+            ],
+            "support": {
+                "issues": "https://github.com/mhmiton/laravel-modules-livewire/issues",
+                "source": "https://github.com/mhmiton/laravel-modules-livewire/tree/v1.6.0"
+            },
+            "time": "2023-02-24T11:20:21+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",

@@ -23,6 +23,7 @@
         "laravel/tinker": "^2.7",
         "laravelcollective/html": "^6.3",
         "livewire/livewire": "^2.10",
+        "mhmiton/laravel-modules-livewire": "^1.6",
         "mpdf/mpdf": "8.1.0",
         "nwidart/laravel-modules": "^10.0",
         "phpoffice/phpspreadsheet": "^1.25",
