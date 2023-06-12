@@ -1,0 +1,11 @@
+{
+    "name": "Transformation",
+    "alias": "transformation",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Transformation\\Providers\\TransformationServiceProvider"
+    ],
+    "files": []
+}
