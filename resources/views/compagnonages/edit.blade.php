@@ -55,6 +55,7 @@
                 <x-sortable-item sort_key="{{$tache->id}}">
                     <div class="card m-1">
                         <div class="card-body">
+                            <div class="myhandle btn btn-default"><x-bootstrap-icon iconname='arrows-move.svg' /></div>
                             <div class="d-flex flex-row mb-1 justify-content-between">
                                 <div class="p-2 h4 w-50" >{{ $tache->tache_liblong }}</div>
                                 <div class="p-2 w-25"> => {{ $tache->tache_libcourt }} </div>

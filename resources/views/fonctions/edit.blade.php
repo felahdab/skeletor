@@ -77,23 +77,23 @@
             <x-sortable name="sort_order">
                 @foreach ($fonction->compagnonages->sortBy('pivot.ordre') as $compagnonage)
                     <x-sortable-item sort_key="{{ $compagnonage->id }}">
-                    <div class="card m-1">
-                        <div class="card-body">
-                            <div class="d-flex flex-row mb-1 justify-content-between">
-                                <div class="p-2 h4 w-50" >{{ $compagnonage->comp_liblong }}</div>
-                                <div class="p-2 w-25"> => {{ $compagnonage->comp_libcourt }} </div>
-                                <div class="p-2 w-25 text-end">
-                                @can("fonctions.removecompagnonage")
-                                    <button type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('removecompagnonage[{{ $compagnonage->id }}]').submit()">Retirer ce compagnonnage</button>
-                                @endcan
+                        <div class="card m-1">
+                            <div class="card-body">
+                                <div class="myhandle btn btn-default"><x-bootstrap-icon iconname='arrows-move.svg' /></div>
+                                <div class="d-flex flex-row mb-1 justify-content-between">
+                                    <div class="p-2 h4 w-50" >{{ $compagnonage->comp_liblong }}</div>
+                                    <div class="p-2 w-25"> => {{ $compagnonage->comp_libcourt }} </div>
+                                    <div class="p-2 w-25 text-end">
+                                    @can("fonctions.removecompagnonage")
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('removecompagnonage[{{ $compagnonage->id }}]').submit()">Retirer ce compagnonnage</button>
+                                    @endcan
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     </x-sortable-item>
                 @endforeach
             </x-sortable>
-
             @can("fonctions.choisircompagnonage")
                 <div class='text-center mt-1 mb-1'>
                     <a class='btn btn-primary btn-sm' href="{{route('fonctions.choisircompagnonage', $fonction->id)}}">Ajouter un nouveau compagnonnage</a>

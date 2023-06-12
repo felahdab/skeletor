@@ -53,6 +53,7 @@
                     <x-sortable-item sort-key="{{$ssobj->id}}">    
                         <div class="card m-1">
                             <div class="card-body">
+                                <div class="myhandle btn btn-default"><x-bootstrap-icon iconname='arrows-move.svg' /></div>
                                 <div class="d-flex flex-row mb-1 justify-content-between">
                                     <div class="p-2 w-50 " >
                                         <div>
