@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Transformation\Http\Controllers;
 
-use App\Http\Requests\StoreObjectifRequest;
-use App\Http\Requests\UpdateObjectifRequest;
+use Modules\Transformation\Http\Requests\StoreObjectifRequest;
+use Modules\Transformation\Http\Requests\UpdateObjectifRequest;
 
 use App\Service\RecalculerTransformationService;
 
 use Illuminate\Http\Request;
 
-use App\Models\Objectif;
+use Modules\Transformation\Entities\Objectif;
+use App\Http\Controllers\Controller;
 use App\Models\Lieu;
 
 class ObjectifController extends Controller
@@ -30,7 +31,7 @@ class ObjectifController extends Controller
             $objectifs = Objectif::orderBy('objectif_libcourt')->paginate(10);
         }
         
-        return view('objectifs.index', ['objectifs' => $objectifs,
+        return view('transformation::objectifs.index', ['objectifs' => $objectifs,
                                         'filter'    => $filter] );
     }
 
@@ -41,7 +42,7 @@ class ObjectifController extends Controller
      */
     public function create()
     {
-        return view('objectifs.create');
+        return view('transformation::objectifs.create');
     }
 
     /**
@@ -68,7 +69,7 @@ class ObjectifController extends Controller
     public function show(Objectif $objectif)
     {
         $lieux = Lieu::orderBy('lieu_liblong')->get();
-        return view('objectifs.show',   ['objectif'   => $objectif,
+        return view('transformation::objectifs.show',   ['objectif'   => $objectif,
                                         'lieux'     => $lieux] );
     }
 
@@ -82,7 +83,7 @@ class ObjectifController extends Controller
     {
         $objectifs = Objectif::orderBy('objectif_libcourt')->get();
         $lieux = Lieu::orderBy('lieu_liblong')->get();
-        return view('objectifs.edit', ['objectif'   => $objectif, 
+        return view('transformation::objectifs.edit', ['objectif'   => $objectif, 
                                         'objectifs' => $objectifs,
                                         'lieux'     => $lieux] );
     }

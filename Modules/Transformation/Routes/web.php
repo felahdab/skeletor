@@ -36,4 +36,5 @@ Route::prefix(env('APP_PREFIX'))->group(function () {
     Route::post('taches/{tach}/ajouteobjectif/{objectif}', [TacheController::class, 'ajouterobjectif'])->name('taches.ajouterobjectif');
     Route::post('taches/{tach}/removeobjectif/{objectif}', [TacheController::class, 'removeobjectif'])->name('taches.removeobjectif');
 
+    Route::resource('objectifs', ObjectifController::class);
 });

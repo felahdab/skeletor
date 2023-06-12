@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Cache;
 
 use Modules\Transformation\Traits\HasTablePrefix;
 
-use App\Models\Tache;
+use Modules\Transformation\Entities\Tache;
 use Modules\Transformation\Entities\Fonction;
 
 class Compagnonage extends Model

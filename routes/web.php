@@ -102,8 +102,6 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
 
         Route::resource('sous-objectifs', SousObjectifController::class);
         Route::post('sous-objectifs/multipleupdate', [SousObjectifController::class, 'multipleupdate'])->name('sous-objectifs.multipleupdate');
-
-        Route::resource('objectifs', ObjectifController::class);
         
         Route::resource('stages',         StageController::class);
         Route::post('stages/{stage}/validergroupe', [StageController::class, 'validermarins'])->name('stages.validermarins');

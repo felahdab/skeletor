@@ -5,7 +5,7 @@ namespace Modules\Transformation\Entities;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Objectif;
+use Modules\Transformation\Entities\Objectif;
 use Modules\Transformation\Entities\Compagnonage;
 
 use Modules\Transformation\Traits\HasTablePrefix;

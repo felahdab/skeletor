@@ -1,13 +1,19 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Transformation\Entities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use Modules\Transformation\Traits\HasTablePrefix;
+
+use App\Models\SousObjectif;
+use Modules\Transformation\Entities\Tache;
+
 class Objectif extends Model
 {
     use HasFactory;
+    use HasTablePrefix;
     
      protected $fillable = [
         'id'

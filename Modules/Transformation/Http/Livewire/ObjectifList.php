@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace Modules\Transformation\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Database\Eloquent\Builder;
 
-use App\Models\Objectif;
+use Modules\Transformation\Entities\Objectif;
 
 class ObjectifList extends Component
 {
@@ -42,7 +42,7 @@ class ObjectifList extends Component
             ->paginate(10);
         }
 
-        return view('livewire.objectif-list', [
+        return view('transformation::livewire.objectif-list', [
             'objectifs' => $objectifs,
             'mode' => $this->mode,
             'tache' => $this->tache

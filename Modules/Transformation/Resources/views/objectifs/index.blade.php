@@ -14,6 +14,6 @@
         <a href="{{ route('objectifs.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un objectif</a>
         </div>
         
-        @livewire('objectif-list')
+        @livewire('transformation::objectif-list')
     </div>
 @endsection
