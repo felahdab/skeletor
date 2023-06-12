@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Transformation\Http\Controllers;
 
 use App\Service\RecalculerTransformationService;
 
 use Illuminate\Http\Request;
 
-use App\Http\Requests\StoreSousObjectifRequest;
-use App\Http\Requests\UpdateSousObjectifRequest;
-use App\Models\SousObjectif;
+use Modules\Transformation\Http\Requests\StoreSousObjectifRequest;
+use Modules\Transformation\Http\Requests\UpdateSousObjectifRequest;
+use Modules\Transformation\Entities\SousObjectif;
+use App\Http\Controllers\Controller;
 
 class SousObjectifController extends Controller
 {
@@ -31,7 +32,7 @@ class SousObjectifController extends Controller
             $sousobjectifs = SousObjectif::orderBy('ssobj_lib')->paginate(10);
         }
         
-        return view('sousobjectifs.index', ['sousobjectifs' => $sousobjectifs ,
+        return view('transformation::sousobjectifs.index', ['sousobjectifs' => $sousobjectifs ,
                                             'filter'        => $filter] );
     }
 

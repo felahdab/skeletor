@@ -11,6 +11,6 @@
         <div class='lead'>Ajout d'un compagnonnage pour la fonction : {!!$fonction->fonction_libcourt !!} </div>
     </div>
     
-    @livewire('compagnonage-list', ['fonction' => $fonction, 'mode' => 'selection'])
+    @livewire('transformation::compagnonage-list', ['fonction' => $fonction, 'mode' => 'selection'])
     
 @endsection

@@ -3,11 +3,11 @@ namespace App\Service;
 
 use App\Models\TransformationHistory;
 use App\Models\Stage;
-use App\Models\Fonction;
-use App\Models\Compagnonage;
-use App\Models\Tache;
-use App\Models\Objectif;
-use App\Models\SousObjectif;
+use Modules\Transformation\Entities\Fonction;
+use Modules\Transformation\Entities\Compagnonage;
+use Modules\Transformation\Entities\Tache;
+use Modules\Transformation\Entities\Objectif;
+use Modules\Transformation\Entities\SousObjectif;
 
 use App\Models\UserSousObjectif;
 use App\Models\User;

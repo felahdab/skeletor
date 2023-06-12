@@ -100,9 +100,6 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         Route::get('archivage/{user}/suppr', [ArchivageController::class, 'supprimer'])->name('archivage.supprimer');
 
 
-        Route::resource('sous-objectifs', SousObjectifController::class);
-        Route::post('sous-objectifs/multipleupdate', [SousObjectifController::class, 'multipleupdate'])->name('sous-objectifs.multipleupdate');
-        
         Route::resource('stages',         StageController::class);
         Route::post('stages/{stage}/validergroupe', [StageController::class, 'validermarins'])->name('stages.validermarins');
         Route::post('stages/{stage}/attribuerstage', [StageController::class, 'attribuerstage'])->name('stages.attribuerstage');

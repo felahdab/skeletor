@@ -22,7 +22,13 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\TransformationHistory;
 use App\Models\Stage;
 use Modules\Transformation\Entities\Fonction;
+use Modules\Transformation\Entities\Compagnonage;
+use Modules\Transformation\Entities\Tache;
+use Modules\Transformation\Entities\Objectif;
+
 use App\Models\UserSousObjectif;
+
+use Modules\Transformation\Entities\SousObjectif;
 
 use Glorand\Model\Settings\Traits\HasSettingsTable;
 
@@ -269,7 +275,7 @@ class User extends Authenticatable
 
         $ssobj_du_parcours_de_transformation = $this->coll_sous_objectifs();
 
-        $liste_sous_obj_valides = $this->belongsToMany(SousObjectif::class, 'user_sous_objectif')
+        $liste_sous_obj_valides = $this->belongsToMany(SousObjectif::class, 'transformation_user_sous_objectif')
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation', 'valideur', 'date_proposition_validation')
             ->get()
@@ -283,7 +289,7 @@ class User extends Authenticatable
 
     public function sous_objectifs()
     {
-        return $this->belongsToMany(SousObjectif::class, 'user_sous_objectif')
+        return $this->belongsToMany(SousObjectif::class, 'transformation_user_sous_objectif')
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation', 'valideur', 'nb_jours_pour_validation', 'date_proposition_validation');
     }

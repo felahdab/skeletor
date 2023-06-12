@@ -7,9 +7,9 @@ use App\Http\Requests\StoreFonctionRequest;
 use App\Http\Requests\UpdateFonctionRequest;
 use Modules\Transformation\Entities\Fonction;
 use App\Models\TypeFonction;
-use App\Models\Compagnonage;
-use App\Models\Tache;
-use App\Models\SousObjectif;
+use Modules\Transformation\Entities\Compagnonage;
+use Modules\Transformation\Entities\Tache;
+use Modules\Transformation\Entities\SousObjectif;
 use App\Models\Stage;
 use App\Models\User;
 
@@ -122,7 +122,6 @@ class FonctionController extends Controller
     
     public function removecompagnonage(Request $request, Fonction $fonction, Compagnonage $compagnonage)
     {
-        ddd($compagnonage);
         $fonction->compagnonages()->detach($compagnonage);
         RecalculerTransformationService::handle();            
         

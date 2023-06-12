@@ -1,13 +1,19 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Transformation\Entities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use Modules\Transformation\Traits\HasTablePrefix;
+
+use App\Models\Lieu;
+use App\Models\User;
+
 class SousObjectif extends Model
 {
     use HasFactory;
+	use HasTablePrefix;
 	
 	public function livretDisplay()
 	{
@@ -26,7 +32,7 @@ class SousObjectif extends Model
     
     public function users()
     {
-        return $this->belongsToMany(User::class, 'user_sous_objectif')
+        return $this->belongsToMany(User::class, 'transformation_user_sous_objectif')
             ->local()
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation', 'valideur');

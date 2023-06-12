@@ -7,9 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 use Modules\Transformation\Traits\HasTablePrefix;
 
-use App\Models\SousObjectif;
-use Modules\Transformation\Entities\Tache;
-
 class Objectif extends Model
 {
     use HasFactory;

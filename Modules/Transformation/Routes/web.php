@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Transformation\Http\Controllers\FonctionController;
 use Modules\Transformation\Http\Controllers\CompagnonageController;
+use Modules\Transformation\Http\Controllers\TacheController;
+use Modules\Transformation\Http\Controllers\ObjectifController;
+use Modules\Transformation\Http\Controllers\SousObjectifController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,4 +40,9 @@ Route::prefix(env('APP_PREFIX'))->group(function () {
     Route::post('taches/{tach}/removeobjectif/{objectif}', [TacheController::class, 'removeobjectif'])->name('taches.removeobjectif');
 
     Route::resource('objectifs', ObjectifController::class);
+
+    Route::resource('sous-objectifs', SousObjectifController::class);
+    Route::post('sous-objectifs/multipleupdate', [SousObjectifController::class, 'multipleupdate'])->name('sous-objectifs.multipleupdate');
+    
+
 });
