@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Transformation\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Carbon;
 
 use Illuminate\Http\Request;
@@ -9,10 +10,10 @@ use Illuminate\Http\Request;
 use App\Service\StatService;
 
 use App\Models\Statistique;
-use App\Models\Stage;
+use Modules\Transformation\Entities\Stage;
 use App\Models\User;
 use App\Models\Service;
-use App\Models\Fonction;
+use Modules\Transformation\Entities\Fonction;
 
 class StatistiqueController extends Controller
 {
@@ -39,7 +40,7 @@ class StatistiqueController extends Controller
         
         $liste_des_periodes = Statistique::all()->pluck('periode')->sort()->unique();
 
-        return view('statistiques.index', ['period' => $period,
+        return view('transformation::statistiques.index', ['period' => $period,
                                            'liste_des_periodes' => $liste_des_periodes,
                                            'statistiques'       => $statistiques]);
     }
@@ -47,14 +48,14 @@ class StatistiqueController extends Controller
     public function pourtuteurs()
     {
         $currentuser = auth()->user();
-        $view = view('statistiques.pourtuteurs', ['currentuser' => $currentuser,]); 
+        $view = view('transformation::statistiques.pourtuteurs', ['currentuser' => $currentuser,]); 
         return $view;
     }
     
     public function parservice(Service $service)
     {
         $currentuser = auth()->user();
-        $view = view('statistiques.pourtuteurs', ['currentuser' => $currentuser, 'service'=> $service]); 
+        $view = view('transformation::statistiques.pourtuteurs', ['currentuser' => $currentuser, 'service'=> $service]); 
         return $view;
     }
     
@@ -65,7 +66,7 @@ class StatistiqueController extends Controller
         $users = User::with('secteur')->get();
         $services = Service::orderBy('service_libcourt')->get();
         $fonctionsaquai = Fonction::where('typefonction_id', 2);
-        return view('statistiques.pourem', ['stages'   => $stages,
+        return view('transformation::statistiques.pourem', ['stages'   => $stages,
                                    'services' => $services,
                                    'fonctionsaquai' => $fonctionsaquai,
                                    'users'    => $users]);
@@ -73,17 +74,17 @@ class StatistiqueController extends Controller
 
     public function dashboard()
     {
-        return view('statistiques.dashboard');
+        return view('transformation::statistiques.dashboard');
     }
     
     public function dashboardarchive()
     {
-        return view('statistiques.dashboardarchive');
+        return view('transformation::statistiques.dashboardarchive');
     }
     
     public function parcomp()
     {
-        return view('statistiques.parcomp');
+        return view('transformation::statistiques.parcomp');
     }
  
     public function pour2ps()
@@ -97,9 +98,9 @@ class StatistiqueController extends Controller
             $nbmarinsavalider = $stage->users()
                                     ->wherePivotNull('date_validation')
                                     ->orWhere(function($query) use ($idstage){
-                                        $query  ->where ('user_stage.stage_id', $idstage)
-                                                ->whereNotNull('user_stage.date_validite')
-                                                ->where('user_stage.date_validite', '<' , now());})
+                                        $query  ->where ('transformation_user_stage.stage_id', $idstage)
+                                                ->whereNotNull('transformation_user_stage.date_validite')
+                                                ->where('transformation_user_stage.date_validite', '<' , now());})
                                     ->get()
                                     ->count();
             if($nbmarinsavalider > 0){
@@ -112,7 +113,7 @@ class StatistiqueController extends Controller
                 }
             }
         }
-        return view('statistiques.pour2ps', ['stageexts' => $stageext,
+        return view('transformation::statistiques.pour2ps', ['stageexts' => $stageext,
                                             'stagelics' => $stagelic,
                                             'stages'=> $stages,
                                             ]);

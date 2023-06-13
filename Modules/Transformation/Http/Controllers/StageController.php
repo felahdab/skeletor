@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Transformation\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Service\GererTransformationService;
 use App\Service\RecalculerTransformationService;
 
@@ -9,8 +10,8 @@ use Illuminate\Support\Carbon;
 
 use App\Http\Requests\StoreStageRequest;
 use App\Http\Requests\UpdateStageRequest;
-use App\Models\Stage;
-use App\Models\TypeLicence;
+use Modules\Transformation\Entities\Stage;
+use Modules\Transformation\Entities\TypeLicence;
 use App\Models\User;
 
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ class StageController extends Controller
      */
     public function index(Request $request)
     {
-        return view('stages.index');
+        return view('transformation::stages.index');
     }
 
     /**
@@ -35,7 +36,7 @@ class StageController extends Controller
     public function create()
     {
         $typelicences = TypeLicence::orderBy('typlicense_libcourt')->get();
-        return view('stages.create', ['typelicences' => $typelicences,]);
+        return view('transformation::stages.create', ['typelicences' => $typelicences,]);
     }
 
     /**
@@ -75,7 +76,7 @@ class StageController extends Controller
     public function show(Request $request, Stage $stage)
     {    
         $usersdustage = $stage->users()->orderBy('name')->get();
-        return view('stages.show', ['stage'        => $stage, 
+        return view('transformation::stages.show', ['stage'        => $stage, 
                                     'usersdustage' => $usersdustage]);
     }
 
@@ -89,7 +90,7 @@ class StageController extends Controller
     {
         $stages = Stage::orderBy('stage_libcourt')->get();
         $typelicences = TypeLicence::orderBy('typlicense_libcourt')->get();
-        return view('stages.edit', ['stage'       => $stage, 
+        return view('transformation::stages.edit', ['stage'       => $stage, 
                                     'stages'     => $stages,
                                     'typelicences' => $typelicences] );
     }
