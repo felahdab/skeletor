@@ -99,33 +99,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         Route::get('archivage/{user}/archivage', [ArchivageController::class, 'archiver'])->name('archivage.archiver');
         Route::get('archivage/{user}/suppr', [ArchivageController::class, 'supprimer'])->name('archivage.supprimer');
 
-
-        
         Route::post('bugreport', [BugReportController::class, 'store'])->name('bugreports.store');
-
-        Route::group(['prefix' => 'transformation'], function () {
-            Route::get('/', [TransformationController::class, 'index'])->name('transformation.index');
-            Route::get('/parfonction', [TransformationController::class, 'indexparfonction'])->name('transformation.indexparfonction');
-            Route::get('/parcomp', [TransformationController::class, 'indexparcomp'])->name('transformation.indexparcomp');
-            Route::get('/parstage', [TransformationController::class, 'indexparstage'])->name('transformation.indexparstage');
-            Route::get('/{user}/choisirfonction', [UsersController::class, 'choisirfonction'])->name('users.choisirfonction');
-            Route::post('/{user}/choisirfonction', [UsersController::class, 'attribuerfonction'])->name('users.attribuerfonction');
-            Route::post('/{user}/retirerfonction', [UsersController::class, 'retirerfonction'])->name('users.retirerfonction');
-            Route::get('/{user}/livret', [TransformationController::class, 'livret'])->name('transformation.livret');
-            Route::get('/{user}/livretpdf', [TransformationController::class, 'livretpdf'])->name('transformation.livretpdf');
-            Route::get('/{user}/progression', [TransformationController::class, 'progression'])->name('transformation.progression');
-            Route::get('/{user}/fichebilan', [TransformationController::class, 'fichebilan'])->name('transformation.fichebilan');
-            Route::get('/mafichebilan', [TransformationController::class, 'mafichebilan'])->name('transformation.mafichebilan');
-            Route::get('/parcoursfichebilan', [TransformationController::class, 'parcoursfichebilan'])->name('transformation.parcoursfichebilan');
-            Route::get('/monlivret', [TransformationController::class, 'monlivret'])->name('transformation.monlivret');
-            Route::get('/maprogression', [TransformationController::class, 'maprogression'])->name('transformation.maprogression');
-            Route::get('/exportparcours', [ImportExportParcours::class, 'ExportParcoursVersExcel'])->name('transformation.exportparcours');
-            Route::get('/recalcultransfo', [TransformationController::class, 'recalcultransfo'])->name('transformation.recalcultransfo');
-        });
-
-        Route::group(['prefix' => 'historique'], function () {
-            Route::get('/', [TransformationHistoryController::class, 'index'])->name('historique.index');
-        });
 
         Route::resource('liens', LienController::class);
 

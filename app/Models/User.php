@@ -20,7 +20,7 @@ use App\Service\AnnudefAjaxRequestService;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\TransformationHistory;
-use App\Models\Stage;
+use Modules\Transformation\Entities\Stage;
 use Modules\Transformation\Entities\Fonction;
 use Modules\Transformation\Entities\Compagnonage;
 use Modules\Transformation\Entities\Tache;
@@ -261,7 +261,7 @@ class User extends Authenticatable
 
     public function stages()
     {
-        return $this->belongsToMany(Stage::class, 'user_stage')
+        return $this->belongsToMany(Stage::class, 'transformation_user_stage')
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation', 'date_validite');
     }

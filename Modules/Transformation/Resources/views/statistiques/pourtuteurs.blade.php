@@ -19,9 +19,9 @@
             </div>
             <div class="mt-3">
             @if (isset($service))
-                @livewire('stattuteur-table', ['service' => $service ])
+                @livewire('transformation::stattuteur-table', ['service' => $service ])
             @else
-                @livewire('stattuteur-table')
+                @livewire('transformation::stattuteur-table')
             @endif
             </div>        
         @else

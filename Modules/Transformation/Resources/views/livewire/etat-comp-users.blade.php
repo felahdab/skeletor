@@ -1,7 +1,7 @@
 <div>
     <div class="lead mt-1 mb-3">Compagnonnage : <b>{{ $comp -> comp_liblong}}</b></div>
     <!-- div avec formulaire de validation -->
-    @include('livewire.livret-transformation.divvalid', ['mode' => "parcomp"])
+    @include('transformation::livewire.livret-transformation.divvalid', ['mode' => "parcomp"])
     <div style="width: min-content;">
         <div class="sticky-top" style="top:5rem;  background: white; width:100%; ">
             <button type="submit" 

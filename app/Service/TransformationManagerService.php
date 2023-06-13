@@ -2,7 +2,7 @@
 namespace App\Service;
 
 use App\Models\TransformationHistory;
-use App\Models\Stage;
+use Modules\Transformation\Entities\Stage;
 use Modules\Transformation\Entities\Fonction;
 use Modules\Transformation\Entities\Compagnonage;
 use Modules\Transformation\Entities\Tache;

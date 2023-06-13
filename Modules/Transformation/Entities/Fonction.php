@@ -29,7 +29,7 @@ class Fonction extends Model
     
     public function stages()
     {
-        return $this->belongsToMany(Stage::class, 'fonction_stage')->withTimeStamps();
+        return $this->belongsToMany(Stage::class, 'transformation_fonction_stage')->withTimeStamps();
     }
     
     public function users()

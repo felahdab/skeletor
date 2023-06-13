@@ -6,13 +6,11 @@
 
 
 @section('content')
-    <div class="p-4">
+    <div class="  p-4 rounded">
         <h1>Transformation</h1>
         <div class="lead">
-            Livret de transformation de {{$user->display_name}}
+            Suivi de la progression de {{$user->prenom}} {{$user->name}}
         </div>
-
-
         @if($mode !="proposition")
             <a href="{{ route('transformation.livret', $user->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
             <a href="{{ route('transformation.progression', $user->id) }}" class="btn btn-primary btn-sm">Progression</a>
@@ -26,10 +24,13 @@
             <a href="{{ route('transformation.maprogression') }}" class="btn btn-primary btn-sm">Ma progression</a>
             <a href="{{ route('transformation.mafichebilan') }}" class="btn btn-secondary btn-sm">Ma fiche bilan</a>
         @endif
+        @if ($user->en_transformation)
+        <div id='progression' style='width:100%;'>
+            @include('transformation::transformation.progression.global')
+            @foreach($user->getTransformationManager()->parcours as $fonction)
+                @include('transformation::transformation.progression.fonction')
+            @endforeach
+        </div>
+        @endif
     
-        @livewire('livret-transformation', ['mode' => $mode, 
-                                            'user' => $user
-                                        ])
-
-    </div>
 @endsection

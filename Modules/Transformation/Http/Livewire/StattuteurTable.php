@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace Modules\Transformation\Http\Livewire;
 
 use App\Models\User;
-use App\Models\Unite;
+use Modules\Transformation\Entities\Unite;
 use App\Models\Grade;
 use App\Models\Diplome;
 use App\Models\Secteur;
 use App\Models\Service;
 
-use App\Models\Fonction;
+use Modules\Transformation\Entities\Fonction;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -54,8 +54,8 @@ class StattuteurTable extends DataTableComponent
                       ->join ('secteurs', 'secteurs.id', '=', 'users.secteur_id')
                       ->WhereExists(function($maquery){
                           $maquery->select ('id')
-                                    ->from ('user_fonction')
-                                    ->whereColumn('user_fonction.user_id', 'users.id')
+                                    ->from ('transformation_user_fonction')
+                                    ->whereColumn('transformation_user_fonction.user_id', 'users.id')
                       ;})
                      ;
         }
@@ -66,8 +66,8 @@ class StattuteurTable extends DataTableComponent
                       ->where('secteurs.service_id', $service_id)
                       ->WhereExists(function($maquery){
                           $maquery->select ('id')
-                                    ->from ('user_fonction')
-                                    ->whereColumn('user_fonction.user_id', 'users.id')
+                                    ->from ('transformation_user_fonction')
+                                    ->whereColumn('transformation_user_fonction.user_id', 'users.id')
                       ;})
                      ;
         }
@@ -75,7 +75,7 @@ class StattuteurTable extends DataTableComponent
 
     public function userActions()
     {
-        return view('tables.stattable.boutons');
+        return view('transformation::tables.stattable.boutons');
     }
 
     public function columns(): array
@@ -108,17 +108,17 @@ class StattuteurTable extends DataTableComponent
                 ->searchable(),
             Column::make('Fonction à quai')
                 ->label(
-                    fn($row, Column $column) => view('tables.stattable.foncquai', ['marin' => $row])
+                    fn($row, Column $column) => view('transformation::tables.stattable.foncquai', ['marin' => $row])
                     )
                 ->searchable(),
             Column::make('Fonction à la mer')
                 ->label(
-                    fn($row, Column $column) => view('tables.stattable.foncmer', ['marin' => $row])
+                    fn($row, Column $column) => view('transformation::tables.stattable.foncmer', ['marin' => $row])
                     )
                 ->searchable(),
             Column::make('Fonction métier')
                 ->label(
-                    fn($row, Column $column) => view('tables.stattable.foncmetier', ['marin' => $row])
+                    fn($row, Column $column) => view('transformation::tables.stattable.foncmetier', ['marin' => $row])
                     )
                 ->searchable(),
             Column::make("Tx transfo", "taux_de_transformation")
@@ -134,7 +134,7 @@ class StattuteurTable extends DataTableComponent
                     ),
             Column::make(' ')
                 ->label(
-                    fn($row, Column $column) => view('tables.stattable.attentevalid', ['marin' => $row])
+                    fn($row, Column $column) => view('transformation::tables.stattable.attentevalid', ['marin' => $row])
                     )
                 ->searchable(),
             Column::make('U-dest', 'unite_destination.unite_libcourt')
@@ -164,7 +164,7 @@ class StattuteurTable extends DataTableComponent
                                     ->orWhere('fonction_liblong', 'like', '%' . $value . '%')
                                     ->get()
                                     ->pluck('id');
-                    $userids = DB::table('user_fonction')
+                    $userids = DB::table('transformation_user_fonction')
                                 ->whereIn('fonction_id', $fonction_ids)
                                 ->get()
                                 ->pluck('user_id');

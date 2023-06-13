@@ -41,7 +41,7 @@
                     </div>
                     <div id="collapseFonction_{{$fonction->id}}" class="accordion-collapse collapse">
                         <div  class="accordion-body">
-                            @includeWhen($mode!='modificationmultiple', 'livewire.livret-transformation.entetefonction')
+                            @includeWhen($mode!='modificationmultiple', 'transformation::livewire.livret-transformation.entetefonction')
                             
                             @if ($fonction->compagnonages->count() > 0)
                                 @foreach($fonction->compagnonages->sortBy('pivot.ordre') as $compagnonage)

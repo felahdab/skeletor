@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace Modules\Transformation\Http\Livewire;
 
 use Livewire\Component;
 use App\Service\GererTransformationService;
@@ -11,7 +11,6 @@ use Modules\Transformation\Entities\Compagnonage;
 use Modules\Transformation\Entities\Tache;
 use Modules\Transformation\Entities\Objectif;
 use Modules\Transformation\Entities\SousObjectif;
-use App\Models\UserSousObjectif;
 
 class EtatCompUsers extends Component
 {
@@ -87,7 +86,7 @@ class EtatCompUsers extends Component
             $ligne['txtransfo'] = $txcompuser;
             array_push($usersssobjs, $ligne);
         }
-        return view('livewire.etat-comp-users',['entete_taches' => $entete_taches,
+        return view('transformation::livewire.etat-comp-users',['entete_taches' => $entete_taches,
                                                 'entete_objectifs' => $entete_objectifs,
                                                 'entete_ssobjectifs' => $entete_ssobjectifs,
                                                 'usersssobjs' => $usersssobjs,

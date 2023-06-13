@@ -1,18 +1,16 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Transformation\Entities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\SousObjectif;
-use App\Models\Tache;
-use App\Models\Stage;
-use App\Models\Fonction;
+use Modules\Transformation\Traits\HasTablePrefix;
 
 class TransformationHistory extends Model
 {
     use HasFactory;
+    use HasTablePrefix;
 
     protected $fillable = [
         'event',

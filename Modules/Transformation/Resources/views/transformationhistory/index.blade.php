@@ -12,7 +12,7 @@
         <h2>Historique des modifications de la transformation</h2>
 
         <div class="mt-3">
-            <livewire:transformation-history-table>
+            <livewire:transformation::transformation-history-table>
         </div>
 
     </div>
