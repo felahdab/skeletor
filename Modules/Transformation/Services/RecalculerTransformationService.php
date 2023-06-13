@@ -1,10 +1,10 @@
 <?php
-namespace App\Service;
+namespace Modules\Transformation\Services;
 
 use App\Models\User;
 
-use App\Jobs\CalculateUserTransformationRatios;
-use App\Jobs\CalculateUserNbJoursValidation;
+use Modules\Transformation\Jobs\CalculateUserTransformationRatios;
+use Modules\Transformation\Jobs\CalculateUserNbJoursValidation;
 
 use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\Bus;

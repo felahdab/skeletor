@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace Modules\Transformation\Http\Livewire;
 
 use Livewire\Component;
 
-use App\Service\RecalculerTransformationService;
+use Modules\Transformation\Services\RecalculerTransformationService;
 use Illuminate\Support\Facades\Bus;
 
 class GereRecalcul extends Component
@@ -24,13 +24,13 @@ class GereRecalcul extends Component
             {
                 if (! $nb_jours_batch->finished() ||  ! $tx_transfo_batch->finished())
                 {
-                    return view('livewire.gere-recalcul', ['nb_jours_batch' => $nb_jours_batch,
+                    return view('transformation::livewire.gere-recalcul', ['nb_jours_batch' => $nb_jours_batch,
                                                    'tx_transfo_batch' => $tx_transfo_batch]);
                 }
             }
         }
         $this->inProgress=false;
-        return view('livewire.gere-recalcul');
+        return view('transformation::livewire.gere-recalcul');
     }
 
     public function startRecalcul()

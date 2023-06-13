@@ -2,7 +2,7 @@
 
 namespace Modules\Transformation\Http\Controllers;
 
-use App\Service\RecalculerTransformationService;
+use Modules\Transformation\Services\RecalculerTransformationService;
 
 use Illuminate\Http\Request;
 

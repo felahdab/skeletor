@@ -2,7 +2,7 @@
 
 namespace Modules\Transformation\Http\Controllers;
 
-use App\Service\RecalculerTransformationService;
+use Modules\Transformation\Services\RecalculerTransformationService;
 
 use Modules\Transformation\Http\Requests\StoreCompagnonageRequest;
 use Modules\Transformation\Entities\Compagnonage;

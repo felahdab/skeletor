@@ -15,7 +15,7 @@
         </div>
         <p class="mt-5 mb-5"><b><u>Attention</u></b> : Ce traitement peut durer quelques minutes.</p>
 
-        <livewire:gere-recalcul>
+        <livewire:transformation::gere-recalcul>
 
     </div>
 @endsection

@@ -2,7 +2,7 @@
 
 namespace Modules\Transformation\Console;
 
-use App\Service\RecalculerTransformationService;
+use Modules\Transformation\Services\RecalculerTransformationService;
 
 use Illuminate\Console\Command;
 

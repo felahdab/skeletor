@@ -13,7 +13,7 @@ use Modules\Transformation\Entities\SousObjectif;
 use App\Models\Stage;
 use App\Models\User;
 
-use App\Service\RecalculerTransformationService;
+use Modules\Transformation\Services\RecalculerTransformationService;
 use App\Service\GererTransformationService;
 
 use Illuminate\Http\Request;

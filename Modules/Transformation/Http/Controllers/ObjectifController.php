@@ -5,7 +5,7 @@ namespace Modules\Transformation\Http\Controllers;
 use Modules\Transformation\Http\Requests\StoreObjectifRequest;
 use Modules\Transformation\Http\Requests\UpdateObjectifRequest;
 
-use App\Service\RecalculerTransformationService;
+use Modules\Transformation\Services\RecalculerTransformationService;
 
 use Illuminate\Http\Request;
 

@@ -3,7 +3,7 @@
 namespace Modules\Transformation\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Service\RecalculerTransformationService;
+use Modules\Transformation\Services\RecalculerTransformationService;
 
 use App\Http\Requests\StoreTacheRequest;
 use App\Http\Requests\UpdateTacheRequest;
