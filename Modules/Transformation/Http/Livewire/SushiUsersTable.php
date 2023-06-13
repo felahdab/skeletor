@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace Modules\Transformation\Http\Livewire;
 
 use App\Models\User;
 use App\Models\SushiUser;
@@ -41,7 +41,7 @@ class SushiUsersTable extends DataTableComponent
 
     public function mount()
     {
-        $relevant_userids=DB::table('user_fonction')
+        $relevant_userids=DB::table('transformation_user_fonction')
                         ->select('user_id')
                         ->where('fonction_id', $this->fonction->id)
                         ->get()

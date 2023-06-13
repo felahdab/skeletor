@@ -24,7 +24,7 @@
         </div>
         
         
-        @livewire('livret-transformation', ['mode'      => "modificationmultiple",
+        @livewire('transformation::livret-transformation', ['mode'      => "modificationmultiple",
                                             'fonction'  => $fonction])
     </div>
 @endsection

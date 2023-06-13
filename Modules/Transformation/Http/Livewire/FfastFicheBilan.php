@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace Modules\Transformation\Http\Livewire;
 
 use Livewire\Component;
 
@@ -56,7 +56,7 @@ class FfastFicheBilan extends Component
             }
         }
 
-        return view('livewire.ffast-fiche-bilan', ['user'      => $user,
+        return view('transformation::livewire.ffast-fiche-bilan', ['user'      => $user,
                                             'listcomp'  => $listcomp,
                                             'liststage' => $liststage]);
     }

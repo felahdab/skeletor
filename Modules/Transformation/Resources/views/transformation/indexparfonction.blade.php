@@ -12,7 +12,7 @@
             Liste des fonctions pour validation collective
         </div>
         <div class="mt-3">
-            @livewire('fonction-list', ["mode" => "transformation"])
+            @livewire('transformation::fonction-list', ["mode" => "transformation"])
         </div>
     </div>
 @endsection

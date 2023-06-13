@@ -223,11 +223,11 @@ class FonctionController extends Controller
     
     public function choixmarins(Fonction $fonction)
     {
-        return view('transformation.livretmultiple', ['fonction' => $fonction]);
+        return view('transformation::transformation.livretmultiple', ['fonction' => $fonction]);
     }
 
     public function listemarinsfonction(Fonction $fonction)
     {
-        return view('fonctions.listemarinsfonction', ['fonction' => $fonction]);
+        return view('transformation::fonctions.listemarinsfonction', ['fonction' => $fonction]);
     }
 }
