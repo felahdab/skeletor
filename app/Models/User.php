@@ -289,7 +289,7 @@ class User extends Authenticatable
 
     public function sous_objectifs()
     {
-        return $this->belongsToMany(SousObjectif::class, 'transformation_user_sous_objectif')
+        return $this->belongsToMany(SousObjectif::class, 'transformation_user_sous_objectifs')
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation', 'valideur', 'nb_jours_pour_validation', 'date_proposition_validation');
     }
