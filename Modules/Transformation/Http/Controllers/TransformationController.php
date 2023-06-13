@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Artisan;
 use App\Console\Commands\RecalculerTransformation;
 use App\Console\Commands;
 
-use App\Service\LivretPdfService;
+use Modules\Transformation\Services\LivretPdfService;
 
 use App\Models\User;
 use App\Models\Secteur;
