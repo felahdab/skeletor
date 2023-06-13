@@ -6,27 +6,13 @@
     },
     "servers": [
         {
-            "url": "https://pprod-ffast.intradef.gouv.fr/florian"
+            "url": "https://pprod-ffast.intradef.gouv.fr/ffast"
         }
     ],
     "paths": {
-        "/api/v1/user": {
-            "get": {
-                "responses": {
-                    "200": {
-                        "description": "Renvoie l'utilisateur pour le compte duquel la requete a ete faite."
-                    }
-                },
-                "security": [
-                    {
-                        "api token": []
-                    }
-                ]
-            }
-        },
         "/api/v1/fonctions": {
             "get": {
-                "operationId": "8343ac52ee5a64666144b1d0033196c6",
+                "operationId": "448e1de43fce93a8f14ae881dbad2bdc",
                 "responses": {
                     "200": {
                         "description": "Renvoie la liste des fonctions."
@@ -41,10 +27,24 @@
         },
         "/api/v1/marins": {
             "get": {
-                "operationId": "4740be32ec1355023a80d5475c6053af",
+                "operationId": "61758c68ce8df91c374712e40937d89a",
                 "responses": {
                     "200": {
                         "description": "Renvoie la liste des marins en transformation."
+                    }
+                },
+                "security": [
+                    {
+                        "api token": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/user": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Renvoie l'utilisateur pour le compte duquel la requete a ete faite."
                     }
                 },
                 "security": [
