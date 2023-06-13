@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Transformation\Http\Controllers;
 
 use App\Http\Requests\StoreTypeFonctionRequest;
 use App\Http\Requests\UpdateTypeFonctionRequest;
-use App\Models\TypeFonction;
+use Modules\Transformation\Entities\TypeFonction;
+use App\Http\Controllers\Controller;
 
 class TypeFonctionController extends Controller
 {

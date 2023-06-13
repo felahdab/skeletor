@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Transformation\Http\Controllers;
 
 use App\Http\Requests\StoreTypeLicenceRequest;
 use App\Http\Requests\UpdateTypeLicenceRequest;
-use App\Models\TypeLicence;
+use Modules\Transformation\Entities\TypeLicence;
+
+use App\Http\Controllers\Controller;
 
 class TypeLicenceController extends Controller
 {
