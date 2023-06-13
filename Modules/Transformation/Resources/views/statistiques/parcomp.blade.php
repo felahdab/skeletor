@@ -12,7 +12,7 @@
             Sélectionnez le compagnonnage à afficher. L'onglet "Résultat" doit s'ouvrir automatiquement.
         </div>
         
-        <livewire:stat-par-comp>
+        <livewire:transformation::stat-par-comp>
 
     </div>
 @endsection
