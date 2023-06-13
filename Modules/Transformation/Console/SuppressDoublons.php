@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Modules\Transformation\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 
 use App\Models\User;
-use App\Models\UserSousObjectif;
+use Modules\Transformation\Entities\UserSousObjectif;
 
 use App\Jobs\CalculateUserTransformationRatios;
 
@@ -17,7 +17,7 @@ class SuppressDoublons extends Command
      *
      * @var string
      */
-    protected $signature = 'ffast:suppressdoublons';
+    protected $signature = 'transformation:suppressdoublons';
 
     /**
      * The console command description.

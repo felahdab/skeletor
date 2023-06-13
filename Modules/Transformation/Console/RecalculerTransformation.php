@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Modules\Transformation\Console;
 
 use App\Service\RecalculerTransformationService;
 
@@ -13,7 +13,7 @@ class RecalculerTransformation extends Command
      *
      * @var string
      */
-    protected $signature = 'ffast:recalculertransformation';
+    protected $signature = 'transformation:recalculertransformation';
 
     /**
      * The console command description.

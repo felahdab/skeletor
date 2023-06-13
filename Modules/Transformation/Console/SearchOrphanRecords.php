@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Modules\Transformation\Console;
 
 use Illuminate\Console\Command;
 
@@ -13,7 +13,7 @@ class SearchOrphanRecords extends Command
      *
      * @var string
      */
-    protected $signature = 'ffast:searchorphanrecords 
+    protected $signature = 'transformation:searchorphanrecords 
                              {delete=0 : Faut-il supprimer les enregistrements orphelins.},
                              {replacezeros=0 : Remplacer les references 0 par null.}';
 

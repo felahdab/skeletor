@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Modules\Transformation\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
@@ -9,7 +9,7 @@ use App\Service\StatService;
 
 use App\Models\Unite;
 use App\Models\User;
-use App\Models\Statistique;
+use Modules\Transformation\Entities\Statistique;
 
 use DateTime;
 
@@ -20,7 +20,7 @@ class GenerateStatistics extends Command
      *
      * @var string
      */
-    protected $signature = 'ffast:makestatistics 
+    protected $signature = 'transformation:makestatistics 
                               {unite=2 : Unite pour laquelle calculer les statistiques. Utiliser ffast:listunits pour obtenir la liste.},
                               {period? : Mois de calcul sous le format YYYY/M. Par defaut, le mois en cours.}';
 
