@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('user_fonction', function (Blueprint $table) {
+        Schema::table('transformation_user_fonction', function (Blueprint $table) {
             $table->index('user_id');
             $table->index('fonction_id');
         });
-        Schema::table('fonctions', function (Blueprint $table) {
+        Schema::table('transformation_fonctions', function (Blueprint $table) {
             $table->index('typefonction_id');
         });
     }
@@ -29,11 +29,11 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('user_fonction', function (Blueprint $table) {
+        Schema::table('transformation_user_fonction', function (Blueprint $table) {
             $table->dropIndex(['fonction_id']);
             $table->dropIndex(['user_id']);
         });
-        Schema::table('fonctions', function (Blueprint $table) {
+        Schema::table('transformation_fonctions', function (Blueprint $table) {
             $table->dropIndex(['typefonction_id']);
         });
     }
