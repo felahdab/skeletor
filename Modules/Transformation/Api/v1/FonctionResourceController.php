@@ -1,25 +1,24 @@
 <?php
 
-namespace App\Api\v1;
+namespace Modules\Transformation\Api\v1;
 
+use Modules\Transformation\Entities\Fonction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use App\Models\User;
-use App\Http\Resources\UserResource;
 
-class MarinResourceController extends Controller
+class FonctionResourceController extends Controller
 {
     /**
-    * @OA\Get(
-    *       path= "/api/v1/marins",
+     * @OA\Get(
+    *       path= "/api/v1/fonctions",
     *       security={{"api token": {}}},
-    *        @OA\Response(response= 200, description= "Renvoie la liste des marins en transformation.")
+    *        @OA\Response(response= 200, description= "Renvoie la liste des fonctions.")
     * )
      */
     public function index()
     {
-        return UserResource::collection(User::all()->where('en_transformation', true));
+        return Fonction::with('compagnonages')->get();
     }
 
     /**
@@ -33,7 +32,7 @@ class MarinResourceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $marin)
+    public function show(Fonction $fonction)
     {
         //
     }
@@ -41,7 +40,7 @@ class MarinResourceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $marin)
+    public function update(Request $request, Fonction $fonction)
     {
         //
     }
@@ -49,7 +48,7 @@ class MarinResourceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $marin)
+    public function destroy(Fonction $fonction)
     {
         //
     }
