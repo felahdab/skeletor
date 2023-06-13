@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace Modules\Transformation\Http\Livewire;
 
 use App\Service\GererTransformationService;
 
-use App\Models\Stage;
+use Modules\Transformation\Entities\Stage;
 use App\Models\User;
-use App\Models\TypeLicence;
+use Modules\Transformation\Entities\TypeLicence;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -54,16 +54,16 @@ class StagesTable extends DataTableComponent
     {
         switch ($this->mode){
             case "gestion" :
-                return view('tables.stagestable.gestion');
+                return view('transformation::tables.stagestable.gestion');
                 break;
             case "transformation" :
-                return view('tables.stagestable.transformation');
+                return view('transformation::tables.stagestable.transformation');
                 break;
             case "uservalidation" :
-                return view('tables.stagestable.uservalidation', ['user' => $this->user]);
+                return view('transformation::tables.stagestable.uservalidation', ['user' => $this->user]);
                 break;
             case "selectnewstage" :
-                return view('tables.stagestable.selectnewstage', ['user' => $this->user]);
+                return view('transformation::tables.stagestable.selectnewstage', ['user' => $this->user]);
                 break;
         }
     }
