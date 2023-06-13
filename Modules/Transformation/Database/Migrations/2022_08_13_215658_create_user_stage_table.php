@@ -13,11 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('compagnonages', function (Blueprint $table) {
+        Schema::create('transformation_user_stage', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-			$table->string('comp_libcourt', 100)->nullable(false);
-			$table->string('comp_liblong', 256)->nullable(false);
+			$table->foreignId('user_id');
+			$table->foreignId('stage_id');
+			$table->string('commentaire', 250)->nullable(true)->default(null);
+			$table->date('date_validation')->nullable(true)->default(null);
         });
     }
 
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('compagnonages');
+        Schema::dropIfExists('transformation_user_stage');
     }
 };

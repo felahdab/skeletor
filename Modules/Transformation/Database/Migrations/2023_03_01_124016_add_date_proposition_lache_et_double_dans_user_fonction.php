@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('user_fonction', function (Blueprint $table) {
+        Schema::table('transformation_user_fonction', function (Blueprint $table) {
             $table->date('date_proposition_double')->nullable(true)->default(null);
             $table->date('date_proposition_lache')->nullable(true)->default(null);
         });
@@ -26,7 +26,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('user_fonction', function (Blueprint $table) {
+        Schema::table('transformation_user_fonction', function (Blueprint $table) {
             $table->dropColumn('date_proposition_double');
             $table->dropColumn('date_proposition_lache');
         });

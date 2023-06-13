@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        foreach(['tache_objectif', 'compagnonage_tache', 'compagnonage_fonction'] as $tablename)
+        foreach(['transformation_tache_objectif', 'transformation_compagnonage_tache', 'transformation_compagnonage_fonction'] as $tablename)
         {
             Schema::table($tablename, function (Blueprint $table) {
                 $table->integer('ordre')->nullable(true)->default(0); 
@@ -24,7 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        foreach(['tache_objectif', 'compagnonage_tache', 'compagnonage_fonction'] as $tablename)
+        foreach(['transformation_tache_objectif', 'transformation_compagnonage_tache', 'transformation_compagnonage_fonction'] as $tablename)
         {
             Schema::table($tablename, function (Blueprint $table) {
                 $table->dropColumn('ordre'); 

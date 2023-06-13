@@ -8,13 +8,11 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::table('user_fonction', function (Blueprint $table) {
-            $table->integer('nb_jours_pour_validation')->nullable(true)->default(0); 
+        Schema::table('transformation_stages', function (Blueprint $table) {
+            $table->integer('duree_validite')->nullable(true);
         });
     }
 
@@ -25,8 +23,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('user_fonction', function (Blueprint $table) {
-            $table->dropColumn('nb_jours_pour_validation');
+        Schema::table('transformation_stages', function (Blueprint $table) {
+            $table->dropColumn('duree_validite');
         });
     }
 };

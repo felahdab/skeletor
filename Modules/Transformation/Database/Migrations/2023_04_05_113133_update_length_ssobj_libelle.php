@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('stages', function (Blueprint $table) {
-            $table->string('stage_lienurl')->nullable(true)->default(NULL); 
-        });
+        Schema::table('transformation_sous_objectifs', function (Blueprint $table) {
+            $table->string('ssobj_lib', 1500)->change();
+            });
+    
     }
 
     /**
@@ -21,8 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('stages', function (Blueprint $table) {
-            $table->dropColumn('stage_lienurl');
-        });
-    }
+        Schema::table('transformation_sous_objectifs', function (Blueprint $table) {
+            $table->string('ssobj_lib', 500)->change();
+            });
+        }
 };

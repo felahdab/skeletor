@@ -13,11 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('taches', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-			$table->string('tache_libcourt', 100)->nullable(false);
-			$table->string('tache_liblong', 256)->nullable(false);
+        Schema::table('transformation_user_fonction', function (Blueprint $table) {
+            $table->decimal('taux_de_transformation', 10,2)->nullable(true)->default(0);
         });
     }
 
@@ -28,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('taches');
+        Schema::table('transformation_user_fonction', function (Blueprint $table) {
+            $table->dropColumn('taux_de_transformation');
+        });
     }
 };

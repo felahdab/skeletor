@@ -11,20 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('stages', function (Blueprint $table) {
-            $table->integer('duree_validite')->nullable(true);
+        Schema::table('transformation_stages', function (Blueprint $table) {
+            $table->string('stage_lienurl')->nullable(true)->default(NULL); 
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::table('stages', function (Blueprint $table) {
-            $table->dropColumn('duree_validite');
+        Schema::table('transformation_stages', function (Blueprint $table) {
+            $table->dropColumn('stage_lienurl');
         });
     }
 };

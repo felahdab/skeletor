@@ -13,11 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('objectifs', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-			$table->string('objectif_libcourt', 100)->nullable(false);
-			$table->string('objectif_liblong', 256)->nullable(false);
+        Schema::table('transformation_fonction_stage', function (Blueprint $table) {
+            $table->date('date_previsionnelle')->nullable(true)->default(null);
         });
     }
 
@@ -28,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('objectifs');
+        Schema::table('transformation_fonction_stage', function (Blueprint $table) {
+            $table->dropColumn('date_previsionnelle');
+        });
     }
 };

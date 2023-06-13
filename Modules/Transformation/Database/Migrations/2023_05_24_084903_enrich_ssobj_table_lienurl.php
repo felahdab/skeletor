@@ -11,20 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('user_stage', function (Blueprint $table) {
-            $table->date('date_validite')->nullable(true);
+        Schema::table('transformation_sous_objectifs', function (Blueprint $table) {
+            $table->string('ssobj_lienurl')->nullable(true)->default(NULL); 
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::table('user_stage', function (Blueprint $table) {
-            $table->dropColumn('date_validite');
+        Schema::table('transformation_sous_objectifs', function (Blueprint $table) {
+            $table->dropColumn('ssobj_lienurl');
         });
     }
 };

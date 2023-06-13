@@ -13,11 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('type_fonctions', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-			$table->string('typfonction_libcourt', 100)->nullable(false);
-			$table->string('typfonction_liblong', 256)->nullable(false);
+        Schema::table('transformation_user_sous_objectif', function (Blueprint $table) {
+            $table->integer('nb_jours_pour_validation')->nullable(true)->default(0); 
         });
     }
 
@@ -28,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('type_fonctions');
+        Schema::table('transformation_user_sous_objectif', function (Blueprint $table) {
+            $table->dropColumn('nb_jours_pour_validation');
+        });
     }
 };

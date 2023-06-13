@@ -13,13 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_stage', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-			$table->foreignId('user_id');
-			$table->foreignId('stage_id');
-			$table->string('commentaire', 250)->nullable(true)->default(null);
-			$table->date('date_validation')->nullable(true)->default(null);
+        Schema::table('transformation_user_fonction', function (Blueprint $table) {
+            $table->integer('nb_jours_pour_validation')->nullable(true)->default(0); 
         });
     }
 
@@ -30,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_stage');
+        Schema::table('transformation_user_fonction', function (Blueprint $table) {
+            $table->dropColumn('nb_jours_pour_validation');
+        });
     }
 };

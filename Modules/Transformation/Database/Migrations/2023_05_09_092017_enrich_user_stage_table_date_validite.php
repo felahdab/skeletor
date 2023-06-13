@@ -8,16 +8,11 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('type_licences', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-			$table->string('typlicense_libcourt',50)->nullable(false);
-			$table->string('typlicense_liblong',500)->nullable(false);
+        Schema::table('transformation_user_stage', function (Blueprint $table) {
+            $table->date('date_validite')->nullable(true);
         });
     }
 
@@ -28,6 +23,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('type_licences');
+        Schema::table('transformation_user_stage', function (Blueprint $table) {
+            $table->dropColumn('date_validite');
+        });
     }
 };

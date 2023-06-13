@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('stages', function (Blueprint $table) {
+        Schema::table('transformation_stages', function (Blueprint $table) {
             $table->float('stage_duree', 10,2)->nullable(true);
             $table->string('stage_lieu', 100)->nullable(true);
             $table->integer('stage_capamax')->nullable(true);
@@ -29,7 +29,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('stages', function (Blueprint $table) {
+        Schema::table('transformation_stages', function (Blueprint $table) {
             $table->dropColumn('stage_duree');
             $table->dropColumn('stage_lieu');
             $table->dropColumn('stage_capamax');

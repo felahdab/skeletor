@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('sous_objectifs', function (Blueprint $table) {
-            $table->string('ssobj_lib', 1500)->change();
-            });
-    
+        Schema::table('transformation_sous_objectifs', function (Blueprint $table) {
+            $table->integer('ordre')->nullable(true)->default(0); 
+        });
     }
 
     /**
@@ -22,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('sous_objectifs', function (Blueprint $table) {
-            $table->string('ssobj_lib', 500)->change();
-            });
-        }
+        Schema::table('transformation_sous_objectifs', function (Blueprint $table) {
+            $table->dropColumn('ordre');
+        });
+    }
 };
