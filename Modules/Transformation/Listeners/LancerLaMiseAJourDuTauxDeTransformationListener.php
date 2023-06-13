@@ -7,7 +7,7 @@ use Illuminate\Queue\InteractsWithQueue;
 
 use Modules\Transformation\Events\UnLivretDeTransformationAChangeEvent;
 
-use App\Jobs\CalculateUserTransformationRatios;
+use Modules\Transformation\Jobs\CalculateUserTransformationRatios;
 
 
 

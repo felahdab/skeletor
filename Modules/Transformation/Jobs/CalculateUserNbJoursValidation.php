@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace Modules\Transformation\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Bus\Batchable;
@@ -13,7 +13,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
 
 use App\Models\User;
-use App\Models\Fonction;
+use Modules\Transformation\Entities\Fonction;
 
 class CalculateUserNbJoursValidation implements ShouldQueue
 {

@@ -2,19 +2,16 @@
 
 namespace App\Service;
 
-use App\Jobs\CalculateUserTransformationRatios;
-use App\Events\UnLivretDeTransformationAChangeEvent;
-use App\Dto\ChangementLivretDeTransformationDto;
+use Modules\Transformation\Events\UnLivretDeTransformationAChangeEvent;
+use Modules\Transformation\Dto\ChangementLivretDeTransformationDto;
 
 use Illuminate\Support\Carbon;
 
-use App\Models\TransformationHistory;
 use App\Models\Stage;
 use Modules\Transformation\Entities\Fonction;
 use Modules\Transformation\Entities\Objectif;
 use Modules\Transformation\Entities\SousObjectif;
-use Modules\Transformation\Entities\Tache;
-use Modules\Transformation\Entities\TypeFonction;
+use Modules\Transformation\Entities\Tache;  
 use App\Models\User;
 
 class GererTransformationService

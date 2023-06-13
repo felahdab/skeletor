@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace Modules\Transformation\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Bus\Batchable;
@@ -11,7 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
 use App\Models\User;
-use App\Models\Fonction;
+use Modules\Transformation\Entities\Fonction;
 
 class CalculateUserTransformationRatios implements ShouldQueue
 {
