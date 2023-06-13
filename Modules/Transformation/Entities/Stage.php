@@ -1,18 +1,19 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Transformation\Entities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Support\Carbon;
+use Modules\Transformation\Traits\HasTablePrefix;
 
-use App\Models\TypeLicence;
-use App\Models\Fonction;
+use App\Models\User;
 
 class Stage extends Model
 {
     use HasFactory;
+    use HasTablePrefix;
     
     public function type_licence()
     {
@@ -21,13 +22,13 @@ class Stage extends Model
     
 	public function fonctions()
     {
-        return $this->belongsToMany(Fonction::class, 'fonction_stage')
+        return $this->belongsToMany(Fonction::class, 'transformation_fonction_stage')
             ->withTimeStamps();
     }
 	
     public function users()
     {
-        return $this->belongsToMany(User::class, 'user_stage')
+        return $this->belongsToMany(User::class, 'transformation_user_stage')
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation', 'date_validite');
     }

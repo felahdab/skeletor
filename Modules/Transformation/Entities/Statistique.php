@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Transformation\Entities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Transformation\Traits\HasTablePrefix;
 
 use Illuminate\Support\Carbon;
 
@@ -13,6 +14,7 @@ use DateTime;
 class Statistique extends Model
 {
     use HasFactory;
+    use HasTablePrefix;
     
     protected $table="statistiques";
     

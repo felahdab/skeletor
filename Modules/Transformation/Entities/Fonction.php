@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Cache;
 
 use Modules\Transformation\Traits\HasTablePrefix;
 
-use App\Models\Stage;
 use App\Models\User;
 
 class Fonction extends Model
