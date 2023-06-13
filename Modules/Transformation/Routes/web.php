@@ -6,6 +6,8 @@ use Modules\Transformation\Http\Controllers\CompagnonageController;
 use Modules\Transformation\Http\Controllers\TacheController;
 use Modules\Transformation\Http\Controllers\ObjectifController;
 use Modules\Transformation\Http\Controllers\SousObjectifController;
+use Modules\Transformation\Http\Controllers\StageController;
+use Modules\Transformation\Http\Controllers\StatistiqueController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -43,6 +45,20 @@ Route::prefix(env('APP_PREFIX'))->group(function () {
 
     Route::resource('sous-objectifs', SousObjectifController::class);
     Route::post('sous-objectifs/multipleupdate', [SousObjectifController::class, 'multipleupdate'])->name('sous-objectifs.multipleupdate');
-    
 
+    Route::resource('stages',         StageController::class);
+    Route::post('stages/{stage}/validergroupe', [StageController::class, 'validermarins'])->name('stages.validermarins');
+    Route::post('stages/{stage}/attribuerstage', [StageController::class, 'attribuerstage'])->name('stages.attribuerstage');
+    Route::post('stages/{stage}/retirerstage', [StageController::class, 'annulermarins'])->name('stages.annulermarins');
+
+
+    Route::get('statistiques/', [StatistiqueController::class, 'index'])->name('statistiques.index');
+    Route::get('statistiques/parservice', [StatistiqueController::class, 'pourtuteurs'])->name('statistiques.pourtuteurs');
+    Route::get('statistiques/parservice/{service}', [StatistiqueController::class, 'parservice'])->name('statistiques.parservice');
+    Route::get('statistiques/global', [StatistiqueController::class, 'pourem'])->name('statistiques.pourem');
+    Route::get('statistiques/stages', [StatistiqueController::class, 'pour2ps'])->name('statistiques.pour2ps');
+    Route::get('statistiques/dashboard', [StatistiqueController::class, 'dashboard'])->name('statistiques.dashboard');
+    Route::get('statistiques/dashboardarchive', [StatistiqueController::class, 'dashboardarchive'])->name('statistiques.dashboardarchive');
+    //Route::get('statistiques/parcomp', [StatistiqueController::class, 'parcomp'])->name('statistiques.parcomp');
+    //Route::get('/{compagnonage}/statistiques.transfoparcomp', 'StatistiqueController@transfoparcomp')->name('statistiques.transfoparcomp');
 });

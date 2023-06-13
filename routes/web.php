@@ -100,11 +100,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         Route::get('archivage/{user}/suppr', [ArchivageController::class, 'supprimer'])->name('archivage.supprimer');
 
 
-        Route::resource('stages',         StageController::class);
-        Route::post('stages/{stage}/validergroupe', [StageController::class, 'validermarins'])->name('stages.validermarins');
-        Route::post('stages/{stage}/attribuerstage', [StageController::class, 'attribuerstage'])->name('stages.attribuerstage');
-        Route::post('stages/{stage}/retirerstage', [StageController::class, 'annulermarins'])->name('stages.annulermarins');
-
+        
         Route::post('bugreport', [BugReportController::class, 'store'])->name('bugreports.store');
 
         Route::group(['prefix' => 'transformation'], function () {
@@ -130,16 +126,6 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         Route::group(['prefix' => 'historique'], function () {
             Route::get('/', [TransformationHistoryController::class, 'index'])->name('historique.index');
         });
-
-        Route::get('statistiques/', [StatistiqueController::class, 'index'])->name('statistiques.index');
-        Route::get('statistiques/parservice', [StatistiqueController::class, 'pourtuteurs'])->name('statistiques.pourtuteurs');
-        Route::get('statistiques/parservice/{service}', [StatistiqueController::class, 'parservice'])->name('statistiques.parservice');
-        Route::get('statistiques/global', [StatistiqueController::class, 'pourem'])->name('statistiques.pourem');
-        Route::get('statistiques/stages', [StatistiqueController::class, 'pour2ps'])->name('statistiques.pour2ps');
-        Route::get('statistiques/dashboard', [StatistiqueController::class, 'dashboard'])->name('statistiques.dashboard');
-        Route::get('statistiques/dashboardarchive', [StatistiqueController::class, 'dashboardarchive'])->name('statistiques.dashboardarchive');
-        //Route::get('statistiques/parcomp', [StatistiqueController::class, 'parcomp'])->name('statistiques.parcomp');
-        //Route::get('/{compagnonage}/statistiques.transfoparcomp', 'StatistiqueController@transfoparcomp')->name('statistiques.transfoparcomp');
 
         Route::resource('liens', LienController::class);
 
