@@ -13,7 +13,7 @@
             <a href="{{ route('stages.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un stage</a>
         </div>
         <div class="mt-4">
-            @livewire('stages-table', ['mode' => "gestion"])
+            @livewire('transformation::stages-table', ['mode' => "gestion"])
         </div>
     </div>
 @endsection
