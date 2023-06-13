@@ -15,6 +15,9 @@ Pour accéder à FFAST, l’utilisateur doit avoir accès à un ordinateur ayant
 <p>&nbsp;</p>
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/connexion/accueil_login.png' )) }}" >
 <p>&nbsp;</p>
+
+>{info} Que la connexion soit établie avec le login local ou MindefConnect, dans les deux cas, vous travaillerez sur la même application. Il n'y a pas de travail "local" possible.
+
 <a name="login_auto">
 ## Authentification MindefConnect
 
@@ -22,29 +25,27 @@ En cliquant sur LOGIN AUTO, si les services du socle DIRISI sont tous fonctionne
 Entrez votre l’identifiant DR-CTP (en général premier lettre du prénom.nom – ex : p.nom) et votre mot de passe : 
   - pour les **marins** à terre (disposant d'une station Intradef normale), il s’agit du mot de passe de la session windows.
   - pour le **bord**, il s’agit du mot de passe associé au compte DR-CPT.
-
+<p>&nbsp;</p>
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/connexion/MindefConnect.png' )) }}">
-
-
+<p>&nbsp;</p>
 Lors de la première connexion, il vous sera demandé de saisir la raison de votre demande d'accès à l'application.L'administrateur validera ensuite l’ouverture des droits. Un mail confirmant votre autorisation d'accès vous sera envoyé dès que votre compte sera actif.
-
+<p>&nbsp;</p>
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/connexion/msg_1ere_connexion.png' )) }}">
-
+<p>&nbsp;</p>
 ** Remarque :**  Si l’utilisateur ne connait pas son mot de passe DR-CPT, il doit contacter les SIC de proximité pour faire réinitialiser son mot de passe. C’est la procédure à privilégier.
 > D’une façon générale, le mot de passe peut-être réinitialisé par le CORSIC de l’unité d’affectation Annudef, en utilisant le site https://portail-motdepasse.intradef.gouv.fr/
 
 <a name="login_local">
 ## Login Local
 
-Pour pallier le fait que certains marins n'ont pas de session Windows lors de leur mise pour emploi à bord des FREMM ou les indisponibilités des services DIRISI, il est aussi possible de se connecter avec LOGIN LOCAL.
+Pour pallier le fait que certains marins n'ont pas de session Windows lors de leur mise pour emploi à bord des FREMM ou les indisponibilités des services DIRISI, il est aussi possible de se connecter avec des identifiants "locaux".
 
-Afin de disposer d'identifiants locaux, vous devez initialiser votre mot de passe local en passant par le menu "GD prénom NOM/changer le mot de passe" lors de votre première connexion MindefConnect. Ce mot de passe doit contenir au moins 8 caractères.
+Pour cela, vous devez initialiser votre mot de passe local en passant par le menu "GD prénom NOM/changer le mot de passe" lors de votre première connexion MindefConnect. Ce mot de passe doit contenir au moins 8 caractères.
+
+Dans le cas ou l'authentification MindefConnect n'est pas possible, vous saisissez votre adresse mail intradef complète et le mot de passe choisi (1). Après validation (2), vous pourrez accéder à l'application.
 <p>&nbsp;</p>
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/connexion/login_local.png' )) }}" width="300px">
 <p>&nbsp;</p>
-Dans le cas ou l'authentification MindefConnect n'est pas possible, vous saisissez votre adresse mail intradef complète et le mot de passe choisi (1). Après validation (2), vous pourrez accéder à l'application.
-
->{info} Que la connexion soit établie avec le login local ou MindefConnect, dans les deux cas, vous travaillerez sur la même application. Il n'y a pas de travail "local" possible.
 
 Si la réinitialisation du mot de passe DR-CPT n’est pas possible ou ne peut pas être faite, et que vous n'avez pas initialisé vos identifiants locaux, il faut l’intervention d’un administrateur de FFAST. Il suffit donc d’envoyer un mail à l’adresse: ffast.notification.tec@intradef.gouv.fr.
 D’une façon générale, l’administrateur de FFAST s’efforcera de communiquer un mot de passe temporaire à l’utilisateur et à un cadre de proximité. Il sera alors conseillé à l’utilisateur de modifier son mot de passe à la première connexion.
