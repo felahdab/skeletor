@@ -21,7 +21,7 @@ Ce menu permet d’accéder :
 3. à la liste des compagnonnages. La selection d'un compagnonnage permet de consulter et valider les marins ayant ce compagnonnage associé à une de ses fonctions.
 4. à la liste des stages. La selection d'un stage permet de consulter la liste des marins en attente de ce stage ou ceux l’ayant déjà validé.
 5. au calcul des taux de transformation.
-6. à l'ensemble des fiches bilan. Des filtres permettent d'affiner l'affcihage.
+6. à l'ensemble des fiches bilan. Des filtres permettent d'affiner l'affichage.
 
 <a name="suivi-par-marin">
 ## Suivi de la transformation par marin
@@ -38,13 +38,13 @@ Ce menu permet d’accéder :
 <a name="attribuer-des-fonctions">
 ### Attribuer des fonctions
 Écran permettant l’attribution et le retrait de fonction à un marin.
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/attribution_fonctions.png' )) }}" width=600px>
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/attribution_fonctions.png' )) }}">
 1. Identité du marin concerné
 2. Liste des fonctions attribuées. 
 3. Le bouton (3) « Retirer cette fonction » retire la fonction au marin.
 4. Sélectionnez dans la liste déroulante la fonction à attribuer puis cliquez sur « Attribuer cette fonction » pour valider.
 5. Une fois les fonctions attribuées, accédez directement au livret de transformation du marin.
-6. Le bouton « Retour » permet de revenir à la liste des marins en transformation.
+6. Le bouton « Annuler » permet de revenir à la liste des marins en transformation.
 
 <a name="livret-de-transformation">
 ### Livret de transformation
@@ -53,8 +53,8 @@ Ce menu permet d’accéder :
 La barre de navigation (1) permet l’accès direct aux autres affichages concernant le marin sélectionné.
 (2) Retrouvez la liste des fonctions du marin. Cliquez sur la ligne pour voir l’ensemble des tâches, objectifs (6), stages (7) et état de lâcher (8) associés à une fonction. 
 
-> {info} Pour chaque fonction, les icônes suivantes signifient : 
->  - **&#10004;** le marin est lâché dans cette fonction.
+> **Remarque :**  Pour chaque fonction, les icônes suivantes signifient : 
+>  - <span class="text-success">**&#10004;**</span> le marin est lâché dans cette fonction.
 >  - **&#128232;** des objectifs sont en attente de validation.
 
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/livret_de_transformation_developpe.png' )) }}" width=1000px> 
