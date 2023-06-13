@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Listeners;
+namespace Modules\Transformation\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-use App\Events\UnLivretDeTransformationAChangeEvent;
-use App\Models\TransformationHistory;
-use App\Dto\ChangementLivretDeTransformationDto;
+use Modules\Transformation\Events\UnLivretDeTransformationAChangeEvent;
+use Modules\Transformation\Entities\TransformationHistory;
+use Modules\Transformation\Dto\ChangementLivretDeTransformationDto;
 
 class HistoriserUnChangementDuLivretDeTransformationListener
 {

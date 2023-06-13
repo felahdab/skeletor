@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Listeners;
+namespace Modules\Transformation\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-use App\Events\UserProposedSomeValidationEvent;
+use Modules\Transformation\Events\UserProposedSomeValidationEvent;
 
 class HandleUserProposedSomeValidationEvent
 {

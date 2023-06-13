@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Dto;
+namespace Modules\Transformation\Dto;
 
 use Spatie\LaravelData\Data;
 use App\Models\User;

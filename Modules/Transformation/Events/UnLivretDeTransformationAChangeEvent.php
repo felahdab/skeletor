@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Events;
+namespace Modules\Transformation\Events;
 
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-use App\Dto\ChangementLivretDeTransformationDto;
+use Modules\Transformation\Dto\ChangementLivretDeTransformationDto;
 
 class UnLivretDeTransformationAChangeEvent
 {

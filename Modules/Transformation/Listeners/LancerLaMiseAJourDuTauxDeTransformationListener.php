@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Listeners;
+namespace Modules\Transformation\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-use App\Events\UnLivretDeTransformationAChangeEvent;
+use Modules\Transformation\Events\UnLivretDeTransformationAChangeEvent;
 
 use App\Jobs\CalculateUserTransformationRatios;
 
