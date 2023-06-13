@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace Modules\Transformation\Http\Livewire;
 
 use Livewire\Component;
 
@@ -22,6 +22,6 @@ class StatParComp extends Component
 
     public function render()
     {
-        return view('livewire.stat-par-comp');
+        return view('transformation::livewire.stat-par-comp');
     }
 }
