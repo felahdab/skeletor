@@ -44,7 +44,7 @@ class Dashboardarchive extends Component
                 'nbmarins'    => count($archive),
             ];
         }
-        return view('livewire.dashboardarchive', ['charts' => $charts]);    
+        return view('transformation::livewire.dashboardarchive', ['charts' => $charts]);    
 
     }
     

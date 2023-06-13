@@ -13,6 +13,6 @@
         </div>
         <div class="mt-3 mb-4"><b style="font-size: x-large;">&#9432;</b> Les filtres dates permettent de filtrer uniquement sur la date de débarquement.</div>
         
-        <livewire:dashboardarchive>
+        <livewire:transformation::dashboardarchive>
     </div>
 @endsection

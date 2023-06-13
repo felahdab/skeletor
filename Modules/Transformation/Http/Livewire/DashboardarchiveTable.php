@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace Modules\Transformation\Http\Livewire;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-use App\Models\Archive;
+use Modules\Transformation\Entities\Archive;
 
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
