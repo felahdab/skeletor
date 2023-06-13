@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace Modules\Transformation\Http\Livewire;
 
 use Livewire\Component;
 
@@ -9,7 +9,7 @@ use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Asantibanez\LivewireCharts\Models\MultiLineChartModel;
 
-use App\Models\Fonction;
+use Modules\Transformation\Entities\Fonction;
 use App\Models\User;
 
 use App\Service\RandomColorService;
@@ -79,7 +79,7 @@ class Dashboard extends Component
 
         }
 
-        return view('livewire.dashboard', ['charts' => $charts]);
+        return view('transformation::livewire.dashboard', ['charts' => $charts]);
     }
     
 

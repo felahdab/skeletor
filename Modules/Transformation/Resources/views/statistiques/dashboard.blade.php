@@ -12,6 +12,6 @@
             Affinez la liste des marins en effectuant une recherche ou en filtrant les données.
         </div>
         
-        <livewire:dashboard>
+        <livewire:transformation::dashboard>
     </div>
 @endsection
