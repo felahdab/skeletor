@@ -1,12 +1,12 @@
 <?php
-namespace App\Service;
+namespace Modules\Transformation\Services;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 
 use App\Models\User;
-use App\Models\Statistique;
+use Modules\Transformation\Entities\Statistique;
 
 class StatService
 {

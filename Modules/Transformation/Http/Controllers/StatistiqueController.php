@@ -7,7 +7,7 @@ use Illuminate\Support\Carbon;
 
 use Illuminate\Http\Request;
 
-use App\Service\StatService;
+use Modules\Transformation\Services\StatService;
 
 use App\Models\Statistique;
 use Modules\Transformation\Entities\Stage;

@@ -1,5 +1,5 @@
 <?php
-namespace App\Service;
+namespace Modules\Transformation\Services;
 
 use App\Models\TransformationHistory;
 use Modules\Transformation\Entities\Stage;
@@ -9,7 +9,7 @@ use Modules\Transformation\Entities\Tache;
 use Modules\Transformation\Entities\Objectif;
 use Modules\Transformation\Entities\SousObjectif;
 
-use App\Models\UserSousObjectif;
+use Modules\Transformation\Entities\UserSousObjectif;
 use App\Models\User;
 
 class TransformationManagerService

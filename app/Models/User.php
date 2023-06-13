@@ -15,7 +15,7 @@ use Lab404\Impersonate\Models\Impersonate;
 
 use App\Jobs\CalculateUserTransformationRatios;
 use App\Service\GererTransformationService;
-use App\Service\TransformationManagerService;
+use Modules\Transformation\Services\TransformationManagerService;
 use App\Service\AnnudefAjaxRequestService;
 
 use Illuminate\Database\Eloquent\Model;
