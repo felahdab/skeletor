@@ -28,6 +28,7 @@ class TransformationServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+        $this->registerCommands();
     }
 
     /**
@@ -38,6 +39,21 @@ class TransformationServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+    }
+
+    /**
+     * Register commands.
+     *
+     * @return void
+     */
+    public function registerCommands()
+    {
+        $this->commands([
+            \Modules\Transformation\Console\GenerateStatistics::class,
+            \Modules\Transformation\Console\RecalculerTransformation::class,
+            \Modules\Transformation\Console\SearchOrphanRecords::class,
+            \Modules\Transformation\Console\SuppressDoublons::class
+        ]);
     }
 
     /**
