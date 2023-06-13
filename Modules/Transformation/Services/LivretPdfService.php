@@ -1,5 +1,6 @@
 <?php
-namespace App\Service;
+namespace Modules\Transformation\Services;
+
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 
@@ -10,7 +11,7 @@ class LivretPdfService
         $pathbrest = Storage::path('public/livret-gtr-brest.jpg');
         $pathtln = Storage::path('public/livret-gtr-toulon.jpg');
 
-        $html = view('transformation.livretpdf', ['user' => $user,
+        $html = view('transformation::transformation.livretpdf', ['user' => $user,
             'pathbrest' => $pathbrest,
             'pathtln'   => $pathtln])->render();
 
