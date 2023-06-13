@@ -26,15 +26,12 @@ Entrez votre l’identifiant DR-CTP (en général premier lettre du prénom.nom 
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/connexion/MindefConnect.png' )) }}">
 
 
->{info} Lors de la première connexion, il vous sera demandé de saisir la raison de votre demande d'accès à l'application.L'administrateur validera ensuite l’ouverture des droits. 
+Lors de la première connexion, il vous sera demandé de saisir la raison de votre demande d'accès à l'application.L'administrateur validera ensuite l’ouverture des droits. Un mail confirmant votre autorisation d'accès vous sera envoyé dès que votre compte sera actif.
 
->Un mail confirmant votre autorisation d'accès vous sera envoyé dès que votre compte sera actif.
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/connexion/msg_1ere_connexion.png' )) }}">
 
-
-<u>Remarque</u> : 
-Si l’utilisateur ne connait pas son mot de passe DR-CPT, il doit contacter les SIC de proximité pour faire réinitialiser son mot de passe. C’est la procédure à privilégier.
-D’une façon générale, le mot de passe peut-être réinitialisé par le CORSIC de l’unité d’affectation Annudef, en utilisant le site https://portail-motdepasse.intradef.gouv.fr/
-
+** Remarque :**  Si l’utilisateur ne connait pas son mot de passe DR-CPT, il doit contacter les SIC de proximité pour faire réinitialiser son mot de passe. C’est la procédure à privilégier.
+> D’une façon générale, le mot de passe peut-être réinitialisé par le CORSIC de l’unité d’affectation Annudef, en utilisant le site https://portail-motdepasse.intradef.gouv.fr/
 
 <a name="login_local">
 ## Login Local
@@ -43,7 +40,7 @@ Pour pallier le fait que certains marins n'ont pas de session Windows lors de le
 
 Afin de disposer d'identifiants locaux, vous devez initialiser votre mot de passe local en passant par le menu "GD prénom NOM/changer le mot de passe" lors de votre première connexion MindefConnect. Ce mot de passe doit contenir au moins 8 caractères.
 <p>&nbsp;</p>
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/connexion/login_local.png' )) }}" width="500px">
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/connexion/login_local.png' )) }}" width="300px">
 <p>&nbsp;</p>
 Dans le cas ou l'authentification MindefConnect n'est pas possible, vous saisissez votre adresse mail intradef complète et le mot de passe choisi (1). Après validation (2), vous pourrez accéder à l'application.
 
