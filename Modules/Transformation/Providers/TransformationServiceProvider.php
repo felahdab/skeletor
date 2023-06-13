@@ -127,4 +127,11 @@ class TransformationServiceProvider extends ServiceProvider
         }
         return $paths;
     }
+
+    protected function discoverEventsWithin(): array
+{
+    return [
+        $this->app->path('Listeners'),
+    ];
+}
 }
