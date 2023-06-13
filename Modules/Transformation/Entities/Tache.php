@@ -17,14 +17,14 @@ class Tache extends Model
     
     public function objectifs()
     {
-        return $this->belongsToMany(Objectif::class, 'tache_objectif')
+        return $this->belongsToMany(Objectif::class, 'transformation_tache_objectif')
             ->withTimestamps()
             ->withPivot('ordre');
     }
     
     public function compagnonages()
     {
-        return $this->belongsToMany(Compagnonage::class, 'compagnonage_tache')->withTimestamps();
+        return $this->belongsToMany(Compagnonage::class, 'transformation_compagnonage_tache')->withTimestamps();
     }
     
     public function nb_ssobj()

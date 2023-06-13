@@ -18,7 +18,7 @@ class Fonction extends Model
     
     public function compagnonages()
     {
-        return $this->belongsToMany(Compagnonage::class, 'compagnonage_fonction')
+        return $this->belongsToMany(Compagnonage::class, 'transformation_compagnonage_fonction')
                 ->withTimestamps()
                 ->withPivot('ordre');
     }
@@ -35,7 +35,7 @@ class Fonction extends Model
     
     public function users()
     {
-        return $this->belongsToMany(User::class, 'user_fonction')
+        return $this->belongsToMany(User::class, 'transformation_user_fonction')
         ->withTimeStamps()
         ->withPivot('date_lache','valideur_lache','commentaire_lache',
                     'date_double','valideur_double','commentaire_double',

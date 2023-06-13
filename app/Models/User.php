@@ -242,7 +242,7 @@ class User extends Authenticatable
 
     public function fonctions()
     {
-        return $this->belongsToMany(Fonction::class, 'user_fonction')
+        return $this->belongsToMany(Fonction::class, 'transformation_user_fonction')
             ->withTimeStamps()
             ->withPivot(
                 'date_lache',

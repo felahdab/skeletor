@@ -4,7 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 
-use App\Models\Compagnonage;
+use Modules\Transformation\Entities\Compagnonage;
 
 class StatParComp extends Component
 {

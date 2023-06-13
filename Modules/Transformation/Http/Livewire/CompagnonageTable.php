@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace Modules\Transformation\Http\Livewire;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\Compagnonage;
+use Modules\Transformation\Entities\Compagnonage;
 
 class CompagnonageTable extends DataTableComponent
 {
@@ -37,7 +37,7 @@ class CompagnonageTable extends DataTableComponent
     }
     public function userActions()
     {
-        return view('tables.stattable.boutoncomp');
+        return view('transformation::tables.stattable.boutoncomp');
     }
 
 }

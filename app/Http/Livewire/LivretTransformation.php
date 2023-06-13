@@ -5,11 +5,11 @@ namespace App\Http\Livewire;
 use App\Service\GererTransformationService;
 
 use App\Models\User;
-use App\Models\Fonction;
-use App\Models\Compagnonage;
-use App\Models\Tache;
-use App\Models\Objectif;
-use App\Models\SousObjectif;
+use Modules\Transformation\Entities\Fonction;
+use Modules\Transformation\Entities\Compagnonage;
+use Modules\Transformation\Entities\Tache;
+use Modules\Transformation\Entities\Objectif;
+use Modules\Transformation\Entities\SousObjectif;
 
 use Livewire\Component;
 

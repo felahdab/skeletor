@@ -11,10 +11,10 @@ use Illuminate\Support\Carbon;
 use App\Models\TransformationHistory;
 use App\Models\Stage;
 use Modules\Transformation\Entities\Fonction;
-use App\Models\Objectif;
-use App\Models\SousObjectif;
-use App\Models\Tache;
-use App\Models\TypeFonction;
+use Modules\Transformation\Entities\Objectif;
+use Modules\Transformation\Entities\SousObjectif;
+use Modules\Transformation\Entities\Tache;
+use Modules\Transformation\Entities\TypeFonction;
 use App\Models\User;
 
 class GererTransformationService

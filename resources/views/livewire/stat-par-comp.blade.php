@@ -18,7 +18,7 @@
     </div>        
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane @if(! $tabresult) show  active @endif" id="nav-table" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
-            <livewire:compagnonage-table>
+            <livewire:transformation::compagnonage-table>
         </div>
         <div class="tab-pane @if($tabresult) show  active @endif" id="nav-fiches" role="tabpanel" tabindex="0">
             @if ($comp)

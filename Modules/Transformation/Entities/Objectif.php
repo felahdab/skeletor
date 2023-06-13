@@ -24,7 +24,7 @@ class Objectif extends Model
     
     public function taches()
     {
-        return $this->belongsToMany(Tache::class, 'tache_objectif')->withTimestamps();
+        return $this->belongsToMany(Tache::class, 'transformation_tache_objectif')->withTimestamps();
     }
     
     public function coll_sous_objectifs()

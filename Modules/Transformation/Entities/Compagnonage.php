@@ -18,14 +18,14 @@ class Compagnonage extends Model
     
     public function taches()
     {
-        return $this->belongsToMany(Tache::class, 'compagnonage_tache')
+        return $this->belongsToMany(Tache::class, 'transformation_compagnonage_tache')
             ->withTimestamps()
             ->withPivot('ordre');
     }
     
     public function fonctions()
     {
-        return $this->belongsToMany(Fonction::class, 'compagnonage_fonction')->withTimestamps();
+        return $this->belongsToMany(Fonction::class, 'transformation_compagnonage_fonction')->withTimestamps();
     }
 
     public function getCachedTachesAttribute()
