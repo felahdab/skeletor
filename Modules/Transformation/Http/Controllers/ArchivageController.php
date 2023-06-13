@@ -1,22 +1,24 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Transformation\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 use App\Models\User;
 
-use App\Service\LivretPdfService;
+use Modules\Transformation\Services\LivretPdfService;
 use App\Service\StatService;
-use App\Service\ArchivRestaurService;
+use Modules\Transformation\Services\ArchivRestaurService;
+
+use App\Http\Controllers\Controller;
 
 
 class ArchivageController extends Controller
 {
     public function index() 
     {
-        return view('archivage.index');
+        return view('transformation::archivage.index');
     }
 
     public function conservcpte($user) 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace Modules\Transformation\Http\Livewire;
 
 use Livewire\Component;
 
@@ -9,7 +9,7 @@ use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Asantibanez\LivewireCharts\Models\MultiLineChartModel;
 
-use App\Models\Archive;
+use Modules\Transformation\Entities\Archive;
 
 use App\Service\RandomColorService;
 

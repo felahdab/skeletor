@@ -92,13 +92,6 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         Route::resource('roles',          RolesController::class);
         Route::resource('permissions',    PermissionsController::class);
 
-        Route::get('archivage', [ArchivageController::class, 'index'])->name('archivage.index');
-        Route::get('archivage/{user}/restauravecdonnees', [ArchivageController::class, 'conservcpte'])->name('archivage.conservcpte');
-        Route::get('archivage/{user}/restaursansdonnees', [ArchivageController::class, 'effacecpte'])->name('archivage.effacecpte');
-        Route::get('archivage/{user}/impression', [ArchivageController::class, 'imprimer'])->name('archivage.imprimer');
-        Route::get('archivage/{user}/archivage', [ArchivageController::class, 'archiver'])->name('archivage.archiver');
-        Route::get('archivage/{user}/suppr', [ArchivageController::class, 'supprimer'])->name('archivage.supprimer');
-
         Route::post('bugreport', [BugReportController::class, 'store'])->name('bugreports.store');
 
         Route::resource('liens', LienController::class);

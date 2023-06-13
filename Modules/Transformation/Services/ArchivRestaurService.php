@@ -1,5 +1,5 @@
 <?php
-namespace App\Service;
+namespace  Modules\Transformation\Services;
 
 use Illuminate\Support\Carbon;
 
@@ -11,7 +11,7 @@ use App\Service\RandomPasswordGeneratorService;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeMail;
 
-use App\Models\Archive;
+use  Modules\Transformation\Entities\Archive;
 
 class ArchivRestaurService
 {

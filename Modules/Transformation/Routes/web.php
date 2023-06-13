@@ -10,6 +10,7 @@ use Modules\Transformation\Http\Controllers\StageController;
 use Modules\Transformation\Http\Controllers\StatistiqueController;
 use Modules\Transformation\Http\Controllers\TransformationController;
 use Modules\Transformation\Http\Controllers\TransformationHistoryController;
+use Modules\Transformation\Http\Controllers\ArchivageController;
 
 use App\Http\Controllers\UsersController;
 /*
@@ -88,4 +89,11 @@ Route::prefix(env('APP_PREFIX'))->group(function () {
     Route::group(['prefix' => 'historique'], function () {
         Route::get('/', [TransformationHistoryController::class, 'index'])->name('historique.index');
     });
+
+    Route::get('archivage', [ArchivageController::class, 'index'])->name('archivage.index');
+    Route::get('archivage/{user}/restauravecdonnees', [ArchivageController::class, 'conservcpte'])->name('archivage.conservcpte');
+    Route::get('archivage/{user}/restaursansdonnees', [ArchivageController::class, 'effacecpte'])->name('archivage.effacecpte');
+    Route::get('archivage/{user}/impression', [ArchivageController::class, 'imprimer'])->name('archivage.imprimer');
+    Route::get('archivage/{user}/archivage', [ArchivageController::class, 'archiver'])->name('archivage.archiver');
+    Route::get('archivage/{user}/suppr', [ArchivageController::class, 'supprimer'])->name('archivage.supprimer');
 });
