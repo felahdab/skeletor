@@ -275,7 +275,7 @@ class User extends Authenticatable
 
         $ssobj_du_parcours_de_transformation = $this->coll_sous_objectifs();
 
-        $liste_sous_obj_valides = $this->belongsToMany(SousObjectif::class, 'transformation_user_sous_objectif')
+        $liste_sous_obj_valides = $this->belongsToMany(SousObjectif::class, 'transformation_user_sous_objectifs')
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation', 'valideur', 'date_proposition_validation')
             ->get()
@@ -295,17 +295,6 @@ class User extends Authenticatable
     }
 
     // Cette partie contient des fonctions d'aide pour le suivi de la transformation
-    public function logTransformationHistory($event, $event_details = "")
-    {
-        $currentuser = auth()->user();
-
-        TransformationHistory::create([
-            "modifying_user" => $currentuser->display_name,
-            "modified_user" => $this->display_name,
-            "event" => $event,
-            "event_details" => $event_details
-        ]);
-    }
 
     public function aValideLaTache(Tache $tache)
     {

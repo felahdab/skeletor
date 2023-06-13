@@ -9,6 +9,8 @@ use Illuminate\Queue\SerializesModels;
 
 use Modules\Transformation\Dto\ChangementLivretDeTransformationDto;
 
+use Illuminate\Support\Facades\Log;
+
 class UnLivretDeTransformationAChangeEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
@@ -18,7 +20,7 @@ class UnLivretDeTransformationAChangeEvent
      */
     public function __construct(public ChangementLivretDeTransformationDto $data)
     {
-        //
+        Log::info("Initialized UnLivretDeTransformationAChangeEvent" . $data->toJson());
     }
 
     /**

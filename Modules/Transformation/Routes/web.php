@@ -10,6 +10,8 @@ use Modules\Transformation\Http\Controllers\StageController;
 use Modules\Transformation\Http\Controllers\StatistiqueController;
 use Modules\Transformation\Http\Controllers\TransformationController;
 use Modules\Transformation\Http\Controllers\TransformationHistoryController;
+
+use App\Http\Controllers\UsersController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes

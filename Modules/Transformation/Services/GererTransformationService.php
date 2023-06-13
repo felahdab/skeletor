@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Service;
+namespace Modules\Transformation\Services;
 
 use Modules\Transformation\Events\UnLivretDeTransformationAChangeEvent;
 use Modules\Transformation\Dto\ChangementLivretDeTransformationDto;
 
 use Illuminate\Support\Carbon;
 
-use App\Models\Stage;
+use Modules\Transformation\Entities\Stage;
 use Modules\Transformation\Entities\Fonction;
 use Modules\Transformation\Entities\Objectif;
 use Modules\Transformation\Entities\SousObjectif;

@@ -2,7 +2,7 @@
 
 namespace Modules\Transformation\Http\Livewire;
 
-use App\Service\GererTransformationService;
+use Modules\Transformation\Services\GererTransformationService;
 
 use App\Models\User;
 use Modules\Transformation\Entities\Fonction;

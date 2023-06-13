@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Service\GererTransformationService;
+use Modules\Transformation\Services\GererTransformationService;
 use App\Dto\ChangementLivretDeTransformationDto;
 use App\Events\UnLivretDeTransformationAChangeEvent;
 
