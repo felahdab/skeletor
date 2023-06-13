@@ -24,7 +24,7 @@
                                 <a href="{{ route('users.stages', $fiche['user']->id) }}" class="btn btn-danger btn-sm">Stages</a>
                             @endcan
 
-                            <livewire:ffast-fiche-bilan :user="$fiche['user']" :wire:key="$fiche['id']" />
+                            <livewire:transformation::ffast-fiche-bilan :user="$fiche['user']" :wire:key="$fiche['id']" />
                         </div>
                         @endforeach
                     @endif

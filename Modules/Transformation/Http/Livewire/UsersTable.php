@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace Modules\Transformation\Http\Livewire;
 
 use App\Models\User;
 use App\Models\Unite;
@@ -70,13 +70,13 @@ class UsersTable extends DataTableComponent
     {
         switch ($this->mode){
             case "gestion" :
-                return view('tables.userstable.gestion');
+                return view('transformation::tables.userstable.gestion');
                 break;
             case "transformation" :
-                return view('tables.userstable.transformation');
+                return view('transformation::tables.userstable.transformation');
                 break;
             case "archiv" :
-                return view('tables.userstable.archivage');
+                return view('transformation::tables.userstable.archivage');
                 break;
         }
     }
@@ -124,22 +124,22 @@ class UsersTable extends DataTableComponent
                 ->deSelected()
                 ->searchable()
                 ->format(
-                    fn($value, $row, Column $column) => view('tables.userstable.comete')->withRow($row)),
+                    fn($value, $row, Column $column) => view('transformation::tables.userstable.comete')->withRow($row)),
             Column::make('Socle', 'socle')
                 ->deSelected()
                 ->searchable() 
                 ->format(
-                    fn($value, $row, Column $column) => view('tables.userstable.socle')->withRow($row)),
+                    fn($value, $row, Column $column) => view('transformation::tables.userstable.socle')->withRow($row)),
         ];
         switch ($this->mode){
             case "dashboard":
                 return array_merge($basecolumns ,[
                     Column::make('Taux de transformation', 'taux_de_transformation')
-                            ->view('tables.userstable.tx_transfo')
+                            ->view('transformation::tables.userstable.tx_transfo')
                             ->sortable(),
                     Column::make('Rôles')
                         ->label(
-                            fn($row, Column $column) => view('tables.userstable.roles')->withRow($row)
+                            fn($row, Column $column) => view('transformation::tables.userstable.roles')->withRow($row)
                             ),
                 ]);
                 break;
@@ -147,7 +147,7 @@ class UsersTable extends DataTableComponent
                 return array_merge($basecolumns ,[
                     Column::make('Rôles')
                         ->label(
-                            fn($row, Column $column) => view('tables.userstable.roles')->withRow($row)
+                            fn($row, Column $column) => view('transformation::tables.userstable.roles')->withRow($row)
                             ),
                     Column::make('Actions')
                         ->label(

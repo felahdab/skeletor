@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace Modules\Transformation\Http\Livewire;
 
 use Livewire\Component;
 
@@ -9,7 +9,7 @@ use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Asantibanez\LivewireCharts\Models\MultiLineChartModel;
 
-use App\Models\Fonction;
+use Modules\Transformation\Entities\Fonction;
 use App\Models\User;
 
 use App\Service\RandomColorService;
@@ -49,7 +49,7 @@ class ParcoursFichesBilan extends Component
             }
 
         }
-        return view('livewire.parcoursfichebilan', ['fiches' => $fiches]);
+        return view('transformation::livewire.parcoursfichebilan', ['fiches' => $fiches]);
     }
     
 

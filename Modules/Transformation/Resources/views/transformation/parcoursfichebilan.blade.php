@@ -12,6 +12,6 @@
             Affinez la liste des marins en effectuant une recherche ou en filtrant les données.
         </div>
         
-        <livewire:parcours-fiches-bilan>
+        <livewire:transformation::parcours-fiches-bilan>
     </div>
 @endsection
