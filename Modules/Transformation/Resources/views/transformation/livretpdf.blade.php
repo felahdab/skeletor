@@ -131,7 +131,7 @@
     </style>
 
 @php
-        use App\Models\TypeFonction;
+        use Modules\Transformation\Entities\TypeFonction;
         $fmerid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'mer')->get()->first()->id;
         $fquaiid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'quai')->get()->first()->id;
         $fmetierid = TypeFonction::where('typfonction_libcourt', 'LIKE', 'metier')->get()->first()->id;
