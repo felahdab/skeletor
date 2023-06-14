@@ -23,25 +23,24 @@ return new class extends Migration
         `users`.`taux_de_transformation` as `taux_transfo_global`, `secteurs`.`secteur_libcourt`,
         `services`.`service_libcourt`, `groupements`.`groupement_libcourt`,
         `grades`.`grade_libcourt`,`diplomes`.`diplome_libcourt`, 
-        `specialites`.`specialite_libcourt`, `fonctions`.`id` as `fonction_id`, 
-        `fonctions`.`fonction_liblong`, `fonctions`.`fonction_libcourt`, 
-        `user_fonction`.`taux_de_transformation` as `taux_transfo_fonction`, `user_fonction`.`date_lache`, 
-        `user_fonction`.`valideur_lache`, `user_fonction`.`commentaire_lache`, 
-        `user_fonction`.`date_double`, `user_fonction`.`valideur_double`, 
-        `user_fonction`.`commentaire_double`, `user_fonction`.`validation`,
-        `compagnonages`.`id` as `comp_id` , `compagnonages`.`comp_libcourt`, 
-        `compagnonages`.`comp_liblong`, `taches`.`id` as `tache_id`, `taches`.`tache_liblong`, 
-        `taches`.`tache_libcourt`, `objectifs`.`objectif_liblong`, 
-        `objectifs`.`objectif_libcourt`, `sous_objectifs`.`id` as `ssobj_id`, 
-        `sous_objectifs`.`ssobj_duree`, `sous_objectifs`.`ssobj_coeff`, 
-        `sous_objectifs`.`ssobj_lib`, `user_sous_objectif`.`date_validation`, 
-        `user_sous_objectif`.`valideur`, `user_sous_objectif`.`commentaire`,
-        `type_fonctions`.`typfonction_libcourt`
-        
+        `specialites`.`specialite_libcourt`, `transformation_fonctions`.`id` as `fonction_id`, 
+        `transformation_fonctions`.`fonction_liblong`, `transformation_fonctions`.`fonction_libcourt`, 
+        `transformation_user_fonction`.`taux_de_transformation` as `taux_transfo_fonction`, `transformation_user_fonction`.`date_lache`, 
+        `transformation_user_fonction`.`valideur_lache`, `transformation_user_fonction`.`commentaire_lache`, 
+        `transformation_user_fonction`.`date_double`, `transformation_user_fonction`.`valideur_double`, 
+        `transformation_user_fonction`.`commentaire_double`, `transformation_user_fonction`.`validation`,
+        `transformation_compagnonages`.`id` as `comp_id` , `transformation_compagnonages`.`comp_libcourt`, 
+        `transformation_compagnonages`.`comp_liblong`, `transformation_taches`.`id` as `tache_id`, `transformation_taches`.`tache_liblong`, 
+        `transformation_taches`.`tache_libcourt`, `transformation_objectifs`.`objectif_liblong`, 
+        `transformation_objectifs`.`objectif_libcourt`, `transformation_sous_objectifs`.`id` as `ssobj_id`, 
+        `transformation_sous_objectifs`.`ssobj_duree`, `transformation_sous_objectifs`.`ssobj_coeff`, 
+        `transformation_sous_objectifs`.`ssobj_lib`, `transformation_user_sous_objectifs`.`date_validation`, 
+        `transformation_user_sous_objectifs`.`valideur`, `transformation_user_sous_objectifs`.`commentaire`,
+        `transformation_type_fonctions`.`typfonction_libcourt`
         
         FROM `users` 
-        LEFT JOIN `user_fonction` 
-        ON `users`.`id` = `user_fonction`.`user_id` 
+        LEFT JOIN `transformation_user_fonction` 
+        ON `users`.`id` = `transformation_user_fonction`.`user_id` 
         
         LEFT JOIN `secteurs` 
         ON `secteurs`.`id` = `users`.`secteur_id`
@@ -61,35 +60,35 @@ return new class extends Migration
         LEFT JOIN `specialites` 
         ON `specialites`.`id` = `users`.`specialite_id`
         
-        LEFT JOIN `fonctions` 
-        ON `fonctions`.`id` = `user_fonction`.`fonction_id` 
+        LEFT JOIN `transformation_fonctions` 
+        ON `transformation_fonctions`.`id` = `transformation_user_fonction`.`fonction_id` 
         
-        LEFT JOIN `compagnonage_fonction` 
-        ON `compagnonage_fonction`.`fonction_id` = `fonctions`.`id` 
+        LEFT JOIN `transformation_compagnonage_fonction` 
+        ON `transformation_compagnonage_fonction`.`fonction_id` = `transformation_fonctions`.`id` 
         
-        LEFT JOIN `compagnonages` 
-        ON `compagnonages`.`id` = `compagnonage_fonction`.`compagnonage_id`
+        LEFT JOIN `transformation_compagnonages` 
+        ON `transformation_compagnonages`.`id` = `transformation_compagnonage_fonction`.`compagnonage_id`
         
-        LEFT JOIN `compagnonage_tache` 
-        ON `compagnonages`.`id` = `compagnonage_tache`.`compagnonage_id`
+        LEFT JOIN `transformation_compagnonage_tache` 
+        ON `transformation_compagnonages`.`id` = `transformation_compagnonage_tache`.`compagnonage_id`
         
-        LEFT JOIN `taches` 
-        ON `taches`.`id` = `compagnonage_tache`.`tache_id`
+        LEFT JOIN `transformation_taches` 
+        ON `transformation_taches`.`id` = `transformation_compagnonage_tache`.`tache_id`
         
-        LEFT JOIN `tache_objectif` 
-        ON `taches`.`id` = `tache_objectif`.`tache_id`
+        LEFT JOIN `transformation_tache_objectif` 
+        ON `transformation_taches`.`id` = `transformation_tache_objectif`.`tache_id`
         
-        LEFT JOIN `objectifs` 
-        ON `objectifs`.`id` = `tache_objectif`.`objectif_id`
+        LEFT JOIN `transformation_objectifs`
+        ON `transformation_objectifs`.`id` = `transformation_tache_objectif`.`objectif_id`
         
-        LEFT JOIN `sous_objectifs` 
-        ON `objectifs`.`id` = `sous_objectifs`.`objectif_id`
+        LEFT JOIN `transformation_sous_objectifs` 
+        ON `transformation_objectifs`.`id` = `transformation_sous_objectifs`.`objectif_id`
         
-        LEFT JOIN `type_fonctions` 
-        ON `fonctions`.`typefonction_id` = `type_fonctions`.`id`
+        LEFT JOIN `transformation_type_fonctions` 
+        ON `transformation_fonctions`.`typefonction_id` = `transformation_type_fonctions`.`id`
         
-        LEFT JOIN `user_sous_objectif` 
-        ON `user_sous_objectif`.`sous_objectif_id` = `sous_objectifs`.`id` AND `user_sous_objectif`.`user_id` = `users`.`id`
+        LEFT JOIN `transformation_user_sous_objectifs` 
+        ON `transformation_user_sous_objectifs`.`sous_objectif_id` = `transformation_sous_objectifs`.`id` AND `transformation_user_sous_objectifs`.`user_id` = `users`.`id`
         
         ");
     }

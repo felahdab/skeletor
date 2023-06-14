@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('transformation_user_sous_objectif', function (Blueprint $table) {
+        Schema::table('transformation_user_sous_objectifs', function (Blueprint $table) {
             $table->date('date_proposition_validation')->nullable(true)->default(null);
         });
     }
@@ -25,7 +25,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('transformation_user_sous_objectif', function (Blueprint $table) {
+        Schema::table('transformation_user_sous_objectifs', function (Blueprint $table) {
             $table->dropColumn('date_proposition_validation');
         });
     }

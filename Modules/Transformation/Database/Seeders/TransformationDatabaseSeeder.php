@@ -16,20 +16,20 @@ class TransformationDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $this->call("TypeLicenceSeeder");
-        $this->call("TypeFonctionSeeder");
-        $this->call("StageSeeder");
-        $this->call("SousObjectifSeeder");
-        $this->call("ObjectifSeeder");
-        $this->call("TacheSeeder");
-        $this->call("TacheObjectif");
+        $this->call(TypeLicenceSeeder::class);
+        $this->call(TypeFonctionSeeder::class);
+        $this->call(StageSeeder::class);
+        $this->call(SousObjectifSeeder::class);
+        $this->call(ObjectifSeeder::class);
+        $this->call(TacheSeeder::class);
+        $this->call(TacheObjectif::class);
 
-        $this->call("CompagnonageSeeder");
-        $this->call("CompagnonageTache");
-        $this->call("FonctionSeeder");
-        $this->call("CompagnonageFonction");
-        $this->call("FonctionStage");
+        $this->call(CompagnonageSeeder::class);
+        $this->call(CompagnonageTache::class);
+        $this->call(FonctionSeeder::class);
+        $this->call(CompagnonageFonction::class);
+        $this->call(FonctionStage::class);
         
-        $this->call("CorrectUpdatedAtNullTimestamp");        
+        $this->call(CorrectUpdatedAtNullTimestamp::class);
     }
 }

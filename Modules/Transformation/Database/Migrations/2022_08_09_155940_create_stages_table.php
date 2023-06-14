@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('stages', function (Blueprint $table) {
+        Schema::create('transformation_stages', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
 			$table->string('stage_libcourt', 50)->nullable(false);
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stages');
+        Schema::dropIfExists('transformation_stages');
     }
 };

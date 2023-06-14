@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('transformation_user_sous_objectif', function (Blueprint $table) {
+        Schema::table('transformation_user_sous_objectifs', function (Blueprint $table) {
             $table->integer('nb_jours_pour_validation')->nullable(true)->default(0); 
         });
     }
@@ -25,7 +25,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('transformation_user_sous_objectif', function (Blueprint $table) {
+        Schema::table('transformation_user_sous_objectifs', function (Blueprint $table) {
             $table->dropColumn('nb_jours_pour_validation');
         });
     }
