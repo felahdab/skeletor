@@ -99,6 +99,8 @@ REL_NOTE=""
 REL_PREFIX="release-"
 PUSH_DEST="tuleap"
 
+FLAG_NOBRANCH=true
+
 # Show credits & help
 usage() { 
   echo -e "$GREEN"\
@@ -118,7 +120,7 @@ usage() {
   echo -e " $S_WARN-p$S_NORM \t\t\tPush commits to ORIGIN. "
   echo -e " $S_WARN-n$S_NORM \t\t\tDon't perform a commit automatically. "\
           "\n\t\t\t* You may want to do that manually after checking everything, for example."
-  echo -e " $S_WARN-b$S_NORM \t\t\tDon't create automatic \`release-<version>\` branch"
+  echo -e " $S_WARN-b$S_NORM \t\t\tCreate automatic \`release-<version>\` branch"
   echo -e " $S_WARN-h$S_NORM \t\t\tShow this help message. "
   echo -e "\n ${S_NORM}${BOLD}Author:$S_LIGHT https://github.com/jv-t/bump-version $RESET\n"
 
@@ -181,8 +183,8 @@ process-arguments() {
         echo -e "\n${S_LIGHT}Option set: ${S_NOTICE}Disable commit after tagging."
       ;;
       b )
-        FLAG_NOBRANCH=true
-        echo -e "\n${S_LIGHT}Option set: ${S_NOTICE}Disable committing to new branch."
+        FLAG_NOBRANCH=false
+        echo -e "\n${S_LIGHT}Option set: ${S_NOTICE}Committing to new branch."
       ;;
       \? )
         echo -e "\n${I_ERROR}${S_ERROR} Invalid option: ${S_WARN}-$OPTARG" >&2
