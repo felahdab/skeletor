@@ -7,7 +7,7 @@ use Modules\Transformation\Services\RecalculerTransformationService;
 use Modules\Transformation\Http\Requests\StoreCompagnonageRequest;
 use Modules\Transformation\Entities\Compagnonage;
 use App\Http\Controllers\Controller;
-use App\Models\Tache;
+use Modules\Transformation\Entities\Tache;
 
 use Illuminate\Http\Request;
 

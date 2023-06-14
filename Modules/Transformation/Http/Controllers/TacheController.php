@@ -8,7 +8,7 @@ use Modules\Transformation\Services\RecalculerTransformationService;
 use App\Http\Requests\StoreTacheRequest;
 use App\Http\Requests\UpdateTacheRequest;
 use Modules\Transformation\Entities\Tache;
-use App\Models\Objectif;
+use Modules\Transformation\Entities\Objectif;
 
 use Illuminate\Http\Request;
 

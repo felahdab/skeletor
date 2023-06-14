@@ -12,5 +12,5 @@
         <div class='lead'>Ajout d'une tâche pour le compagnonnage : {!!$compagnonage->comp_libcourt !!} </div>
     </div>
     
-    @livewire('tache-list', ['compagnonage' => $compagnonage, 'mode' => 'selection'])
+    @livewire('transformation::tache-list', ['compagnonage' => $compagnonage, 'mode' => 'selection'])
 @endsection

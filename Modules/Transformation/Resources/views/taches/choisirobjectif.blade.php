@@ -12,6 +12,6 @@
         <div class='lead'>Ajout d'un objectif pour la tâche {!!$tache->tache_libcourt !!} </div>
     </div>
     
-    @livewire('objectif-list', ['tache' => $tache, 'mode' => 'selection'])
+    @livewire('transformation::objectif-list', ['tache' => $tache, 'mode' => 'selection'])
     
 @endsection
