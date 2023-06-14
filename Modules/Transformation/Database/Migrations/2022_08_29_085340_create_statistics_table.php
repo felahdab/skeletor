@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('transformation_statistiques', function (Blueprint $table) {
+        Schema::create('statistiques', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->date('date_stat')->nullable();
@@ -44,6 +44,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transformation_statistiques');
+        Schema::dropIfExists('statistiques');
     }
 };
