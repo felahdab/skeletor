@@ -19,8 +19,9 @@ class TransformationDatabaseSeeder extends Seeder
         $this->call(TypeLicenceSeeder::class);
         $this->call(TypeFonctionSeeder::class);
         $this->call(StageSeeder::class);
-        $this->call(SousObjectifSeeder::class);
         $this->call(ObjectifSeeder::class);
+        $this->call(SousObjectifSeeder::class);
+        
         $this->call(TacheSeeder::class);
         $this->call(TacheObjectif::class);
 
