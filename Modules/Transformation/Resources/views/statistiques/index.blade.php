@@ -120,7 +120,7 @@
         <div id='durmarin' class='card   w-100' x-show='durmarin' x-cloak>
             <div class='card-header'>Dur&eacute;e moyenne (jour) avant l&acirc;cher par marin </div>
             <div class="mt-3">
-                <livewire:statistique-table period="{{$period}}">
+                <livewire:transformation::statistique-table period="{{$period}}">
             </div>
         </div>
         <div id='durspe' class='card   w-50' x-show='durspe' x-cloak>
