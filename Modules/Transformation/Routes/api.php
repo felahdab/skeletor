@@ -3,7 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
+use Modules\Transformation\Api\v1\FonctionResourceController;
+use Modules\Transformation\Api\v1\MarinResourceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,10 +17,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['prefix' => 'v1', 'middleware' => ['forcejson', 'auth:sanctum'], "as" => "api.v1."], function() 
-    {
-    
-   Route::apiResource('fonctions', FonctionResourceController::class);
-   Route::apiResource('marins', MarinResourceController::class);
-    
+Route::group(['prefix' => 'v1', 'middleware' => ['forcejson', 'auth:sanctum'], "as" => "api.v1."], function () {
+
+    Route::apiResource('fonctions', FonctionResourceController::class);
+    Route::apiResource('marins', MarinResourceController::class);
 });
