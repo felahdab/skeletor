@@ -22,18 +22,21 @@ return new class extends Migration
         'stages',
         'user_stage',
         'type_licences',
-        'statistiques'
+        'statistiques',
+        'transformation_histories',
+        'archives'
     ];
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        
+        return;
         foreach ($this->renames as $from) {
             $to = 'transformation_' . $from;
             Schema::rename($from, $to);
         }
+        Schema::rename('transformation_user_sous_objectif', 'transformation_user_sous_objectifs');
     }
 
     /**
@@ -41,6 +44,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::rename('transformation_user_sous_objectifs', 'transformation_user_sous_objectif');
         foreach ($this->renames as $to) {
             $from = 'transformation_' . $to;
             Schema::rename($from, $to);
