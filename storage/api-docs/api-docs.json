@@ -6,7 +6,7 @@
     },
     "servers": [
         {
-            "url": "https://pprod-ffast.intradef.gouv.fr/florian"
+            "url": "http://localfanlab.el-ahdab.fr/ffast"
         }
     ],
     "paths": {
