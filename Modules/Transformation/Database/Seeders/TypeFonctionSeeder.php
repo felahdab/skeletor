@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Modules\Transformation\Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -22,7 +22,7 @@ class TypeFonctionSeeder extends Seeder
 			[3, 'metier', 'fonction métier']
 		];
 		foreach ($records as $record){
-			DB::insert('insert into type_fonctions (id, typfonction_libcourt, typfonction_liblong) values (?, ?, ?)', $record);
+			DB::insert('insert into transformation_type_fonctions (id, typfonction_libcourt, typfonction_liblong) values (?, ?, ?)', $record);
 		}
     }
 }

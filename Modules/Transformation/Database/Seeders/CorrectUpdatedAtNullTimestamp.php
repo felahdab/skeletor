@@ -1,15 +1,15 @@
 <?php
 
-namespace Database\Seeders;
+namespace Modules\Transformation\Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-use App\Models\Fonction;
-use App\Models\Compagnonage;
-use App\Models\Tache;
-use App\Models\Objectif;
-use App\Models\SousObjectif;
+use Modules\Transformation\Entities\Fonction;
+use Modules\Transformation\Entities\Compagnonage;
+use Modules\Transformation\Entities\Tache;
+use Modules\Transformation\Entities\Objectif;
+use Modules\Transformation\Entities\SousObjectif;
 
 class CorrectUpdatedAtNullTimestamp extends Seeder
 {

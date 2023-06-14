@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Modules\Transformation\Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -1300,7 +1300,7 @@ class ObjectifSeeder extends Seeder
             [1334,'2022-09-15 14:13:50','2022-09-15 14:13:50','FCM - SAVOIR FAIRE','FCM - SAVOIR-FAIRE']
         ];
         foreach ($records as $record){
-            DB::insert('insert into objectifs (id, created_at, updated_at, objectif_libcourt, objectif_liblong) values (?, ?, ?, ?, ?)', $record);
+            DB::insert('insert into transformation_objectifs (id, created_at, updated_at, objectif_libcourt, objectif_liblong) values (?, ?, ?, ?, ?)', $record);
         }
     }
 }

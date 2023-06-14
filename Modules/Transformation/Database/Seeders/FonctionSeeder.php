@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Modules\Transformation\Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -91,7 +91,7 @@ class FonctionSeeder extends Seeder
             [104,'2022-09-15 14:05:57','2022-09-15 14:08:49','FCM-LSM OPSONAR DSM/SURF','FCM - OPERATEUR SONAR',3,0,0]
         ];
         foreach ($records as $record){
-            DB::insert('insert into fonctions (id, created_at, updated_at, fonction_libcourt, fonction_liblong, typefonction_id, fonction_lache, fonction_double) values (?, ?, ?, ?, ?, ?, ?, ?)', $record);
+            DB::insert('insert into transformation_fonctions (id, created_at, updated_at, fonction_libcourt, fonction_liblong, typefonction_id, fonction_lache, fonction_double) values (?, ?, ?, ?, ?, ?, ?, ?)', $record);
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Modules\Transformation\Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -491,7 +491,7 @@ class TacheSeeder extends Seeder
             [496,'2022-09-15 14:21:18','2022-09-15 14:21:18','test3','test3']
         ];
         foreach ($records as $record){
-            DB::insert('insert into taches (id, created_at, updated_at, tache_libcourt, tache_liblong) values (?, ?, ?, ?, ?)', $record);
+            DB::insert('insert into transformation_taches (id, created_at, updated_at, tache_libcourt, tache_liblong) values (?, ?, ?, ?, ?)', $record);
         }
     }
 }

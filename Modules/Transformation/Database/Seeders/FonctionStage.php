@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Modules\Transformation\Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -310,7 +310,7 @@ class FonctionStage extends Seeder
             [379,'2022-09-15 14:29:34','2022-09-15 14:29:34',104,52,NULL]
         ];
         foreach ($records as $record){
-            DB::insert('insert into fonction_stage (id, created_at, updated_at, fonction_id, stage_id, date_previsionnelle) values (?, ?, ?, ?, ?, ?)', $record);
+            DB::insert('insert into transformation_fonction_stage (id, created_at, updated_at, fonction_id, stage_id, date_previsionnelle) values (?, ?, ?, ?, ?, ?)', $record);
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Modules\Transformation\Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -496,7 +496,7 @@ class CompagnonageTache extends Seeder
             [515,'2022-09-15 14:12:31','2022-09-15 14:12:31',119,495]
         ];
         foreach ($records as $record){
-            DB::insert('insert into compagnonage_tache (id, created_at, updated_at, compagnonage_id, tache_id) values (?, ?, ?, ?, ?)', $record);
+            DB::insert('insert into transformation_compagnonage_tache (id, created_at, updated_at, compagnonage_id, tache_id) values (?, ?, ?, ?, ?)', $record);
         }
     }
 }

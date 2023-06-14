@@ -1,13 +1,13 @@
 <?php
 
-namespace Database\Seeders;
+namespace Modules\Transformation\Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 use Illuminate\Support\Facades\DB;
 
-use App\Models\Stage;
+use Modules\Transformation\Entities\Stage;
 
 class TypeLicenceSeeder extends Seeder
 {
@@ -25,7 +25,7 @@ class TypeLicenceSeeder extends Seeder
             [3, 'Licence 3', '']
         ];
         foreach ($records as $record){
-            DB::insert('insert into type_licences (id, typlicense_libcourt, typlicense_liblong) values (?, ?, ?)', $record);
+            DB::insert('insert into transformation_type_licences (id, typlicense_libcourt, typlicense_liblong) values (?, ?, ?)', $record);
         }
         foreach (Stage::where('typelicence_id', 0)->get() as $stage)
         {

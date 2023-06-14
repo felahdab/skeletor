@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Modules\Transformation\Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -120,7 +120,7 @@ class CompagnonageSeeder extends Seeder
 [119,'2022-09-15 14:10:42','2022-09-15 14:10:42','FCM - M1 - DOMAINE GENOPS','FCM - MODULE 1 - DOMAINE 3 - GENOPS']
         ];
         foreach ($records as $record){
-            DB::insert('insert into compagnonages (id, created_at, updated_at, comp_libcourt, comp_liblong) values (?, ?, ?, ?, ?)', $record);
+            DB::insert('insert into transformation_compagnonages (id, created_at, updated_at, comp_libcourt, comp_liblong) values (?, ?, ?, ?, ?)', $record);
         }
     }
 }

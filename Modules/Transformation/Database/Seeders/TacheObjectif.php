@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Modules\Transformation\Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -1427,7 +1427,7 @@ class TacheObjectif extends Seeder
             [1483,'2022-09-15 14:22:26','2022-09-15 14:22:26',495,1334]
         ];
         foreach ($records as $record){
-            DB::insert('insert into tache_objectif (id, created_at, updated_at, tache_id, objectif_id) values (?, ?, ?, ?, ?)', $record);
+            DB::insert('insert into transformation_tache_objectif (id, created_at, updated_at, tache_id, objectif_id) values (?, ?, ?, ?, ?)', $record);
         }
     }
 }

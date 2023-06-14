@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Modules\Transformation\Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -163,7 +163,7 @@ class CompagnonageFonction extends Seeder
 [253,'2022-09-15 14:28:58','2022-09-15 14:28:58',119,104]
         ];
         foreach ($records as $record){
-            DB::insert('insert into compagnonage_fonction (id, created_at, updated_at, compagnonage_id, fonction_id) values (?, ?, ?, ?, ?)', $record);
+            DB::insert('insert into transformation_compagnonage_fonction (id, created_at, updated_at, compagnonage_id, fonction_id) values (?, ?, ?, ?, ?)', $record);
         }
     }
 }

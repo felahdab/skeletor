@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Modules\Transformation\Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -167,7 +167,7 @@ class StageSeeder extends Seeder
             [173,'2022-09-15 12:05:49','2022-09-15 12:05:49','B0-H0','Rondier de bord',0,4]
         ];
         foreach ($records as $record){
-            DB::insert('insert into stages (id, created_at, updated_at, stage_libcourt, stage_liblong, transverse, typelicence_id) values (?, ?, ?, ?, ?, ?, ?)', $record);
+            DB::insert('insert into transformation_stages (id, created_at, updated_at, stage_libcourt, stage_liblong, transverse, typelicence_id) values (?, ?, ?, ?, ?, ?, ?)', $record);
         }
     }
 }
