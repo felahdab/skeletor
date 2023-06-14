@@ -6,7 +6,7 @@
     },
     "servers": [
         {
-            "url": "https://pprod-ffast.intradef.gouv.fr/ffast"
+            "url": "https://pprod-ffast.intradef.gouv.fr/florian"
         }
     ],
     "paths": {

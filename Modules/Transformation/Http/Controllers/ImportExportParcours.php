@@ -1,21 +1,23 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Transformation\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Fonction;
-use App\Models\Compagnonage;
-use App\Models\Tache;
-use App\Models\Objectif;
-use App\Models\SousObjectif;
-use App\Models\Stage;
+use Modules\Transformation\Entities\Fonction;
+use Modules\Transformation\Entities\Compagnonage;
+use Modules\Transformation\Entities\Tache;
+use Modules\Transformation\Entities\Objectif;
+use Modules\Transformation\Entities\SousObjectif;
+use Modules\Transformation\Entities\Stage;
 
 use Illuminate\Support\Str;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Table;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+use App\Http\Controllers\Controller;
 
 class ImportExportParcours extends Controller
 {

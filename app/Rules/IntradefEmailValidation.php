@@ -3,8 +3,9 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Contracts\Validation\Rule;
 
-class IntradefEmailValidation implements ValidationRule
+class IntradefEmailValidation implements Rule
 {
     /**
      * Create a new rule instance.

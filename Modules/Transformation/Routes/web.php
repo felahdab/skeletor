@@ -11,6 +11,7 @@ use Modules\Transformation\Http\Controllers\StatistiqueController;
 use Modules\Transformation\Http\Controllers\TransformationController;
 use Modules\Transformation\Http\Controllers\TransformationHistoryController;
 use Modules\Transformation\Http\Controllers\ArchivageController;
+use Modules\Transformation\Http\Controllers\ImportExportParcours;
 
 use App\Http\Controllers\UsersController;
 /*

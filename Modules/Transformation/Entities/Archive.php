@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\TRansformation\Entities;
+namespace Modules\Transformation\Entities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
