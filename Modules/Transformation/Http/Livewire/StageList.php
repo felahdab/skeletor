@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace Modules\Transformation\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
 
-use App\Models\Stage;
+use Modules\Transformation\Entities\Stage;
 
 class StageList extends Component
 {
@@ -23,7 +23,7 @@ class StageList extends Component
     
     public function render()
     {
-        return view('livewire.stage-list', [
+        return view('transformation::livewire.stage-list', [
             'stages' => Stage::where('stage_libcourt', 'like', '%'. $this->filter . '%')->paginate(10),
             'mode' => $this->mode,
             'fonction' => $this->fonction

@@ -12,6 +12,6 @@
         <div class='lead'>Ajout d'un stage pour la fonction : {!!$fonction->fonction_libcourt !!} </div>
     </div>
    
-   @livewire('stage-list', ['mode' => 'selection', 'fonction'=>$fonction])
+   @livewire('transformation::stage-list', ['mode' => 'selection', 'fonction'=>$fonction])
    
 @endsection

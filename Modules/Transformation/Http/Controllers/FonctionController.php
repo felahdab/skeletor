@@ -10,7 +10,7 @@ use Modules\Transformation\Entities\TypeFonction;
 use Modules\Transformation\Entities\Compagnonage;
 use Modules\Transformation\Entities\Tache;
 use Modules\Transformation\Entities\SousObjectif;
-use App\Models\Stage;
+use Modules\Transformation\Entities\Stage;
 use App\Models\User;
 
 use Modules\Transformation\Services\RecalculerTransformationService;
