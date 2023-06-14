@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\app\Http\Controllers;
+namespace Modules\Transformation\Tests\Feature\Http\Controllers;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
