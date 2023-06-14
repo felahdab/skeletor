@@ -7,7 +7,7 @@ use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
 use App\Models\User;
-use App\Models\Fonction;
+use Modules\Transformation\Entities\Fonction;
 
 class LivretMultipleTest extends DuskTestCase
 {
