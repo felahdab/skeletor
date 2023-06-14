@@ -2,7 +2,7 @@
 
 namespace Modules\Transformation\Http\Livewire;
 
-use App\Service\GererTransformationService;
+use Modules\Transformation\Services\GererTransformationService;
 
 use Modules\Transformation\Entities\Stage;
 use App\Models\User;
@@ -32,12 +32,12 @@ class StagesTable extends DataTableComponent
         if ($this->mode == "uservalidation")
         {
             $stagelist = $this->user->stages()->get()->pluck('id', 'id');
-            return Stage::query()->whereIn('stages.id', $stagelist);
+            return Stage::query()->whereIn('transformation_stages.id', $stagelist);
         }
         elseif ($this->mode == "selectnewstage")
         {
             $stagelist = $this->user->stages()->get()->pluck('id', 'id');
-            return Stage::query()->whereNotIn('stages.id', $stagelist);
+            return Stage::query()->whereNotIn('transformation_stages.id', $stagelist);
         }
         return Stage::query();
     }

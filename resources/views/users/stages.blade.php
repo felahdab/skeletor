@@ -100,10 +100,10 @@
                 </div>
 
                 <div x-cloak x-show="selectstage">
-                    @livewire('stages-table', ['mode' => 'selectnewstage', 'user' => $marin])
+                    @livewire('transformation::stages-table', ['mode' => 'selectnewstage', 'user' => $marin])
                 </div>
                 <div x-cloak x-show=" ! selectstage">
-                    @livewire('stages-table', ['mode' => 'uservalidation', 'user' => $marin])
+                    @livewire('transformation::stages-table', ['mode' => 'uservalidation', 'user' => $marin])
                 </div>
             </div>
             @endif

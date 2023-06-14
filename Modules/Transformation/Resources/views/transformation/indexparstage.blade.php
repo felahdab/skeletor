@@ -12,7 +12,7 @@
             Liste des stages pour validation collective
         </div>
         <div class="mt-3">
-            <livewire:stages-table mode="transformation">
+            <livewire:transformation::stages-table mode="transformation">
         </div>
     </div>
 @endsection

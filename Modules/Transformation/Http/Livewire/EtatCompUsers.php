@@ -3,7 +3,7 @@
 namespace Modules\Transformation\Http\Livewire;
 
 use Livewire\Component;
-use App\Service\GererTransformationService;
+use Modules\Transformation\Services\GererTransformationService;
 
 use App\Models\User;
 // use App\Models\Fonction;

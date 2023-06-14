@@ -241,7 +241,7 @@ class SushiUsersTable extends DataTableComponent
                     'maxlength'   => 5
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                    $secteur = Secteur::where('secteur_libcourt', 'like', '%' . $value . '%')->get()->first();
+                    $secteur = Secteur::where('secteur_libcourt', 'like',  $value )->get()->first();
                     if ($secteur != null)
                         $builder->where('secteur_id', $secteur->id);
                 }),
