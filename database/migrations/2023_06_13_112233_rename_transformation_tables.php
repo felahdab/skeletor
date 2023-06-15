@@ -31,7 +31,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        return;
         foreach ($this->renames as $from) {
             $to = 'transformation_' . $from;
             Schema::rename($from, $to);
