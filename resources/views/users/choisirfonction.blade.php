@@ -9,80 +9,60 @@
     <div class="  p-4 rounded">
         <h1>Attribution des fonctions à l'utilisateur</h1>
         <h3>{{ $user->display_name }}</h3>
-            
-        <div class="container mt-4">
-            <div style='padding-left: 15px;'>
-                <div class='card-header ml-n3 mr-n4 mb-3' >Fonction(s) attribu&eacute;e(s)</div>
-                
-                @php $count = 1 @endphp
-                @foreach ($user->fonctions()->get() as $fonction)
-                <div class='cadressobj'>
-                    <div class='form-group row' >
-                        <label class='col-sm-5 col-form-label '>Fonction </label>
-                    </div>
-                    <div class='form-group row' >
-                        <label class='col-sm-5 col-form-label '>Libelle court</label>
-                        <div class='col-sm-5'>
-                            <input type='text' 
-                            class='form-control' 
-                            name='fonction_libcourt' 
-                            id='fonction_libcourt' 
-                            placeholder='Libelle court' 
-                            value='{{ $fonction->fonction_libcourt }}'>
-                        </div>
-                    </div>
-                    <div class='form-group row' >
-                        <label class='col-sm-5 col-form-label '>Libelle long</label>
-                        <div class='col-sm-5'>
-                            <input type='text' 
-                            class='form-control' 
-                            name='fonction_liblong' 
-                            id='fonction_liblong' 
-                            placeholder='Libelle long' 
-                            value='{{ $fonction->fonction_liblong }}'>
-                        </div>
-                    </div>
-                    <div class='form-group row' >
-                        <label class='col-sm-5 col-form-label '>Type de fonction</label>
-                        <div class='col-sm-5'>
-                            <input type='text' 
-                            class='form-control' 
-                            name='typefonction' 
-                            id='typefonction' 
-                            placeholder='Type de fonction' 
-                            value='{{ $fonction->type_fonction()->get()->first()->typfonction_libcourt }}'>
-                        </div>
-                    </div>
-                    {!! Form::open(['method' => 'POST','route' => ['users.retirerfonction', $user->id]]) !!}
-                    <input type='hidden' id='fonction_id' name='fonction_id' value='{{ $fonction->id }}'>
-                    {!! Form::button('Retirer cette fonction', ['type'=> 'submit', 'class'=>'btn btn-danger']) !!}
-                    {!! Form::close() !!}
-                </div>
-                @php $count = $count +1 @endphp
-                @endforeach
-                
-            </div>
 
-            {!! Form::open(['method' => 'POST','route' => ['users.attribuerfonction', $user->id]]) !!}
-            <label for="fonction" class="form-label">Fonction</label>
-            <select class="form-control" 
-                name="fonction_id" required>
-                <option value="0">Fonction a attribuer</option>
-                @foreach($fonctions as $fonction)
-                    <option value="{{ $fonction->id }}">
-                        {{ $fonction->fonction_liblong }}
-                        </option>
-                @endforeach
-            </select>
-
+        {!! Form::open(['method' => 'POST','route' => ['users.attribuerfonction', $user->id]]) !!}
+        {{-- <label for="fonction" class="form-label">Fonction</label> --}}
+        <select class="form-select w-50 mt-4" 
+            name="fonction_id" required>
+            <option value="0">Sélectionnez la fonction à attribuer</option>
+            @foreach($fonctions as $fonction)
+                <option value="{{ $fonction->id }}">
+                    {{ $fonction->fonction_liblong }}
+                    </option>
+            @endforeach
+        </select>
+        <div class="btn-group mt-3" role="groupe">
             {!! Form::button('Attribuer cette fonction', ['type'=> 'submit', 'class'=>'btn btn-primary']) !!}
             {!! Form::close() !!}
-            
-            <div class="btn-group mt-3" role="groupe">
-                <a href="{{ route('transformation.index') }}" class="btn btn-primary"> Retour </button>
-                <a href="{{ route('transformation.livret', $user->id) }}" class="btn btn-warning">Livret de transformation</a>
+            <a href="{{ route('transformation.index') }}" class="btn btn-outline-dark"> Annuler </button>
+            <a href="{{ route('transformation.livret', $user->id) }}" class="btn btn-warning">Livret de transformation</a>
+        </div>
+        
+        <div class="container mt-4">
+            <div style='padding-left: 15px;'>
+                <div class="d-flex flex-row mb-3 justify-content-between">
+                    <div class="p-2 w-50">Fonction(s) attribu&eacute;e(s)</div>
+                    <div class="p-2 w-25">Type</div>
+                    <div class="p-2 w-25">Action</div>
+                </div>
+                                  
+                @php $count = 1 @endphp
+                @foreach ($user->fonctions()->get() as $fonction)
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-row mb-1 d-flex justify-content-between">
+                            <div class="p-2 w-50">
+                                @if ($fonction->pivot->date_lache != null)
+                                    <span class="text-success"><x-bootstrap-icon iconname='check-circle.svg'/>&nbsp;</span>
+                                @endif
+                                <span class="card-title h4">{{ $fonction->fonction_liblong }}</span><span class="card-text"> => {{ $fonction->fonction_libcourt }} </span>
+                                <h6 class="card-subtitle mb-2 text-body-secondary mt-1">Taux de transformation : {{ $fonction->pivot->taux_de_transformation }} %</h6>        
+                            </div>
+                            <div class="p-2 w-25">
+                                <h6 class="card-subtitle mb-2 text-body-secondary mt-1">{{ $fonction->type_fonction()->get()->first()->typfonction_liblong }}</h6>        
+                            </div>
+                            <div class="p-2 w-25">
+                                {!! Form::open(['method' => 'POST','route' => ['users.retirerfonction', $user->id]]) !!}
+                                <input type='hidden' id='fonction_id' name='fonction_id' value='{{ $fonction->id }}'>
+                                {!! Form::button('Retirer cette fonction', ['type'=> 'submit', 'class'=>'btn btn-danger btn-sm']) !!}
+                                {!! Form::close() !!}    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               @php $count = $count +1 @endphp
+                @endforeach                
             </div>
         </div>
-
     </div>
 @endsection

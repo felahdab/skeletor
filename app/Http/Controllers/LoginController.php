@@ -46,41 +46,51 @@ class LoginController extends Controller
             Auth::login($user);
             return $this->authenticated($request, $user);
         }
+        $MCuserexist = MindefConnectUser::where('email', $MCuser->email)->get()->first();
+        if($MCuserexist){
+            $MCuserexist->updated_at = date('Y-m-d G:i:s');
+            $MCuserexist->msg = true;
+        }
+        else{
+            $MCuserexist = MindefConnectUser::create(
+                [
+                    'sub' => $MCuser->user['sub'],
+                    'email' => $MCuser->email,
+                    'name' => $MCuser->user['usual_name'],
+                    'prenom' => $MCuser->user['usual_forename'],
+                    'main_department_number' => $MCuser->user['main_department_number'],
+                    'personal_title'=> $MCuser->user['personal_title'],
+                    'rank'=> $MCuser->user['rank'],
+                    'short_rank'=> $MCuser->user['short_rank'],
+                    'display_name'=> $MCuser->user['display_name'],
+                ]
+            );    
+        }
 
-        
-        // First we remove any entry if any
-        MindefConnectUser::where('email', $MCuser->email)->delete();
-        
-        // The, we create a new entry:
+        return view('auth.comebacklater',['MCuserexist'=>$MCuserexist]);
+    }
 
-        $user = MindefConnectUser::create(
-            [
-                'email' => $MCuser->email,
-                'name' => $MCuser->user['usual_name'],
-                'prenom' => $MCuser->user['usual_forename'],
-                'main_department_number' => $MCuser->user['main_department_number'],
-                'personal_title'=> $MCuser->user['personal_title'],
-                'rank'=> $MCuser->user['rank'],
-                'short_rank'=> $MCuser->user['short_rank'],
-                'display_name'=> $MCuser->user['display_name'],
-            ]
-        );
-            
+    public function newMdcLogin(Request $request, MindefConnectUser $MCuserexist)
+    {
+        //enregistrer le commentaire
+        $MCuserexist->commentaire=$request->comment_mdconnect;
+        $MCuserexist->save();
+
         $response = Http::withoutVerifying()
             ->withHeaders(["X-Auth-AccessKey" => env("TULEAP_TOKEN")])
             ->post(
                 env("TULEAP_URL") . "api/artifacts", [
                 "tracker" =>  ["id" => env('TULEAP_TRACKER_MINDEFCONNECT') ],
                 "values_by_field" => [
-                    "affectation"=>  ["value"  => $MCuser->user['main_department_number'] ],
-                    "user"=> ["value" => $MCuser->user['display_name']] ,
+                    "affectation"=>  ["value"  => $MCuserexist->main_department_number ],
+                    "user"=> ["value" => $MCuserexist->display_name] ,
+                    "raison" => ["value" => $MCuserexist->commentaire] ,
                     "instance" => ["value" => env("APP_PREFIX") ]
                 ]
                 ]
             );
-            
-            
-        return view('auth.comebacklater');
+
+        return view('home.index');            
     }
     
     public function locallogin(LoginRequest $request)

@@ -91,6 +91,14 @@ class TacheController extends Controller
         $tach->objectifs()->attach($objectif);
         RecalculerTransformationService::handle();
         $tache = $tach;
+
+        //maj du pivot pour ordre  
+        $nb_ordre = $tach->objectifs()->count() + 1;
+        $maj = $tach->objectifs()
+                        ->where('tache_id',$tache->id)
+                        ->where('objectif_id',$objectif->id)
+                        ->update(["ordre" => $nb_ordre]);
+        
         return redirect()->route('taches.edit', $tache);
     }
     

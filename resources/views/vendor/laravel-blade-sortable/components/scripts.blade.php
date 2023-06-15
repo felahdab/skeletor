@@ -17,7 +17,7 @@
                 this.sortOrder = this.computeSortOrderFromChildren()
 
                 window.Sortable.create(this.$refs.root, {
-                    handle: this.dragHandle,
+                    handle: '.myhandle',
                     animation: this.animation,
                     ghostClass: this.ghostClass,
                     group: {

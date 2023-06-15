@@ -41,14 +41,19 @@
             @endforeach
             </div>
     @else
-        <div style="display: flex; flex-direction:column; justify-content:space-between; min-height:90vh;">
-            <div></div>
-            <div>
+        <div class="w-100">
+            <div class="w-100 mt-5 text-center">
                 <img src='{!! asset("assets/images/logo_FFAST_bleu.png") !!}' alt="Logo" style="height:400px; display: block; margin-left:auto; margin-right: auto; ">
             </div>
-            <footer style="display:flex;justify-content:space-between;"><span>&#9786;FFAST&#xAE;</span><span style="font-size:x-small;">Version : {{env('APP_VERSION')}}</span></footer>
+            <div class="w-100 mt-5 mb-5 text-center h5">
+                Application de gestion du suivi de la transformation des marins des GTR.
+            </div>
+            <div class="w-100 mt-5 d-flex justify-content-between">
+                <div style="font-size: smaller;">&#9786;FFAST&#xAE;</div>
+                <div style="font-size: smaller;">Version : {{env('APP_VERSION')}}</div>
+            </div>
         </div>
-        @endif
+    @endif
 
 @endsection
 

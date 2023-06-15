@@ -133,8 +133,7 @@
       @guest
         <div class="text-end">
           <span class="btn btn-outline-light me-2">@yield('helplink')</span>
-          <a href="{{ route('login.show') }}" class="btn btn-outline-light me-2">Login local</a>
-          <a href="{{ route('keycloak.login.redirect') }}" class="btn btn-outline-light me-2">Login auto</a>
+          <a href="{{ route('login.show') }}" class="btn btn-outline-light me-2">Login</a>
         </div>
       @endguest
       

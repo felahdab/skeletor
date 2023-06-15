@@ -59,7 +59,6 @@ class FonctionController extends Controller
      */
     public function store(StoreFonctionRequest $request)
     {
-        // ddd($request);
         $fonction=new Fonction;
         $fonction->fonction_libcourt = $request->fonction['fonction_libcourt'];
         $fonction->fonction_liblong = $request->fonction['fonction_liblong'];
@@ -115,6 +114,13 @@ class FonctionController extends Controller
             $fonction->compagnonages()->attach($compagnonage);
             RecalculerTransformationService::handle();            
         }
+        //maj du pivot pour ordre  
+        $nb_ordre = $fonction->compagnonages()->count() + 1;
+        $maj = $fonction->compagnonages()
+                        ->where('compagnonage_id',$compagnonage_id)
+                        ->where('fonction_id',$fonction->id)
+                        ->update(["ordre" => $nb_ordre]);
+        
         $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
         return redirect()->route('fonctions.edit', ['fonction'   => $fonction,
                                                     'typefonctions' => $typefonctions]);
@@ -149,7 +155,6 @@ class FonctionController extends Controller
             $users=$fonction->users()->get();
             foreach ($users as $user){
                 $transformationService = new GererTransformationService;
-                // dd($query);
                 $transformationService->attachStage($user, $stage);
             }
          }
@@ -165,7 +170,6 @@ class FonctionController extends Controller
         $users=$fonction->users()->get();
         foreach ($users as $user){
             $transformationService = new GererTransformationService;
-            // dd($query);
             $transformationService->detachStage($user, $stage);
         }
         $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
@@ -193,16 +197,14 @@ class FonctionController extends Controller
         else
             $fonction->fonction_double = false;
 
-
         $comps = $fonction->compagnonages;
-        //ddd(array_flip($request->sort_order));
+        // dd($request->sort_order);
         foreach(array_flip($request->sort_order) as $id => $ordre)
         {
             $w = $comps->find($id)->pivot;
             $w->ordre = $ordre;
             $w->save();
         }
-        
         $fonction->save();
         
         return redirect()->route('fonctions.edit', $fonction);

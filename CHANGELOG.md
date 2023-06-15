@@ -1,3 +1,22 @@
+## 1.2.6 (June 14, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.5 –> 1.2.6
+- Mise à jour de la documentation
+- Implements art #114179 amelioration de la gestion des draghandle
+- Implements art #61731 correction affichage noms valideurs dans entete-fonction du livret car les caracteres speciaux n'etaient pas affiches correctement
+- Implements art #74326 un seul écran pour le login avec les deux choix local/auto + ajout commentaire à saisir si 1ere connexion
+- Implements art #71666 suppression des liens feuille de style et jsfile ds menu general
+- Implements art #72242 Implements art #112134 remise en forme suite ajout de l'ordre d'affichage Implements art #71666 suppression des refs à feuille de style personnalisée et jsfile personnalisé
+- Implements art #72238 changement affichage des title en popover et tooltip
+- Implements art #113576 modification de la couleur d'affichage des dates de validation pour les les dates > à la date du jour.
+- Implements art #113146 Contourne le bug résultant dans le non affichage du suivi par compagnonnage pour certains compagnonnages.
+- art #113146 resolution du fullmemory en supprimant le recalcul du taux par comp par un affichage du nb ssobjvalidés / ssobfàfaire
+- Implements art #112134 Permet de définir l'ordre d'affichage des éléments du parcours de transformation depuis les pages d'édition.
+- Ajustement des seeders pour prendre en compte la permission transformation.updatelivret (non liée à une route).
+- prise en compte de la permission transformation.updatelivret pour controler la possibilite de valider les elements du parcours de transfo.
+- Implements art #112136: Dans le suivi par fonction, prendre en compte la permission fonction.validermarins Implements art #112132: Ajout d'un champ url pour les Stage et les SousObjectifs + affichage dans le livret de transformation le cas échéant Implements art #112130: Ajout filtre "Unité destination" dans les tables d'utilisateurs. Implements art #102007: Corrige le calcul du numbre de jour de présence dans le bilan par service. Implements art #72234: Corrige le décalage des boutons du livret de transformation lors de l'ouverture du modal Bootstrap
+- Implements art #101997 Corriger test dusk suivi de la transformation par compagnonage
+- Implements art #112131 Rajout de la possibilité de supprimer un mail antérieur
+
 ## 1.2.5 (May 22, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.4b –> 1.2.5
 - Ajoute la correction du champs created_at au seeder de correction du parcours.
