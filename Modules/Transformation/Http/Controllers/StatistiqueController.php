@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 use Modules\Transformation\Services\StatService;
 
-use App\Models\Statistique;
+use Modules\Transformation\Entities\Statistique;
 use Modules\Transformation\Entities\Stage;
 use App\Models\User;
 use App\Models\Service;
