@@ -12,14 +12,16 @@
     <div class="d-flex flex-row justify-content-center ">
         <div class="p-3 me-2 card w-25" style="border: 2px solid grey; padding: 5px; box-shadow: 0px 0px 10px;">
             <!-- partie mindefconnect -->
-            <div class="mt-2 mb-3 text-center h5">Authentification <br>MindefConnect</div>
+            <div class="mt-2 mb-4 text-center h5">Authentification MindefConnect</div>
             <div class="text-center">
-                <a href="{{ route('keycloak.login.redirect') }}">
+                <a href="{{ route('keycloak.login.redirect') }}" class="btn btn-light">
                     <img src='{!! asset("assets/images/MDC_intradef.png") !!}' alt="Logo MDconnect" style="height:100px; width:90px">
                 </a>
             </div>
+            <div class="mt-4 mb-1 text-center" style="font-size: x-small;">Cliquez sur l'image pour vous connecter automatiquement avec vos identifiants DR-CPT</div>
         </div>
         <div class="p-3 ms-2 card w-25" style="border: 2px solid grey; padding: 5px; box-shadow: 0px 0px 10px;">
+            <div class="mt-2 mb-3 text-center h5">Authentification Locale</div>
             <!-- partie login local -->
             <form method="post" action="{{ route('login.perform') }}">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
@@ -29,7 +31,7 @@
                         <span class="text-danger text-left">{{ $errors->first('username') }}</span>
                     @endif
                 </div>
-                <div class="mb-4">
+                <div class="mb-3">
                     <input dusk="login-password" type="password" class="form-control" name="password" value="{{ old('password') }}" placeholder="Password" required="required">
                     @if ($errors->has('password'))
                         <span class="text-danger text-left">{{ $errors->first('password') }}</span>
@@ -37,6 +39,7 @@
                 </div>        
                 <button dusk="login-button" class="w-100 btn btn-primary" type="submit">Login</button>
             </form>
+            <div class="mt-2 mb-1 text-center" style="font-size: x-small;">Saisissez votre adresse mail <b>complète</b> et le mot de passe défini dans l'application.</div>
         </div>
     </div>
 @endsection
