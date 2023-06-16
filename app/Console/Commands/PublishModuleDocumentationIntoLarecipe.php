@@ -65,6 +65,8 @@ class PublishModuleDocumentationIntoLarecipe extends Command
             '--force' => $this->option('force'),
             '--tag' => ['doc-for-larecipe'],
         ]);
+
+        # TODO: c'est là qu'il faut ajuster comment on intègre la doc 
     }
 
     /**
