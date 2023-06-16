@@ -29,6 +29,7 @@ class TransformationServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
         $this->registerCommands();
+        $this->registerDocumentation();
     }
 
     /**
@@ -39,6 +40,18 @@ class TransformationServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+    }
+
+    /**
+     * Register commands.
+     *
+     * @return void
+     */
+    public function registerDocumentation()
+    {
+        $this->publishes([
+            module_path($this->moduleName, 'Resources/docs') => base_path('resources/docs/1.0/' . $this->moduleNameLower),
+        ], 'doc-for-larecipe');
     }
 
     /**
@@ -67,7 +80,8 @@ class TransformationServiceProvider extends ServiceProvider
             module_path($this->moduleName, 'Config/config.php') => config_path($this->moduleNameLower . '.php'),
         ], 'config');
         $this->mergeConfigFrom(
-            module_path($this->moduleName, 'Config/config.php'), $this->moduleNameLower
+            module_path($this->moduleName, 'Config/config.php'),
+            $this->moduleNameLower
         );
     }
 
@@ -129,9 +143,9 @@ class TransformationServiceProvider extends ServiceProvider
     }
 
     protected function discoverEventsWithin(): array
-{
-    return [
-        $this->app->path('Listeners'),
-    ];
-}
+    {
+        return [
+            $this->app->path('Listeners'),
+        ];
+    }
 }
