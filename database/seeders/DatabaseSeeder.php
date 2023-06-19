@@ -26,20 +26,7 @@ class DatabaseSeeder extends Seeder
                     UniteSeeder::class,
                     CreateAdminUserSeeder::class,
                     LieuSeeder::class,
-                    TypeFonctionSeeder::class,
-                    FonctionSeeder::class,
-                    CompagnonageSeeder::class,
-                    TacheSeeder::class,
-                    ObjectifSeeder::class,
-                    SousObjectifSeeder::class,
-                    TypeLicenceSeeder::class,
-                    StageSeeder::class,
-                    FonctionStage::class,
                     LiensSeeder::class,
-                    CompagnonageFonction::class,
-                    CompagnonageTache::class,
-                    TacheObjectif::class,
-                    CorrectUpdatedAtNullTimestamp::class
                 ]);
 
     }

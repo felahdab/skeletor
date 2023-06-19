@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Service\GererTransformationService;
-use App\Dto\ChangementLivretDeTransformationDto;
-use App\Events\UnLivretDeTransformationAChangeEvent;
+use Modules\Transformation\Services\GererTransformationService;
 
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
-use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Storage;
 
 use App\Models\Secteur;
 use App\Models\Specialite;
@@ -20,8 +16,7 @@ use App\Models\Diplome;
 use App\Models\Grade;
 use App\Models\Unite;
 
-use App\Models\Fonction;
-use App\Models\TypeFonction;
+use Modules\Transformation\Entities\Fonction;
 
 use OpenApi\Annotations as OA;
 

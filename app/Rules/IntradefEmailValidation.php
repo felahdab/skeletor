@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Rule;
 
 class IntradefEmailValidation implements Rule

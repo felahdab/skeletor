@@ -37,11 +37,11 @@ class UsersTable extends DataTableComponent
     {
         switch ($this->mode){
             case "listmarin" :
-                $userlist = User::query()->join('user_fonction','users.id','=','user_id')->Where('fonction_id', $this->fonction->id)->get()->pluck('user_id', 'id');
+                $userlist = User::query()->join('transformation_user_fonction','users.id','=','user_id')->Where('fonction_id', $this->fonction->id)->get()->pluck('user_id', 'id');
                 return User::query()->whereIn('users.id', $userlist);
                 break;
             case "dashboard" :
-                $userlist = DB::table('user_fonction')->get()->pluck('user_id')->unique();
+                $userlist = DB::table('transformation_user_fonction')->get()->pluck('user_id')->unique();
                 return User::query()->whereIn('users.id', $userlist);
                 break;
             case "archiv" :

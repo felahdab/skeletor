@@ -10,6 +10,11 @@ use PHPStan\PhpDocParser\Ast\Node;
 use PHPStan\PhpDocParser\Ast\PhpDoc\AssertTagMethodValueNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\AssertTagPropertyValueNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\AssertTagValueNode;
+use PHPStan\PhpDocParser\Ast\PhpDoc\Doctrine\DoctrineAnnotation;
+use PHPStan\PhpDocParser\Ast\PhpDoc\Doctrine\DoctrineArgument;
+use PHPStan\PhpDocParser\Ast\PhpDoc\Doctrine\DoctrineArray;
+use PHPStan\PhpDocParser\Ast\PhpDoc\Doctrine\DoctrineArrayItem;
+use PHPStan\PhpDocParser\Ast\PhpDoc\Doctrine\DoctrineTagValueNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\ExtendsTagValueNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\ImplementsTagValueNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\MethodTagValueNode;
@@ -95,6 +100,8 @@ final class Printer
 		GenericTypeNode::class . '->genericTypes' => ', ',
 		ConstExprArrayNode::class . '->items' => ', ',
 		MethodTagValueNode::class . '->parameters' => ', ',
+		DoctrineArray::class . '->items' => ', ',
+		DoctrineAnnotation::class . '->arguments' => ', ',
 	];
 
 	/**
@@ -106,6 +113,8 @@ final class Printer
 		CallableTypeNode::class . '->parameters' => ['(', '', ''],
 		ArrayShapeNode::class . '->items' => ['{', '', ''],
 		ObjectShapeNode::class . '->items' => ['{', '', ''],
+		DoctrineArray::class . '->items' => ['{', '', ''],
+		DoctrineAnnotation::class . '->arguments' => ['(', '', ''],
 	];
 
 	/** @var array<string, list<class-string<TypeNode>>> */
@@ -186,6 +195,10 @@ final class Printer
 			return $node->text;
 		}
 		if ($node instanceof PhpDocTagNode) {
+			if ($node->value instanceof DoctrineTagValueNode) {
+				return $this->print($node->value);
+			}
+
 			return trim(sprintf('%s %s', $node->name, $this->print($node->value)));
 		}
 		if ($node instanceof PhpDocTagValueNode) {
@@ -210,6 +223,18 @@ final class Printer
 			$isVariadic = $node->isVariadic ? '...' : '';
 			$isOptional = $node->isOptional ? '=' : '';
 			return trim("{$type}{$isReference}{$isVariadic}{$node->parameterName}") . $isOptional;
+		}
+		if ($node instanceof DoctrineAnnotation) {
+			return (string) $node;
+		}
+		if ($node instanceof DoctrineArgument) {
+			return (string) $node;
+		}
+		if ($node instanceof DoctrineArray) {
+			return (string) $node;
+		}
+		if ($node instanceof DoctrineArrayItem) {
+			return (string) $node;
 		}
 
 		throw new LogicException(sprintf('Unknown node type %s', get_class($node)));
@@ -534,7 +559,8 @@ final class Printer
 				}
 
 				$parenthesesNeeded = isset($this->parenthesesListMap[$mapKey])
-					&& in_array(get_class($newNode), $this->parenthesesListMap[$mapKey], true);
+					&& in_array(get_class($newNode), $this->parenthesesListMap[$mapKey], true)
+					&& !in_array(get_class($originalNode), $this->parenthesesListMap[$mapKey], true);
 				$addParentheses = $parenthesesNeeded && !$originalTokens->hasParentheses($itemStartPos, $itemEndPos);
 				if ($addParentheses) {
 					$result .= '(';
@@ -777,6 +803,12 @@ final class Printer
 			$mapKey = get_class($node) . '->' . $subNodeName;
 			$parenthesesNeeded = isset($this->parenthesesMap[$mapKey])
 				&& in_array(get_class($subNode), $this->parenthesesMap[$mapKey], true);
+
+			if ($subNode->getAttribute(Attribute::ORIGINAL_NODE) !== null) {
+				$parenthesesNeeded = $parenthesesNeeded
+					&& !in_array(get_class($subNode->getAttribute(Attribute::ORIGINAL_NODE)), $this->parenthesesMap[$mapKey], true);
+			}
+
 			$addParentheses = $parenthesesNeeded && !$originalTokens->hasParentheses($subStartPos, $subEndPos);
 			if ($addParentheses) {
 				$result .= '(';

@@ -1,0 +1,11 @@
+{
+    "name": "Socle",
+    "alias": "socle",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Socle\\Providers\\SocleServiceProvider"
+    ],
+    "files": []
+}

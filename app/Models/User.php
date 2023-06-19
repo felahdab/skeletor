@@ -15,14 +15,20 @@ use Lab404\Impersonate\Models\Impersonate;
 
 use App\Jobs\CalculateUserTransformationRatios;
 use App\Service\GererTransformationService;
-use App\Service\TransformationManagerService;
+use Modules\Transformation\Services\TransformationManagerService;
 use App\Service\AnnudefAjaxRequestService;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\TransformationHistory;
-use App\Models\Stage;
-use App\Models\Fonction;
+use Modules\Transformation\Entities\Stage;
+use Modules\Transformation\Entities\Fonction;
+use Modules\Transformation\Entities\Compagnonage;
+use Modules\Transformation\Entities\Tache;
+use Modules\Transformation\Entities\Objectif;
+
 use App\Models\UserSousObjectif;
+
+use Modules\Transformation\Entities\SousObjectif;
 
 use Glorand\Model\Settings\Traits\HasSettingsTable;
 
@@ -236,7 +242,7 @@ class User extends Authenticatable
 
     public function fonctions()
     {
-        return $this->belongsToMany(Fonction::class, 'user_fonction')
+        return $this->belongsToMany(Fonction::class, 'transformation_user_fonction')
             ->withTimeStamps()
             ->withPivot(
                 'date_lache',
@@ -255,7 +261,7 @@ class User extends Authenticatable
 
     public function stages()
     {
-        return $this->belongsToMany(Stage::class, 'user_stage')
+        return $this->belongsToMany(Stage::class, 'transformation_user_stage')
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation', 'date_validite');
     }
@@ -269,7 +275,7 @@ class User extends Authenticatable
 
         $ssobj_du_parcours_de_transformation = $this->coll_sous_objectifs();
 
-        $liste_sous_obj_valides = $this->belongsToMany(SousObjectif::class, 'user_sous_objectif')
+        $liste_sous_obj_valides = $this->belongsToMany(SousObjectif::class, 'transformation_user_sous_objectifs')
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation', 'valideur', 'date_proposition_validation')
             ->get()
@@ -283,23 +289,12 @@ class User extends Authenticatable
 
     public function sous_objectifs()
     {
-        return $this->belongsToMany(SousObjectif::class, 'user_sous_objectif')
+        return $this->belongsToMany(SousObjectif::class, 'transformation_user_sous_objectifs')
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation', 'valideur', 'nb_jours_pour_validation', 'date_proposition_validation');
     }
 
     // Cette partie contient des fonctions d'aide pour le suivi de la transformation
-    public function logTransformationHistory($event, $event_details = "")
-    {
-        $currentuser = auth()->user();
-
-        TransformationHistory::create([
-            "modifying_user" => $currentuser->display_name,
-            "modified_user" => $this->display_name,
-            "event" => $event,
-            "event_details" => $event_details
-        ]);
-    }
 
     public function aValideLaTache(Tache $tache)
     {

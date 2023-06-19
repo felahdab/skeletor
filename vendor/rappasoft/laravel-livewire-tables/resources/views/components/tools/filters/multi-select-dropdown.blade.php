@@ -4,9 +4,9 @@
     $tableName = $component->getTableName();
 @endphp
 <div>
-    @if($filter->hasCustomFilterLabel())
+    @if($filter->hasCustomFilterLabel() && !$filter->hasCustomPosition())
         @include($filter->getCustomFilterLabel(),['filter' => $filter, 'theme' => $theme, 'filterLayout' => $filterLayout, 'tableName' => $tableName  ])
-    @else
+    @elseif(!$filter->hasCustomPosition())
         <x-livewire-tables::tools.filter-label :filter="$filter" :theme="$theme" :filterLayout="$filterLayout" :tableName="$tableName" />
     @endif
         @if ($theme === 'tailwind')
@@ -55,6 +55,5 @@
                 @endif
             @endforeach
         </select>
-    </div>
   @endif
 </div>

@@ -18,7 +18,7 @@
                     <img src='{!! asset("assets/images/MDC_intradef.png") !!}' alt="Logo MDconnect" style="height:100px; width:90px">
                 </a>
             </div>
-            <div class="mt-4 mb-1 text-center" style="font-size: x-small;">Cliquez sur l'image pour vous connecter automatiquement avec vos identifiants DR-CPT</div>
+            <div class="mt-4 mb-1 text-center" style="font-size: x-small;">Cliquez sur l'image pour vous connecter automatiquement ou avec vos identifiants DR-CPT</div>
         </div>
         <div class="p-3 ms-2 card w-25" style="border: 2px solid grey; padding: 5px; box-shadow: 0px 0px 10px;">
             <div class="mt-2 mb-3 text-center h5">Authentification Locale</div>

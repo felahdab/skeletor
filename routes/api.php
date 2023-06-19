@@ -23,7 +23,5 @@ Route::group(['namespace' => 'App\Api\v1' , 'prefix' => 'v1', 'middleware' => ['
         return $request->user();
     }
     );
-   Route::apiResource('fonctions', FonctionResourceController::class);
-   Route::apiResource('marins', MarinResourceController::class);
     
 });
