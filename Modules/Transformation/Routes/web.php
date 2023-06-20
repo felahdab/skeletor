@@ -13,7 +13,6 @@ use Modules\Transformation\Http\Controllers\TransformationHistoryController;
 use Modules\Transformation\Http\Controllers\ArchivageController;
 use Modules\Transformation\Http\Controllers\ImportExportParcours;
 
-use App\Http\Controllers\UsersController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -57,15 +56,16 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
         Route::post('stages/{stage}/validergroupe', [StageController::class, 'validermarins'])->name('stages.validermarins');
         Route::post('stages/{stage}/attribuerstage', [StageController::class, 'attribuerstage'])->name('stages.attribuerstage');
         Route::post('stages/{stage}/retirerstage', [StageController::class, 'annulermarins'])->name('stages.annulermarins');
+        Route::get('stages_du_marin/{user}', [StageController::class, 'stages_du_marin'])->name('users.stages');
 
         Route::group(['prefix' => 'transformation'], function () {
             Route::get('/', [TransformationController::class, 'index'])->name('transformation.index');
             Route::get('/parfonction', [TransformationController::class, 'indexparfonction'])->name('transformation.indexparfonction');
             Route::get('/parcomp', [TransformationController::class, 'indexparcomp'])->name('transformation.indexparcomp');
             Route::get('/parstage', [TransformationController::class, 'indexparstage'])->name('transformation.indexparstage');
-            Route::get('/{user}/choisirfonction', [UsersController::class, 'choisirfonction'])->name('users.choisirfonction');
-            Route::post('/{user}/choisirfonction', [UsersController::class, 'attribuerfonction'])->name('users.attribuerfonction');
-            Route::post('/{user}/retirerfonction', [UsersController::class, 'retirerfonction'])->name('users.retirerfonction');
+            Route::get('/{user}/choisirfonction', [TransformationController::class, 'choisirfonction'])->name('users.choisirfonction');
+            Route::post('/{user}/choisirfonction', [TransformationController::class, 'attribuerfonction'])->name('users.attribuerfonction');
+            Route::post('/{user}/retirerfonction', [TransformationController::class, 'retirerfonction'])->name('users.retirerfonction');
             Route::get('/{user}/livret', [TransformationController::class, 'livret'])->name('transformation.livret');
             Route::get('/{user}/livretpdf', [TransformationController::class, 'livretpdf'])->name('transformation.livretpdf');
             Route::get('/{user}/progression', [TransformationController::class, 'progression'])->name('transformation.progression');

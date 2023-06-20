@@ -3,29 +3,15 @@
 namespace Modules\Transformation\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 
-use App\Console\Commands\RecalculerTransformation;
-use App\Console\Commands;
-
-use Modules\Transformation\Services\LivretPdfService;
-
 use App\Models\User;
-use App\Models\Secteur;
-use App\Models\Specialite;
-use App\Models\Diplome;
-use App\Models\Grade;
-use App\Models\Unite;
 
-use Modules\Transformation\Entities\Tache;
+use Modules\Transformation\Services\GererTransformationService;
+use Modules\Transformation\Services\LivretPdfService;
 use Modules\Transformation\Entities\Fonction;
-use Modules\Transformation\Entities\SousObjectif;
-use Modules\Transformation\Entities\TypeFonction;
-use Modules\Transformation\Entities\Stage;
-
-use Illuminate\Support\Facades\Storage;
 
 class TransformationController extends Controller
 {
@@ -155,5 +141,45 @@ class TransformationController extends Controller
     public function parcoursfichebilan()
     {
         return view('transformation::transformation.parcoursfichebilan');
+    }
+
+    public function choisirfonction(User $user)
+    {
+        $fonctions=Fonction::orderBy('fonction_liblong')->get();
+        return view('users.choisirfonction', ['user' => $user,
+                                              'fonctions' => $fonctions]);
+    }
+    
+    public function attribuerfonction(Request $request, User $user)
+    {
+        $fonction_id = $request->fonction_id;
+        $fonction = Fonction::find($fonction_id);
+        if ($fonction == null){
+            $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
+            return redirect()->route('users.choisirfonction', ['user' => $user,
+                                                           'fonctions' => $fonctions])->withError("Merci de selectionner une fonction");
+        }
+        
+        $transformationService = new GererTransformationService;
+        $transformationService->attachFonction($user, $fonction);
+
+        $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
+        
+        return redirect()->route('users.choisirfonction', ['user' => $user,
+                                                           'fonctions' => $fonctions]);
+    }
+    
+    public function retirerfonction(Request $request, User $user)
+    {
+        $fonction_id = $request->fonction_id;
+        $fonction = Fonction::find($fonction_id);
+        
+        $transformationService = new GererTransformationService;
+        $transformationService->detachFonction($user, $fonction);
+        
+        $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
+
+        return redirect()->route('users.choisirfonction', ['user' => $user,
+                                                           'fonctions' => $fonctions]);
     }
 }

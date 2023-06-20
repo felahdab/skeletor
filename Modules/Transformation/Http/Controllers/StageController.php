@@ -198,4 +198,11 @@ class StageController extends Controller
         }
         return redirect()->route('stages.show', ['stage'=>$stage]);
     }  
+
+    public function stages_du_marin(User $user) 
+    {
+        return view('users.stages', [
+            'marin' => $user
+        ]);
+    }
 }
