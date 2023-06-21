@@ -15,8 +15,8 @@ class TransformationDatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-        $this->call(RolesSeeder::class);
         $this->call(PermissionsSeeder::class);
+        $this->call(RolesSeeder::class);
 
         $this->call(TypeLicenceSeeder::class);
         $this->call(TypeFonctionSeeder::class);
