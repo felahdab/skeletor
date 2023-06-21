@@ -61,7 +61,6 @@ class AdaptionDuSchemaDeBase extends Command
         $r=DB::select('select batch from migrations where migration LIKE "2022_11_14_135052_constraint_foreign_id_keys"');
         $batch = $r[0]->batch;
         DB::insert('insert into migrations (migration, batch) values (?,?)', ['2022_11_14_135053_constraint_foreign_id_keys',$batch]);
-        return 0;
 
         $from=module_path('Transformation', 'Database/Migrations/2022_11_14_135053_constraint_foreign_id_keys.php.stub');
         $to=module_path('Transformation', 'Database/Migrations/2022_11_14_135053_constraint_foreign_id_keys.php');
@@ -69,5 +68,7 @@ class AdaptionDuSchemaDeBase extends Command
 
         $command_path = app_path('Console/Commands/AdaptionDuSchemaDeBase.php');
         unlink($command_path);
+
+        return 0;
     }
 }
