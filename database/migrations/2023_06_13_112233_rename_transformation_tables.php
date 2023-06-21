@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -36,6 +37,10 @@ return new class extends Migration
             Schema::rename($from, $to);
         }
         Schema::rename('transformation_user_sous_objectif', 'transformation_user_sous_objectifs');
+
+        $r=DB::select('select batch from migrations where migration LIKE "2022_11_14_135052_constraint_foreign_id_keys"');
+        $batch = $r[0]->batch;
+        DB::insert('insert into migrations (migration, batch) values (?,?)', ['2022_11_14_135053_constraint_foreign_id_keys',$batch]);
     }
 
     /**
