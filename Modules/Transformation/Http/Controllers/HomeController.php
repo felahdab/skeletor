@@ -23,6 +23,6 @@ class HomeController extends Controller
         }
         $liens= Lien::orderBy('lien_lib')->get();
         $user = auth()->user();
-        return view('home.index' , [ 'liens' => $liens , 'user' => $user]);
+        return view('transformation::home.index' , [ 'liens' => $liens , 'user' => $user]);
     }
 }
