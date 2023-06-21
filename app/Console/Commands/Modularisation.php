@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 use Nwidart\Modules\Facades\Module;
 
-class AdaptionDuSchemaDeBase extends Command
+class Modularisation extends Command
 {
     /**
      * The name and signature of the console command.
@@ -66,7 +66,7 @@ class AdaptionDuSchemaDeBase extends Command
         $to=module_path('Transformation', 'Database/Migrations/2022_11_14_135053_constraint_foreign_id_keys.php');
         rename($from, $to);
 
-        $command_path = app_path('Console/Commands/AdaptionDuSchemaDeBase.php');
+        $command_path = app_path('Console/Commands/Modularisation.php');
         unlink($command_path);
 
         return 0;
