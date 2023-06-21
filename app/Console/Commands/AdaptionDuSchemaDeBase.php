@@ -66,5 +66,8 @@ class AdaptionDuSchemaDeBase extends Command
         $from=module_path('Transformation', 'Database/Migrations/2022_11_14_135053_constraint_foreign_id_keys.php.stub');
         $to=module_path('Transformation', 'Database/Migrations/2022_11_14_135053_constraint_foreign_id_keys.php');
         rename($from, $to);
+
+        $command_path = app_path('Console/Commands/AdaptionDuSchemaDeBase.php');
+        unlink($command_path);
     }
 }
