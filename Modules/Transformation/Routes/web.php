@@ -11,6 +11,7 @@ use Modules\Transformation\Http\Controllers\StatistiqueController;
 use Modules\Transformation\Http\Controllers\TransformationController;
 use Modules\Transformation\Http\Controllers\TransformationHistoryController;
 use Modules\Transformation\Http\Controllers\ArchivageController;
+use Modules\Transformation\Http\Controllers\HomeController;
 use Modules\Transformation\Http\Controllers\ImportExportParcours;
 
 /*
@@ -26,6 +27,9 @@ use Modules\Transformation\Http\Controllers\ImportExportParcours;
 
 Route::group(['middleware' => ['auth', 'permission']], function () {
     Route::prefix(env('APP_PREFIX'))->group(function () {
+    
+        Route::get('transformation/home', [HomeController::class, "index"])->name('transformation.homeindex');
+
         Route::resource('fonctions',      FonctionController::class);
         Route::get('fonctions/{fonction}/ajoutecompagnonage', [FonctionController::class, 'choisircompagnonage'])->name('fonctions.choisircompagnonage');
         Route::post('fonctions/{fonction}/ajoutecompagnonage', [FonctionController::class, 'ajoutercompagnonage'])->name('fonctions.ajoutercompagnonage');
