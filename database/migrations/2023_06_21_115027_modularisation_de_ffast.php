@@ -3,18 +3,51 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
 use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
+        $renames = [
+            'fonctions',
+            'compagnonages',
+            'compagnonage_fonction',
+            'compagnonage_tache',
+            'sous_objectifs',
+            'objectifs',
+            'taches',
+            'tache_objectif',
+            'type_fonctions',
+            'user_fonction',
+            'user_sous_objectif',
+            'fonction_stage',
+            'stages',
+            'user_stage',
+            'type_licences',
+            'statistiques',
+            'transformation_histories',
+            'archives'
+        ];
+
+        foreach ($renames as $from) {
+            $to = 'transformation_' . $from;
+            if (Schema::hasTable($from) && !Schema::hasTable($to)) {
+                Schema::rename($from, $to);
+            }
+        }
+        if (Schema::hasTable('transformation_user_sous_objectif') && !Schema::hasTable('transformation_user_sous_objectifs')) {
+            Schema::rename('transformation_user_sous_objectif', 'transformation_user_sous_objectifs');
+        }
+
+        $r = DB::select('select batch from migrations where migration LIKE "2022_11_14_135052_constraint_foreign_id_keys"');
+        $batch = $r[0]->batch;
+        DB::insert('insert into migrations (migration, batch) values (?,?)', ['2022_11_14_135053_constraint_foreign_id_keys', $batch]);
+
+        DB::statement("DROP VIEW IF EXISTS bilan_transformation");
         DB::statement("CREATE VIEW IF NOT EXISTS transformation_bilan_transformation 
         
         AS
@@ -95,11 +128,9 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        DB::statement("DROP VIEW IF EXISTS bilan_transformation");
+        //
     }
 };
