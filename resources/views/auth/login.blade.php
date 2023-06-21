@@ -5,15 +5,10 @@
 @endsection
 
 @section('content')
-    {{-- <div class="mt-5 mb-3">
-        <img src='{!! asset("assets/images/logo_FFAST_bleu.png") !!}' alt="Logo FFAST" style="height:250px; display: block; margin-left:auto; margin-right: auto; ">
-    </div> --}}
-
     <div class="d-flex justify-content-center mt-5 ">
         <div class="card w-50 justify-content-center" >
             <div class="w-100 text-center mt-3">
                 <div class="mb-1"><h4><b>LOGIN Automatique/DR-CPT</b></h4></div>
-                {{-- <div class="mb-1" style="font-size: small;">Cliquez sur le bouton ci-dessous pour vous connecter.</div> --}}
                 <a href="{{ route('keycloak.login.redirect') }}" class="btn btn-light w-50" >
                     <div class="card">
                         <div class="row g-0">

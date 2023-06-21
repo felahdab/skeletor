@@ -59,7 +59,7 @@
                             </button>
                         @endif
                         </td>
-                        @foreach($objectif->sous_objectifs->sortBy("pivot.ordre") as $sous_objectif)
+                        @foreach($objectif->sous_objectifs->sortBy("ordre") as $sous_objectif)
                             @include('transformation::livewire.livret-transformation.sous-objectif')
                         @endforeach <!-- foreach sous objectif -->
                     @endforeach <!-- foreach objectif -->

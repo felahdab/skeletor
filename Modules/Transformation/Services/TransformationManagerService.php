@@ -273,7 +273,7 @@ class TransformationManagerService
     public function dateDePropositionDeValidationDuSousObjectif(SousObjectif $ssobj){
         if ( ! $this->aProposeLeSousObjectif($ssobj))
             return null;
-        return $this->sous_objectifs_proposes->where('id', $ssobj->id)->first()->pivot->date_validation;
+        return $this->sous_objectifs_proposes->where('id', $ssobj->id)->first()->pivot->date_proposition_validation;
     }
 
     public function commentaireDePropositionDeValidationDuSousObjectif(SousObjectif $ssobj){

@@ -49,7 +49,7 @@
     </div>
     <div class='card ml-3 w-100'>
         <div class='card-header ml-n3 mr-n4 mb-3' ><b>Sous-objectif(s) associ&eacute;(s)</b></div>
-        @foreach ($objectif->sous_objectifs()->get() as $ssobj)
+        @foreach ($objectif->sous_objectifs()->orderBy("ordre")->get() as $ssobj)
             @php 
                 $lieu= $lieux->where('id', $ssobj->lieu_id)->first();
                 $lib_lieu = $lieu->lieu_libcourt;
