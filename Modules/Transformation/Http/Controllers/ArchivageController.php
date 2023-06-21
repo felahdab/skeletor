@@ -8,7 +8,6 @@ use Illuminate\Support\Carbon;
 use App\Models\User;
 
 use Modules\Transformation\Services\LivretPdfService;
-use App\Service\StatService;
 use Modules\Transformation\Services\ArchivRestaurService;
 
 use App\Http\Controllers\Controller;

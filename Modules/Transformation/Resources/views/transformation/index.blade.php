@@ -14,7 +14,7 @@
         </div>
 
         <div class="mt-3">
-            <livewire:users-table mode="transformation">
+            <livewire:transformation::users-table mode="transformation">
         </div>
 
     </div>

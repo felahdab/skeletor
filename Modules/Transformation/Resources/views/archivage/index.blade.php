@@ -13,7 +13,7 @@
             Suppression définitive des marins.        
         </div>
         <div class="mt-3">
-            <livewire:users-table mode="archiv">
+            <livewire:transformation::users-table mode="archiv">
         </div>
 
     </div>
