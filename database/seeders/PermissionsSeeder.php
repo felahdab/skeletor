@@ -19,7 +19,6 @@ class PermissionsSeeder extends Seeder
         // Artisan::call('mail:send', ['user' => $user, '--queue' => 'default']);
         Artisan::call('permission:create-permission-routes');
         Artisan::call('permission:create-permission', ['name' => 'changepasswd.allusers', 'guard' => 'web']);
-        Artisan::call('permission:create-permission', ['name' => 'transformation.updatelivret', 'guard' => 'web']);
 
     }
 }
