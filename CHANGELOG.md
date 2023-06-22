@@ -1,3 +1,14 @@
+## 2.0.0 (June 22, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.6 –> 2.0.0
+- Implements art# 117991 conversion de FFAST en module de Skeletor
+- Implement art #117495 correction pour afficher les sous objectifs dans l'ordre enregistre pour objectif.show et dans le livret
+- Nouvelle présentation pour les logins. Ajout message explicatif a cote des types de connexion
+- Ajustement de la configuration dusk générale pour inclure les tests des modules
+- Creation .gitignore dans public pour nettoyer la staging area et faciliter la revue des changements survenus
+- Reconfiguration de l5-swagger pour explorer les modules
+- composer require nwidart/laravel-modules
+- composer update
+
 ## 1.2.6 (June 14, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.5 –> 1.2.6
 - Mise à jour de la documentation
