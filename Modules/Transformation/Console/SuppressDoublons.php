@@ -3,12 +3,9 @@
 namespace Modules\Transformation\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 
 use App\Models\User;
 use Modules\Transformation\Entities\UserSousObjectif;
-
-use App\Jobs\CalculateUserTransformationRatios;
 
 class SuppressDoublons extends Command
 {
@@ -24,7 +21,7 @@ class SuppressDoublons extends Command
      *
      * @var string
      */
-    protected $description = 'Supprimer les doubles dans la table user_sous_objectif. Recalcule le taux de transformation.';
+    protected $description = 'Supprimer les doubles dans la table transformation_user_sous_objectifs. Recalcule le taux de transformation.';
 
     /**
      * Execute the console command.

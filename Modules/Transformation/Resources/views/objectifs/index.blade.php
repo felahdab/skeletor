@@ -11,7 +11,7 @@
         <h2>Objectifs</h2>
         <div class="lead">
             Gérer les objectifs.
-        <a href="{{ route('objectifs.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un objectif</a>
+        <a href="{{ route('transformation::objectifs.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un objectif</a>
         </div>
         
         @livewire('transformation::objectif-list')

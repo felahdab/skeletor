@@ -66,7 +66,7 @@
             </div>
             <div>
                 <button class='btn btn-primary mt-4' type='submit'>Enregistrer</button>
-                <a href="{{ route('fonctions.index') }}" class="btn btn-outline-dark mt-4">Annuler</a>
+                <a href="{{ route('transformation::fonctions.index') }}" class="btn btn-outline-dark mt-4">Annuler</a>
                 <br>&nbsp;
             </div>
         </div>
@@ -96,7 +96,7 @@
             </x-sortable>
             @can("fonctions.choisircompagnonage")
                 <div class='text-center mt-1 mb-1'>
-                    <a class='btn btn-primary btn-sm' href="{{route('fonctions.choisircompagnonage', $fonction->id)}}">Ajouter un nouveau compagnonnage</a>
+                    <a class='btn btn-primary btn-sm' href="{{route('transformation::fonctions.choisircompagnonage', $fonction->id)}}">Ajouter un nouveau compagnonnage</a>
                 </div>
             @endcan
         </div>
@@ -104,7 +104,7 @@
 
         @can("fonctions.removecompagnonage")
             @foreach ($fonction->compagnonages->sortBy('pivot.ordre') as $compagnonage)
-                <form method="POST" action="{{ route('fonctions.removecompagnonage', [$fonction , $compagnonage]) }}" id="removecompagnonage[{{ $compagnonage->id }}]">
+                <form method="POST" action="{{ route('transformation::fonctions.removecompagnonage', [$fonction , $compagnonage]) }}" id="removecompagnonage[{{ $compagnonage->id }}]">
                     @csrf
                 </form>
             @endforeach

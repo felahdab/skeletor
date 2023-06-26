@@ -33,7 +33,7 @@ class StattuteurTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
         $this->setTableRowUrl(function($row) {
-            return route('transformation.livret', $row);
+            return route('transformation::transformation.livret', $row);
         });
         $this->setPaginationStatus(false);
         $this->setFilterLayoutSlideDown();

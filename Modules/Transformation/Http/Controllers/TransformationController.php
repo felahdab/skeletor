@@ -156,7 +156,7 @@ class TransformationController extends Controller
         $fonction = Fonction::find($fonction_id);
         if ($fonction == null){
             $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
-            return redirect()->route('users.choisirfonction', ['user' => $user,
+            return redirect()->route('transformation::users.choisirfonction', ['user' => $user,
                                                            'fonctions' => $fonctions])->withError("Merci de selectionner une fonction");
         }
         
@@ -165,7 +165,7 @@ class TransformationController extends Controller
 
         $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
         
-        return redirect()->route('users.choisirfonction', ['user' => $user,
+        return redirect()->route('transformation::users.choisirfonction', ['user' => $user,
                                                            'fonctions' => $fonctions]);
     }
     
@@ -179,7 +179,7 @@ class TransformationController extends Controller
         
         $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
 
-        return redirect()->route('users.choisirfonction', ['user' => $user,
+        return redirect()->route('transformation::users.choisirfonction', ['user' => $user,
                                                            'fonctions' => $fonctions]);
     }
 }

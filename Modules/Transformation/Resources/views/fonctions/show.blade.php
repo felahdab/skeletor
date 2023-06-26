@@ -51,9 +51,9 @@
         </div>
         <div>
             @can('fonctions.edit')
-                <a href="{{ route('fonctions.edit', $fonction) }}" class="btn btn-primary mt-4 mx-1">Modifier</a>
+                <a href="{{ route('transformation::fonctions.edit', $fonction) }}" class="btn btn-primary mt-4 mx-1">Modifier</a>
             @endcan
-            <a href="{{ route('fonctions.index') }}" class="btn btn-outline-dark mt-4  mx-1">Retour</a>
+            <a href="{{ route('transformation::fonctions.index') }}" class="btn btn-outline-dark mt-4  mx-1">Retour</a>
             <br>&nbsp;
         </div>
     </div>

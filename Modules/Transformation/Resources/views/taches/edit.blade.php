@@ -13,7 +13,7 @@
     <div id='divmodifobj' class='card   ml-3 w-100' >
         <div class='card-header' >Modification tâche </div>
         <div style='text-align:right;'>* champs obligatoires </div>
-        {!! Form::open(['method' => 'PATCH','route' => ['taches.update', $tache->id] ]) !!}
+        {!! Form::open(['method' => 'PATCH','route' => ['transformation::taches.update', $tache->id] ]) !!}
         <input type='hidden' id='tache[id]' name='tache[id]' value='{{ $tache->id }}'>
         <div style='padding-left: 15px;'>
             <div class='form-group row' >
@@ -30,7 +30,7 @@
             </div>
             <div>
                 <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Enregistrer</button>
-                <a href="{{ route('taches.index') }}" class="btn btn-outline-dark mt-4">Annuler</a>
+                <a href="{{ route('transformation::taches.index') }}" class="btn btn-outline-dark mt-4">Annuler</a>
                 <br>&nbsp;
             </div>
             <div style='text-align:right;'>
@@ -39,7 +39,7 @@
                         <a href='#' class='dropdown-toogle' data-bs-toggle='dropdown'>Compagnonnage(s) associé(s)</a>
                         <div class='dropdown-menu'>
                             @foreach ($tache->compagnonages()->get() as $comp)
-                                <a class="dropdown-item" href="{{ route('compagnonages.show', $comp->id) }}">{{ $comp->comp_libcourt }}</a>
+                                <a class="dropdown-item" href="{{ route('transformation::compagnonages.show', $comp->id) }}">{{ $comp->comp_libcourt }}</a>
                             @endforeach
                         </div>
                     </li>
@@ -60,7 +60,7 @@
                                     <div class="p-2 h4 w-50" >{{ $objectif->objectif_libcourt }}</div>
                                     <div class="p-2 w-25"> => {{ $objectif->objectif_liblong }} </div>
                                     <div class="p-2 w-25 text-end">
-                                        @can("objectifs.destroy")
+                                        @can("transformation::objectifs.destroy")
                                             <button type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('removeobj[{{ $objectif->id }}]').submit()">Retirer cet objectif</button>
                                         @endcan
                                     </div>
@@ -72,15 +72,15 @@
             </x-sortable>
         
             <div  class='text-center mt-1 mb-1'>
-                <a class='btn btn-primary btn-sm' href="{{ route('taches.choisirobjectif', $tache->id) }}">Ajouter un nouvel objectif</a>
+                <a class='btn btn-primary btn-sm' href="{{ route('transformation::taches.choisirobjectif', $tache->id) }}">Ajouter un nouvel objectif</a>
             </div>
         </div>
         {!! Form::close() !!}
         <!-- Cette partie contient les formulaires actives par javascript pour provoquer la suppression
             d'un objectif-->
-            @can("objectifs.destroy")
+            @can("transformation::objectifs.destroy")
                 @foreach ($tache->objectifs as $objectif)
-                <form method="POST" action="{{ route('taches.removeobjectif', [$tache, $objectif]) }}" id="removeobj[{{ $objectif->id }}]">
+                <form method="POST" action="{{ route('transformation::taches.removeobjectif', [$tache, $objectif]) }}" id="removeobj[{{ $objectif->id }}]">
                     @csrf
                 </form>
                 @endforeach

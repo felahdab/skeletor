@@ -13,11 +13,11 @@ class HomeController extends Controller
         {
             $user=auth()->user();
             if ($user->hasRole("2ps"))
-                return redirect()->route("statistiques.pour2ps");
+                return redirect()->route("transformation::statistiques.pour2ps");
             elseif ($user->hasRole("tuteur"))
-                return redirect()->route("statistiques.pourtuteurs");
+                return redirect()->route("transformation::statistiques.pourtuteurs");
             elseif ($user->hasRole("em"))
-                return redirect()->route("statistiques.pourem");
+                return redirect()->route("transformation::statistiques.pourem");
             elseif ($user->hasRole("bord"))
                 return redirect()->route("transformation.index");
         }

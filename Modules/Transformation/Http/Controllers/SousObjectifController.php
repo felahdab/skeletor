@@ -63,7 +63,7 @@ class SousObjectifController extends Controller
 
         $ssobj->save();
         RecalculerTransformationService::handle();
-        return redirect()->route('objectifs.edit', $request['objectif_id']);
+        return redirect()->route('transformation::objectifs.edit', $request['objectif_id']);
     }
 
     /**
@@ -113,7 +113,7 @@ class SousObjectifController extends Controller
 
     //         RecalculerTransformationService::handle();
     //     }
-    //     return redirect()->route('objectifs.edit', $request['objectif_id']);
+    //     return redirect()->route('transformation::objectifs.edit', $request['objectif_id']);
     // }
 
 
@@ -127,6 +127,6 @@ class SousObjectifController extends Controller
     {
         $sousObjectif->delete();
         RecalculerTransformationService::handle();
-        return redirect()->route('objectifs.edit', $request['objectif_id']);
+        return redirect()->route('transformation::objectifs.edit', $request['objectif_id']);
     }
 }

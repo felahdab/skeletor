@@ -57,7 +57,7 @@ class ObjectifController extends Controller
         $objectif->objectif_libcourt = $request->objectif['objectif_libcourt'];
         $objectif->objectif_liblong = $request->objectif['objectif_liblong'];
         $objectif->save();
-        return redirect()->route('objectifs.edit', $objectif);
+        return redirect()->route('transformation::objectifs.edit', $objectif);
     }
 
     /**
@@ -113,7 +113,7 @@ class ObjectifController extends Controller
         }
         $objectif->save();
 
-        return redirect()->route('objectifs.edit', $objectif);
+        return redirect()->route('transformation::objectifs.edit', $objectif);
     }
 
     /**
@@ -126,6 +126,6 @@ class ObjectifController extends Controller
     {
         $objectif->delete();
         RecalculerTransformationService::handle();
-        return redirect()->route('objectifs.index');
+        return redirect()->route('transformation::objectifs.index');
     }
 }
