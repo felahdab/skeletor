@@ -11,7 +11,7 @@
         <h2>Compagnonnages</h2>
         <div class="lead">
             Gérer les compagnonnages
-            <a href="{{ route('compagnonages.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un compagnonnage</a>
+            <a href="{{ route('transformation::compagnonages.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un compagnonnage</a>
         </div>
         @livewire('transformation::compagnonage-list')
     </div>

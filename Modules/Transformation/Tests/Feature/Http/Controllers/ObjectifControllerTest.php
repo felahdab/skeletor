@@ -18,7 +18,7 @@ class ObjectifControllerTest extends TestCase
      */
     public function test_objectif_index_fails_when_not_logged_in()
     {
-        $response = $this->get(route('objectifs.index'));
+        $response = $this->get(route('transformation::objectifs.index'));
 
         $response->assertRedirect(route('home.index'));
     }
@@ -28,7 +28,7 @@ class ObjectifControllerTest extends TestCase
         $this->seed();
 	    $user=User::find(1);
 	    $response = $this->actingAs($user)
-		      ->get(route('objectifs.index'));
+		      ->get(route('transformation::objectifs.index'));
 
         $response->assertStatus(200);
     }

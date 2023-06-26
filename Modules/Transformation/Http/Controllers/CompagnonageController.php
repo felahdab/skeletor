@@ -55,7 +55,7 @@ class CompagnonageController extends Controller
         $comp->comp_libcourt = $request->comp['comp_libcourt'];
         $comp->comp_liblong = $request->comp['comp_liblong'];
         $comp->save();
-        return redirect()->route('compagnonages.edit', $comp);
+        return redirect()->route('transformation::compagnonages.edit', $comp);
     }
 
     /**
@@ -107,7 +107,7 @@ class CompagnonageController extends Controller
                         ->where('compagnonage_id',$compagnonage->id)
                         ->update(["ordre" => $nb_ordre]);
 
-        return redirect()->route('compagnonages.edit', ['compagnonage'   => $compagnonage]);
+        return redirect()->route('transformation::compagnonages.edit', ['compagnonage'   => $compagnonage]);
     }
     
     public function removetache(Request $request, Compagnonage $compagnonage, Tache $tache)
@@ -115,7 +115,7 @@ class CompagnonageController extends Controller
         $compagnonage->taches()->detach($tache);
         RecalculerTransformationService::handle();
 
-        return redirect()->route('compagnonages.edit', ['compagnonage'   => $compagnonage]);
+        return redirect()->route('transformation::compagnonages.edit', ['compagnonage'   => $compagnonage]);
     }
 
     /**
@@ -140,7 +140,7 @@ class CompagnonageController extends Controller
         }
         $compagnonage->save();
         
-        return redirect()->route('compagnonages.edit', $compagnonage);
+        return redirect()->route('transformation::compagnonages.edit', $compagnonage);
     }
 
     /**
@@ -153,6 +153,6 @@ class CompagnonageController extends Controller
     {
         $compagnonage->delete();
         RecalculerTransformationService::handle();
-        return redirect()->route('compagnonages.index');
+        return redirect()->route('transformation::compagnonages.index');
     }
 }

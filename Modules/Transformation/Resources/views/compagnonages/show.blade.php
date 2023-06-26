@@ -27,9 +27,9 @@
             </div>
             <div>
                 @can('compagnonages.edit')
-                <a href="{{ route('compagnonages.edit', $compagnonage) }}" class="btn btn-primary mt-4">Modifier</a>
+                <a href="{{ route('transformation::compagnonages.edit', $compagnonage) }}" class="btn btn-primary mt-4">Modifier</a>
                 @endcan
-                <a href="{{ route('compagnonages.index') }}" class="btn btn-outline-dark mt-4">Retour</a>
+                <a href="{{ route('transformation::compagnonages.index') }}" class="btn btn-outline-dark mt-4">Retour</a>
                 <br>&nbsp;
             </div>
             <div style='text-align:right;'>

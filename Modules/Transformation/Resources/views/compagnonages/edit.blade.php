@@ -29,7 +29,7 @@
             </div>
             <div>
                 <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Enregistrer</button>
-                <a href="{{ route('compagnonages.index') }}" class="btn btn-outline-dark mt-4">Annuler</a>
+                <a href="{{ route('transformation::compagnonages.index') }}" class="btn btn-outline-dark mt-4">Annuler</a>
                 <br>&nbsp;
             </div>
             <div style='text-align:right;'>
@@ -38,7 +38,7 @@
                         <a href='#' class='dropdown-toogle' data-bs-toggle='dropdown'>Fonction(s) associée(s)</a>
                         <div class='dropdown-menu'>
                             @foreach ($compagnonage->fonctions()->get() as $fonction)
-                                <a class="dropdown-item" href="{{ route('fonctions.show', $fonction->id) }}">{{ $fonction->fonction_libcourt }}</a>
+                                <a class="dropdown-item" href="{{ route('transformation::fonctions.show', $fonction->id) }}">{{ $fonction->fonction_libcourt }}</a>
                             @endforeach
                         </div>
                     </li>
@@ -74,7 +74,7 @@
             
             @can("compagnonages.removetache")
                 @foreach ($compagnonage->taches->sortBy('pivot.ordre') as $tache)
-                    <form method="POST" action="{{ route('compagnonages.removetache', [$compagnonage, $tache]) }}" id="removetache[{{ $tache->id }}]">
+                    <form method="POST" action="{{ route('transformation::compagnonages.removetache', [$compagnonage, $tache]) }}" id="removetache[{{ $tache->id }}]">
                         @csrf
                     </form>
                 @endforeach

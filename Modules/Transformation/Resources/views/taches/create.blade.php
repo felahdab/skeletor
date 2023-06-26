@@ -13,7 +13,7 @@
     <div id='divmodifobj' class='card   ml-3 w-100' >
         <div class='card-header' >Création tâche </div>
         <div style='text-align:right;'>* champs obligatoires </div>
-        {!! Form::open(['method' => 'POST','route' => 'taches.store' ]) !!}
+        {!! Form::open(['method' => 'POST','route' => 'transformation::taches.store' ]) !!}
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
                     <label class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
@@ -29,7 +29,7 @@
                 </div>
                 <div>
                     <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Créer</button>
-                    <a href="{{ route('taches.index') }}" class="btn btn-default mt-4">Annuler</a>
+                    <a href="{{ route('transformation::taches.index') }}" class="btn btn-default mt-4">Annuler</a>
                     <br>&nbsp;
                 </div>
             </div>

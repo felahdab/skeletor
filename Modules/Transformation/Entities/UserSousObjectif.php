@@ -11,6 +11,6 @@ class UserSousObjectif extends Model
     use HasFactory;
     use HasTablePrefix;
     
-    protected $table = 'user_sous_objectif';
+    protected $table = 'transformation_user_sous_objectifs';
 
 }

@@ -11,17 +11,17 @@
                 <div class="col-md-3 mt-5">
                 <p style="text-align:justify">Ce site vous permet de suivre votre parcours de transformation. Il présente l’ensemble des compétences et étapes que vous devrez acquérir et valider.<br><br>
                     <b>C’est votre outil de travail quotidien, qui vous guidera tout au long de votre parcours.</b></p><br>
-                    <p class="text-center"><br><a href="{{ route('transformation.monlivret') }}" class="btn btn-warning btn-lg">Mon livret de transformation</a></p>
+                    <p class="text-center"><br><a href="{{ route('transformation::transformation.monlivret') }}" class="btn btn-warning btn-lg">Mon livret de transformation</a></p>
                 </div>
                 <div class="col-md-6 mt-5">
                     <div><p class="text-center"><font size="6%">Taux de transformation</font></p></div>
                     <div class="display-2 mt-4"><p class="text-center">{{$user->taux_de_transformation}}&nbsp;%</p></div>
-                    <p class="text-center"><br><a href="{{ route('transformation.maprogression') }}" class="btn btn-primary btn-lg ">Ma progression</a></p>
+                    <p class="text-center"><br><a href="{{ route('transformation::transformation.maprogression') }}" class="btn btn-primary btn-lg ">Ma progression</a></p>
                 </div>
                 <div class="col-md-3 mt-5">
                     <p style="text-align:justify"><u>N’oubliez pas :</u> <br>chacun est maître de sa formation.<br> Les tuteurs vous accompagnent et vous orientent pour vous permettre de rejoindre votre futur équipage
                     dans un état de préparation le plus abouti possible. Celui-ci dépendra avant tout de votre investissement personnel au quotidien.</p>
-                    <p class="text-center"><br><a href="{{ route('transformation.mafichebilan') }}" class="btn btn-secondary btn-lg">Ma fiche bilan</a></p>
+                    <p class="text-center"><br><a href="{{ route('transformation::transformation.mafichebilan') }}" class="btn btn-secondary btn-lg">Ma fiche bilan</a></p>
                 </div>
             </div>
         </div>    

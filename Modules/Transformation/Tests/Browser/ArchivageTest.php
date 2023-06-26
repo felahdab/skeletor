@@ -20,7 +20,7 @@ class ArchivageTest extends DuskTestCase
         $this->browse(function ($browser)  use ($user){
             $browser->maximize()
                 ->loginAs($user)
-                  ->visit(route('archivage.index'))
+                  ->visit(route('transformation::archivage.index'))
                   ->assertSee('Marins à archiver');
         });
         
@@ -42,7 +42,7 @@ class ArchivageTest extends DuskTestCase
         $this->browse(function ($browser)  use ($user, $otheruser){
             $browser->maximize()
                 ->loginAs($user)
-                  ->visit(route('archivage.index'))
+                  ->visit(route('transformation::archivage.index'))
                   ->assertSee($otheruser->name);
         });
         
@@ -67,7 +67,7 @@ class ArchivageTest extends DuskTestCase
         $this->browse(function ($browser)  use ($user, $otheruser){
             $browser->maximize()
                 ->loginAs($user)
-                  ->visit(route('archivage.index'))
+                  ->visit(route('transformation::archivage.index'))
                   ->keys("div.input-group:nth-child(1) > input:nth-child(1)", $otheruser->name)
                   ->pause(1000)
                   ->assertSee($otheruser->name)
@@ -101,7 +101,7 @@ class ArchivageTest extends DuskTestCase
         $this->browse(function ($browser)  use ($user, $otheruser){
             $browser->maximize()
                 ->loginAs($user)
-                  ->visit(route('archivage.index'))
+                  ->visit(route('transformation::archivage.index'))
                   ->keys("div.input-group:nth-child(1) > input:nth-child(1)", $otheruser->name)
                   ->pause(1000)
                   ->assertSee($otheruser->name)
@@ -135,7 +135,7 @@ class ArchivageTest extends DuskTestCase
         $this->browse(function ($browser)  use ($user, $otheruser){
             $browser->maximize()
                 ->loginAs($user)
-                  ->visit(route('archivage.index'))
+                  ->visit(route('transformation::archivage.index'))
                   ->keys("div.input-group:nth-child(1) > input:nth-child(1)", $otheruser->name)
                   ->pause(1000)
                   ->assertSee($otheruser->name)
@@ -166,7 +166,7 @@ class ArchivageTest extends DuskTestCase
         $this->browse(function ($browser)  use ($user, $otheruser){
             $browser->maximize()
                 ->loginAs($user)
-                  ->visit(route('archivage.index'))
+                  ->visit(route('transformation::archivage.index'))
                   ->keys("div.input-group:nth-child(1) > input:nth-child(1)", $otheruser->name)
                   ->pause(1000)
                   ->assertSee($otheruser->name)
@@ -196,7 +196,7 @@ class ArchivageTest extends DuskTestCase
         $this->browse(function ($browser)  use ($user, $otheruser){
             $browser->maximize()
                 ->loginAs($user)
-                  ->visit(route('archivage.index'))
+                  ->visit(route('transformation::archivage.index'))
                   ->keys("div.input-group:nth-child(1) > input:nth-child(1)", $otheruser->name)
                   ->pause(1000)
                   ->assertSee($otheruser->name)

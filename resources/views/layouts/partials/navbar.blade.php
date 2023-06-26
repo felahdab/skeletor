@@ -27,7 +27,6 @@
                 @can('mindefconnect.index')<a class="dropdown-item" href="{{ route('mindefconnect.index') }}">Demandes Mindef Connect</a>@endcan
                 <a class="dropdown-item" href="{{ route('users.index') }}">Fiches des marins</a>
                 @can('roles.index')<a class="dropdown-item" href="{{ route('roles.index')}}">Roles</a>@endcan
-                @can('permissions.index')<a class="dropdown-item" href="{{ route('permissions.index')}}">Droits d'acces</a>@endcan
                 @can('liens.index')<a class="dropdown-item" href="{{ route('liens.index')}}">Liens</a>@endcan
                 @can('annudef.index')<a class="dropdown-item" href="{{ route('annudef.index')}}">Annudef</a>@endcan
                 @can('mails.index')<a class="dropdown-item" href="{{ route('mails.index')}}">Mails</a>@endcan
@@ -67,7 +66,10 @@
             @can('mespreferences')<a class="dropdown-item" href="{{ route('mespreferences') }}">Préférences</a>@endcan
             <a class="dropdown-item" href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2">Déconnexion</a>
             <hr>
-            <span class="dropdown-item">Version : {{env('APP_VERSION')}}</span>
+            <span class="dropdown-item">Skeletor {{env('APP_VERSION')}}</span>
+            @foreach(Module::allEnabled() as $module)
+              <span class="dropdown-item">Module {{ $module->getLowerName() }} {{ Config::get($module->getLowerName() . '.version') }}</span>
+            @endforeach
           </div>
         </div>
       @endauth

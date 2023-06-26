@@ -129,7 +129,7 @@
                 </div>
                 <div>
                     <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Modifier</button>
-                    <a href="{{ route('stages.index') }}" class="btn btn-default mt-4">Annuler</a>
+                    <a href="{{ route('transformation::stages.index') }}" class="btn btn-default mt-4">Annuler</a>
                     <br>&nbsp;
                 </div>
             </div>

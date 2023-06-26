@@ -39,7 +39,7 @@
             </div>
             <div>
                 <button class='btn btn-primary ms-4 mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Créer</button>
-                <a href="{{ route('compagnonages.index') }}" class="btn btn-default mt-4">Annuler</a>
+                <a href="{{ route('transformation::compagnonages.index') }}" class="btn btn-default mt-4">Annuler</a>
                 <br>&nbsp;
             </div>
             {!! Form::close() !!}

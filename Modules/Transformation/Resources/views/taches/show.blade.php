@@ -27,10 +27,10 @@
                 </div>
             </div>
             <div>
-                @can('taches.edit')
-                <a href="{{ route('taches.edit', $tache) }}" class="btn btn-primary mt-4">Modifier</a>
+                @can('transformation::taches.edit')
+                <a href="{{ route('transformation::taches.edit', $tache) }}" class="btn btn-primary mt-4">Modifier</a>
                 @endcan
-                <a href="{{ route('taches.index') }}" class="btn btn-outline-dark mt-4">Retour</a>
+                <a href="{{ route('transformation::taches.index') }}" class="btn btn-outline-dark mt-4">Retour</a>
                 <br>&nbsp;
             </div>
             <div style='text-align:right;'>
@@ -39,7 +39,7 @@
                         <a href='#' class='dropdown-toogle' data-bs-toggle='dropdown'>Compagnonnage(s) associé(s)</a>
                         <div class='dropdown-menu'>
                             @foreach ($tache->compagnonages()->get() as $comp)
-                                <a class="dropdown-item" href="{{ route('compagnonages.show', $comp->id) }}">{{ $comp->comp_libcourt }}</a>
+                                <a class="dropdown-item" href="{{ route('transformation::compagnonages.show', $comp->id) }}">{{ $comp->comp_libcourt }}</a>
                             @endforeach
                         </div>
                     </li>
