@@ -1,3 +1,10 @@
+## 2.0.1 (June 27, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.0.0 –> 2.0.1
+- Implements art #118754 : Modification des routes et permissions pour les préfixer avec transformation::. Modification de l'affichage dans la page d'édition des rôles pour regrouper les permissions par module.
+- Implements art# 118917 : Retrait du package recca0120/terminal inutile.
+- Ajoute l'affichage de la version des modules activés dans la NAVBAR
+- Retrait du lien vers la liste des permissions (droits d'accès) de la Navbar: il n'y a aucun cas où on veut qu'un utilisateur, même administrateur, y ait accès.
+
 ## 2.0.0 (June 22, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.6 –> 2.0.0
 - Implements art# 117991 conversion de FFAST en module de Skeletor
