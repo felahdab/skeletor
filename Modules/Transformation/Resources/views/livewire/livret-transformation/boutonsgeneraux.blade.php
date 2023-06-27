@@ -10,7 +10,7 @@
                                     validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
                                     validModal.show();
                                     opendivvalid=true">Enregistrer les validations</button>
-        <a href="{{ route('transformation.indexparfonction') }}" class="btn btn-light">Retour</a>
+        <a href="{{ route('transformation::transformation.indexparfonction') }}" class="btn btn-light">Retour</a>
         <button x-show="false" 
             x-on:uservalidated.window="if (active)
             { 
@@ -39,7 +39,7 @@
                                                             selected_compagnonnages , selected_taches , 
                                                             selected_objectifs ,selected_sous_objectifs );">
                 Annuler la validation des éléments cochés</button>
-        <a href="{{ route('transformation.livretpdf', $user->id) }}" class="btn btn-info">Imprimer</a>
+        <a href="{{ route('transformation::transformation.livretpdf', $user->id) }}" class="btn btn-info">Imprimer</a>
         @break
     @case ('proposition')
         <button type="submit" form="ssobjs" class="btn btn-primary" name="validation"
@@ -60,7 +60,7 @@
                                                             selected_compagnonnages , selected_taches , 
                                                             selected_objectifs ,selected_sous_objectifs );">
                 Retirer les sous objectifs sélectionnés de ma proposition de validation</button>
-        <a href="{{ route('transformation.livretpdf', $user->id) }}" class="btn btn-info">Imprimer</a>
+        <a href="{{ route('transformation::transformation.livretpdf', $user->id) }}" class="btn btn-info">Imprimer</a>
         @break
     @endswitch
     <a href="#" style="text-decoration: none;">
