@@ -201,7 +201,7 @@ class StageController extends Controller
 
     public function stages_du_marin(User $user) 
     {
-        return view('users.stages', [
+        return view('transformation::transformation.stages', [
             'marin' => $user
         ]);
     }

@@ -4,7 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 
-use App\Models\Fonction;
+use Modules\Transformation\Entities\Fonction;
 use App\Models\Service;
 
 class UserPreferencesComponent extends Component

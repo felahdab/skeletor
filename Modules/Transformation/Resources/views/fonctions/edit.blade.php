@@ -12,7 +12,7 @@
     <div id='divmodifobj' class='card ml-3 w-100' >
         <div class='card-header' >Modification fonction </div>
         <div style='text-align:right;'>* champs obligatoires </div>
-        {!! Form::open(['method' => 'PATCH','route' => ['fonctions.update', $fonction->id] ]) !!}
+        {!! Form::open(['method' => 'PATCH','route' => ['transformation::fonctions.update', $fonction->id] ]) !!}
         <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
         <div style='padding-left: 15px;'>
             <div class='form-group row' >
@@ -84,7 +84,7 @@
                                     <div class="p-2 h4 w-50" >{{ $compagnonage->comp_liblong }}</div>
                                     <div class="p-2 w-25"> => {{ $compagnonage->comp_libcourt }} </div>
                                     <div class="p-2 w-25 text-end">
-                                    @can("fonctions.removecompagnonage")
+                                    @can("transformation::fonctions.removecompagnonage")
                                         <button type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('removecompagnonage[{{ $compagnonage->id }}]').submit()">Retirer ce compagnonnage</button>
                                     @endcan
                                     </div>
@@ -94,7 +94,7 @@
                     </x-sortable-item>
                 @endforeach
             </x-sortable>
-            @can("fonctions.choisircompagnonage")
+            @can("transformation::fonctions.choisircompagnonage")
                 <div class='text-center mt-1 mb-1'>
                     <a class='btn btn-primary btn-sm' href="{{route('transformation::fonctions.choisircompagnonage', $fonction->id)}}">Ajouter un nouveau compagnonnage</a>
                 </div>
@@ -102,7 +102,7 @@
         </div>
         {!! Form::close() !!}
 
-        @can("fonctions.removecompagnonage")
+        @can("transformation::fonctions.removecompagnonage")
             @foreach ($fonction->compagnonages->sortBy('pivot.ordre') as $compagnonage)
                 <form method="POST" action="{{ route('transformation::fonctions.removecompagnonage', [$fonction , $compagnonage]) }}" id="removecompagnonage[{{ $compagnonage->id }}]">
                     @csrf
@@ -120,8 +120,8 @@
                             <div class="p-2 h4 w-50">{{ $stage->stage_libcourt}}</div>
                             <div class="p-2 w-25">=> {{ $stage->stage_liblong}}</div>
                             <div class="p-2 w-25 text-end">
-                                @can("fonctions.removestage")
-                                    {!! Form::open(['method' => 'POST','route' => ['fonctions.removestage', $fonction , $stage],'style'=>'display:inline']) !!}
+                                @can("transformation::fonctions.removestage")
+                                    {!! Form::open(['method' => 'POST','route' => ['transformation::fonctions.removestage', $fonction , $stage],'style'=>'display:inline']) !!}
                                     <input type='hidden' name='stage_id' id='stage_id'  value='{{ $stage->id }}'>
                                     {!! Form::submit('Retirer ce stage', ['class' => 'btn btn-danger btn-sm']) !!}
                                     {!! Form::close() !!}
@@ -134,7 +134,7 @@
             
             @can("fonctions.choisirstage")
             <div class='text-center mb-1 mt-1'>
-                {!! Form::open(['method' => 'GET','route' => ['fonctions.choisirstage', $fonction->id],'style'=>'display:inline']) !!}
+                {!! Form::open(['method' => 'GET','route' => ['transformation::fonctions.choisirstage', $fonction->id],'style'=>'display:inline']) !!}
                 {!! Form::submit('Ajouter un nouveau stage', ['class' => 'btn btn-primary btn-sm']) !!}
                 {!! Form::close() !!}
             </div>

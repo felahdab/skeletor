@@ -19,7 +19,7 @@ class HomeController extends Controller
             elseif ($user->hasRole("em"))
                 return redirect()->route("transformation::statistiques.pourem");
             elseif ($user->hasRole("bord"))
-                return redirect()->route("transformation.index");
+                return redirect()->route("transformation::transformation.index");
         }
         $liens= Lien::orderBy('lien_lib')->get();
         $user = auth()->user();

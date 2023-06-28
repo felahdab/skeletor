@@ -12,7 +12,7 @@
     <div id='divmodifobj' class='card ml-3 w-100' >
         <div class='card-header' >Modification compagnonnage </div>
         <div style='text-align:right;'>* champs obligatoires </div>
-        {!! Form::open(['method' => 'PATCH','route' => ['compagnonages.update', $compagnonage->id] ]) !!}
+        {!! Form::open(['method' => 'PATCH','route' => ['transformation::compagnonages.update', $compagnonage->id] ]) !!}
         <input type='hidden' id='comp[id]' name='comp[id]' value='{{ $compagnonage->id }}'>
         <div style='padding-left: 15px;'>
             <div class='form-group row' >
@@ -60,7 +60,7 @@
                                 <div class="p-2 h4 w-50" >{{ $tache->tache_liblong }}</div>
                                 <div class="p-2 w-25"> => {{ $tache->tache_libcourt }} </div>
                                 <div class="p-2 w-25 text-end">
-                                    @can("compagnonages.removetache")
+                                    @can("transformation::compagnonages.removetache")
                                         <button type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('removetache[{{ $tache->id }}]').submit()">Retirer cette tâche</button>
                                     @endcan
                                 </div>
@@ -72,7 +72,7 @@
             </x-sortable>
             {!! Form::close() !!}
             
-            @can("compagnonages.removetache")
+            @can("transformation::compagnonages.removetache")
                 @foreach ($compagnonage->taches->sortBy('pivot.ordre') as $tache)
                     <form method="POST" action="{{ route('transformation::compagnonages.removetache', [$compagnonage, $tache]) }}" id="removetache[{{ $tache->id }}]">
                         @csrf
@@ -80,9 +80,9 @@
                 @endforeach
             @endcan
 
-            @can("compagnonages.choisirtache")
+            @can("transformation::compagnonages.choisirtache")
             <div class='text-center mt-1 mb-1'>
-                {!! Form::open(['method' => 'GET','route' => ['compagnonages.choisirtache', $compagnonage->id],'style'=>'display:inline']) !!}
+                {!! Form::open(['method' => 'GET','route' => ['transformation::compagnonages.choisirtache', $compagnonage->id],'style'=>'display:inline']) !!}
                 {!! Form::submit('Ajouter une nouvelle tâche', ['class' => 'btn btn-primary btn-sm']) !!}
                 {!! Form::close() !!}
             </div>

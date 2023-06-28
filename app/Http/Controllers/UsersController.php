@@ -90,7 +90,7 @@ class UsersController extends Controller
             return redirect()->route("users.index")
                 ->withSuccess(__('L utilisateur a été créé avec succès.'));
         elseif ($request["buttonid"] == "users.choisirfonction")
-            return redirect()->route("users.choisirfonction", $user->id)
+            return redirect()->route("transformation::users.choisirfonction", $user->id)
                 ->withSuccess(__('L utilisateur a été créé avec succès.'));
     }
 

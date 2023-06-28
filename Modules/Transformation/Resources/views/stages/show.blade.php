@@ -51,7 +51,7 @@
 
     <div id='divconsultstage'>
         @if ($stage != null)
-        {!! Form::open(['method' => 'POST','route' => ['stages.validermarins', $stage->id], 'id' => 'form']) !!}
+        {!! Form::open(['method' => 'POST','route' => ['transformation::stages.validermarins', $stage->id], 'id' => 'form']) !!}
         <input type='hidden' id='date_validation' name='date_validation' x-model="date_validation">
         <input type='hidden' id='commentaire'     name='commentaire'     x-model="commentaire">
         <input type='hidden' id='valideur'        name='valideur'        x-model="valideur">
@@ -152,7 +152,7 @@
         @endcan
         {!! Form::close() !!}
         
-        {!! Form::open(['method' => 'POST','route' => ['stages.annulermarins', $stage->id], 'id' => 'form']) !!}
+        {!! Form::open(['method' => 'POST','route' => ['transformation::stages.annulermarins', $stage->id], 'id' => 'form']) !!}
         <input type='hidden' id='date_validation' name='date_validation' value=''>
         <input type='hidden' id='commentaire' name='commentaire' value=''>
         <input type='hidden' id='valideur' name='valideur' value=''>

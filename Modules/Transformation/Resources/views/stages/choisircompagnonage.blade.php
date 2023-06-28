@@ -17,7 +17,7 @@
     {!! Form::close() !!}
     <div id='divmodifobj' class='card   ml-3 w-100' >
         <div class='card-header' > Ajout d'un compagnonage </div>
-        {!! Form::open(['method' => 'POST','route' => ['fonctions.ajoutercompagnonage', $fonction->id] ]) !!}
+        {!! Form::open(['method' => 'POST','route' => ['transformation::fonctions.ajoutercompagnonage', $fonction->id] ]) !!}
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
                 <label class='col-sm-5 col-form-label '>Tache</label>

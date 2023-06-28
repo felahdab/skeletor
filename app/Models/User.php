@@ -3,34 +3,27 @@
 namespace App\Models;
 
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Config;
 
-use Lab404\Impersonate\Models\Impersonate;
+use Spatie\Permission\Traits\HasRoles;
 
-use App\Jobs\CalculateUserTransformationRatios;
-use App\Service\GererTransformationService;
-use Modules\Transformation\Services\TransformationManagerService;
 use App\Service\AnnudefAjaxRequestService;
 
-use Illuminate\Database\Eloquent\Model;
-use App\Models\TransformationHistory;
 use Modules\Transformation\Entities\Stage;
 use Modules\Transformation\Entities\Fonction;
 use Modules\Transformation\Entities\Compagnonage;
 use Modules\Transformation\Entities\Tache;
 use Modules\Transformation\Entities\Objectif;
-
-use App\Models\UserSousObjectif;
-
+use Modules\Transformation\Services\TransformationManagerService;
 use Modules\Transformation\Entities\SousObjectif;
 
 use Glorand\Model\Settings\Traits\HasSettingsTable;
+use Lab404\Impersonate\Models\Impersonate;
+use Nwidart\Modules\Facades\Module;
 
 class User extends Authenticatable
 {
@@ -40,22 +33,27 @@ class User extends Authenticatable
 
     use HasSettingsTable; # provides the ->settings() methods
 
+    # La propriete statique modelDefaultSettings est enrichie par les preferences des utilisateurs declarees dans les modules
+    # actives, puis utilisee a l'initialisation d'un User pour configurer la propriete defaultSettings.
+    protected static $modelDefaultSettings=[];
+
     public array $defaultSettings = [
-        'ffast' => [
-            'notifications' => [
-                'pour_fonctions' => [
-                    'daily'           => false,
-                    'weekly'          => false,
-                    'liste_fonctions' => []
-                ],
-                'pour_services' => [
-                    'daily'           => false,
-                    'weekly'          => false,
-                    'liste_services' => []
-                ],
-            ]
-        ]
+        
     ]; # for Glorand\Model\Settings\Traits\HasSettingsTable
+
+    protected static function booted(): void
+    {
+        foreach(Module::allEnabled() as $module)
+        {
+            static::$modelDefaultSettings[$module->getLowerName()] = config($module->getLowerName() . ".user_settings");
+        }
+    }
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->defaultSettings = static::$modelDefaultSettings;
+    }
 
     /**
      * The database table used by the model.

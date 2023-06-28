@@ -50,7 +50,7 @@
             <input type='hidden' name='fonction_id' id='fonction_id'  value='{{ $fonction->id }}'>
         </div>
         <div>
-            @can('fonctions.edit')
+            @can('transformation::fonctions.edit')
                 <a href="{{ route('transformation::fonctions.edit', $fonction) }}" class="btn btn-primary mt-4 mx-1">Modifier</a>
             @endcan
             <a href="{{ route('transformation::fonctions.index') }}" class="btn btn-outline-dark mt-4  mx-1">Retour</a>

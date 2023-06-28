@@ -12,11 +12,11 @@
             Stages de {{$marin->display_name}}
         </div>
         <div class='mt-2'> 
-            <a href="{{ route('transformation.livret', $marin->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
-            <a href="{{ route('transformation.progression', $marin->id) }}" class="btn btn-primary btn-sm">Progression</a>
-            <a href="{{ route('transformation.fichebilan', $marin->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
-            <a href="{{ route('users.stages', $marin->id) }}" class="btn btn-danger btn-sm">Stages</a>
-            <a href="{{ route('transformation.index') }}" class="btn btn-default btn-sm">Annuler</a>
+            <a href="{{ route('transformation::transformation.livret', $marin->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
+            <a href="{{ route('transformation::transformation.progression', $marin->id) }}" class="btn btn-primary btn-sm">Progression</a>
+            <a href="{{ route('transformation::transformation.fichebilan', $marin->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
+            <a href="{{ route('transformation::users.stages', $marin->id) }}" class="btn btn-danger btn-sm">Stages</a>
+            <a href="{{ route('transformation::transformation.index') }}" class="btn btn-default btn-sm">Annuler</a>
         </div>
    
     <div x-data="{stageid : null , 

@@ -26,14 +26,14 @@
                             <td><a href="{{ route('transformation::objectifs.edit', $objectif->id) }}" class="btn btn-info btn-sm">Modifier</a></td>
                             @can('transformation::objectifs.destroy')
                             <td>
-                                {!! Form::open(['method' => 'DELETE','route' => ['objectifs.destroy', $objectif->id],'style'=>'display:inline']) !!}
+                                {!! Form::open(['method' => 'DELETE','route' => ['transformation::objectifs.destroy', $objectif->id],'style'=>'display:inline']) !!}
                                 {!! Form::submit('Supprimer', ['class' => 'btn btn-danger btn-sm']) !!}
                                 {!! Form::close() !!}
                             </td>
                             @endcan
                          @elseif ($mode == "selection")
                             <td>
-                                {!! Form::open(['method' => 'POST','route' => ['taches.ajouterobjectif', $tache, $objectif] ]) !!}
+                                {!! Form::open(['method' => 'POST','route' => ['transformation::taches.ajouterobjectif', $tache, $objectif] ]) !!}
                                 <button type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
                                 {!! Form::close() !!}
                             </td>

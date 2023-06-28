@@ -49,7 +49,7 @@ class TransformationController extends Controller
     {
         //conditions sur permission
         $mode = "consultation";
-        if (auth()->user()->can('transformation.updatelivret')) {
+        if (auth()->user()->can('transformation::transformation.updatelivret')) {
             $mode = "modification";
         }
         return view('transformation::transformation.livret', [
@@ -146,7 +146,7 @@ class TransformationController extends Controller
     public function choisirfonction(User $user)
     {
         $fonctions=Fonction::orderBy('fonction_liblong')->get();
-        return view('users.choisirfonction', ['user' => $user,
+        return view('transformation::transformation.choisirfonction', ['user' => $user,
                                               'fonctions' => $fonctions]);
     }
     

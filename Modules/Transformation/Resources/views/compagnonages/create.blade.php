@@ -12,7 +12,7 @@
     <div id='divmodifobj' class='card ml-3 w-100' >
         <div class='card-header' >Création compagnonnage </div>
         <div style='text-align:right;'>* champs obligatoires </div>
-            {!! Form::open(['method' => 'POST','route' => 'compagnonages.store' ]) !!}
+            {!! Form::open(['method' => 'POST','route' => 'transformation::compagnonages.store' ]) !!}
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
                     <label for='comp[comp_libcourt]' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>

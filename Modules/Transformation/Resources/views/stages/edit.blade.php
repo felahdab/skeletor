@@ -12,7 +12,7 @@
     <div id='divmodifobj' class='card   ml-3 w-100' >
         <div class='card-header' >Modification d'un stage </div>
 		<div style='text-align:right;'>* champs obligatoires </div>
-        {!! Form::open(['method' => 'PATCH','route' => ['stages.update', $stage->id] ]) !!}
+        {!! Form::open(['method' => 'PATCH','route' => ['transformation::stages.update', $stage->id] ]) !!}
             <input type='hidden' id='stage[id]' name='stage[id]' value='{{ $stage->id }}'>
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
