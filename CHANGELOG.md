@@ -1,4 +1,4 @@
-## 2.0.1 (June 27, 2023)
+## 2.0.1 (June 28, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.0.0 –> 2.0.1
 - Implements art #118754 : Modification des routes et permissions pour les préfixer avec transformation::. Modification de l'affichage dans la page d'édition des rôles pour regrouper les permissions par module.
 - Implements art# 118917 : Retrait du package recca0120/terminal inutile.
