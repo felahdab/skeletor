@@ -7,8 +7,6 @@ use App\Http\Requests\UpdateMindefConnectUserRequest;
 use App\Models\MindefConnectUser;
 use Illuminate\Http\Request;
 
-use App\Service\ArchivRestaurService;
-
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use App\Models\Secteur;
@@ -22,6 +20,8 @@ use App\Models\TypeFonction;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeMail;
+
+use App\Events\UnUtilisateurDoitEtreRestaureEvent;
 
 
 class MindefConnectUserController extends Controller
@@ -180,7 +180,7 @@ class MindefConnectUserController extends Controller
     }
     public function conservcpte(MindefConnectUser $mcuser)
     {
-        ArchivRestaurService::restauravecdonnees($mcuser,'mindefconnect');
+        UnUtilisateurDoitEtreRestaureEvent::dispatch($mcuser->email, true);
         $mcuser->delete();
 
         return redirect()->route('mindefconnect.index')
@@ -188,7 +188,7 @@ class MindefConnectUserController extends Controller
     }
     public function effacecpte(MindefConnectUser $mcuser)
     {
-        ArchivRestaurService::restaursansdonnees($mcuser,'mindefconnect');
+        UnUtilisateurDoitEtreRestaureEvent::dispatch($mcuser->email, false);
         $mcuser->delete();
         
         return redirect()->route('mindefconnect.index')
