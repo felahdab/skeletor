@@ -31,6 +31,8 @@ class LivretTransformation extends Component
     {
         switch ($this->mode) {
             case "modification":
+            case "validelacherdouble":
+            case "modiflivret":
             case "consultation":
             case "proposition":
                 $this->provider = $this->user->getTransformationManager();
@@ -47,6 +49,8 @@ class LivretTransformation extends Component
     {
         switch ($this->mode) {
             case "modification":
+            case "validelacherdouble":
+            case "modiflivret":
             case "consultation":
             case "proposition":
                 $this->provider = $this->user->getTransformationManager();

@@ -64,8 +64,15 @@ class TransformationController extends Controller
         //conditions sur permission
         $mode = "consultation";
         if (auth()->user()->can('transformation.updatelivret')) {
+            $mode = "modiflivret";
+        }
+        if (auth()->user()->can('transformation.validerlacheoudouble')) {
+            $mode = "validelacherdouble";
+        }
+        if (auth()->user()->can('transformation.updatelivret') && auth()->user()->can('transformation.validerlacheoudouble')) {
             $mode = "modification";
         }
+
         return view('transformation::transformation.livret', [
             'mode'      => $mode,
             'user'      => $user

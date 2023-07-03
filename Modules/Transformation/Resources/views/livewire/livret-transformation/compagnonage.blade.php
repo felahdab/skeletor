@@ -31,7 +31,7 @@
                     @else
                         <td rowspan='{{ $tache->coll_sous_objectifs()->count() }}'>
                     @endif
-                            @if ($mode == "consultation" || ($mode== 'proposition' && $user->getTransformationManager()->aValideLaTache($tache) )  )
+                            @if ($mode == "validelacherdouble" || $mode == "consultation" || ($mode== 'proposition' && $user->getTransformationManager()->aValideLaTache($tache) )  )
                             @else
                                 <input type='checkbox' 
                                     x-data='{ active: false }'
@@ -45,7 +45,7 @@
                         </td>
                     @foreach($tache->objectifs->sortBy("pivot.ordre") as $objectif)
                         <td rowspan='{{$objectif->sous_objectifs->count()}}'> 
-                            @if ($mode == "consultation" || ($mode== 'proposition' && $user->getTransformationManager()->aValideLObjectif($objectif) )  )
+                            @if ($mode == "validelacherdouble" || $mode == "consultation" || ($mode== 'proposition' && $user->getTransformationManager()->aValideLObjectif($objectif) )  )
                             @else
                             <input type='checkbox' 
                                 x-data='{ active: false }'

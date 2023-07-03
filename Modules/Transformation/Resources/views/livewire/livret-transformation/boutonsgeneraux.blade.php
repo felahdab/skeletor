@@ -21,6 +21,7 @@
             }"></button>
         @break
     @case ('modification')
+    @case ('modiflivret')
         <button type="submit" form="ssobjs" class="btn btn-primary" name="validation"
                 x-on:click.prevent="active = true ;
                             validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
