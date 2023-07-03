@@ -18,6 +18,7 @@ use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\TextFilter;
+use Rappasoft\LaravelLivewireTables\Views\Filters\DateFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -42,6 +43,13 @@ class StattuteurTable extends DataTableComponent
         if ($this->service){
             $this->setFilter('service', $this->service->service_libcourt);
         }
+        
+        $this->setTrAttributes(function($row) {
+            if ($row->date_embarq >= date('Y-m-d')) {
+              return ['style' => 'border-left: 10px solid purple !important'];
+            }
+            return [];
+        });
     }
 
     public function builder(): Builder
@@ -190,7 +198,11 @@ class StattuteurTable extends DataTableComponent
                     $secteur = Secteur::where('secteur_libcourt', 'like', '%' . $value . '%')->get()->first();
                     if ($secteur != null)
                         $builder->where('secteur_id', $secteur->id);
-            }),
+                }),
+            DateFilter::make('Date Embarq')
+                ->filter(function(Builder $builder, string $value) {
+                        $builder->where('date_embarq','<=', $value);
+                }),
         ];
                 
         if ($currentuser->hasRole("em")){
