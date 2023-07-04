@@ -15,6 +15,7 @@ use Modules\Transformation\Listeners\HistoriserUnChangementDuLivretDeTransformat
 use Modules\Transformation\Listeners\LancerLaMiseAJourDuTauxDeTransformationListener;
 use Modules\Transformation\Listeners\UnUtilisateurDoitEtreArchiveListener;
 use Modules\Transformation\Listeners\UnUtilisateurDoitEtreRestaureListener;
+use Modules\Transformation\Listeners\NotifierLesUtilisateursDUnLache;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -27,7 +28,8 @@ class EventServiceProvider extends ServiceProvider
         ],
         UnLivretDeTransformationAChangeEvent::class => [
             HistoriserUnChangementDuLivretDeTransformationListener::class,
-            LancerLaMiseAJourDuTauxDeTransformationListener::class
+            LancerLaMiseAJourDuTauxDeTransformationListener::class,
+            NotifierLesUtilisateursDUnLache::class,
         ],
         UserProposedSomeValidationEvent::class => [
             HandleUserProposedSomeValidationEvent::class,
