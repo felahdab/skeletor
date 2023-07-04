@@ -47,7 +47,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
-        Route::middleware('web')
+        Route::prefix(env('APP_PREFIX'))
+            ->middleware('web')
             ->namespace($this->moduleNamespace)
             ->group(module_path('Transformation', '/Routes/web.php'));
     }
