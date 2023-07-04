@@ -1,5 +1,12 @@
 # Développement
 
+- [Développement modulaire](#nwidart-modules)
+    - [Préfixe des tables en base de données](#modules-tables)
+    - [Préfixe des routes et des permissions](#modules-routes)
+    - [Préfixe des ressources](#modules-resources)
+    - [Utilisation du layou général de Skelerot](#modules-layout)
+    - [Utilisation de la barre de menus de Skeletor](#modules-navbar)
+    - [Renvoi vers la documentation et lien dans la barre de menus](#modules-helplink)
 - [Contraintes liées au routage des requêtes](#contraintes-routage)
     - [Préfixe de l'instance](#prefixe_instance)
     - [Laravel Sanctum](#laravel_sanctum)
@@ -12,6 +19,9 @@
     - [Fichiers statiques](#fichiers_statiques)
 - [Gestion des droits](#gestion_des_droits)
 - [Mindef Connect](#mindef_connect)
+- [Rappasoft Datatables](#rappasoft)
+- [Sushi](#sushi)
+- [Exposer une API](#api)
 
 Skeletor est le squelette d'application Web Intradef mis à la disposition des développeurs de la FAN par le FANLab.<br><br>
 
@@ -20,11 +30,112 @@ Ainsi, les tâches normalement réalisées au tout début d'un projet ont déjà
 Skeletor tire partie de l'expérience acquise sur le projet FFAST du GTR Toulon, et inclut donc des briques fonctionnelles requises ou utiles pour l'intégration dans Intradef (Mindef Connect en particulier, mais aussi envoi de mail Intradef et interrogation de l'Annudef), basées sur des technologies conformes au CCT afin de faciliter, le cas échéant, la validation du projet par la comilologie ministérielle.<br><br>
 
 Skeletor est basé sur le framework Laravel et inclut également d'autres briques techniques classiques (Bootstrap, Livewire, Alpine.js). Destiné à être mis en oeuvre sur la plateforme de développement du FANLab, ce squelette d'application doit aussi composer avec quelques contraintes techniques inhabituelles qui sont décrites ci-dessous et que le développeur devra respecter s'il veut que son application fonctionne.
-A l'usage, ces contraintes ne sont pas difficiles à intégrer et ne posent pas de grosse difficulté.
+A l'usage, ces contraintes ne sont pas difficiles à intégrer et ne posent pas de grosse difficulté. Dans Skeletor, le plus gros du travail est déjà fait.
 
 > {info} Cette documentation ne reprend pas la documentation des briques techniques utilisées. Pour parfaitement la comprendre, il faut que le développeur se soit déjà intéressé
 > à la documentation du framework Laravel qui constitue la base de travail. Les informations ci-dessous viennent préciser comment le framework Laravel est mis en oeuvre dans
 > le cadre particulier de la plateforme de développement du FANLab.<br><br>
+
+## Distinguer ce qui relève du spécifique de ce qui relève du générique
+L'un des objectifs de Skeletor, c'est de permettre la collaboration sur le développement des outils de la FAN. Par conséquent, lorsqu'un développeur envisage de rajouter une fonctionnalité à son application et/ou son module, il doit se demander s'il s'agit d'un besoin métier spécifique, ou d'un besoin générique pouvant potentiellement servir à d'autres.<br><br>
+
+- S'il s'agit d'un besoin métier spécifique, le développeur peut l'inclure dans son module.
+- S'il s'agit d'un besoin potentiellement générique, le développeur doit se poser la question d'en faire un composant générique inclus dans Skeletor pour tout le monde.
+
+<a name="nwidart-modules">
+
+## Développement modulaire
+Skeletor inclue les packages ```nwidart/laravel-modules``` et ```mhmiton/laravel-modules-livewire``` qui facilitent le développement d'application Laravel sous forme de modules.<br><br>
+
+Le recours à ces outils, s'il n'est pas indispensable pour un maquétage ou une application temporaire, doit être envisagé dès lors que le développement présente un intérêt manifeste de généralisation. La modularisation des applications permet d'envisager leur intégration dans une même application chapeau. C'est l'un des buts de Skeletor.<br><br>
+
+Le dévelopement modulaire présente quelques complications supplémentaires:
+- les modules ne doivent pas dépendre les uns des autres, ou les dépendances doivent être gérées
+- les modules ne doivent pas entrer en conflit sur les noms de routes, de permissions, de rôles, de tables en base de données, etc...<br><br>
+
+
+> {info} Il est toujours possible de convertir une application, même complexe, en module. Néanmoins, plus on s'inscrit dans la démarche de modularisation tôt, plus la démarche
+> est simple à mettre en oeuvre.
+
+<a name="modules-tables">
+
+### Préfixe des tables en base de données
+Pour faciliter la mise en place de ce préfixe, Skeletor inclue le Trait ```HasTablePrefix```.
+
+Au niveau de chaque module, ce Trait peut-être surclassé de la façon suivante:
+```php
+<?php
+
+namespace Modules\Transformation\Traits;
+
+use App\Traits\HasTablePrefix as BasePrefixTrait;
+
+trait HasTablePrefix
+{
+    use BasePrefixTrait;
+
+    protected $prefix = 'transformation_';
+}
+```
+
+Chaque modèle du module peut alors simplement ```use HasTablePrefix``` pour rajouter le même préfixe à tous les modèles du module.<br><br>
+
+Evidemment, le préfixe doit être pris en compte dans les migrations du module.
+
+<a name="modules-routes">
+
+### Préfixe des routes du module
+
+> {info} Compte tenu des règles générales liant les routes aux permissions, d'une façon générale, un module doit préfixer le nom des routes qu'il déclare avec 
+> ```nom_du_module::```. Ainsi, les permissions associées seront également préfixées de la même façon.
+> Skeletor dispose nativement d'une page permettant d'affecter les permissions aux rôles. La page concernée affiche les permissions préfixées de la façon indiquée 
+> dans des sections séparées dans la page de gestion des rôles. <br><br>
+
+<a name="modules-resources">
+
+### Nom des vues, des composants Blade et des composants Livewire
+Les vues, composants Blade et composants Livewire sont eux aussi préfixés avec ```nom_du_module::```
+
+> {info} Le package  ```mhmiton/laravel-modules-livewire``` introduit la commande artisan ```module:make-livewire``` qui facilite la création d'un composant livewire 
+> au sein d'un module.
+
+<a name="modules-layout">
+
+### Utilisation du layout général de Skeletor
+Skeletor propose un layout général des pages que les modules peuvent utiliser en incluant la directive suivante dans leurs vues Blade:
+```php
+@extends('layouts.app-master')
+```
+
+> {info} Néanmoins, le développeur est également totalement libre de ne pas utiliser ce layout pour toutes un certaines vues de son module.
+
+<a name="modules-navbar">
+
+### Intégration des menus du module dans la barre de menu générale
+Le layout général proposé par Skeletor inclue une barre de menu qui intègre automatiquement la vue ```nomdumodule::partials/navbar```.
+
+```php
+@foreach(Module::allEnabled() as $module)
+    @includeIf($module->getLowerName() . "::partials.navbar") 
+@endforeach
+```
+
+Ainsi, le développeur peut construire un ou plusieurs menus qui seront automatiquement affichés dans la barre de menu générale lorsque son module sera activé.
+
+<a name="modules-helplink">
+
+### Lien vers les pages de documentation
+Skeletor offre 2 facilités supplémentaires:
+- le composant Blade ```<x-help-link>``` qui permet de générer un lien pointant vers une page de la documentation publiée sur Larecipe
+- un espace dans la barre de menu générale (section ```helplink``` destiné à recevoir un lien vers la documentation)
+
+Ainsi, dans une vue de l'application, le développeur peut inclure une sections ```helplink``` semblable à l'exemple ci-dessous, qui introduira automatiquement dans le menu général un lien vers la page ```parcours``` de la documentation Larecipe.
+
+```php
+@section('helplink')
+    <x-help-link page="parcours"/>
+@endsection
+```
 
 <a name="contraintes-routage">
 
@@ -36,7 +147,7 @@ Par conséquent, afin de pouvoir offrir des instances de développement à la de
 
 
 > {info} Par exemple, si l'instance de développement se voit attribuer le prefixe ```toto```, toutes les URL de cette instance commenceront par 
-> ```https://un-domaine-qui-va-bien.intradef.gouv.fr/toto/```<br><br>
+> ```https://un-domaine-qui-va-bien.intradef.gouv.fr/toto/```
 
 Or, Laravel (comme la plupart des applications et/ou framework de développement Web) ne dispose pas de mécanisme particulier pour gérer ce genre de cas. Toutefois, le mécanisme de routage des requêtes de Laravel permet de configurer chaque route servie et facilite la définition d'un préfixe sur une ou plusieurs routes (
 Voir la documentation de Laravel sur le Routage et sur les prefixes: <a href="https://laravel.com/docs/10.x/routing#route-group-prefixes">```https://laravel.com/docs/10.x/routing#route-group-prefixes```</a> )<br><br>
@@ -67,7 +178,7 @@ public function map()
 ```
 
 > {info} Si l'application renvoit une erreur 404 (la page n'existe pas), il peut-être pertinent de vérifier que le préfixe configuré dans le ```.env``` correspond bien au prefixe
-> attribué à l'instance. Si ce n'est pas le cas, les requêtes reçues ne correspondront pas aux routes déclarées, ce qui entrainera une erreur 404 systématique<br><br>
+> attribué à l'instance. Si ce n'est pas le cas, les requêtes reçues ne correspondront pas aux routes déclarées, ce qui entrainera une erreur 404 systématique
 
 
 ### Prise en compte du préfixe de l'instance dans les packages déjà installés dans Skeletor
@@ -373,3 +484,40 @@ public function login(Request $request)
         ...
 
 ```
+> {info} Le code ci-dessus prévoit explicitement que le client Socialite ne vérifie pas les certificats SSL du serveur Mindef Connect ```"verify" => false```. Les certificats
+> des serveurs Mindef Connect sont évidemment valables, mais comme ils sont signés par l'IGC du Mindef, ils ne sont pas reconnus automatiquement par les chaines de confiance
+> inclues dans les OS standard. C'est pourquoi dans Skeletor, la vérification des certificats SSL est désactivée.
+
+<a name="rappasoft">
+
+## Rappasoft Datatables
+Skeletor inclue et utilise le package ```rappasoft/laravel-livewire-tables```.<br><br>
+
+Ce package propose une généralisation du concept de table de donnée, reposant sur ```livewire```. 
+C'est une excellente façon de mettre en oeuvre rapidement et avec relativement peu de code à écrire des tables pour afficher/rechercher/trier les données d'un modèle donné.<br><br>
+
+Ce module est conçu pour manipuler des modèles Eloquent uniquement. Or, dans certaines situations (par exemple lors de la récupération de données via une API, ou en cas de construction d'une table de données à partir de plusieurs sources de données en base), il peut être utile de disposer d'une datatable sans pour autant avoir un modèle Eloquent sous-jacent. Pour cela, voir le package ```calebporzio/sushi``` qui est également inclue dans Skeletor.<br><br>
+
+<a name="sushi">
+
+## Sushi
+Skeletor inclue le package ```calebporzio/sushi``` qui permet de construire un modèle Eloquent à partir d'une source de données arbitraire.<br><br>
+
+Vient en complément de ```rappasoft/laravel-livewire-tables``` décrit précédemment.
+
+
+<a name="api">
+
+## Exposer une API
+
+Laravel et Skeletor incluent les outils de base permettant d'exposer une API pour donner accès aux données de son application.<br><br>
+
+Côté API à proprement parler, rien de particulier dans Skeletor vis à vis des pratiques courantes de Laravel. Skeletor inclue nativement le package ```spatie/laravel-data``` 
+qui peut dans certains cas faciliter la définition par le développeur des données exposées, et des règles de validation et de conversion des données entrantes le cas échéant.
+Son emploi n'est pas une obligation.<br><br>
+
+Skeletor inclue par ailleurs le package ```darkaonline/l5-swagger``` qui facilite la documentation des API exposées.<br><br>
+
+Par défaut, les API exposées et documentées sont directement visualisables depuis la page de documentation des API située par défaut à l'URL ```https://domain-qui-va-bien.intradef.gouv.fr/APP_PREFIX/api/documentation```<br><br>
+
+Skeletor offre également un middleware complémentaire permettant de forcer toutes les requêtes destinées aux API à préciser comme ```accept/type: application/json```. Ce middleware est utile pour faciliter le test des API depuis la page de documentation Swagger (qui par défaut ne précise pas d'accept/type...)
