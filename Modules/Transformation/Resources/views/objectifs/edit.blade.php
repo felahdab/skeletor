@@ -13,7 +13,7 @@
     <div id='divmodifobj' class='card w-100'>
         <div class='card-header' >Modification objectif </div>
         <div class='text-end '>* champs obligatoires </div>
-        <x-form::form method="PATCH" :action="route('objectifs.update', $objectif->id)">
+        <x-form::form method="PATCH" :action="route('transformation::objectifs.update', $objectif->id)">
             <input type='hidden' id='objectif[id]' name='objectif[id]' value='{{ $objectif->id }}'>
             <div style='padding-left: 15px;'>
                 <div class="p-2">
@@ -28,7 +28,7 @@
                 </div>
                 <div>
                     <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Enregistrer</button>
-                    <a href="{{ route('objectifs.index') }}" class="btn btn-outline-dark mt-4">Annuler</a>
+                    <a href="{{ route('transformation::objectifs.index') }}" class="btn btn-outline-dark mt-4">Annuler</a>
                     <br>&nbsp;
                 </div>
                 <div style='text-align:right;'>
@@ -37,7 +37,7 @@
                             <a href='#' class='dropdown-toogle' data-bs-toggle='dropdown'>Tâche(s) associée(s)</a>
                             <div class='dropdown-menu'>
                                 @foreach ($objectif->taches()->get() as $tache)
-                                    <a class="dropdown-item" href="{{ route('taches.show', $tache->id) }}">{{ $tache->tache_libcourt }}</a>
+                                    <a class="dropdown-item" href="{{ route('transformation::taches.show', $tache->id) }}">{{ $tache->tache_libcourt }}</a>
                                 @endforeach
                             </div>
                         </li>
@@ -61,7 +61,7 @@
                                             <textarea class="form-control" maxlength='1500' cols='40' rows='6' name='sous_objectifs[{{$ssobj->id}}][ssobj_lib]' placeholder='Libell&eacute;' >{{ $ssobj->ssobj_lib }}</textarea>
                                         </div>
                                         <div class="mt-3 text-center">
-                                            @can("sousobjectifs.destroy")
+                                            @can("transformation::sousobjectifs.destroy")
                                                 <input class="btn btn-danger" value="Supprimer ce sous objectif" onclick="document.getElementById('deleteform[{{ $ssobj->id }}]').submit();">
                                             @endcan        
                                         </div>
@@ -99,7 +99,7 @@
                 </x-sortable>
         </x-form:::form>
                 <div class='text-center mb-1'>
-                    <x-form::form method="POST" :action="route('sous-objectifs.store')">
+                    <x-form::form method="POST" :action="route('transformation::sous-objectifs.store')">
                         <input type='hidden' name='objectif_id' id='objectif_id'  value='{{ $objectif->id }}'>
                         <button class='btn btn-primary btn-sm' type='submit' >Ajouter un nouveau sous objectif</button>
                     </x-form:::form>
@@ -107,7 +107,7 @@
                 <!-- Cette partie contient les formulaires actives par javascript pour provoquer la suppression
                 d'un sous-objectif-->
                 @foreach ($objectif->sous_objectifs()->get() as $ssobj)
-                    <x-form::form method="POST" :action="route('sous-objectifs.destroy', $ssobj)" id="deleteform[{{ $ssobj->id }}]">
+                    <x-form::form method="POST" :action="route('transformation::sous-objectifs.destroy', $ssobj)" id="deleteform[{{ $ssobj->id }}]">
                         @csrf
                         <input name="_method" type="hidden" value="DELETE">
                         <input type='hidden' name='objectif_id' id='objectif_id' value='{{ $objectif->id }}'>

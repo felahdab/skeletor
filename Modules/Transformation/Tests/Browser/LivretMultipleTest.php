@@ -28,7 +28,7 @@ class LivretMultipleTest extends DuskTestCase
         $this->browse(function ($browser)  use ($user, $fonction){
             $browser->maximize()
                     ->loginAs($user)
-                  ->visit(route('fonctions.choixmarins', ["fonction" => $fonction]))
+                  ->visit(route('transformation::fonctions.choixmarins', ["fonction" => $fonction]))
                   ->assertSee('Validation collective');
         });
         
@@ -47,7 +47,7 @@ class LivretMultipleTest extends DuskTestCase
         $this->browse(function ($browser)  use ($user, $fonction){
             $browser->maximize()
                 ->loginAs($user)
-                ->visit(route('fonctions.choixmarins', ["fonction" => $fonction]))
+                ->visit(route('transformation::fonctions.choixmarins', ["fonction" => $fonction]))
                 ->assertSee('Validation collective')
                 ->click("@livret-multiple-enregistrer")
                 ->assertSee($user->display_name);

@@ -66,7 +66,7 @@ class FonctionController extends Controller
         $fonction->fonction_lache = array_key_exists('fonction_lache', $request->fonction);
         $fonction->fonction_double = array_key_exists('fonction_double', $request->fonction) ;
         $fonction->save();
-        return redirect()->route('fonctions.edit', $fonction);
+        return redirect()->route('transformation::fonctions.edit', $fonction);
     }
 
     /**
@@ -122,7 +122,7 @@ class FonctionController extends Controller
                         ->update(["ordre" => $nb_ordre]);
         
         $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
-        return redirect()->route('fonctions.edit', ['fonction'   => $fonction,
+        return redirect()->route('transformation::fonctions.edit', ['fonction'   => $fonction,
                                                     'typefonctions' => $typefonctions]);
     }
     
@@ -131,7 +131,7 @@ class FonctionController extends Controller
         $fonction->compagnonages()->detach($compagnonage);
         RecalculerTransformationService::handle();            
         
-        return redirect()->route('fonctions.edit', ['fonction'   => $fonction]);
+        return redirect()->route('transformation::fonctions.edit', ['fonction'   => $fonction]);
     }
 
     public function choisirstage(Request $request, Fonction $fonction)
@@ -159,7 +159,7 @@ class FonctionController extends Controller
             }
          }
         $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
-        return redirect()->route('fonctions.edit', ['fonction'   => $fonction,
+        return redirect()->route('transformation::fonctions.edit', ['fonction'   => $fonction,
                                                     'typefonctions' => $typefonctions]);
     }
     
@@ -173,7 +173,7 @@ class FonctionController extends Controller
             $transformationService->detachStage($user, $stage);
         }
         $typefonctions = TypeFonction::orderBy('typfonction_libcourt')->get();
-        return redirect()->route('fonctions.edit', ['fonction'   => $fonction,
+        return redirect()->route('transformation::fonctions.edit', ['fonction'   => $fonction,
                                                     'typefonctions' => $typefonctions]);    }
 
     /**
@@ -207,7 +207,7 @@ class FonctionController extends Controller
         }
         $fonction->save();
         
-        return redirect()->route('fonctions.edit', $fonction);
+        return redirect()->route('transformation::fonctions.edit', $fonction);
     }
 
     /**
@@ -220,7 +220,7 @@ class FonctionController extends Controller
     {
         $fonction->delete();
         RecalculerTransformationService::handle();           
-        return redirect()->route('fonctions.index');
+        return redirect()->route('transformation::fonctions.index');
     }
     
     public function choixmarins(Fonction $fonction)

@@ -15,7 +15,7 @@ use  Modules\Transformation\Entities\Archive;
 
 class ArchivRestaurService
 {
-    public static function restauravecdonnees($restauruser, $type)
+    public static function restauravecdonnees($restauruser)
     {
         if (is_object($restauruser))
             $email = $restauruser->email;
@@ -31,7 +31,7 @@ class ArchivRestaurService
             ->queue(new WelcomeMail($user));
         // Que fait-on avec les stats ? Comment ?            
     }
-    public static function restaursansdonnees($restauruser, $type)
+    public static function restaursansdonnees($restauruser)
     {
         if (is_object($restauruser))
             $email = $restauruser->email;

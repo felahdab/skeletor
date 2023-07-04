@@ -6,8 +6,6 @@ use Livewire\Component;
 
 use Illuminate\Http\Client\ConnectionException;
 
-use App\Service\ArchivRestaurService;
-
 use App\Http\Controllers\AnnudefController;
 use App\Http\Controllers\UsersController;
 use App\Models\User;
@@ -16,6 +14,8 @@ use App\Models\Unite;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeMail;
+
+use App\Events\UnUtilisateurDoitEtreRestaureEvent;
 
 class AnnudefSearch extends Component
 {
@@ -178,7 +178,7 @@ class AnnudefSearch extends Component
     public function conservcpte($index)
     {
         $userconserv = $this->users[$index];
-        ArchivRestaurService::restauravecdonnees($userconserv,'annudef');
+        UnUtilisateurDoitEtreRestaureEvent::dispatch($userconserv["email"], true);
         return redirect()->route('annudef.index')
                 ->with(['success' => __('Utilisateur restauré avec succès.') ] );
     }
@@ -186,7 +186,7 @@ class AnnudefSearch extends Component
     public function effacecpte($index)
     {
         $userconserv = $this->users[$index];
-        ArchivRestaurService::restaursansdonnees($userconserv,'annudef');
+        UnUtilisateurDoitEtreRestaureEvent::dispatch($userconserv["email"], false);
         return redirect()->route('annudef.index')
                 ->with(['success' => __('Utilisateur restauré avec succès.') ] );
     }

@@ -8,7 +8,7 @@
 @else
     <span class="badge bg-danger" style="width: 80px;">N.C.</span>
 @endif
-@can('stages.attribuerstage')
+@can('transformation::stages.attribuerstage')
     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" 
         @if (trim($user->CommentaireDuStage($row)))
             data-bs-title="{{trim($user->CommentaireDuStage($row))}}"
@@ -46,8 +46,8 @@
     @endif
 @endcan
 
-<a href="{{route('stages.show', $row->id)}}" class="btn btn-primary">Situation des marins pour ce stage</a>
-@can('stages.attribuerstage')
+<a href="{{route('transformation::stages.show', $row->id)}}" class="btn btn-primary">Situation des marins pour ce stage</a>
+@can('transformation::stages.attribuerstage')
     @if ( ! array_key_exists($row->id,  $user->stagesLiesAUneFonction()->pluck('id','id')->toArray() ) )
     <button wire:click.prevent="RetirerStage( {{$user->id}}, {{$row->id}} );"
             class="btn btn-danger">Retirer ce stage</button>

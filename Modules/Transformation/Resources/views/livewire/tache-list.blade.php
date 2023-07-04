@@ -22,18 +22,18 @@
                         <td>{{ $tache->tache_libcourt }}</td>
                         <td>{{ $tache->tache_liblong }}</td>
                         @if ($mode == "gestion")
-                            <td><a href="{{ route('taches.show', $tache->id) }}" class="btn btn-primary btn-sm">Consulter</a></td>
-                            <td><a href="{{ route('taches.edit', $tache->id) }}" class="btn btn-info btn-sm">Modifier</a></td>
-                            @can('taches.destroy')
+                            <td><a href="{{ route('transformation::taches.show', $tache->id) }}" class="btn btn-primary btn-sm">Consulter</a></td>
+                            <td><a href="{{ route('transformation::taches.edit', $tache->id) }}" class="btn btn-info btn-sm">Modifier</a></td>
+                            @can('transformation::taches.destroy')
                             <td>
-                                {!! Form::open(['method' => 'DELETE','route' => ['taches.destroy', $tache->id],'style'=>'display:inline']) !!}
+                                {!! Form::open(['method' => 'DELETE','route' => ['transformation::taches.destroy', $tache->id],'style'=>'display:inline']) !!}
                                 {!! Form::submit('Supprimer', ['class' => 'btn btn-danger btn-sm']) !!}
                                 {!! Form::close() !!}
                             </td>
                             @endcan
                         @elseif ($mode == "selection")
                             <td>
-                                {!! Form::open(['method' => 'POST','route' => ['compagnonages.ajoutertache', $compagnonage->id] ]) !!}
+                                {!! Form::open(['method' => 'POST','route' => ['transformation::compagnonages.ajoutertache', $compagnonage->id] ]) !!}
                                 <input type='hidden' id='tache_id' name='tache_id' value='{{ $tache->id }}'>
                                 <button type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
                                 {!! Form::close() !!}

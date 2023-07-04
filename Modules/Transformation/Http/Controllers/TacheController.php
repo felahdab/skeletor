@@ -56,7 +56,7 @@ class TacheController extends Controller
         $tache->tache_libcourt = $request->tache['tache_libcourt'];
         $tache->tache_liblong = $request->tache['tache_liblong'];
         $tache->save();
-        return redirect()->route('taches.edit', $tache);
+        return redirect()->route('transformation::taches.edit', $tache);
     }
 
     /**
@@ -99,7 +99,7 @@ class TacheController extends Controller
                         ->where('objectif_id',$objectif->id)
                         ->update(["ordre" => $nb_ordre]);
         
-        return redirect()->route('taches.edit', $tache);
+        return redirect()->route('transformation::taches.edit', $tache);
     }
     
     public function removeobjectif(Request $request, Tache $tach, Objectif $objectif)
@@ -108,7 +108,7 @@ class TacheController extends Controller
         $tach->objectifs()->detach($objectif);
         RecalculerTransformationService::handle();
         $tache = $tach;
-        return redirect()->route('taches.edit', $tache);
+        return redirect()->route('transformation::taches.edit', $tache);
     }
 
     /**
@@ -130,7 +130,7 @@ class TacheController extends Controller
             $w->save();
         }
         $tach->save();
-        return redirect()->route('taches.edit', $tach);
+        return redirect()->route('transformation::taches.edit', $tach);
     }
 
     /**
@@ -143,6 +143,6 @@ class TacheController extends Controller
     {
         $tach->delete();
         RecalculerTransformationService::handle();
-        return redirect()->route('taches.index')->withSuccess("Tache supprimee");
+        return redirect()->route('transformation::taches.index')->withSuccess("Tache supprimee");
     }
 }

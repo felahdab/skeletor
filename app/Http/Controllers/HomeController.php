@@ -2,27 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-use App\Models\Lien;
+
+use Nwidart\Modules\Facades\Module;
 
 class HomeController extends Controller
 {
-    public function index() 
-    {
-        if(auth()->user())
-        {
-            $user=auth()->user();
-            if ($user->hasRole("2ps"))
-                return redirect()->route("statistiques.pour2ps");
-            elseif ($user->hasRole("tuteur"))
-                return redirect()->route("statistiques.pourtuteurs");
-            elseif ($user->hasRole("em"))
-                return redirect()->route("statistiques.pourem");
-            elseif ($user->hasRole("bord"))
-                return redirect()->route("transformation.index");
+    public function index()
+    {   
+        if (Auth::check()) {
+            foreach (Module::allEnabled() as $module) {
+                $module_home_route = $module->getLowerName() . ".homeindex";
+                if (Route::has($module_home_route)) {
+                    return redirect()->route($module_home_route);
+                }
+            }
         }
-        $liens= Lien::orderBy('lien_lib')->get();
-        $user = auth()->user();
-        return view('home.index' , [ 'liens' => $liens , 'user' => $user]);
+        return view('home.index');
     }
 }

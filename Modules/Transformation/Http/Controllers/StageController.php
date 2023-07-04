@@ -64,7 +64,7 @@ class StageController extends Controller
         $stage->stage_lienurl = $request->stage['stage_lienurl'];
         $stage->stage_commentaire = $request->stage['stage_commentaire'];
         $stage->save();
-        return redirect()->route('stages.edit', $stage);
+        return redirect()->route('transformation::stages.edit', $stage);
     }
 
     /**
@@ -131,7 +131,7 @@ class StageController extends Controller
                 $stage->miseajourdatevalidite();
             }
         }
-        return redirect()->route('stages.edit', $stage);
+        return redirect()->route('transformation::stages.edit', $stage);
     }
 
     /**
@@ -144,7 +144,7 @@ class StageController extends Controller
     {
         $stage->delete();
         RecalculerTransformationService::handle();
-        return redirect()->route('stages.index');
+        return redirect()->route('transformation::stages.index');
     }
     
     public function attribuerstage(Request $request, Stage $stage)
@@ -155,7 +155,7 @@ class StageController extends Controller
             $user = User::find(intval($request['user_id']));
             $transformationService->attachStage($user, $stage);
         }
-        return redirect()->route('stages.choixmarins', ['stage'=>$stage]);
+        return redirect()->route('transformation::stages.choixmarins', ['stage'=>$stage]);
     }
     
     public function validermarins(Request $request, Stage $stage)
@@ -179,7 +179,7 @@ class StageController extends Controller
             }
             RecalculerTransformationService::handle();
         }
-        return redirect()->route('stages.show', ['stage'=>$stage]);
+        return redirect()->route('transformation::stages.show', ['stage'=>$stage]);
     }
     
      public function annulermarins(Request $request, Stage $stage)
@@ -196,6 +196,13 @@ class StageController extends Controller
             }
             RecalculerTransformationService::handle();
         }
-        return redirect()->route('stages.show', ['stage'=>$stage]);
+        return redirect()->route('transformation::stages.show', ['stage'=>$stage]);
     }  
+
+    public function stages_du_marin(User $user) 
+    {
+        return view('transformation::transformation.stages', [
+            'marin' => $user
+        ]);
+    }
 }

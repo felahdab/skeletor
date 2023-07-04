@@ -65,7 +65,8 @@ class TransformationServiceProvider extends ServiceProvider
             \Modules\Transformation\Console\GenerateStatistics::class,
             \Modules\Transformation\Console\RecalculerTransformation::class,
             \Modules\Transformation\Console\SearchOrphanRecords::class,
-            \Modules\Transformation\Console\SuppressDoublons::class
+            \Modules\Transformation\Console\SuppressDoublons::class,
+            \Modules\Transformation\Console\RenamePermissionsToTransformationModuleCommand::class
         ]);
     }
 

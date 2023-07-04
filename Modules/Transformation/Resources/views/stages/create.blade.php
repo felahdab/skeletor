@@ -12,7 +12,7 @@
     <div id='divmodifobj' class='card   ml-3 w-100' >
         <div class='card-header' >Création d'un stage </div>
 		<div style='text-align:right;'>* champs obligatoires </div>
-        {!! Form::open(['method' => 'POST','route' => 'stages.store' ]) !!}
+        {!! Form::open(['method' => 'POST','route' => 'transformation::stages.store' ]) !!}
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
                     <label for='stage[stage_libcourt]' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
@@ -132,7 +132,7 @@
                 </div>
                 <div>
                     <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Créer</button>
-                    <a href="{{ route('stages.index') }}" class="btn btn-default mt-4">Annuler</a>
+                    <a href="{{ route('transformation::stages.index') }}" class="btn btn-default mt-4">Annuler</a>
                     <br>&nbsp;
                 </div>
             </div>

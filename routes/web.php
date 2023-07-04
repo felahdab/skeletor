@@ -86,7 +86,6 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             Route::get('/currentrole', [ChangeUserCurrentRole::class, 'index'])->name('currentrole.show');
             Route::post('/currentrole', [ChangeUserCurrentRole::class, 'store'])->name('currentrole.store');
             Route::get('/{user}/changepasswd', [ChangeUserPassword::class,  'index'])->name('changepasswd.show');
-            Route::get('/{user}/stages', [UsersController::class, 'stages'])->name('users.stages');
             Route::post('/{user}/changepasswd', [ChangeUserPassword::class,  'store'])->name('changepasswd.store');
         });
 

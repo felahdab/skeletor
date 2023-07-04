@@ -7,7 +7,7 @@
 @section('content')
     <div class="mt-4 mb-4 rounded">
         <h2>Situation des marins pour le stage : <span class="font-weight-light">{{$stage->stage_libcourt}}</span></h2>
-        @if(auth()->user()->can('stages.attribuerstage'))
+        @if(auth()->user()->can('transformation::stages.attribuerstage'))
             <b>COMMENTAIRE :</b> {{$stage->stage_commentaire}}
             <small>
                 <p><br><x-bootstrap-icon iconname='chat-left-quote.svg' /> Commentaire du marin pour ce stage
@@ -51,7 +51,7 @@
 
     <div id='divconsultstage'>
         @if ($stage != null)
-        {!! Form::open(['method' => 'POST','route' => ['stages.validermarins', $stage->id], 'id' => 'form']) !!}
+        {!! Form::open(['method' => 'POST','route' => ['transformation::stages.validermarins', $stage->id], 'id' => 'form']) !!}
         <input type='hidden' id='date_validation' name='date_validation' x-model="date_validation">
         <input type='hidden' id='commentaire'     name='commentaire'     x-model="commentaire">
         <input type='hidden' id='valideur'        name='valideur'        x-model="valideur">
@@ -82,7 +82,7 @@
                             <th scope="col">Secteur</th>
                             <th scope="col">Mut</th>
                             <th scope="col">Date mut</th>
-                            @if(auth()->user()->can('stages.attribuerstage'))
+                            @if(auth()->user()->can('transformation::stages.attribuerstage'))
                                 <th scope="col"><x-bootstrap-icon iconname='chat-left-quote.svg' /></th>
                                 <th scope="col"><x-bootstrap-icon iconname='person.svg' /></th>
                             @endif
@@ -100,14 +100,14 @@
                             <td style='height:40px;'>{{$user->displayGrade()}} </td>
                             <td>{{$user->displayDiplome()}} </td>
                             <td>{{$user->displaySpecialite()}} </td>
-                            <td><a href='{{ route("users.stages", $user->id) }}'>{{$user->name}}</a></td>
+                            <td><a href='{{ route("transformation::users.stages", $user->id) }}'>{{$user->name}}</a></td>
                             <td>{{$user->prenom}} </td>
                             <td>{{$user->matricule}}</td>
                             <td>{{$user->nid}}</td>
                             <td>{{$user->displaySecteur()}} </td>
                             <td>{{$user->displayDestination()}}</td>
                             <td>{{$user->displayDateDebarquement()}}</td>
-                            @if(auth()->user()->can('stages.attribuerstage'))
+                            @if(auth()->user()->can('transformation::stages.attribuerstage'))
                                 @if ($user->pivot->commentaire == null or trim($user->pivot->commentaire) == '')
                                     <td>&nbsp;</td>
                                 @else
@@ -138,7 +138,7 @@
                 </table>
             </div>
         </div>
-        @can('stages.validermarins')
+        @can('transformation::stages.validermarins')
             <div class="text-center">
                 <button type="submit" 
                     class="btn btn-primary" 
@@ -152,7 +152,7 @@
         @endcan
         {!! Form::close() !!}
         
-        {!! Form::open(['method' => 'POST','route' => ['stages.annulermarins', $stage->id], 'id' => 'form']) !!}
+        {!! Form::open(['method' => 'POST','route' => ['transformation::stages.annulermarins', $stage->id], 'id' => 'form']) !!}
         <input type='hidden' id='date_validation' name='date_validation' value=''>
         <input type='hidden' id='commentaire' name='commentaire' value=''>
         <input type='hidden' id='valideur' name='valideur' value=''>
@@ -172,7 +172,7 @@
                         <td>Secteur</td>
                         <td>Date validation</td>
                         <td>Date validité</td>
-                        @if(auth()->user()->can('stages.attribuerstage'))
+                        @if(auth()->user()->can('transformation::stages.attribuerstage'))
                                 <th scope="col"><x-bootstrap-icon iconname='chat-left-quote.svg' /></th>
                                 <th scope="col"><x-bootstrap-icon iconname='person.svg' /></th>
                         @endif
@@ -188,13 +188,13 @@
                             <td style='height:40px;'>{{$user->displayGrade()}}   </td>
                             <td>{{$user->displayDiplome()}} </td>
                             <td>{{$user->displaySpecialite()}} </td>
-                            <td><a href='{{ route("users.stages", $user->id) }}'>{{$user->name}} </a></td>
+                            <td><a href='{{ route("transformation::users.stages", $user->id) }}'>{{$user->name}} </a></td>
                             <td>{{$user->prenom}} </td>
                             @if(false)<td>{{$user->matricule}}</td>@endif
                             <td>{{$user->displaySecteur()}} </td>
                             <td>{{$user->pivot->date_validation}}</td>
                             <td>{{$user->pivot->date_validite}}</td>
-                            @if(auth()->user()->can('stages.attribuerstage'))
+                            @if(auth()->user()->can('transformation::stages.attribuerstage'))
                             @if ($user->pivot->commentaire == null or trim($user->pivot->commentaire) == '')
                                 <td>&nbsp;</td>
                                 @else
@@ -223,7 +223,7 @@
                 </table>
             </div>
         </div>
-        @can('stages.annulermarins')
+        @can('transformation::stages.annulermarins')
             <div class="text-center  mb-3">
                 <button type="submit" 
                     class="btn btn-danger" 

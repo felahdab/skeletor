@@ -19,7 +19,7 @@
                     @foreach($services as $service)
                     
                     <tr>
-                        <td><a href="{{route ('statistiques.parservice', $service ) }}">{{$service->service_libcourt}}</a></td>
+                        <td><a href="{{route ('transformation::statistiques.parservice', $service ) }}">{{$service->service_libcourt}}</a></td>
                         <td>@php
                                 $service_id = $service->id;
                                 $serviceusers = $users->where('secteur.service_id', $service_id);
@@ -41,7 +41,7 @@
                     </tr>
                     @foreach($fonctionsaquai->get() as $fonction)
                         <tr>
-                            <td><a dusk="listemarins-fct-lien-{{$loop->index}}" href="{{route ('fonctions.listemarinsfonction', $fonction->id ) }}">{{$fonction->fonction_libcourt}}</a></td>
+                            <td><a dusk="listemarins-fct-lien-{{$loop->index}}" href="{{route ('transformation::fonctions.listemarinsfonction', $fonction->id ) }}">{{$fonction->fonction_libcourt}}</a></td>
                             <td>{{$fonction->users()->count()}}</td>
                             <td>{{$fonction->users()->get()->whereNotNull('pivot.date_lache')->count()}}</td>
                         </tr>

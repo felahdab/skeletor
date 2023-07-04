@@ -8,7 +8,6 @@ use Illuminate\Support\Carbon;
 use App\Models\User;
 
 use Modules\Transformation\Services\LivretPdfService;
-use App\Service\StatService;
 use Modules\Transformation\Services\ArchivRestaurService;
 
 use App\Http\Controllers\Controller;
@@ -25,7 +24,7 @@ class ArchivageController extends Controller
     {
         $user = User::withTrashed()->find($user);
         ArchivRestaurService::restauravecdonnees($user,'archivage');
-        return redirect()->route('archivage.index')
+        return redirect()->route('transformation::archivage.index')
             ->withSuccess(__('Utilisateur restauré avec succès.'));
         }
 
@@ -33,7 +32,7 @@ class ArchivageController extends Controller
     {
         $user = User::withTrashed()->find($id);
         ArchivRestaurService::restaursansdonnees($user,'archivage');
-        return redirect()->route('archivage.index')
+        return redirect()->route('transformation::archivage.index')
             ->withSuccess(__('Utilisateur restauré avec succès.'));
     }
 
@@ -53,7 +52,7 @@ class ArchivageController extends Controller
         $user->unite_destination_id == null  )
         {
             //dd($user->date_debarq);
-            return redirect()->route('archivage.index')
+            return redirect()->route('transformation::archivage.index')
             ->withError(__('Ce marin ne peut être archivé car ses données ne sont pas complètes (nid, matricule, date débarquement, grade, spécialité, brevet, unite de destination).'));
         }
         // Si l'utilisateur a un livret de tranfo: on génère le PDF et on l'enregistre sur le serveur.
@@ -67,7 +66,7 @@ class ArchivageController extends Controller
         $user->date_archivage=Carbon::now();
         $user->save();
 
-        return redirect()->route('archivage.index')
+        return redirect()->route('transformation::archivage.index')
             ->withSuccess(__('Utilisateur archivé avec succès.'));
     }
     
@@ -75,7 +74,7 @@ class ArchivageController extends Controller
     {
         $user=User::withTrashed()->find($id);
         $user->forceDelete();
-        return redirect()->route('archivage.index')
+        return redirect()->route('transformation::archivage.index')
             ->withSuccess(__('Utilisateur supprimé avec succès.'));
     }
 }

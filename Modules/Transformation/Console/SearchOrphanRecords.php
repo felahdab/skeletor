@@ -165,20 +165,20 @@ class SearchOrphanRecords extends Command
         }
         
         $checkList = [ 
-            [ 'tache_objectif', 'Modules\Transformation\Entities\Tache', 'tache_id' ],
-            [ 'tache_objectif', 'Modules\Transformation\Entities\Objectif', 'objectif_id' ],
-            [ 'compagnonage_tache', 'Modules\Transformation\Entities\Compagnonage', 'compagnonage_id' ],
-            [ 'compagnonage_tache', 'Modules\Transformation\Entities\Tache', 'tache_id' ],
-            [ 'compagnonage_fonction', 'Modules\Transformation\Entities\Compagnonage', 'compagnonage_id' ],
-            [ 'compagnonage_fonction', 'Modules\Transformation\Entities\Fonction', 'fonction_id' ],
-            [ 'fonction_stage', 'Modules\Transformation\Entities\Fonction', 'fonction_id' ],
-            [ 'fonction_stage', 'Modules\Transformation\Entities\Stage', 'stage_id' ],
-            [ 'user_fonction', 'App\Models\User', 'user_id' ],
-            [ 'user_fonction', 'Modules\Transformation\Entities\Fonction', 'fonction_id' ],
-            [ 'user_stage', 'App\Models\User', 'user_id' ],
-            [ 'user_stage', 'Modules\Transformation\Entities\Stage', 'stage_id' ],
-            [ 'user_sous_objectif', 'App\Models\User', 'user_id' ],
-            [ 'user_sous_objectif', 'Modules\Transformation\Entities\SousObjectif', 'sous_objectif_id' ],
+            [ 'transformation_tache_objectif', 'Modules\Transformation\Entities\Tache', 'tache_id' ],
+            [ 'transformation_tache_objectif', 'Modules\Transformation\Entities\Objectif', 'objectif_id' ],
+            [ 'transformation_compagnonage_tache', 'Modules\Transformation\Entities\Compagnonage', 'compagnonage_id' ],
+            [ 'transformation_compagnonage_tache', 'Modules\Transformation\Entities\Tache', 'tache_id' ],
+            [ 'transformation_compagnonage_fonction', 'Modules\Transformation\Entities\Compagnonage', 'compagnonage_id' ],
+            [ 'transformation_compagnonage_fonction', 'Modules\Transformation\Entities\Fonction', 'fonction_id' ],
+            [ 'transformation_fonction_stage', 'Modules\Transformation\Entities\Fonction', 'fonction_id' ],
+            [ 'transformation_fonction_stage', 'Modules\Transformation\Entities\Stage', 'stage_id' ],
+            [ 'transformation_user_fonction', 'App\Models\User', 'user_id' ],
+            [ 'transformation_user_fonction', 'Modules\Transformation\Entities\Fonction', 'fonction_id' ],
+            [ 'transformation_user_stage', 'App\Models\User', 'user_id' ],
+            [ 'transformation_user_stage', 'Modules\Transformation\Entities\Stage', 'stage_id' ],
+            [ 'transformation_user_sous_objectifs', 'App\Models\User', 'user_id' ],
+            [ 'transformation_user_sous_objectifs', 'Modules\Transformation\Entities\SousObjectif', 'sous_objectif_id' ],
         ];
         
         foreach($checkList as $check)

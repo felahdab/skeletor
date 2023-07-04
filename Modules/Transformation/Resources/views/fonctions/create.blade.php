@@ -12,7 +12,7 @@
     <div id='divmodifobj' class='card ml-3 w-100' >
         <div class='card-header' >Création fonction </div>
         <div style='text-align:right;'>* champs obligatoires </div>
-        {!! Form::open(['method' => 'POST','route' => 'fonctions.store']) !!}
+        {!! Form::open(['method' => 'POST','route' => 'transformation::fonctions.store']) !!}
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
                     <label for='fonction[fonction_libcourt]' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
@@ -56,7 +56,7 @@
                 </div>                
                 <div>
                     <button class='btn btn-primary mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Créer</button>
-                    <a href="{{ route('fonctions.index') }}" class="btn btn-default mt-4">Annuler</a>
+                    <a href="{{ route('transformation::fonctions.index') }}" class="btn btn-default mt-4">Annuler</a>
                     <br>&nbsp;
                 </div>
             </div>

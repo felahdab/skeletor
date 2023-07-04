@@ -26,10 +26,10 @@
                 </div>
             </div>
             <div>
-                @can('compagnonages.edit')
-                <a href="{{ route('compagnonages.edit', $compagnonage) }}" class="btn btn-primary mt-4">Modifier</a>
+                @can('transformation::compagnonages.edit')
+                <a href="{{ route('transformation::compagnonages.edit', $compagnonage) }}" class="btn btn-primary mt-4">Modifier</a>
                 @endcan
-                <a href="{{ route('compagnonages.index') }}" class="btn btn-outline-dark mt-4">Retour</a>
+                <a href="{{ route('transformation::compagnonages.index') }}" class="btn btn-outline-dark mt-4">Retour</a>
                 <br>&nbsp;
             </div>
             <div style='text-align:right;'>
@@ -38,7 +38,7 @@
                         <a href='#' class='dropdown-toogle' data-bs-toggle='dropdown'>Fonction(s) associée(s)</a>
                         <div class='dropdown-menu'>
                             @foreach ($compagnonage->fonctions()->get() as $fonction)
-                                <a class="dropdown-item" href="{{ route('fonctions.show', $fonction->id) }}">{{ $fonction->fonction_libcourt }}</a>
+                                <a class="dropdown-item" href="{{ route('transformation::fonctions.show', $fonction->id) }}">{{ $fonction->fonction_libcourt }}</a>
                             @endforeach
                         </div>
                     </li>

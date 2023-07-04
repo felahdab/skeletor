@@ -17,11 +17,11 @@
         <div class="card-body">
             <div>
             <input type='checkbox' 
-                wire:model="settings.ffast.notifications.pour_fonctions.daily"> Notifications quotidiennes
+                wire:model="settings.transformation.notifications.pour_fonctions.daily"> Notifications quotidiennes
             </div>
             <div>
             <input type='checkbox' 
-                wire:model="settings.ffast.notifications.pour_fonctions.weekly"> Notifications hebdomadaires
+                wire:model="settings.transformation.notifications.pour_fonctions.weekly"> Notifications hebdomadaires
             </div>
             <div class="accordion  mt-4">
                 <div class="accordion-item">
@@ -41,7 +41,7 @@
                             <div>           
                                 <input type='checkbox'
                                 x-on:click="services_collapse=true; fonctions_collapse=false"
-                                wire:model="settings.ffast.notifications.pour_fonctions.liste_fonctions.{{ $fonction->id }}"
+                                wire:model="settings.transformation.notifications.pour_fonctions.liste_fonctions.{{ $fonction->id }}"
                                     value="{{$fonction->id}}">
                                 {{ $fonction->fonction_libcourt }}
                             </div>
@@ -59,11 +59,11 @@
         <div class="card-body">
             <div>
             <input type='checkbox' 
-                wire:model="settings.ffast.notifications.pour_services.daily"> Notifications quotidiennes
+                wire:model="settings.transformation.notifications.pour_services.daily"> Notifications quotidiennes
             </div>
             <div>
             <input type='checkbox' 
-                wire:model="settings.ffast.notifications.pour_services.weekly"> Notifications hebdomadaires
+                wire:model="settings.transformation.notifications.pour_services.weekly"> Notifications hebdomadaires
             </div>
             <div class="accordion mt-4">
                 <div class="accordion-item">
@@ -83,7 +83,7 @@
                             <div>
                                 <input type='checkbox' 
                                     x-on:click="services_collapse=false; fonctions_collapse=true"
-                                    wire:model="settings.ffast.notifications.pour_services.liste_services.{{ $service->id }}"
+                                    wire:model="settings.transformation.notifications.pour_services.liste_services.{{ $service->id }}"
                                     value="{{$service->id}}" />
                                 {{ $service->service_libcourt }}
                             </div>

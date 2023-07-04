@@ -41,7 +41,7 @@
     <div class='flex' style='justify-content: start;'>
         <div class="container mt-4 w-50" x-data='{allChecked : false }'>
             <div>
-                {!! Form::open(['method' => 'POST','route' => ['stages.validermarins', $stage->id], 'id' => 'form']) !!}
+                {!! Form::open(['method' => 'POST','route' => ['transformation::stages.validermarins', $stage->id], 'id' => 'form']) !!}
                 <input type='hidden' id='date_validation' name='date_validation' value='' x-model="date_validation">
                 <input type='hidden' id='commentaire' name='commentaire' value='' x-model="commentaire">
                 <input type='hidden' id='valideur' name='valideur' value='' x-model="valideur">
@@ -74,11 +74,11 @@
 		    x-on:click.prevent="opendivvalid = true;">Valider</button>
                 <button type="submit" x-show="false"
                     x-on:uservalidated.window="$el.click()"></button>
-                {!! link_to_route('stages.index', 'Annuler', [], ['class' => 'btn btn-default']) !!}
+                {!! link_to_route('transformation::stages.index', 'Annuler', [], ['class' => 'btn btn-default']) !!}
                 {!! Form::close() !!}
             </div>
             
-            {!! Form::open(['method' => 'POST','route' => ['stages.attribuerstage', $stage->id]]) !!}
+            {!! Form::open(['method' => 'POST','route' => ['transformation::stages.attribuerstage', $stage->id]]) !!}
             <label for="fonction" class="form-label">Marin supplémentaire</label>
             <select class="form-control" 
                 name="user_id" required>
@@ -97,7 +97,7 @@
         </div>
         
         <div class="container mt-4  w-50" x-data='{ allChecked : false }'>
-            {!! Form::open(['method' => 'POST','route' => ['stages.annulermarins', $stage->id], 'id' => 'form']) !!}
+            {!! Form::open(['method' => 'POST','route' => ['transformation::stages.annulermarins', $stage->id], 'id' => 'form']) !!}
             <input type='hidden' id='date_validation' name='date_validation' value=''>
             <input type='hidden' id='commentaire' name='commentaire' value=''>
             <input type='hidden' id='valideur' name='valideur' value=''>
@@ -129,7 +129,7 @@
             <button type="submit" 
                 class="btn btn-primary" 
                 name="validation_double">Valider</button>
-            {!! link_to_route('stages.index', 'Annuler', [], ['class' => 'btn btn-default']) !!}
+            {!! link_to_route('transformation::stages.index', 'Annuler', [], ['class' => 'btn btn-default']) !!}
             {!! Form::close() !!}
         </div>
     </div>

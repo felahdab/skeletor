@@ -26,19 +26,19 @@
                         <td>{{ $fonction->type_fonction->typfonction_libcourt }}</td>
                         <td>
                         @if ($mode == 'gestion')
-                            <a href="{{ route('fonctions.show', $fonction->id) }}" class="btn btn-primary btn-sm">Consulter</a>
-                            <a href="{{ route('fonctions.edit', $fonction->id) }}" class="btn btn-info btn-sm">Modifier</a>
-                            @can('fonctions.destroy')
-                                {!! Form::open(['method' => 'DELETE','route' => ['fonctions.destroy', $fonction->id],'style'=>'display:inline']) !!}
+                            <a href="{{ route('transformation::fonctions.show', $fonction->id) }}" class="btn btn-primary btn-sm">Consulter</a>
+                            <a href="{{ route('transformation::fonctions.edit', $fonction->id) }}" class="btn btn-info btn-sm">Modifier</a>
+                            @can('transformation::fonctions.destroy')
+                                {!! Form::open(['method' => 'DELETE','route' => ['transformation::fonctions.destroy', $fonction->id],'style'=>'display:inline']) !!}
                                 {!! Form::submit('Supprimer', ['class' => 'btn btn-danger btn-sm']) !!}
                                 {!! Form::close() !!}
                             
                             @endcan
                         @elseif($mode == 'transformation')
-                            @can('fonctions.validermarins')
-                                <a href="{{ route('fonctions.choixmarins', $fonction->id) }}" class="btn btn-info btn-sm">Validation collective</a>
+                            @can('transformation::fonctions.validermarins')
+                                <a href="{{ route('transformation::fonctions.choixmarins', $fonction->id) }}" class="btn btn-info btn-sm">Validation collective</a>
                             @endcan
-                            <a href="{{ route('fonctions.listemarinsfonction', $fonction->id) }}" class="btn btn-primary btn-sm">Liste marins</a>
+                            <a href="{{ route('transformation::fonctions.listemarinsfonction', $fonction->id) }}" class="btn btn-primary btn-sm">Liste marins</a>
                         @endif
                         </td>
                     </tr>

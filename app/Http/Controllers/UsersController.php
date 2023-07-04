@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Modules\Transformation\Services\GererTransformationService;
-
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -92,7 +90,7 @@ class UsersController extends Controller
             return redirect()->route("users.index")
                 ->withSuccess(__('L utilisateur a été créé avec succès.'));
         elseif ($request["buttonid"] == "users.choisirfonction")
-            return redirect()->route("users.choisirfonction", $user->id)
+            return redirect()->route("transformation::users.choisirfonction", $user->id)
                 ->withSuccess(__('L utilisateur a été créé avec succès.'));
     }
 
@@ -110,13 +108,6 @@ class UsersController extends Controller
         ]);
     }
     
-    public function stages(User $user) 
-    {
-        return view('users.stages', [
-            'marin' => $user
-        ]);
-    }
-
     /**
      * Edit user data
      * 
@@ -138,45 +129,7 @@ class UsersController extends Controller
         ]);
     }
     
-    public function choisirfonction(User $user)
-    {
-        $fonctions=Fonction::orderBy('fonction_liblong')->get();
-        return view('users.choisirfonction', ['user' => $user,
-                                              'fonctions' => $fonctions]);
-    }
     
-    public function attribuerfonction(Request $request, User $user)
-    {
-        $fonction_id = $request->fonction_id;
-        $fonction = Fonction::find($fonction_id);
-        if ($fonction == null){
-            $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
-            return redirect()->route('users.choisirfonction', ['user' => $user,
-                                                           'fonctions' => $fonctions])->withError("Merci de selectionner une fonction");
-        }
-        
-        $transformationService = new GererTransformationService;
-        $transformationService->attachFonction($user, $fonction);
-
-        $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
-        
-        return redirect()->route('users.choisirfonction', ['user' => $user,
-                                                           'fonctions' => $fonctions]);
-    }
-    
-    public function retirerfonction(Request $request, User $user)
-    {
-        $fonction_id = $request->fonction_id;
-        $fonction = Fonction::find($fonction_id);
-        
-        $transformationService = new GererTransformationService;
-        $transformationService->detachFonction($user, $fonction);
-        
-        $fonctions=Fonction::orderBy('fonction_libcourt')->get()->diff($user->fonctions()->get());
-
-        return redirect()->route('users.choisirfonction', ['user' => $user,
-                                                           'fonctions' => $fonctions]);
-    }
 
     /**
      * Update user data

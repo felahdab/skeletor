@@ -21,7 +21,7 @@ class SuiviTransformationTest extends DuskTestCase
         $this->browse(function ($browser)  use ($user) {
             $browser->maximize()
                 ->loginAs($user)
-                ->visit(route('transformation.indexparfonction'))
+                ->visit(route('transformation::transformation.indexparfonction'))
                 ->assertSee('Liste des fonctions pour validation collective');
         });
 
@@ -36,7 +36,7 @@ class SuiviTransformationTest extends DuskTestCase
         $this->browse(function ($browser)  use ($user) {
             $browser->maximize()
                 ->loginAs($user)
-                ->visit(route('transformation.indexparstage'))
+                ->visit(route('transformation::transformation.indexparstage'))
                 ->assertSee('Liste des stages pour validation collective');
         });
 
@@ -51,7 +51,7 @@ class SuiviTransformationTest extends DuskTestCase
         $this->browse(function ($browser)  use ($user) {
             $browser->maximize()
                 ->loginAs($user)
-                ->visit(route('transformation.indexparcomp'))
+                ->visit(route('transformation::transformation.indexparcomp'))
                 ->assertSee('Transformation par compagnonnage');
         });
 

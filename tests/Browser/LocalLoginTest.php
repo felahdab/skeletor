@@ -38,7 +38,7 @@ class LocalLoginTest extends DuskTestCase
                     ->type('@login-email', $user->email)
                     ->type('@login-password', 'admin123')
                     ->press('@login-button')
-                    ->assertPathIs('/' . env('APP_PREFIX'));
+                    ->assertSee($user->name);
         });
         
         $user->forceDelete();
