@@ -5,4 +5,4 @@
     - [Parcours](/{{route}}/{{version}}/parcours)
     - [Transformation](/{{route}}/{{version}}/transformation)
     - [Statistiques](/{{route}}/{{version}}/statistiques)
-    - [Développement](/{{route}}/{{version}}/developpement)
+    
