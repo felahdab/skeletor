@@ -1,5 +1,16 @@
 # Développement
 
+- [Généralités](#generalites)
+- [Développement modulaire](#nwidart-modules)
+- [Contraintes liées au routage des requêtes](#contraintes-routage)
+- [Gestion des droits](#gestion_des_droits)
+- [Mindef Connect](#mindef_connect)
+- [Rappasoft Datatables](#rappasoft)
+- [Sushi](#sushi)
+- [Exposer une API](#api)
+
+Contenu:
+- [Généralités](#generalites)
 - [Développement modulaire](#nwidart-modules)
     - [Préfixe des tables en base de données](#modules-tables)
     - [Préfixe des routes et des permissions](#modules-routes)
@@ -23,11 +34,18 @@
 - [Sushi](#sushi)
 - [Exposer une API](#api)
 
+<a name="generalites">
+
+## Généralités
 Skeletor est le squelette d'application Web Intradef mis à la disposition des développeurs de la FAN par le FANLab.<br><br>
 
 Ce squelette a notamment pour objectif de placer le développeur dans un environnement lui permettant de développer ses idées sans avoir à réinventer la roue.
 Ainsi, les tâches normalement réalisées au tout début d'un projet ont déjà été réalisées, et le développeur n'a pas à s'en préoccuper.
 Skeletor tire partie de l'expérience acquise sur le projet FFAST du GTR Toulon, et inclut donc des briques fonctionnelles requises ou utiles pour l'intégration dans Intradef (Mindef Connect en particulier, mais aussi envoi de mail Intradef et interrogation de l'Annudef), basées sur des technologies conformes au CCT afin de faciliter, le cas échéant, la validation du projet par la comilologie ministérielle.<br><br>
+
+FFAST dispose d'une instance de démonstration qui permet à n'importe qui de parcourir l'application et d'en découvrir les fonctionnalités. Pour le développeur, c'est l'occasion de voir s'il y a dans FFAST des composants ou fonctionnalités qui pourraient lui être utile:<br><br>
+
+[Démonstration FFAST](https://pprod-ffast.intradef.gouv.fr/demo-ffast).<br><br>
 
 Skeletor est basé sur le framework Laravel et inclut également d'autres briques techniques classiques (Bootstrap, Livewire, Alpine.js). Destiné à être mis en oeuvre sur la plateforme de développement du FANLab, ce squelette d'application doit aussi composer avec quelques contraintes techniques inhabituelles qui sont décrites ci-dessous et que le développeur devra respecter s'il veut que son application fonctionne.
 A l'usage, ces contraintes ne sont pas difficiles à intégrer et ne posent pas de grosse difficulté. Dans Skeletor, le plus gros du travail est déjà fait.
@@ -37,10 +55,10 @@ A l'usage, ces contraintes ne sont pas difficiles à intégrer et ne posent pas 
 > le cadre particulier de la plateforme de développement du FANLab.<br><br>
 
 ## Distinguer ce qui relève du spécifique de ce qui relève du générique
-L'un des objectifs de Skeletor, c'est de permettre la collaboration sur le développement des outils de la FAN. Par conséquent, lorsqu'un développeur envisage de rajouter une fonctionnalité à son application et/ou son module, il doit se demander s'il s'agit d'un besoin métier spécifique, ou d'un besoin générique pouvant potentiellement servir à d'autres.<br><br>
+L'un des objectifs de Skeletor et de la plateforme de développement du FANLab, c'est de permettre la collaboration sur le développement des outils de la FAN. Par conséquent, lorsqu'un développeur envisage de rajouter une fonctionnalité à son application et/ou son module, il doit se demander s'il s'agit d'un besoin métier spécifique, ou d'un besoin générique pouvant potentiellement servir à d'autres.<br><br>
 
 - S'il s'agit d'un besoin métier spécifique, le développeur peut l'inclure dans son module.
-- S'il s'agit d'un besoin potentiellement générique, le développeur doit se poser la question d'en faire un composant générique inclus dans Skeletor pour tout le monde.
+- S'il s'agit d'un besoin potentiellement générique, le développeur doit se poser la question d'en faire un composant générique inclus dans Skeletor pour tout le monde. Dans ce dernier cas, une coordination avec les équipes de FANLab est nécessaire car ces dernières doivent pouvoir assurer la compatibilité ascendante avec les applications déjà en production.
 
 <a name="nwidart-modules">
 
@@ -60,6 +78,9 @@ Le dévelopement modulaire présente quelques complications supplémentaires:
 <a name="modules-tables">
 
 ### Préfixe des tables en base de données
+Afin d'éviter que 2 modules utilisent le même nom de table en base de données, il est utile de préfixer les noms de tables. Or, dans Laravel/Eloquent, le nom de la table est
+normalement dérivé du nom du Modèle. Il faut donc contrarier ce fonctionnement par défaut pour parvenir à préfixer les noms des tables.
+
 Pour faciliter la mise en place de ce préfixe, Skeletor inclue le Trait ```HasTablePrefix```.
 
 Au niveau de chaque module, ce Trait peut-être surclassé de la façon suivante:
@@ -80,13 +101,13 @@ trait HasTablePrefix
 
 Chaque modèle du module peut alors simplement ```use HasTablePrefix``` pour rajouter le même préfixe à tous les modèles du module.<br><br>
 
-Evidemment, le préfixe doit être pris en compte dans les migrations du module.
+Evidemment, le préfixe doit être pris en compte dans les migrations et éventuellement les seeders du module.
 
 <a name="modules-routes">
 
 ### Préfixe des routes du module
 
-> {info} Compte tenu des règles générales liant les routes aux permissions, d'une façon générale, un module doit préfixer le nom des routes qu'il déclare avec 
+> {info} Compte tenu des règles générales liant les routes aux permissions dans Skeletor, d'une façon générale, un module doit préfixer le nom des routes qu'il déclare avec 
 > ```nom_du_module::```. Ainsi, les permissions associées seront également préfixées de la même façon.
 > Skeletor dispose nativement d'une page permettant d'affecter les permissions aux rôles. La page concernée affiche les permissions préfixées de la façon indiquée 
 > dans des sections séparées dans la page de gestion des rôles. <br><br>
