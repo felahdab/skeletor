@@ -26,6 +26,10 @@ class StatistiqueTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
         $this->setDefaultSort('date_debarq', 'asc');
+        $this->setTableAttributes([
+            'default' => false,
+            'class' => 'table table-hover',
+        ]);
     }
     public function builder(): Builder
     {

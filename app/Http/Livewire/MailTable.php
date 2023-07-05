@@ -14,6 +14,10 @@ class MailTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setTableAttributes([
+            'default' => false,
+            'class' => 'table table-hover',
+        ]);
     }
 
     public function userActions(): View

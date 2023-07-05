@@ -85,14 +85,12 @@ Route::name('transformation::')->group(function () {
             });
 
             Route::get('statistiques/', [StatistiqueController::class, 'index'])->name('statistiques.index');
-            Route::get('statistiques/parservice', [StatistiqueController::class, 'pourtuteurs'])->name('statistiques.pourtuteurs');
+            Route::get('statistiques/parservice', [StatistiqueController::class, 'statpourunservice'])->name('statistiques.statpourunservice');
             Route::get('statistiques/parservice/{service}', [StatistiqueController::class, 'parservice'])->name('statistiques.parservice');
-            Route::get('statistiques/global', [StatistiqueController::class, 'pourem'])->name('statistiques.pourem');
-            Route::get('statistiques/stages', [StatistiqueController::class, 'pour2ps'])->name('statistiques.pour2ps');
+            Route::get('statistiques/global', [StatistiqueController::class, 'statglobal'])->name('statistiques.statglobal');
+            Route::get('statistiques/stages', [StatistiqueController::class, 'statstage'])->name('statistiques.statstage');
             Route::get('statistiques/dashboard', [StatistiqueController::class, 'dashboard'])->name('statistiques.dashboard');
             Route::get('statistiques/dashboardarchive', [StatistiqueController::class, 'dashboardarchive'])->name('statistiques.dashboardarchive');
-            //Route::get('statistiques/parcomp', [StatistiqueController::class, 'parcomp'])->name('statistiques.parcomp');
-            //Route::get('/{compagnonage}/statistiques.transfoparcomp', 'StatistiqueController@transfoparcomp')->name('statistiques.transfoparcomp');
 
             Route::group(['prefix' => 'historique'], function () {
                 Route::get('/', [TransformationHistoryController::class, 'index'])->name('historique.index');

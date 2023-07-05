@@ -134,13 +134,17 @@ class SushiUsersTable extends DataTableComponent
         $this->setPrimaryKey('id');
         $this->setFilterLayoutSlideDown();
         $this->setDefaultSort('name', 'asc');
+        $this->setTableAttributes([
+            'default' => false,
+            'class' => 'table table-hover',
+        ]);
     }
 
     public function userActions()
     {
         switch ($this->mode) {
             case "listmarin":
-                return view('tables.userstable.listmarins');
+                return view('transformation::tables.userstable.listmarins');
                 break;
         }
     }

@@ -43,7 +43,12 @@ class StattuteurTable extends DataTableComponent
         if ($this->service){
             $this->setFilter('service', $this->service->service_libcourt);
         }
-        
+
+        $this->setTableAttributes([
+            'default' => false,
+            'class' => 'table table-hover',
+        ]);
+
         $this->setTrAttributes(function($row) {
             if ($row->date_embarq >= date('Y-m-d')) {
               return ['style' => 'border-left: 10px solid purple !important'];

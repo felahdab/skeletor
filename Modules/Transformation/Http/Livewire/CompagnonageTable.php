@@ -15,6 +15,10 @@ class CompagnonageTable extends DataTableComponent
         $this->setPrimaryKey('id');
         $this->setFilterLayoutSlideDown();
         $this->setDefaultSort('comp_libcourt', 'asc');
+        $this->setTableAttributes([
+            'default' => false,
+            'class' => 'table table-hover',
+        ]);
     }
 
     public function columns(): array

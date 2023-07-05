@@ -48,6 +48,11 @@ class StagesTable extends DataTableComponent
         $this->setFilterLayoutSlideDown();
         $this->setDefaultSort('stage_libcourt', 'asc');
         $this->setPerPage(50);
+        $this->setTableAttributes([
+            'default' => false,
+            'class' => 'table table-hover',
+        ]);
+
     }
 
     public function stageActions()

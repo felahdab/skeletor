@@ -9,7 +9,7 @@
         
 
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane show active" id="nav-table" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0"><livewire:users-table mode="dashboard"> </div>
+            <div class="tab-pane show active" id="nav-table" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0"><livewire:transformation::users-table mode="dashboard"> </div>
             <div class="tab-pane" id="nav-fiches" role="tabpanel" tabindex="0">
                 
                 <div id="carouselDesFiches" class="carousel slide" style='height: 400px;'>

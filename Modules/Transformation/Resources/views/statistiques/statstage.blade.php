@@ -13,7 +13,7 @@
                       <p class='card-header'> STAGES SOUS LICENCE</p>
                       </div>
                     <div>
-                        <table class='table table-hover table-striped table-bordered'>
+                        <table class='table table-hover table-bordered'>
                             <thead>
                                 <tr style='background-color:silver;'>
                                     <th class="align-middle" style='width: 70%; '>Libell&eacute;</th>
@@ -38,7 +38,7 @@
                         <p class='card-header'> STAGES EXT&Eacute;RIEURS</p>
                     </div>
                     <div>
-                        <table class='table table-hover table-striped table-bordered'>
+                        <table class='table table-hover table-bordered'>
                             <thead>
                                 <tr style='background-color:silver;'>
                                     <th class="align-middle" style='width: 70%; '>Libell&eacute;</th>
