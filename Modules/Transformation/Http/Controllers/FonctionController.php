@@ -14,7 +14,7 @@ use Modules\Transformation\Entities\Stage;
 use App\Models\User;
 
 use Modules\Transformation\Services\RecalculerTransformationService;
-use Modules\Transformation\Service\GererTransformationService;
+use Modules\Transformation\Services\GererTransformationService;
 
 use Illuminate\Http\Request;
 
