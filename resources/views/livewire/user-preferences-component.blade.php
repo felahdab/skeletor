@@ -8,7 +8,9 @@
             'services_collapse'  : $wire.entangle('services_collapse')}">
     <h2 class="mt-4"> Préférences </h2>
 
+    @can('transformation::notifications.lache_fonction')
     <h3 class="mt-4"> Notifications </h3>
+    
     
     <div class="card mt-4">
         <div class="card-header">
@@ -108,4 +110,5 @@
         </div>
     </div>
     @endif
+    @endcan
 </div>
