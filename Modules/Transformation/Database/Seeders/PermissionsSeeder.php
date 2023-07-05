@@ -16,5 +16,6 @@ class PermissionsSeeder extends Seeder
     {
         Artisan::call('permission:create-permission-routes');
         Artisan::call('permission:create-permission', ['name' => 'transformation::transformation.updatelivret', 'guard' => 'web']);
+        Artisan::call('permission:create-permission', ['name' => 'transformation::transformation.validerlacheoudouble', 'guard' => 'web']);
     }
 }
