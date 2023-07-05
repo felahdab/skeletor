@@ -15,6 +15,10 @@
             Notifications relatives aux fonctions
         </div>
         <div class="card-body">
+            <div>Sélectionnez ci-dessous les fonctions pour lesquelles vous souhaitez être prévenu lorsqu'un marin est lâché. <br>
+                Vous serez vous même prévenu si vous êtes lâché dans une de vos fonctions, même si celle-ci n'est pas sélectionnée ci-dessous.
+            </div>
+            @if(false)
             <div>
             <input type='checkbox' 
                 wire:model="settings.transformation.notifications.pour_fonctions.daily"> Notifications quotidiennes
@@ -23,6 +27,7 @@
             <input type='checkbox' 
                 wire:model="settings.transformation.notifications.pour_fonctions.weekly"> Notifications hebdomadaires
             </div>
+            @endif
             <div class="accordion  mt-4">
                 <div class="accordion-item">
                     <div class="accordion-header bg-primary">
@@ -38,12 +43,19 @@
                     <div id="accordeon_fonctions" class="accordion-collapse" :class="fonctions_collapse ? 'collapse': 'show'">
                         <div  class="accordion-body">
                             @foreach($fonctions as $fonction)
-                            <div>           
-                                <input type='checkbox'
-                                x-on:click="services_collapse=true; fonctions_collapse=false"
-                                wire:model="settings.transformation.notifications.pour_fonctions.liste_fonctions.{{ $fonction->id }}"
-                                    value="{{$fonction->id}}">
-                                {{ $fonction->fonction_libcourt }}
+                            <div class="row">
+                                <div class="col-sm-1 form-switch">           
+                                    <input type='checkbox'  class="form-check-input"
+                                    x-on:click="services_collapse=true; fonctions_collapse=false"
+                                    wire:model="settings.transformation.notifications.pour_fonctions.liste_fonctions.{{ $fonction->id }}"
+                                        value="{{$fonction->id}}">
+                                </div>
+                                <div class="col-sm-3">
+                                    {{ $fonction->fonction_libcourt }}
+                                </div> 
+                                <div class="col-sm-8">
+                                    {{ $fonction->fonction_liblong }}
+                                </div>       
                             </div>
                             @endforeach
                         </div>
@@ -52,6 +64,7 @@
             </div>
         </div>
     </div>
+    @if(false)
     <div class="card mt-4"">
         <div class="card-header">
             Notifications relatives aux services
@@ -80,8 +93,8 @@
                     <div id="accordeon_services" class="accordion-collapse" :class="services_collapse ? 'collapse': 'show'">
                         <div  class="accordion-body">
                             @foreach($services as $service)
-                            <div>
-                                <input type='checkbox' 
+                            <div class="form-switch">           
+                                <input type='checkbox'  class="form-check-input"
                                     x-on:click="services_collapse=false; fonctions_collapse=true"
                                     wire:model="settings.transformation.notifications.pour_services.liste_services.{{ $service->id }}"
                                     value="{{$service->id}}" />
@@ -94,4 +107,5 @@
             </div>
         </div>
     </div>
+    @endif
 </div>
