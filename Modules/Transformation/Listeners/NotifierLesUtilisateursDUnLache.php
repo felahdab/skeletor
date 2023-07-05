@@ -53,7 +53,13 @@ class NotifierLesUtilisateursDUnLache
 
             if ($notified_user->id == $modified_user->id) {
                 continue;
-                # L'utilisateur qui a été lâché peut être notifié, mais il lui faut une notification personnalisée: c'est plus classe.
+                # L'utilisateur qui a été lâché peut être notifié, mais il lui faut une notification personnalisée: c'est plus classe (voir-ci-dessous).
+            }
+
+            # Seuls les utilisateurs disposant de la permission transformation::notifications.lache_fonction doivent recevoir les notifications
+            # de laché dans les fonctions. Hormis bien sûr pour leur propre lâcher (voir-ci-dessous).
+            if (! $notified_user->can('transformation::notifications.lache_fonction')){
+                continue;
             }
 
             if (in_array($fonction->id, $notified_user->settings()->get('transformation.notifications.pour_fonctions.liste_fonctions')))
@@ -62,11 +68,12 @@ class NotifierLesUtilisateursDUnLache
 
         Notification::send($recipients, $notification);
 
-        # On envoie une notification personnalisée à l'utilisateur qui a été lâché.
+        # Dans tous les cas, et sans tenir compte des permissions, on envoie une notification personnalisée à l'utilisateur qui a été lâché.
         $personalized_notification = (new TitreMentionTexteNotification())
             ->withTitre("Vous êtes laché!")
             ->withMention(Carbon::now(new \DateTimeZone('Europe/Paris'))->toDateTimeString())
             ->withTexte($modifying_user->display_name . " a validé votre lâcher dans la fonction: " . $fonction->fonction_libcourt . ". Bravo !");
+
         Notification::send($modified_user, $personalized_notification);
     }
 }
