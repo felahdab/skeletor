@@ -41,9 +41,9 @@ Skeletor est le squelette d'application Web Intradef mis à la disposition des d
 
 Ce squelette a notamment pour objectif de placer le développeur dans un environnement lui permettant de développer ses idées sans avoir à réinventer la roue.
 Ainsi, les tâches normalement réalisées au tout début d'un projet ont déjà été réalisées, et le développeur n'a pas à s'en préoccuper.
-Skeletor tire partie de l'expérience acquise sur le projet FFAST du GTR Toulon, et inclut donc des briques fonctionnelles requises ou utiles pour l'intégration dans Intradef (Mindef Connect en particulier, mais aussi envoi de mail Intradef et interrogation de l'Annudef), basées sur des technologies conformes au CCT afin de faciliter, le cas échéant, la validation du projet par la comilologie ministérielle.<br><br>
+Skeletor tire partie de l'expérience acquise sur le projet FFAST du GTR Toulon, et inclut donc des briques fonctionnelles requises ou utiles pour l'intégration dans Intradef (Mindef Connect en particulier, mais aussi envoi de mail Intradef et interrogation de l'Annudef), basées sur des technologies conformes au CCT afin de faciliter, le cas échéant, la validation du projet par la comitologie ministérielle.<br><br>
 
-FFAST dispose d'une instance de démonstration qui permet à n'importe qui de parcourir l'application et d'en découvrir les fonctionnalités. Pour le développeur, c'est l'occasion de voir s'il y a dans FFAST des composants ou fonctionnalités qui pourraient lui être utile:<br><br>
+FFAST dispose d'une instance de démonstration qui permet à n'importe qui de parcourir l'application et d'en découvrir les fonctionnalités. Pour le développeur, c'est l'occasion de voir s'il y a dans FFAST des composants ou fonctionnalités qui pourraient lui être utiles:<br><br>
 
 [Démonstration FFAST](https://pprod-ffast.intradef.gouv.fr/demo-ffast).<br><br>
 
@@ -58,7 +58,7 @@ A l'usage, ces contraintes ne sont pas difficiles à intégrer et ne posent pas 
 L'un des objectifs de Skeletor et de la plateforme de développement du FANLab, c'est de permettre la collaboration sur le développement des outils de la FAN. Par conséquent, lorsqu'un développeur envisage de rajouter une fonctionnalité à son application et/ou son module, il doit se demander s'il s'agit d'un besoin métier spécifique, ou d'un besoin générique pouvant potentiellement servir à d'autres.<br><br>
 
 - S'il s'agit d'un besoin métier spécifique, le développeur peut l'inclure dans son module.
-- S'il s'agit d'un besoin potentiellement générique, le développeur doit se poser la question d'en faire un composant générique inclus dans Skeletor pour tout le monde. Dans ce dernier cas, une coordination avec les équipes de FANLab est nécessaire car ces dernières doivent pouvoir assurer la compatibilité ascendante avec les applications déjà en production.
+- S'il s'agit d'un besoin potentiellement générique, le développeur doit se poser la question d'en faire un composant générique inclus dans Skeletor pour tout le monde. Dans ce dernier cas, une coordination avec les équipes du FANLab est nécessaire car ces dernières doivent pouvoir assurer la compatibilité ascendante avec les applications déjà en production.
 
 <a name="nwidart-modules">
 
@@ -68,7 +68,7 @@ Skeletor inclue les packages ```nwidart/laravel-modules``` et ```mhmiton/laravel
 Le recours à ces outils, s'il n'est pas indispensable pour un maquétage ou une application temporaire, doit être envisagé dès lors que le développement présente un intérêt manifeste de généralisation. La modularisation des applications permet d'envisager leur intégration dans une même application chapeau. C'est l'un des buts de Skeletor.<br><br>
 
 Le dévelopement modulaire présente quelques complications supplémentaires:
-- les modules ne doivent pas dépendre les uns des autres, ou les dépendances doivent être gérées
+- les modules ne doivent pas dépendre les uns des autres, ou les dépendances doivent être gérées;
 - les modules ne doivent pas entrer en conflit sur les noms de routes, de permissions, de rôles, de tables en base de données, etc...<br><br>
 
 
@@ -128,7 +128,7 @@ Skeletor propose un layout général des pages que les modules peuvent utiliser 
 @extends('layouts.app-master')
 ```
 
-> {info} Néanmoins, le développeur est également totalement libre de ne pas utiliser ce layout pour toutes un certaines vues de son module.
+> {info} Néanmoins, le développeur est également totalement libre de ne pas utiliser ce layout pour toutes ou certaines vues de son module.
 
 <a name="modules-navbar">
 
@@ -147,10 +147,10 @@ Ainsi, le développeur peut construire un ou plusieurs menus qui seront automati
 
 ### Lien vers les pages de documentation
 Skeletor offre 2 facilités supplémentaires:
-- le composant Blade ```<x-help-link>``` qui permet de générer un lien pointant vers une page de la documentation publiée sur Larecipe
-- un espace dans la barre de menu générale (section ```helplink``` destiné à recevoir un lien vers la documentation)
+- le composant Blade ```<x-help-link>``` qui permet de générer un lien pointant vers une page de la documentation publiée sur Larecipe ;
+- un espace dans la barre de menu générale (section ```helplink``` destinée à recevoir un lien vers la documentation).
 
-Ainsi, dans une vue de l'application, le développeur peut inclure une sections ```helplink``` semblable à l'exemple ci-dessous, qui introduira automatiquement dans le menu général un lien vers la page ```parcours``` de la documentation Larecipe.
+Ainsi, dans une vue de l'application, le développeur peut inclure une section ```helplink``` semblable à l'exemple ci-dessous, qui introduira automatiquement dans le menu général un lien vers la page ```parcours``` de la documentation Larecipe.
 
 ```php
 @section('helplink')
@@ -514,15 +514,15 @@ public function login(Request $request)
 ## Rappasoft Datatables
 Skeletor inclue et utilise le package ```rappasoft/laravel-livewire-tables```.<br><br>
 
-Ce package propose une généralisation du concept de table de donnée, reposant sur ```livewire```. 
-C'est une excellente façon de mettre en oeuvre rapidement et avec relativement peu de code à écrire des tables pour afficher/rechercher/trier les données d'un modèle donné.<br><br>
+Ce package propose une généralisation du concept de table de données, reposant sur ```livewire```. 
+C'est une excellente façon de mettre en oeuvre rapidement, et avec relativement peu de code à écrire, des tables pour afficher/rechercher/trier les données d'un modèle donné.<br><br>
 
-Ce module est conçu pour manipuler des modèles Eloquent uniquement. Or, dans certaines situations (par exemple lors de la récupération de données via une API, ou en cas de construction d'une table de données à partir de plusieurs sources de données en base), il peut être utile de disposer d'une datatable sans pour autant avoir un modèle Eloquent sous-jacent. Pour cela, voir le package ```calebporzio/sushi``` qui est également inclue dans Skeletor.<br><br>
+Ce module est conçu pour manipuler des modèles Eloquent uniquement. Or, dans certaines situations (par exemple lors de la récupération de données via une API, ou en cas de construction d'une table de données à partir de plusieurs sources de données en base), il peut être utile de disposer d'une datatable sans pour autant avoir un modèle Eloquent sous-jacent. Pour cela, voir le package ```calebporzio/sushi``` qui est également inclus dans Skeletor.<br><br>
 
 <a name="sushi">
 
 ## Sushi
-Skeletor inclue le package ```calebporzio/sushi``` qui permet de construire un modèle Eloquent à partir d'une source de données arbitraire.<br><br>
+Skeletor inclut le package ```calebporzio/sushi``` qui permet de construire un modèle Eloquent à partir d'une source de données arbitraire.<br><br>
 
 Vient en complément de ```rappasoft/laravel-livewire-tables``` décrit précédemment.
 
@@ -534,10 +534,10 @@ Vient en complément de ```rappasoft/laravel-livewire-tables``` décrit précéd
 Laravel et Skeletor incluent les outils de base permettant d'exposer une API pour donner accès aux données de son application.<br><br>
 
 Côté API à proprement parler, rien de particulier dans Skeletor vis à vis des pratiques courantes de Laravel. Skeletor inclue nativement le package ```spatie/laravel-data``` 
-qui peut dans certains cas faciliter la définition par le développeur des données exposées, et des règles de validation et de conversion des données entrantes le cas échéant.
+qui peut, dans certains cas, faciliter la définition par le développeur des données exposées, et des règles de validation et de conversion des données entrantes le cas échéant.
 Son emploi n'est pas une obligation.<br><br>
 
-Skeletor inclue par ailleurs le package ```darkaonline/l5-swagger``` qui facilite la documentation des API exposées.<br><br>
+Skeletor inclut par ailleurs le package ```darkaonline/l5-swagger``` qui facilite la documentation des API exposées.<br><br>
 
 Par défaut, les API exposées et documentées sont directement visualisables depuis la page de documentation des API située par défaut à l'URL ```https://domain-qui-va-bien.intradef.gouv.fr/APP_PREFIX/api/documentation```<br><br>
 
