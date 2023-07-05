@@ -75,6 +75,7 @@ Route::name('transformation::')->group(function () {
                 Route::get('/{user}/livretpdf', [TransformationController::class, 'livretpdf'])->name('transformation.livretpdf');
                 Route::get('/{user}/progression', [TransformationController::class, 'progression'])->name('transformation.progression');
                 Route::get('/{user}/fichebilan', [TransformationController::class, 'fichebilan'])->name('transformation.fichebilan');
+                Route::get('/{user}/fichebilanpdf', [TransformationController::class, 'fichebilanpdf'])->name('transformation.fichebilanpdf');
                 Route::get('/mafichebilan', [TransformationController::class, 'mafichebilan'])->name('transformation.mafichebilan');
                 Route::get('/parcoursfichebilan', [TransformationController::class, 'parcoursfichebilan'])->name('transformation.parcoursfichebilan');
                 Route::get('/monlivret', [TransformationController::class, 'monlivret'])->name('transformation.monlivret');

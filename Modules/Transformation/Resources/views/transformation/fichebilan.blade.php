@@ -26,5 +26,5 @@
             <a href="{{ route('transformation::transformation.mafichebilan') }}" class="btn btn-secondary btn-sm">Ma fiche bilan</a>
         @endif
         <livewire:transformation::ffast-fiche-bilan :user="$user"/>
-        
+    </div>    
 @endsection

@@ -4,7 +4,15 @@
 
     <div class="container">
         <div class="row card">
-            <div class="col-12 card-header text-center"><h1>{{$user->display_name}}</h1></div>
+            <div class="col-12 card-header text-center">
+                <div class="row">
+                    <div class="col-11"><h1>{{$user->display_name}}</h1></div>
+                    <div class="col-1">
+                        <a href="{{ route('transformation::transformation.fichebilanpdf', $user->id) }}" class="btn btn-default" title="Imprimer"><x-bootstrap-icon iconname='printer.svg' /></a>
+                        {{--  --}}
+                    </div>
+                </div>
+            </div>    
             <div class="container">
                 <div class="row justify-content-between mt-2 mb-2">
                     <div class="col-2">
@@ -65,86 +73,65 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-row justify-content-center">
-            <div class="p-2">
+        <div class="row mt-2">
+            <div class="col-sm-6"><div class="me-1">
                 <div class="row card mb-2">
-                    @if (isset($listcomp))
-                    <div class="card-header "><b>COMPAGNONNAGES</b></div>
-                    <div class="container ">
-                        @foreach($listcomp as $comp)
-                            <div class="row">
-                                <div class="col">{{$comp->comp_libcourt}}</div>
-                                @php 
-                                    $pourcentage = $user->getTransformationManager()->taux_de_transformation(null, $comp, null, null);
-                                @endphp
-                                <x-ffast-progression-div :pourcentage="$pourcentage" height="whatever" class="col"/>
-                            </div>
-                            @endforeach
-                    </div>
+                    @if($readyToLoad)
+                        @if (isset($listcomp))
+                        <div class="card-header col-12 text-center"><b>COMPAGNONNAGES</b></div>
+                        <div class="container ">
+                            @foreach($listcomp as $comp)
+                                <div class="row">
+                                    <div class="col-6">{{$comp->comp_libcourt}}</div>
+                                    @php 
+                                        $pourcentage = $user->getTransformationManager()->taux_de_transformation(null, $comp, null, null);
+                                        if ($pourcentage == 100)
+                                            $color = 'green';
+                                        elseif ($pourcentage >= 70 )
+                                            $color = 'purple';
+                                        elseif ($pourcentage >= 35)
+                                            $color = 'Goldenrod';
+                                        else
+                                            $color = 'red';                                    
+                                    @endphp                                    
+                                    <div class="col-6">
+                                        <span style="color:{{$color}};">{{round($pourcentage,2)}} %</span>
+                                    </div>
+                                </div>
+                                @endforeach
+                        </div>
+                        @endif
                     @endif
                 </div> 
-            </div>
-            <div class="p-2">STAGES</div>
-            
-
+            </div></div>
+           
+            <div class="col-sm-6"><div class="ms-1">
+                <div class="row card mb-2">
+                    @if($readyToLoad)
+                        @if (isset($liststage))
+                        <div class="card-header col-12"><b>STAGES</b></div>
+                        <div class="container ">
+                            @foreach($liststage as $stage)
+                                <div class="row">
+                                    <div class="col-6">{{$stage->stage_libcourt}}</div>
+                                    <div class="col-6">
+                                        @if ($datvalid=$user->getTransformationManager()->dateDeValidationDuStage($stage) )
+                                            @if($datvalid> date('Y-m-d'))
+                                                <span style="color:purple;">INSCRIT <small>(session du {{$datvalid}})</small></span>
+                                            @else
+                                                <span style="color:green;">VALIDE ({{$datvalid}})</span>
+                                            @endif
+                                        @else
+                                            <span style="color:red;">NON VALIDE</span>
+                                        @endif                                      
+                                    </div>
+                              </div>
+                            @endforeach
+                        </div>
+                        @endif
+                    @endif
+                </div> 
+            </div> </div>
         </div>
-
-        
-        
-        
-        
-        
-        
     </div>
-
-
-    
-
-    <table class=' mb-2 ' id ='ficheDeSynthese '  style='width: 100%; height: 95%; '>
-  
-                <tr>
-                    <!-- Entete fiche synthese -->
-                    <th colspan='2' class='text-center'></th>
-                    <th colspan='2' class='text-center'></th>
-                </tr>
-
-        </thead>
-        @if($readyToLoad)
-            <tbody style='border: 1px solid #C3C3C3;'>
-                @if (isset($listcomp))
-                    @foreach($listcomp as $comp)
-                        <tr style='border : 1px solid black;' >
-                            @if ($comp == null)
-                                <td style='width:25%;'></td>
-                                <td style='width:25%;'></td>
-                            @else
-                                <td style='width:25%;'>{{$comp->comp_libcourt}}</td>
-                                @php 
-                                    $pourcentage = $user->getTransformationManager()->taux_de_transformation(null, $comp, null, null);
-                                @endphp
-                                <x-ffast-progression-div :pourcentage="$pourcentage" height="whatever" style="td"/>
-                            @endif
-                            
-                            @php $stage = $liststage[$loop->index] ; @endphp
-                            @if ($stage == null)
-                                <td style='width:25%;'></td>
-                                <td style='width:25%;'></td>
-                            @else
-                                <td style='width:25%;'>{{$stage->stage_libcourt}}</td>
-                                @if ($datvalid=$user->getTransformationManager()->dateDeValidationDuStage($stage) )
-                                    @if($datvalid> date('Y-m-d'))
-                                        <x-ffast-progression-div :pourcentage="50" height="whatever" style="td"  text="INSCRIT"/>
-                                    @else
-                                        <x-ffast-progression-div :pourcentage="100" height="whatever" style="td"  text="VALIDE"/>
-                                    @endif
-                                @else
-                                    <x-ffast-progression-div :pourcentage="0" height="whatever" style="td" text="NON VALIDE"/>
-                                @endif
-                            @endif
-                        </tr>
-                    @endforeach
-                @endif
-            </tbody>
-        @endif
-    </table>
 </div>
