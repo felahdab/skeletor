@@ -117,9 +117,17 @@
                                     <div class="col-6">
                                         @if ($datvalid=$user->getTransformationManager()->dateDeValidationDuStage($stage) )
                                             @if($datvalid> date('Y-m-d'))
-                                                <span style="color:purple;">INSCRIT <small>(session du {{$datvalid}})</small></span>
+                                                <span style="color:orange;">INSCRIT <small>(session du {{$datvalid}})</small></span>
                                             @else
-                                                <span style="color:green;">VALIDE ({{$datvalid}})</span>
+                                                @if ($stage->pivot->date_validite)
+                                                    @if ($stage->pivot->date_validite > date('Y-m-d'))
+                                                        <span style="color:green;">VALIDE jusqu'au {{$stage->pivot->date_validite}}</span>
+                                                    @else
+                                                        <span style="color:purple;">VALIDE jusqu'au {{$stage->pivot->date_validite}}</span>
+                                                    @endif
+                                                @else
+                                                    <span style="color:green;">VALIDE ({{$datvalid}})</span>
+                                                @endif
                                             @endif
                                         @else
                                             <span style="color:red;">NON VALIDE</span>
