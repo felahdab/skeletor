@@ -4,6 +4,8 @@ namespace Modules\Transformation\Http\Livewire;
 
 use Livewire\Component;
 
+use App\Models\User;
+
 class FfastFicheBilan extends Component
 {
     public $user=null;
@@ -14,7 +16,7 @@ class FfastFicheBilan extends Component
         $this->readyToLoad=true;
     }
 
-    public function mount($user)
+    public function mount(User $user)
     {
         $this->user=$user;
     }
