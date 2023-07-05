@@ -35,7 +35,7 @@
                             <td>
                                 {!! Form::open(['method' => 'POST','route' => ['transformation::fonctions.ajoutercompagnonage', $fonction->id] ]) !!}
                                 <input type='hidden' id='compagnonage_id' name='compagnonage_id' value='{{ $compagnonage->id }}'>
-                                <button type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
+                                <button dusk="select-comp" type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
                                 {!! Form::close() !!}
                             <td></td>
                             <td></td>

@@ -3,7 +3,7 @@
 namespace Modules\Transformation\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Service\GererTransformationService;
+use Modules\Transformation\Service\GererTransformationService;
 use Modules\Transformation\Services\RecalculerTransformationService;
 
 use Illuminate\Support\Carbon;

@@ -41,7 +41,7 @@
                         <td colspan="3"> 
                             {!! Form::open(['method' => 'POST','route' => ['transformation::fonctions.ajouterstage', $fonction->id] ]) !!}
                             <input type='hidden' id='stage_id' name='stage_id' value='{{ $stage->id }}'>
-                            <button type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
+                            <button dusk="select-stage" type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
                             {!! Form::close() !!}
                         </td>
                     @endif

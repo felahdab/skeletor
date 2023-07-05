@@ -12,7 +12,7 @@
 
     <div >
         <div class="container mt-4">
-            <x-form::form method="PATCH" :action="route('users.update', $user->id)" enctype='multipart/form-data'>
+            <x-form::form method="PATCH" :action="route('users.update', $user->id)">
                 <div class="row mt-4">
                     <div class="col">
                         <x-form::input name="email" label="Email *" placeholder="Email..." type="email" :value="$user->email" required/>

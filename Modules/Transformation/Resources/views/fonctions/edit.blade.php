@@ -12,13 +12,13 @@
     <div id='divmodifobj' class='card ml-3 w-100' >
         <div class='card-header' >Modification fonction </div>
         <div style='text-align:right;'>* champs obligatoires </div>
-        {!! Form::open(['method' => 'PATCH','route' => ['transformation::fonctions.update', $fonction->id] ]) !!}
+        <x-form::form method="PATCH" :action="route('transformation::fonctions.update',   $fonction )">
         <input type='hidden' id='fonction[id]' name='fonction[id]' value='{{ $fonction->id }}'>
         <div style='padding-left: 15px;'>
             <div class='form-group row' >
                 <label for='fonction[fonction_libcourt]' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
                 <div class='col-sm-5'>
-                    <input type='text' maxlength='100' class='form-control'  name='fonction[fonction_libcourt]' id='fonction[fonction_libcourt]' placeholder='Libell&eacute; court' value="{{ $fonction->fonction_libcourt }}" >
+                    <input dusk="input-libcourt" type='text' maxlength='100' class='form-control'  name='fonction[fonction_libcourt]' id='fonction[fonction_libcourt]' placeholder='Libell&eacute; court' value="{{ $fonction->fonction_libcourt }}" >
                 </div>
             </div>
             <div class='form-group row' >
@@ -65,7 +65,7 @@
                 </div>
             </div>
             <div>
-                <button class='btn btn-primary mt-4' type='submit'>Enregistrer</button>
+                <button class='btn btn-primary mt-4' dusk="enregistrer_fonction" type='submit'>Enregistrer</button>
                 <a href="{{ route('transformation::fonctions.index') }}" class="btn btn-outline-dark mt-4">Annuler</a>
                 <br>&nbsp;
             </div>
@@ -85,7 +85,7 @@
                                     <div class="p-2 w-25"> => {{ $compagnonage->comp_libcourt }} </div>
                                     <div class="p-2 w-25 text-end">
                                     @can("transformation::fonctions.removecompagnonage")
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('removecompagnonage[{{ $compagnonage->id }}]').submit()">Retirer ce compagnonnage</button>
+                                        <button dusk="retirer-comp" type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('removecompagnonage[{{ $compagnonage->id }}]').submit()">Retirer ce compagnonnage</button>
                                     @endcan
                                     </div>
                                 </div>
@@ -96,11 +96,11 @@
             </x-sortable>
             @can("transformation::fonctions.choisircompagnonage")
                 <div class='text-center mt-1 mb-1'>
-                    <a class='btn btn-primary btn-sm' href="{{route('transformation::fonctions.choisircompagnonage', $fonction->id)}}">Ajouter un nouveau compagnonnage</a>
+                    <a dusk="ajouter_compagnonnage" class='btn btn-primary btn-sm' href="{{route('transformation::fonctions.choisircompagnonage', $fonction->id)}}">Ajouter un nouveau compagnonnage</a>
                 </div>
             @endcan
         </div>
-        {!! Form::close() !!}
+        </x-form::form>
 
         @can("transformation::fonctions.removecompagnonage")
             @foreach ($fonction->compagnonages->sortBy('pivot.ordre') as $compagnonage)
@@ -121,10 +121,9 @@
                             <div class="p-2 w-25">=> {{ $stage->stage_liblong}}</div>
                             <div class="p-2 w-25 text-end">
                                 @can("transformation::fonctions.removestage")
-                                    {!! Form::open(['method' => 'POST','route' => ['transformation::fonctions.removestage', $fonction , $stage],'style'=>'display:inline']) !!}
-                                    <input type='hidden' name='stage_id' id='stage_id'  value='{{ $stage->id }}'>
-                                    {!! Form::submit('Retirer ce stage', ['class' => 'btn btn-danger btn-sm']) !!}
-                                    {!! Form::close() !!}
+                                <x-form::form method="POST" :action="route('transformation::fonctions.removestage',  [ $fonction , $stage ])">
+                                    <button dusk="retirer_stage" class="btn btn-danger btn-sm" type="submit">Retirer ce stage</button>
+                                </x-form::form>
                                 @endcan
                             </div>
                         </div>
@@ -134,9 +133,7 @@
             
             @can("fonctions.choisirstage")
             <div class='text-center mb-1 mt-1'>
-                {!! Form::open(['method' => 'GET','route' => ['transformation::fonctions.choisirstage', $fonction->id],'style'=>'display:inline']) !!}
-                {!! Form::submit('Ajouter un nouveau stage', ['class' => 'btn btn-primary btn-sm']) !!}
-                {!! Form::close() !!}
+                <a dusk="ajouter_stage" class="btn btn-primary btn-sm" href="{{ route('transformation::fonctions.choisirstage', $fonction)}}">Ajouter un nouveau stage</a>
             </div>
             @endcan
         </div>

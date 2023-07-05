@@ -140,7 +140,7 @@ class SushiUsersTable extends DataTableComponent
     {
         switch ($this->mode) {
             case "listmarin":
-                return view('tables.userstable.listmarins');
+                return view('transformation::tables.userstable.listmarins');
                 break;
         }
     }

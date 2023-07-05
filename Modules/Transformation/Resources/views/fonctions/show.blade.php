@@ -16,7 +16,7 @@
             <div class='form-group row' >
                 <label class='col-sm-5 col-form-label'> Libell&eacute; court</label>
                 <div class='col-sm-5'>
-                    <input disabled type='text' class='form-control' value="{{ $fonction->fonction_libcourt }}" >
+                    <input disabled type='text' class='form-control' name='fonction[fonction_libcourt]' value="{{ $fonction->fonction_libcourt }}" >
                 </div>
             </div>
             <div class='form-group row' >
