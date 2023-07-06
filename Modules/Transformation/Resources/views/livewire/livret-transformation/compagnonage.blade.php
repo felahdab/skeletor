@@ -5,7 +5,7 @@
             <h5>
             @if ($mode== "proposition" || $mode== "modification")
                 @if ($user->getTransformationManager()->sous_objectifs_du_parcours_proposes($fonction, $compagnonage)->count() > 0)
-                    <span class="text-info"><x-bootstrap-icon iconname='envelope-paper-fill.svg' /></span>
+                    <span class="text-info"><x-bootstrap-icon iconname='envelope-open.svg' /></span>
                 @endif
             @endif
                 {{$compagnonage->comp_libcourt}}
@@ -31,7 +31,7 @@
                     @else
                         <td rowspan='{{ $tache->coll_sous_objectifs()->count() }}'>
                     @endif
-                            @if ($mode == "consultation" || ($mode== 'proposition' && $user->getTransformationManager()->aValideLaTache($tache) )  )
+                            @if ($mode == "validelacherdouble" || $mode == "consultation" || ($mode== 'proposition' && $user->getTransformationManager()->aValideLaTache($tache) )  )
                             @else
                                 <input type='checkbox' 
                                     x-data='{ active: false }'
@@ -45,7 +45,7 @@
                         </td>
                     @foreach($tache->objectifs->sortBy("pivot.ordre") as $objectif)
                         <td rowspan='{{$objectif->sous_objectifs->count()}}'> 
-                            @if ($mode == "consultation" || ($mode== 'proposition' && $user->getTransformationManager()->aValideLObjectif($objectif) )  )
+                            @if ($mode == "validelacherdouble" || $mode == "consultation" || ($mode== 'proposition' && $user->getTransformationManager()->aValideLObjectif($objectif) )  )
                             @else
                             <input type='checkbox' 
                                 x-data='{ active: false }'

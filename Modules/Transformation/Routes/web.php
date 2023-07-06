@@ -62,35 +62,34 @@ Route::name('transformation::')->group(function () {
         Route::post('stages/{stage}/retirerstage', [StageController::class, 'annulermarins'])->name('stages.annulermarins');
         Route::get('stages_du_marin/{user}', [StageController::class, 'stages_du_marin'])->name('users.stages');
 
-        Route::group(['prefix' => 'transformation'], function () {
-            Route::get('/', [TransformationController::class, 'index'])->name('transformation.index');
-            Route::get('/parfonction', [TransformationController::class, 'indexparfonction'])->name('transformation.indexparfonction');
-            Route::get('/parcomp', [TransformationController::class, 'indexparcomp'])->name('transformation.indexparcomp');
-            Route::get('/parstage', [TransformationController::class, 'indexparstage'])->name('transformation.indexparstage');
-            Route::get('/{user}/choisirfonction', [TransformationController::class, 'choisirfonction'])->name('users.choisirfonction');
-            Route::post('/{user}/choisirfonction', [TransformationController::class, 'attribuerfonction'])->name('users.attribuerfonction');
-            Route::post('/{user}/retirerfonction', [TransformationController::class, 'retirerfonction'])->name('users.retirerfonction');
-            Route::get('/{user}/livret', [TransformationController::class, 'livret'])->name('transformation.livret');
-            Route::get('/{user}/livretpdf', [TransformationController::class, 'livretpdf'])->name('transformation.livretpdf');
-            Route::get('/{user}/progression', [TransformationController::class, 'progression'])->name('transformation.progression');
-            Route::get('/{user}/fichebilan', [TransformationController::class, 'fichebilan'])->name('transformation.fichebilan');
-            Route::get('/mafichebilan', [TransformationController::class, 'mafichebilan'])->name('transformation.mafichebilan');
-            Route::get('/parcoursfichebilan', [TransformationController::class, 'parcoursfichebilan'])->name('transformation.parcoursfichebilan');
-            Route::get('/monlivret', [TransformationController::class, 'monlivret'])->name('transformation.monlivret');
-            Route::get('/maprogression', [TransformationController::class, 'maprogression'])->name('transformation.maprogression');
-            Route::get('/exportparcours', [ImportExportParcours::class, 'ExportParcoursVersExcel'])->name('transformation.exportparcours');
-            Route::get('/recalcultransfo', [TransformationController::class, 'recalcultransfo'])->name('transformation.recalcultransfo');
-        });
+            Route::group(['prefix' => 'transformation'], function () {
+                Route::get('/', [TransformationController::class, 'index'])->name('transformation.index');
+                Route::get('/parfonction', [TransformationController::class, 'indexparfonction'])->name('transformation.indexparfonction');
+                Route::get('/parcomp', [TransformationController::class, 'indexparcomp'])->name('transformation.indexparcomp');
+                Route::get('/parstage', [TransformationController::class, 'indexparstage'])->name('transformation.indexparstage');
+                Route::get('/{user}/choisirfonction', [TransformationController::class, 'choisirfonction'])->name('users.choisirfonction');
+                Route::post('/{user}/choisirfonction', [TransformationController::class, 'attribuerfonction'])->name('users.attribuerfonction');
+                Route::post('/{user}/retirerfonction', [TransformationController::class, 'retirerfonction'])->name('users.retirerfonction');
+                Route::get('/{user}/livret', [TransformationController::class, 'livret'])->name('transformation.livret');
+                Route::get('/{user}/livretpdf', [TransformationController::class, 'livretpdf'])->name('transformation.livretpdf');
+                Route::get('/{user}/progression', [TransformationController::class, 'progression'])->name('transformation.progression');
+                Route::get('/{user}/fichebilan', [TransformationController::class, 'fichebilan'])->name('transformation.fichebilan');
+                Route::get('/{user}/fichebilanpdf', [TransformationController::class, 'fichebilanpdf'])->name('transformation.fichebilanpdf');
+                Route::get('/mafichebilan', [TransformationController::class, 'mafichebilan'])->name('transformation.mafichebilan');
+                Route::get('/parcoursfichebilan', [TransformationController::class, 'parcoursfichebilan'])->name('transformation.parcoursfichebilan');
+                Route::get('/monlivret', [TransformationController::class, 'monlivret'])->name('transformation.monlivret');
+                Route::get('/maprogression', [TransformationController::class, 'maprogression'])->name('transformation.maprogression');
+                Route::get('/exportparcours', [ImportExportParcours::class, 'ExportParcoursVersExcel'])->name('transformation.exportparcours');
+                Route::get('/recalcultransfo', [TransformationController::class, 'recalcultransfo'])->name('transformation.recalcultransfo');
+            });
 
-        Route::get('statistiques/', [StatistiqueController::class, 'index'])->name('statistiques.index');
-        Route::get('statistiques/parservice', [StatistiqueController::class, 'pourtuteurs'])->name('statistiques.pourtuteurs');
-        Route::get('statistiques/parservice/{service}', [StatistiqueController::class, 'parservice'])->name('statistiques.parservice');
-        Route::get('statistiques/global', [StatistiqueController::class, 'pourem'])->name('statistiques.pourem');
-        Route::get('statistiques/stages', [StatistiqueController::class, 'pour2ps'])->name('statistiques.pour2ps');
-        Route::get('statistiques/dashboard', [StatistiqueController::class, 'dashboard'])->name('statistiques.dashboard');
-        Route::get('statistiques/dashboardarchive', [StatistiqueController::class, 'dashboardarchive'])->name('statistiques.dashboardarchive');
-        //Route::get('statistiques/parcomp', [StatistiqueController::class, 'parcomp'])->name('statistiques.parcomp');
-        //Route::get('/{compagnonage}/statistiques.transfoparcomp', 'StatistiqueController@transfoparcomp')->name('statistiques.transfoparcomp');
+            Route::get('statistiques/', [StatistiqueController::class, 'index'])->name('statistiques.index');
+            Route::get('statistiques/parservice', [StatistiqueController::class, 'statpourunservice'])->name('statistiques.statpourunservice');
+            Route::get('statistiques/parservice/{service}', [StatistiqueController::class, 'parservice'])->name('statistiques.parservice');
+            Route::get('statistiques/global', [StatistiqueController::class, 'statglobal'])->name('statistiques.statglobal');
+            Route::get('statistiques/stages', [StatistiqueController::class, 'statstage'])->name('statistiques.statstage');
+            Route::get('statistiques/dashboard', [StatistiqueController::class, 'dashboard'])->name('statistiques.dashboard');
+            Route::get('statistiques/dashboardarchive', [StatistiqueController::class, 'dashboardarchive'])->name('statistiques.dashboardarchive');
 
         Route::group(['prefix' => 'historique'], function () {
             Route::get('/', [TransformationHistoryController::class, 'index'])->name('historique.index');

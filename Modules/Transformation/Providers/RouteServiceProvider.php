@@ -49,7 +49,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix(env('APP_PREFIX'))
             ->middleware('web')
-            ->namespace($this->moduleNamespace)
+            //->namespace($this->moduleNamespace)
             ->group(module_path('Transformation', '/Routes/web.php'));
     }
 

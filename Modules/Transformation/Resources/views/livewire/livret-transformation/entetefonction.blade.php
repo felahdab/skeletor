@@ -30,43 +30,54 @@
         @if ( $user->getTransformationManager()->aProposeDoubleFonction($fonction) ||  $user->getTransformationManager()->aValideDoubleFonction($fonction) )
             {{ htmlspecialchars_decode($fonction->pivot->valideur_double) }}
         @endif
-        @if ($mode == "modification" || $mode == "proposition")
-            @if ( $user->getTransformationManager()->aProposeDoubleFonction($fonction) ||  $user->getTransformationManager()->aValideDoubleFonction($fonction) )
-                <button class="btn btn-danger" 
-                x-on:click.prevent="$wire.UnValideDoubleFonction( {{ $user->id }}, {{ $fonction->id }} );">
-                Annuler</button>
-            @endif
-            @if ( $mode=="modification" && ! $user->getTransformationManager()->aValideDoubleFonction($fonction) )
-                <button type="submit" 
-                    class="btn btn-primary" 
-                    name="validation_double"
-                    x-on:click.prevent="active  = true; 
-                                buttonid ='validation_double'; 
-                                validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
-                        validModal.show();">Valider</button>
-                <button x-show="false" 
-                    x-on:uservalidated.window="if (active)
-                    {   
-                        active = false;  
-                        $wire.ValideDoubleFonction( {{$user->id}}, {{$fonction->id}}, date_validation , commentaire, valideur);
-                    };"></button>
-            @endif
-            @if ( $mode=="proposition"  && ! $user->getTransformationManager()->aProposeDoubleFonction($fonction) && !$user->getTransformationManager()->aValideDoubleFonction($fonction))
-                <button type="submit" 
+
+        @switch ($mode)
+            @case ('modification')
+            @case ('validelacherdouble')
+                    @if ( $user->getTransformationManager()->aProposeDoubleFonction($fonction) ||  $user->getTransformationManager()->aValideDoubleFonction($fonction) )
+                        <button class="btn btn-danger" 
+                        x-on:click.prevent="$wire.UnValideDoubleFonction( {{ $user->id }}, {{ $fonction->id }} );">
+                        Annuler</button>
+                    @endif
+                    @if ( ! $user->getTransformationManager()->aValideDoubleFonction($fonction) )
+                    <button type="submit" 
+                        class="btn btn-primary" 
+                        name="validation_double"
+                        x-on:click.prevent="active  = true; 
+                                    buttonid ='validation_double'; 
+                                    validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
+                            validModal.show();">Valider</button>
+                    <button x-show="false" 
+                        x-on:uservalidated.window="if (active)
+                        {   
+                            active = false;  
+                            $wire.ValideDoubleFonction( {{$user->id}}, {{$fonction->id}}, date_validation , commentaire, valideur);
+                        };"></button>
+                    @endif
+            @break
+            @case ('proposition')
+                @if ( $user->getTransformationManager()->aProposeDoubleFonction($fonction) && ! $user->getTransformationManager()->aValideDoubleFonction($fonction))
+                    <button class="btn btn-danger" 
+                    x-on:click.prevent="$wire.UnValideDoubleFonction( {{ $user->id }}, {{ $fonction->id }} );">
+                    Annuler</button>
+                @endif
+                @if ( ! $user->getTransformationManager()->aProposeDoubleFonction($fonction) && ! $user->getTransformationManager()->aValideDoubleFonction($fonction))
+                    <button type="submit" 
                     class="btn btn-primary" 
                     name="validation_double"
                     x-on:click.prevent="active  = true; 
                                 buttonid ='validation_double'; 
                                 validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
                         validModal.show();">Proposer la validation</button>
-                <button x-show="false" 
+                    <button x-show="false" 
                     x-on:uservalidated.window="if (active)
                     {   
                         active = false;  
                         $wire.ValideDoubleFonction( {{$user->id}}, {{$fonction->id}}, date_validation , commentaire, valideur);
                     };"></button>
-            @endif
-        @endif
+                @endif
+            @break
+        @endswitch
         </td>
         <td>Bord</td>
     </tr>
@@ -96,44 +107,53 @@
             {{ htmlspecialchars_decode($fonction->pivot->valideur_lache) }}
         @endif
 
-        @if ($mode =="modification" || $mode=="proposition")
-            @if ( $user->getTransformationManager()->aProposeLacheFonction($fonction) || $user->getTransformationManager()->aValideLacheFonction($fonction) )
-                <button class="btn btn-danger" 
-                x-on:click.prevent="$wire.UnValideLacheFonction( {{ $user->id }}, {{ $fonction->id }} );">
-                Annuler</button>
-            @endif
-            @if ( $mode =="modification" && ! $user->getTransformationManager()->aValideLacheFonction($fonction) )
-                <button type="submit" 
-                    class="btn btn-primary" 
-                    name="validation_lache"
-                    x-on:click.prevent="active  = true; 
-                                buttonid ='validation_lache'; 
-                                validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
-                        validModal.show();">Valider</button>
-                <button x-show="false" 
-                    x-on:uservalidated.window="if (active)
-                    {   
-                        active = false;  
-                        $wire.ValideLacheFonction( {{$user->id}}, {{$fonction->id}}, date_validation , commentaire, valideur);
-                    };"></button>
-            @endif
-            
-            @if ($mode =="proposition" && ! $user->getTransformationManager()->aValideLacheFonction($fonction) && ! $user->getTransformationManager()->aProposeLacheFonction($fonction) )
-                <button type="submit" 
+        @switch ($mode)
+            @case ('modification')
+            @case ('validelacherdouble')
+                    @if ( $user->getTransformationManager()->aProposeLacheFonction($fonction) ||  $user->getTransformationManager()->aValideLacheFonction($fonction) )
+                        <button class="btn btn-danger" 
+                        x-on:click.prevent="$wire.UnValideLacheFonction( {{ $user->id }}, {{ $fonction->id }} );">
+                        Annuler</button>
+                    @endif
+                    @if ( ! $user->getTransformationManager()->aValideLacheFonction($fonction) )
+                        <button type="submit" 
+                            class="btn btn-primary" 
+                            name="validation_lache"
+                            x-on:click.prevent="active  = true; 
+                                        buttonid ='validation_lache'; 
+                                        validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
+                                validModal.show();">Valider</button>
+                        <button x-show="false" 
+                            x-on:uservalidated.window="if (active)
+                            {   
+                                active = false;  
+                                $wire.ValideLacheFonction( {{$user->id}}, {{$fonction->id}}, date_validation , commentaire, valideur);
+                            };"></button>
+                    @endif
+            @break
+            @case ('proposition')
+                @if ( $user->getTransformationManager()->aProposeLacheFonction($fonction) && ! $user->getTransformationManager()->aValideLacheFonction($fonction))
+                    <button class="btn btn-danger" 
+                    x-on:click.prevent="$wire.UnValideLacheFonction( {{ $user->id }}, {{ $fonction->id }} );">
+                    Annuler</button>
+                @endif
+                @if ( ! $user->getTransformationManager()->aProposeLacheFonction($fonction) && ! $user->getTransformationManager()->aValideDoubleFonction($fonction))
+                    <button type="submit" 
                     class="btn btn-primary" 
                     name="validation_lache"
                     x-on:click.prevent="active  = true; 
                                 buttonid ='validation_lache'; 
                                 validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
                         validModal.show();">Proposer la validation</button>
-                <button x-show="false" 
+                    <button x-show="false" 
                     x-on:uservalidated.window="if (active)
                     {   
                         active = false;  
                         $wire.ValideLacheFonction( {{$user->id}}, {{$fonction->id}}, date_validation , commentaire, valideur);
                     };"></button>
-            @endif
-        @endif
+                @endif
+            @break
+        @endswitch
         </td>
         <td>Bord</td>
     </tr>

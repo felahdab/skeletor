@@ -256,7 +256,7 @@
 </table>
 <pagebreak>
 
-<bookmark content='Stages' level='0' />
+<bookmark content='Situation' level='0' />
     <table class='tablerecap'>
         <tr><td class='titrerecap' colspan="3">Taux de transformation</td></tr>
         <tr>

@@ -11,12 +11,13 @@
         
         @if (auth()->user()->secteur_id != 0)
             <div class="lead">
-        @if (auth()->user()->hasRole("em"))
-                Liste des marins en transformation par entité
-        @else
-                Liste des marins en transformation dans le service {{ $currentuser->displayService() }}
-        @endif
+                @if (auth()->user()->hasRole("em"))
+                        Liste des marins en transformation par entité
+                @else
+                        Liste des marins en transformation dans le service {{ $currentuser->displayService() }}
+                @endif
             </div>
+            <div style ="border-left: 5px solid purple !important"><small> &nbsp;Le marin n'a pas encore embarqué.</small></div>
             <div class="mt-3">
             @if (isset($service))
                 @livewire('transformation::stattuteur-table', ['service' => $service ])

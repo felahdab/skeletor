@@ -31,6 +31,10 @@ class TransformationHistoryTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
         $this->setFilterLayoutSlideDown();
+        $this->setTableAttributes([
+            'default' => false,
+            'class' => 'table table-hover',
+        ]);
     }
 
     public function columns(): array

@@ -23,7 +23,7 @@
         <button x-on:click="$wire.aligneAllGrade()" class='btn btn-info'>Ajuster tous les grades</button>
     </div>
 
-    <table class="table table-sm table-hover table-striped table-bordered mt-4">
+    <table class="table table-sm table-hover table-bordered mt-4">
         <thead class="text-center align-middle table-light ">
             <tr>
                 <th scope="col">Titre</th>

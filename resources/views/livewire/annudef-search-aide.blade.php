@@ -15,7 +15,7 @@
     <div wire:loading> Recherche en cours... </div>
     @if (count($users))
     
-    <table class="table table-sm table-hover  table-striped mt-4">
+    <table class="table table-sm table-hover mt-4">
         <thead>
             <tr>
                 <th scope="col"></th>

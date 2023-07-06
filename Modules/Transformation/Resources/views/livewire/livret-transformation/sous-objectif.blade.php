@@ -6,7 +6,7 @@
 </td>
 <td>{{$sous_objectif->ssobj_duree}}</td>
 <td>
-    @if ($mode == "consultation" || ($mode== 'proposition' && $user->getTransformationManager()->aValideLeSousObjectif($sous_objectif) )  )
+    @if ($mode == "validelacherdouble" || $mode == "consultation" || ($mode== 'proposition' && $user->getTransformationManager()->aValideLeSousObjectif($sous_objectif) )  )
     @else
         <input type='checkbox' 
         x-data='{ active: false }'

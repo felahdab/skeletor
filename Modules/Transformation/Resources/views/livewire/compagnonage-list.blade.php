@@ -6,7 +6,7 @@
     </div>
 
     <div wire:loading.remove>
-        <table class="table table-striped">
+        <table class="table table-hover">
             <thead>
             <tr>
                 <th scope="col" width="1%">#</th>

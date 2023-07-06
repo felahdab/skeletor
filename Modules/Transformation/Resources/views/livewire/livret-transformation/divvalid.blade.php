@@ -49,6 +49,8 @@
             </div>
         @break
     @case ('modification')
+    @case ('modiflivret')
+    @case ('validelacherdouble')
     @case ('proposition')
     @case ('parcomp')
             </div><!-- modal-body -->
@@ -60,7 +62,7 @@
                         x-on:click="opendivvalid=false; $dispatch('uservalidated');">Valider</button>
             </div>
         @break
-    @case ('consultation')
+        @case ('consultation')
             </div><!-- modal-body -->
         @break
     @endswitch

@@ -11,6 +11,7 @@ use App\Models\User;
 
 use Modules\Transformation\Services\GererTransformationService;
 use Modules\Transformation\Services\LivretPdfService;
+use Modules\Transformation\Services\FichebilanPdfService;
 use Modules\Transformation\Entities\Fonction;
 
 class TransformationController extends Controller
@@ -49,9 +50,16 @@ class TransformationController extends Controller
     {
         //conditions sur permission
         $mode = "consultation";
-        if (auth()->user()->can('transformation::transformation.updatelivret')) {
+        if (auth()->user()->can('transformation.updatelivret')) {
+            $mode = "modiflivret";
+        }
+        if (auth()->user()->can('transformation.validerlacheoudouble')) {
+            $mode = "validelacherdouble";
+        }
+        if (auth()->user()->can('transformation.updatelivret') && auth()->user()->can('transformation.validerlacheoudouble')) {
             $mode = "modification";
         }
+
         return view('transformation::transformation.livret', [
             'mode'      => $mode,
             'user'      => $user
@@ -92,34 +100,15 @@ class TransformationController extends Controller
 
     public function fichebilan(User $user, $mode = 'consultation')
     {
-        $listcomp = [];
-        $liststage = [];
-        foreach ($user->fonctions()->get() as $fonction) {
-            foreach ($fonction->compagnonages()->get() as $comp)
-                array_push($listcomp, $comp);
-        }
-        foreach ($user->stages()->get() as $stage)
-            array_push($liststage, $stage);
-
-        $nbcomp = count($listcomp);
-        $nbstage = count($liststage);
-
-        if ($nbcomp == $nbstage);
-        elseif ($nbcomp > $nbstage) {
-            $complement = array_fill(0, $nbcomp - $nbstage, null);
-            $liststage = array_merge($liststage, $complement);
-        } elseif ($nbcomp < $nbstage) {
-            $complement = array_fill(0, $nbstage - $nbcomp, null);
-            $listcomp = array_merge($listcomp, $complement);
-        }
-
-        // $readwrite=true;
         return view('transformation::transformation.fichebilan', [
             'user' => $user,
-            'listcomp' => $listcomp,
-            'liststage' => $liststage,
             'mode' => $mode
         ]);
+    }
+
+    public function fichebilanpdf(User $user)
+    {
+        FichebilanPdfService::fichebilanpdf($user);
     }
 
     public function mafichebilan()

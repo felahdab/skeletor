@@ -64,6 +64,10 @@ class UsersTable extends DataTableComponent
         $this->setPrimaryKey('id');
         $this->setFilterLayoutSlideDown();
         $this->setDefaultSort('name', 'asc');
+        $this->setTableAttributes([
+            'default' => false,
+            'class' => 'table table-hover',
+        ]);
     }
 
     public function userActions()

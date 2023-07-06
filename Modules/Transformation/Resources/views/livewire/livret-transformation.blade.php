@@ -31,8 +31,8 @@
         <div id='livret' class='div-table-contrat-compagnonnage table'>
             @foreach ($fonctions as $fonction)
              <div class="accordion">
-                <div class="accordion-item">
-                    <div class="accordion-header bg-primary">
+                <div class="accordion-item mb-1">
+                    <div class="accordion-header">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFonction_{{$fonction->id}}">
                             <h3>
                                 @include('transformation::livewire.livret-transformation.titrefonction')

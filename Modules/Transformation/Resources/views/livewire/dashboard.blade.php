@@ -11,7 +11,7 @@
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane show active" id="nav-table" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0"><livewire:users-table mode="dashboard"> </div>
+            <div class="tab-pane show active" id="nav-table" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0"><livewire:transformation::users-table mode="dashboard"> </div>
             @if(! is_null($charts) && sizeof($charts))
                 @foreach($charts as $chart)
                     <div class="tab-pane" id="nav-{{ $chart['id'] }}" role="tabpanel" tabindex="0">

@@ -46,17 +46,17 @@
             @endif
             
             @if (auth()->user()->canAny(['transformation::statistiques.index', 
-                                         'transformation::statistiques.pourtuteurs', 
+                                         'transformation::statistiques.statpourunservice', 
                                          'transformation::statistiques.pour2ps',
-                                         'transformation::statistiques.pourem']))
+                                         'transformation::statistiques.statglobal']))
             <div class="dropdown" >
               <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Statistiques
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                @can('transformation::statistiques.pourtuteurs')<a class="dropdown-item" href="{{route('transformation::statistiques.pourtuteurs')}}">Bilan par service</a>@endcan
-                @can('transformation::statistiques.pour2ps')<a class="dropdown-item" href="{{route('transformation::statistiques.pour2ps')}}">Bilan par stage</a>@endcan
-                @can('transformation::statistiques.pourem')<a class="dropdown-item" href="{{route('transformation::statistiques.pourem')}}">Bilan global</a>@endcan
+                @can('transformation::statistiques.statpourunservice')<a class="dropdown-item" href="{{route('transformation::statistiques.statpourunservice')}}">Bilan par service</a>@endcan
+                @can('transformation::statistiques.statstage')<a class="dropdown-item" href="{{route('transformation::statistiques.statstage')}}">Bilan par stage</a>@endcan
+                @can('transformation::statistiques.statglobal')<a class="dropdown-item" href="{{route('transformation::statistiques.statglobal')}}">Bilan global</a>@endcan
                 @can('transformation::statistiques.index')<!--a class="dropdown-item" href="{{route('transformation::statistiques.index')}}">Indicateurs</a-->@endcan
                 @can('transformation::statistiques.dashboard')<a class="dropdown-item" href="{{route('transformation::statistiques.dashboard')}}">Tableau de bord</a>@endcan
                 @can('transformation::statistiques.dashboardarchive')<a class="dropdown-item" href="{{route('transformation::statistiques.dashboardarchive')}}">Archives</a>@endcan

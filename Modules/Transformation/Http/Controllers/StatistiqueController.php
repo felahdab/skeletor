@@ -45,28 +45,28 @@ class StatistiqueController extends Controller
                                            'statistiques'       => $statistiques]);
     }
     
-    public function pourtuteurs()
+    public function statpourunservice()
     {
         $currentuser = auth()->user();
-        $view = view('transformation::statistiques.pourtuteurs', ['currentuser' => $currentuser,]); 
+        $view = view('transformation::statistiques.statparservice', ['currentuser' => $currentuser,]); 
         return $view;
     }
     
     public function parservice(Service $service)
     {
         $currentuser = auth()->user();
-        $view = view('transformation::statistiques.pourtuteurs', ['currentuser' => $currentuser, 'service'=> $service]); 
+        $view = view('transformation::statistiques.statparservice', ['currentuser' => $currentuser, 'service'=> $service]); 
         return $view;
     }
     
-    public function pourem()
+    public function statglobal()
     {
         
         $stages = Stage::all();
         $users = User::with('secteur')->get();
         $services = Service::orderBy('service_libcourt')->get();
         $fonctionsaquai = Fonction::where('typefonction_id', 2);
-        return view('transformation::statistiques.pourem', ['stages'   => $stages,
+        return view('transformation::statistiques.statglobal', ['stages'   => $stages,
                                    'services' => $services,
                                    'fonctionsaquai' => $fonctionsaquai,
                                    'users'    => $users]);
@@ -87,7 +87,7 @@ class StatistiqueController extends Controller
         return view('transformation::statistiques.parcomp');
     }
  
-    public function pour2ps()
+    public function statstage()
     {
         $stages = Stage::all();
         $stageext = [];
@@ -113,7 +113,7 @@ class StatistiqueController extends Controller
                 }
             }
         }
-        return view('transformation::statistiques.pour2ps', ['stageexts' => $stageext,
+        return view('transformation::statistiques.statstage', ['stageexts' => $stageext,
                                             'stagelics' => $stagelic,
                                             'stages'=> $stages,
                                             ]);
