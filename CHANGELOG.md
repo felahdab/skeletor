@@ -1,3 +1,41 @@
+## 2.1 (July 06, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.0.1 –> 2.1
+- Correction type et ajustement navbar
+- Merge branch 'sandrine_courant'
+- Ajustement des tests et du seeder des roles.
+- Merge branch 'master' into fldb-documentation-skeletor
+- Suppression du test des pages du parcours initial.
+- L'affichage de la selection des fonctions dans le panneau des préférences de l'utilisateur est conditionné à la permission transformation::notifications.lache_fonction
+- Activation de la page des préférences personnelles par attribution de la permission mespreferences au role user.
+- Merge commit '8f2a106faeaf0fb47720e83e9bfc0a19cef86a96' into tuleap-67140-implementer-la-tache-recurrente-et-les-jobs-de-generation-des-notifications-relatives-a-la-transformation
+- Rajoute une vérification de la permission transformation::notifications.lache_fonction pour choisir les utilisateurs destinataires des notifications de lâcher.
+- Simplifie le panneau des préférences utilisateurs pour ne faire apparaitre que les fonctions.
+- On cree la permission transformation::notifications.lache_fonction pour pouvoir régler qui peut recevoir les notifications de lacher
+- suppression permissions associées au terminal qui a été supprimé.
+- Correction d'une vue utilisee dans la SushiUsersTable.
+- Ajustement des tests des pages de gestion des Fonction. Création des tests des pages de gestion des Compagnonnages.
+- ajout permission non liee à une route pour valider un lacher ou un double
+- corrrections doc dev
+- Creation de tests pour éviter la régression suite au bug #137836
+- Implements art # 117949 modif fiche bilan pour prise en compte date fin validité des stages
+- evolution affichages tableaux pour retirer les rayures, changement des noms de fichiers pour correspondre à leur fonctionnalité
+- modification pour permettre à un composant livewire de servir de controller.
+- Implements art #137836 : corrige le bug consécutif à la modularisation de FFAST empechant de rajouter un stage à une Fonction.
+- evolution presentation fiche bilan + ajout possibilite impression
+- Ajout du badge avec le nombre de notifications non lues.
+- Implements art #67140: envoie une notification aux utilisateurs lors d'un lache dans une fonction, en tenant compte des préférences de chaque utilisateur.
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast
+- Complément de documentation DEV.
+- Retrait du lien vers la documentation de développement.
+- Simplification de la déclaration des routes du module Transformation.
+- Complément de documentation développeur Skeletor
+- Premier complément de documentation sur Skeletor
+- Merge branch 'master' into sandrine_courant
+- WIP remise en forme de la fiche bilan
+- Implements art #117493 permission transfo.validerlacheroudouble mise en fonction. Attention, cette permission n'est pas liée à une route.
+- Implements art#97452 evolution des affichages pour prise en compte de la date embarquement dans le recap par service + ajout filtre datemb.
+- Implements art #127531: découplage de Skeletor et du module Transformation sur la restauration des utilisateurs précédemment supprimés
+
 ## 2.0.1 (June 28, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.0.0 –> 2.0.1
 - Implements art #118754 : Modification des routes et permissions pour les préfixer avec transformation::. Modification de l'affichage dans la page d'édition des rôles pour regrouper les permissions par module.
