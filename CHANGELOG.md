@@ -1,3 +1,19 @@
+## 2.1.0 (July 06, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.0.1 –> 2.1.0
+- Activation de la page des préférences personnelles par attribution de la permission mespreferences au role user.
+- Rajoute une vérification de la permission transformation::notifications.lache_fonction pour choisir les utilisateurs destinataires des notifications de lâcher.
+- Simplifie le panneau des préférences utilisateurs pour ne faire apparaitre que les fonctions.
+- On cree la permission transformation::notifications.lache_fonction pour pouvoir régler qui peut recevoir les notifications de lacher
+- Ajustement des tests des pages de gestion des Fonction. Création des tests des pages de gestion des Compagnonnages.
+- Implements art #117949 modif fiche bilan pour prise en compte date fin validité des stages
+- Implements art #137836 : corrige le bug consécutif à la modularisation de FFAST empechant de rajouter un stage à une Fonction.
+- Ajout possibilite impression PDF de la fiche bilan
+- Implements art #67140: Envoie une notification aux utilisateurs lors d'un lache dans une fonction, en tenant compte des préférences de chaque utilisateur.
+- Complément de documentation DEV.
+- Implements art #117493 permission transfo.validerlacheroudouble mise en fonction. Attention, cette permission n'est pas liée à une route.
+- Implements art #97452 evolution des affichages pour prise en compte de la date embarquement dans le recap par service + ajout filtre datemb.
+- Implements art #127531: découplage de Skeletor et du module Transformation sur la restauration des utilisateurs précédemment supprimés
+
 ## 2.0.1 (June 28, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.0.0 –> 2.0.1
 - Implements art #118754 : Modification des routes et permissions pour les préfixer avec transformation::. Modification de l'affichage dans la page d'édition des rôles pour regrouper les permissions par module.

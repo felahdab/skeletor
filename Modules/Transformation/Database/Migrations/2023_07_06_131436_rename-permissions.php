@@ -31,26 +31,26 @@ return new class extends Migration
             $perm->save();
         }
 
+        $perm = Permission::where('name', 'statistiques.pourem')->first();
         if ($perm) {
-            $perm = Permission::where('name', 'statistiques.pourem')->first();
             $perm->name = 'transformation::statistiques.statglobal';
             $perm->save();
         }
 
+        $perm = Permission::where('name', 'statistiques.pour2ps')->first();
         if ($perm) {
-            $perm = Permission::where('name', 'statistiques.pour2ps')->first();
             $perm->name = 'transformation::statistiques.statstage';
             $perm->save();
         }
 
+        $perm = Permission::where('name', 'transformation.validerlacheoudouble')->first();
         if ($perm) {
-            $perm = Permission::where('name', 'transformation.validerlacheoudouble')->first();
             $perm->name = 'transformation::transformation.validerlacheoudouble';
             $perm->save();
         }
 
+        $perm = Permission::where('name', 'transformation.updatelivret')->first();
         if ($perm) {
-            $perm = Permission::where('name', 'transformation.updatelivret')->first();
             $perm->name = 'transformation::transformation.updatelivret';
             $perm->save();
         }
