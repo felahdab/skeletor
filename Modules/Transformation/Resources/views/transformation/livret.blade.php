@@ -7,7 +7,7 @@
 
 @section('content')
     <div class="p-4">
-        <h1>Transformation{{$mode}}</h1>
+        <h1>Transformation</h1>
         <div class="lead">
             Livret de transformation de {{$user->display_name}}
         </div>

@@ -62,14 +62,6 @@ class RenamePermissionsToTransformationModuleCommand extends Command
 
             }
         }
-        $fromname = 'transformation.updatelivret';
-        $permission = Permission::where('name', $fromname)->first();
-        if ($permission) {
-            $toname = 'transformation::' . $fromname;
-            $this->warn($fromname . "->" . $toname);
-            $permission->name = $toname;
-            $permission->save();
-        }
 
         $this->info('Permission renamed.');
     }

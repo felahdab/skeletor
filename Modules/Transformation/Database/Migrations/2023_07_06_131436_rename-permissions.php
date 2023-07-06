@@ -17,8 +17,14 @@ return new class extends Migration
      */
     public function up()
     {
+        # On renomme toutes les permissions correspondant à une ancienne route
         Artisan::call('transformation:rename-transformation-permissions');
 
+        # On supprime 2 permissions devenues inutiles
+        Permission::where('name', 'stages.choixmarins')->delete();
+        Permission::where('name', 'stages.consulter')->delete();
+
+        # On renomme quelques permissions dont la route a change de nom, ou qui ne sont pas associees a une route.
         $perm = Permission::where('name', 'statistiques.pourtuteurs')->first();
         $perm->name='transformation::statistiques.statpourunservice';
         $perm->save();
@@ -31,8 +37,14 @@ return new class extends Migration
         $perm->name='transformation::statistiques.statstage';
         $perm->save();
 
-        Permission::where('name', 'stages.choixmarins')->delete();
-        Permission::where('name', 'stages.consulter')->delete();
+        $perm = Permission::where('name', 'transformation.validerlacheoudouble')->first();
+        $perm->name='transformation::transformation.validerlacheoudouble';
+        $perm->save();
+
+        $perm = Permission::where('name', 'transformation.updatelivret')->first();
+        $perm->name='transformation::transformation.updatelivret';
+        $perm->save();
+       
     }
 
     /**
