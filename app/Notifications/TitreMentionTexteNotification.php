@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Carbon;
 
 class TitreMentionTexteNotification extends Notification // implements ShouldQueue
 {
@@ -72,7 +73,8 @@ class TitreMentionTexteNotification extends Notification // implements ShouldQue
         return [
             'titre' => $this->titre,
             'texte' => $this->texte,
-            'mention' => $this->mention
+            'mention' => $this->mention,
+            'gdh' => Carbon::now()
         ];
     }
 }

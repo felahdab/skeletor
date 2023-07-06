@@ -35,7 +35,7 @@
                             <td>
                                 {!! Form::open(['method' => 'POST','route' => ['transformation::compagnonages.ajoutertache', $compagnonage->id] ]) !!}
                                 <input type='hidden' id='tache_id' name='tache_id' value='{{ $tache->id }}'>
-                                <button type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
+                                <button dusk="select-tache" type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
                                 {!! Form::close() !!}
                                 </td>
                             <td></td>

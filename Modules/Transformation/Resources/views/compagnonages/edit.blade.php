@@ -61,7 +61,7 @@
                                 <div class="p-2 w-25"> => {{ $tache->tache_libcourt }} </div>
                                 <div class="p-2 w-25 text-end">
                                     @can("transformation::compagnonages.removetache")
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('removetache[{{ $tache->id }}]').submit()">Retirer cette tâche</button>
+                                        <button dusk="retirer-tache" type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('removetache[{{ $tache->id }}]').submit()">Retirer cette tâche</button>
                                     @endcan
                                 </div>
                             </div>
@@ -81,10 +81,8 @@
             @endcan
 
             @can("transformation::compagnonages.choisirtache")
-            <div class='text-center mt-1 mb-1'>
-                {!! Form::open(['method' => 'GET','route' => ['transformation::compagnonages.choisirtache', $compagnonage->id],'style'=>'display:inline']) !!}
-                {!! Form::submit('Ajouter une nouvelle tâche', ['class' => 'btn btn-primary btn-sm']) !!}
-                {!! Form::close() !!}
+            <div class="text-center mt-1 mb-1">
+                <a dusk="ajouter_tache" class="btn btn-primary btn-sm" href="{{ route('transformation::compagnonages.choisirtache', $compagnonage)}}">Ajouter une nouvelle tâche</a>
             </div>
             @endcan
         </div>
