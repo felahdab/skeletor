@@ -37,7 +37,7 @@ class RolesSeeder extends Seeder
             'transformation::transformation.livretpdf',
             'transformation::transformation.progression',
             'transformation::transformation.fichebilan',
-            'transformation::statistiques.pourtuteurs',
+            'transformation::statistiques.statpourunservice',
             'transformation::transformation.updatelivret'
         ];
         $role->syncPermissions($rolepermissions);
@@ -61,7 +61,7 @@ class RolesSeeder extends Seeder
             'transformation::transformation.livretpdf',
             'transformation::transformation.progression',
             'transformation::transformation.fichebilan',
-            'transformation::statistiques.pourem',
+            'transformation::statistiques.statglobal',
             'transformation::statistiques.index',
             'transformation::transformation.updatelivret'
 
@@ -163,9 +163,9 @@ class RolesSeeder extends Seeder
             'transformation::transformation.progression',
             'transformation::transformation.fichebilan',
             'transformation::statistiques.index',
-            'transformation::statistiques.pourtuteurs',
-            'transformation::statistiques.pourem',
-            'transformation::statistiques.pour2ps',
+            'transformation::statistiques.statpourunservice',
+            'transformation::statistiques.statglobal',
+            'transformation::statistiques.statstage',
             'transformation::transformation.updatelivret'
         ];
         $role->syncPermissions($rolepermissions);
