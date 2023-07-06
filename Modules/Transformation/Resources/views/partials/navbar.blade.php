@@ -1,5 +1,10 @@
 
-            @can('transformation::transformation.exportparcours')
+            @canAny(['transformation::transformation.exportparcours',
+                    'transformation::stages.index', 
+                    'transformation::objectifs.index', 
+                    'transformation::taches.index',
+                    'transformation::compagnonages.index',
+                    'transformation::fonctions.index'])
             <div class="dropdown" >
               <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Parcours
@@ -10,8 +15,7 @@
                 @can('transformation::taches.index')<a class="dropdown-item" href="{{ route('transformation::taches.index')}}">Tâches</a>@endcan
                 @can('transformation::objectifs.index')<a class="dropdown-item" href="{{ route('transformation::objectifs.index')}}">Objectifs</a>@endcan
                 @can('transformation::stages.index')<a class="dropdown-item" href="{{ route('transformation::stages.index')}}">Stages</a>@endcan
-                <a class="dropdown-item" href="{{ route('transformation::transformation.exportparcours')}}">Exporter les parcours</a>
-                <!--a class="dropdown-item" href="{{ route('transformation::sous-objectifs.index')}}">Sous-Objectifs</a-->
+                @can('transformation::transformation.exportparcours')<a class="dropdown-item" href="{{ route('transformation::transformation.exportparcours')}}">Exporter les parcours</a>@endcan
               </div>
             </div>
             @endcan
