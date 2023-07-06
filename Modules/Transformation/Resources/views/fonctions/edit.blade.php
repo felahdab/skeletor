@@ -131,7 +131,7 @@
                 </div>
             @endforeach
             
-            @can("fonctions.choisirstage")
+            @can("transformation::fonctions.choisirstage")
             <div class='text-center mb-1 mt-1'>
                 <a dusk="ajouter_stage" class="btn btn-primary btn-sm" href="{{ route('transformation::fonctions.choisirstage', $fonction)}}">Ajouter un nouveau stage</a>
             </div>

@@ -32,7 +32,7 @@
             <div class='mt-2 mb-2' style='margin-left:50%; text-align: center;'> </div>
 
             <div x-data='{ selectstage : false }'>
-                @can('stages.attribuerstage')
+                @can('transformation::stages.attribuerstage')
                     <button class="btn btn-primary mb-1" 
                         x-on:click.prevent="selectstage= ! selectstage;
                                             if (selectstage)
