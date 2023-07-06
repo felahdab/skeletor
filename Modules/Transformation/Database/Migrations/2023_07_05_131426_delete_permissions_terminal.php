@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+use Spatie\Permission\Models\Permission;
+
 return new class extends Migration
 {
     /**
@@ -13,7 +15,8 @@ return new class extends Migration
      */
     public function up()
     {
-        DB::table('permissions')->where('name', 'like', 'terminal.%')->delete();
+        Permission::where('name', 'LIKE', 'terminal.%')->delete();
+
     }
 
 };
