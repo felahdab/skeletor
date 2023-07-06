@@ -26,25 +26,34 @@ return new class extends Migration
 
         # On renomme quelques permissions dont la route a change de nom, ou qui ne sont pas associees a une route.
         $perm = Permission::where('name', 'statistiques.pourtuteurs')->first();
-        $perm->name='transformation::statistiques.statpourunservice';
-        $perm->save();
+        if ($perm) {
+            $perm->name = 'transformation::statistiques.statpourunservice';
+            $perm->save();
+        }
 
-        $perm = Permission::where('name', 'statistiques.pourem')->first();
-        $perm->name='transformation::statistiques.statglobal';
-        $perm->save();
+        if ($perm) {
+            $perm = Permission::where('name', 'statistiques.pourem')->first();
+            $perm->name = 'transformation::statistiques.statglobal';
+            $perm->save();
+        }
 
-        $perm = Permission::where('name', 'statistiques.pour2ps')->first();
-        $perm->name='transformation::statistiques.statstage';
-        $perm->save();
+        if ($perm) {
+            $perm = Permission::where('name', 'statistiques.pour2ps')->first();
+            $perm->name = 'transformation::statistiques.statstage';
+            $perm->save();
+        }
 
-        $perm = Permission::where('name', 'transformation.validerlacheoudouble')->first();
-        $perm->name='transformation::transformation.validerlacheoudouble';
-        $perm->save();
+        if ($perm) {
+            $perm = Permission::where('name', 'transformation.validerlacheoudouble')->first();
+            $perm->name = 'transformation::transformation.validerlacheoudouble';
+            $perm->save();
+        }
 
-        $perm = Permission::where('name', 'transformation.updatelivret')->first();
-        $perm->name='transformation::transformation.updatelivret';
-        $perm->save();
-       
+        if ($perm) {
+            $perm = Permission::where('name', 'transformation.updatelivret')->first();
+            $perm->name = 'transformation::transformation.updatelivret';
+            $perm->save();
+        }
     }
 
     /**
