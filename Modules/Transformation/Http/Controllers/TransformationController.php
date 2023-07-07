@@ -50,13 +50,13 @@ class TransformationController extends Controller
     {
         //conditions sur permission
         $mode = "consultation";
-        if (auth()->user()->can('transformation.updatelivret')) {
+        if (auth()->user()->can('transformation::transformation.updatelivret')) {
             $mode = "modiflivret";
         }
-        if (auth()->user()->can('transformation.validerlacheoudouble')) {
+        if (auth()->user()->can('transformation::transformation.validerlacheoudouble')) {
             $mode = "validelacherdouble";
         }
-        if (auth()->user()->can('transformation.updatelivret') && auth()->user()->can('transformation.validerlacheoudouble')) {
+        if (auth()->user()->can('transformation::transformation.updatelivret') && auth()->user()->can('transformation::transformation.validerlacheoudouble')) {
             $mode = "modification";
         }
 
@@ -119,11 +119,6 @@ class TransformationController extends Controller
 
     public function recalcultransfo(Request $request)
     {
-        if ($request->has("mode")) {
-            Artisan::call('ffast:recalculertransformation');
-            return view('transformation::transformation.recalcultransfo')
-                ->withSuccess(__('Calcul terminé'));
-        }
         return view('transformation::transformation.recalcultransfo');
     }
 
