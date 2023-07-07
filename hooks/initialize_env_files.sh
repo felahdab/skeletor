@@ -2,6 +2,10 @@
 SCRIPTDIRECTORY="$(dirname "$0")"
 BASEDIRECTORY=$(realpath $SCRIPTDIRECTORY)
 APPDIRECTORY=$BASEDIRECTORY/..
+
+echo -e "Regenerate application .env files\n"
+
+
 cd $APPDIRECTORY
 if [ ! "$?" -eq 0 ]; then
     echo -e "\n${I_ERROR}${S_ERROR} cd to application directory failed.${RESET}" >&2
@@ -15,9 +19,9 @@ if [ ! -f ../.env ]; then
 fi
 
 source ../.env
-echo $DOMAIN
-echo $PREFIX
-echo $ENVIRONNEMENT
+echo "Domaine:       "$DOMAIN
+echo "Prefixe:       "$PREFIX
+echo "Environnement: "$ENVIRONNEMENT
 
 APP_VERSION=$(cat VERSION)
 
@@ -33,5 +37,9 @@ sed -i $SED_CMD .env
 
 #mv public/assets public/$PREFIX
 cd public
+if [ -L $PREFIX ]; then
+    rm $PREFIX
+fi
 ln -s ./assets $PREFIX
 
+echo -e "Application initialize_env_files done\n"
