@@ -14,12 +14,13 @@ class HomeController extends Controller
     {   
         if (Auth::check()) {
             foreach (Module::allEnabled() as $module) {
-                $module_home_route = $module->getLowerName() . ".homeindex";
+                $module_home_route = $module->getLowerName() . "::" . $module->getLowerName() . ".homeindex";
                 if (Route::has($module_home_route)) {
                     return redirect()->route($module_home_route);
                 }
             }
         }
+        
         return view('home.index');
     }
 }

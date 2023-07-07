@@ -19,9 +19,10 @@ class RolesSeeder extends Seeder
     {
         $role = Role::findOrCreate('user');
         $rolepermissions = [
+            'transformation::transformation.homeindex',
             'transformation::transformation.mafichebilan',
             'transformation::transformation.monlivret',
-            'transformation::transformation.maprogression',
+            'transformation::transformation.maprogression'
         ];
         $role->givePermissionTo($rolepermissions);
 
