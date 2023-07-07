@@ -220,7 +220,7 @@ class UsersTable extends DataTableComponent
                     'maxlength'   => 3
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                        $grade = Grade::where('grade_libcourt', 'like', '%' . $value . '%')->get()->first();
+                        $grade = Grade::where('grade_libcourt', 'like', $value . '%')->get()->first();
                         if ($grade != null)
                             $builder->where('grade_id', $grade->id);
                 }),
@@ -230,7 +230,7 @@ class UsersTable extends DataTableComponent
                     'maxlength'   => 3
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                        $diplome = Diplome::where('diplome_libcourt', 'like', '%' . $value . '%')->get()->first();
+                        $diplome = Diplome::where('diplome_libcourt', 'like', $value . '%')->get()->first();
                         if ($diplome != null)
                             $builder->where('diplome_id', $diplome->id);
                 }),
@@ -240,7 +240,7 @@ class UsersTable extends DataTableComponent
                     'maxlength'   => 15
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                        $specialite = Specialite::where('specialite_libcourt', 'like', '%' . $value . '%')->get()->first();
+                        $specialite = Specialite::where('specialite_libcourt', 'like', $value . '%')->get()->first();
                         if ($specialite != null)
                             $builder->where('specialite_id', $specialite->id);
                 }),
@@ -250,7 +250,7 @@ class UsersTable extends DataTableComponent
                     'maxlength'   => 5
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                        $secteur = Secteur::where('secteur_libcourt', 'like', '%' . $value . '%')->get()->first();
+                        $secteur = Secteur::where('secteur_libcourt', 'like', $value . '%')->get()->first();
                         if ($secteur != null)
                             $builder->where('secteur_id', $secteur->id);
                 }),
@@ -260,7 +260,7 @@ class UsersTable extends DataTableComponent
                     'maxlength'   => 5
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                        $service = Service::where('service_libcourt', 'like', '%' . $value . '%')->get()->first();
+                        $service = Service::where('service_libcourt', 'like', $value . '%')->get()->first();
                         if ($service != null)
                             $builder->where('service_id', $service->id);
                 }),
@@ -270,7 +270,7 @@ class UsersTable extends DataTableComponent
                     'maxlength'   => 5
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                        $gpmt = Groupement::where('groupement_libcourt', 'like', '%' . $value . '%')->get()->first();
+                        $gpmt = Groupement::where('groupement_libcourt', 'like', $value . '%')->get()->first();
                         if ($gpmt != null)
                             $builder->where('groupement_id', $gpmt->id);
                 }),
