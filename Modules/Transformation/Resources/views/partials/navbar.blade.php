@@ -51,7 +51,7 @@
             
             @if (auth()->user()->canAny(['transformation::statistiques.index', 
                                          'transformation::statistiques.statpourunservice', 
-                                         'transformation::statistiques.pour2ps',
+                                         'transformation::statistiques.statstage',
                                          'transformation::statistiques.statglobal']))
             <div class="dropdown" >
               <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
