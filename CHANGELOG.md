@@ -1,3 +1,22 @@
+## 2.1.1 (July 10, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.0 –> 2.1.1
+- Implements art # 117946 evolution affichage suivi par compagnonnage
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast into sandrine_courant
+- Modifie la commande de backup quotidienne pour inclure les fichiers configures.
+- Restreint le backup aux livrets archivés.
+- Modifie la regle de nommage des backups pour inclure le prefixe et l'environnement de l'instance.
+- Schedule backup clean et backup run une fois par jour.
+- Ajustement du script de génération des .env
+- Publication des configurations de laravel-backup et de backup:restore
+- correction filtres %like% -> like% sinon elec -> telecom
+- oubli
+- Merge remote-tracking branch 'origin/master'
+- Correction fichiers CHANGELOG et VERSION qui contiennent des traces d'un conflit de merge non résolu.
+- Suite modularisation de la transfo, évolution de homeindex pour prise en compte du module::homeindex
+- composer update & composer require spatie/laravel-backup && composer require wnx/laravel-backup-restore
+- Merge branch 'master' into sandrine_courant
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.0.1 –> 2.1
+
 ## 2.1.0 (July 06, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.0.1 –> 2.1.0
 - Activation de la page des préférences personnelles par attribution de la permission mespreferences au role user.
