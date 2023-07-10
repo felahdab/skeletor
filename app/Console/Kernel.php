@@ -21,7 +21,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new AdjustDisplayNames)->daily();
 
         $schedule->command('backup:clean')->daily()->at('07:00');
-        $schedule->command('backup:run --only-db')->daily()->at('07:15');
+        $schedule->command('backup:run')->daily()->at('07:15');
     }
 
     /**
