@@ -19,6 +19,9 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('queue:prune-batches')->hourly();
         $schedule->job(new AdjustDisplayNames)->daily();
+
+        $schedule->command('backup:clean')->daily()->at('07:00');
+        $schedule->command('backup:run')->daily()->at('07:15');
     }
 
     /**
