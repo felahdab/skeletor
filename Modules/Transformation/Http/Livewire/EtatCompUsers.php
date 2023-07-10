@@ -71,10 +71,15 @@ class EtatCompUsers extends Component
             $nbssobjvalid=0;
             foreach($entete_ssobjectifs as $ssobj){
                 $idssobj=$ssobj['ssobj']->id;
-                if (array_key_exists($idssobj, $etat_de_validation) && $etat_de_validation[$idssobj] != null)
+                if (array_key_exists($idssobj, $etat_de_validation) )
                 {
-                    $ligne[$idssobj] = 'true';
-                    $nbssobjvalid ++;
+                    if ($etat_de_validation[$idssobj] != null){
+                        $ligne[$idssobj] = 'true';
+                        $nbssobjvalid ++;    
+                    }
+                    else{
+                        $ligne[$idssobj] = 'propose';
+                    }
                 }
                 else{
                     $ligne[$idssobj] = 'false';
