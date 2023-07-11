@@ -9,6 +9,7 @@ use App\Models\User;
 class FfastFicheBilan extends Component
 {
     public $user=null;
+    public $mode=null;
     public $readyToLoad=false;
 
     public function triggerLoad()
@@ -16,9 +17,10 @@ class FfastFicheBilan extends Component
         $this->readyToLoad=true;
     }
 
-    public function mount(User $user)
+    public function mount(User $user, $mode)
     {
         $this->user=$user;
+        $this->mode=$mode;
     }
 
     public function render()
@@ -43,6 +45,7 @@ class FfastFicheBilan extends Component
 
         return view('transformation::livewire.ffast-fiche-bilan', ['user'      => $user,
                                             'listcomp'  => $listcomp,
-                                            'liststage' => $liststage]);
+                                            'liststage' => $liststage,
+                                        'mode' => $this->mode]);
     }
 }

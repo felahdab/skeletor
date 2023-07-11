@@ -76,8 +76,10 @@ Route::name('transformation::')->group(function () {
                 Route::get('/{user}/fichebilan', [TransformationController::class, 'fichebilan'])->name('transformation.fichebilan');
                 Route::get('/{user}/fichebilanpdf', [TransformationController::class, 'fichebilanpdf'])->name('transformation.fichebilanpdf');
                 Route::get('/mafichebilan', [TransformationController::class, 'mafichebilan'])->name('transformation.mafichebilan');
+                Route::get('/mafichebilanpdf', [TransformationController::class, 'mafichebilanpdf'])->name('transformation.mafichebilanpdf');
                 Route::get('/parcoursfichebilan', [TransformationController::class, 'parcoursfichebilan'])->name('transformation.parcoursfichebilan');
                 Route::get('/monlivret', [TransformationController::class, 'monlivret'])->name('transformation.monlivret');
+                Route::get('/monlivretpdf', [TransformationController::class, 'monlivretpdf'])->name('transformation.monlivretpdf');
                 Route::get('/maprogression', [TransformationController::class, 'maprogression'])->name('transformation.maprogression');
                 Route::get('/exportparcours', [ImportExportParcours::class, 'ExportParcoursVersExcel'])->name('transformation.exportparcours');
                 Route::get('/recalcultransfo', [TransformationController::class, 'recalcultransfo'])->name('transformation.recalcultransfo');

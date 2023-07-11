@@ -25,6 +25,6 @@
             <a href="{{ route('transformation::transformation.maprogression') }}" class="btn btn-primary btn-sm">Ma progression</a>
             <a href="{{ route('transformation::transformation.mafichebilan') }}" class="btn btn-secondary btn-sm">Ma fiche bilan</a>
         @endif
-        <livewire:transformation::ffast-fiche-bilan :user="$user"/>
+        @livewire('transformation::ffast-fiche-bilan', ['mode' => $mode, 'user' => $user ])
     </div>    
 @endsection
