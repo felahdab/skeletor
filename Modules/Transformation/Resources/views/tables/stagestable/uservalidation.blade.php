@@ -18,7 +18,7 @@
         data-bs-toggle="modal"
         data-bs-target="#divvalidcomment"
         x-on:click.prevent='stageid= {{ $row->id }};
-                            commentaire = "{{ $user->CommentaireDuStage($row) }}";
+                            commentaire = "{{ str_replace(CHR(10)," *",$user->CommentaireDuStage($row) )}}";
                             opendivvalidcomment = true;
                             libstage = "{{ $row->stage_libcourt }}";
                             nommarin = "{{ $user->display_name }}";'
@@ -37,7 +37,7 @@
             data-bs-target="#divvalid"
             x-on:click.prevent="stageid= {{ $row->id }};
                             date_validation = '{{ date('Y-m-d') }}'; 
-                            commentaire = '{{ htmlspecialchars(trim($user->CommentaireDuStage($row))) }}';
+                            commentaire = '{{ str_replace(CHR(10)," *",htmlspecialchars(trim($user->CommentaireDuStage($row)))) }}';
                             opendivvalid = true;     "
             x-on:uservalidated.window="if(stageid=={{ $row->id }})
                 {
