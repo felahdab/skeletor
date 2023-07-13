@@ -64,6 +64,9 @@ class MindefConnectUserController extends Controller
     {
         $newUser = User::create(array_merge($request->input(), [ "password" =>$this->generateRandomString()]));
         $newUser->display_name=$newUser->displayString();
+        $newUser->admin = false;  
+        if ($request->has('admin'))
+            $newUser->admin = true;       
         $newUser->save();
         
         $newUser->syncRoles($request->get('role'));
@@ -139,7 +142,7 @@ class MindefConnectUserController extends Controller
         
         return view('mindefconnect.edit', ['mcuser' => $User,
                                     'roles' => Role::latest()->get(),
-                                    'grades' => Grade::orderBy('ordre_classmt', 'desc')->get(),
+                                    'grades' => Grade::orderBy('ordre_classmt', 'asc')->get(),
                                     'specialites' => Specialite::orderBy('specialite_libcourt', 'asc')->get(),
                                     'diplomes' => Diplome::latest()->get(),
                                     'secteurs' => Secteur::orderBy('secteur_libcourt', 'asc')->get(),
