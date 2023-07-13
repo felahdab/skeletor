@@ -5,6 +5,7 @@
                 <li>{{ $error }}</li>
             @endforeach
         </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
 
@@ -15,12 +16,14 @@
             <div class="alert alert-danger text-center alert-dismissible fade show" role="alert">
                 <i class="fa fa-check"></i>
                 {{ $msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endforeach
     @else
         <div class="alert alert-danger text-center alert-dismissible fade show" role="alert">
             <i class="fa fa-check"></i>
             {{ $data }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
 @endif
@@ -32,12 +35,14 @@
             <div class="alert alert-info text-center alert-dismissible fade show" role="alert">
                 <i class="fa fa-check"></i>
                 {{ $msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endforeach
     @else
         <div class="alert alert-info text-center alert-dismissible fade show" role="alert">
             <i class="fa fa-check"></i>
             {{ $data }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
 @endif
