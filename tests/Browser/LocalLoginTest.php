@@ -28,8 +28,8 @@ class LocalLoginTest extends DuskTestCase
     {
         $user=User::factory()->create();
         $user->password="admin123";
+        $user->admin = true;
         $user->save();
-        $user->assignRole("admin");
         
         $this->browse(function (Browser $browser) use($user) {
             $browser->maximize()

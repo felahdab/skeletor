@@ -14,7 +14,8 @@ class MailsTest extends DuskTestCase
     public function test_mails_page_displays()
     {
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
         
         $this->browse(function ($browser)  use ($user){
             $browser->maximize()
@@ -30,7 +31,8 @@ class MailsTest extends DuskTestCase
     public function test_create_and_save_new_mail()
     {
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
         
         $this->browse(function ($browser)  use ($user){
             $browser->maximize()

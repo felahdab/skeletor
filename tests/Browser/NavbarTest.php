@@ -13,7 +13,8 @@ class NavbarTest extends DuskTestCase
     public function test_main_menu_displays()
     {
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
         
         $this->browse(function ($browser) use ($user){
             $browser->maximize()
@@ -28,7 +29,8 @@ class NavbarTest extends DuskTestCase
     public function test_users_table_displays()
     {
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
         
         $this->browse(function ($browser)  use ($user){
             $browser->maximize()

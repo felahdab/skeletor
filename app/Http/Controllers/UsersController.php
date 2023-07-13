@@ -60,16 +60,16 @@ class UsersController extends Controller
     public function store(User $user, StoreUserRequest $request) 
     {        
         $user = $user->create(array_merge($request->validated(), [ "password" =>$this->generateRandomString()]));
-        // partie photo //
+
+        $user->socle = false;
         if ($request->has('socle'))
             $user->socle = true;
-        else
-            $user->socle = false;
+        $user->comete = false;  
         if ($request->has('comete'))
             $user->comete = true;
-        else
-            $user->comete = false;
-       
+        $user->admin = false;  
+        if ($request->has('admin'))
+            $user->admin = true;       
         $user->name = strtoupper($user->name);
         $user->prenom = ucfirst(strtolower($user->prenom));
         $user->display_name = $user->displayString();
@@ -141,14 +141,15 @@ class UsersController extends Controller
      */
     public function update(User $user, UpdateUserRequest $request) 
     {
+        $user->socle = false;
         if ($request->has('socle'))
             $user->socle = true;
-        else
-            $user->socle = false;
+        $user->comete = false;
         if ($request->has('comete'))
             $user->comete = true;
-        else
-            $user->comete = false;
+        $user->admin = false;  
+        if ($request->has('admin'))
+            $user->admin = true;          
         $user->update($request->validated());
         $user->name = strtoupper($user->name);
         $user->prenom = ucfirst(strtolower($user->prenom));

@@ -16,7 +16,8 @@ class SuiviTransformationTest extends DuskTestCase
     public function test_suivi_par_fonction_saffiche(): void
     {
         $user = User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $this->browse(function ($browser)  use ($user) {
             $browser->maximize()
@@ -31,7 +32,8 @@ class SuiviTransformationTest extends DuskTestCase
     public function test_suivi_par_stage_saffiche(): void
     {
         $user = User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $this->browse(function ($browser)  use ($user) {
             $browser->maximize()
@@ -46,7 +48,8 @@ class SuiviTransformationTest extends DuskTestCase
     public function test_suivi_par_compagnonage_saffiche(): void
     {
         $user = User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $this->browse(function ($browser)  use ($user) {
             $browser->maximize()

@@ -14,7 +14,8 @@ class AnnudefTest extends DuskTestCase
     public function test_annudef_page_displays()
     {
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
         
         $this->browse(function ($browser)  use ($user){
             $browser->maximize()
@@ -29,7 +30,8 @@ class AnnudefTest extends DuskTestCase
     public function test_annudef_search_by_name_doesnt_crash()
     {
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
         
         $this->browse(function ($browser)  use ($user){
             $browser->maximize()
