@@ -7,22 +7,19 @@ use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
-    public function index() 
+    public function index()
     {
-        if(auth()->user())
-        {
-            $user=auth()->user();
-            if ($user->hasRole("2ps"))
-                return redirect()->route("transformation::statistiques.statstage");
-            elseif ($user->hasRole("tuteur"))
-                return redirect()->route("transformation::statistiques.statpourunservice");
-            elseif ($user->hasRole("em"))
-                return redirect()->route("transformation::statistiques.statglobal");
-            elseif ($user->hasRole("bord"))
-                return redirect()->route("transformation::transformation.index");
-        }
-        $liens= Lien::orderBy('lien_lib')->get();
         $user = auth()->user();
-        return view('transformation::home.index' , [ 'liens' => $liens , 'user' => $user]);
+        $preferedroute = $user->settings()->get('transformation.pageaccueil');
+
+        if ($preferedroute != null) {
+            return redirect()->route($preferedroute);
+        }
+
+        if ($preferedroute == 'transformation::home.index' || $preferedroute == null) {
+            $liens = Lien::orderBy('lien_lib')->get();
+            $user = auth()->user();
+            return view('transformation::home.index', ['liens' => $liens, 'user' => $user]);
+        }
     }
 }
