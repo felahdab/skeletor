@@ -15,7 +15,8 @@ class ArchivageTest extends DuskTestCase
     public function test_archivage_page_displays()
     {
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
         
         $this->browse(function ($browser)  use ($user){
             $browser->maximize()
@@ -30,7 +31,8 @@ class ArchivageTest extends DuskTestCase
     public function test_soft_deleted_user_displays()
     {
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $otheruser=User::factory()->create();
         $otheruser->assignRole("user");
@@ -55,7 +57,8 @@ class ArchivageTest extends DuskTestCase
         Mail::fake();
 
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $otheruser=User::factory()->create();
         $otheruser->assignRole("user");
@@ -89,7 +92,8 @@ class ArchivageTest extends DuskTestCase
         Mail::fake();
         
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $otheruser=User::factory()->create();
         $otheruser->assignRole("user");
@@ -122,7 +126,8 @@ class ArchivageTest extends DuskTestCase
     public function test_soft_deleted_user_cannot_be_deleted_if_not_date_archivage()
     {
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $otheruser=User::factory()->create();
         $otheruser->assignRole("user");
@@ -149,7 +154,8 @@ class ArchivageTest extends DuskTestCase
     public function test_soft_deleted_user_without_date_archivage_can_be_deleted_after_archivage()
     {
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $otheruser=User::factory()->create();
         $otheruser->assignRole("user");
@@ -183,7 +189,8 @@ class ArchivageTest extends DuskTestCase
     public function test_soft_deleted_user_with_date_archivage_can_be_force_deleted()
     {
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $otheruser=User::factory()->create();
         $otheruser->assignRole("user");

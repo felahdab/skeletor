@@ -15,7 +15,8 @@ class GestionCompTest extends DuskTestCase
     public function test_comps_s_affichent(): void
     {
         $user = User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $this->browse(function ($browser)  use ($user) {
             $browser->maximize()
@@ -30,7 +31,8 @@ class GestionCompTest extends DuskTestCase
     public function test_comp_consultation(): void
     {
         $user = User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $comp=Compagnonage::first();
 
@@ -47,7 +49,8 @@ class GestionCompTest extends DuskTestCase
     public function test_comp_edition(): void
     {
         $user = User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $comp=Compagnonage::first();
 
@@ -64,7 +67,8 @@ class GestionCompTest extends DuskTestCase
     public function test_comp_edition_ajouter_tache(): void
     {
         $user = User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $comp=Compagnonage::first();
 
@@ -87,7 +91,8 @@ class GestionCompTest extends DuskTestCase
     public function test_comp_edition_retirer_tache(): void
     {
         $user = User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $comp=Compagnonage::first();
 

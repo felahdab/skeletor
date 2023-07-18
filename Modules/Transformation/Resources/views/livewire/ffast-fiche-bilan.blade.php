@@ -8,8 +8,11 @@
                 <div class="row">
                     <div class="col-11"><h1>{{$user->display_name}}</h1></div>
                     <div class="col-1">
-                        <a href="{{ route('transformation::transformation.fichebilanpdf', $user->id) }}" class="btn btn-default" title="Imprimer"><x-bootstrap-icon iconname='printer.svg' /></a>
-                        {{--  --}}
+                        @if ($mode=="proposition")
+                            <a href="{{ route('transformation::transformation.mafichebilanpdf', $user->id) }}" class="btn btn-default" title="Imprimer"><x-bootstrap-icon iconname='printer.svg' /></a>
+                        @else
+                            <a href="{{ route('transformation::transformation.fichebilanpdf', $user->id) }}" class="btn btn-default" title="Imprimer"><x-bootstrap-icon iconname='printer.svg' /></a>
+                        @endif
                     </div>
                 </div>
             </div>    

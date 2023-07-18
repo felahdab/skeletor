@@ -61,7 +61,7 @@
                                                             selected_compagnonnages , selected_taches , 
                                                             selected_objectifs ,selected_sous_objectifs );">
                 Retirer les sous objectifs sélectionnés de ma proposition de validation</button>
-        <a href="{{ route('transformation::transformation.livretpdf', $user->id) }}" class="btn btn-info"><x-bootstrap-icon iconname='printer.svg' /></a>
+        <a href="{{ route('transformation::transformation.monlivretpdf', $user->id) }}" class="btn btn-info"><x-bootstrap-icon iconname='printer.svg' /></a>
         @break
     @endswitch
     <a href="#" style="text-decoration: none;">

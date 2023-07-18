@@ -26,7 +26,7 @@
     @endphp
     @if ($mode!='consultation' && $comment)
         <span class="d-inline-block" data-bs-toggle="popover" data-bs-placement="right" 
-                data-bs-content="{{$comment}}">
+                data-bs-trigger="focus" tabindex="0" data-bs-content="{{$comment}}">
             <x-bootstrap-icon iconname='chat-left-quote.svg' />
         </span>
     @endif

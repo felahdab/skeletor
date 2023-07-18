@@ -86,6 +86,7 @@ class User extends Authenticatable
         'nid',
         'comete',
         'socle',
+        'admin',
     ];
 
     /**
@@ -592,5 +593,13 @@ class User extends Authenticatable
             $nbjours = $deb->diff($fin)->format('%a');
         }
         return $nbjours;
+    }
+    public function IsSuperAdmin()
+    {
+        // renvoie si le user est superadmin
+        if ($this->admin)
+            return 1;
+        
+        return 0;
     }
 }

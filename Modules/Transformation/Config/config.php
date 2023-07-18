@@ -14,6 +14,7 @@ return [
                 'weekly'          => false,
                 'liste_services' => []
             ],
-        ]
+        ],
+        'pageaccueil' => null
     ]
 ];

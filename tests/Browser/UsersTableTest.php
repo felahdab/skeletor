@@ -18,7 +18,8 @@ class UsersTableTest extends DuskTestCase
     public function test_users_table_gestion_displays()
     {
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
         
         $this->browse(function ($browser)  use ($user){
             $browser->maximize()
@@ -33,7 +34,8 @@ class UsersTableTest extends DuskTestCase
     public function test_users_table_gestion_search()
     {
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
         
         $this->browse(function ($browser)  use ($user){
             $browser->maximize()
@@ -52,7 +54,8 @@ class UsersTableTest extends DuskTestCase
     public function test_users_deletion_fails_if_not_date_debarq()
     {
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
         
         $otheruser=User::factory()->create();
         $otheruser->assignRole("user");
@@ -79,7 +82,8 @@ class UsersTableTest extends DuskTestCase
     public function test_users_deletion_succeeds_if_date_debarq()
     {
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $otheruser=User::factory()->create();
         $otheruser->assignRole("user");

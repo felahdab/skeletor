@@ -14,7 +14,8 @@ class LiensTest extends DuskTestCase
     public function test_liens_page_displays()
     {
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
         
         $this->browse(function ($browser)  use ($user){
             $browser->maximize()

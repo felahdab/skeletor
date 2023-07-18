@@ -80,6 +80,12 @@ class TransformationController extends Controller
         LivretPdfService::livretpdf($user, 'imprim');
     }
 
+    public function monlivretpdf()
+    {
+        $user = auth()->user();
+        LivretPdfService::livretpdf($user, 'imprim');
+    }
+
     public function progression(User $user)
     {
         $readwrite = true;
@@ -106,15 +112,21 @@ class TransformationController extends Controller
         ]);
     }
 
+    public function mafichebilan()
+    {
+        $user = auth()->user();
+        return $this->fichebilan($user, $mode = 'proposition');
+    }
+
     public function fichebilanpdf(User $user)
     {
         FichebilanPdfService::fichebilanpdf($user);
     }
 
-    public function mafichebilan()
+    public function mafichebilanpdf()
     {
         $user = auth()->user();
-        return $this->fichebilan($user, $mode = 'proposition');
+        FichebilanPdfService::fichebilanpdf($user, $mode = 'proposition');
     }
 
     public function recalcultransfo(Request $request)

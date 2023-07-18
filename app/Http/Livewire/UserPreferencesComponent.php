@@ -25,8 +25,15 @@ class UserPreferencesComponent extends Component
         $fonctions = Fonction::all();
         $services = Service::all();
 
+        $prefered_routes = [
+            "Ma page d'accueil" => 'transformation::transformation.homeindex',
+            'Bilan pour mon service' => "transformation::statistiques.statpourunservice",
+            'Bilan global' => 'transformation::statistiques.statglobal',
+            'Bilan par stage' => 'transformation::statistiques.statstage',
+            'Suivi par marins' => 'transformation::transformation.index',
+            'Suivi par stages' => 'transformation::transformation.indexparstage'];
+
         return view('livewire.user-preferences-component')
-            ->layout('layouts.app-master')
-            ->with(compact('fonctions', 'services'));
+            ->with(compact('fonctions', 'services', 'prefered_routes'));
     }
 }

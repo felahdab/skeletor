@@ -15,7 +15,7 @@
 <div x-data='{ allChecked : false }'>
 
     <div>
-        <table class="table table-striped">
+        <table class="table">
             <thead>
             <tr>
                 <th scope="col" width="1%">#</th>
@@ -166,29 +166,42 @@
                         </div>
                     </div>
                 </div>
-               
-                <label for="roles" class="form-label">Attribuer des roles</label>
-
-                <table class="table table-striped">
-                    <thead>
-                        <th scope="col" width="1%"><input type="checkbox" name="all_roles" x-on:click="allChecked = !allChecked; $dispatch('toggleallroles');"></th>
-                        <th scope="col" width="20%">Nom</th>
-                    </thead>
-
-                    @foreach($roles as $role)
-                        <tr>
-                            <td>
-                                <input type="checkbox" 
-                                name="role[{{ $role->name }}]"
-				value="{{ $role->name }}"
-                                x-on:toggleallroles.window="$el.checked = allChecked;"
-                                class='role' @checked($role->name == "user")>
-                            </td>
-                            <td>{{ $role->name }}</td>
-                        </tr>
-                    @endforeach
-                </table>
-
+                @if(auth()->user()->IsSuperAdmin())
+                <div class="row ms-3 w-50">
+                    <div class="col-3 form-check form-switch">
+                        <x-form::checkbox name="admin" value="0" label="SuperAdmin" class="form-check-input "/>
+                    </div>
+                    <div class="col">
+                        <span class="text-danger"><x-bootstrap-icon iconname='exclamation-triangle.svg' /></span>
+                        Si vous cochez la case SuperAdmin, l'utilisateur aura tous les droits sur l'application, quels que soient les rôles séléctionnés.
+                    </div>
+                </div>
+                @endif
+                <div class="row mt-4">
+                    <div class="col">
+                        <table class="table">
+                            <thead>
+                                <th scope="col" width="1%"><input type="checkbox" name="all_roles" x-on:click="allChecked = !allChecked; $dispatch('toggleallroles');"></th>
+                                <th scope="col" width="20%">Sélectionner les r&ocirc;les à attribuer</th>
+                            </thead>
+        
+                            @foreach($roles as $role)
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" 
+                                        name="role[{{ $role->name }}]"
+                                        value="{{ $role->name }}"
+                                        x-on:toggleallroles.window="$el.checked = allChecked;"
+                                        class='role' @checked($role->name == "user")>
+                                    </td>
+                                    <td>{{ $role->name }}</td>
+                                </tr>
+                            @endforeach
+                        </table>                                
+                    </div>
+                    <div class="col">
+                    </div>
+                </div>
                 <button type="submit" class="btn btn-primary">Enregistrer l'utilisateur</button>
                 <a href="{{ route('mindefconnect.index') }}" class="btn btn-default">Retour</a>
             </form>

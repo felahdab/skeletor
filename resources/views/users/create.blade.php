@@ -145,7 +145,18 @@
                     <div class="col">
                        <x-form::input name="nid" label="NID" placeholder="NID..." type="text" x-model="nid"/>
                     </div>
-                    <div class="col">
+                    <div class="col  ms-4">
+                        @if(auth()->user()->IsSuperAdmin())
+                            <div class="row mt-4">
+                                <div class="col-3 form-check form-switch">
+                                    <x-form::checkbox name="admin" value="0" label="SuperAdmin" class="form-check-input "/>
+                                </div>
+                                <div class="col">
+                                    <span class="text-danger"><x-bootstrap-icon iconname='exclamation-triangle.svg' /></span>
+                                    Si vous cochez la case SuperAdmin, l'utilisateur aura tous les droits sur l'application, quels que soient les rôles séléctionnés.
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <div class="row mt-4">
@@ -159,36 +170,41 @@
                     <div class="col">
                         <x-form::checkbox name="comete" value="1" label="Embarqué COMETE" />
                     </div>
-                    <div class="col">
+                    <div class="col">                        
                         <x-form::checkbox name="socle" value="1" label="Socle" />
                     </div>
                 </div>
                 <div class="row mt-4">
-                    <x-form::textarea name="user_comment" label="Commentaire" placeholder="Commentaire..." type="textarea" cols=100 rows=3/>
+                    <div class="col">
+                        <div class="row" x-data='{ allchecked : false }' >
+                            <table class="table w-75">
+                                <thead>
+                                    <th scope="col" width="1%"><input type="checkbox" x-on:click="allChecked = ! allChecked; $dispatch('toggleallroles');"></th>
+                                    <th scope="col" width="20%">Sélectionner les r&ocirc;les à attribuer</th>
+                                </thead>
+                                @foreach($roles as $role)
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" 
+                                            name="role[{{ $role->name }}]"
+                                            value="{{ $role->name }}"
+                                            class='role'
+                                            x-on:toggleallroles.window="$el.checked = allChecked;">
+                                        </td>
+                                        <td>{{ $role->name }}</td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <x-form::textarea name="user_comment" label="Commentaire" placeholder="Commentaire..." type="textarea" cols=50 rows=12/>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    
                 </div>
                 
-                <div class="row mt-4" x-data='{ allchecked : false }' >
-                    <label for="roles" class="form-label">Attribuer des r&ocirc;les</label>
-                    <table class="table table-striped">
-                        <thead>
-                            <th scope="col" width="1%"><input type="checkbox" x-on:click="allChecked = ! allChecked; $dispatch('toggleallroles');"></th>
-                            <th scope="col" width="20%">Sélectionner les r&ocirc;les</th>
-                        </thead>
-
-                        @foreach($roles as $role)
-                            <tr>
-                                <td>
-                                    <input type="checkbox" 
-                                    name="role[{{ $role->name }}]"
-                                    value="{{ $role->name }}"
-                                    class='role'
-                                    x-on:toggleallroles.window="$el.checked = allChecked;">
-                                </td>
-                                <td>{{ $role->name }}</td>
-                            </tr>
-                        @endforeach
-                    </table>
-                </div>
                 <div class="btn-group" role="groupe">
                     <button type="submit" 
                             class="btn btn-primary" 

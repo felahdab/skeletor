@@ -15,7 +15,8 @@ class GestionFonctionTest extends DuskTestCase
     public function test_fonctions_s_affichent(): void
     {
         $user = User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $this->browse(function ($browser)  use ($user) {
             $browser->maximize()
@@ -30,7 +31,8 @@ class GestionFonctionTest extends DuskTestCase
     public function test_fonction_consultation(): void
     {
         $user = User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $fonction=Fonction::first();
 
@@ -47,7 +49,8 @@ class GestionFonctionTest extends DuskTestCase
     public function test_fonction_edition(): void
     {
         $user = User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $fonction=Fonction::first();
 
@@ -64,7 +67,8 @@ class GestionFonctionTest extends DuskTestCase
     public function test_fonction_edition_ajouter_compagnonnage(): void
     {
         $user = User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $fonction=Fonction::first();
 
@@ -87,7 +91,8 @@ class GestionFonctionTest extends DuskTestCase
     public function test_fonction_edition_ajouter_stage(): void
     {
         $user = User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $fonction=Fonction::first();
 
@@ -110,7 +115,8 @@ class GestionFonctionTest extends DuskTestCase
     public function test_fonction_edition_retirer_stage(): void
     {
         $user = User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $fonction=Fonction::first();
 
@@ -131,7 +137,8 @@ class GestionFonctionTest extends DuskTestCase
     public function test_fonction_edition_retirer_compagnonnage(): void
     {
         $user = User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
 
         $fonction=Fonction::first();
 

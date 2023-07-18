@@ -19,7 +19,8 @@ class LivretMultipleTest extends DuskTestCase
     public function test_livret_multiple_displays()
     {
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
         
         $fonction=Fonction::first();
 
@@ -38,7 +39,8 @@ class LivretMultipleTest extends DuskTestCase
     public function test_livret_multiple_shows_assigned_user()
     {
         $user=User::factory()->create();
-        $user->assignRole("admin");
+        $user->admin = true;
+        $user->save();
         
         $fonction=Fonction::first();
 
