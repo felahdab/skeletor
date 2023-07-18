@@ -35,7 +35,9 @@ class User extends Authenticatable
 
     # La propriete statique modelDefaultSettings est enrichie par les preferences des utilisateurs declarees dans les modules
     # actives, puis utilisee a l'initialisation d'un User pour configurer la propriete defaultSettings.
-    protected static $modelDefaultSettings=[];
+    protected static $modelDefaultSettings=[
+        "prefered_page" => null
+    ];
 
     public array $defaultSettings = [
         

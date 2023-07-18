@@ -9,23 +9,12 @@ use App\Http\Controllers\MindefConnectUserController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ChangeUserCurrentRole;
 use App\Http\Controllers\ChangeUserPassword;
-use App\Http\Controllers\ArchivageController;
-use App\Http\Controllers\TransformationController;
-use App\Http\Controllers\StatistiqueController;
-use App\Http\Controllers\TacheController;
 use App\Http\Controllers\MailController;
-use App\Http\Controllers\StageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LogoutController;
-use App\Http\Controllers\TestController;
-use App\Http\Controllers\ObjectifController;
-use App\Http\Controllers\SousObjectifController;
 use App\Http\Controllers\BugReportController;
-use App\Http\Controllers\ImportExportParcours;
-use App\Http\Controllers\TransformationHistoryController;
 use App\Http\Controllers\AnnudefController;
-
-use App\Http\Livewire\UserPreferencesComponent;
+use App\Http\Controllers\UserPreferencesController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -45,7 +34,7 @@ Route::get('/auth/redirect', function () {
 
 
 Route::group(['middleware' => ['auth', 'permission']], function () {
-    Route::get('/mespreferences', UserPreferencesComponent::class)->name('mespreferences');
+    Route::get('/mespreferences', [UserPreferencesController::class, 'mespreferences'])->name('mespreferences');
 });
 
 Route::group(['namespace' => 'App\Http\Controllers'], function () {

@@ -15,6 +15,13 @@ return [
                 'liste_services' => []
             ],
         ],
-        'pageaccueil' => null
+    ],
+    'pageaccueilpossible' => [
+        "Ma page d'accueil" => 'transformation::transformation.homeindex',
+        'Bilan pour mon service' => "transformation::statistiques.statpourunservice",
+        'Bilan global' => 'transformation::statistiques.statglobal',
+        'Bilan par stage' => 'transformation::statistiques.statstage',
+        'Suivi par marins' => 'transformation::transformation.index',
+        'Suivi par stages' => 'transformation::transformation.indexparstage'
     ]
 ];

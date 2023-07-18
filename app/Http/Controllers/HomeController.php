@@ -11,16 +11,14 @@ use Nwidart\Modules\Facades\Module;
 class HomeController extends Controller
 {
     public function index()
-    {   
-        if (Auth::check()) {
-            foreach (Module::allEnabled() as $module) {
-                $module_home_route = $module->getLowerName() . "::" . $module->getLowerName() . ".homeindex";
-                if (Route::has($module_home_route)) {
-                    return redirect()->route($module_home_route);
-                }
-            }
+    {
+        $user = auth()->user();
+        $preferedroute = $user->settings()->get('prefered_page');
+
+        if ($preferedroute != null) {
+            return redirect()->route($preferedroute);
         }
-        
+
         return view('home.index');
     }
 }
