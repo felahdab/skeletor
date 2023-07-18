@@ -26,7 +26,7 @@ class UserPreferencesComponent extends Component
         $services = Service::all();
 
         $prefered_routes = [
-            "Ma page d'accueil" => 'transformation::home.index',
+            "Ma page d'accueil" => 'transformation::transformation.homeindex',
             'Bilan pour mon service' => "transformation::statistiques.statpourunservice",
             'Bilan global' => 'transformation::statistiques.statglobal',
             'Bilan par stage' => 'transformation::statistiques.statstage',
