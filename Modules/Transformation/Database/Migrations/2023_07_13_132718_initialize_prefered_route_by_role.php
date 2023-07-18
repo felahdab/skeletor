@@ -25,7 +25,7 @@ return new class extends Migration
             elseif ($user->hasRole("bord"))
                 $user->settings()->set('transformation.pageaccueil', "transformation::transformation.index");
             else
-                $user->settings()->set('transformation.pageaccueil', 'transformation::home.index');
+                $user->settings()->set('transformation.pageaccueil', 'transformation::transformation.homeindex');
         }
     }
 
