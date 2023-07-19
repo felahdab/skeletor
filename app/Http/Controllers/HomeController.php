@@ -12,11 +12,14 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
-        $preferedroute = $user->settings()->get('prefered_page');
 
-        if ($preferedroute != null) {
-            return redirect()->route($preferedroute);
+        $user = auth()->user();
+        if ($user != null) {
+            $preferedroute = $user->settings()->get('prefered_page');
+
+            if ($preferedroute != null) {
+                return redirect()->route($preferedroute);
+            }
         }
 
         return view('home.index');
