@@ -1,3 +1,26 @@
+## 2.1.2 (July 19, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.1 –> 2.1.2
+- Merge remote-tracking branch 'origin/master' into sandrine_courant
+- Renvoi du choix de la page d'accueil à un composant de Skeletor. Les modules peuvent préciser les pages qu'ils offrent dans leur configuration. La page de préférences de l'utilisateur peut inclure les composants de chaque module.
+- Merge commit '9dd28dc76762bd87fe27aa6d75ef64095015a213'
+- suite modif erreur route homeindex
+- Merge commit '13e0d883496827bc572f49404ea2dab7757ad7ac'
+- erreur de route homeindex dans les preferences
+- Mise en place préférence pour choisir sa page d'accueil après connexion.
+- suite ajout croix pour fermer messages de validation/erreur
+- Implements art #112127 suite role superadmin avec ecran mindefconnect
+- Implement art #112127 création du role superadmin avc booleen dans table user
+- ajout croix pour fermer messages de validation/erreur
+- Ajout de controle dans le seeder des permissions.
+- Implements art #140071 creation route specifique pour impression monlivret et mafichebilan
+- composer require stancl/tenancy
+- Mise à jour des .env pour configurer redis et utiliser redis comme moteur de cache par defaut
+- Publication configuration de spatie/larevel-permission. Désactivation du cache pour ce package.
+- Configuration REDIS
+- Implements art #117497 remplacement des retours chariot par " *".
+- Implements art #141362 le popover se ferme automatiquement quand on clique ailleurs sur la page.
+- composer require predis/predis
+
 ## 2.1.1 (July 10, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.0 –> 2.1.1
 - Implements art # 117946 evolution affichage suivi par compagnonnage
