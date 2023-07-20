@@ -1,3 +1,7 @@
+## 2.1.2a (July 20, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.2 –> 2.1.2a
+- Correction: les pages d'accueil possibles ne s'affichent pas si on n'est pas super admin.
+
 ## 2.1.2 (July 19, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.1 –> 2.1.2
 - Merge remote-tracking branch 'origin/master' into sandrine_courant
