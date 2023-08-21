@@ -32,7 +32,7 @@
                                         <a href="{{ route('transformation::users.stages', $fiche['user']->id) }}" class="btn btn-danger btn-sm">Stages</a>
                                     @endcan
                             
-                                    <livewire:transformation::ffast-fiche-bilan :user="$fiche['user']" :wire:key="$fiche['id']" />
+                                    <livewire:transformation::ffast-fiche-bilan :user="$fiche['user']" :wire:key="$fiche['id']"  mode="parcours"/>
                                 </div>
                                 <div class="col-sm-1">
                                     <button class="btn btn-default" data-bs-target="#carouselDesFiches" data-bs-slide="next" style="height: 100%;">
