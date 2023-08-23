@@ -1,3 +1,7 @@
+## 2.1.2b (August 23, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.2a –> 2.1.2b
+- Implements art #150052 #148134 affichage parcours fiche bilan retabli car il manquait le mode en parametre
+
 ## 2.1.2a (July 20, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.2 –> 2.1.2a
 - Correction: les pages d'accueil possibles ne s'affichent pas si on n'est pas super admin.
