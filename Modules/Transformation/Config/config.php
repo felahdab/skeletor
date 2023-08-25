@@ -17,6 +17,7 @@ return [
         ],
     ],
     'pageaccueilpossible' => [
+        "Page par défaut" => Null,
         "Ma page d'accueil" => 'transformation::transformation.homeindex',
         'Bilan pour mon service' => "transformation::statistiques.statpourunservice",
         'Bilan global' => 'transformation::statistiques.statglobal',
