@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Cache;
 
 use Spatie\Permission\Traits\HasRoles;
 
@@ -109,6 +110,26 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime'
     ];
+
+    public function cacheKey()
+    {
+        return sprintf(
+            "%s/%s-%s",
+            $this->getTable(),
+            $this->getKey(),
+            $this->updated_at->timestamp
+        );
+    }
+
+    public function storeMindefConnectInformations($informations)
+    {
+        Cache::put($this->cacheKey() . ':mindefConnectInformations', $informations, 60*60*24);
+    }
+
+    public function getMindefConnectInformations()
+    {
+        return Cache::get($this->cacheKey() . ':mindefConnectInformations');
+    }
 
     // protected $appends = ['en_transformation'];
 

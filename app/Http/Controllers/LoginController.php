@@ -43,6 +43,7 @@ class LoginController extends Controller
         
         $user = User::where('email', $MCuser->email)->get()->first();
         if ($user != null) {
+            $user->storeMindefConnectInformations($MCuser->user);
             Auth::login($user);
             return $this->authenticated($request, $user);
         }
