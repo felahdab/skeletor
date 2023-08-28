@@ -21,5 +21,7 @@
         </div>
     </div>
 
-    <livewire:transformation::user-preferences-component/>
+    @foreach($composants_des_modules as $composant)
+        @livewire($composant)
+    @endforeach
 </div>
