@@ -37,13 +37,13 @@
                 <form method="post" action="{{ route('login.perform') }}">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                     <div class="m-3 d-flex justify-content-center">
-                        <input dusk="login-email" type="text" class="form-control w-75" name="email" value="{{ old('email') }}" placeholder="Email" required="required" autofocus>
+                        <input dusk="login-email" type="text" class="form-control w-75" name="email" value="{{ old('email') }}" placeholder="prenom.nom@intradef.gouv.fr" required="required" autofocus>
                         @if ($errors->has('username'))
                             <span class="text-danger text-left">{{ $errors->first('username') }}</span>
                         @endif
                     </div>
                     <div class="m-3 d-flex justify-content-center">
-                        <input dusk="login-password" type="password" class="form-control w-75" name="password" value="{{ old('password') }}" placeholder="Password" required="required">
+                        <input dusk="login-password" type="password" class="form-control w-75" name="password" value="{{ old('password') }}" placeholder="Mot de passe" required="required">
                         @if ($errors->has('password'))
                             <span class="text-danger text-left">{{ $errors->first('password') }}</span>
                         @endif

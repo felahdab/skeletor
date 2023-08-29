@@ -35,19 +35,19 @@
                     <td style="font-size:x-small;" colspan="{{$entete_objectif['colspanobj']}}" title="{{$entete_objectif['libobj']}}">{{substr($entete_objectif['libobj'], 0, 40)}}...</td>
                 @endforeach
             </tr>   
+            <tr class="table-info">
+                <th>Marin</th>
+                <th>Taux</th>
+                @foreach($entete_ssobjectifs as $entete_ssobjectif)
+                    <th style="font-size:x-small;" 
+                        title="{{$entete_ssobjectif['ssobj']->ssobj_lib}}" >
+                        {{substr($entete_ssobjectif['ssobj']->ssobj_lib, 0, 40)}}...
+                    </th>
+                @endforeach
+            </tr>   
             </thead>
             <tbody>
-                <tr class="table-info">
-                    <th>Marin</th>
-                    <th>Taux</th>
-                    @foreach($entete_ssobjectifs as $entete_ssobjectif)
-                        <th style="font-size:x-small;" 
-                            title="{{$entete_ssobjectif['ssobj']->ssobj_lib}}" >
-                            {{substr($entete_ssobjectif['ssobj']->ssobj_lib, 0, 40)}}...
-                </th>
-                    @endforeach
-                </tr>   
-                    @foreach($usersssobjs as $ligne)
+                @foreach($usersssobjs as $ligne)
                 <tr>
                     <td class="text-center" style="position: sticky; left: 0;z-index: 1;background: white;"><a href="{{ route('transformation::transformation.livret', $ligne['id'] )}}">{{$ligne['name']}}</a>
                     <td>{{$ligne['txtransfo']}}</td>

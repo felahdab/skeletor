@@ -200,7 +200,7 @@ class StattuteurTable extends DataTableComponent
                     'maxlength'   => 10
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                    $secteur = Secteur::where('secteur_libcourt', 'like', '%' . $value . '%')->get()->first();
+                    $secteur = Secteur::where('secteur_libcourt', 'like', $value . '%')->get()->first();
                     if ($secteur != null)
                         $builder->where('secteur_id', $secteur->id);
                 }),
@@ -217,7 +217,7 @@ class StattuteurTable extends DataTableComponent
                     'maxlength'   => 10
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                        $service = Service::where('service_libcourt', 'like', '%' . $value . '%')->get()->first();
+                        $service = Service::where('service_libcourt', 'like', $value . '%')->get()->first();
                         if ($service != null)
                             $secteurs = $service->secteurs()->get()->pluck('id');
                             $builder->whereIn('secteur_id', $secteurs);

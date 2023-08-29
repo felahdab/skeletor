@@ -12,7 +12,7 @@
             <img src='{!! asset("assets/images/logo_FFAST_bleu.png") !!}' alt="Logo" style="height:400px; display: block; margin-left:auto; margin-right: auto; ">
         </div>
         <div class="w-100 mt-5 mb-5 text-center h5">
-            Application de gestion du suivi de la transformation des marins des GTR.
+            Application de gestion du suivi de la transformation.
         </div>
         <div class="w-100 mt-5 d-flex justify-content-between">
             <div style="font-size: smaller;">&#9786;FFAST&#xAE;</div>
