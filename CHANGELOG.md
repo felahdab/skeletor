@@ -1,3 +1,15 @@
+## 2.1.3 (août 29, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.2b –> 2.1.3
+- Merge commit '61348668950d92c6b9bcc21c707c31440e378f4d'
+- modif libelle mail de la page login
+- Mise en cache des informations MindefConnect de l'utilisateur lorsque celui-ci se connecte via MindefConnect.
+- Merge remote-tracking branch 'origin/master' into sandrine_courant
+- Probleme d'affichage des sous objectifs réglé
+- Implements art #158472: decouvre les composants livewire de gestion des preferences de l'utilisateur de façon fiable.
+- correction
+- Implements art #158283 ajout d'une page par défaut dans le menu preferences pour que les marins en transfo puissent aussi choisir.
+- Implements art #158283 filtre secteur et service modifié
+
 ## 2.1.2b (August 23, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.2a –> 2.1.2b
 - Implements art #150052 #148134 affichage parcours fiche bilan retabli car il manquait le mode en parametre
