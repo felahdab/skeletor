@@ -14,6 +14,8 @@ use App\Models\User;
 
 use App\Service\RandomColorService;
 
+use Modules\Transformation\Scopes\MemeUnite;
+
 class Dashboard extends Component
 {
     public $userids=null;
@@ -44,7 +46,7 @@ class Dashboard extends Component
 
         if (!is_null($this->userids) && sizeof($this->userids))
         {
-            $users=User::with('fonctions')->whereIn('id', $this->userids)->get();
+            $users=User::scoped(MemeUnite::class)->with('fonctions')->whereIn('id', $this->userids)->get();
 
             $columnChartModel = 
             (new ColumnChartModel())

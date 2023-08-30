@@ -15,6 +15,8 @@ use App\Models\User;
 use App\Models\Service;
 use Modules\Transformation\Entities\Fonction;
 
+use Modules\Transformation\Scopes\MemeUnite;
+
 class StatistiqueController extends Controller
 {
     public function index(Request $request) 
@@ -63,7 +65,7 @@ class StatistiqueController extends Controller
     {
         
         $stages = Stage::all();
-        $users = User::with('secteur')->get();
+        $users = User::scoped(MemeUnite::class)->with('secteur')->get();
         $services = Service::orderBy('service_libcourt')->get();
         $fonctionsaquai = Fonction::where('typefonction_id', 2);
         return view('transformation::statistiques.statglobal', ['stages'   => $stages,
