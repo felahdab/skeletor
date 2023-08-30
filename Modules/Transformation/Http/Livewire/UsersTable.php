@@ -29,6 +29,8 @@ use Illuminate\Support\Facades\DB;
 
 use Barryvdh\Debugbar\Facades\Debugbar;
 
+use Modules\Transformation\Scopes\MemeUnite;
+
 class UsersTable extends DataTableComponent
 {
     // protected $model = User::class;
@@ -37,20 +39,20 @@ class UsersTable extends DataTableComponent
     {
         switch ($this->mode){
             case "listmarin" :
-                $userlist = User::query()->join('transformation_user_fonction','users.id','=','user_id')->Where('fonction_id', $this->fonction->id)->get()->pluck('user_id', 'id');
-                return User::query()->whereIn('users.id', $userlist);
+                $userlist = User::scoped(MemeUnite::class)->join('transformation_user_fonction','users.id','=','user_id')->Where('fonction_id', $this->fonction->id)->get()->pluck('user_id', 'id');
+                return User::scoped(MemeUnite::class)->whereIn('users.id', $userlist);
                 break;
             case "dashboard" :
                 $userlist = DB::table('transformation_user_fonction')->get()->pluck('user_id')->unique();
-                return User::query()->whereIn('users.id', $userlist);
+                return User::scoped(MemeUnite::class)->whereIn('users.id', $userlist);
                 break;
             case "archiv" :
-                $userlist =User::withTrashed()
+                $userlist = User::scoped(MemeUnite::class)->withTrashed()
                     ->whereNotNull('users.deleted_at');  // qui ont ete supprime depuis la liste des utilisateurs
                 return $userlist;
                 break;
             default :
-                return User::query();
+                return User::scoped(MemeUnite::class);
                 break;
         }
     }

@@ -24,10 +24,12 @@ use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
+use Modules\Transformation\Scopes\MemeUnite;
+
 class StattuteurTable extends DataTableComponent
 {
-    protected $model = User::class;
-    
+    //protected $model = User::class;
+
     public $service;
 
     public function configure(): void
@@ -63,7 +65,7 @@ class StattuteurTable extends DataTableComponent
         $service_id=$currentuser->service->id;
         
         if ($currentuser->hasRole("em")) {
-            return User::query()
+            return User::scoped(MemeUnite::class)
                       ->join ('secteurs', 'secteurs.id', '=', 'users.secteur_id')
                       ->WhereExists(function($maquery){
                           $maquery->select ('id')
@@ -74,7 +76,7 @@ class StattuteurTable extends DataTableComponent
         }
         else
         {
-            return User::query()
+            return User::scoped(MemeUnite::class)
                       ->join ('secteurs', 'secteurs.id', '=', 'users.secteur_id')
                       ->where('secteurs.service_id', $service_id)
                       ->WhereExists(function($maquery){
