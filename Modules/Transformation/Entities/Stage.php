@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use Modules\Transformation\Traits\HasTablePrefix;
 
 use App\Models\User;
+use Modules\Transformation\Entities\Personne;
 
 class Stage extends Model
 {
@@ -28,7 +29,7 @@ class Stage extends Model
 	
     public function users()
     {
-        return $this->belongsToMany(User::class, 'transformation_user_stage')
+        return $this->belongsToMany(Personne::class, 'transformation_user_stage', null, 'user_id')
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation', 'date_validite');
     }
