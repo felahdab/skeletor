@@ -136,6 +136,8 @@ class GererTransformationService
                 $workitem->date_proposition_validation = null;
                 $workitem->valideur = $valideur;
                 $workitem->$fieldname = $date_validation;
+                if ($ssobj->pivot->commentaire != null || ltrim($ssobj->pivot->commentaire) != '')
+                    $commentaire= $ssobj->pivot->commentaire.' '.$commentaire;
                 $workitem->commentaire = $commentaire;
                 $workitem->nb_jours_pour_validation = $nbjours;
                 $workitem->save();
