@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Transformation\Traits\HasTablePrefix;
 
 use App\Models\Lieu;
-use App\Models\User;
+//use App\Models\User;
 
 class SousObjectif extends Model
 {
@@ -32,7 +32,7 @@ class SousObjectif extends Model
     
     public function users()
     {
-        return $this->belongsToMany(User::class, 'transformation_user_sous_objectifs')
+        return $this->belongsToMany(Personne::class, 'transformation_user_sous_objectifs', null, 'user_id')
             ->local()
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation', 'valideur');

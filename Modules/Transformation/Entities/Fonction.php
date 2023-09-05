@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Cache;
 
 use Modules\Transformation\Traits\HasTablePrefix;
 
-use App\Models\User;
+//use App\Models\User;
 
 class Fonction extends Model
 {
@@ -34,7 +34,7 @@ class Fonction extends Model
     
     public function users()
     {
-        return $this->belongsToMany(User::class, 'transformation_user_fonction')
+        return $this->belongsToMany(Personne::class, 'transformation_user_fonction', null, 'user_id')
         ->withTimeStamps()
         ->withPivot('date_lache','valideur_lache','commentaire_lache',
                     'date_double','valideur_double','commentaire_double',
