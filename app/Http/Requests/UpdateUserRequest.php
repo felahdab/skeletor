@@ -40,6 +40,7 @@ class UpdateUserRequest extends FormRequest
             'specialite_id' => 'nullable',
             'diplome_id' => 'nullable',
             'secteur_id' => 'nullable',
+            'unite_id' => 'nullable',
             'unite_destination_id' => 'nullable',
             'user_comment' => 'nullable',
             'nid'=>'nullable',

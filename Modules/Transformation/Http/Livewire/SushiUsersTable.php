@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\DB;
 
 use Barryvdh\Debugbar\Facades\Debugbar;
 
+use Modules\Transformation\Scopes\MemeUnite;
+
 class SushiUsersTable extends DataTableComponent
 {
     public $mode = 'gestion';
@@ -48,7 +50,7 @@ class SushiUsersTable extends DataTableComponent
             ->pluck('user_id')
             ->all();
 
-        $this->userlist = User::query()
+        $this->userlist = User::scoped(MemeUnite::class)
             ->whereIn('id', $relevant_userids)
             ->with('secteur.service.groupement')
             ->with('grade')
