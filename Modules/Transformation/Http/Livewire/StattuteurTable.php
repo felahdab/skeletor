@@ -199,7 +199,7 @@ class StattuteurTable extends DataTableComponent
             TextFilter::make('Secteur')
                 ->config([
                     'placeholder' => 'RESEAU...',
-                    'maxlength'   => 10
+                    'maxlength'   => 50
                     ])
                 ->filter(function(Builder $builder, string $value) {
                     $secteur = Secteur::where('secteur_libcourt', 'like', $value . '%')->get()->first();

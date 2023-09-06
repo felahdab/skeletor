@@ -227,7 +227,7 @@ class UsersTable extends DataTableComponent
             TextFilter::make('Brevet')
                 ->config([
                     'placeholder' => 'BAT...',
-                    'maxlength'   => 3
+                    'maxlength'   => 50
                     ])
                 ->filter(function(Builder $builder, string $value) {
                         $diplome = Diplome::where('diplome_libcourt', 'like', '%' . $value . '%')->get()->first();
@@ -247,7 +247,7 @@ class UsersTable extends DataTableComponent
                 TextFilter::make('Secteur')
                 ->config([
                     'placeholder' => 'DEM...',
-                    'maxlength'   => 5
+                    'maxlength'   => 50
                     ])
                 ->filter(function(Builder $builder, string $value) {
                         $secteur = Secteur::where('secteur_libcourt', 'like', $value . '%')->get()->first();
