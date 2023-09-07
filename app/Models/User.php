@@ -44,16 +44,6 @@ class User extends Authenticatable
         return parent::__call($name, $args);
     }
 
-    /* La surcharge ci-dessous semble inutile, mais elle est là pour outrepasser la surcharge de __call définie
-        dans le trait HasSettingsTable qui utilise call_user_func(get_parent_class($this) . '::__call', $name, $args);
-        là ou parent::__call($name, $args) aurait suffit. La méthode utilisée déclenche un appel récursif sans find
-        dans le cas où on extends le modèle sans rien surcharger...
-    */
-    public function __call($name, $args)
-    {
-        return parent::__call($name, $args);
-    }
-
     # La propriete statique modelDefaultSettings est enrichie par les preferences des utilisateurs declarees dans les modules
     # actives, puis utilisee a l'initialisation d'un User pour configurer la propriete defaultSettings.
     protected static $modelDefaultSettings=[
