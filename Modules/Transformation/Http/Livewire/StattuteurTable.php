@@ -3,7 +3,7 @@
 namespace Modules\Transformation\Http\Livewire;
 
 use App\Models\User;
-use Modules\Transformation\Entities\Unite;
+use App\Models\Unite;
 use App\Models\Grade;
 use App\Models\Diplome;
 use App\Models\Secteur;
