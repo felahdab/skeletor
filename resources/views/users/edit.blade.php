@@ -94,12 +94,30 @@
                 </div>
                 <div class="row mt-4">
                     <div class="col">
-                        <x-form::input name="date_embarq" label="Date d'embarquement *" type="date" :value="$user->date_embarq" required/>
+                        
                     </div>
                     <div class="col">
                         <div class="mb-3">
-                            <img src="{{ $user->getAnnudefPictureUrl() }}" height="75px">
+                            <div class="form-group" >
+                                <label class="form-label" for="name">Photo Annudef:</label>
+                                <img src="{{ $user->getAnnudefPictureUrl() }}" height="75px">
+                            </div>
                         </div>
+                    </div>                        
+                </div>
+                <div class="row mt-4">
+                    <div class="col">
+                        <x-form::input name="date_embarq" label="Date d'embarquement *" type="date" :value="$user->date_embarq" required/>
+                    </div>
+                    <div class="col">
+                        <x-form::model-select name="unite_id" 
+                            :models="$unites" 
+                            label="Unité actuelle" 
+                            key-attribute="id" 
+                            value-attribute="unite_liblong"
+                            :value="$user->unite">
+                            <option value="">Non renseigné</option>
+                        </x-form::model-select>
                     </div>                        
                 </div>
                 <div class="row mt-4">
@@ -109,11 +127,11 @@
                     <div class="col">
                         <x-form::model-select name="unite_destination_id" 
                             :models="$unites" 
-                            label="Unité destination" 
+                            label="Unité destination ou temporaire" 
                             key-attribute="id" 
                             value-attribute="unite_liblong"
                             :value="$user->unite_destination">
-                            <option value="">Unité destination</option>
+                            <option value="">Néant</option>
                         </x-form::model-select>
                     </div>
                 </div>

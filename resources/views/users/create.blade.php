@@ -164,6 +164,13 @@
                         <x-form::input name="date_embarq" label="Date d'embarquement *" type="date" required/>
                     </div>
                     <div class="col">
+                        <x-form::model-select name="unite_id" 
+                            :models="$unites" 
+                            label="Unité actuelle" 
+                            key-attribute="id" 
+                            value-attribute="unite_liblong">
+                            <option value="">Non renseigné</option>
+                        </x-form::model-select>
                     </div>
                 </div>
                 <div class="row mt-4">

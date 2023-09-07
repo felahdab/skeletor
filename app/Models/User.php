@@ -33,6 +33,16 @@ class User extends Authenticatable
     use Impersonate;
 
     use HasSettingsTable; # provides the ->settings() methods
+    
+    /* La surcharge ci-dessous semble inutile, mais elle est là pour outrepasser la surcharge de __call définie
+        dans le trait HasSettingsTable qui utilise call_user_func(get_parent_class($this) . '::__call', $name, $args);
+        là ou parent::__call($name, $args) aurait suffit. La méthode utilisée déclenche un appel récursif sans find
+        dans le cas où on extends le modèle sans rien surcharger...
+    */
+    public function __call($name, $args)
+    {
+        return parent::__call($name, $args);
+    }
 
     /* La surcharge ci-dessous semble inutile, mais elle est là pour outrepasser la surcharge de __call définie
         dans le trait HasSettingsTable qui utilise call_user_func(get_parent_class($this) . '::__call', $name, $args);
@@ -274,7 +284,7 @@ class User extends Authenticatable
 
     public function fonctions()
     {
-        return $this->belongsToMany(Fonction::class, 'transformation_user_fonction')
+        return $this->belongsToMany(Fonction::class, 'transformation_user_fonction', 'user_id')
             ->withTimeStamps()
             ->withPivot(
                 'date_lache',
@@ -293,7 +303,7 @@ class User extends Authenticatable
 
     public function stages()
     {
-        return $this->belongsToMany(Stage::class, 'transformation_user_stage')
+        return $this->belongsToMany(Stage::class, 'transformation_user_stage', 'user_id')
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation', 'date_validite');
     }
@@ -321,7 +331,7 @@ class User extends Authenticatable
 
     public function sous_objectifs()
     {
-        return $this->belongsToMany(SousObjectif::class, 'transformation_user_sous_objectifs')
+        return $this->belongsToMany(SousObjectif::class, 'transformation_user_sous_objectifs', 'user_id')
             ->withTimeStamps()
             ->withPivot('commentaire', 'date_validation', 'valideur', 'nb_jours_pour_validation', 'date_proposition_validation');
     }
