@@ -189,7 +189,7 @@ class StattuteurTable extends DataTableComponent
             TextFilter::make('U-dest')
                 ->config([
                     'placeholder' => 'LGC...',
-                    'maxlength'   => 5
+                    'maxlength'   => 10
                     ])
                 ->filter(function(Builder $builder, string $value) {
                         $unite = Unite::where('unite_libcourt', 'like', '%' . $value . '%')->get()->pluck('id');
