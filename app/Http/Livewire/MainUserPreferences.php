@@ -25,6 +25,7 @@ class MainUserPreferences extends Component
         $listpagesaccueil = [];
         $composants_des_modules = [];
         foreach (Module::allEnabled() as $module) {
+            $listpagesaccueil=[];
             if($listpagesdumodule = config($module->getLowerName() . ".pageaccueilpossible")){
                 foreach ($listpagesdumodule as $key => $route) {
                     $listpagesaccueil[$module->getName() . " - " . $key] = $route;
