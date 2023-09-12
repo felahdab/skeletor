@@ -15,6 +15,7 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\BugReportController;
 use App\Http\Controllers\AnnudefController;
 use App\Http\Controllers\UserPreferencesController;
+use App\Http\Controllers\ParamaccueilsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -94,5 +95,11 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             Route::get('/edit/{mail}', [MailController::class, 'edit'])->name('mails.edit');
             Route::get('/create', [MailController::class, 'create'])->name('mails.create');
         });
+
+        Route::group(['prefix' => 'paramaccueils'], function () {
+            Route::get('/', [ParamaccueilsController::class, 'index'])->name('paramaccueils.index');
+            Route::patch('/', [ParamaccueilsController::class, 'update'])->name('paramaccueils.update');
+        });
+
     });
 });
