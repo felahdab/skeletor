@@ -193,6 +193,7 @@ class UsersTable extends DataTableComponent
                     Column::make('Supprimé', 'deleted_at')
                         ->deSelected(),
                     Column::make('Débarq.', 'date_debarq')
+                        ->sortable()
                         ->searchable(),
                     Column::make("Date d'archivage", 'date_archivage')
                         ->searchable()
