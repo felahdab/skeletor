@@ -64,7 +64,7 @@ class StattuteurTable extends DataTableComponent
         $currentuser=auth()->user();
         $service_id=$currentuser->service->id;
         
-        if ($currentuser->hasRole("em")) {
+        if ($currentuser->can('transformation::statistiques.statglobal')) {
             return User::scoped(MemeUnite::class)
                       ->join ('secteurs', 'secteurs.id', '=', 'users.secteur_id')
                       ->WhereExists(function($maquery){
@@ -152,10 +152,17 @@ class StattuteurTable extends DataTableComponent
                     fn($row, Column $column) => view('transformation::tables.stattable.attentevalid', ['marin' => $row])
                     )
                 ->searchable(),
+            Column::make('U-actuelle', 'unite_id')
+                ->sortable()
+                ->format(
+                    fn($value, $row, Column $column) => view('tables.userstable.libunite')->withRow($row))
+                ->deSelected(),
             Column::make('U-dest', 'unite_destination.unite_libcourt')
                 ->sortable()
                 ->searchable()
                 ->deSelected(),
+
+                
             ];
         return array_merge($basecolumns , [
             Column::make('Actions')
@@ -186,6 +193,18 @@ class StattuteurTable extends DataTableComponent
                     if ($userids != null)
                         $builder->whereIn('users.id', $userids);
             }),
+            TextFilter::make('U-actuelle')
+                ->config([
+                    'placeholder' => 'LGC...',
+                    'maxlength'   => 50
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $unite = Unite::where('unite_libcourt', 'like', '%' . $value . '%')
+                                    ->orWhere('unite_liblong', 'like', '%' . $value . '%')
+                                    ->get()->pluck('id');
+                        if ($unite != null)
+                            $builder->whereIn('unite_id', $unite);
+                }),
             TextFilter::make('U-dest')
                 ->config([
                     'placeholder' => 'LGC...',

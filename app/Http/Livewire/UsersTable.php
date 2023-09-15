@@ -120,6 +120,11 @@ class UsersTable extends DataTableComponent
                 ->searchable(),
             Column::make('Groupement', 'secteur.service.groupement.groupement_libcourt')
                 ->searchable(),
+            Column::make('U-actuelle', 'unite_id')
+                ->sortable()
+                ->format(
+                    fn($value, $row, Column $column) => view('tables.userstable.libunite')->withRow($row))
+                ->deSelected(),
             Column::make('U-dest', 'unite_destination.unite_libcourt')
                 ->sortable()
                 ->searchable()
@@ -134,7 +139,7 @@ class UsersTable extends DataTableComponent
                 ->searchable() 
                 ->format(
                     fn($value, $row, Column $column) => view('tables.userstable.socle')->withRow($row)),
-        ];
+            ];
         switch ($this->mode){
             case "dashboard":
                 return array_merge($basecolumns ,[
@@ -273,6 +278,18 @@ class UsersTable extends DataTableComponent
                         $gpmt = Groupement::where('groupement_libcourt', 'like', $value . '%')->get()->first();
                         if ($gpmt != null)
                             $builder->where('groupement_id', $gpmt->id);
+                }),
+            TextFilter::make('U-actuelle')
+                ->config([
+                    'placeholder' => 'LGC...',
+                    'maxlength'   => 50
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $unite = Unite::where('unite_libcourt', 'like', '%' . $value . '%')
+                                    ->orWhere('unite_liblong', 'like', '%' . $value . '%')
+                                    ->get()->pluck('id');
+                        if ($unite != null)
+                            $builder->whereIn('unite_id', $unite);
                 }),
             TextFilter::make('U-dest')
                 ->config([
