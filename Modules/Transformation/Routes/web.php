@@ -14,6 +14,7 @@ use Modules\Transformation\Http\Controllers\ArchivageController;
 use Modules\Transformation\Http\Controllers\HomeController;
 use Modules\Transformation\Http\Controllers\ImportExportParcours;
 
+use Modules\Transformation\Http\Middleware\RestrictVisibility;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,7 +27,7 @@ use Modules\Transformation\Http\Controllers\ImportExportParcours;
 */
 
 Route::name('transformation::')->group(function () {
-    Route::group(['middleware' => ['auth', 'permission']], function () {
+    Route::group(['middleware' => ['auth', 'permission', RestrictVisibility::class]], function () {
 
         Route::get('transformation/home', [HomeController::class, "index"])->name('transformation.homeindex');
 

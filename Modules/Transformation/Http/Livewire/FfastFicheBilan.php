@@ -4,7 +4,7 @@ namespace Modules\Transformation\Http\Livewire;
 
 use Livewire\Component;
 
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 
 class FfastFicheBilan extends Component
 {

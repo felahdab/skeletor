@@ -10,7 +10,7 @@ use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Asantibanez\LivewireCharts\Models\MultiLineChartModel;
 
 use Modules\Transformation\Entities\Fonction;
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 
 use App\Service\RandomColorService;
 
@@ -39,7 +39,7 @@ class ParcoursFichesBilan extends Component
             // $users=User::with('fonctions')->whereIn('id', $this->userids)->get();
             foreach($this->userids as $id)
             {
-                $user=User::scoped(MemeUnite::class)->find($id);
+                $user=User::query()->find($id);
                 if ($user != null)
                 {
                     $fiches[] = [

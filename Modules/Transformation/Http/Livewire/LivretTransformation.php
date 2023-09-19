@@ -4,7 +4,7 @@ namespace Modules\Transformation\Http\Livewire;
 
 use Modules\Transformation\Services\GererTransformationService;
 
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 use Modules\Transformation\Entities\Fonction;
 use Modules\Transformation\Entities\Compagnonage;
 use Modules\Transformation\Entities\Tache;

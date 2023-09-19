@@ -13,21 +13,6 @@ class MemeUnite implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        if (app()->runningInConsole()) {
-            return;
-        }
-        if (!auth()->check()) {
-            return;
-        }
-        if (auth()->user()->admin) {
-            return;
-        }
-        if (auth()->user()->unite_id == null) {
-            return;
-        }
-        if (auth()->user()->can('transformation::view_all_users')) {
-            return;
-        }
         $builder->where('unite_id', auth()->user()->unite_id);
     }
 }

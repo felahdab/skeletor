@@ -10,7 +10,7 @@ use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Asantibanez\LivewireCharts\Models\MultiLineChartModel;
 
 use Modules\Transformation\Entities\Fonction;
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 
 use App\Service\RandomColorService;
 
@@ -46,7 +46,7 @@ class Dashboard extends Component
 
         if (!is_null($this->userids) && sizeof($this->userids))
         {
-            $users=User::scoped(MemeUnite::class)->with('fonctions')->whereIn('id', $this->userids)->get();
+            $users=User::query()->with('fonctions')->whereIn('id', $this->userids)->get();
 
             $columnChartModel = 
             (new ColumnChartModel())

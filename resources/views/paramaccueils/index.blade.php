@@ -20,8 +20,8 @@
                     <div class="row card mb-2">
                         <div class="card-header col-12">PAGE ACTUELLE</div>
                         <div class="m-2">
-                            <img src='{{asset("public/images/" . $paramaccueil-> paramaccueil_image)}}' style="width:250px">
-                            <br><br><br>{{$paramaccueil-> paramaccueil_texte}}
+                            <img src='{{asset("public/images/" . $paramaccueil?->paramaccueil_image)}}' style="width:250px">
+                            <br><br><br>{{$paramaccueil?->paramaccueil_texte}}
                         </div>
                     </div>
                 </div>
@@ -30,8 +30,8 @@
                         <div class="card-header text-center col-12">MODIFICATIONS</div>
                         <div class="m-2">
                             {{-- <input type='file' class='form-control' name='paramaccueil_image' id='paramaccueil_image' accept='.jpg, .jpeg, .png' for="{{ $paramaccueil->paramaccueil_image }}" > --}}
-                            <x-form::input name="paramaccueil_image" label="Image" type="file" accept='.jpg, .jpeg, .png' for="{{ $paramaccueil->paramaccueil_image }}"/>
-                            <x-form::input name="paramaccueil_texte" label="Texte" type="text" :value="$paramaccueil-> paramaccueil_texte"/>
+                            <x-form::input name="paramaccueil_image" label="Image" type="file" accept='.jpg, .jpeg, .png' for="{{ $paramaccueil?->paramaccueil_image }}"/>
+                            <x-form::input name="paramaccueil_texte" label="Texte" type="text" :value="$paramaccueil?->paramaccueil_texte"/>
                         </div>
                         <div class="m-2">
                             <button class="btn btn-primary" type="submit">Mettre à jour</button>

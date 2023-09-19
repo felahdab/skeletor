@@ -5,7 +5,7 @@ namespace Modules\Transformation\Http\Livewire;
 use Modules\Transformation\Services\GererTransformationService;
 
 use Modules\Transformation\Entities\Stage;
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 use Modules\Transformation\Entities\TypeLicence;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
