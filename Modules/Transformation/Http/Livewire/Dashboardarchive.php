@@ -35,6 +35,21 @@ class Dashboardarchive extends Component
             $columnChartModel = (new ColumnChartModel())
                                 ->setTitle('Indicateurs moyens');
 
+            $nbemb = 0;
+            $nbdeb = 0;  
+            $ddebut = $this->archiveids['datedebut'];
+            $dfin = $this->archiveids['datefin'];            
+            foreach ($archive as $marin){
+                $userdata=json_decode($marin->userdata);
+                $datemb=$userdata->date_emb;
+                $datedeb=$userdata->date_deb;
+                if ($ddebut <= $datemb &&  $datemb<= $dfin){
+                    $nbemb ++;
+                }
+                if ($ddebut <= $datedeb &&  $datedeb<= $dfin){
+                    $nbdeb ++;
+                }
+            }
 
             $charts[]= [
                 'id'    => 'moyenne_globale',
@@ -42,6 +57,8 @@ class Dashboardarchive extends Component
                 'txtransfo'    => round($archive->avg("tauxdetransformation"), 2),
                 'duree'    => round($archive->avg("duree")),
                 'nbmarins'    => count($archive),
+                'nbmarins_debarq'    => $nbdeb,
+                'nbmarins_embarq'    => $nbemb,
             ];
         }
         return view('transformation::livewire.dashboardarchive', ['charts' => $charts]);    
