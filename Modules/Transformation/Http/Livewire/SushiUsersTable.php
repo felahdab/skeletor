@@ -2,7 +2,7 @@
 
 namespace Modules\Transformation\Http\Livewire;
 
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 use App\Models\SushiUser;
 
 use App\Models\Unite;
@@ -50,7 +50,7 @@ class SushiUsersTable extends DataTableComponent
             ->pluck('user_id')
             ->all();
 
-        $this->userlist = User::scoped(MemeUnite::class)
+        $this->userlist = User::query()
             ->whereIn('id', $relevant_userids)
             ->with('secteur.service.groupement')
             ->with('grade')

@@ -1,7 +1,7 @@
 <?php
 namespace Modules\Transformation\Services;
 
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 use Illuminate\Support\Facades\Storage;
 
 class LivretPdfService

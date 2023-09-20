@@ -12,7 +12,7 @@ use App\Http\Requests\StoreStageRequest;
 use App\Http\Requests\UpdateStageRequest;
 use Modules\Transformation\Entities\Stage;
 use Modules\Transformation\Entities\TypeLicence;
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 
 use Illuminate\Http\Request;
 

@@ -10,7 +10,7 @@ use Modules\Transformation\Entities\Objectif;
 use Modules\Transformation\Entities\SousObjectif;
 
 use Modules\Transformation\Entities\UserSousObjectif;
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 
 class TransformationManagerService
 {

@@ -3,7 +3,7 @@
 namespace Modules\Transformation\Dto;
 
 use Spatie\LaravelData\Data;
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 
 class ChangementLivretDeTransformationDto extends Data
 {

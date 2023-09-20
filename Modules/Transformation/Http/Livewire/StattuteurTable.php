@@ -2,7 +2,7 @@
 
 namespace Modules\Transformation\Http\Livewire;
 
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 use App\Models\Unite;
 use App\Models\Grade;
 use App\Models\Diplome;
@@ -65,7 +65,7 @@ class StattuteurTable extends DataTableComponent
         $service_id=$currentuser->service->id;
         
         if ($currentuser->can('transformation::statistiques.statglobal')) {
-            return User::scoped(MemeUnite::class)
+            return User::query()
                       ->join ('secteurs', 'secteurs.id', '=', 'users.secteur_id')
                       ->WhereExists(function($maquery){
                           $maquery->select ('id')
@@ -76,7 +76,7 @@ class StattuteurTable extends DataTableComponent
         }
         else
         {
-            return User::scoped(MemeUnite::class)
+            return User::query()
                       ->join ('secteurs', 'secteurs.id', '=', 'users.secteur_id')
                       ->where('secteurs.service_id', $service_id)
                       ->WhereExists(function($maquery){
