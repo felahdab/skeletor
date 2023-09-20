@@ -12,7 +12,7 @@ use Modules\Transformation\Entities\Fonction;
 use Modules\Transformation\Entities\Objectif;
 use Modules\Transformation\Entities\SousObjectif;
 use Modules\Transformation\Entities\Tache;  
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 
 class GererTransformationService
 {

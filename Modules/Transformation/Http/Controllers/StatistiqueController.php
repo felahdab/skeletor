@@ -11,7 +11,7 @@ use Modules\Transformation\Services\StatService;
 
 use Modules\Transformation\Entities\Statistique;
 use Modules\Transformation\Entities\Stage;
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 use App\Models\Service;
 use Modules\Transformation\Entities\Fonction;
 
@@ -65,7 +65,7 @@ class StatistiqueController extends Controller
     {
         
         $stages = Stage::all();
-        $users = User::scoped(MemeUnite::class)->with('secteur')->get();
+        $users = User::query()->with('secteur')->get();
         $services = Service::orderBy('service_libcourt')->get();
         $fonctionsaquai = Fonction::where('typefonction_id', 2);
         return view('transformation::statistiques.statglobal', ['stages'   => $stages,

@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 
 use Illuminate\Support\Carbon;
 
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 use Modules\Transformation\Entities\Fonction;
 
 class CalculateUserNbJoursValidation implements ShouldQueue

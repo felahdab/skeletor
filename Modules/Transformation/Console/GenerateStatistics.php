@@ -8,7 +8,7 @@ use Illuminate\Support\Carbon;
 use App\Service\StatService;
 
 use App\Models\Unite;
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 use Modules\Transformation\Entities\Statistique;
 
 use DateTime;

@@ -5,7 +5,7 @@ namespace Modules\Transformation\Api\v1;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 use Modules\Transformation\Http\Resources\UserResource;
 
 class MarinResourceController extends Controller

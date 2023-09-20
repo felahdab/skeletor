@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 
 use Modules\Transformation\Services\GererTransformationService;
 use Modules\Transformation\Services\LivretPdfService;

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Modules\Transformation\Traits\HasTablePrefix;
 
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 use App\Models\Unite;
 
 class MiseEnVisibilite extends Model

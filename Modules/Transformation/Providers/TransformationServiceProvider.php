@@ -3,7 +3,9 @@
 namespace Modules\Transformation\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
+
+use Livewire\Livewire;
+use Modules\Transformation\Http\Middleware\RestrictVisibility;
 
 class TransformationServiceProvider extends ServiceProvider
 {
@@ -30,6 +32,7 @@ class TransformationServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
         $this->registerCommands();
         $this->registerDocumentation();
+        $this->registerPermanentMiddlewareForLivewire();
     }
 
     /**
@@ -120,6 +123,11 @@ class TransformationServiceProvider extends ServiceProvider
             $this->loadTranslationsFrom(module_path($this->moduleName, 'Resources/lang'), $this->moduleNameLower);
             $this->loadJsonTranslationsFrom(module_path($this->moduleName, 'Resources/lang'));
         }
+    }
+
+    public function registerPermanentMiddlewareForLivewire()
+    {
+        Livewire::addPersistentMiddleware(RestrictVisibility::class);
     }
 
     /**
