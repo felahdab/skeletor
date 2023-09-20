@@ -8,8 +8,15 @@ use Illuminate\Database\Eloquent\Scope;
 
 use Modules\Transformation\Entities\MiseEnVisibilite;
 
+use Modules\Transformation\Entities\Personne;
+
 class MisesPourEmploi implements Scope
 {
+    public function __construct(Builder $builder)
+    {
+        $this->apply($builder, Personne::make());
+    }
+
     /**
      * Ce scope sera applique aux requetes realisees sur les Personne dans le module Transformation
      * Son objectif est de donner la visibilite sur les Personnes en tenant compte des mises
