@@ -23,7 +23,10 @@ class HomeController extends Controller
                 return redirect()->route($preferedroute);
             }
         }
-        $paramaccueil = Paramaccueil::first();
+        $paramaccueil = Paramaccueil::firstOrCreate([
+            'paramaccueil_image' => ' 11.jpg',
+            'paramaccueil_texte' => 'le texte est modifiable'
+        ]);
 
         return view('home.index',['paramaccueil' => $paramaccueil]);
     }

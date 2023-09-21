@@ -7,5 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Paramaccueil extends Model
 {
-    use HasFactory;
+    protected $fillable = ['paramaccueil_image','paramaccueil_texte'];
+
 }
