@@ -16,7 +16,7 @@ use Modules\Transformation\Scopes\MemeUniteOuRenduVisible;
 
 use Modules\Transformation\Entities\MiseEnVisibilite;
 
-class TestRestrictVisibility extends TestCase
+class RestrictVisibilityTest extends TestCase
 {
     use RefreshDatabase;
     public $seed=true;
