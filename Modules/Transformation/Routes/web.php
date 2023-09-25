@@ -13,6 +13,7 @@ use Modules\Transformation\Http\Controllers\TransformationHistoryController;
 use Modules\Transformation\Http\Controllers\ArchivageController;
 use Modules\Transformation\Http\Controllers\HomeController;
 use Modules\Transformation\Http\Controllers\ImportExportParcours;
+use Modules\Transformation\Http\Controllers\MiseenvisibiliteController;
 
 use Modules\Transformation\Http\Middleware\RestrictVisibility;
 /*
@@ -104,5 +105,7 @@ Route::name('transformation::')->group(function () {
         Route::get('archivage/{user}/impression', [ArchivageController::class, 'imprimer'])->name('archivage.imprimer');
         Route::get('archivage/{user}/archivage', [ArchivageController::class, 'archiver'])->name('archivage.archiver');
         Route::get('archivage/{user}/suppr', [ArchivageController::class, 'supprimer'])->name('archivage.supprimer');
+
+        Route::resource('miseenvisibilite', MiseenvisibiliteController::class);
     });
 });
