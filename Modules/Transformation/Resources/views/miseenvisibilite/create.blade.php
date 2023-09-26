@@ -35,10 +35,11 @@
                         </option>
                     @endforeach
                 </select>
-                <label class="form-label">Date de début *</label>
-                <input type="date" class="form-control" name="datedeb" id="datedeb" required>
-                <label class="form-label">Date de fin *</label>
-                <input type="date" class="form-control" name="datefin" id="datefin" required>
+                <label class="form-label">Date de début</label>
+                <input type="date" class="form-control" name="datedeb" id="datedeb">
+                <label class="form-label">Date de fin</label>
+                <input type="date" class="form-control" name="datefin" id="datefin">
+                <p style="font-size: smaller;">Pour une visibilité permanente par l'unité, ne saisissez pas de date.</p>
             </div>
         </div>
 

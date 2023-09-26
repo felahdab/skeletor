@@ -45,8 +45,13 @@ class MiseenvisibiliteController extends Controller
         foreach ($request->users as $user){
             $mpe=new MiseEnVisibilite();
             $mpe->user_id=$user;
-            $mpe->date_fin=$request->datefin;
-            $mpe->date_debut=$request->datedeb;
+            if ($mpe->date_fin && $mpe->date_debut)
+            {
+                $mpe->date_fin=$request->datefin;
+                $mpe->date_debut=$request->datedeb;
+            }
+            else
+                $mpe->sans_dates = true;
             $mpe->unite_id=$request->uniteid;     
             $mpe->save();
         }
@@ -70,9 +75,15 @@ class MiseenvisibiliteController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(Miseenvisibilite $miseenvisibilite)
     {
-        return view('transformation::miseenvisibilite.edit');
+        $unites = Unite::orderBy('unite_libcourt')->get();
+        $user= User::where ('id', $miseenvisibilite->user_id)->first();
+        return view('transformation::miseenvisibilite.edit', [
+                        'miseenvisibilite' => $miseenvisibilite,
+                        'user' => $user,
+                        'unites' => $unites,
+        ]);
     }
 
     /**
@@ -81,9 +92,20 @@ class MiseenvisibiliteController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Miseenvisibilite $miseenvisibilite)
     {
-        //
+        $miseenvisibilite->date_debut = null;
+        $miseenvisibilite->date_fin = null;
+        $miseenvisibilite->sans_dates = true;    
+        if ($request->datedeb && $request->datefin){
+            $miseenvisibilite->date_debut = $request->datedeb;
+            $miseenvisibilite->date_fin = $request->datefin;
+            $miseenvisibilite->sans_dates = false;    
+        }
+        $miseenvisibilite->unite_id = $request->uniteid;
+        $miseenvisibilite->save();
+
+        return view('transformation::miseenvisibilite.index');
     }
 
     /**
@@ -91,9 +113,9 @@ class MiseenvisibiliteController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(Miseenvisibilite $miseenvisibilite)
     {
-        MiseEnVisibilite::where('id', $id)->delete();
+        $miseenvisibilite->delete();
         return redirect()->route('transformation::miseenvisibilite.index');
     }
 }
