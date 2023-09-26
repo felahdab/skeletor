@@ -8,12 +8,16 @@ use Illuminate\Database\Eloquent\Scope;
 
 use Modules\Transformation\Entities\MiseEnVisibilite;
 
+use App\Models\User;
 use Modules\Transformation\Entities\Personne;
 
 class MisesPourEmploi implements Scope
 {
-    public function __construct(Builder $builder)
+    public function __construct(Builder $builder, public ?User $user)
     {
+        if ($this->user == null) {
+            $this->user = auth()->user();
+        }
         $this->apply($builder, Personne::make());
     }
 
@@ -24,25 +28,26 @@ class MisesPourEmploi implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        $user = auth()->user();
-        $unite = $user->unite;
+        $unite = $this->user->unite;
 
-        $liste_des_users_visibles = MiseEnVisibilite::query()
+        $coll_des_mises_en_visibilite_dates = MiseEnVisibilite::query()
             ->whereBelongsTo($unite)
             ->tap(new ActiveNow())
             ->get()
             ->pluck('user_id');
 
-        $liste_des_users_visibles = $liste_des_users_visibles
-            ->concat(MiseEnVisibilite::query()
-                ->whereBelongsTo($unite)
-                ->tap(new SansDates())
-                ->get()
-                ->pluck('user_id'))
+        $coll_des_mises_en_visibilite_permanentes = MiseEnVisibilite::query()
+            ->whereBelongsTo($unite)
+            ->tap(new SansDates())
+            ->get()
+            ->pluck('user_id');
+
+        $coll_des_mises_en_visibilite = $coll_des_mises_en_visibilite_dates
+            ->concat($coll_des_mises_en_visibilite_permanentes)
             ->unique();
 
         $table = $model->getTable();
         $key = $model->getKeyName();
-        $builder->whereIn($table . '.' . $key, $liste_des_users_visibles);
+        $builder->whereIn($table . '.' . $key, $coll_des_mises_en_visibilite);
     }
 }
