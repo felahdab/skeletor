@@ -11,7 +11,7 @@
         <div class="tab-pane show active" id="nav-table" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0"><livewire:transformation::miseenvisibilite-planning-table></div>
             @if(! is_null($tabresult) && sizeof($tabresult))
                 <div class="tab-pane" id="nav-{{ $tabresult['id'] }}" role="tabpanel" tabindex="0">
-{{dd($tabresult);}}
+
 
 
 
