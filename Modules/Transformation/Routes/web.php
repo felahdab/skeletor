@@ -107,5 +107,7 @@ Route::name('transformation::')->group(function () {
         Route::get('archivage/{user}/suppr', [ArchivageController::class, 'supprimer'])->name('archivage.supprimer');
 
         Route::resource('miseenvisibilite', MiseenvisibiliteController::class);
+        Route::get('miseenvisibilites/planning', [MiseenvisibiliteController::class, 'planning'])->name('miseenvisibilite.planning');
+        
     });
 });

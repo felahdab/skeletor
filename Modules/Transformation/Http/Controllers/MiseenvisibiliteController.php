@@ -11,6 +11,14 @@ use Modules\Transformation\Entities\User;
 
 class MiseenvisibiliteController extends Controller
 {
+
+    public function planning()
+    {
+        // dd('toto');
+        return view('transformation::miseenvisibilite.planning');
+    }
+
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -45,7 +53,7 @@ class MiseenvisibiliteController extends Controller
         foreach ($request->users as $user){
             $mpe=new MiseEnVisibilite();
             $mpe->user_id=$user;
-            if ($mpe->date_fin && $mpe->date_debut)
+            if ($request->datefin && $request->datedeb)
             {
                 $mpe->date_fin=$request->datefin;
                 $mpe->date_debut=$request->datedeb;
@@ -67,7 +75,7 @@ class MiseenvisibiliteController extends Controller
      */
     public function show($id)
     {
-        return view('transformation::miseenvisibilite.show');
+        
     }
 
     /**
@@ -118,4 +126,5 @@ class MiseenvisibiliteController extends Controller
         $miseenvisibilite->delete();
         return redirect()->route('transformation::miseenvisibilite.index');
     }
+
 }

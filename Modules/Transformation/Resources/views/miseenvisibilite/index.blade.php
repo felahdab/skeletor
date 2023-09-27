@@ -12,6 +12,7 @@
         <div class="lead">
             Gérer les mises pour emploi.
         <a href="{{ route('transformation::miseenvisibilite.create') }}" class="btn btn-primary btn-sm float-right">Ajouter MPE</a>
+        <a href="{{ route('transformation::miseenvisibilite.planning') }}" class="btn btn-secondary btn-sm float-right">Planning</a>
         </div>
         
         @livewire('transformation::miseenvisibilite-table')
