@@ -20,17 +20,10 @@ class Planning extends Component
 
     public function render()
     {
-        $tabresult=[];
+        $mpes=[];
         if (!is_null($this->planningids) && sizeof($this->planningids)){
-            $tabresult['id']='Planning';
-            $tabentete=[];
-            array_push ($tabresult, $tabentete);
-            $mpes=MiseEnVisibilite::whereIn('id', $this->planningids)->orderBy('user_id')->get();
-            foreach ($mpes as $mpe){
-                array_push ($tabresult, $mpe);
-            }
-
+            $mpes = MiseEnVisibilite::with('user')->whereIn('id', $this->planningids)->orderBy('user_id')->get();
         }
-        return view('transformation::livewire.planning', ['tabresult' => $tabresult]);    
+        return view('transformation::livewire.planning', ['mpes' => $mpes]);    
     }
 }

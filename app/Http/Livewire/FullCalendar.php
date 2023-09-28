@@ -16,6 +16,11 @@ class FullCalendar extends Component
         ddd($event);
     }
 
+    public function eventResize($event)
+    {
+        ddd($event);
+    }
+
     public function getEvents()
     {
         $events = [

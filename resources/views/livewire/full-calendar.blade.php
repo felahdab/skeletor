@@ -1,73 +1,68 @@
-<div wire:ignore>
-    <button wire:click="refreshCalendar">Rafraichir</button>
-    <div id='calendar'></div>
-</div>
+<div>
+    
+    <div wire:ignore x-init="
+        calendarEl = document.getElementById('calendar');
 
-@section('scripts')
-    <script src="{!! asset('assets/js/fullcalendar_6.1.3.js') !!}"></script>
-    <script>
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+            locale: 'fr',
+            
+            initialView: 'resourceTimelineMonth',
+            nowIndicator : true,
+            editable: true,
+            droppable: true,
 
-    document.addEventListener('DOMContentLoaded', function() {
-      var calendarEl = document.getElementById('calendar');
+            eventAdd: info => @this.eventAdd(info.event),
+            eventReceive: info => @this.eventReceive(info.event),
+            eventResize: info => @this.eventResize(info.event),
+            eventRemove: info => @this.eventRemove(info.event),
+            eventDrop: info => @this.eventDrop(info.event),
+            eventClick: info => @this.eventClick(info.event),
 
-      var calendar = new FullCalendar.Calendar(calendarEl, {
-        schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
-        locale: 'fr',
-        
-        initialView: 'resourceTimelineYear',
-        nowIndicator : true,
-        editable: true,
-        droppable: true,
-
-        eventAdd: info => @this.eventAdd(info.event),
-        eventReceive: info => @this.eventReceive(info.event),
-        eventRemove: info => @this.eventRemove(info.event),
-        eventDrop: info => @this.eventDrop(info.event),
-        eventClick: info => @this.eventClick(info.event),
-
-        loading: function(isLoading) 
-        {
-            if (!isLoading)
+            loading: function(isLoading) 
             {
-                this.getEvents().forEach(function(e)
+                if (!isLoading)
                 {
-                    if (e.source ===null)
+                    this.getEvents().forEach(function(e)
                     {
-                        e.remove();
-                    }
-                })
-            }
-        },
-
-        headerToolbar: {
-            left: 'today prev,next',
-            center: 'title',
-            right: 'resourceTimelineDay,resourceTimelineTenDay,resourceTimelineMonth,resourceTimelineYear'
+                        if (e.source ===null)
+                        {
+                            e.remove();
+                        }
+                    })
+                }
             },
-        height: 650,
-        weekNumbers: true,
-        resourceGroupField: 'groupId',
-        resources: function(fetchInfo, successCallback, failureCallback) 
+
+            headerToolbar: {
+                left: 'today prev,next',
+                center: 'title',
+                right: 'resourceTimelineDay,resourceTimelineMonth,resourceTimelineYear'
+                },
+            height: 600,
+            weekNumbers: true,
+            //resourceGroupField: 'groupId',
+            resources: function(fetchInfo, successCallback, failureCallback) 
+                {
+                    @this.getResources().then(results => {
+                        successCallback(results);
+                    })
+                },
+            
+            events: function(fetchInfo, successCallback, failureCallback) 
             {
-                @this.getResources().then(results => {
+                @this.getEvents().then(results => {
                     successCallback(results);
                 })
-            },
-        
-        events: function(fetchInfo, successCallback, failureCallback) 
-        {
-            @this.getEvents().then(results => {
-                successCallback(results);
-            })
-        }
-        });
-        
-        calendar.render();
+            }
+            });
+            
+            calendar.render();
 
-        @this.on('refreshCalendar', function() {
-            calendar.refetchEvents();
-        })
-    });
+            @this.on('refreshCalendar', function() {
+                calendar.refetchEvents();
+            });">
 
-  </script>
-@endsection
+        <button class='btn btn-primary mt-4 mb-4' wire:click="refreshCalendar">Rafraichir</button>
+        <div id='calendar'></div>
+    </div>
+</div>
