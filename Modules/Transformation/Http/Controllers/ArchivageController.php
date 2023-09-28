@@ -5,7 +5,7 @@ namespace Modules\Transformation\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
-use App\Models\User;
+use Modules\Transformation\Entities\User;
 
 use Modules\Transformation\Services\LivretPdfService;
 use Modules\Transformation\Services\ArchivRestaurService;
