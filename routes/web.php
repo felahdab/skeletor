@@ -26,6 +26,10 @@ use App\Http\Controllers\UserPreferencesController;
 |
 */
 
+Route::get('/test', function () {
+    return view('test.index');
+});
+
 Route::impersonate();
 
 Route::get('/auth/redirect', function () {
