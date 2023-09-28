@@ -4,18 +4,22 @@ namespace Spatie\Backup\Commands;
 
 use Exception;
 use Spatie\Backup\Events\BackupHasFailed;
+use Spatie\Backup\Exceptions\BackupFailed;
 use Spatie\Backup\Exceptions\InvalidCommand;
 use Spatie\Backup\Tasks\Backup\BackupJobFactory;
+use Spatie\Backup\Traits\Retryable;
 
 class BackupCommand extends BaseCommand
 {
-    protected $signature = 'backup:run {--filename=} {--only-db} {--db-name=*} {--only-files} {--only-to-disk=} {--disable-notifications} {--timeout=}';
+    use Retryable;
+
+    protected $signature = 'backup:run {--filename=} {--only-db} {--db-name=*} {--only-files} {--only-to-disk=} {--disable-notifications} {--timeout=} {--tries=}';
 
     protected $description = 'Run the backup.';
 
-    public function handle()
+    public function handle(): int
     {
-        consoleOutput()->comment('Starting backup...');
+        consoleOutput()->comment($this->currentTry > 1 ? sprintf('Attempt n°%d...', $this->currentTry) : 'Starting backup...');
 
         $disableNotifications = $this->option('disable-notifications');
 
@@ -47,6 +51,8 @@ class BackupCommand extends BaseCommand
                 $backupJob->setFilename($this->option('filename'));
             }
 
+            $this->setTries('backup');
+
             if ($disableNotifications) {
                 $backupJob->disableNotifications();
             }
@@ -58,16 +64,32 @@ class BackupCommand extends BaseCommand
             $backupJob->run();
 
             consoleOutput()->comment('Backup completed!');
+
+            return static::SUCCESS;
         } catch (Exception $exception) {
+            if ($this->shouldRetry()) {
+                if ($this->hasRetryDelay('backup')) {
+                    $this->sleepFor($this->getRetryDelay('backup'));
+                }
+
+                $this->currentTry += 1;
+
+                return $this->handle();
+            }
+
             consoleOutput()->error("Backup failed because: {$exception->getMessage()}.");
 
             report($exception);
 
             if (! $disableNotifications) {
-                event(new BackupHasFailed($exception));
+                event(
+                    $exception instanceof BackupFailed
+                    ? new BackupHasFailed($exception->getPrevious(), $exception->backupDestination)
+                    : new BackupHasFailed($exception)
+                );
             }
 
-            return 1;
+            return static::FAILURE;
         }
     }
 
