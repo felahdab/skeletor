@@ -5,13 +5,14 @@ namespace Modules\Transformation\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
-use App\Models\User;
+// use App\Models\User;
+use Modules\Transformation\Entities\User;
 
 use Modules\Transformation\Services\LivretPdfService;
 use Modules\Transformation\Services\ArchivRestaurService;
 
 use App\Http\Controllers\Controller;
-
+use Modules\Transformation\Entities\MiseEnVisibilite;
 
 class ArchivageController extends Controller
 {
@@ -73,6 +74,7 @@ class ArchivageController extends Controller
     public function supprimer($id) 
     {
         $user=User::withTrashed()->find($id);
+        MiseEnVisibilite::where('user_id', $id)->delete();
         $user->forceDelete();
         return redirect()->route('transformation::archivage.index')
             ->withSuccess(__('Utilisateur supprimé avec succès.'));
