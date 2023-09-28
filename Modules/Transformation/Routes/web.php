@@ -106,8 +106,14 @@ Route::name('transformation::')->group(function () {
         Route::get('archivage/{user}/archivage', [ArchivageController::class, 'archiver'])->name('archivage.archiver');
         Route::get('archivage/{user}/suppr', [ArchivageController::class, 'supprimer'])->name('archivage.supprimer');
 
-        Route::resource('miseenvisibilite', MiseenvisibiliteController::class);
-        Route::get('miseenvisibilites/planning', [MiseenvisibiliteController::class, 'planning'])->name('miseenvisibilite.planning');
-        
+        Route::group(['prefix' => 'miseenvisibilite'], function () {
+            Route::get('/', [MiseenvisibiliteController::class, 'index'])->name('miseenvisibilite.index');
+            Route::get('/create', [MiseenvisibiliteController::class, 'create'])->name('miseenvisibilite.create');
+            Route::post('/create', [MiseenvisibiliteController::class, 'store'])->name('miseenvisibilite.store');
+            Route::get('/{miseenvisibilite}/edit', [MiseenvisibiliteController::class, 'edit'])->name('miseenvisibilite.edit');
+            Route::patch('/{miseenvisibilite}/update', [MiseenvisibiliteController::class, 'update'])->name('miseenvisibilite.update');
+            Route::delete('/{miseenvisibilite}/delete', [MiseenvisibiliteController::class, 'destroy'])->name('miseenvisibilite.destroy');
+            Route::get('/planning', [MiseenvisibiliteController::class, 'planning'])->name('miseenvisibilite.planning');
+        });        
     });
 });

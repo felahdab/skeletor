@@ -49,32 +49,22 @@ class MiseenvisibiliteController extends Controller
      */
     public function store(Request $request)
     {
-        //
         foreach ($request->users as $user){
             $mpe=new MiseEnVisibilite();
             $mpe->user_id=$user;
-            if ($request->datefin && $request->datedeb)
-            {
+            $mpe->unite_id=$request->uniteid;     
+            $mpe->date_fin=null;
+            $mpe->date_debut=null;
+            $mpe->sans_dates = true;    
+            if ($request->has('datedeb')){
                 $mpe->date_fin=$request->datefin;
                 $mpe->date_debut=$request->datedeb;
+                $mpe->sans_dates = false;
             }
-            else
-                $mpe->sans_dates = true;
-            $mpe->unite_id=$request->uniteid;     
             $mpe->save();
         }
         
         return redirect()->route('transformation::miseenvisibilite.index');
-        
-    }
-
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
         
     }
 
@@ -105,7 +95,7 @@ class MiseenvisibiliteController extends Controller
         $miseenvisibilite->date_debut = null;
         $miseenvisibilite->date_fin = null;
         $miseenvisibilite->sans_dates = true;    
-        if ($request->datedeb && $request->datefin){
+        if ($request->has('datedeb')){
             $miseenvisibilite->date_debut = $request->datedeb;
             $miseenvisibilite->date_fin = $request->datefin;
             $miseenvisibilite->sans_dates = false;    
