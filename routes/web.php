@@ -27,6 +27,10 @@ use App\Http\Controllers\ParamaccueilsController;
 |
 */
 
+Route::get('/test', function () {
+    return view('test.index');
+});
+
 Route::impersonate();
 
 Route::get('/auth/redirect', function () {

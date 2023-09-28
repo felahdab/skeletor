@@ -2,6 +2,31 @@
 
 All notable changes to `laravel-data` will be documented in this file.
 
+## 3.8.1 - 2023-08-11
+
+- fix abstract json cast format
+
+## 3.8.0 - 2023-08-09
+
+- Add Hidden Attribute (#505)
+- Add Null value support for RequiredUnless Validation (#525)
+- Add abstract eloquent casts (#526)
+
+## 3.7.1 - 2023-08-04
+
+- fix target namespace when creating files with Laravel Idea (#497)
+- allow collection to be created passing null (#507)
+- add Ulid validation rule (#510)   
+  -add TARGET_PARAMETER to Attribute for improved Validation (#523)
+
+## 3.7.0 - 2023-07-05
+
+- Add support for better exception messages when parameters are missing
+- Fix default properties generating validation rules when not provided
+- Add last() method on DataCollection (#486)
+- Add new manual written present attribute rule always overwrites a generated required rule
+- Added the ability to create data files, casts, transformers and rules using Laravel Idea plugin #485
+
 ## 3.6.0 - 2023-06-02
 
 - Add some config options to the `make:data` command (#449, #335)
