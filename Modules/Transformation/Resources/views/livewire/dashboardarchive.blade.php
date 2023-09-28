@@ -17,12 +17,21 @@
                     <div class="tab-pane" id="nav-{{ $chart['id'] }}" role="tabpanel" tabindex="0">
                         @if ($chart['id']=="moyenne_globale")
                             <div class="container-fluid mt-3">
-                                <div class="row">
-                                    <div class="col-lg-6 text-center lead">
+                                <div class="row border">
+                                    <div class="col-lg-3 text-center lead">
                                         Taux de transformation moyen<br><h1>{{$charts[0]['txtransfo']}} %</h1>
                                     </div>
-                                    <div class="col-lg-6 text-center lead">
+                                    <div class="col-lg-3 text-center lead">
                                         Durée moyenne de présence (j)<br><h1>{{$charts[0]['duree']}}</h1>
+                                    </div>
+                                    <div class="col-lg-2 text-center lead">
+                                        Nb de marins <br><h1>{{$charts[0]['nbmarins']}}</h1>
+                                    </div>
+                                    <div class="col-lg-2 text-center lead">
+                                        Nb de marins embarqués <br><h1>{{$charts[0]['nbmarins_embarq']}}</h1>
+                                    </div>
+                                    <div class="col-lg-2 text-center lead">
+                                        Nb de marins débarqués <br><h1>{{$charts[0]['nbmarins_debarq']}}</h1>
                                     </div>
                                 </div>
                             </div>

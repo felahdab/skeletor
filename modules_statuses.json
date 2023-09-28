@@ -1,4 +1,5 @@
 {
     "Socle": false,
-    "Transformation": true
+    "Transformation": true,
+    "RH": true
 }

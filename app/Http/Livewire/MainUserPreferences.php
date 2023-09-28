@@ -25,12 +25,12 @@ class MainUserPreferences extends Component
         $listpagesaccueil = [];
         $composants_des_modules = [];
         foreach (Module::allEnabled() as $module) {
-            $listpagesdumodule = config($module->getLowerName() . ".pageaccueilpossible");
-
-            foreach ($listpagesdumodule as $key => $route) {
-                $listpagesaccueil[$module->getName() . " - " . $key] = $route;
+            $listpagesaccueil=[];
+            if($listpagesdumodule = config($module->getLowerName() . ".pageaccueilpossible")){
+                foreach ($listpagesdumodule as $key => $route) {
+                    $listpagesaccueil[$module->getName() . " - " . $key] = $route;
+                }    
             }
-
             $candidat_composant = $module->getLowerName() . "::user-preferences-component";
 
             if (array_key_exists($candidat_composant, app('livewire')->getComponentAliases())) {

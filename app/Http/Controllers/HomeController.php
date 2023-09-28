@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Paramaccueil;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -21,7 +23,8 @@ class HomeController extends Controller
                 return redirect()->route($preferedroute);
             }
         }
+        $paramaccueil = Paramaccueil::first();
 
-        return view('home.index');
+        return view('home.index',['paramaccueil' => $paramaccueil]);
     }
 }

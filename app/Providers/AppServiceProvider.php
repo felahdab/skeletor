@@ -4,8 +4,11 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Builder;
 
 use Illuminate\Support\Facades\Mail;
+
+use App\Scopes\ScopedMacro;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,12 +31,17 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrap();
 
-        if (env('APP_ENV') != 'production')
-        {
+        if (env('APP_ENV') != 'production') {
             Mail::fake();
         }
-        
+
         if (env('APP_SCHEME') == 'https')
             \Illuminate\Support\Facades\URL::forceScheme('https');
+
+        Builder::macro('scoped', function ($scope, ...$parameters) {
+            $query = $this;
+            \assert($query instanceof Builder);
+            return (new ScopedMacro($query))($scope, ...$parameters);
+        });
     }
 }

@@ -14,6 +14,8 @@ use App\Models\User;
 
 use App\Service\RandomColorService;
 
+use Modules\Transformation\Scopes\MemeUnite;
+
 class ParcoursFichesBilan extends Component
 {
     public $userids=null;
@@ -37,7 +39,7 @@ class ParcoursFichesBilan extends Component
             // $users=User::with('fonctions')->whereIn('id', $this->userids)->get();
             foreach($this->userids as $id)
             {
-                $user=User::find($id);
+                $user=User::scoped(MemeUnite::class)->find($id);
                 if ($user != null)
                 {
                     $fiches[] = [

@@ -3,6 +3,7 @@
 namespace Modules\Transformation\Http\Livewire;
 
 use Livewire\Component;
+use Illuminate\Support\Carbon;
 
 use Asantibanez\LivewireCharts\Facades\LivewireCharts;
 use Asantibanez\LivewireCharts\Models\ColumnChartModel;
@@ -13,6 +14,8 @@ use Modules\Transformation\Entities\Fonction;
 use App\Models\User;
 
 use App\Service\RandomColorService;
+
+use Modules\Transformation\Scopes\MemeUnite;
 
 class Dashboard extends Component
 {
@@ -44,7 +47,7 @@ class Dashboard extends Component
 
         if (!is_null($this->userids) && sizeof($this->userids))
         {
-            $users=User::with('fonctions')->whereIn('id', $this->userids)->get();
+            $users=User::scoped(MemeUnite::class)->with('fonctions')->whereIn('id', $this->userids)->get();
 
             $columnChartModel = 
             (new ColumnChartModel())
@@ -77,6 +80,27 @@ class Dashboard extends Component
                          'title' => 'Taux de transformation',
                          'id'    => 'tx_de_transformation' ];
 
+            $nbdeb = 0;  
+            $durmoy=0;
+            $nbmarins=count($users);
+            $aujourdhui=new Carbon(date('Y-m-d'));
+            foreach ($users as $user){
+                if($user->date_debarq && $user->date_debarq <$aujourdhui)
+                    $nbdeb ++;
+                $date_embarq = new Carbon($user->date_embarq);
+                $nb_jour_gtr = $aujourdhui->diffInDays($date_embarq);
+                $durmoy = $durmoy + $nb_jour_gtr;        
+            }
+            $durmoy = round($durmoy/$nbmarins);
+
+            $charts[]= [
+                    'id'    => 'moyenne_globale',
+                    'title' => 'Moyenne globale',
+                    'txtransfo'    => round($users->avg("taux_de_transformation"), 2),
+                    'duree'    => $durmoy,
+                    'nbmarins'    => $nbmarins,
+                    // 'nbmarins_debarq'    => $nbdeb 
+                ];
         }
 
         return view('transformation::livewire.dashboard', ['charts' => $charts]);

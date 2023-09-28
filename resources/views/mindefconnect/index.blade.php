@@ -20,6 +20,7 @@
                 <th scope="col" width="8%">Nom</th>
                 <th scope="col" width="8%">Prénom</th>
                 <th scope="col" width="8%">Email</th>
+                <th scope="col">Commentaire</th>
                 <th scope="col">Unité</th>
                 <th scope="col">Actions</th>
             </tr>
@@ -31,6 +32,7 @@
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->prenom }}</td>
                         <td>{{ $user->email }}</td>
+                        <td>{{ $user->commentaire}}</td>
                         <td>{{ $user->main_department_number }}</td>
                         <td>
                             <a href="{{ route('mindefconnect.edit', $user->id) }}" class="btn btn-info btn-sm">Examiner cette demande</a>

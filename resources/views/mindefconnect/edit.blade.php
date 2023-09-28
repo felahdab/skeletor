@@ -142,14 +142,7 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <div class="mb-3">
-                            <label for="date_embarq" class="form-label">Date d'embarquement</label>
-                            <input value="{{date('Y-m-d')}}" 
-                                type="date" 
-                                class="form-control" 
-                                name="date_embarq" 
-                                placeholder="Date d'embarquement" required>
-                        </div>
+                        
                     </div>
                     <div class="col">
                         <div class="mb-3">
@@ -164,6 +157,28 @@
                                 @endforeach
                             </select>
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="date_embarq" class="form-label">Date d'embarquement</label>
+                            <input value="{{date('Y-m-d')}}" 
+                                type="date" 
+                                class="form-control" 
+                                name="date_embarq" 
+                                placeholder="Date d'embarquement" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <x-form::model-select name="unite_id" 
+                            :models="$unites" 
+                            label="Unité actuelle" 
+                            key-attribute="id" 
+                            value-attribute="unite_liblong"
+                            :value="$possibleUnite?->id">
+                            <option value="">Non renseigné</option>
+                        </x-form::model-select>
                     </div>
                 </div>
                 @if(auth()->user()->IsSuperAdmin())

@@ -20,18 +20,23 @@ class SongData extends Data
 
 ## Creating your validation attribute
 
-A validation attribute is a class that extends `ValidationRule` and returns an array of validation rules when the `getRules` method is called:
+It is possible to create your own validation attribute by extending the `CustomValidationAttribute` class, this class has a `getRules` method that returns the rules that should be applied to the property.
 
 ```php
-#[Attribute(Attribute::TARGET_PROPERTY)]
-class CustomRule extends ValidationRule
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
+class CustomRule extends CustomValidationAttribute
 {
-    public function getRules(): array
+    /**
+     * @return array<object|string>|object|string
+     */
+    public function getRules(ValidationPath $path): array|object|string;
     {
         return [new CustomRule()];
     }
 }
 ```
+
+Quick note: you can only use these rules as an attribute, not as a class rule within the static `rules` method of the data class.
 
 ## Available validation attributes
 
@@ -67,13 +72,14 @@ public string $closure;
 [Docs](https://laravel.com/docs/9.x/validation#rule-after)
 
 ```php
-#[After('other_field')]
-public Carbon $closure; 
-
 #[After('tomorrow')]
 public Carbon $closure; 
 
 #[After(Carbon::yesterday())]
+public Carbon $closure; 
+
+// Always use field references when referencing other fields
+#[After(new FieldReference('other_field'))]
 public Carbon $closure; 
 ```
 
@@ -82,13 +88,14 @@ public Carbon $closure;
 [Docs](https://laravel.com/docs/9.x/validation#rule-after-or-equal)
 
 ```php
-#[AfterOrEqual('other_field')]
-public Carbon $closure; 
-
 #[AfterOrEqual('tomorrow')]
 public Carbon $closure; 
 
 #[AfterOrEqual(Carbon::yesterday())]
+public Carbon $closure; 
+
+// Always use field references when referencing other fields
+#[AfterOrEqual(new FieldReference('other_field'))]
 public Carbon $closure; 
 ```
 
@@ -148,13 +155,14 @@ public string $closure;
 [Docs](https://laravel.com/docs/9.x/validation#rule-before)
 
 ```php
-#[Before('other_field')]
-public Carbon $closure; 
-
 #[Before('tomorrow')]
 public Carbon $closure; 
 
 #[Before(Carbon::yesterday())]
+public Carbon $closure; 
+
+// Always use field references when referencing other fields
+#[Before(new FieldReference('other_field'))]
 public Carbon $closure; 
 ```
 
@@ -163,13 +171,14 @@ public Carbon $closure;
 [Docs](https://laravel.com/docs/9.x/validation#rule-before-or-equal)
 
 ```php
-#[BeforeOrEqual('other_field')]
-public Carbon $closure; 
-
 #[BeforeOrEqual('tomorrow')]
 public Carbon $closure; 
 
 #[BeforeOrEqual(Carbon::yesterday())]
+public Carbon $closure; 
+
+// Always use field references when referencing other fields
+#[BeforeOrEqual(new FieldReference('other_field'))]
 public Carbon $closure; 
 ```
 
@@ -857,7 +866,7 @@ public string $closure;
 
 ### Unique
 
-[Docs](https://laravel.com/docs/9.x/validation#rule-unqiue)
+[Docs](https://laravel.com/docs/9.x/validation#rule-unique)
 
 ```php
 #[Unique('users')]
@@ -885,6 +894,15 @@ public string $closure;
 
 ```php
 #[Url]
+public string $closure; 
+```
+
+### Ulid
+
+[Docs](https://laravel.com/docs/9.x/validation#rule-ulid)
+
+```php
+#[Ulid]
 public string $closure; 
 ```
 

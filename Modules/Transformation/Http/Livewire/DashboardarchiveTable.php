@@ -96,7 +96,7 @@ class DashboardarchiveTable extends DataTableComponent
                 }),
             DateFilter::make('Fin')
                 ->filter(function(Builder $builder, string $value) {
-                    $builder->where('userdata->date_deb', '<=', $value);
+                    $builder->where('userdata->date_emb', '<=', $value);
                 }),
             TextFilter::make('Grade')
                 ->config([
@@ -128,7 +128,9 @@ class DashboardarchiveTable extends DataTableComponent
     public function render()
     {
         $this->archiveids = $this->getCurrentItems();
-        $this->emitUp("archiveListUpdated", $this->archiveids);
+        $this->archiveids["datedebut"] = $this->table['filters']['début'];
+        $this->archiveids["datefin"] = $this->table['filters']['fin'];
+        $this->emitUp("archiveListUpdated" , $this->archiveids);
         return parent::render();
     }
     

@@ -3,7 +3,7 @@
 namespace Modules\Transformation\Http\Livewire;
 
 use App\Models\User;
-use Modules\Transformation\Entities\Unite;
+use App\Models\Unite;
 use App\Models\Grade;
 use App\Models\Diplome;
 use App\Models\Secteur;
@@ -24,10 +24,12 @@ use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
+use Modules\Transformation\Scopes\MemeUnite;
+
 class StattuteurTable extends DataTableComponent
 {
-    protected $model = User::class;
-    
+    //protected $model = User::class;
+
     public $service;
 
     public function configure(): void
@@ -62,8 +64,8 @@ class StattuteurTable extends DataTableComponent
         $currentuser=auth()->user();
         $service_id=$currentuser->service->id;
         
-        if ($currentuser->hasRole("em")) {
-            return User::query()
+        if ($currentuser->can('transformation::statistiques.statglobal')) {
+            return User::scoped(MemeUnite::class)
                       ->join ('secteurs', 'secteurs.id', '=', 'users.secteur_id')
                       ->WhereExists(function($maquery){
                           $maquery->select ('id')
@@ -74,7 +76,7 @@ class StattuteurTable extends DataTableComponent
         }
         else
         {
-            return User::query()
+            return User::scoped(MemeUnite::class)
                       ->join ('secteurs', 'secteurs.id', '=', 'users.secteur_id')
                       ->where('secteurs.service_id', $service_id)
                       ->WhereExists(function($maquery){
@@ -150,10 +152,17 @@ class StattuteurTable extends DataTableComponent
                     fn($row, Column $column) => view('transformation::tables.stattable.attentevalid', ['marin' => $row])
                     )
                 ->searchable(),
+            Column::make('U-actuelle', 'unite_id')
+                ->sortable()
+                ->format(
+                    fn($value, $row, Column $column) => view('tables.userstable.libunite')->withRow($row))
+                ->deSelected(),
             Column::make('U-dest', 'unite_destination.unite_libcourt')
                 ->sortable()
                 ->searchable()
                 ->deSelected(),
+
+                
             ];
         return array_merge($basecolumns , [
             Column::make('Actions')
@@ -184,10 +193,22 @@ class StattuteurTable extends DataTableComponent
                     if ($userids != null)
                         $builder->whereIn('users.id', $userids);
             }),
+            TextFilter::make('U-actuelle')
+                ->config([
+                    'placeholder' => 'LGC...',
+                    'maxlength'   => 50
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $unite = Unite::where('unite_libcourt', 'like', '%' . $value . '%')
+                                    ->orWhere('unite_liblong', 'like', '%' . $value . '%')
+                                    ->get()->pluck('id');
+                        if ($unite != null)
+                            $builder->whereIn('unite_id', $unite);
+                }),
             TextFilter::make('U-dest')
                 ->config([
                     'placeholder' => 'LGC...',
-                    'maxlength'   => 5
+                    'maxlength'   => 10
                     ])
                 ->filter(function(Builder $builder, string $value) {
                         $unite = Unite::where('unite_libcourt', 'like', '%' . $value . '%')->get()->pluck('id');
@@ -197,7 +218,7 @@ class StattuteurTable extends DataTableComponent
             TextFilter::make('Secteur')
                 ->config([
                     'placeholder' => 'RESEAU...',
-                    'maxlength'   => 10
+                    'maxlength'   => 50
                     ])
                 ->filter(function(Builder $builder, string $value) {
                     $secteur = Secteur::where('secteur_libcourt', 'like', $value . '%')->get()->first();

@@ -165,8 +165,7 @@ abstract class AbstractAnnotation implements \JsonSerializable
         foreach (static::$_blacklist as $_property) {
             unset($fields[$_property]);
         }
-        $this->_context->logger->warning('Unexpected field "' . $property . '" for ' . $this->identity() . ', expecting "' . implode('", "', array_keys($fields)) . '" in ' . $this->_context);
-        $this->{$property} = $value;
+        $this->_context->logger->warning('Ignoring unexpected property "' . $property . '" for ' . $this->identity() . ', expecting "' . implode('", "', array_keys($fields)) . '" in ' . $this->_context);
     }
 
     /**
@@ -381,8 +380,12 @@ abstract class AbstractAnnotation implements \JsonSerializable
         if ($this->_context->version === OpenApi::VERSION_3_1_0) {
             if (isset($data->nullable)) {
                 if (true === $data->nullable) {
-                    $data->type = (array) $data->type;
-                    $data->type[] = 'null';
+                    if (isset($data->oneOf)) {
+                        $data->oneOf[] = ['type' => 'null'];
+                    } else {
+                        $data->type = (array) $data->type;
+                        $data->type[] = 'null';
+                    }
                 }
                 unset($data->nullable);
             }
