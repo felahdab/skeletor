@@ -15,7 +15,10 @@ class GroupementController extends Controller
      */
     public function index()
     {
-        //
+        $listgroupement = Groupement::all();
+        return view('groupement.index', [
+            'listgroupement' => $listgroupement
+        ]);
     }
 
     /**
@@ -25,7 +28,8 @@ class GroupementController extends Controller
      */
     public function create()
     {
-        //
+        return view('groupement.create', [
+        ]);
     }
 
     /**
@@ -36,7 +40,18 @@ class GroupementController extends Controller
      */
     public function store(StoreGroupementRequest $request)
     {
-        //
+        $validatedData = $request->validate([
+            'groupement_libcourt' => 'required',
+            'groupement_liblong' => 'required',
+        ]);
+        // Créer un nouveau groupement
+        $groupement = new Groupement();
+        $groupement->groupement_libcourt = $request->groupement_libcourt;
+        $groupement->groupement_liblong = $request->groupement_liblong;
+        $groupement->save();
+
+        // Rediriger vers la route 'groupement.index'
+        return redirect()->route('groupement.index'); 
     }
 
     /**
@@ -47,7 +62,7 @@ class GroupementController extends Controller
      */
     public function show(Groupement $groupement)
     {
-        //
+        return view('groupement.show', ['groupement' => $groupement]);
     }
 
     /**
@@ -58,7 +73,7 @@ class GroupementController extends Controller
      */
     public function edit(Groupement $groupement)
     {
-        //
+        return view('groupement.edit', ['groupement' => $groupement]);
     }
 
     /**
@@ -70,7 +85,15 @@ class GroupementController extends Controller
      */
     public function update(UpdateGroupementRequest $request, Groupement $groupement)
     {
-        //
+        $query=Groupement::where('id', $groupement->id);
+        if ( $query->count() == 1)
+        {
+            $update = $query->first();
+            $update->groupement_libcourt=$request->input('groupement_libcourt');
+            $update->groupement_liblong=$request->input('groupement_liblong');
+            $update->save();
+        }
+        return redirect()->route('groupement.index', $update);
     }
 
     /**
@@ -81,6 +104,9 @@ class GroupementController extends Controller
      */
     public function destroy(Groupement $groupement)
     {
-        //
-    }
+        $groupement->delete();
+
+        return redirect()->route('groupement.index')
+            ->withSuccess(__('Groupement supprimé avec succès.'));
+    } 
 }

@@ -6,7 +6,6 @@ use App\Models\Paramaccueil;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 
 use Nwidart\Modules\Facades\Module;
 
