@@ -30,7 +30,11 @@ class MiseEnVisibiliteTable extends DataTableComponent
 {
     public function builder(): Builder
     {
-        return MiseEnVisibilite::query();
+        return MiseEnVisibilite::query()
+        ->whereHas('user', function (Builder $query) {
+            $query->where('deleted_at', null);
+        });
+        
     }
     
     public function configure(): void
