@@ -17,7 +17,9 @@ use App\Http\Controllers\AnnudefController;
 use App\Http\Controllers\GroupementController;
 use App\Http\Controllers\SecteurController;
 use App\Http\Controllers\ServiceController;
-use App\Http\Livewire\UserPreferencesComponent;
+use App\Http\Controllers\UserPreferencesController;
+use App\Http\Controllers\ParamaccueilsController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,10 +30,6 @@ use App\Http\Livewire\UserPreferencesComponent;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/test', function () {
-    return view('test.index');
-});
 
 Route::impersonate();
 
@@ -102,7 +100,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             Route::delete('/{secteur}/delete', [SecteurController::class, 'destroy'])->name('secteurs.destroy');
         });
 
-        Route::group(['prefix' => 'groupement'], function () {
+        Route::group(['prefix' => 'groupements'], function () {
             Route::get('/', [GroupementController::class, 'index'])->name('groupement.index');
             Route::get('/create', [GroupementController::class, 'create'])->name('groupement.create');
             Route::post('/create', [GroupementController::class, 'store'])->name('groupement.store');
