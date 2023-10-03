@@ -80,7 +80,7 @@ trait BaseData
             ->through(CastPropertiesDataPipe::class);
     }
 
-    public static function collection(Enumerable|array|AbstractPaginator|Paginator|AbstractCursorPaginator|CursorPaginator|DataCollection $items): DataCollection|CursorPaginatedDataCollection|PaginatedDataCollection
+    public static function collection(Enumerable|array|AbstractPaginator|Paginator|AbstractCursorPaginator|CursorPaginator|DataCollection|null $items): DataCollection|CursorPaginatedDataCollection|PaginatedDataCollection
     {
         if ($items instanceof Paginator || $items instanceof AbstractPaginator) {
             return new (static::$_paginatedCollectionClass)(static::class, $items);
@@ -104,6 +104,14 @@ trait BaseData
         bool $mapPropertyNames = true,
     ): array {
         return DataTransformer::create($transformValues, $wrapExecutionType, $mapPropertyNames)->transform($this);
+    }
+
+    public function getMorphClass(): string
+    {
+        /** @var class-string<\Spatie\LaravelData\Contracts\BaseData> $class */
+        $class = static::class;
+
+        return app(DataConfig::class)->morphMap->getDataClassAlias($class) ?? $class;
     }
 
     public function __sleep(): array
