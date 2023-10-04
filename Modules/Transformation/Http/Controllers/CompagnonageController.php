@@ -130,13 +130,14 @@ class CompagnonageController extends Controller
         
         $compagnonage->comp_libcourt=$request->comp['comp_libcourt'];
         $compagnonage->comp_liblong=$request->comp['comp_liblong'];
-
-        $taches = $compagnonage->taches;
-        foreach(array_flip($request->sort_order) as $id => $ordre)
-        {
-            $w = $taches->find($id)->pivot;
-            $w->ordre = $ordre;
-            $w->save();
+        if ($request->sort_order){
+            $taches = $compagnonage->taches;
+            foreach(array_flip($request->sort_order) as $id => $ordre)
+            {
+                $w = $taches->find($id)->pivot;
+                $w->ordre = $ordre;
+                $w->save();
+            }
         }
         $compagnonage->save();
         
