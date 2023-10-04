@@ -6,7 +6,7 @@
 
 
 @section('content')
-<div x-data='{indic: true, durspe: false, durmarin: false}'>
+{{-- <div x-data='{indic: true, durspe: false, durmarin: false}'>
     <div class="  p-4 rounded">
         <h2>Indicateurs</h2>
         <div class='mb-2 mt-2 me-2 w-25'>
@@ -154,5 +154,5 @@
             </table>
         </div>
     </div>
-</div>
+</div> --}}
 @endsection

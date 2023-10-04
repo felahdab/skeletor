@@ -9,7 +9,7 @@
 
     <div class="  p-4 rounded">
         <h2>Fonctions</h2>
-        <div class='lead'>Ajout d'un compagnonage pour la fonction {!!$fonction->fonction_libcourt !!} </div>
+        {{-- <div class='lead'>Ajout d'un compagnonage pour la fonction {!!$fonction->fonction_libcourt !!} </div>
     </div>
     {!! Form::open(['method' => 'GET','route' => [request()->route()->getName(), $fonction->id]]) !!}
     {!! Form::text('filter', $filter) !!}
@@ -34,7 +34,7 @@
                     <br>&nbsp;
                 </div>
             </div>
-        {!! Form::close() !!}
+        {!! Form::close() !!} --}}
 
     </div>
 @endsection

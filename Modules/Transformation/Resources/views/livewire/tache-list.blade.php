@@ -26,17 +26,17 @@
                             <td><a href="{{ route('transformation::taches.edit', $tache->id) }}" class="btn btn-info btn-sm">Modifier</a></td>
                             @can('transformation::taches.destroy')
                             <td>
-                                {!! Form::open(['method' => 'DELETE','route' => ['transformation::taches.destroy', $tache->id],'style'=>'display:inline']) !!}
-                                {!! Form::submit('Supprimer', ['class' => 'btn btn-danger btn-sm']) !!}
-                                {!! Form::close() !!}
+                                <x-form::form method="DELETE" :action="route('taches.destroy', $tache->id)">
+                                <button class="btn btn-danger btn-sm" type="submit" dusk="delete-btn">Supprimer</button>
+                                </x-form::form>
                             </td>
                             @endcan
                         @elseif ($mode == "selection")
                             <td>
-                                {!! Form::open(['method' => 'POST','route' => ['transformation::compagnonages.ajoutertache', $compagnonage->id] ]) !!}
+                                <x-form::form method="POST" :action="route('transformation::compagnonages.ajoutertache', $compagnonage->id)">
                                 <input type='hidden' id='tache_id' name='tache_id' value='{{ $tache->id }}'>
                                 <button dusk="select-tache" type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
-                                {!! Form::close() !!}
+                                </x-form::form>
                                 </td>
                             <td></td>
                             <td></td>

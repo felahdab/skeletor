@@ -11,8 +11,7 @@
         <h2>Mises pour emploi</h2>
         <div style='text-align:right;'>* champs obligatoires </div>
  
-        
-        {!! Form::open(['method' => 'PATCH','route' => ['transformation::miseenvisibilite.update', $miseenvisibilite->id] ]) !!}
+        <x-form::form method="PATCH" :action="route('transformation::miseenvisibilite.update', $miseenvisibilite->id)">
         <div class="row mt-4"
         x-data='{
             hideshowdates() {
@@ -79,6 +78,6 @@
 
         <button class='btn btn-primary ms-4 mt-4' type='submit' id='btnmodifobj' name='btnmodifobj'>Modifier</button>
         <a href="{{ route('transformation::miseenvisibilite.index') }}" class="btn btn-default mt-4">Annuler</a>
-        {!! Form::close() !!}
+        </x-form::form>
     </div>
 @endsection

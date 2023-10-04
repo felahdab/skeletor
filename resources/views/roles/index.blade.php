@@ -31,9 +31,9 @@
                     <a class="btn btn-info btn-sm" href="{{ route('roles.edit', $role->id) }}">Modifier</a>
                 </td>
                 <td>
-                    {!! Form::open(['method' => 'DELETE','route' => ['roles.destroy', $role->id],'style'=>'display:inline']) !!}
-                    {!! Form::submit('Supprimer', ['class' => 'btn btn-danger btn-sm']) !!}
-                    {!! Form::close() !!}
+                    <x-form::form method="DELETE" :action="route('roles.destroy', $role->id)">
+                    <button class="btn btn-danger btn-sm" type="submit" dusk="delete-btn">Supprimer</button>
+                    </x-form::form>
                 </td>
             </tr>
             @endforeach

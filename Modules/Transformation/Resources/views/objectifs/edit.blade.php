@@ -21,7 +21,7 @@
                         <div class="p-2 w-25">Libellé court *</div>
                         <div class="p-2 w-75"><x-form::input name="objectif[objectif_libcourt]" type="text" :value="$objectif->objectif_libcourt"/></div>
                     </div>
-                    <div class="d-flex flex-row "">
+                    <div class="d-flex flex-row ">
                         <div class="p-2 w-25">Libellé long *</div>
                         <div class="p-2 w-75"><x-form::input name="objectif[objectif_liblong]" type="text" :value="$objectif->objectif_liblong" /></div>                                  
                     </div>

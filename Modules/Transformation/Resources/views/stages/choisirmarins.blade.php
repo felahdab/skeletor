@@ -9,7 +9,7 @@
     <div class="  p-4 rounded">
         <h2>Stages - Validation ou annulation collective du stage {{$stage->stage_libcourt}}</h2>
     </div>
-<div x-data="{ opendivvalid : false ,
+    {{-- <div x-data="{ opendivvalid : false ,
                commentaire   :    '' ,
                valideur      :    '' ,
                date_validation : '{{ date('Y-m-d') }}' }">
@@ -134,6 +134,6 @@
         </div>
     </div>
     </div>
-</div>
+</div> --}}
 @endsection
 

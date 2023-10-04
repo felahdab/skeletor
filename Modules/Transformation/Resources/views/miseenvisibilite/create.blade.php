@@ -11,8 +11,7 @@
         <h2>Mises pour emploi</h2>
         <div style='text-align:right;'>* champs obligatoires </div>
  
-        
-        {!! Form::open(['method' => 'POST','route' => 'transformation::miseenvisibilite.store' ]) !!}
+        <x-form::form method="POST" :action="route('transformation::miseenvisibilite.store')">
         <div class="row mt-4"
         x-data='{
             hideshowdates() {
@@ -77,6 +76,6 @@
 
         <button class='btn btn-primary ms-4 mt-4' type='submit' id='btncreerobj' name='btncreerobj'>Créer</button>
         <a href="{{ route('transformation::miseenvisibilite.index') }}" class="btn btn-default mt-4">Annuler</a>
-        {!! Form::close() !!}
+        </x-form::form>
     </div>
 @endsection
