@@ -97,7 +97,7 @@ V_SUGGEST="0.1.0" # This is suggested in case VERSION file or user supplied vers
 GIT_MSG=""
 REL_NOTE=""
 REL_PREFIX="release-"
-PUSH_DEST="tuleap"
+PUSH_DEST="origin"
 
 FLAG_NOBRANCH=true
 
