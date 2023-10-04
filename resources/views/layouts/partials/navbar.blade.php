@@ -74,7 +74,7 @@
             <hr>
             <span class="dropdown-item">Skeletor {{env('APP_VERSION')}}</span>
             @foreach(Module::allEnabled() as $module)
-              <span class="dropdown-item">Module {{ $module->getLowerName() }} {{ Config::get($module->getLowerName() . '.version') }}</span>
+              <span class="dropdown-item">Module {{ $module->getName() }} {{ Config::get($module->getLowerName() . '.version') }}</span>
             @endforeach
           </div>
         </div>
