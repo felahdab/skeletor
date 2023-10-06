@@ -33,7 +33,7 @@
                 @can('transformation::transformation.parcoursfichebilan')<a class="dropdown-item" href="{{route('transformation::transformation.parcoursfichebilan')}}">Parcours des fiches bilan</a>@endif
                 @can('transformation::historique.index')<a class="dropdown-item" href="{{ route('transformation::historique.index')}}">Historique</a>@endcan
                 @can('transformation::archivage.index')<a class="dropdown-item" href="{{ route('transformation::archivage.index')}}">Archivage</a>@endcan
-                @can('transformation::miseenvisibilite.index')<a class="dropdown-item" href="{{ route('transformation::miseenvisibilite.index')}}">MPE</a>@endcan
+                @can('transformation::miseenvisibilite.index')<a class="dropdown-item" href="{{ route('transformation::miseenvisibilite.index')}}">Partage dossier</a>@endcan
               </div>
             </div>
             @endcan

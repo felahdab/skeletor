@@ -8,7 +8,7 @@
 @section('content')
 
     <div class="p-4 rounded">
-        <h2>Mises pour emploi</h2>
+        <h2>Partage de dossier</h2>
         <div style='text-align:right;'>* champs obligatoires </div>
  
         <x-form::form method="POST" :action="route('transformation::miseenvisibilite.store')">
