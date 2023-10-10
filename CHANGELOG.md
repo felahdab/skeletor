@@ -1,3 +1,56 @@
+## 2.1.5 (October 10, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.4 –> 2.1.5
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast
+- changement menu tansfo en deux parties : gestion et suivi
+- Implements art #177832 ajouts filtres dans statparservice.
+- changement libelles MPE-> Partage de dossier
+- Mise ajour reference laravel
+- changement du firstorcreate car recreait systematiquement un enregistrement dans table paramaccueil
+- Merge remote-tracking branch 'origin/sandrine_courant' into sandrine_courant
+- Implements art #176965 changement de {!form:: en <x-form::
+- Mise à jour composer.
+- Merge remote-tracking branch 'origin/sandrine_courant' into sandrine_courant
+- WIP
+- Merge remote-tracking branch 'origin/sandrine_courant' into sandrine_courant
+- Modif pour qu'il n'y ait plus de message d'erreur si pas de tache selectionnée
+- Correction bug : affichage monlivret impossible car pb entre entity/user et Model/user
+- Suppression du fichier modules_statuses.json de l'index.
+- Remove modules_status.json from tracked files: this file depends on each instance deployment.
+- Ajustement composer.json pour pointer sur le repo du carnet de sante
+- Ajustement des use et de l'url de gestion des groupements
+- Merge remote-tracking branch 'internet/release-2.1.4' into sandrine_courant
+- Ajustement du builder de la table des mises en visibilite pour ne pas voir apparaitre les utilisateurs soft deletes.
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast
+- Modifications de Skeletor isolées
+- Merge remote-tracking branch 'origin/sandrine_courant' into sandrine_courant
+- Premiere implémentation du planning des mises pour emploi.
+- Implement art #176531 suppression definive possible
+- Correction de bug lié à la transition vers Entities\User.
+- Merge branch 'fldb-integrate-fullcalendar' into sandrine_courant
+- Merge remote-tracking branch 'origin/master' into fldb-integrate-fullcalendar
+- Conversion to livewire component.
+- Merge branch 'fldb-package-update' into tuleap-176386-mise-a-jour-des-packages-logiciels
+- Reinstall chrome driver. Update ClassLoader with composer update.
+- composer update - tests ok
+- suite mise en visibilite ajout champ "sansdates" et modif routes pour debug show/planning.
+- Initial fullcalendar integration trial
+- oubli
+- suite mises en disponibilite partie planning. En attente du plugin gestion de calendrier.
+- Merge branch 'tuleap-162500-mpe-changement-d-unite' into sandrine_courant
+- suite des mises en visibilité create store edit update destroy
+- 1ere partie visu des mises en visibilité
+- Merge branch 'tuleap-162500-mpe-changement-d-unite' of ssh://forge.intradef.gouv.fr/ffast/app_ffast into tuleap-162500-mpe-changement-d-unite
+- modification pour qu'un enreg soit créé dans table paramaccueil si elle est vide
+- WIP
+- WIP
+- Merge branch 'tuleap-162500-mpe-changement-d-unite' into sandrine_courant
+- Merge branch 'tuleap-162500-mpe-changement-d-unite' of ssh://forge.intradef.gouv.fr/ffast/app_ffast into tuleap-162500-mpe-changement-d-unite
+- WIP
+- Premiere implementation: Création d'un middleware destine a limiter la visibilite des objets de type User. Inscription de ce middleware aux middleware persistents de Livewire. Rajout de ce middleware aux routes du module Transformation.
+- ajout d'indicateurs supplémentaires sur le dashboard et le dashboard archive
+- afichage champ commentaire dans liste des demandes MC
+- WIP
+
 ## 2.1.4 (septembre 18, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.3 –> 2.1.4
 - Revert "Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.3 –> 2.1.4"
