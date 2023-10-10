@@ -11,31 +11,24 @@
         <div class="lead">
             Moditifer le role et attribuer les permissions associées.
         </div>
-
-<div x-data='{allChecked : false }'>
-        <div class="container mt-4">
-
-            @if (count($errors) > 0)
-                <div class="alert alert-danger">
-                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
-                    <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                    </ul>
-                </div>
-            @endif
-
-			{!! Form::open(['method' => 'PATCH','route' => ['roles.update', $role->id]]) !!}
-				
+        <div x-data='{allChecked : false }'>
+            <div class="container mt-4">
+                @if (count($errors) > 0)
+                    <div class="alert alert-danger">
+                        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                        <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <x-form::form method="PATCH" :action="route('roles.update', $role->id)">				
                 <div class="mb-3">
 					<label for="name" class="form-label">Nom du rôle</label>
-					{!!Form::text('name', $role->name , ['class' => 'form-control', 'placeholder'=> "Name"]) !!}
-                    
-                </div>
-                
+					{!!Form::text('name', $role->name , ['class' => 'form-control', 'placeholder'=> "Name"]) !!}                    
+                </div>                
                 <label for="permissions" class="form-label">Attribuer les permissions</label>
-
                 <table class="table table-striped">
                     <thead>
                         <th scope="col" width="1%"><input type="checkbox" x-on:click="allChecked = !allChecked; $dispatch('toggleallperms');"></th>
@@ -53,9 +46,7 @@
                                         value="{{ $permission->name }}"
                                         class='permission'
                                         x-on:toggleallperms.window="$el.checked = allChecked;"
-                                    {{ in_array($permission->name, $rolePermissions) 
-                                        ? 'checked'
-                                        : '' }}>
+                                    {{ in_array($permission->name, $rolePermissions) ? 'checked' : '' }}>
                                 </td>
                                 <td>{{ $permission->name }}</td>
                                 <td>{{ $permission->guard_name }}</td>
@@ -74,9 +65,7 @@
                                             value="{{ $permission->name }}"
                                             class='permission'
                                             x-on:toggleallperms.window="$el.checked = allChecked;"
-                                        {{ in_array($permission->name, $rolePermissions) 
-                                            ? 'checked'
-                                            : '' }}>
+                                        {{ in_array($permission->name, $rolePermissions) ? 'checked' : '' }}>
                                     </td>
                                     <td>{{ $permission->name }}</td>
                                     <td>{{ $permission->guard_name }}</td>
@@ -84,14 +73,13 @@
                             @endif
                         @endforeach
                     @endforeach
-                            </tbody>
+                    </tbody>
                 </table>
-
                 <button type="submit" class="btn btn-primary">Enregistrer</button>
                 <a href="{{ route('roles.index') }}" class="btn btn-default">Retour</a>
-			{!! Form::close() !!}
+			    </x-form::form>
+            </div>
         </div>
-</div>
     </div>
 @endsection
 

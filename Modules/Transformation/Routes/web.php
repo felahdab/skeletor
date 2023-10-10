@@ -13,6 +13,7 @@ use Modules\Transformation\Http\Controllers\TransformationHistoryController;
 use Modules\Transformation\Http\Controllers\ArchivageController;
 use Modules\Transformation\Http\Controllers\HomeController;
 use Modules\Transformation\Http\Controllers\ImportExportParcours;
+use Modules\Transformation\Http\Controllers\MiseenvisibiliteController;
 
 use Modules\Transformation\Http\Middleware\RestrictVisibility;
 /*
@@ -104,5 +105,15 @@ Route::name('transformation::')->group(function () {
         Route::get('archivage/{user}/impression', [ArchivageController::class, 'imprimer'])->name('archivage.imprimer');
         Route::get('archivage/{user}/archivage', [ArchivageController::class, 'archiver'])->name('archivage.archiver');
         Route::get('archivage/{user}/suppr', [ArchivageController::class, 'supprimer'])->name('archivage.supprimer');
+
+        Route::group(['prefix' => 'miseenvisibilite'], function () {
+            Route::get('/', [MiseenvisibiliteController::class, 'index'])->name('miseenvisibilite.index');
+            Route::get('/create', [MiseenvisibiliteController::class, 'create'])->name('miseenvisibilite.create');
+            Route::post('/create', [MiseenvisibiliteController::class, 'store'])->name('miseenvisibilite.store');
+            Route::get('/{miseenvisibilite}/edit', [MiseenvisibiliteController::class, 'edit'])->name('miseenvisibilite.edit');
+            Route::patch('/{miseenvisibilite}/update', [MiseenvisibiliteController::class, 'update'])->name('miseenvisibilite.update');
+            Route::delete('/{miseenvisibilite}/delete', [MiseenvisibiliteController::class, 'destroy'])->name('miseenvisibilite.destroy');
+            Route::get('/planning', [MiseenvisibiliteController::class, 'planning'])->name('miseenvisibilite.planning');
+        });        
     });
 });

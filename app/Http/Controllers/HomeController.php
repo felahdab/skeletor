@@ -6,7 +6,6 @@ use App\Models\Paramaccueil;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 
 use Nwidart\Modules\Facades\Module;
 
@@ -23,11 +22,13 @@ class HomeController extends Controller
                 return redirect()->route($preferedroute);
             }
         }
-        $paramaccueil = Paramaccueil::firstOrCreate([
-            'paramaccueil_image' => ' 11.jpg',
-            'paramaccueil_texte' => 'le texte est modifiable'
-        ]);
-
+        $paramaccueil = Paramaccueil::first();
+        if (!$paramaccueil){
+            $paramaccueil= new Paramaccueil;
+            $paramaccueil->paramaccueil_image ='11.jpg';
+            $paramaccueil->paramaccueil_texte ='le texte est modifiable';
+            $paramaccueil->save();
+        }
         return view('home.index',['paramaccueil' => $paramaccueil]);
     }
 }

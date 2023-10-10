@@ -25,9 +25,9 @@
                         <td>{{ $lien->lien_url }}</td>
                         <td><a href="{{ route('liens.edit', $lien->id) }}" class="btn btn-info btn-sm">Modifier</a></td>
                         <td>            
-                            {!! Form::open(['method' => 'DELETE','route' => ['liens.destroy', $lien->id],'style'=>'display:inline']) !!}
-                            {!! Form::submit('Supprimer', ['class' => 'btn btn-danger btn-sm']) !!}
-                            {!! Form::close() !!}
+                            <x-form::form method="DELETE" :action="route('liens.destroy', $lien->id)">
+                            <button class="btn btn-danger btn-sm" type="submit" dusk="delete-btn">Supprimer</button>
+                            </x-form::form>
                         </td>
                     </tr>
                 @endforeach

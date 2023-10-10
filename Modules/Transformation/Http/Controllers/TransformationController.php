@@ -69,9 +69,10 @@ class TransformationController extends Controller
     public function monlivret()
     {
         $user = auth()->user();
+        $user2= User::where('id',$user->id)->get()->first();
         return view('transformation::transformation.livret', [
             'mode' => 'proposition',
-            'user' => $user
+            'user' => $user2
         ]);
     }
 
@@ -83,7 +84,8 @@ class TransformationController extends Controller
     public function monlivretpdf()
     {
         $user = auth()->user();
-        LivretPdfService::livretpdf($user, 'imprim');
+        $user2= User::where('id',$user->id)->get()->first();
+        LivretPdfService::livretpdf($user2, 'imprim');
     }
 
     public function progression(User $user)
@@ -98,9 +100,10 @@ class TransformationController extends Controller
     public function maprogression()
     {
         $user = auth()->user();
+        $user2= User::where('id',$user->id)->get()->first();
         return view('transformation::transformation.progression', [
             'mode' => 'proposition',
-            'user' => $user
+            'user' => $user2
         ]);
     }
 
@@ -115,7 +118,8 @@ class TransformationController extends Controller
     public function mafichebilan()
     {
         $user = auth()->user();
-        return $this->fichebilan($user, $mode = 'proposition');
+        $user2= User::where('id',$user->id)->get()->first();
+        return $this->fichebilan($user2, $mode = 'proposition');
     }
 
     public function fichebilanpdf(User $user)
@@ -126,7 +130,8 @@ class TransformationController extends Controller
     public function mafichebilanpdf()
     {
         $user = auth()->user();
-        FichebilanPdfService::fichebilanpdf($user, $mode = 'proposition');
+        $user2= User::where('id',$user->id)->get()->first();
+        FichebilanPdfService::fichebilanpdf($user2, $mode = 'proposition');
     }
 
     public function recalcultransfo(Request $request)

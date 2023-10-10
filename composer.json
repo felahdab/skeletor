@@ -94,5 +94,19 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "packagist.org": false
+        },
+        {
+            "type": "vcs",
+            "url": "ssh://gitolite@forge.intradef.gouv.fr/fanl-b/module_evenement.git"
+        }
+        ,
+        {
+            "type": "vcs",
+            "url": "ssh://gitolite@forge.intradef.gouv.fr/fanl-b/module_carnetdesante.git"
+        }
+    ]
 }

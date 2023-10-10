@@ -161,8 +161,10 @@ class StattuteurTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->deSelected(),
-
-                
+            Column::make('Socle', 'socle')
+                ->deSelected()
+                ->format(
+                    fn($value, $row, Column $column) => view('tables.userstable.socle')->withRow($row)),
             ];
         return array_merge($basecolumns , [
             Column::make('Actions')
@@ -228,6 +230,30 @@ class StattuteurTable extends DataTableComponent
             DateFilter::make('Date Embarq')
                 ->filter(function(Builder $builder, string $value) {
                         $builder->where('date_embarq','<=', $value);
+                }),
+            TextFilter::make('Brevet')
+                ->config([
+                    'placeholder' => 'BAT...',
+                    'maxlength'   => 50
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $diplome = Diplome::where('diplome_libcourt', 'like', '%' . $value . '%')->get()->first();
+                        if ($diplome != null)
+                            $builder->where('diplome_id', $diplome->id);
+                }),
+            SelectFilter::make('Socle')
+                ->options([
+                    '' => 'Tous',
+                    '1' => 'Socle',
+                    '0' => 'Transformation',
+                ])
+                ->filter(function(Builder $builder, string $value) {
+                    if ($value === '1') {
+                        $builder->where('socle', true);
+                    } 
+                    elseif ($value === '0') {
+                        $builder->where('socle', false);
+                    }
                 }),
         ];
                 

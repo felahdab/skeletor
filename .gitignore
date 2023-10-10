@@ -19,3 +19,4 @@ yarn-error.log
 php-fpm.log
 scheduler.log
 worker.log
+modules_statuses.json

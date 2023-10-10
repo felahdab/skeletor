@@ -35,28 +35,13 @@ Vous avez également la possibilité de télécharger directement une version po
     <link rel="icon" type="image/png" sizes="32x32" href="{!! asset('assets/images/favicon-32x32.png') !!}">
     <link rel="icon" type="image/png" sizes="16x16" href="{!! asset('assets/images/favicon-16x16.png') !!}">
 
-    <!-- Bootstrap core CSS -->
     @livewireStyles
     <link href="{!! asset('assets/bootstrap/css/bootstrap.css') !!}" rel="stylesheet">
     <script src="{!! asset('assets/js/jscharts.js') !!}"></script>
     <script src="{!! asset('assets/js/Sortable.js') !!}"></script>
+    <script src="{!! asset('assets/js/fullcalendar_6.1.3.js') !!}"></script>
     <x-sortable-scripts/>
     
-    <style>
-      /* .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      } */
-
-      /* @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        } */
-      /* } */
-    </style>
     <style>
         [x-cloak] {
             display: none;
@@ -84,7 +69,6 @@ Vous avez également la possibilité de télécharger directement une version po
     <script src="{!! asset('/vendor/livewire-charts/app.js') !!}"></script>
     <script src="{!! asset('assets/js/alpine.js') !!}"></script>
     <script src="{!! asset('assets/js/apexcharts.js') !!}"></script>
-    
     
     @yield("scripts")
 

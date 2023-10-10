@@ -12,7 +12,7 @@
     <div id='divmodifobj' class='card ml-3 w-100' >
         <div class='card-header' >Création compagnonnage </div>
         <div style='text-align:right;'>* champs obligatoires </div>
-            {!! Form::open(['method' => 'POST','route' => 'transformation::compagnonages.store' ]) !!}
+            <x-form::form method="POST" :action="route('transformation::compagnonages.store')">
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
                     <label for='comp[comp_libcourt]' class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
@@ -42,6 +42,6 @@
                 <a href="{{ route('transformation::compagnonages.index') }}" class="btn btn-default mt-4">Annuler</a>
                 <br>&nbsp;
             </div>
-            {!! Form::close() !!}
+            </x-form::form>
     </div>
 @endsection

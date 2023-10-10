@@ -6,18 +6,23 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 
+use App\Models\User;
 use Modules\Transformation\Entities\Personne;
 
 class MemeUnite implements Scope
 {
-    public function __construct(Builder $builder)
+    public function __construct(Builder $builder, public ?User $user)
     {
+        if ($this->user == null)
+        {
+            $this->user = auth()->user();
+        }
         $this->apply($builder, Personne::make());
     }
 
     public function apply(Builder $builder, Model $model): void
     {
         $table = $model->getTable();
-        $builder->where($table . '.unite_id', auth()->user()->unite_id);
+        $builder->where($table . '.unite_id', $this->user->unite_id);
     }
 }

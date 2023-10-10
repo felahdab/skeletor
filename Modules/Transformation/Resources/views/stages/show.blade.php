@@ -51,7 +51,7 @@
 
     <div id='divconsultstage'>
         @if ($stage != null)
-        {!! Form::open(['method' => 'POST','route' => ['transformation::stages.validermarins', $stage->id], 'id' => 'form']) !!}
+        <x-form::form method="POST" :action="route('transformation::stages.validermarins', $stage->id)">
         <input type='hidden' id='date_validation' name='date_validation' x-model="date_validation">
         <input type='hidden' id='commentaire'     name='commentaire'     x-model="commentaire">
         <input type='hidden' id='valideur'        name='valideur'        x-model="valideur">
@@ -150,9 +150,9 @@
                     x-on:uservalidated.window="$el.click()"></button>
             </div>
         @endcan
-        {!! Form::close() !!}
+        </x-form::form>
         
-        {!! Form::open(['method' => 'POST','route' => ['transformation::stages.annulermarins', $stage->id], 'id' => 'form']) !!}
+        <x-form::form method="POST" :action="route('transformation::stages.annulermarins', $stage->id)">
         <input type='hidden' id='date_validation' name='date_validation' value=''>
         <input type='hidden' id='commentaire' name='commentaire' value=''>
         <input type='hidden' id='valideur' name='valideur' value=''>
@@ -230,7 +230,7 @@
                     name="validation_double">Dé-valider les marins sélectionnés ci-dessus</button>
             </div>
         @endcan
-        {!! Form::close() !!}
+        </x-form::form>
         @endif
     </div>
         <a href="{{ url()->previous() }}" class="btn btn-secondary btn-sm">Retour</a>

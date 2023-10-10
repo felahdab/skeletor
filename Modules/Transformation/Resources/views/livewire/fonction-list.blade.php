@@ -29,10 +29,9 @@
                             <a href="{{ route('transformation::fonctions.show', $fonction->id) }}" class="btn btn-primary btn-sm">Consulter</a>
                             <a href="{{ route('transformation::fonctions.edit', $fonction->id) }}" class="btn btn-info btn-sm">Modifier</a>
                             @can('transformation::fonctions.destroy')
-                                {!! Form::open(['method' => 'DELETE','route' => ['transformation::fonctions.destroy', $fonction->id],'style'=>'display:inline']) !!}
-                                {!! Form::submit('Supprimer', ['class' => 'btn btn-danger btn-sm']) !!}
-                                {!! Form::close() !!}
-                            
+                                <x-form::form method="DELETE" :action="route('transformation::fonctions.destroy', $fonction->id)">
+                                <button class="btn btn-danger btn-sm" type="submit" dusk="delete-btn">Supprimer</button>
+                                </x-form::form>
                             @endcan
                         @elseif($mode == 'transformation')
                             @can('transformation::fonctions.validermarins')
