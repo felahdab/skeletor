@@ -44,7 +44,7 @@ class UsersTable extends DataTableComponent
                 break;
             case "dashboard" :
                 $userlist = DB::table('transformation_user_fonction')->get()->pluck('user_id')->unique();
-                return User::query()->whereIn('users.id', $userlist);
+                return User::query()->whereIn('users.id', $userlist)->withTrashed()->where('users.date_embarq', '<=', date("Y-m-d"));
                 break;
             case "archiv" :
                 $userlist = User::query()->withTrashed()
@@ -71,10 +71,13 @@ class UsersTable extends DataTableComponent
             'class' => 'table table-hover',
         ]);
         
-        $this->setAdditionalSelects(['users.date_embarq as date_embarq']);
+        $this->setAdditionalSelects(['users.date_debarq as date_debarq','users.date_embarq as date_embarq']);
         $this->setTrAttributes(function($row) {
             if ($row->date_embarq >= date('Y-m-d')) {
               return ['style' => 'border-left: 10px solid purple !important'];
+            }
+            elseif($row->date_debarq != null && $this->mode=='dashboard') {
+                return ['style' => 'border-left: 10px solid deepskyblue !important'];
             }
             return [];
         });
@@ -151,10 +154,6 @@ class UsersTable extends DataTableComponent
                     Column::make('Taux de transformation', 'taux_de_transformation')
                             ->view('transformation::tables.userstable.tx_transfo')
                             ->sortable(),
-                    Column::make('Rôles')
-                        ->label(
-                            fn($row, Column $column) => view('transformation::tables.userstable.roles')->withRow($row)
-                            ),
                 ]);
                 break;
             case "gestion" :
@@ -328,7 +327,6 @@ class UsersTable extends DataTableComponent
         {
             case "gestion":
             case "listmarins":
-            case "dashboard":
                 $basefilters[]= MultiSelectFilter::make('Roles')
                 ->options(
                     Role::query()
@@ -343,6 +341,23 @@ class UsersTable extends DataTableComponent
                         $roles = Role::whereIn('id',  $values )->get();
                         $builder->role($roles);
                 });
+                break;
+            case "dashboard":
+                $basefilters[]=SelectFilter::make('Date débarquement')
+                ->options([
+                    '' => 'Tous',
+                    '1' => 'Connue',
+                    '0' => 'Non connue',
+                ])
+                ->filter(function(Builder $builder, string $value) {
+                    if ($value === '1') {
+                        $builder->where('date_debarq', '<>', null);
+                    } 
+                    elseif ($value === '0') {
+                        $builder->where('date_debarq', null );
+                    }
+                });
+
                 break;
         }
 
