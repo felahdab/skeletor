@@ -109,5 +109,10 @@
             "type": "vcs",
             "url": "ssh://gitolite@forge.intradef.gouv.fr/fanl-b/module_carnetdesante.git"
         }
+        ,
+        {
+            "type": "vcs",
+            "url": "ssh://gitolite@forge.intradef.gouv.fr/fanl-b/module_programmation_activite.git"
+        }
     ]
 }
