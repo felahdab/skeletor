@@ -37,7 +37,7 @@
                         <td>
                             <a href="{{ route('mindefconnect.edit', $user->id) }}" class="btn btn-info btn-sm">Examiner cette demande</a>
                             <x-form::form method="DELETE" :action="route('mindefconnect.destroy', $user->id)">
-                            <button class="btn btn-danger btn-sm" type="submit" dusk="delete-btn">Refuser cette demande</button>
+                                <button type='submit' class='btn btn-danger btn-sm'>Refuser cette demande</button>
                             </x-form::form>
                         </td>
                     </tr>

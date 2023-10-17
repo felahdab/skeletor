@@ -60,7 +60,7 @@
                     <br>&nbsp;
                 </div>
             </div>
-        </x-form::form>
+        </x-form::form> 
 
         </div>
 @endsection

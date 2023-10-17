@@ -32,7 +32,7 @@
                 </td>
                 <td>
                     <x-form::form method="DELETE" :action="route('roles.destroy', $role->id)">
-                    <button class="btn btn-danger btn-sm" type="submit" dusk="delete-btn">Supprimer</button>
+                        <button type='submit' class='btn btn-danger btn-sm'>Supprimer</button>
                     </x-form::form>
                 </td>
             </tr>

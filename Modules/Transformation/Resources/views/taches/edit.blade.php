@@ -13,6 +13,7 @@
     <div id='divmodifobj' class='card   ml-3 w-100' >
         <div class='card-header' >Modification tâche </div>
         <div style='text-align:right;'>* champs obligatoires </div>
+        
         <x-form::form method="PATCH" :action="route('transformation::taches.update', $tache->id)">
         <input type='hidden' id='tache[id]' name='tache[id]' value='{{ $tache->id }}'>
         <div style='padding-left: 15px;'>
