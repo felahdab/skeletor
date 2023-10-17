@@ -1,3 +1,14 @@
+## 2.1.5a (October 17, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.5 –> 2.1.5a
+- Merge commit 'dc3c8c106caeae02d0b99efa3a60e97895184c67'
+- Implement art #180650  la route était fausse suite aux modifs ( Implments art #176965 ) form:: en x-form
+- Ajout du repository du module de programmation d'activite au composer.json de Skeletor.
+- Ajout .gitignore dans le dossier Module pour ne tenir compte que des modules de base.
+- Mise à jour CLassLoader.php
+- Merge branch 'fldb-install-blueprint'
+- composer require laravel-shift/blueprint
+- Implements art #178901 users soft deleted pris en compte dans les calculs et ajout d'un filtre associé
+
 ## 2.1.5 (October 10, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.4 –> 2.1.5
 - Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast
