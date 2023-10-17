@@ -1,5 +1,5 @@
 <div class="modal fade" id="bugreport-modal" tabindex=-1>
-    {!! Form::open(['method' => 'POST','route' => ['bugreports.store'], 'style'=>'display:inline']) !!}
+    <x-form::form method="POST" :action="route('bugreports.store')">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -18,5 +18,5 @@
             </div>
         </div>
     </div>
-    {!! Form::close() !!}
+    </x-form::form>
 </div>

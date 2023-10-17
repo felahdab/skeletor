@@ -41,7 +41,7 @@
     <div class='flex' style='justify-content: start;'>
         <div class="container mt-4 w-50" x-data='{allChecked : false }'>
             <div>
-                {!! Form::open(['method' => 'POST','route' => ['transformation::stages.validermarins', $stage->id], 'id' => 'form']) !!}
+                <x-form::form method="POST" :action="route('transformation::stages.validermarins', $stage->id)" id='form'>
                 <input type='hidden' id='date_validation' name='date_validation' value='' x-model="date_validation">
                 <input type='hidden' id='commentaire' name='commentaire' value='' x-model="commentaire">
                 <input type='hidden' id='valideur' name='valideur' value='' x-model="valideur">
@@ -75,10 +75,10 @@
                 <button type="submit" x-show="false"
                     x-on:uservalidated.window="$el.click()"></button>
                 {!! link_to_route('transformation::stages.index', 'Annuler', [], ['class' => 'btn btn-default']) !!}
-                {!! Form::close() !!}
+                </x-form::form>
             </div>
             
-            {!! Form::open(['method' => 'POST','route' => ['transformation::stages.attribuerstage', $stage->id]]) !!}
+            <x-form::form method="POST" :action="route('transformation::stages.attribuerstage', $stage->id)">
             <label for="fonction" class="form-label">Marin supplémentaire</label>
             <select class="form-control" 
                 name="user_id" required>
@@ -92,12 +92,12 @@
                 @endforeach
             </select>
 
-            {!! Form::button('Rajouter ce marin', ['type'=> 'submit', 'class'=>'btn btn-primary']) !!}
-            {!! Form::close() !!}
+            <button type='submit' class='btn btn-primary'>Rajouter ce marin</button>
+            </x-form::form>
         </div>
         
         <div class="container mt-4  w-50" x-data='{ allChecked : false }'>
-            {!! Form::open(['method' => 'POST','route' => ['transformation::stages.annulermarins', $stage->id], 'id' => 'form']) !!}
+            <x-form::form method="POST" :action="route('transformation::stages.annulermarins', $stage->id)" id='form'>
             <input type='hidden' id='date_validation' name='date_validation' value=''>
             <input type='hidden' id='commentaire' name='commentaire' value=''>
             <input type='hidden' id='valideur' name='valideur' value=''>
@@ -117,7 +117,7 @@
                                 <input type="checkbox" 
                                 name="usercancel[{{ $user->id }}]"
                                 value="usercancel[{{ $user->id }}]"
-				class='user'
+				                class='user'
                                 x-on:toggleallusers.window="$el.checked=allChecked">
                             </td>
                             <td>{{ $user->display_name }}</td>
@@ -130,7 +130,7 @@
                 class="btn btn-primary" 
                 name="validation_double">Valider</button>
             {!! link_to_route('transformation::stages.index', 'Annuler', [], ['class' => 'btn btn-default']) !!}
-            {!! Form::close() !!}
+            </x-form::form>
         </div>
     </div>
     </div>

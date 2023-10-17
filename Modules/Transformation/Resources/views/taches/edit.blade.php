@@ -13,7 +13,8 @@
     <div id='divmodifobj' class='card   ml-3 w-100' >
         <div class='card-header' >Modification tâche </div>
         <div style='text-align:right;'>* champs obligatoires </div>
-        {!! Form::open(['method' => 'PATCH','route' => ['transformation::taches.update', $tache->id] ]) !!}
+        
+        <x-form::form method="PATCH" :action="route('transformation::taches.update', $tache->id)">
         <input type='hidden' id='tache[id]' name='tache[id]' value='{{ $tache->id }}'>
         <div style='padding-left: 15px;'>
             <div class='form-group row' >
@@ -75,7 +76,7 @@
                 <a class='btn btn-primary btn-sm' href="{{ route('transformation::taches.choisirobjectif', $tache->id) }}">Ajouter un nouvel objectif</a>
             </div>
         </div>
-        {!! Form::close() !!}
+        </x-form::form>
         <!-- Cette partie contient les formulaires actives par javascript pour provoquer la suppression
             d'un objectif-->
             @can("transformation::objectifs.destroy")

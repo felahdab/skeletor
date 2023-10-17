@@ -26,17 +26,18 @@
                             <td><a href="{{ route('transformation::compagnonages.edit', $compagnonage->id) }}" class="btn btn-info btn-sm">Modifier</a></td>
                             @can('transformation::compagnonages.destroy')
                             <td>
-                                {!! Form::open(['method' => 'DELETE','route' => ['transformation::compagnonages.destroy', $compagnonage->id],'style'=>'display:inline']) !!}
-                                {!! Form::submit('Supprimer', ['class' => 'btn btn-danger btn-sm']) !!}
-                                {!! Form::close() !!}
+                                
+                                <x-form::form method="DELETE" :action="route('transformation::compagnonages.destroy', $compagnonage->id)">
+                                <button class='btn btn-danger btn-sm' type='submit'>Supprimer</button>
+                                </x-form::form> 
                             </td>
                             @endcan
                         @elseif ($mode == "selection")
                             <td>
-                                {!! Form::open(['method' => 'POST','route' => ['transformation::fonctions.ajoutercompagnonage', $fonction->id] ]) !!}
+                                <x-form::form method="POST" :action="route('transformation::fonctions.ajoutercompagnonage', $fonction->id)">
                                 <input type='hidden' id='compagnonage_id' name='compagnonage_id' value='{{ $compagnonage->id }}'>
                                 <button dusk="select-comp" type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
-                                {!! Form::close() !!}
+                                </x-form::form>
                             <td></td>
                             <td></td>
                         @endif

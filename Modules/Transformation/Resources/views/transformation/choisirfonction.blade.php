@@ -10,7 +10,7 @@
         <h1>Attribution des fonctions à l'utilisateur</h1>
         <h3>{{ $user->display_name }}</h3>
 
-        {!! Form::open(['method' => 'POST','route' => ['transformation::users.attribuerfonction', $user->id]]) !!}
+        <x-form::form method="POST" :action="route('transformation::users.attribuerfonction', $user->id)">
         {{-- <label for="fonction" class="form-label">Fonction</label> --}}
         <select class="form-select w-50 mt-4" 
             name="fonction_id" required>
@@ -22,8 +22,8 @@
             @endforeach
         </select>
         <div class="btn-group mt-3" role="groupe">
-            {!! Form::button('Attribuer cette fonction', ['type'=> 'submit', 'class'=>'btn btn-primary']) !!}
-            {!! Form::close() !!}
+            <button type='submit' class='btn btn-primary'>Attribuer cette fonction</button>
+            </x-form::form>
             <a href="{{ route('transformation::transformation.index') }}" class="btn btn-outline-dark"> Annuler </button>
             <a href="{{ route('transformation::transformation.livret', $user->id) }}" class="btn btn-warning">Livret de transformation</a>
         </div>
@@ -52,10 +52,10 @@
                                 <h6 class="card-subtitle mb-2 text-body-secondary mt-1">{{ $fonction->type_fonction()->get()->first()->typfonction_liblong }}</h6>        
                             </div>
                             <div class="p-2 w-25">
-                                {!! Form::open(['method' => 'POST','route' => ['transformation::users.retirerfonction', $user->id]]) !!}
-                                <input type='hidden' id='fonction_id' name='fonction_id' value='{{ $fonction->id }}'>
-                                {!! Form::button('Retirer cette fonction', ['type'=> 'submit', 'class'=>'btn btn-danger btn-sm']) !!}
-                                {!! Form::close() !!}    
+                                <x-form::form method="POST" :action="route('transformation::users.retirerfonction', $user->id)">
+                                    <input type='hidden' id='fonction_id' name='fonction_id' value='{{ $fonction->id }}'>
+                                    <button type='submit' class='btn btn-danger btn-sm'>Retirer cette fonction</button>
+                                </x-form::form>    
                             </div>
                         </div>
                     </div>

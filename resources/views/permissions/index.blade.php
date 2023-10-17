@@ -29,9 +29,9 @@
                         <td>{{ $permission->guard_name }}</td>
                         <td><a href="{{ route('permissions.edit', $permission->id) }}" class="btn btn-info btn-sm">Modifier</a></td>
                         <td>
-                            {!! Form::open(['method' => 'DELETE','route' => ['permissions.destroy', $permission->id],'style'=>'display:inline']) !!}
-                            {!! Form::submit('Supprimer', ['class' => 'btn btn-danger btn-sm']) !!}
-                            {!! Form::close() !!}
+                            <x-form::form method="DELETE" :action="route('permissions.destroy', $permission->id)">
+                            <button type='submit' class='btn btn-danger btn-sm'>Supprimer</button>
+                            </x-form::form>
                         </td>
                     </tr>
                 @endforeach

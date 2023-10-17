@@ -26,12 +26,10 @@
                 </div>
             @endif
 
-			{!! Form::open(['method' => 'PATCH','route' => ['roles.update', $role->id]]) !!}
+            <x-form::form method="PATCH" :action="route('roles.update', $role->id)">
 				
                 <div class="mb-3">
-					<label for="name" class="form-label">Nom du rôle</label>
-					{!!Form::text('name', $role->name , ['class' => 'form-control', 'placeholder'=> "Name"]) !!}
-                    
+                    <x-form::input name='name' label='Nom du rôle' type='text' placeholder="Nom du role" :value="$role->name"/>
                 </div>
                 
                 <label for="permissions" class="form-label">Attribuer les permissions</label>
@@ -89,7 +87,7 @@
 
                 <button type="submit" class="btn btn-primary">Enregistrer</button>
                 <a href="{{ route('roles.index') }}" class="btn btn-default">Retour</a>
-			{!! Form::close() !!}
+			</x-form::form>
         </div>
 </div>
     </div>

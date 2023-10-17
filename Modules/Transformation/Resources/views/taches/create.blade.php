@@ -13,7 +13,7 @@
     <div id='divmodifobj' class='card   ml-3 w-100' >
         <div class='card-header' >Création tâche </div>
         <div style='text-align:right;'>* champs obligatoires </div>
-        {!! Form::open(['method' => 'POST','route' => 'transformation::taches.store' ]) !!}
+        <x-form::form method="POST" :action="route('transformation::taches.store')">
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
                     <label class='col-sm-5 col-form-label'> Libell&eacute; court *</label>
@@ -33,6 +33,6 @@
                     <br>&nbsp;
                 </div>
             </div>
-        {!! Form::close() !!}
+        </x-form::form>
     </div>
 @endsection

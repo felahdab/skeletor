@@ -12,7 +12,7 @@
     <div id='divmodifobj' class='card ml-3 w-100' >
         <div class='card-header' >Modification compagnonnage </div>
         <div style='text-align:right;'>* champs obligatoires </div>
-        {!! Form::open(['method' => 'PATCH','route' => ['transformation::compagnonages.update', $compagnonage->id] ]) !!}
+        <x-form::form method="PATCH" :action="route('transformation::compagnonages.update', $compagnonage->id)">
         <input type='hidden' id='comp[id]' name='comp[id]' value='{{ $compagnonage->id }}'>
         <div style='padding-left: 15px;'>
             <div class='form-group row' >
@@ -70,7 +70,7 @@
                 </x-sortable-item>
             @endforeach
             </x-sortable>
-            {!! Form::close() !!}
+            </x-form::form>
             
             @can("transformation::compagnonages.removetache")
                 @foreach ($compagnonage->taches->sortBy('pivot.ordre') as $tache)
