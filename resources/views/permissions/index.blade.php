@@ -30,7 +30,7 @@
                         <td><a href="{{ route('permissions.edit', $permission->id) }}" class="btn btn-info btn-sm">Modifier</a></td>
                         <td>
                             <x-form::form method="DELETE" :action="route('permissions.destroy', $permission->id)">
-                            <button class="btn btn-danger btn-sm" type="submit" dusk="delete-btn">Supprimer</button>
+                            <button type='submit' class='btn btn-danger btn-sm'>Supprimer</button>
                             </x-form::form>
                         </td>
                     </tr>
