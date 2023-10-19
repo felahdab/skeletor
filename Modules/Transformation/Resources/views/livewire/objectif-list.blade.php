@@ -27,14 +27,14 @@
                             @can('transformation::objectifs.destroy')
                             <td>
                                 <x-form::form method="DELETE" :action="route('transformation::objectifs.destroy', $objectif->id)">
-                                <button class="btn btn-danger btn-sm" type="submit" dusk="delete-btn">Supprimer</button>
+                                    <button type='submit' class='btn btn-danger btn-sm'>Supprimer</button>
                                 </x-form::form>
                             </td>
                             @endcan
                          @elseif ($mode == "selection")
                             <td>
-                                <x-form::form method="POST" :action="route('transformation::taches.ajouterobjectif',  [ $tache, $objectif ])">
-                                <button type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
+                                <x-form::form method="POST" :action="route('transformation::taches.ajouterobjectif', [$tache, $objectif])">
+                                    <button type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
                                 </x-form::form>
                             </td>
                             <td></td>

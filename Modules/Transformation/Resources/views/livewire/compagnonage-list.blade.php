@@ -26,9 +26,10 @@
                             <td><a href="{{ route('transformation::compagnonages.edit', $compagnonage->id) }}" class="btn btn-info btn-sm">Modifier</a></td>
                             @can('transformation::compagnonages.destroy')
                             <td>
+                                
                                 <x-form::form method="DELETE" :action="route('transformation::compagnonages.destroy', $compagnonage->id)">
-                                <button class="btn btn-danger btn-sm" type="submit" dusk="delete-btn">Supprimer</button>
-                                </x-form::form>
+                                <button class='btn btn-danger btn-sm' type='submit'>Supprimer</button>
+                                </x-form::form> 
                             </td>
                             @endcan
                         @elseif ($mode == "selection")
