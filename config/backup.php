@@ -210,7 +210,7 @@ return [
      */
     'monitor_backups' => [
         [
-            'name' => env('APP_NAME', 'laravel-backup'),
+            'name' => env('APP_NAME', 'laravel-backup'). '-' . env('APP_PREFIX', 'laravel-backup') . '-' . env('APP_ENV', 'default_env'),
             'disks' => ['backups'],
             'health_checks' => [
                 \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 1,
