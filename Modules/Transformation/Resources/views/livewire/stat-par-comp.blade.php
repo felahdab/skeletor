@@ -22,7 +22,7 @@
         </div>
         <div class="tab-pane @if($tabresult) show  active @endif" id="nav-fiches" role="tabpanel" tabindex="0">
             @if ($comp)
-                <livewire:transformation::etat-comp-users :comp="$comp"  :wire:key="$comp->id">
+                <livewire:transformation::etat-comp-users :comp="$comp" :listusers=null :wire:key="$comp->id">
             @endif
         </div>
     </div>

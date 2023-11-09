@@ -2,7 +2,15 @@
     <div class="lead mt-1 mb-3">Compagnonnage : <b>{{ $comp -> comp_liblong}}</b></div>
     <!-- div avec formulaire de validation -->
     @include('transformation::livewire.livret-transformation.divvalid', ['mode' => "parcomp"])
-    <div style="width: min-content;">
+    <div style="width: min-content;" x-data="{
+        selectedMarins: [],
+        filter(){
+            $wire.showMarinFiltrer(this.selectedMarins);
+        },
+        reinitialiser(){
+            $wire.reinitialiser();
+        }
+    }">
         <div class="sticky-top" style="top:5rem;  background: white; width:100%; ">
             <button type="submit" 
             form="ssobjsusers"
@@ -18,24 +26,38 @@
                     active = false; 
                     $wire.ValideElementsDuParcoursParcomp( date_validation, commentaire, valideur, selected_parcomp );
                 }">Valider les éléments cochés
-            </button>
         </div>
         <div>Cliquez sur un sous objectif pour mettre la colonne en surbrillance</div>
         <table class="table table-bordered table-striped table-hover table-sm" id="matable">
             <thead class="sticky-top" style="top:7.5rem;">
             <tr class="table-primary" >
-                <td colspan="2">&nbsp</td>
+                <td colspan="3">&nbsp</td>
                 @foreach($entete_taches as $entete_tache)
                     <td style="font-size:x-small;" colspan="{{$entete_tache['colspantach']}}" title="{{$entete_tache['libtach']}}">{{substr($entete_tache['libtach'], 0, 40)}}...</td>
                 @endforeach
             </tr>   
             <tr class="table-success">
-                <td colspan="2">&nbsp</td>            
+                <td colspan="3">&nbsp</td>            
                 @foreach($entete_objectifs as $entete_objectif)
                     <td style="font-size:x-small;" colspan="{{$entete_objectif['colspanobj']}}" title="{{$entete_objectif['libobj']}}">{{substr($entete_objectif['libobj'], 0, 40)}}...</td>
                 @endforeach
             </tr>   
             <tr class="table-info">
+                <th style="position: sticky; left: 0px;z-index: 1;">
+                <button
+                    class="btn btn-primary sticky-top"
+                    style="left:220px;"
+                    x-on:click="filter"
+                    >
+                    Filtrer
+                </button>
+                <button
+                class="btn btn-primary sticky-top"
+                    style="left:220px;"
+                    x-on:click="reinitialiser">
+                    Réinitialiser
+                </button>
+                </th>
                 <th>Marin</th>
                 <th>Taux</th>
                 @foreach($entete_ssobjectifs as $entete_ssobjectif)
@@ -47,34 +69,42 @@
             </tr>   
             </thead>
             <tbody>
-                @foreach($usersssobjs as $ligne)
-                <tr>
-                    <td class="text-center" style="position: sticky; left: 0;z-index: 1;background: white;"><a href="{{ route('transformation::transformation.livret', $ligne['id'] )}}">{{$ligne['name']}}</a>
-                    <td>{{$ligne['txtransfo']}}</td>
-
-                    @foreach($ligne as $key => $cell)
-                        @if ($cell == 'true')
-                            <td class="text-center text-success"><x-bootstrap-icon iconname='check-circle.svg'/></td>
-                        @endif
-                        @if ($cell == 'false')
-                            <td class="text-center text-danger"><x-bootstrap-icon iconname='x-circle.svg'/>
-                            <input type="checkbox" 
-                                    x-data='{ active: false }'
-                                    x-model="selected_parcomp"
-                                    value="'ssobjid'-{{$key}}-'userid'-{{$ligne['id']}}">
-                            </td>                                   
-                        @endif
-                        @if ($cell == 'propose')
-                            <td class="text-center text-info"><x-bootstrap-icon iconname='envelope-open.svg' />
-                            <input type="checkbox" 
-                                    x-data='{ active: false }'
-                                    x-model="selected_parcomp"
-                                    value="'ssobjid'-{{$key}}-'userid'-{{$ligne['id']}}">
-                            </td>                                   
-                        @endif
+                    @foreach($usersssobjs as $ligne)
+                    <tr>
+                        <td style="position: sticky; left: 0;z-index: 1;background: white;">
+                            <input type="checkbox" class="form-check-input" x-model="selectedMarins" :value="{{$ligne['id']}}">
+                        </td>
+                        <td class="text-center" style="position: sticky; left: 50px;z-index: 1;background: white;">
+                            <a href="{{ route('transformation::transformation.livret', $ligne['id'] )}}">
+                                {{$ligne['name']}}
+                            </a>
+                            <br>
+                        </td>
+                        <td>{{$ligne['txtransfo']}}</td>
+    
+                        @foreach($ligne as $key => $cell)
+                            @if ($cell == 'true')
+                                <td class="text-center text-success"><x-bootstrap-icon iconname='check-circle.svg'/></td>
+                            @endif
+                            @if ($cell == 'false')
+                                <td class="text-center text-danger"><x-bootstrap-icon iconname='x-circle.svg'/>
+                                <input type="checkbox" 
+                                        x-data='{ active: false }'
+                                        x-model="selected_parcomp"
+                                        value="'ssobjid'-{{$key}}-'userid'-{{$ligne['id']}}">
+                                </td>                                   
+                            @endif
+                            @if ($cell == 'propose')
+                                <td class="text-center text-info"><x-bootstrap-icon iconname='envelope-open.svg' />
+                                <input type="checkbox" 
+                                        x-data='{ active: false }'
+                                        x-model="selected_parcomp"
+                                        value="'ssobjid'-{{$key}}-'userid'-{{$ligne['id']}}">
+                                </td>                                   
+                            @endif
+                        @endforeach
+                    </tr>   
                     @endforeach
-                </tr>   
-                @endforeach
             </tbody>
         </table>
     </div>

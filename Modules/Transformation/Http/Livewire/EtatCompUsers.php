@@ -12,14 +12,18 @@ use Modules\Transformation\Entities\Tache;
 use Modules\Transformation\Entities\Objectif;
 use Modules\Transformation\Entities\SousObjectif;
 
+use function Termwind\render;
+
 class EtatCompUsers extends Component
 {
 
     public $comp=null;
-    
-    public function mount(Compagnonage $comp)
+    public $listusers =null;
+    public function mount(Compagnonage $comp, $listusers)
     {
         $this->comp=$comp;
+        $this->listusers=$listusers;
+        
     }
 
     public function render()
@@ -28,17 +32,18 @@ class EtatCompUsers extends Component
         $listfoncs= $this->comp->fonctions()->get();
 
         // liste des users ayant ces fonc donc ce comp
-        $listusers=collect();
-        foreach($listfoncs as $fonc){
-            $users=$fonc->users;
-            if ($users->isNotEmpty()){
-                foreach($users as $user){
-                    $listusers->push($user);
+        if($this->listusers === null){
+            $this->listusers=collect();
+            foreach($listfoncs as $fonc){
+                $users=$fonc->users;
+                if ($users->isNotEmpty()){
+                    foreach($users as $user){
+                        $this->listusers->push($user);
+                    }
                 }
             }
         }
-        $listusers=$listusers->unique('id');
-        $listusers=$listusers->sortBy('name');
+        $listusers=$this->listusers->sortBy('name');
         //entete du tableau
         $entete_taches=[];
         $entete_objectifs=[];
@@ -112,5 +117,17 @@ class EtatCompUsers extends Component
         }
         // $this->emit('$refresh');
         $this->dispatchBrowserEvent("resetselection");
+    }
+
+    public function showMarinFiltrer($marinSelectionnes){
+        $listUsers = [];
+        $listUsers = User::whereIn('id', $marinSelectionnes)->get();
+        $this->listusers = $listUsers;
+        $this->render();
+    }
+
+    public function reinitialiser(){
+        $this->listusers = null;
+        $this->render();
     }
 }
