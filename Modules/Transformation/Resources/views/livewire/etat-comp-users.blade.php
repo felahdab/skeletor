@@ -26,12 +26,21 @@
                     active = false; 
                     $wire.ValideElementsDuParcoursParcomp( date_validation, commentaire, valideur, selected_parcomp );
                 }">Valider les éléments cochés
+            </button>
         </div>
         <div>Cliquez sur un sous objectif pour mettre la colonne en surbrillance</div>
         <table class="table table-bordered table-striped table-hover table-sm" id="matable">
             <thead class="sticky-top" style="top:7.5rem;">
             <tr class="table-primary" >
-                <td colspan="3">&nbsp</td>
+                <td colspan="3" style="position: sticky; left: 0px;z-index: 1;">
+                    <nav class="navbar bg-body-tertiary sticky-top">
+                        <div class="sticky-top" style="left:0px">
+                            <form style="left:0px;" role="search">
+                                <input type="search" class="form-control me-2" placeholder="Recherche" aria-label="Recherche" id="searchInput">
+                            </form>
+                        </div>
+                    </nav> 
+                </td>
                 @foreach($entete_taches as $entete_tache)
                     <td style="font-size:x-small;" colspan="{{$entete_tache['colspantach']}}" title="{{$entete_tache['libtach']}}">{{substr($entete_tache['libtach'], 0, 40)}}...</td>
                 @endforeach
@@ -48,14 +57,16 @@
                     class="btn btn-primary sticky-top"
                     style="left:220px;"
                     x-on:click="filter"
+                    title="filtre"
                     >
-                    Filtrer
+                    <img src="{!! asset("assets/images/funnel.svg") !!}" alt="">
                 </button>
                 <button
                 class="btn btn-primary sticky-top"
                     style="left:220px;"
-                    x-on:click="reinitialiser">
-                    Réinitialiser
+                    x-on:click="reinitialiser"
+                    title="réinitialiser le filtre des marins">
+                    <img src="{!! asset("assets/images/x.svg") !!}" alt="">
                 </button>
                 </th>
                 <th>Marin</th>
@@ -109,6 +120,37 @@
         </table>
     </div>
 </div>
+
+
+<style>
+    .highlight{
+        background-color: #feffa7;
+    }
+</style>
+
+<script>
+    var input = document.getElementById("searchInput");
+    var table = document.getElementById("matable");
+    var rows = table.querySelectorAll("tbody tr");
+
+    input.addEventListener("input", function() {
+        var searchText = input.value.toLowerCase();
+        for (var i = 0; i < rows.length; i++) {
+            var marinCell = rows[i].querySelector("td:nth-child(2)");
+            if (marinCell.textContent.toLowerCase().includes(searchText)) {
+                rows[i].classList.add("highlight");
+                rows[i].scrollIntoView({ behavior: "smooth", block: "center" });
+            } else {
+                rows[i].classList.remove("highlight");
+            }
+        }
+        if (searchText === "") {
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].classList.remove("highlight");
+            }
+        }
+    });
+</script>
 
 <script>
       // Get the table element
