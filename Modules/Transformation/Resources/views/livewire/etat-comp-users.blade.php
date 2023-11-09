@@ -130,11 +130,11 @@
 
 <script>
     var input = document.getElementById("searchInput");
-    var table = document.getElementById("matable");
-    var rows = table.querySelectorAll("tbody tr");
-
     input.addEventListener("input", function() {
+        var table = document.getElementById("matable");
+        var rows = table.querySelectorAll("tbody tr");
         var searchText = input.value.toLowerCase();
+        alert(rows.length);
         for (var i = 0; i < rows.length; i++) {
             var marinCell = rows[i].querySelector("td:nth-child(2)");
             if (marinCell.textContent.toLowerCase().includes(searchText)) {
