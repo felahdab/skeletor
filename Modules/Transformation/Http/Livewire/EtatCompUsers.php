@@ -2,6 +2,7 @@
 
 namespace Modules\Transformation\Http\Livewire;
 
+use App\Models\FiltreTransformationCompagnonnage;
 use Livewire\Component;
 use Modules\Transformation\Services\GererTransformationService;
 
@@ -11,6 +12,7 @@ use Modules\Transformation\Entities\Compagnonage;
 use Modules\Transformation\Entities\Tache;
 use Modules\Transformation\Entities\Objectif;
 use Modules\Transformation\Entities\SousObjectif;
+use PHPUnit\TextUI\XmlConfiguration\CodeCoverage\Report\Php;
 
 use function Termwind\render;
 
@@ -19,11 +21,12 @@ class EtatCompUsers extends Component
 
     public $comp=null;
     public $listusers =null;
-    public function mount(Compagnonage $comp, $listusers)
+    public $user_id=null;
+    public function mount(Compagnonage $comp, $listusers, $user)
     {
         $this->comp=$comp;
         $this->listusers=$listusers;
-        
+        $this->user_id=$user;
     }
 
     public function render()
@@ -96,10 +99,12 @@ class EtatCompUsers extends Component
             $ligne['txtransfo'] = $txcompuser;
             array_push($usersssobjs, $ligne);
         }
+        $filtres = FiltreTransformationCompagnonnage::where('user_id', $this->user_id)->get();
         return view('transformation::livewire.etat-comp-users',['entete_taches' => $entete_taches,
                                                 'entete_objectifs' => $entete_objectifs,
                                                 'entete_ssobjectifs' => $entete_ssobjectifs,
                                                 'usersssobjs' => $usersssobjs,
+                                                'filtres' => $filtres,
                                             ]);
     }
     public function ValideElementsDuParcoursParcomp( 
@@ -130,4 +135,27 @@ class EtatCompUsers extends Component
         $this->listusers = null;
         $this->render();
     }
+
+    public function creerUnFiltre($marinSelectionnes){
+        $listUsers = [];
+        $listUsers = User::whereIn('id', $marinSelectionnes)->get();
+        $this->listusers = $listUsers;
+        $filtre = new FiltreTransformationCompagnonnage();
+        $filtre->user_id = $this->user_id;
+        $filtre->nomDuFiltre = "test";
+        $filtre->listeId = json_encode($marinSelectionnes);
+        $filtre->save();
+        $this->render();
+    }
+
+    public function appliquerFiltre($idFiltre){
+        //TODO bug à regler
+        //ajouter une fenetre quand on appuie sur enregistrer pour vérifier les personnes selectionnées et mettre un nom au filtre
+        $filtre = FiltreTransformationCompagnonnage::where('id','=',$idFiltre)->get();
+        $listeId = $filtre->listeId;
+        $listUsers = User::whereIn('id', $listeId)->get();
+        $this->listusers = $listUsers;
+        $this->render();
+    }
+
 }

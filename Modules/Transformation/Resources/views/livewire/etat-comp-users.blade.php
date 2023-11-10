@@ -9,6 +9,12 @@
         },
         reinitialiser(){
             $wire.reinitialiser();
+        },
+        creerUnFiltre(){
+            $wire.creerUnFiltre(this.selectedMarins);
+        },
+        appliquerFiltre(idFiltre){
+            $wire.appliquerFiltre(idFiltre);
         }
     }">
         <div class="sticky-top" style="top:5rem;  background: white; width:100%; ">
@@ -25,7 +31,8 @@
                 { 
                     active = false; 
                     $wire.ValideElementsDuParcoursParcomp( date_validation, commentaire, valideur, selected_parcomp );
-                }">Valider les éléments cochés
+                }"
+                >Valider les éléments cochés
             </button>
         </div>
         <div>Cliquez sur un sous objectif pour mettre la colonne en surbrillance</div>
@@ -46,7 +53,21 @@
                 @endforeach
             </tr>   
             <tr class="table-success">
-                <td colspan="3">&nbsp</td>            
+                <td colspan="3" style="position: sticky; left: 0px;z-index: 1;">
+                    <button  class="btn btn-primary sticky-top" title="enregistrer le filtre"  x-on:click="creerUnFiltre">
+                        <img src="{!! asset("assets/images/floppy.svg") !!}" alt="">
+                    </button>
+                    <div class="dropdown" class="sticky-top">
+                        <button class="btn btn-primary dropdown-toggle" type="buttun" data-bs-toggle="dropdown" aria-expanded="false">
+                            Filtre(s) enregistré(s)
+                        </button>
+                        <ul class="dropdown-menu">
+                            @forEach($filtres as $filtre)
+                                <li><button class="btn btn-primary" x-on:click="appliquerFiltre({{$filtre->id}})">{{$filtre->nomDuFiltre}}</button></li>
+                            @endforeach
+                        </ul>
+                    </div>    
+                </td>            
                 @foreach($entete_objectifs as $entete_objectif)
                     <td style="font-size:x-small;" colspan="{{$entete_objectif['colspanobj']}}" title="{{$entete_objectif['libobj']}}">{{substr($entete_objectif['libobj'], 0, 40)}}...</td>
                 @endforeach
