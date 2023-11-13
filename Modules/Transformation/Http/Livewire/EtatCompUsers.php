@@ -3,6 +3,8 @@
 namespace Modules\Transformation\Http\Livewire;
 
 use App\Models\FiltreTransformationCompagnonnage;
+use App\Models\FiltreTransformationCompagnonnages;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Modules\Transformation\Services\GererTransformationService;
 
@@ -46,7 +48,7 @@ class EtatCompUsers extends Component
                 }
             }
         }
-        
+
         $listusers=$this->listusers->sortBy('name');
         //entete du tableau
         $entete_taches=[];
@@ -100,7 +102,10 @@ class EtatCompUsers extends Component
             $ligne['txtransfo'] = $txcompuser;
             array_push($usersssobjs, $ligne);
         }
-        $filtres = FiltreTransformationCompagnonnage::where('user_id', $this->user_id)->get();
+        $filtres = DB::table('filtre_transformation_compagnonnages')
+                        ->where('user_id', $this->user_id)
+                        ->where('comp', $this->comp)
+                        ->get();
         return view('transformation::livewire.etat-comp-users',['entete_taches' => $entete_taches,
                                                 'entete_objectifs' => $entete_objectifs,
                                                 'entete_ssobjectifs' => $entete_ssobjectifs,
@@ -141,16 +146,17 @@ class EtatCompUsers extends Component
             $listUsers = [];
             $listUsers = User::whereIn('id', $marinSelectionnes)->get();
             $this->listusers = $listUsers;
-            $filtre = new FiltreTransformationCompagnonnage();
+            $filtre = new FiltreTransformationCompagnonnages();
             $filtre->user_id = $this->user_id;
             $filtre->nomDuFiltre = $nomDuFiltre;
             $filtre->listeId = json_encode($marinSelectionnes);
+            $filtre->comp = $this->comp;
             $filtre->save();
             $this->render();
     }
 
     public function appliquerFiltre($idFiltre){
-        $filtre = FiltreTransformationCompagnonnage::where('id', $idFiltre)->first();
+        $filtre = FiltreTransformationCompagnonnages::where('id', $idFiltre)->first();
         if($filtre){
             $listeId = json_decode($filtre->listeId, true);
             $listUsers = User::whereIn('id', $listeId)->get();
@@ -160,7 +166,7 @@ class EtatCompUsers extends Component
     }
 
     public function supprimerLeFiltre($idFiltre){
-        FiltreTransformationCompagnonnage::where('id', $idFiltre)->delete();
+        FiltreTransformationCompagnonnages::where('id', $idFiltre)->delete();
         $this->listusers = null;
         $this->render();
     }

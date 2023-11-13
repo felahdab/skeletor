@@ -49,8 +49,6 @@
             </button>
         </div>
         <div>Cliquez sur un sous objectif pour mettre la colonne en surbrillance</div>
-        <div>Attention ! les filtres peuvent être appliqué même si les personnes qui sont dans celui-ci ne font pas partie du Compagnonnage <br>
-        Bien faire attention </div>
         <table class="table table-bordered table-striped table-hover table-sm" id="matable">
             <thead class="sticky-top" style="top:7.5rem;">
             <tr class="table-primary" >
