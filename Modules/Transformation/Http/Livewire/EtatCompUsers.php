@@ -143,16 +143,16 @@ class EtatCompUsers extends Component
     }
 
     public function creerUnFiltre($marinSelectionnes, $nomDuFiltre){
-            $listUsers = [];
-            $listUsers = User::whereIn('id', $marinSelectionnes)->get();
-            $this->listusers = $listUsers;
-            $filtre = new FiltreTransformationCompagnonnages();
-            $filtre->user_id = $this->user_id;
-            $filtre->nomDuFiltre = $nomDuFiltre;
-            $filtre->listeId = json_encode($marinSelectionnes);
-            $filtre->comp = $this->comp->comp_liblong;
-            $filtre->save();
-            $this->render();
+        $listUsers = [];
+        $listUsers = User::whereIn('id', $marinSelectionnes)->get();
+        $this->listusers = $listUsers;
+        $filtre = new FiltreTransformationCompagnonnages();
+        $filtre->user_id = $this->user_id;
+        $filtre->nomDuFiltre = $nomDuFiltre;
+        $filtre->listeId = json_encode($marinSelectionnes);
+        $filtre->comp = $this->comp->comp_liblong;
+        $filtre->save();
+        $this->render();
     }
 
     public function appliquerFiltre($idFiltre){

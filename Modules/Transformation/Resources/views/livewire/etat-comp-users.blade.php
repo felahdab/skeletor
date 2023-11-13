@@ -17,11 +17,13 @@
         creerUnFiltre(){
             if(this.nomDuFiltre.trim() === ''){
                 this.erreur = 'Veuillez donner un nom au filtre';
+            }else if(this.selectedMarins.length === 0){
+                this.erreur = 'Il faut selectionner au moins un marin';
             }
-            else{
+            else{ 
                 this.erreur = '';
-                this.success = 'Filtre enregistré';
                 $wire.creerUnFiltre(this.selectedMarins, this.nomDuFiltre);
+                this.success = 'Filtre enregistré';
             }
         },
         appliquerFiltre(idFiltre){
