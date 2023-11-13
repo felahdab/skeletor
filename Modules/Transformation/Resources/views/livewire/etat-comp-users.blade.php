@@ -7,6 +7,7 @@
         selectedMarins: [],
         nomDuFiltre: '',
         erreur: '',
+        success: '',
         filter(){
             $wire.showMarinFiltrer(this.selectedMarins);
         },
@@ -19,6 +20,7 @@
             }
             else{
                 this.erreur = '';
+                this.success = 'Filtre enregistré';
                 $wire.creerUnFiltre(this.selectedMarins, this.nomDuFiltre);
             }
         },
@@ -69,6 +71,7 @@
                 <td colspan="3">
                     <input type="text" class="form-control me-2" placeholder="Donner un nom au filtre" aria-label="nom du filtre" x-model="nomDuFiltre">
                     <span x-text ="erreur" class="text-danger"></span>
+                    <span x-text ="success" class="text-success"></span>
                     <br>
                     <button  class="btn btn-primary sticky-top" title="enregistrer le filtre"  x-on:click="creerUnFiltre">
                         <img src="{!! asset("assets/images/floppy.svg") !!}" alt="">
