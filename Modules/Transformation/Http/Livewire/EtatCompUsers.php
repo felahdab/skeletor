@@ -46,6 +46,7 @@ class EtatCompUsers extends Component
                 }
             }
         }
+        
         $listusers=$this->listusers->sortBy('name');
         //entete du tableau
         $entete_taches=[];
@@ -136,24 +137,19 @@ class EtatCompUsers extends Component
         $this->render();
     }
 
-    public function creerUnFiltre($marinSelectionnes){
-        if(count($marinSelectionnes) != 0){
+    public function creerUnFiltre($marinSelectionnes, $nomDuFiltre){
             $listUsers = [];
             $listUsers = User::whereIn('id', $marinSelectionnes)->get();
             $this->listusers = $listUsers;
             $filtre = new FiltreTransformationCompagnonnage();
             $filtre->user_id = $this->user_id;
-            $filtre->nomDuFiltre = "test";
+            $filtre->nomDuFiltre = $nomDuFiltre;
             $filtre->listeId = json_encode($marinSelectionnes);
             $filtre->save();
             $this->render();
-        }
-        $this->listusers = null;
-        $this->render();
     }
 
     public function appliquerFiltre($idFiltre){
-        //Ajouter une fenetre quand on appuie sur enregistrer pour vérifier les personnes selectionnées et mettre un nom au filtre
         $filtre = FiltreTransformationCompagnonnage::where('id', $idFiltre)->first();
         if($filtre){
             $listeId = json_decode($filtre->listeId, true);
@@ -161,5 +157,11 @@ class EtatCompUsers extends Component
             $this->listusers = $listUsers;
             $this->render();
         }
+    }
+
+    public function supprimerLeFiltre($idFiltre){
+        FiltreTransformationCompagnonnage::where('id', $idFiltre)->delete();
+        $this->listusers = null;
+        $this->render();
     }
 }

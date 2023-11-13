@@ -5,6 +5,8 @@
     
     <div style="width: min-content;" x-data="{
         selectedMarins: [],
+        nomDuFiltre: '',
+        erreur: '',
         filter(){
             $wire.showMarinFiltrer(this.selectedMarins);
         },
@@ -12,11 +14,21 @@
             $wire.reinitialiser();
         },
         creerUnFiltre(){
-            $wire.creerUnFiltre(this.selectedMarins);
+            if(this.nomDuFiltre.trim() === ''){
+                this.erreur = 'Veuillez donner un nom au filtre';
+            }
+            else{
+                this.erreur = '';
+                $wire.creerUnFiltre(this.selectedMarins, this.nomDuFiltre);
+            }
         },
         appliquerFiltre(idFiltre){
             $wire.appliquerFiltre(idFiltre);
+        },
+        supprimerLeFiltre(idFiltre){
+            $wire.supprimerLeFiltre(idFiltre);
         }
+
     }">
         <div class="sticky-top" style="top:5rem;  background: white; width:100%; ">
             <button type="submit" 
@@ -37,6 +49,8 @@
             </button>
         </div>
         <div>Cliquez sur un sous objectif pour mettre la colonne en surbrillance</div>
+        <div>Attention ! les filtres peuvent être appliqué même si les personnes qui sont dans celui-ci ne font pas partie du Compagnonnage <br>
+        Bien faire attention </div>
         <table class="table table-bordered table-striped table-hover table-sm" id="matable">
             <thead class="sticky-top" style="top:7.5rem;">
             <tr class="table-primary" >
@@ -44,7 +58,7 @@
                     <nav class="navbar bg-body-tertiary sticky-top">
                         <div class="sticky-top" style="left:0px">
                             <form style="left:0px;" role="search">
-                                <input type="search" class="form-control me-2" placeholder="Recherche" aria-label="Recherche" id="searchInput">
+                                <input type="search" class="form-control me-2" placeholder="Recherche nom" aria-label="Recherche" id="searchInput">
                             </form>
                         </div>
                     </nav> 
@@ -55,6 +69,9 @@
             </tr>   
             <tr class="table-success">
                 <td colspan="3">
+                    <input type="text" class="form-control me-2" placeholder="Donner un nom au filtre" aria-label="nom du filtre" x-model="nomDuFiltre">
+                    <span x-text ="erreur" class="text-danger"></span>
+                    <br>
                     <button  class="btn btn-primary sticky-top" title="enregistrer le filtre"  x-on:click="creerUnFiltre">
                         <img src="{!! asset("assets/images/floppy.svg") !!}" alt="">
                     </button>
@@ -64,7 +81,12 @@
                         </button>
                         <ul class="dropdown-menu">
                             @forEach($filtres as $filtre)
-                                <li><button class="btn btn-primary" x-on:click="appliquerFiltre({{$filtre->id}})">{{$filtre->nomDuFiltre}}</button></li>
+                                <li>
+                                    <button class="btn btn-primary" x-on:click="appliquerFiltre({{$filtre->id}})">{{$filtre->nomDuFiltre}}</button>
+                                    <button  class="btn btn-primary" title="supprimer le filtre" x-on:click="supprimerLeFiltre({{$filtre->id}})">
+                                        <img src="{!! asset("assets/images/x.svg") !!}" alt="supprimer filtre">
+                                    </button>
+                                </li>
                             @endforeach
                         </ul>
                     </div>    
