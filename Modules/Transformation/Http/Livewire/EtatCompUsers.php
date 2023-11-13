@@ -104,7 +104,7 @@ class EtatCompUsers extends Component
         }
         $filtres = DB::table('filtre_transformation_compagnonnages')
                         ->where('user_id', $this->user_id)
-                        ->where('comp', $this->comp)
+                        ->where('comp', $this->comp->comp_liblong)
                         ->get();
         return view('transformation::livewire.etat-comp-users',['entete_taches' => $entete_taches,
                                                 'entete_objectifs' => $entete_objectifs,
@@ -150,7 +150,7 @@ class EtatCompUsers extends Component
             $filtre->user_id = $this->user_id;
             $filtre->nomDuFiltre = $nomDuFiltre;
             $filtre->listeId = json_encode($marinSelectionnes);
-            $filtre->comp = $this->comp;
+            $filtre->comp = $this->comp->comp_liblong;
             $filtre->save();
             $this->render();
     }
