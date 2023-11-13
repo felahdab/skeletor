@@ -149,7 +149,7 @@ class EtatCompUsers extends Component
     }
 
     public function creerUnFiltre($marinSelectionnes, $nomDuFiltre){
-        if( $filtres = DB::table('filtre_transformation_compagnonnages')
+        if(DB::table('filtre_transformation_compagnonnages')
         ->where('nomDuFiltre', $nomDuFiltre)
         ->where('comp', $this->comp->comp_liblong)
         ->first() === null){
