@@ -23,7 +23,6 @@
             else{ 
                 this.erreur = '';
                 $wire.creerUnFiltre(this.selectedMarins, this.nomDuFiltre);
-                this.success = 'Filtre enregistré';
             }
         },
         appliquerFiltre(idFiltre){
@@ -73,8 +72,8 @@
                 <td colspan="3">
                     <input type="text" class="form-control me-2" placeholder="Donner un nom au filtre" aria-label="nom du filtre" x-model="nomDuFiltre">
                     <span x-text ="erreur" class="text-danger"></span>
-                    <span x-text ="success" class="text-success"></span>
-                    <br>
+                    <p class="text-success"> {{$success}} </p>
+                    <p class="text-danger">{{$erreur}}</p>
                     <button  class="btn btn-primary sticky-top" title="enregistrer le filtre"  x-on:click="creerUnFiltre">
                         <img src="{!! asset("assets/images/floppy.svg") !!}" alt="">
                     </button>

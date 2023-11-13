@@ -24,6 +24,8 @@ class EtatCompUsers extends Component
     public $comp=null;
     public $listusers =null;
     public $user_id=null;
+    public $success='';
+    public $erreur='';
     public function mount(Compagnonage $comp, $listusers, $user)
     {
         $this->comp=$comp;
@@ -111,6 +113,8 @@ class EtatCompUsers extends Component
                                                 'entete_ssobjectifs' => $entete_ssobjectifs,
                                                 'usersssobjs' => $usersssobjs,
                                                 'filtres' => $filtres,
+                                                'success' => $this->success,
+                                                'erreur' => $this->erreur,
                                             ]);
     }
     public function ValideElementsDuParcoursParcomp( 
@@ -139,20 +143,35 @@ class EtatCompUsers extends Component
 
     public function reinitialiser(){
         $this->listusers = null;
+        $this->success='';
+        $this->erreur='';
         $this->render();
     }
 
     public function creerUnFiltre($marinSelectionnes, $nomDuFiltre){
-        $listUsers = [];
-        $listUsers = User::whereIn('id', $marinSelectionnes)->get();
-        $this->listusers = $listUsers;
-        $filtre = new FiltreTransformationCompagnonnages();
-        $filtre->user_id = $this->user_id;
-        $filtre->nomDuFiltre = $nomDuFiltre;
-        $filtre->listeId = json_encode($marinSelectionnes);
-        $filtre->comp = $this->comp->comp_liblong;
-        $filtre->save();
-        $this->render();
+        if( $filtres = DB::table('filtre_transformation_compagnonnages')
+        ->where('nomDuFiltre', $nomDuFiltre)
+        ->where('comp', $this->comp->comp_liblong)
+        ->first() === null){
+            $listUsers = [];
+            $listUsers = User::whereIn('id', $marinSelectionnes)->get();
+            $this->listusers = $listUsers;
+            $filtre = new FiltreTransformationCompagnonnages();
+            $filtre->user_id = $this->user_id;
+            $filtre->nomDuFiltre = $nomDuFiltre;
+            $filtre->listeId = json_encode($marinSelectionnes);
+            $filtre->comp = $this->comp->comp_liblong;
+            $filtre->save();
+            $this->success = "filtre enregistré";
+            $this->erreur = ""; 
+            $this->render();
+        }
+        else{
+            $this->success= "";
+            $this->erreur = "nom de filtre déjà utilisé";
+            $this->listusers = null;
+            $this->render();
+        }
     }
 
     public function appliquerFiltre($idFiltre){
@@ -161,6 +180,8 @@ class EtatCompUsers extends Component
             $listeId = json_decode($filtre->listeId, true);
             $listUsers = User::whereIn('id', $listeId)->get();
             $this->listusers = $listUsers;
+            $this->success='';
+            $this->erreur='';
             $this->render();
         }
     }
@@ -168,6 +189,8 @@ class EtatCompUsers extends Component
     public function supprimerLeFiltre($idFiltre){
         FiltreTransformationCompagnonnages::where('id', $idFiltre)->delete();
         $this->listusers = null;
+        $this->success='Filtre bien supprimé';
+        $this->erreur='';
         $this->render();
     }
 }
