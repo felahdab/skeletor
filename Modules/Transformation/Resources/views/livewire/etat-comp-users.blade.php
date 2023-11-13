@@ -2,6 +2,7 @@
     <div class="lead mt-1 mb-3">Compagnonnage : <b>{{ $comp -> comp_liblong}}</b></div>
     <!-- div avec formulaire de validation -->
     @include('transformation::livewire.livret-transformation.divvalid', ['mode' => "parcomp"])
+    
     <div style="width: min-content;" x-data="{
         selectedMarins: [],
         filter(){
@@ -53,7 +54,7 @@
                 @endforeach
             </tr>   
             <tr class="table-success">
-                <td colspan="3" style="position: sticky; left: 0px;z-index: 1;">
+                <td colspan="3">
                     <button  class="btn btn-primary sticky-top" title="enregistrer le filtre"  x-on:click="creerUnFiltre">
                         <img src="{!! asset("assets/images/floppy.svg") !!}" alt="">
                     </button>

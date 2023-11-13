@@ -137,25 +137,29 @@ class EtatCompUsers extends Component
     }
 
     public function creerUnFiltre($marinSelectionnes){
-        $listUsers = [];
-        $listUsers = User::whereIn('id', $marinSelectionnes)->get();
-        $this->listusers = $listUsers;
-        $filtre = new FiltreTransformationCompagnonnage();
-        $filtre->user_id = $this->user_id;
-        $filtre->nomDuFiltre = "test";
-        $filtre->listeId = json_encode($marinSelectionnes);
-        $filtre->save();
+        if(count($marinSelectionnes) != 0){
+            $listUsers = [];
+            $listUsers = User::whereIn('id', $marinSelectionnes)->get();
+            $this->listusers = $listUsers;
+            $filtre = new FiltreTransformationCompagnonnage();
+            $filtre->user_id = $this->user_id;
+            $filtre->nomDuFiltre = "test";
+            $filtre->listeId = json_encode($marinSelectionnes);
+            $filtre->save();
+            $this->render();
+        }
+        $this->listusers = null;
         $this->render();
     }
 
     public function appliquerFiltre($idFiltre){
-        //TODO bug à regler
-        //ajouter une fenetre quand on appuie sur enregistrer pour vérifier les personnes selectionnées et mettre un nom au filtre
-        $filtre = FiltreTransformationCompagnonnage::where('id','=',$idFiltre)->get();
-        $listeId = $filtre->listeId;
-        $listUsers = User::whereIn('id', $listeId)->get();
-        $this->listusers = $listUsers;
-        $this->render();
+        //Ajouter une fenetre quand on appuie sur enregistrer pour vérifier les personnes selectionnées et mettre un nom au filtre
+        $filtre = FiltreTransformationCompagnonnage::where('id', $idFiltre)->first();
+        if($filtre){
+            $listeId = json_decode($filtre->listeId, true);
+            $listUsers = User::whereIn('id', $listeId)->get();
+            $this->listusers = $listUsers;
+            $this->render();
+        }
     }
-
 }
