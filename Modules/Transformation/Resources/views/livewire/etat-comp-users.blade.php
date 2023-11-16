@@ -34,7 +34,7 @@
 
     }">
     <div>Cliquez sur un sous objectif pour mettre la colonne en surbrillance</div>
-    <div class="sticky-top" style="top:5rem;  background: white; width:100%; ">
+    <div class="sticky-top" style="top:5rem;  background: white; width:100%; z-index: 9999;">
         <button type="submit" 
         form="ssobjsusers"
         class="btn btn-primary sticky-top" 
@@ -53,7 +53,7 @@
         </button>
 
         <div class="sticky-top" style="top:5.5rem;"> 
-            <div class="container p-0" style="float:left; position: sticky; left: 0px;z-index: 1;">
+            <div class="container p-0" style="float:left; position: sticky; left: 0px;z-index: 1050;">
                 <div class="row">
                     <div class="col-md-2">
                         <nav class="navbar bg-body-tertiary sticky-top">
@@ -64,7 +64,7 @@
                             </div>
                         </nav> 
                     </div>
-                    <div class="col-md-3"> <!-- Ajustez la taille de la colonne ici -->
+                    <div class="col-md-3">
                         <div class="input-group sticky-top mt-2">
                             <input type="text" class="form-control" placeholder="Donner un nom au filtre" aria-label="nom du filtre" x-model="nomDuFiltre">
                             <div class="input-group-append">
@@ -72,6 +72,23 @@
                                     <img src="{!! asset("assets/images/floppy.svg") !!}" alt="">
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="dropdown sticky-top mt-2" style="position:sticky">
+                            <button class="btn btn-primary dropdown-toggle" type="buttun" data-bs-toggle="dropdown" aria-expanded="false">
+                                Filtre(s) enregistré(s)
+                            </button>
+                            <ul class="dropdown-menu">
+                                @forEach($filtres as $filtre)
+                                    <li>
+                                        <button class="btn btn-primary" x-on:click="appliquerFiltre({{$filtre->id}})">{{$filtre->nomDuFiltre}}</button>
+                                        <button  class="btn btn-primary" title="supprimer le filtre" x-on:click="supprimerLeFiltre({{$filtre->id}})">
+                                            <img src="{!! asset("assets/images/x.svg") !!}" alt="supprimer filtre">
+                                        </button>
+                                    </li>
+                                @endforeach
+                            </ul>
                         </div>
                     </div>
                     <div class="ml-auto">
@@ -83,10 +100,10 @@
             </div> 
         </div>
     </div>
-        <table class="table table-bordered table-striped table-hover table-sm" id="matable">
+        <table class="table table-bordered table-striped table-hover table-sm" id="matable" style="z-index: 1;">
             <thead class="sticky-top" style="top:12.5rem;">
-            <tr class="table-primary" >
-                <td colspan="3">
+            <tr class="table-primary">
+                <td colspan="3">  
                 </td>
                 @foreach($entete_taches as $entete_tache)
                     <td style="font-size:x-small;" colspan="{{$entete_tache['colspantach']}}" title="{{$entete_tache['libtach']}}">{{substr($entete_tache['libtach'], 0, 40)}}...</td>
@@ -94,44 +111,23 @@
             </tr>   
             <tr class="table-success">
                 <td colspan="3">
-                    <div class="dropdown" class="sticky-top">
-                        <button class="btn btn-primary dropdown-toggle" type="buttun" data-bs-toggle="dropdown" aria-expanded="false">
-                            Filtre(s) enregistré(s)
-                        </button>
-                        <ul class="dropdown-menu">
-                            @forEach($filtres as $filtre)
-                                <li>
-                                    <button class="btn btn-primary" x-on:click="appliquerFiltre({{$filtre->id}})">{{$filtre->nomDuFiltre}}</button>
-                                    <button  class="btn btn-primary" title="supprimer le filtre" x-on:click="supprimerLeFiltre({{$filtre->id}})">
-                                        <img src="{!! asset("assets/images/x.svg") !!}" alt="supprimer filtre">
-                                    </button>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>  
                 </td>            
                 @foreach($entete_objectifs as $entete_objectif)
                     <td style="font-size:x-small;" colspan="{{$entete_objectif['colspanobj']}}" title="{{$entete_objectif['libobj']}}">{{substr($entete_objectif['libobj'], 0, 40)}}...</td>
                 @endforeach
             </tr>   
             <tr class="table-info">
-                <th style="position: sticky; left: 0px;z-index: 1;">
-                <button
-                    class="btn btn-primary sticky-top"
-                    style="left:220px;"
-                    x-on:click="filter"
-                    title="filtre"
-                    >
-                    <img src="{!! asset("assets/images/funnel.svg") !!}" alt="">
-                </button>
-                <button
-                class="btn btn-primary sticky-top"
-                    style="left:220px;"
-                    x-on:click="reinitialiser"
-                    title="réinitialiser le filtre des marins">
-                    <img src="{!! asset("assets/images/x.svg") !!}" alt="">
-                </button>
-                </th>
+                <th style="position: sticky; left: 0px; z-index: 1;">
+                    <div style="display: flex; align-items: center; justify-content: center;">
+                        <button class="btn btn-primary sticky-top" style="margin-right: 10px;" x-on:click="filter" title="filtre">
+                            <img src="{!! asset('assets/images/funnel.svg') !!}" alt="">
+                        </button>
+            
+                        <button class="btn btn-primary sticky-top" x-on:click="reinitialiser" title="réinitialiser le filtre des marins">
+                            <img src="{!! asset('assets/images/x.svg') !!}" alt="">
+                        </button>
+                    </div>
+                </th>            
                 <th>Marin</th>
                 <th>Taux</th>
                 @foreach($entete_ssobjectifs as $entete_ssobjectif)
@@ -145,10 +141,11 @@
             <tbody>
                     @foreach($usersssobjs as $ligne)
                     <tr>
-                        <td style="position: sticky; left: 0;z-index: 1;background: white;">
+                        <td style="position: sticky; left: 0; z-index: 1; background: white; text-align: center; vertical-align: middle;">
                             <input type="checkbox" class="form-check-input" x-model="selectedMarins" :value="{{$ligne['id']}}">
                         </td>
-                        <td class="text-center" style="position: sticky; left: 50px;z-index: 1;background: white;">
+                    
+                        <td class="text-center" style="position: sticky; left: 60px;z-index: 1;background: white;">
                             <a href="{{ route('transformation::transformation.livret', $ligne['id'] )}}">
                                 {{$ligne['name']}}
                             </a>
