@@ -135,10 +135,17 @@ class EtatCompUsers extends Component
     }
 
     public function showMarinFiltrer($marinSelectionnes){
-        $listUsers = [];
-        $listUsers = User::whereIn('id', $marinSelectionnes)->get();
-        $this->listusers = $listUsers;
-        $this->render();
+        if(sizeof($marinSelectionnes) > 0){
+            $listUsers = [];
+            $listUsers = User::whereIn('id', $marinSelectionnes)->get();
+            $this->listusers = $listUsers;
+            $this->render();
+        }
+        else{
+            $this->listusers = null;
+            $this->erreur = "il faut selectionner au moins un marin";
+            $this->render();
+        }
     }
 
     public function reinitialiser(){

@@ -119,11 +119,11 @@
             <tr class="table-info">
                 <th style="position: sticky; left: 0px; z-index: 1;">
                     <div style="display: flex; align-items: center; justify-content: center;">
-                        <button class="btn btn-primary sticky-top" style="margin-right: 10px;" x-on:click="filter" title="filtre">
+                        <button class="btn btn-primary sticky-top" style="margin-right: 10px; padding:5px" x-on:click="filter" title="Filtrer">
                             <img src="{!! asset('assets/images/funnel.svg') !!}" alt="">
                         </button>
             
-                        <button class="btn btn-primary sticky-top" x-on:click="reinitialiser" title="réinitialiser le filtre des marins">
+                        <button class="btn btn-primary sticky-top" x-on:click="reinitialiser" title="Réinitialiser le filtre" style="padding:5px">
                             <img src="{!! asset('assets/images/x.svg') !!}" alt="">
                         </button>
                     </div>
