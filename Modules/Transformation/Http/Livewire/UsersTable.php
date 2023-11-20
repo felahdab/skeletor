@@ -321,7 +321,6 @@ class UsersTable extends DataTableComponent
                         $builder->where('socle', false);
                     }
                 }),
-
             SelectFilter::make('Fonction')
                 ->options(
                     ['' => 'Tous'] + DB::table('transformation_fonctions')
@@ -336,6 +335,16 @@ class UsersTable extends DataTableComponent
                                   ->whereRaw('transformation_user_fonction.user_id = users.id')
                                   ->where('transformation_user_fonction.fonction_id', $value);
                         });
+                    }}),
+            SelectFilter::make('unité')
+                ->options(
+                    ['' => 'Tous'] + DB::table('unites')
+                        ->pluck('unite_libcourt', 'id')
+                        ->toArray()
+                    )
+                ->filter(function(Builder $builder, string $value) {
+                    if ($value !== '') {
+                        $builder->where('unite_id', $value);
                     }}),
         ];
         
