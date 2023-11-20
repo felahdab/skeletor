@@ -44,6 +44,14 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     Route::get('/mespreferences', [UserPreferencesController::class, 'mespreferences'])->name('mespreferences');
 });
 
+/**
+ * Reset password
+ */
+Route::get('/forgotpwd', [LoginController::class, 'indexforgotpwd'])->name('login.indexforgotpwd');
+Route::post('/forgotpwd', [LoginController::class, 'forgotpwd'])->name('login.forgotpwd');
+Route::get('/resetpwd/{token}/{email}', [LoginController::class, 'resetpwdpage'])->name('password.reset');
+Route::post('/resetpwd', [LoginController::class, 'updatepwd'])->name('login.updatepwd');
+
 Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::get('/auth/callback', [LoginController::class, 'login'])->name('keycloak.login.perform');
 
@@ -52,7 +60,9 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::get('/login', [LoginController::class, 'show'])->name('login.show');
     Route::post('/login', [LoginController::class, 'locallogin'])->name('login.perform');
     Route::post('/login/{MCuserexist:sub}/newMdc', [LoginController::class, 'newMdcLogin'])->name('login.newMdcLogin');
+    
 
+    
     Route::group(['middleware' => ['auth', 'permission']], function () {
         /**
          * Logout Routes

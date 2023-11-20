@@ -24,6 +24,7 @@ use App\Service\AnnudefAjaxRequestService;
 
 use Glorand\Model\Settings\Traits\HasSettingsTable;
 use Lab404\Impersonate\Models\Impersonate;
+use League\Pipeline\PipelineBuilder;
 use Nwidart\Modules\Facades\Module;
 
 class User extends Authenticatable
@@ -260,4 +261,14 @@ class User extends Authenticatable
         
         return 0;
     }
+
+    /**
+     * Permet de récupérer le user grâce à son email
+     * @param string $email
+     * @return User
+     */
+    // static public function getEmailSingle($email)
+    // {
+    //     return User::where('email', '=', $email)->first();
+    // }
 }
