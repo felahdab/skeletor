@@ -336,7 +336,7 @@ class UsersTable extends DataTableComponent
                                   ->where('transformation_user_fonction.fonction_id', $value);
                         });
                     }}),
-            SelectFilter::make('unité')
+            SelectFilter::make('Unité')
                 ->options(
                     ['' => 'Tous'] + DB::table('unites')
                         ->pluck('unite_libcourt', 'id')
