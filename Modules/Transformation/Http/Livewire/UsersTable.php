@@ -321,6 +321,22 @@ class UsersTable extends DataTableComponent
                         $builder->where('socle', false);
                     }
                 }),
+
+            SelectFilter::make('Fonction')
+                ->options(
+                    ['' => 'Tous'] + DB::table('transformation_fonctions')
+                        ->pluck('fonction_libcourt', 'id')
+                        ->toArray()
+                )
+                ->filter(function(Builder $builder, string $value) {
+                    if ($value !== '') {
+                        $builder->whereExists(function ($query) use ($value) {
+                            $query->select(DB::raw(1))
+                                  ->from('transformation_user_fonction')
+                                  ->whereRaw('transformation_user_fonction.user_id = users.id')
+                                  ->where('transformation_user_fonction.fonction_id', $value);
+                        });
+                    }}),
         ];
         
         switch ($this->mode)
