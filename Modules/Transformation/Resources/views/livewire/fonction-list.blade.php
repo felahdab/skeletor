@@ -30,8 +30,9 @@
                             <a href="{{ route('transformation::fonctions.edit', $fonction->id) }}" class="btn btn-info btn-sm">Modifier</a>
                             @can('transformation::fonctions.destroy')
                                 <x-form::form method="DELETE" :action="route('transformation::fonctions.destroy', $fonction->id)">
-                                <button class="btn btn-danger btn-sm" type="submit" dusk="delete-btn">Supprimer</button>
+                                <button type='submit' class='btn btn-danger btn-sm'>Supprimer</button>
                                 </x-form::form>
+                            
                             @endcan
                         @elseif($mode == 'transformation')
                             @can('transformation::fonctions.validermarins')
