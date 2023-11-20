@@ -20,6 +20,8 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserPreferencesController;
 use App\Http\Controllers\ParamaccueilsController;
 
+use App\Http\Middleware\RestrictVisibility;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -69,18 +71,20 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         /**
          * User Routes
          */
-        Route::group(['prefix' => 'users'], function () {
-            Route::get('/', [UsersController::class, 'index'])->name('users.index');
-            Route::get('/create', [UsersController::class, 'create'])->name('users.create');
-            Route::post('/create', [UsersController::class, 'store'])->name('users.store');
-            Route::get('/{user}/show', [UsersController::class, 'show'])->name('users.show');
-            Route::get('/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
-            Route::patch('/{user}/update', [UsersController::class, 'update'])->name('users.update');
-            Route::delete('/{user}/delete', [UsersController::class, 'destroy'])->name('users.destroy');
-            Route::get('/currentrole', [ChangeUserCurrentRole::class, 'index'])->name('currentrole.show');
-            Route::post('/currentrole', [ChangeUserCurrentRole::class, 'store'])->name('currentrole.store');
-            Route::get('/{user}/changepasswd', [ChangeUserPassword::class,  'index'])->name('changepasswd.show');
-            Route::post('/{user}/changepasswd', [ChangeUserPassword::class,  'store'])->name('changepasswd.store');
+        Route::group(['middleware' => [RestrictVisibility::class]], function () {
+            Route::group(['prefix' => 'users'], function () {
+                Route::get('/', [UsersController::class, 'index'])->name('users.index');
+                Route::get('/create', [UsersController::class, 'create'])->name('users.create');
+                Route::post('/create', [UsersController::class, 'store'])->name('users.store');
+                Route::get('/{user}/show', [UsersController::class, 'show'])->name('users.show');
+                Route::get('/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
+                Route::patch('/{user}/update', [UsersController::class, 'update'])->name('users.update');
+                Route::delete('/{user}/delete', [UsersController::class, 'destroy'])->name('users.destroy');
+                Route::get('/currentrole', [ChangeUserCurrentRole::class, 'index'])->name('currentrole.show');
+                Route::post('/currentrole', [ChangeUserCurrentRole::class, 'store'])->name('currentrole.store');
+                Route::get('/{user}/changepasswd', [ChangeUserPassword::class,  'index'])->name('changepasswd.show');
+                Route::post('/{user}/changepasswd', [ChangeUserPassword::class,  'store'])->name('changepasswd.store');
+            });
         });
 
         Route::resource('roles',          RolesController::class);
