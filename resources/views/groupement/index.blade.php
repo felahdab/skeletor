@@ -6,9 +6,9 @@
 
 @section('content')
 
-<h1>Groupement</h1>
+<h1>Groupements</h1>
 <div class="lead">
-    Gestion des groupement
+    Gestion des groupements
     <a href="{{ route('groupement.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un groupement</a>
 </div>
 <livewire:groupement-table>
