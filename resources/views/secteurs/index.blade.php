@@ -1,6 +1,6 @@
 @extends('layouts.app-master')
 @section('helplink')
-< x-help-link page="administration"/>
+<x-help-link page="administration"/>
 @endsection
 
 
