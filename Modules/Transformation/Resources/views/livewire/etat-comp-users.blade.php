@@ -69,7 +69,7 @@
                             <input type="text" class="form-control" placeholder="Donner un nom au filtre" aria-label="nom du filtre" x-model="nomDuFiltre">
                             <div class="input-group-append">
                                 <button  class="btn btn-primary sticky-top" title="enregistrer le filtre"  x-on:click="creerUnFiltre">
-                                    <img src="{!! asset("assets/images/floppy.svg") !!}" alt="">
+                                    <x-bootstrap-icon iconname='floppy.svg' />
                                 </button>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                                     <li>
                                         <button class="btn btn-primary" x-on:click="appliquerFiltre({{$filtre->id}})">{{$filtre->nomDuFiltre}}</button>
                                         <button  class="btn btn-primary" title="supprimer le filtre" x-on:click="supprimerLeFiltre({{$filtre->id}})">
-                                            <img src="{!! asset("assets/images/x.svg") !!}" alt="supprimer filtre">
+                                            <x-bootstrap-icon iconname='x.svg' />
                                         </button>
                                     </li>
                                 @endforeach
@@ -120,11 +120,11 @@
                 <th style="position: sticky; left: 0px; z-index: 1;">
                     <div style="display: flex; align-items: center; justify-content: center;">
                         <button class="btn btn-primary sticky-top" style="margin-right: 10px; padding:5px" x-on:click="filter" title="Filtrer">
-                            <img src="{!! asset('assets/images/funnel.svg') !!}" alt="">
+                            <x-bootstrap-icon iconname='funnel.svg' />
                         </button>
             
                         <button class="btn btn-primary sticky-top" x-on:click="reinitialiser" title="Réinitialiser le filtre" style="padding:5px">
-                            <img src="{!! asset('assets/images/x.svg') !!}" alt="">
+                            <x-bootstrap-icon iconname='x.svg' />
                         </button>
                     </div>
                 </th>            
