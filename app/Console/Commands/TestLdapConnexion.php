@@ -17,7 +17,7 @@ class TestLdapConnexion extends Command
      *
      * @var string
      */
-    protected $signature = 'ffast:testldapconnexion';
+    protected $signature = 'skeletor:test-ldap-connexion';
 
     /**
      * The console command description.

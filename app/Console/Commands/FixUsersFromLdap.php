@@ -17,7 +17,7 @@ class FixUsersFromLdap extends Command
      *
      * @var string
      */
-    protected $signature = 'ffast:fixusersfromldap';
+    protected $signature = 'skeletor:fix-users-from-ldap';
 
     /**
      * The console command description.
