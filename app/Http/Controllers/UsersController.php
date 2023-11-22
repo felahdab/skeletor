@@ -20,7 +20,6 @@ use OpenApi\Annotations as OA;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeMail;
-use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
@@ -38,14 +37,26 @@ class UsersController extends Controller
     public function create() 
     {
         $user_unite_id = auth()->user()->unite_id;
-        return view('users.create', [
-            'roles' => Role::latest()->get(),
-            'grades' => Grade::orderBy('ordre_classmt', 'asc')->get(),
-            'specialites' => Specialite::orderBy('specialite_libcourt', 'asc')->get(),
-            'diplomes' => Diplome::latest()->get(),
-            'secteurs' => Secteur::orderBy('secteur_libcourt', 'asc')->get(),
-            'unites' => Unite::where('id', $user_unite_id)->get(),
-        ]);
+        if(! auth()->user()->admin){
+            return view('users.create', [
+                'roles' => Role::latest()->get(),
+                'grades' => Grade::orderBy('ordre_classmt', 'asc')->get(),
+                'specialites' => Specialite::orderBy('specialite_libcourt', 'asc')->get(),
+                'diplomes' => Diplome::latest()->get(),
+                'secteurs' => Secteur::orderBy('secteur_libcourt', 'asc')->get(),
+                'unites' => Unite::where('id', $user_unite_id)->get(),
+            ]);
+        }
+        else{
+            return view('users.create', [
+                'roles' => Role::latest()->get(),
+                'grades' => Grade::orderBy('ordre_classmt', 'asc')->get(),
+                'specialites' => Specialite::orderBy('specialite_libcourt', 'asc')->get(),
+                'diplomes' => Diplome::latest()->get(),
+                'secteurs' => Secteur::orderBy('secteur_libcourt', 'asc')->get(),
+                'unites' => Unite::orderBy('unite_libcourt', 'asc')->get(),
+            ]);
+        }
     }
 
     public static function generateRandomString($length = 10) {
@@ -119,6 +130,19 @@ class UsersController extends Controller
      */
     public function edit(User $user) 
     {
+        $user_unite_id = auth()->user()->unite_id;
+        if(! auth()->user()->admin){
+            return view('users.edit', [
+                'user' => $user,
+                'userRole' => $user->roles->pluck('name')->toArray(),
+                'roles' => Role::latest()->get(),
+                'grades' => Grade::orderBy('ordre_classmt', 'asc')->get(),
+                'specialites' => Specialite::orderBy('specialite_libcourt', 'asc')->get(),
+                'diplomes' => Diplome::latest()->get(),
+                'secteurs' => Secteur::orderBy('secteur_libcourt', 'asc')->get(),
+                'unites' => Unite::where('id', $user_unite_id)->get()
+            ]);
+        }
         return view('users.edit', [
             'user' => $user,
             'userRole' => $user->roles->pluck('name')->toArray(),
