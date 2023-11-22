@@ -19,7 +19,7 @@ class RestrictVisibility
      */
     public function handle(Request $request, Closure $next)
     {
-        if ( ! auth()->user()->can('transformation::view_all_users')) {
+        if ( ! auth()->user()->can('view_all_users')) {
             User::addGlobalScope(new MemeUniteOuRenduVisible(null));
         }   
         return $next($request);
