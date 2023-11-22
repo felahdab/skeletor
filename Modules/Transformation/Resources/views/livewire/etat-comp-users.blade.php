@@ -198,7 +198,7 @@
             var marinCell = rows[i].querySelector("td:nth-child(2)");
             if (marinCell.textContent.toLowerCase().includes(searchText)) {
                 rows[i].classList.add("highlight");
-                rows[i].scrollIntoView({ behavior: "smooth", block: "center" });
+                rows[i].scrollIntoView({ behavior: "smooth", block: "end" });
             } else {
                 rows[i].classList.remove("highlight");
             }
