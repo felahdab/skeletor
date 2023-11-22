@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Transformation\Http\Middleware;
+namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
 
-use Modules\Transformation\Entities\User;
-use Modules\Transformation\Scopes\MemeUniteOuRenduVisible;
+use App\Models\User;
+use App\Scopes\MemeUnite;
 
 class RestrictVisibility
 {
@@ -20,7 +20,7 @@ class RestrictVisibility
     public function handle(Request $request, Closure $next)
     {
         if ( ! auth()->user()->can('view_all_users')) {
-            User::addGlobalScope(new MemeUniteOuRenduVisible(null));
+            User::addGlobalScope(new MemeUnite(null));
         }   
         return $next($request);
     }
