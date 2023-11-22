@@ -164,14 +164,12 @@
                         <x-form::input name="date_embarq" label="Date d'embarquement *" type="date" required/>
                     </div>
                     <div class="col">
-                        <x-form::model-select name="unite_id" 
-                            :models="$unites" 
-                            label="Unité actuelle" 
-                            key-attribute="id" 
-                            value-attribute="unite_liblong">
-                            <option value="">Non renseigné</option>
-                        </x-form::model-select>
-                    </div>
+                        <div class="form-group">
+                            <label for="unite_id" class="form-label">Unité actuelle</label>
+                            <input type="text" id="unite_id" name="unite_id" class="form-control" value="{{ $unites[0]->unite_libcourt }}" readonly style="background-color: #ccc">
+                            <input type="hidden" name="unite_id" value="{{ $unites[0]->id }}">
+                        </div>
+                    </div>                                    
                 </div>
                 <div class="row mt-4">
                     <div class="col">
