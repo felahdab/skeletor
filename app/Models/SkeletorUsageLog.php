@@ -19,6 +19,7 @@ class SkeletorUsageLog extends Model
         'status',
         'ip',
         'method',
+        'response_time',
         'counter'
     ];
 }

@@ -57,8 +57,8 @@ class RecordUsageDataListener
 
         $uri = str_replace($request->root(), '', $request->url()) ?: '/';
         $user_name = $request->user()?->email ?? 'anonyme';
-
-        SkeletorUsageLog::firstOrCreate([
+//dd($request->responsetime);
+        $s=SkeletorUsageLog::firstOrCreate([
             'uri'        => $uri,
             'route'      => $request->route()?->getName() ?? 'unnamed_route',
             'session'    => $request->session()->getId(),
@@ -68,6 +68,10 @@ class RecordUsageDataListener
             'status'     => $response->getStatusCode(),
             'ip'         => $request->ip(),
             'method'     => $request->getMethod(),
-        ], ['counter' => 0])->increment('counter', 1);
+        ], ['counter' => 0]);
+        $s->fill(['response_time' =>  $request->responsetime ?? 0]);
+        $s->increment('counter', 1);
+        $s->save();
+
     }
 }
