@@ -13,7 +13,7 @@ class ListUnites extends Command
      *
      * @var string
      */
-    protected $signature = 'ffast:listunits';
+    protected $signature = 'skeletor:list-units';
 
     /**
      * The console command description.
