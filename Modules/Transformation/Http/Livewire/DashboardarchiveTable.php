@@ -130,7 +130,7 @@ class DashboardarchiveTable extends DataTableComponent
         $this->archiveids = $this->getCurrentItems();
         $this->archiveids["datedebut"] = $this->table['filters']['début'];
         $this->archiveids["datefin"] = $this->table['filters']['fin'];
-        $this->emitUp("archiveListUpdated" , $this->archiveids);
+        $this->dispatch("archiveListUpdated" , $this->archiveids);
         return parent::render();
     }
     

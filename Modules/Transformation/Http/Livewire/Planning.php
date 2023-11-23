@@ -15,7 +15,7 @@ class Planning extends Component
     public function planningUpdated($planningids)
     {
         $this->planningids = $planningids;
-        $this->emitSelf('$refresh');
+        $this->dispatch('$refresh');
     }
 
     public function render()

@@ -71,7 +71,7 @@ class LivretTransformation extends Component
 
         if ($this->mode != "modificationmultiple") {
             $user->getTransformationManager()->forceReload();
-            $this->emit('$refresh');
+            $this->dispatch('$refresh');
         }
     }
 
@@ -81,7 +81,7 @@ class LivretTransformation extends Component
         $transformationService->UnValideLacheFonction($user, $fonction, $this->mode == "proposition");
         if ($this->mode != "modificationmultiple") {
             $user->getTransformationManager()->forceReload();
-            $this->emit('$refresh');
+            $this->dispatch('$refresh');
         }
     }
 
@@ -91,7 +91,7 @@ class LivretTransformation extends Component
         $transformationService->ValideDoubleFonction($user, $fonction, $date_validation, $commentaire, $valideur, $this->mode == "proposition");
         if ($this->mode != "modificationmultiple") {
             $user->getTransformationManager()->forceReload();
-            $this->emit('$refresh');
+            $this->dispatch('$refresh');
         }
     }
 
@@ -101,7 +101,7 @@ class LivretTransformation extends Component
         $transformationService->UnValideDoubleFonction($user, $fonction, $this->mode == "proposition");
         if ($this->mode != "modificationmultiple") {
             $user->getTransformationManager()->forceReload();
-            $this->emit('$refresh');
+            $this->dispatch('$refresh');
         }
     }
 
@@ -140,9 +140,9 @@ class LivretTransformation extends Component
         }
         if ($this->mode != "modificationmultiple") {
             $user->getTransformationManager()->forceReload();
-            $this->emit('$refresh');
+            $this->dispatch('$refresh');
         }
-        $this->dispatchBrowserEvent("resetselection");
+        $this->dispatch("resetselection");
     }
 
     public function ValideElementsDuParcoursMultiple(
@@ -204,8 +204,8 @@ class LivretTransformation extends Component
         }
         if ($this->mode != "modificationmultiple") {
             $user->getTransformationManager()->forceReload();
-            $this->emit('$refresh');
+            $this->dispatch('$refresh');
         }
-        $this->dispatchBrowserEvent("resetselection");
+        $this->dispatch("resetselection");
     }
 }

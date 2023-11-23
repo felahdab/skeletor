@@ -27,7 +27,7 @@ class Dashboard extends Component
     public function userListUpdated($userids)
     {
         $this->userids = $userids;
-        $this->emitSelf('$refresh');
+        $this->dispatch('$refresh');
     }
 
     public function render()

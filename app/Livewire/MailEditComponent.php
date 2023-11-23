@@ -27,7 +27,7 @@ class MailEditComponent extends Component
     {
         $this->userids = $userids;
         $this->makeQuery();
-        $this->emitSelf('$refresh');
+        $this->dispatch('$refresh');
     }
     
     public function mount($mail)

@@ -356,7 +356,7 @@ class SushiUsersTable extends DataTableComponent
     // public function render()
     // {
     //     $this->userids = $this->getCurrentItems();
-    //     $this->emitUp("userListUpdated", $this->userids);
+    //     $this->dispatch("userListUpdated", $this->userids);
     //     return parent::render();
     // }
 
