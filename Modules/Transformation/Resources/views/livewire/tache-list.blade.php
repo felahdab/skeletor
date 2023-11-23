@@ -26,7 +26,7 @@
                             <td><a href="{{ route('transformation::taches.edit', $tache->id) }}" class="btn btn-info btn-sm">Modifier</a></td>
                             @can('transformation::taches.destroy')
                             <td>
-                                <x-form::form method="DELETE" :action="route('taches.destroy', $tache->id)">
+                                <x-form::form method="DELETE" :action="route('transformation::taches.destroy', $tache->id)">
                                 <button class="btn btn-danger btn-sm" type="submit" dusk="delete-btn">Supprimer</button>
                                 </x-form::form>
                             </td>
