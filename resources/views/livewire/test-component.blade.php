@@ -21,5 +21,5 @@
         <button x-on:click="count++">+</button>
     </div>
 
-    @livewire('notification-panel')
+    @livewire('full-calendar')
 </div>

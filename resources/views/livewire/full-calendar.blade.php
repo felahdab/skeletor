@@ -66,3 +66,7 @@
         <div id='calendar'></div>
     </div>
 </div>
+
+@assets
+<script src="{!! asset('assets/js/fullcalendar_6.1.3.js') !!}"></script>
+@endassets
