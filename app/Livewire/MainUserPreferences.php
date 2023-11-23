@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 
 use Nwidart\Modules\Facades\Module;
+use Livewire\Mechanisms\ComponentRegistry;
 
 class MainUserPreferences extends Component
 {
@@ -18,6 +19,7 @@ class MainUserPreferences extends Component
 
     public function render()
     {
+        $livewire_registry = app(ComponentRegistry::class);
 
         $user = auth()->user();
         $user->settings()->apply($this->settings);
@@ -33,8 +35,12 @@ class MainUserPreferences extends Component
             }
             $candidat_composant = $module->getLowerName() . "::user-preferences-component";
 
-            if (array_key_exists($candidat_composant, app('livewire')->getComponentAliases())) {
+            try {
+                $livewire_registry->getClass($candidat_composant);
+         
                 $composants_des_modules[]  = $candidat_composant;
+            } catch(\Throwable $th) {
+                
             }
         }
 
