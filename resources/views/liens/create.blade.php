@@ -1,7 +1,7 @@
 @extends('layouts.app-master')
 
 @section('helplink')
-< x-help-link page="administration"/>
+<x-help-link page="administration"/>
 @endsection
 
 
@@ -12,7 +12,7 @@
     <div id='divmodifobj' class='card ml-3 w-100' >
         <div class='card-header' >Création d'un lien </div>
         <div style='text-align:right;'>* champs obligatoires </div>
-        <x-form::form method="POST" :action="route('liens.store')" enctype="multipart/form-data"> 
+        <x-form::form method="POST" :action="route('liens.store')">
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
                     <label for='lib_lien' class='col-sm-5 col-form-label'> Libell&eacute; *</label>

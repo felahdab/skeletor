@@ -1,6 +1,6 @@
 @extends('layouts.app-master')
 @section('helplink')
-< x-help-link page="administration"/>
+<x-help-link page="administration"/>
 @endsection
 
 
@@ -9,7 +9,7 @@
     <div id='divmodifobj' class='card ml-3 w-100' >
         <div class='card-header' >Création d'un service </div>
         <div style='text-align:right;'>* champs obligatoires </div>
-        {!! Form::open(['method' => 'POST','route' => 'services.store', 'enctype'=>'multipart/form-data' ]) !!}
+        <x-form::form method="POST" :action="route('services.store')">
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
                     <label for='service_libcourt' class='col-sm-5 col-form-label'>Libell&eacute; court*</label>
@@ -39,7 +39,7 @@
                     <br>&nbsp;
                 </div>
             </div>
-        {!! Form::close() !!}
+        </x-form::form>
     </div>
  
 

@@ -1,7 +1,7 @@
 @extends('layouts.app-master')
 
 @section('helplink')
-< x-help-link page="administration"/>
+<x-help-link page="administration"/>
 @endsection
 
 
@@ -11,23 +11,27 @@
         <div class="lead">
             Moditifer le role et attribuer les permissions associées.
         </div>
-        <div x-data='{allChecked : false }'>
-            <div class="container mt-4">
-                @if (count($errors) > 0)
-                    <div class="alert alert-danger">
-                        <strong>Whoops!</strong> There were some problems with your input.<br><br>
-                        <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                        </ul>
-                    </div>
-                @endif
-                <x-form::form method="PATCH" :action="route('roles.update', $role->id)">				
+
+<div x-data='{allChecked : false }'>
+        <div class="container mt-4">
+
+            @if (count($errors) > 0)
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                    <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <x-form::form method="PATCH" :action="route('roles.update', $role->id)">
+				
                 <div class="mb-3">
-					<label for="name" class="form-label">Nom du rôle</label>
-					{!!Form::text('name', $role->name , ['class' => 'form-control', 'placeholder'=> "Name"]) !!}                    
-                </div>                
+                    <x-form::input name='name' label='Nom du rôle' type='text' placeholder="Nom du role" :value="$role->name"/>
+                </div>
+                
                 <label for="permissions" class="form-label">Attribuer les permissions</label>
                 <table class="table table-striped">
                     <thead>
@@ -77,9 +81,9 @@
                 </table>
                 <button type="submit" class="btn btn-primary">Enregistrer</button>
                 <a href="{{ route('roles.index') }}" class="btn btn-default">Retour</a>
-			    </x-form::form>
-            </div>
+			</x-form::form>
         </div>
+</div>
     </div>
 @endsection
 

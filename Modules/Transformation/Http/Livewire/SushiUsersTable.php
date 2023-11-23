@@ -348,6 +348,16 @@ class SushiUsersTable extends DataTableComponent
                         $builder->where('lache_dans_fonction', false);
                     }
                 }),
+            SelectFilter::make('Unité')
+                ->options(
+                    ['' => 'Tous'] + DB::table('unites')
+                        ->pluck('unite_libcourt', 'id')
+                        ->toArray()
+                    )
+                ->filter(function(Builder $builder, string $value) {
+                    if ($value !== '') {
+                        $builder->where('unite_id', $value);
+                }}),
         ];
 
         return $basefilters;

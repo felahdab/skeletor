@@ -11,6 +11,7 @@
         <h3>{{ $user->display_name }}</h3>
 
         <x-form::form method="POST" :action="route('transformation::users.attribuerfonction', $user->id)">
+        {{-- <label for="fonction" class="form-label">Fonction</label> --}}
         <select class="form-select w-50 mt-4" 
             name="fonction_id" required>
             <option value="0">Sélectionnez la fonction à attribuer</option>
@@ -21,8 +22,8 @@
             @endforeach
         </select>
         <div class="btn-group mt-3" role="groupe">
-            <button class="btn btn-primary" type="submit">Attribuer cette fonction</button>
-        </x-form::form>
+            <button type='submit' class='btn btn-primary'>Attribuer cette fonction</button>
+            </x-form::form>
             <a href="{{ route('transformation::transformation.index') }}" class="btn btn-outline-dark"> Annuler </button>
             <a href="{{ route('transformation::transformation.livret', $user->id) }}" class="btn btn-warning">Livret de transformation</a>
         </div>
@@ -52,9 +53,9 @@
                             </div>
                             <div class="p-2 w-25">
                                 <x-form::form method="POST" :action="route('transformation::users.retirerfonction', $user->id)">
-                                <input type='hidden' id='fonction_id' name='fonction_id' value='{{ $fonction->id }}'>
-                                <button class="btn btn-danger btn-sm" type="submit">Retirer cette fonction</button>
-                                </x-form::form>
+                                    <input type='hidden' id='fonction_id' name='fonction_id' value='{{ $fonction->id }}'>
+                                    <button type='submit' class='btn btn-danger btn-sm'>Retirer cette fonction</button>
+                                </x-form::form>    
                             </div>
                         </div>
                     </div>

@@ -54,7 +54,12 @@
               </div>
             </div>
             @endcan
-            @if(auth()->user()->en_transformation)
+            {{-- @if(auth()->user()->en_transformation) --}}
+            @php
+              use Modules\Transformation\Entities\User;
+              $user=User::find(auth()->user()->id);
+            @endphp
+            @if($user->en_transformation)
             <div class="dropdown" >
               <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Ma transformation

@@ -13,9 +13,9 @@ Pour accéder à FFAST, l’utilisateur doit avoir accès à un ordinateur ayant
   - (1) L'authentification MindefConnect (ex-login "auto") qui permet de se connecter avec ses identifiants DR-CPT.
   - (2) Le login "local" qui permet de se connecter avec son @mail et un mot de passe défini par l'utilisateur.
 <p>&nbsp;</p>
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/connexion/accueil_login.png' )) }}" >
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/connexion/accueil_login.png')) }}" >
 <p>&nbsp;</p>
-
+  - (3) Le lien mot de passe oublié permet de réinitialiser son mot de passe local.
 >{info} Que la connexion soit établie avec le login local ou MindefConnect, dans les deux cas, vous travaillerez sur la même application. Il n'y a pas de travail "local" possible.
 
 <a name="login_auto">
@@ -42,9 +42,19 @@ Pour pallier le fait que certains marins n'ont pas de session Windows lors de le
 
 Pour cela, vous devez initialiser votre mot de passe local en passant par le menu "GD prénom NOM/changer le mot de passe" lors de votre première connexion MindefConnect. Ce mot de passe doit contenir au moins 8 caractères.
 
-Dans le cas ou l'authentification MindefConnect n'est pas possible, vous saisissez votre adresse mail intradef complète et le mot de passe choisi (1). Après validation (2), vous pourrez accéder à l'application.
+Dans le cas ou l'authentification MindefConnect n'est pas possible, vous saisissez votre adresse mail intradef complète et le mot de passe choisi (1). Après validation (2), vous pourrez accéder à l'application. En cas d'oubli de votre mot de passe local, cliquez sur le lien (3) "Mot de passe oublié ?"
 <p>&nbsp;</p>
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/connexion/login_local.png' )) }}" width="300px">
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/connexion/login_local.png' )) }}" width="400px">
+<p>&nbsp;</p>
+
+Saisissez votre adresse mail intradef complète et validez. Un lien permettant de réinitialiser votre mot de passe vous est envoyé sur votre messagerie.
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/connexion/dde_reinit_mdp.png' )) }}" width="400px">
+<p>&nbsp;</p>
+Dans le mail reçu, cliquez sur le bouton "Réinitialiser mot de passe".
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/connexion/mail.PNG' )) }}" width="700px">
+<p>&nbsp;</p>
+Saisissez deux fois votre nouveau mot de passe (minimum 8 caractères)!
+<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/connexion/saisie_nvx_mdp.png' )) }}" width="700px">
 <p>&nbsp;</p>
 
 Si la réinitialisation du mot de passe DR-CPT n’est pas possible ou ne peut pas être faite, et que vous n'avez pas initialisé vos identifiants locaux, il faut l’intervention d’un administrateur de FFAST. Il suffit donc d’envoyer un mail à l’adresse: ffast.notification.tec@intradef.gouv.fr.

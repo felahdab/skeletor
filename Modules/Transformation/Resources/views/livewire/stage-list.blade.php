@@ -29,7 +29,7 @@
                         @can('transformation::stage.destroy')
                         <td>
                             <x-form::form method="DELETE" :action="route('transformation::stages.destroy', $stage->id)">
-                            <button class="btn btn-danger btn-sm" type="submit" dusk="delete-btn">Supprimer</button>
+                                <button type='submit' class='btn btn-danger btn-sm'>Supprimer</button>
                             </x-form::form>
                         </td>
                         @endcan
@@ -39,9 +39,9 @@
                         <td></td>
                     @elseif ($mode=='selection')
                         <td colspan="3"> 
-                            <x-form::form method="POST" :action="route('transformation::fonctions.ajouterstage',   $fonction->id )">
-                            <input type='hidden' id='stage_id' name='stage_id' value='{{ $stage->id }}'>
-                            <button dusk="select-stage" type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
+                            <x-form::form method="POST" :action="route('transformation::fonctions.ajouterstage', $fonction->id)">
+                                <input type='hidden' id='stage_id' name='stage_id' value='{{ $stage->id }}'>
+                                <button dusk="select-stage" type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
                             </x-form::form>
                         </td>
                     @endif

@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use Exception;
 use Illuminate\Foundation\Http\Events\RequestHandled;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -42,7 +43,7 @@ class RecordUsageDataListener
 
         foreach (config('analytics.exclude', []) as $except) {
             if (!Str::contains($except, env('APP_PREFIX'))) {
-                $prefix = Str::startsWith($except,'/') ? env('APP_PREFIX')  : env('APP_PREFIX') . '/';
+                $prefix = Str::startsWith($except, '/') ? env('APP_PREFIX')  : env('APP_PREFIX') . '/';
                 $except = $prefix . $except;
             }
 
@@ -55,13 +56,20 @@ class RecordUsageDataListener
             }
         }
 
+        $sessionid = 'no_session_id';
+        try {
+            $sessionid = $request->session()?->getId();
+        } catch (Exception) {
+        }
+
+
         $uri = str_replace($request->root(), '', $request->url()) ?: '/';
         $user_name = $request->user()?->email ?? 'anonyme';
-//dd($request->responsetime);
-        $s=SkeletorUsageLog::firstOrCreate([
+
+        $s = SkeletorUsageLog::firstOrCreate([
             'uri'        => $uri,
             'route'      => $request->route()?->getName() ?? 'unnamed_route',
-            'session'    => $request->session()->getId(),
+            'session'    => $sessionid,
             'source'     => $request->headers->get('referer'),
             'user-agent' => $request->userAgent(),
             'user-email' => $user_name,
@@ -72,6 +80,5 @@ class RecordUsageDataListener
         $s->fill(['response_time' =>  $request->responsetime ?? 0]);
         $s->increment('counter', 1);
         $s->save();
-
     }
 }

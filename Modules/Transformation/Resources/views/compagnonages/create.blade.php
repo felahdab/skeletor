@@ -42,6 +42,6 @@
                 <a href="{{ route('transformation::compagnonages.index') }}" class="btn btn-default mt-4">Annuler</a>
                 <br>&nbsp;
             </div>
-            </x-form::form>
+        </x-form::form>
     </div>
 @endsection

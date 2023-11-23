@@ -29,6 +29,8 @@ use Illuminate\Support\Facades\DB;
 
 use Barryvdh\Debugbar\Facades\Debugbar;
 
+use App\Scopes\MemeUnite;
+
 class UsersTable extends DataTableComponent
 {
     // protected $model = User::class;
