@@ -16,14 +16,7 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $listservice = Service::select('services.id AS id', 'services.service_libcourt', 'services.service_liblong', 'groupements.groupement_libcourt', 'groupements.groupement_liblong')
-        ->join('groupements','groupements.id','=','services.groupement_id')
-        ->orderBy('id')
-        ->get();
-
-        return view('services.index', [
-            'listservice' => $listservice
-        ]);
+        return view('services.index');
     }
 
     /**

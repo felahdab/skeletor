@@ -15,10 +15,7 @@ class GroupementController extends Controller
      */
     public function index()
     {
-        $listgroupement = Groupement::all();
-        return view('groupement.index', [
-            'listgroupement' => $listgroupement
-        ]);
+        return view('groupement.index');
     }
 
     /**

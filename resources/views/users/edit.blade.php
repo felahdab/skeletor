@@ -1,7 +1,7 @@
 @extends('layouts.app-master')
 
 @section('helplink')
-< x-help-link page="administration"/>
+<x-help-link page="administration"/>
 @endsection
 
 
@@ -110,15 +110,23 @@
                         <x-form::input name="date_embarq" label="Date d'embarquement *" type="date" :value="$user->date_embarq" required/>
                     </div>
                     <div class="col">
-                        <x-form::model-select name="unite_id" 
+                        @if(auth()->user()->admin)
+                            <x-form::model-select name="unite_id" 
                             :models="$unites" 
                             label="Unité actuelle" 
                             key-attribute="id" 
                             value-attribute="unite_liblong"
                             :value="$user->unite">
                             <option value="">Non renseigné</option>
-                        </x-form::model-select>
-                    </div>                        
+                            </x-form::model-select>
+                        @else
+                            <div class="form-group">
+                                <label for="unite_id" class="form-label">Unité actuelle</label>
+                                <input type="text" id="unite_id" name="unite_id" class="form-control" value="{{ $unites[0]->unite_libcourt }}" readonly style="background-color: #ccc">
+                                <input type="hidden" name="unite_id" value="{{ $unites[0]->id }}">
+                            </div>
+                        @endif
+                    </div>               
                 </div>
                 <div class="row mt-4">
                     <div class="col">
