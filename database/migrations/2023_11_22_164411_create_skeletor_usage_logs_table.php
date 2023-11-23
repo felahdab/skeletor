@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('status');
             $table->ipAddress('ip');
             $table->string('method');
-            $table->float('response_time', 5, 3);
+            $table->float('response_time', 5, 3)->default(0);
             $table->unsignedInteger('counter');
             $table->timestamps();
         });
