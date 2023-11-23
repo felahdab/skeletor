@@ -20,6 +20,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserPreferencesController;
 use App\Http\Controllers\ParamaccueilsController;
 
+use App\Livewire\TestComponent;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,6 +31,8 @@ use App\Http\Controllers\ParamaccueilsController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/test', TestComponent::class);
 
 Route::impersonate();
 
