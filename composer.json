@@ -78,7 +78,13 @@
             "@php artisan key:generate --ansi"
         ]
     },
-    "extra": {},
+    "extra": {
+        "laravel": {
+            "dont-discover": [
+                "livewire/livewire"
+            ]
+        }
+    },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
