@@ -35,11 +35,7 @@ trait ColumnHelpers
 
     public function getSlug(): string
     {
-        if ($this->hasCustomSlug()) {
-            return Str::slug($this->customSlug);
-        } else {
-            return Str::slug($this->title);
-        }
+        return Str::slug($this->hasCustomSlug() ? $this->getCustomSlug() : $this->getTitle());
     }
 
     public function getField(): ?string
@@ -97,7 +93,7 @@ trait ColumnHelpers
     }
 
     // TODO: Test
-    public function renderContents(Model $row)
+    public function renderContents(Model $row): null|string|\BackedEnum|HtmlString|DataTableConfigurationException|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         if ($this->shouldCollapseOnMobile() && $this->shouldCollapseOnTablet()) {
             throw new DataTableConfigurationException('You should only specify a columns should collapse on mobile OR tablet, not both.');
@@ -107,7 +103,7 @@ trait ColumnHelpers
     }
 
     // TODO: Test
-    public function getContents(Model $row)
+    public function getContents(Model $row): null|string|\BackedEnum|HtmlString|DataTableConfigurationException|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         if ($this->isLabel()) {
             $value = call_user_func($this->getLabelCallback(), $row, $this);
@@ -201,6 +197,18 @@ trait ColumnHelpers
         return $this->collapseOnTablet;
     }
 
+    public function collapseAlways(): self
+    {
+        $this->collapseAlways = true;
+
+        return $this;
+    }
+
+    public function shouldCollapseAlways(): bool
+    {
+        return $this->collapseAlways;
+    }
+
     public function getSortingPillTitle(): string
     {
         if ($this->hasCustomSortingPillTitle()) {
@@ -279,7 +287,7 @@ trait ColumnHelpers
     }
 
     // TODO
-    public function view($view): self
+    public function view(string $view): self
     {
         $this->format(function ($value, $row, Column $column) use ($view) {
             return view($view)
@@ -333,7 +341,7 @@ trait ColumnHelpers
      * @param  mixed  $rows
      * @return mixed
      */
-    public function getSecondaryHeaderContents($rows)
+    public function getSecondaryHeaderContents($rows, array $filterGenericData)
     {
         $value = null;
         $callback = $this->getSecondaryHeaderCallback();
@@ -341,17 +349,16 @@ trait ColumnHelpers
         if ($this->hasSecondaryHeaderCallback()) {
             if (is_callable($callback)) {
                 $value = call_user_func($callback, $rows);
-
                 if ($this->isHtml()) {
                     return new HtmlString($value);
                 }
             } elseif ($callback instanceof Filter) {
-                return $callback->setFilterPosition('header')->render($this->getComponent());
+                return $callback->setFilterPosition('header')->setGenericDisplayData($filterGenericData)->render();
             } elseif (is_string($callback)) {
                 $filter = $this->getComponent()->getFilterByKey($callback);
 
                 if ($filter instanceof Filter) {
-                    return $filter->setFilterPosition('header')->render($this->getComponent());
+                    return $filter->setFilterPosition('header')->setGenericDisplayData($filterGenericData)->render();
                 }
             } else {
                 throw new DataTableConfigurationException('The secondary header callback must be a closure, filter object, or filter key if using secondaryHeaderFilter().');
@@ -383,7 +390,7 @@ trait ColumnHelpers
      * @param  mixed  $rows
      * @return mixed
      */
-    public function getFooterContents($rows)
+    public function getFooterContents($rows, array $filterGenericData)
     {
         $value = null;
         $callback = $this->getFooterCallback();
@@ -396,12 +403,12 @@ trait ColumnHelpers
                     return new HtmlString($value);
                 }
             } elseif ($callback instanceof Filter) {
-                return $callback->setFilterPosition('footer')->render($this->getComponent());
+                return $callback->setFilterPosition('footer')->setGenericDisplayData($filterGenericData)->render();
             } elseif (is_string($callback)) {
                 $filter = $this->getComponent()->getFilterByKey($callback);
 
                 if ($filter instanceof Filter) {
-                    return $filter->setFilterPosition('footer')->render($this->getComponent());
+                    return $filter->setFilterPosition('footer')->setGenericDisplayData($filterGenericData)->render();
                 }
             } else {
                 throw new DataTableConfigurationException('The footer callback must be a closure, filter object, or filter key if using footerFilter().');
@@ -441,5 +448,10 @@ trait ColumnHelpers
     public function hasCustomSlug(): bool
     {
         return $this->customSlug !== null;
+    }
+
+    public function getColumnLabelStatus(): bool
+    {
+        return $this->displayColumnLabel ?? true;
     }
 }

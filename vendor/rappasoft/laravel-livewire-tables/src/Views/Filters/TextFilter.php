@@ -2,12 +2,13 @@
 
 namespace Rappasoft\LaravelLivewireTables\Views\Filters;
 
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
 
 class TextFilter extends Filter
 {
-    public function validate($value)
+    public string $viewPath = 'livewire-tables::components.tools.filters.text-field';
+
+    public function validate(string $value): string|bool
     {
         if ($this->hasConfig('maxlength')) {
             return strlen($value) <= $this->getConfig('maxlength') ? $value : false;
@@ -29,11 +30,8 @@ class TextFilter extends Filter
         return $this->filterDefaultValue ?? null;
     }
 
-    public function render(DataTableComponent $component)
+    public function render(): string|\Illuminate\Contracts\Foundation\Application|\Illuminate\View\View|\Illuminate\View\Factory
     {
-        return view('livewire-tables::components.tools.filters.text-field', [
-            'component' => $component,
-            'filter' => $this,
-        ]);
+        return view($this->getViewPath(), $this->getFilterDisplayData());
     }
 }

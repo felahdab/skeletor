@@ -1,3 +1,4 @@
+import { mergedOptionsWithJsonConfig } from './helpers'
 
 const columnChart = () => {
     return {
@@ -23,6 +24,7 @@ const columnChart = () => {
             const grid = component.get('columnChartModel.grid');
             const columnWidth = component.get('columnChartModel.columnWidth');
             const horizontal = component.get('columnChartModel.horizontal');
+            const jsonConfig = component.get('columnChartModel.jsonConfig');
 
             const data = component.get('columnChartModel.data');
             const series = [{
@@ -92,6 +94,8 @@ const columnChart = () => {
                     opacity: component.get('columnChartModel.opacity') || 0.5
                 },
 
+                theme: component.get('columnChartModel.theme') || {},
+
                 tooltip: {
                     y: {
                         formatter: function(value, series) {
@@ -99,6 +103,7 @@ const columnChart = () => {
                         }
                     }
                 },
+
             };
 
             const colors = component.get('columnChartModel.colors');
@@ -107,7 +112,7 @@ const columnChart = () => {
                 options['colors'] = colors
             }
 
-            this.chart = new ApexCharts(this.$refs.container, options);
+            this.chart = new ApexCharts(this.$refs.container, mergedOptionsWithJsonConfig(options, jsonConfig));
             this.chart.render();
         }
     }
