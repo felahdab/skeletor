@@ -1,3 +1,25 @@
+## 2.1.6 (November 23, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.5a –> 2.1.6
+- Implements art #139971 outil d'analyse de l'utilisation de l'application
+- Implements art #187520 suite des modifs scope memeUnite
+- Implements art #187520 unité actuelle mise par défaut
+- Implements art #187520 suite des modifs scope memeUnite
+- Poursuite du retrait des dépendances à laravelcollective/html
+- Ajustement des tests du module Transformation au déplacement des fonctions de suivi de la transformation vers l'entité User du module Transformation. Retrait de propriétés orphelines du modèle App\Models\User.
+- evolution doc connexion
+- Implements art #187520 mise en place du scope meme unite sur les model/users
+- Implements art #189991: fonction de reset de mot de passe
+- Implements password reset logic and tests.
+- Rajout des fichiers de langue FR
+- ajout de la barre de recherche et des images
+- filtre des marin sur le tableau
+- Ajustement de la configuration du backup pour surveiller les mêmes backups que ceux qui sont créés. Fixes art #176059
+- deplacement des fonctions propres à la transfo de model/user dans entity/user
+- composer remove laravelcollective/html
+- Mise à jour composer.lock. auditing publish.
+- composer require laravel-shift/blueprint
+- laravel-blueprint install
+
 ## 2.1.5a (October 17, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.5 –> 2.1.5a
 - Merge commit 'dc3c8c106caeae02d0b99efa3a60e97895184c67'
