@@ -78,6 +78,10 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             Route::get('/{mcuser}/effacecpte', [MindefConnectUserController::class, 'effacecpte'])->name('mindefconnect.effacecpte');
         });
 
+        Route::group(['prefix' => 'annudef'], function () {
+            Route::get('/', [AnnudefController::class, 'index'])->name('annudef.index');
+        });
+        
         /**
          * User Routes
          */
@@ -95,6 +99,12 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
                 Route::get('/{user}/changepasswd', [ChangeUserPassword::class,  'index'])->name('changepasswd.show');
                 Route::post('/{user}/changepasswd', [ChangeUserPassword::class,  'store'])->name('changepasswd.store');
             });
+            Route::group(['prefix' => 'mails'], function () {
+                Route::get('/', [MailController::class, 'index'])->name('mails.index');
+                Route::get('/edit/{mail}', [MailController::class, 'edit'])->name('mails.edit');
+                Route::get('/create', [MailController::class, 'create'])->name('mails.create');
+            });
+    
         });
 
         Route::resource('roles',          RolesController::class);
@@ -132,18 +142,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             Route::patch('/{service}/update', [ServiceController::class, 'update'])->name('services.update');
             Route::delete('/{service}/delete', [ServiceController::class, 'destroy'])->name('services.destroy');
         });
-
-        Route::group(['prefix' => 'annudef'], function () {
-            Route::get('/', [AnnudefController::class, 'index'])->name('annudef.index');
-        });
-
         
-        Route::group(['prefix' => 'mails'], function () {
-            Route::get('/', [MailController::class, 'index'])->name('mails.index');
-            Route::get('/edit/{mail}', [MailController::class, 'edit'])->name('mails.edit');
-            Route::get('/create', [MailController::class, 'create'])->name('mails.create');
-        });
-
         Route::group(['prefix' => 'paramaccueils'], function () {
             Route::get('/', [ParamaccueilsController::class, 'index'])->name('paramaccueils.index');
             Route::patch('/', [ParamaccueilsController::class, 'update'])->name('paramaccueils.update');
