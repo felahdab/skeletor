@@ -67,7 +67,7 @@ Vous avez également la possibilité de télécharger directement une version po
     @livewireScripts
     <script src="{!! asset('assets/bootstrap/js/bootstrap.bundle.js') !!}"></script>
     <script src="{!! asset('/vendor/livewire-charts/app.js') !!}"></script>
-    <script src="{!! asset('assets/js/alpine.js') !!}"></script>
+    
     <script src="{!! asset('assets/js/apexcharts.js') !!}"></script>
     
     @yield("scripts")
