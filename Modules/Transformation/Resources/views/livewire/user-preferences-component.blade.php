@@ -23,11 +23,11 @@
             @if(false)
             <div>
             <input type='checkbox' 
-                wire:model="settings.transformation.notifications.pour_fonctions.daily"> Notifications quotidiennes
+                wire:model.live="settings.transformation.notifications.pour_fonctions.daily"> Notifications quotidiennes
             </div>
             <div>
             <input type='checkbox' 
-                wire:model="settings.transformation.notifications.pour_fonctions.weekly"> Notifications hebdomadaires
+                wire:model.live="settings.transformation.notifications.pour_fonctions.weekly"> Notifications hebdomadaires
             </div>
             @endif
             <div class="accordion  mt-4">
@@ -49,7 +49,7 @@
                                 <div class="col-sm-1 form-switch">           
                                     <input type='checkbox'  class="form-check-input"
                                     x-on:click="services_collapse=true; fonctions_collapse=false"
-                                    wire:model="settings.transformation.notifications.pour_fonctions.liste_fonctions.{{ $fonction->id }}"
+                                    wire:model.live="settings.transformation.notifications.pour_fonctions.liste_fonctions.{{ $fonction->id }}"
                                         value="{{$fonction->id}}">
                                 </div>
                                 <div class="col-sm-3">
@@ -74,11 +74,11 @@
         <div class="card-body">
             <div>
             <input type='checkbox' 
-                wire:model="settings.transformation.notifications.pour_services.daily"> Notifications quotidiennes
+                wire:model.live="settings.transformation.notifications.pour_services.daily"> Notifications quotidiennes
             </div>
             <div>
             <input type='checkbox' 
-                wire:model="settings.transformation.notifications.pour_services.weekly"> Notifications hebdomadaires
+                wire:model.live="settings.transformation.notifications.pour_services.weekly"> Notifications hebdomadaires
             </div>
             <div class="accordion mt-4">
                 <div class="accordion-item">
@@ -98,7 +98,7 @@
                             <div class="form-switch">           
                                 <input type='checkbox'  class="form-check-input"
                                     x-on:click="services_collapse=false; fonctions_collapse=true"
-                                    wire:model="settings.transformation.notifications.pour_services.liste_services.{{ $service->id }}"
+                                    wire:model.live="settings.transformation.notifications.pour_services.liste_services.{{ $service->id }}"
                                     value="{{$service->id}}" />
                                 {{ $service->service_libcourt }}
                             </div>
