@@ -3,46 +3,11 @@
 namespace Rappasoft\LaravelLivewireTables\Views;
 
 use Illuminate\Support\Str;
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use Rappasoft\LaravelLivewireTables\Views\Traits\Configuration\FilterConfiguration;
-use Rappasoft\LaravelLivewireTables\Views\Traits\Helpers\FilterHelpers;
+use Rappasoft\LaravelLivewireTables\Views\Traits\IsFilter;
 
 abstract class Filter
 {
-    use FilterConfiguration,
-        FilterHelpers;
-
-    protected string $name;
-
-    protected string $key;
-
-    protected bool $hiddenFromMenus = false;
-
-    protected bool $hiddenFromPills = false;
-
-    protected bool $hiddenFromFilterCount = false;
-
-    protected bool $resetByClearButton = true;
-
-    protected $filterCallback = null;
-
-    protected array $config = [];
-
-    protected ?string $filterPillTitle = null;
-
-    protected array $filterPillValues = [];
-
-    public ?string $filterPosition = null;
-
-    protected ?string $filterCustomLabel = null;
-
-    protected ?int $filterSlidedownRow = null;
-
-    protected ?int $filterSlidedownColspan = null;
-
-    protected ?string $filterCustomPillBlade = null;
-
-    protected $filterDefaultValue;
+    use IsFilter;
 
     public function __construct(string $name, string $key = null)
     {
@@ -53,6 +18,7 @@ abstract class Filter
         } else {
             $this->key = Str::snake($name);
         }
+        $this->config([]);
     }
 
     /**
@@ -65,5 +31,5 @@ abstract class Filter
 
     abstract public function isEmpty(string $value): bool;
 
-    abstract public function render(DataTableComponent $component);
+    abstract public function render(): string|\Illuminate\Contracts\Foundation\Application|\Illuminate\View\View|\Illuminate\View\Factory;
 }

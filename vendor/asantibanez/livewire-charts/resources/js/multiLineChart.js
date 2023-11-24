@@ -1,3 +1,4 @@
+import { mergedOptionsWithJsonConfig } from './helpers'
 
 const multiLineChart = () => {
     return {
@@ -20,6 +21,7 @@ const multiLineChart = () => {
             const data = component.get('lineChartModel.data');
             const onPointClickEventName = component.get('lineChartModel.onPointClickEventName');
             const sparkline = component.get('lineChartModel.sparkline');
+            const jsonConfig = component.get('lineChartModel.jsonConfig');
 
             const series = Object.keys(data).map(key => {
                 return {
@@ -74,6 +76,8 @@ const multiLineChart = () => {
                 },
 
                 yaxis: component.get('lineChartModel.yAxis') || {},
+
+                theme: component.get('lineChartModel.theme') || {},
             };
 
             const colors = component.get('lineChartModel.colors');
@@ -82,7 +86,7 @@ const multiLineChart = () => {
                 options['colors'] = colors
             }
 
-            this.chart = new ApexCharts(this.$refs.container, options);
+            this.chart = new ApexCharts(this.$refs.container, mergedOptionsWithJsonConfig(options, jsonConfig));
             this.chart.render();
         }
     }

@@ -125,7 +125,7 @@ class DashboardarchiveTable extends DataTableComponent
         ];
         return $basefilters;
     }
-    public function render()
+    public function render(): \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         $this->archiveids = $this->getCurrentItems();
         $this->archiveids["datedebut"] = $this->table['filters']['début'];

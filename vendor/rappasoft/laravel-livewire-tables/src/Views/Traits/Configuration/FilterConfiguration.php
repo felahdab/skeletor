@@ -118,4 +118,32 @@ trait FilterConfiguration
 
         return $this;
     }
+
+    public function setFilterLabelAttributes(array $filterLabelAttributes): self
+    {
+        $this->filterLabelAttributes = [...['default' => false], ...$filterLabelAttributes];
+
+        return $this;
+    }
+
+    public function setGenericDisplayData(array $genericDisplayData = []): self
+    {
+        $this->genericDisplayData = [
+            'filterLayout' => $genericDisplayData['filterLayout'],
+            'tableName' => $genericDisplayData['tableName'],
+            'isTailwind' => $genericDisplayData['isTailwind'],
+            'isBootstrap' => ($genericDisplayData['isBootstrap4'] || $genericDisplayData['isBootstrap5']),
+            'isBootstrap4' => $genericDisplayData['isBootstrap4'],
+            'isBootstrap5' => $genericDisplayData['isBootstrap5'],
+        ];
+
+        return $this;
+    }
+
+    public function setCustomView(string $customView): self
+    {
+        $this->viewPath = $customView;
+
+        return $this;
+    }
 }

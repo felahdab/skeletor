@@ -5,40 +5,13 @@ namespace Rappasoft\LaravelLivewireTables;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\Exceptions\DataTableConfigurationException;
-use Rappasoft\LaravelLivewireTables\Traits\ComponentUtilities;
-use Rappasoft\LaravelLivewireTables\Traits\WithBulkActions;
-use Rappasoft\LaravelLivewireTables\Traits\WithColumns;
-use Rappasoft\LaravelLivewireTables\Traits\WithColumnSelect;
-use Rappasoft\LaravelLivewireTables\Traits\WithData;
-use Rappasoft\LaravelLivewireTables\Traits\WithDebugging;
-use Rappasoft\LaravelLivewireTables\Traits\WithEvents;
-use Rappasoft\LaravelLivewireTables\Traits\WithFilters;
-use Rappasoft\LaravelLivewireTables\Traits\WithFooter;
-use Rappasoft\LaravelLivewireTables\Traits\WithPagination;
-use Rappasoft\LaravelLivewireTables\Traits\WithRefresh;
-use Rappasoft\LaravelLivewireTables\Traits\WithReordering;
-use Rappasoft\LaravelLivewireTables\Traits\WithSearch;
-use Rappasoft\LaravelLivewireTables\Traits\WithSecondaryHeader;
-use Rappasoft\LaravelLivewireTables\Traits\WithSorting;
+use Rappasoft\LaravelLivewireTables\Traits\HasAllTraits;
 
 abstract class DataTableComponent extends Component
 {
-    use ComponentUtilities,
-        WithBulkActions,
-        WithColumns,
-        WithColumnSelect,
-        WithData,
-        WithDebugging,
-        WithEvents,
-        WithFilters,
-        WithFooter,
-        WithSecondaryHeader,
-        WithPagination,
-        WithRefresh,
-        WithReordering,
-        WithSearch,
-        WithSorting;
+    use HasAllTraits;
 
+    /** @phpstan-ignore-next-line */
     protected $listeners = [
         'refreshDatatable' => '$refresh',
         'setSort' => 'setSortEvent',
@@ -48,7 +21,7 @@ abstract class DataTableComponent extends Component
     ];
 
     /**
-     * returns a unique id for the table, used as an alias to identify one table from another session and query string to prevent conflicts
+     * Returns a unique id for the table, used as an alias to identify one table from another session and query string to prevent conflicts
      */
     protected function generateDataTableFingerprint(): string
     {
@@ -63,12 +36,7 @@ abstract class DataTableComponent extends Component
      */
     public function boot(): void
     {
-        $this->{$this->tableName} = [
-            'sorts' => $this->{$this->tableName}['sorts'] ?? [],
-            'filters' => $this->{$this->tableName}['filters'] ?? [],
-            'columns' => $this->{$this->tableName}['columns'] ?? [],
-        ];
-
+        //
     }
 
     /**
@@ -76,22 +44,32 @@ abstract class DataTableComponent extends Component
      */
     public function booted(): void
     {
+        // Configuring
+        // Fire hook for configuring
+        $this->callHook('configuring');
+        $this->callTraitHook('configuring');
+
         // Call the configure() method
         $this->configure();
 
-        // Set the filter defaults based on the filter type
-        // Moved to Traits/Helpers/FilterHelpers - mountFilterHelpers
-        //$this->setFilterDefaults();
-
-        // Sets the Theme - tailwind/bootstrap
-        // Moved to Traits/ComponentUtilities - mountComponentUtilities
-        //$this->setTheme();
+        // Fire hook for configured
+        $this->callHook('configured');
+        $this->callTraitHook('configured');
 
         //Sets up the Builder Instance
         $this->setBuilder($this->builder());
 
         // Sets Columns
+        // Fire hook for settingColumns
+        $this->callHook('settingColumns');
+        $this->callTraitHook('settingColumns');
+
+        // Set Columns
         $this->setColumns();
+
+        // Fire hook for columnsSet
+        $this->callHook('columnsSet');
+        $this->callTraitHook('columnsSet');
 
         // Make sure a primary key is set
         if (! $this->hasPrimaryKey()) {
@@ -129,19 +107,11 @@ abstract class DataTableComponent extends Component
         return 'livewire-tables::stubs.custom';
     }
 
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
-    public function render()
+    public function render(): \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        $this->setupColumnSelect();
-        $this->setupPagination();
-        $this->setupSecondaryHeader();
-        $this->setupFooter();
-        $this->setupReordering();
-
         return view('livewire-tables::datatable')
             ->with([
+                'filterGenericData' => $this->getFilterGenericData(),
                 'columns' => $this->getColumns(),
                 'rows' => $this->getRows(),
                 'customView' => $this->customView(),

@@ -2,12 +2,13 @@
 
 namespace Rappasoft\LaravelLivewireTables\Views\Filters;
 
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
 
 class NumberFilter extends Filter
 {
-    public function validate($value)
+    public string $viewPath = 'livewire-tables::components.tools.filters.number';
+
+    public function validate(mixed $value): int|bool
     {
         return is_numeric($value) ? $value : false;
     }
@@ -25,11 +26,8 @@ class NumberFilter extends Filter
         return $this->filterDefaultValue ?? null;
     }
 
-    public function render(DataTableComponent $component)
+    public function render(): string|\Illuminate\Contracts\Foundation\Application|\Illuminate\View\View|\Illuminate\View\Factory
     {
-        return view('livewire-tables::components.tools.filters.number', [
-            'component' => $component,
-            'filter' => $this,
-        ]);
+        return view($this->getViewPath(), $this->getFilterDisplayData());
     }
 }
