@@ -20,6 +20,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserPreferencesController;
 use App\Http\Controllers\ParamaccueilsController;
 
+use App\Livewire\TestComponent;
 use App\Http\Middleware\RestrictVisibility;
 
 /*
@@ -32,6 +33,8 @@ use App\Http\Middleware\RestrictVisibility;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/test', TestComponent::class);
 
 Route::impersonate();
 
@@ -77,7 +80,6 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             Route::get('/{mcuser}/conservcpte', [MindefConnectUserController::class, 'conservcpte'])->name('mindefconnect.conservcpte');
             Route::get('/{mcuser}/effacecpte', [MindefConnectUserController::class, 'effacecpte'])->name('mindefconnect.effacecpte');
         });
-
         Route::group(['prefix' => 'annudef'], function () {
             Route::get('/', [AnnudefController::class, 'index'])->name('annudef.index');
         });

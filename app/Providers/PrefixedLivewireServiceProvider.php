@@ -4,19 +4,36 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Route as RouteFacade;
 
-use Livewire\LivewireServiceProvider;
+use Illuminate\Support\ServiceProvider;
 
-class PrefixedLivewireServiceProvider extends LivewireServiceProvider
+use Livewire\Livewire;
+use Illuminate\Support\Facades\Route;
+
+class PrefixedLivewireServiceProvider extends ServiceProvider
 {
-    protected function registerRoutes()
+    public function boot()
     {
-        return;
-        
-        $prefix = config('livewire.route_prefix');
-        
-        RouteFacade::prefix($prefix)->group(function() {
-            parent::registerRoutes();
+    }
+    public function register()
+    {
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post('/ffast/livewire/update', $handle);
         });
 
+        // Livewire::setUploadFileRoute(function ($handle) {
+        //     return Route::post('/ffast/livewire/upload-file', $handle);
+        // });
+
+        Livewire::setScriptRoute(function ($handle) {
+            return Route::get('/ffast/livewire/livewire.js', $handle);
+        });
+
+        return;
+
+        $prefix = config('livewire.route_prefix');
+
+        RouteFacade::prefix($prefix)->group(function () {
+            parent::registerRoutes();
+        });
     }
 }

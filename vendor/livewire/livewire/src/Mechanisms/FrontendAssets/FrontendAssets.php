@@ -23,9 +23,9 @@ class FrontendAssets
 
     public function boot()
     {
-        app($this::class)->setScriptRoute(function ($handle) {
-            return Route::get('/livewire/livewire.js', $handle);
-        });
+        // app($this::class)->setScriptRoute(function ($handle) {
+        //     return Route::get('/livewire/livewire.js', $handle);
+        // });
 
         Blade::directive('livewireScripts', [static::class, 'livewireScripts']);
         Blade::directive('livewireScriptConfig', [static::class, 'livewireScriptConfig']);
@@ -187,6 +187,7 @@ class FrontendAssets
             'uri' => app('livewire')->getUpdateUri(),
             'progressBar' => $progressBar,
         ]);
+        dd($attributes);
 
         return <<<HTML
         <script{$nonce} data-navigate-once="true">window.livewireScriptConfig = {$attributes};</script>
