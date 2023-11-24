@@ -57,7 +57,7 @@ class FullCalendar extends Component
     }
 
     public function refreshCalendar(){
-        $this->emit('refreshCalendar');
+        $this->dispatch('refreshCalendar');
     }
 
     public function render()

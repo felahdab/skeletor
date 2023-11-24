@@ -23,7 +23,7 @@ class Dashboardarchive extends Component
     public function archiveListUpdated($archiveids)
     {
         $this->archiveids = $archiveids;
-        $this->emitSelf('$refresh');
+        $this->dispatch('$refresh');
     }
 
     public function render()
