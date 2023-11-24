@@ -39,7 +39,7 @@ Vous avez également la possibilité de télécharger directement une version po
     <link href="{!! asset('assets/bootstrap/css/bootstrap.css') !!}" rel="stylesheet">
     <script src="{!! asset('assets/js/jscharts.js') !!}"></script>
     <script src="{!! asset('assets/js/Sortable.js') !!}"></script>
-    <script src="{!! asset('assets/js/fullcalendar_6.1.3.js') !!}"></script>
+    
     <x-sortable-scripts/>
     
     <style>
