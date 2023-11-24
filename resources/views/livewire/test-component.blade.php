@@ -20,4 +20,6 @@
         <!-- Increment the "count" value by "1" when a click event is dispatched... -->
         <button x-on:click="count++">+</button>
     </div>
+
+    @livewire('notification-panel')
 </div>

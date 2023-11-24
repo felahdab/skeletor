@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use App\Models\User;
 use App\Models\Unite;
@@ -359,10 +359,10 @@ class UsersTable extends DataTableComponent
         return $basefilters;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        $this->userids = $this->getCurrentItems();
-        $this->emitUp("userListUpdated", $this->userids);
+       // $this->userids = $this->getCurrentItems();
+       // $this->emitUp("userListUpdated", $this->userids);
         return parent::render();
     }
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
+use App\Models\Secteur;
 use App\Models\Service;
-use App\Models\Groupement;
 
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
@@ -20,9 +20,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class ServicesTable extends DataTableComponent
+class SecteursTable extends DataTableComponent
 {
-    protected $model = Service::class;
+    protected $model = Secteur::class;
 
     public function configure(): void
     {
@@ -33,12 +33,12 @@ class ServicesTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Service::query();
+        return Secteur::query();
     }
 
-    public function serviceActions()
+    public function secteurActions()
     {
-        return view('tables.servicestable.gestion');
+        return view('tables.secteurstable.gestion');
     }
 
     public function columns(): array
@@ -48,21 +48,21 @@ class ServicesTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->deSelected(),
-            Column::make("Libellé court", "service_libcourt")
+            Column::make("Libellé court", "secteur_libcourt")
                 ->searchable()
                 ->sortable(),
-            Column::make("Libellé long", "service_liblong")
+            Column::make("Libellé long", "secteur_liblong")
                 ->searchable()
                 ->sortable(),
-            Column::make("Libellé court", "groupement.groupement_libcourt")
+            Column::make("Libellé court", "service.service_libcourt")
                 ->searchable()
                 ->sortable(),
-            Column::make("Libellé long", "groupement.groupement_liblong")
+            Column::make("Libellé long", "service.service_liblong")
                 ->searchable()
                 ->sortable(),
             Column::make('Actions')
                     ->label(
-                        fn($row, Column $column) => $this->serviceActions()->withRow($row)
+                        fn($row, Column $column) => $this->secteurActions()->withRow($row)
                         ),
         ];
     }
@@ -71,27 +71,27 @@ class ServicesTable extends DataTableComponent
     {
         $basefilters= [
             
-            TextFilter::make('Service')
+            TextFilter::make('Secteur')
                 ->config([
                     'placeholder' => 'LAS...',
                     'maxlength'   => 5
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                        $service = Service::where('service_libcourt', 'like', $value . '%')->get()->first();
-                        if ($service != null)
-                            $builder->where('id', $service->id);
+                        $secteur = Secteur::where('secteur_libcourt', 'like', $value . '%')->get()->first();
+                        if ($secteur != null)
+                            $builder->where('id', $secteur->id);
                 }),
 
-            TextFilter::make('Groupement')
-                ->config([
-                    'placeholder' => 'NAV...',
-                    'maxlength'   => 5
-                    ])
-                ->filter(function(Builder $builder, string $value) {
-                        $gpmt = Groupement::where('groupement_libcourt', 'like', $value . '%')->get()->first();
-                        if ($gpmt != null)
-                            $builder->where('groupement_id', $gpmt->id);
-                }),
+            // TextFilter::make('Service')
+            //     ->config([
+            //         'placeholder' => 'NAV...',
+            //         'maxlength'   => 5
+            //         ])
+            //     ->filter(function(Builder $builder, string $value) {
+            //             $gpmt = Service::where('service_libcourt', 'like', $value . '%')->get()->first();
+            //             if ($gpmt != null)
+            //                 $builder->where('service_id', $gpmt->id);
+            //     }),
         ];
         return $basefilters;
     }

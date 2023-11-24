@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-use App\Models\Secteur;
-use App\Models\Service;
+use App\Models\Groupement;
 
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
@@ -20,9 +19,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class SecteursTable extends DataTableComponent
+class GroupementTable extends DataTableComponent
 {
-    protected $model = Secteur::class;
+    protected $model = Groupement::class;
 
     public function configure(): void
     {
@@ -33,12 +32,12 @@ class SecteursTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Secteur::query();
+        return Groupement::query();
     }
 
-    public function secteurActions()
+    public function groupementActions()
     {
-        return view('tables.secteurstable.gestion');
+        return view('tables.groupementtable.gestion');
     }
 
     public function columns(): array
@@ -48,21 +47,15 @@ class SecteursTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->deSelected(),
-            Column::make("Libellé court", "secteur_libcourt")
+            Column::make("Libellé court", "groupement_libcourt")
                 ->searchable()
                 ->sortable(),
-            Column::make("Libellé long", "secteur_liblong")
-                ->searchable()
-                ->sortable(),
-            Column::make("Libellé court", "service.service_libcourt")
-                ->searchable()
-                ->sortable(),
-            Column::make("Libellé long", "service.service_liblong")
+            Column::make("Libellé long", "groupement_liblong")
                 ->searchable()
                 ->sortable(),
             Column::make('Actions')
                     ->label(
-                        fn($row, Column $column) => $this->secteurActions()->withRow($row)
+                        fn($row, Column $column) => $this->groupementActions()->withRow($row)
                         ),
         ];
     }
@@ -71,27 +64,16 @@ class SecteursTable extends DataTableComponent
     {
         $basefilters= [
             
-            TextFilter::make('Secteur')
+            TextFilter::make('groupement')
                 ->config([
                     'placeholder' => 'LAS...',
                     'maxlength'   => 5
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                        $secteur = Secteur::where('secteur_libcourt', 'like', $value . '%')->get()->first();
-                        if ($secteur != null)
-                            $builder->where('id', $secteur->id);
+                        $groupement = groupement::where('groupement_libcourt', 'like', $value . '%')->get()->first();
+                        if ($groupement != null)
+                            $builder->where('id', $groupement->id);
                 }),
-
-            // TextFilter::make('Service')
-            //     ->config([
-            //         'placeholder' => 'NAV...',
-            //         'maxlength'   => 5
-            //         ])
-            //     ->filter(function(Builder $builder, string $value) {
-            //             $gpmt = Service::where('service_libcourt', 'like', $value . '%')->get()->first();
-            //             if ($gpmt != null)
-            //                 $builder->where('service_id', $gpmt->id);
-            //     }),
         ];
         return $basefilters;
     }

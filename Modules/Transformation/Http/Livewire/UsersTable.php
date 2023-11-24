@@ -391,8 +391,8 @@ class UsersTable extends DataTableComponent
 
     public function render(): \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        $this->userids = $this->getCurrentItems();
-        $this->emitUp("userListUpdated", $this->userids);
+       // $this->userids = $this->getCurrentItems();
+       // $this->emitUp("userListUpdated", $this->userids);
         return parent::render();
     }
 

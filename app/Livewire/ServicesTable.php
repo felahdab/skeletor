@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
+use App\Models\Service;
 use App\Models\Groupement;
 
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
@@ -19,9 +20,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class GroupementTable extends DataTableComponent
+class ServicesTable extends DataTableComponent
 {
-    protected $model = Groupement::class;
+    protected $model = Service::class;
 
     public function configure(): void
     {
@@ -32,12 +33,12 @@ class GroupementTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Groupement::query();
+        return Service::query();
     }
 
-    public function groupementActions()
+    public function serviceActions()
     {
-        return view('tables.groupementtable.gestion');
+        return view('tables.servicestable.gestion');
     }
 
     public function columns(): array
@@ -47,15 +48,21 @@ class GroupementTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->deSelected(),
-            Column::make("Libellé court", "groupement_libcourt")
+            Column::make("Libellé court", "service_libcourt")
                 ->searchable()
                 ->sortable(),
-            Column::make("Libellé long", "groupement_liblong")
+            Column::make("Libellé long", "service_liblong")
+                ->searchable()
+                ->sortable(),
+            Column::make("Libellé court", "groupement.groupement_libcourt")
+                ->searchable()
+                ->sortable(),
+            Column::make("Libellé long", "groupement.groupement_liblong")
                 ->searchable()
                 ->sortable(),
             Column::make('Actions')
                     ->label(
-                        fn($row, Column $column) => $this->groupementActions()->withRow($row)
+                        fn($row, Column $column) => $this->serviceActions()->withRow($row)
                         ),
         ];
     }
@@ -64,15 +71,26 @@ class GroupementTable extends DataTableComponent
     {
         $basefilters= [
             
-            TextFilter::make('groupement')
+            TextFilter::make('Service')
                 ->config([
                     'placeholder' => 'LAS...',
                     'maxlength'   => 5
                     ])
                 ->filter(function(Builder $builder, string $value) {
-                        $groupement = groupement::where('groupement_libcourt', 'like', $value . '%')->get()->first();
-                        if ($groupement != null)
-                            $builder->where('id', $groupement->id);
+                        $service = Service::where('service_libcourt', 'like', $value . '%')->get()->first();
+                        if ($service != null)
+                            $builder->where('id', $service->id);
+                }),
+
+            TextFilter::make('Groupement')
+                ->config([
+                    'placeholder' => 'NAV...',
+                    'maxlength'   => 5
+                    ])
+                ->filter(function(Builder $builder, string $value) {
+                        $gpmt = Groupement::where('groupement_libcourt', 'like', $value . '%')->get()->first();
+                        if ($gpmt != null)
+                            $builder->where('groupement_id', $gpmt->id);
                 }),
         ];
         return $basefilters;
