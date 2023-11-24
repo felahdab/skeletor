@@ -57,3 +57,8 @@
         </div>
     </div>
 </div>
+
+@assets
+<script src="{!! asset('/vendor/livewire-charts/app.js') !!}"></script> 
+<script src="{!! asset('assets/js/apexcharts.js') !!}"></script>
+@endassets
