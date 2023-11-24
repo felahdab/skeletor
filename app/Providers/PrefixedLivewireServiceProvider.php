@@ -10,6 +10,8 @@ class PrefixedLivewireServiceProvider extends LivewireServiceProvider
 {
     protected function registerRoutes()
     {
+        return;
+        
         $prefix = config('livewire.route_prefix');
         
         RouteFacade::prefix($prefix)->group(function() {
