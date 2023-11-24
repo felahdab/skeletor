@@ -4,6 +4,15 @@
     <button wire:click="increment">+</button>
  
     <button wire:click="decrement">-</button>
+
+    <form wire:submit="save">
+        <input type="file" wire:model="photo">
+     
+        @error('photo') <span class="error">{{ $message }}</span> @enderror
+     
+        <button type="submit">Save photo</button>
+    </form>
+    
     <div x-data="{ count: 0 }">
         <!-- Render the current "count" value inside an element... -->
         <h2 x-text="count"></h2>
