@@ -47,7 +47,7 @@ class Dashboard extends Component
 
         if (!is_null($this->userids) && sizeof($this->userids))
         {
-            $users=User::query()->with('fonctions')->whereIn('id', $this->userids)->get();
+            $users=User::query()->withTrashed()->with('fonctions')->whereIn('id', $this->userids)->get();
 
             $columnChartModel = 
             (new ColumnChartModel())
@@ -99,7 +99,7 @@ class Dashboard extends Component
                     'txtransfo'    => round($users->avg("taux_de_transformation"), 2),
                     'duree'    => $durmoy,
                     'nbmarins'    => $nbmarins,
-                    // 'nbmarins_debarq'    => $nbdeb 
+                    'nbmarins_debarq'    => $nbdeb 
                 ];
         }
 

@@ -34,8 +34,8 @@
                         @elseif ($mode == "selection")
                             <td>
                                 <x-form::form method="POST" :action="route('transformation::compagnonages.ajoutertache', $compagnonage->id)">
-                                <input type='hidden' id='tache_id' name='tache_id' value='{{ $tache->id }}'>
-                                <button dusk="select-tache" type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
+                                    <input type='hidden' id='tache_id' name='tache_id' value='{{ $tache->id }}'>
+                                    <button dusk="select-tache" type="submit" class="btn btn-primary btn-sm">Ajouter</a></td>
                                 </x-form::form>
                                 </td>
                             <td></td>

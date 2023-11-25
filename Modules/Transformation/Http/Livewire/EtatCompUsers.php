@@ -2,6 +2,9 @@
 
 namespace Modules\Transformation\Http\Livewire;
 
+use App\Models\FiltreTransformationCompagnonnage;
+use App\Models\FiltreTransformationCompagnonnages;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Modules\Transformation\Services\GererTransformationService;
 
@@ -11,15 +14,23 @@ use Modules\Transformation\Entities\Compagnonage;
 use Modules\Transformation\Entities\Tache;
 use Modules\Transformation\Entities\Objectif;
 use Modules\Transformation\Entities\SousObjectif;
+use PHPUnit\TextUI\XmlConfiguration\CodeCoverage\Report\Php;
+
+use function Termwind\render;
 
 class EtatCompUsers extends Component
 {
 
     public $comp=null;
-    
-    public function mount(Compagnonage $comp)
+    public $listusers =null;
+    public $user_id=null;
+    public $success='';
+    public $erreur='';
+    public function mount(Compagnonage $comp, $listusers, $user)
     {
         $this->comp=$comp;
+        $this->listusers=$listusers;
+        $this->user_id=$user;
     }
 
     public function render()
@@ -28,17 +39,19 @@ class EtatCompUsers extends Component
         $listfoncs= $this->comp->fonctions()->get();
 
         // liste des users ayant ces fonc donc ce comp
-        $listusers=collect();
-        foreach($listfoncs as $fonc){
-            $users=$fonc->users;
-            if ($users->isNotEmpty()){
-                foreach($users as $user){
-                    $listusers->push($user);
+        if($this->listusers === null){
+            $this->listusers=collect();
+            foreach($listfoncs as $fonc){
+                $users=$fonc->users;
+                if ($users->isNotEmpty()){
+                    foreach($users as $user){
+                        $this->listusers->push($user);
+                    }
                 }
             }
         }
-        $listusers=$listusers->unique('id');
-        $listusers=$listusers->sortBy('name');
+
+        $listusers=$this->listusers->sortBy('name');
         //entete du tableau
         $entete_taches=[];
         $entete_objectifs=[];
@@ -91,10 +104,17 @@ class EtatCompUsers extends Component
             $ligne['txtransfo'] = $txcompuser;
             array_push($usersssobjs, $ligne);
         }
+        $filtres = DB::table('filtre_transformation_compagnonnages')
+                        ->where('user_id', $this->user_id)
+                        ->where('comp', $this->comp->comp_liblong)
+                        ->get();
         return view('transformation::livewire.etat-comp-users',['entete_taches' => $entete_taches,
                                                 'entete_objectifs' => $entete_objectifs,
                                                 'entete_ssobjectifs' => $entete_ssobjectifs,
                                                 'usersssobjs' => $usersssobjs,
+                                                'filtres' => $filtres,
+                                                'success' => $this->success,
+                                                'erreur' => $this->erreur,
                                             ]);
     }
     public function ValideElementsDuParcoursParcomp( 
@@ -112,5 +132,72 @@ class EtatCompUsers extends Component
         }
         // $this->emit('$refresh');
         $this->dispatch("resetselection");
+    }
+
+    public function showMarinFiltrer($marinSelectionnes){
+        if(sizeof($marinSelectionnes) > 0){
+            $listUsers = [];
+            $listUsers = User::whereIn('id', $marinSelectionnes)->get();
+            $this->listusers = $listUsers;
+            $this->render();
+        }
+        else{
+            $this->listusers = null;
+            $this->erreur = "il faut selectionner au moins un marin";
+            $this->render();
+        }
+    }
+
+    public function reinitialiser(){
+        $this->listusers = null;
+        $this->success='';
+        $this->erreur='';
+        $this->render();
+    }
+
+    public function creerUnFiltre($marinSelectionnes, $nomDuFiltre){
+        if(DB::table('filtre_transformation_compagnonnages')
+        ->where('nomDuFiltre', $nomDuFiltre)
+        ->where('comp', $this->comp->comp_liblong)
+        ->first() === null){
+            $listUsers = [];
+            $listUsers = User::whereIn('id', $marinSelectionnes)->get();
+            $this->listusers = $listUsers;
+            $filtre = new FiltreTransformationCompagnonnages();
+            $filtre->user_id = $this->user_id;
+            $filtre->nomDuFiltre = $nomDuFiltre;
+            $filtre->listeId = json_encode($marinSelectionnes);
+            $filtre->comp = $this->comp->comp_liblong;
+            $filtre->save();
+            $this->success = "filtre enregistré";
+            $this->erreur = ""; 
+            $this->render();
+        }
+        else{
+            $this->success= "";
+            $this->erreur = "nom de filtre déjà utilisé";
+            $this->listusers = null;
+            $this->render();
+        }
+    }
+
+    public function appliquerFiltre($idFiltre){
+        $filtre = FiltreTransformationCompagnonnages::where('id', $idFiltre)->first();
+        if($filtre){
+            $listeId = json_decode($filtre->listeId, true);
+            $listUsers = User::whereIn('id', $listeId)->get();
+            $this->listusers = $listUsers;
+            $this->success='';
+            $this->erreur='';
+            $this->render();
+        }
+    }
+
+    public function supprimerLeFiltre($idFiltre){
+        FiltreTransformationCompagnonnages::where('id', $idFiltre)->delete();
+        $this->listusers = null;
+        $this->success='Filtre bien supprimé';
+        $this->erreur='';
+        $this->render();
     }
 }

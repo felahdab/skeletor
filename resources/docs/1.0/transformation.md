@@ -134,8 +134,13 @@ Cette page permet de consulter la situation de tous les marins pour un compagnon
 En cliquant sur le bouton « Situation des marins » (1), vous ouvrez automatiquement l'onglet "Résultat" (2). 
 
 <img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/transformation/tableau_recap_user_comp.png' )) }}">
-Vous y retrouvez un tableau récapitulant tous les marins (1), la liste des tache/objectifs/sous-objectifs (2), et l'état de validation pour chaque sous-objectifs (3) du compagnonnage. Vous pouvez valider la réalisation des sous objectifs en sélectionnant les cases à cocher correspondantes puis en cliquant sur " Valider les éléments cochés " (4). Un Pop-up vous permettant de saisir la date de validation, le valideur et un commantaire apparaitra.
-Pour changer de compagnonnage, revenez sur l'onglet "Sélection" (5).
+Vous y retrouverez un tableau récapitulant tous les marins (1), la liste des tâches/objectifs/sous-objectifs (2), et l'état de validation pour chaque sous-objectif (3) du compagnonnage. Vous pouvez valider la réalisation des sous-objectifs en sélectionnant les cases à cocher correspondantes puis en cliquant sur 'Valider les éléments cochés' (4). Un pop-up vous permettant de saisir la date de validation, le valideur et un commentaire apparaîtra. Pour changer de compagnonnage, revenez sur l'onglet 'Sélection' (5). 
+
+Vous pouvez chercher par nom (6) la personne que vous voulez dans le tableau, sa ligne sera surlignée.
+
+Pour afficher plusieurs marins, sélectionnez la case à cocher associée à chaque ligne puis cliquez sur l'entonnoir (7). Pour réinitiliser la liste, cliquez sur le bouton "x" (8).
+
+La lise des marins affichés peut être sauvegardrée(10) après saisie d'un libellé (9). Vous retrouverez les listes enregistrées en cliquant sur le bouton "Filtres enregistrés" (11).
 
 <a name="suivi-par-stage">
 ## Suivi de la transformation par stage

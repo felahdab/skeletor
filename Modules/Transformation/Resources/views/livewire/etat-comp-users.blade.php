@@ -2,40 +2,132 @@
     <div class="lead mt-1 mb-3">Compagnonnage : <b>{{ $comp -> comp_liblong}}</b></div>
     <!-- div avec formulaire de validation -->
     @include('transformation::livewire.livret-transformation.divvalid', ['mode' => "parcomp"])
-    <div style="width: min-content;">
-        <div class="sticky-top" style="top:5rem;  background: white; width:100%; ">
-            <button type="submit" 
-            form="ssobjsusers"
-            class="btn btn-primary sticky-top" 
-            style="left:0;"
-            name="validation"
-            x-on:click.prevent="active = true ;
-                                validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
-                                validModal.show();
-                                buttonid = 'validation' ;"
-            x-on:uservalidated.window="if (active)
-                { 
-                    active = false; 
-                    $wire.ValideElementsDuParcoursParcomp( date_validation, commentaire, valideur, selected_parcomp );
-                }">Valider les éléments cochés
-            </button>
+    
+    <div style="width: min-content;" x-data="{
+        selectedMarins: [],
+        nomDuFiltre: '',
+        erreur: '',
+        success: '',
+        filter(){
+            $wire.showMarinFiltrer(this.selectedMarins);
+        },
+        reinitialiser(){
+            $wire.reinitialiser();
+        },
+        creerUnFiltre(){
+            if(this.nomDuFiltre.trim() === ''){
+                this.erreur = 'Veuillez donner un nom au filtre';
+            }else if(this.selectedMarins.length === 0){
+                this.erreur = 'Il faut selectionner au moins un marin';
+            }
+            else{ 
+                this.erreur = '';
+                $wire.creerUnFiltre(this.selectedMarins, this.nomDuFiltre);
+            }
+        },
+        appliquerFiltre(idFiltre){
+            $wire.appliquerFiltre(idFiltre);
+        },
+        supprimerLeFiltre(idFiltre){
+            $wire.supprimerLeFiltre(idFiltre);
+        }
+
+    }">
+    <div>Cliquez sur un sous objectif pour mettre la colonne en surbrillance</div>
+    <div class="sticky-top" style="top:5rem;  background: white; width:100%; z-index: 9999;">
+        <button type="submit" 
+        form="ssobjsusers"
+        class="btn btn-primary sticky-top" 
+        style="left:0;"
+        name="validation"
+        x-on:click.prevent="active = true ;
+                            validModal = new bootstrap.Modal(document.getElementById('divvalid'), []);
+                            validModal.show();
+                            buttonid = 'validation' ;"
+        x-on:uservalidated.window="if (active)
+            { 
+                active = false; 
+                $wire.ValideElementsDuParcoursParcomp( date_validation, commentaire, valideur, selected_parcomp );
+            }"
+            >Valider les éléments cochés
+        </button>
+
+        <div class="sticky-top" style="top:5.5rem;"> 
+            <div class="container p-0" style="float:left; position: sticky; left: 0px;z-index: 1050;">
+                <div class="row">
+                    <div class="col-md-2">
+                        <nav class="navbar bg-body-tertiary sticky-top">
+                            <div class="sticky-top">
+                                <form role="search">
+                                    <input type="search" class="form-control me-2" placeholder="Recherche par nom" aria-label="Recherche" id="searchInput">
+                                </form>
+                            </div>
+                        </nav> 
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group sticky-top mt-2">
+                            <input type="text" class="form-control" placeholder="Donner un nom au filtre" aria-label="nom du filtre" x-model="nomDuFiltre">
+                            <div class="input-group-append">
+                                <button  class="btn btn-primary sticky-top" title="enregistrer le filtre"  x-on:click="creerUnFiltre">
+                                    <x-bootstrap-icon iconname='floppy.svg' />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="dropdown sticky-top mt-2" style="position:sticky">
+                            <button class="btn btn-primary dropdown-toggle" type="buttun" data-bs-toggle="dropdown" aria-expanded="false">
+                                Filtre(s) enregistré(s)
+                            </button>
+                            <ul class="dropdown-menu">
+                                @forEach($filtres as $filtre)
+                                    <li>
+                                        <button class="btn btn-primary" x-on:click="appliquerFiltre({{$filtre->id}})">{{$filtre->nomDuFiltre}}</button>
+                                        <button  class="btn btn-primary" title="supprimer le filtre" x-on:click="supprimerLeFiltre({{$filtre->id}})">
+                                            <x-bootstrap-icon iconname='x.svg' />
+                                        </button>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="ml-auto">
+                        <span x-text ="erreur" class="text-danger"></span>
+                        <p class="text-success"> {{$success}} </p>
+                        <p class="text-danger">{{$erreur}}</p>
+                    </div>
+                </div>
+            </div> 
         </div>
-        <div>Cliquez sur un sous objectif pour mettre la colonne en surbrillance</div>
-        <table class="table table-bordered table-striped table-hover table-sm" id="matable">
-            <thead class="sticky-top" style="top:7.5rem;">
-            <tr class="table-primary" >
-                <td colspan="2">&nbsp</td>
+    </div>
+        <table class="table table-bordered table-striped table-hover table-sm" id="matable" style="z-index: 1;">
+            <thead class="sticky-top" style="top:12.5rem;">
+            <tr class="table-primary">
+                <td colspan="3">  
+                </td>
                 @foreach($entete_taches as $entete_tache)
                     <td style="font-size:x-small;" colspan="{{$entete_tache['colspantach']}}" title="{{$entete_tache['libtach']}}">{{substr($entete_tache['libtach'], 0, 40)}}...</td>
                 @endforeach
             </tr>   
             <tr class="table-success">
-                <td colspan="2">&nbsp</td>            
+                <td colspan="3">
+                </td>            
                 @foreach($entete_objectifs as $entete_objectif)
                     <td style="font-size:x-small;" colspan="{{$entete_objectif['colspanobj']}}" title="{{$entete_objectif['libobj']}}">{{substr($entete_objectif['libobj'], 0, 40)}}...</td>
                 @endforeach
             </tr>   
             <tr class="table-info">
+                <th style="position: sticky; left: 0px; z-index: 1;">
+                    <div style="display: flex; align-items: center; justify-content: center;">
+                        <button class="btn btn-primary sticky-top" style="margin-right: 10px; padding:5px" x-on:click="filter" title="Filtrer">
+                            <x-bootstrap-icon iconname='funnel.svg' />
+                        </button>
+            
+                        <button class="btn btn-primary sticky-top" x-on:click="reinitialiser" title="Réinitialiser le filtre" style="padding:5px">
+                            <x-bootstrap-icon iconname='x.svg' />
+                        </button>
+                    </div>
+                </th>            
                 <th>Marin</th>
                 <th>Taux</th>
                 @foreach($entete_ssobjectifs as $entete_ssobjectif)
@@ -47,38 +139,77 @@
             </tr>   
             </thead>
             <tbody>
-                @foreach($usersssobjs as $ligne)
-                <tr>
-                    <td class="text-center" style="position: sticky; left: 0;z-index: 1;background: white;"><a href="{{ route('transformation::transformation.livret', $ligne['id'] )}}">{{$ligne['name']}}</a>
-                    <td>{{$ligne['txtransfo']}}</td>
-
-                    @foreach($ligne as $key => $cell)
-                        @if ($cell == 'true')
-                            <td class="text-center text-success"><x-bootstrap-icon iconname='check-circle.svg'/></td>
-                        @endif
-                        @if ($cell == 'false')
-                            <td class="text-center text-danger"><x-bootstrap-icon iconname='x-circle.svg'/>
-                            <input type="checkbox" 
-                                    x-data='{ active: false }'
-                                    x-model="selected_parcomp"
-                                    value="'ssobjid'-{{$key}}-'userid'-{{$ligne['id']}}">
-                            </td>                                   
-                        @endif
-                        @if ($cell == 'propose')
-                            <td class="text-center text-info"><x-bootstrap-icon iconname='envelope-open.svg' />
-                            <input type="checkbox" 
-                                    x-data='{ active: false }'
-                                    x-model="selected_parcomp"
-                                    value="'ssobjid'-{{$key}}-'userid'-{{$ligne['id']}}">
-                            </td>                                   
-                        @endif
+                    @foreach($usersssobjs as $ligne)
+                    <tr>
+                        <td style="position: sticky; left: 0; z-index: 1; background: white; text-align: center; vertical-align: middle;">
+                            <input type="checkbox" class="form-check-input" x-model="selectedMarins" :value="{{$ligne['id']}}">
+                        </td>
+                    
+                        <td class="text-center" style="position: sticky; left: 60px;z-index: 1;background: white;">
+                            <a href="{{ route('transformation::transformation.livret', $ligne['id'] )}}">
+                                {{$ligne['name']}}
+                            </a>
+                            <br>
+                        </td>
+                        <td>{{$ligne['txtransfo']}}</td>
+    
+                        @foreach($ligne as $key => $cell)
+                            @if ($cell == 'true')
+                                <td class="text-center text-success"><x-bootstrap-icon iconname='check-circle.svg'/></td>
+                            @endif
+                            @if ($cell == 'false')
+                                <td class="text-center text-danger"><x-bootstrap-icon iconname='x-circle.svg'/>
+                                <input type="checkbox" 
+                                        x-data='{ active: false }'
+                                        x-model="selected_parcomp"
+                                        value="'ssobjid'-{{$key}}-'userid'-{{$ligne['id']}}">
+                                </td>                                   
+                            @endif
+                            @if ($cell == 'propose')
+                                <td class="text-center text-info"><x-bootstrap-icon iconname='envelope-open.svg' />
+                                <input type="checkbox" 
+                                        x-data='{ active: false }'
+                                        x-model="selected_parcomp"
+                                        value="'ssobjid'-{{$key}}-'userid'-{{$ligne['id']}}">
+                                </td>                                   
+                            @endif
+                        @endforeach
+                    </tr>   
                     @endforeach
-                </tr>   
-                @endforeach
             </tbody>
         </table>
     </div>
 </div>
+
+
+<style>
+    .highlight{
+        background-color: #feffa7;
+    }
+</style>
+
+<script>
+    var input = document.getElementById("searchInput");
+    input.addEventListener("input", function() {
+        var table = document.getElementById("matable");
+        var rows = table.querySelectorAll("tbody tr");
+        var searchText = input.value.toLowerCase();
+        for (var i = 0; i < rows.length; i++) {
+            var marinCell = rows[i].querySelector("td:nth-child(2)");
+            if (marinCell.textContent.toLowerCase().includes(searchText)) {
+                rows[i].classList.add("highlight");
+                rows[i].scrollIntoView({ behavior: "smooth", block: "end" });
+            } else {
+                rows[i].classList.remove("highlight");
+            }
+        }
+        if (searchText === "") {
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].classList.remove("highlight");
+            }
+        }
+    });
+</script>
 
 <script>
       // Get the table element

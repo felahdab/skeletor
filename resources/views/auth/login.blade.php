@@ -1,9 +1,13 @@
 @extends('layouts.app-master')
 
 @section('helplink')
-  < x-help-link page="connexion"/>
+  <x-help-link page="connexion"/>
 @endsection
-
+@if (session('success'))
+    <div class="alert alert-success">
+        {{session('success')}}
+    </div>
+@endif
 @section('content')
     <div class="d-flex justify-content-center mt-5 ">
         <div class="card w-50 justify-content-center" >
@@ -50,6 +54,7 @@
                     </div>        
                     <button dusk="login-button" class=" w-25 btn btn-primary m-3" type="submit">Se connecter</button>
                 </form>
+                <a href="{{ route('login.indexforgotpwd') }}">Mot de passe oublié ?</a>
             </div>
         </div>
     </div>

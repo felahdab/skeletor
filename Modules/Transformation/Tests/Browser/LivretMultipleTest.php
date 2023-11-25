@@ -7,6 +7,7 @@ use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
 use App\Models\User;
+use Modules\Transformation\Entities\User as TransfoUser;
 use Modules\Transformation\Entities\Fonction;
 
 class LivretMultipleTest extends DuskTestCase
@@ -24,7 +25,8 @@ class LivretMultipleTest extends DuskTestCase
         
         $fonction=Fonction::first();
 
-        $user->fonctions()->attach($fonction);
+        $transfouser = TransfoUser::find($user->id);
+        $transfouser->fonctions()->attach($fonction);
 
         $this->browse(function ($browser)  use ($user, $fonction){
             $browser->maximize()
@@ -44,7 +46,8 @@ class LivretMultipleTest extends DuskTestCase
         
         $fonction=Fonction::first();
 
-        $user->fonctions()->attach($fonction);
+        $transfouser = TransfoUser::find($user->id);
+        $transfouser->fonctions()->attach($fonction);
         
         $this->browse(function ($browser)  use ($user, $fonction){
             $browser->maximize()

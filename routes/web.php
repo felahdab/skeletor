@@ -20,6 +20,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserPreferencesController;
 use App\Http\Controllers\ParamaccueilsController;
 
+use App\Http\Middleware\RestrictVisibility;
 use App\Livewire\TestComponent;
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,14 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     Route::get('/mespreferences', [UserPreferencesController::class, 'mespreferences'])->name('mespreferences');
 });
 
+/**
+ * Reset password
+ */
+Route::get('/forgotpwd', [LoginController::class, 'indexforgotpwd'])->name('login.indexforgotpwd');
+Route::post('/forgotpwd', [LoginController::class, 'forgotpwd'])->name('login.forgotpwd');
+Route::get('/resetpwd/{token}/{email}', [LoginController::class, 'resetpwdpage'])->name('password.reset');
+Route::post('/resetpwd', [LoginController::class, 'updatepwd'])->name('login.updatepwd');
+
 Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::get('/auth/callback', [LoginController::class, 'login'])->name('keycloak.login.perform');
 
@@ -53,7 +62,9 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::get('/login', [LoginController::class, 'show'])->name('login.show');
     Route::post('/login', [LoginController::class, 'locallogin'])->name('login.perform');
     Route::post('/login/{MCuserexist:sub}/newMdc', [LoginController::class, 'newMdcLogin'])->name('login.newMdcLogin');
+    
 
+    
     Route::group(['middleware' => ['auth', 'permission']], function () {
         /**
          * Logout Routes
@@ -69,21 +80,33 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             Route::get('/{mcuser}/effacecpte', [MindefConnectUserController::class, 'effacecpte'])->name('mindefconnect.effacecpte');
         });
 
+        Route::group(['prefix' => 'annudef'], function () {
+            Route::get('/', [AnnudefController::class, 'index'])->name('annudef.index');
+        });
+        
         /**
          * User Routes
          */
-        Route::group(['prefix' => 'users'], function () {
-            Route::get('/', [UsersController::class, 'index'])->name('users.index');
-            Route::get('/create', [UsersController::class, 'create'])->name('users.create');
-            Route::post('/create', [UsersController::class, 'store'])->name('users.store');
-            Route::get('/{user}/show', [UsersController::class, 'show'])->name('users.show');
-            Route::get('/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
-            Route::patch('/{user}/update', [UsersController::class, 'update'])->name('users.update');
-            Route::delete('/{user}/delete', [UsersController::class, 'destroy'])->name('users.destroy');
-            Route::get('/currentrole', [ChangeUserCurrentRole::class, 'index'])->name('currentrole.show');
-            Route::post('/currentrole', [ChangeUserCurrentRole::class, 'store'])->name('currentrole.store');
-            Route::get('/{user}/changepasswd', [ChangeUserPassword::class,  'index'])->name('changepasswd.show');
-            Route::post('/{user}/changepasswd', [ChangeUserPassword::class,  'store'])->name('changepasswd.store');
+        Route::group(['middleware' => [RestrictVisibility::class]], function () {
+            Route::group(['prefix' => 'users'], function () {
+                Route::get('/', [UsersController::class, 'index'])->name('users.index');
+                Route::get('/create', [UsersController::class, 'create'])->name('users.create');
+                Route::post('/create', [UsersController::class, 'store'])->name('users.store');
+                Route::get('/{user}/show', [UsersController::class, 'show'])->name('users.show');
+                Route::get('/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
+                Route::patch('/{user}/update', [UsersController::class, 'update'])->name('users.update');
+                Route::delete('/{user}/delete', [UsersController::class, 'destroy'])->name('users.destroy');
+                Route::get('/currentrole', [ChangeUserCurrentRole::class, 'index'])->name('currentrole.show');
+                Route::post('/currentrole', [ChangeUserCurrentRole::class, 'store'])->name('currentrole.store');
+                Route::get('/{user}/changepasswd', [ChangeUserPassword::class,  'index'])->name('changepasswd.show');
+                Route::post('/{user}/changepasswd', [ChangeUserPassword::class,  'store'])->name('changepasswd.store');
+            });
+            Route::group(['prefix' => 'mails'], function () {
+                Route::get('/', [MailController::class, 'index'])->name('mails.index');
+                Route::get('/edit/{mail}', [MailController::class, 'edit'])->name('mails.edit');
+                Route::get('/create', [MailController::class, 'create'])->name('mails.create');
+            });
+    
         });
 
         Route::resource('roles',          RolesController::class);
@@ -121,18 +144,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             Route::patch('/{service}/update', [ServiceController::class, 'update'])->name('services.update');
             Route::delete('/{service}/delete', [ServiceController::class, 'destroy'])->name('services.destroy');
         });
-
-        Route::group(['prefix' => 'annudef'], function () {
-            Route::get('/', [AnnudefController::class, 'index'])->name('annudef.index');
-        });
-
         
-        Route::group(['prefix' => 'mails'], function () {
-            Route::get('/', [MailController::class, 'index'])->name('mails.index');
-            Route::get('/edit/{mail}', [MailController::class, 'edit'])->name('mails.edit');
-            Route::get('/create', [MailController::class, 'create'])->name('mails.create');
-        });
-
         Route::group(['prefix' => 'paramaccueils'], function () {
             Route::get('/', [ParamaccueilsController::class, 'index'])->name('paramaccueils.index');
             Route::patch('/', [ParamaccueilsController::class, 'update'])->name('paramaccueils.update');

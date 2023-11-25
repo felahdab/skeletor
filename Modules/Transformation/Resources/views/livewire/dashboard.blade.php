@@ -28,9 +28,9 @@
                                         <div class="col-lg-3 text-center lead">
                                             Nb de marins <br><h1>{{$chart['nbmarins']}}</h1>
                                         </div>
-                                        {{-- <div class="col-lg-3 text-center lead">
+                                        <div class="col-lg-3 text-center lead">
                                             Nb de marins débarqués <br><h1>{{$chart['nbmarins_debarq']}}</h1>
-                                        </div> --}}
+                                        </div>
                                     </div> 
                                 </div> 
                             @elseif ( $chart['type'] == 'livewire-column-chart')
