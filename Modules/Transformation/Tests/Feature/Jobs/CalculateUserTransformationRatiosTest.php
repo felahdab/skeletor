@@ -37,8 +37,9 @@ class CalculateUserTransformationRatiosTest extends TestCase
         $service = new GererTransformationService();
 
         $this->assertTrue($user->taux_de_transformation == 0);
+        
         $service->attachFonction($user, $fonction);
-
+        
         $ssobj=$user->coll_sous_objectifs()->first();
         $service->ValidateSousObjectif($user, $ssobj, "2022-09-01", "Good job", "Admin", false);
 
