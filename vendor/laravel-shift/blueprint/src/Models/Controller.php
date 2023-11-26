@@ -7,31 +7,19 @@ use Illuminate\Support\Str;
 
 class Controller implements BlueprintModel
 {
-    /** @var array */
-    public static $resourceMethods = ['index', 'create', 'store', 'edit', 'update', 'show', 'destroy'];
+    public static array $resourceMethods = ['index', 'create', 'store', 'edit', 'update', 'show', 'destroy'];
 
-    /** @var array */
-    public static $apiResourceMethods = ['index', 'store', 'update', 'show', 'destroy'];
+    public static array $apiResourceMethods = ['index', 'store', 'update', 'show', 'destroy'];
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $namespace;
+    private string $namespace;
 
-    /**
-     * @var array
-     */
-    private $methods = [];
+    private array $methods = [];
 
-    /**
-     * @var bool
-     */
-    private $apiResource = false;
+    private ?Policy $policy = null;
+
+    private bool $apiResource = false;
 
     /**
      * Controller constructor.
@@ -52,7 +40,7 @@ class Controller implements BlueprintModel
         return $this->name() . (Str::endsWith($this->name(), 'Controller') ? '' : 'Controller');
     }
 
-    public function namespace()
+    public function namespace(): string
     {
         if (empty($this->namespace)) {
             return '';
@@ -61,7 +49,7 @@ class Controller implements BlueprintModel
         return $this->namespace;
     }
 
-    public function fullyQualifiedNamespace()
+    public function fullyQualifiedNamespace(): string
     {
         $fqn = config('blueprint.namespace');
 
@@ -76,7 +64,7 @@ class Controller implements BlueprintModel
         return $fqn;
     }
 
-    public function fullyQualifiedClassName()
+    public function fullyQualifiedClassName(): string
     {
         return $this->fullyQualifiedNamespace() . '\\' . $this->className();
     }
@@ -86,12 +74,21 @@ class Controller implements BlueprintModel
         return $this->methods;
     }
 
-    public function addMethod(string $name, array $statements)
+    public function addMethod(string $name, array $statements): void
     {
         $this->methods[$name] = $statements;
     }
 
-    public function prefix()
+    public function policy(Policy $policy = null): ?Policy
+    {
+        if ($policy) {
+            $this->policy = $policy;
+        }
+
+        return $this->policy;
+    }
+
+    public function prefix(): string
     {
         if (Str::endsWith($this->name(), 'Controller')) {
             return Str::substr($this->name(), 0, -10);
@@ -100,7 +97,7 @@ class Controller implements BlueprintModel
         return $this->name();
     }
 
-    public function setApiResource(bool $apiResource)
+    public function setApiResource(bool $apiResource): void
     {
         $this->apiResource = $apiResource;
     }

@@ -4,15 +4,9 @@ namespace Blueprint\Models\Statements;
 
 class FireStatement
 {
-    /**
-     * @var string
-     */
-    private $event;
+    private string $event;
 
-    /**
-     * @var array
-     */
-    private $data;
+    private array $data;
 
     public function __construct(string $event, array $data = [])
     {
@@ -20,7 +14,7 @@ class FireStatement
         $this->data = $data;
     }
 
-    public function event()
+    public function event(): string
     {
         return $this->event;
     }
@@ -35,31 +29,26 @@ class FireStatement
         return preg_match('/^[a-z0-9.]+$/', $this->event) === 1;
     }
 
-    public function output()
+    public function output(): string
     {
-        $code = 'event(';
+        $template = '%s::dispatch(%s);';
 
         if ($this->isNamedEvent()) {
-            $code .= "'" . $this->event() . "'";
-
             if ($this->data()) {
-                $code .= ', [' . $this->buildParameters($this->data()) . ']';
+                $template = "event('%s', [%s]);";
+            } else {
+                $template = "event('%s');";
             }
-        } else {
-            $code .= 'new ' . $this->event() . '(';
-            if ($this->data()) {
-                $code .= $this->buildParameters($this->data());
-            }
-
-            $code .= ')';
         }
 
-        $code .= ');';
-
-        return $code;
+        return sprintf(
+            $template,
+            $this->event(),
+            $this->data() ? $this->buildParameters($this->data()) : ''
+        );
     }
 
-    private function buildParameters(array $data)
+    private function buildParameters(array $data): string
     {
         $parameters = array_map(fn ($parameter) => '$' . $parameter, $data);
 

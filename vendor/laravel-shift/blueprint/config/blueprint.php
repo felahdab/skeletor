@@ -30,6 +30,8 @@ return [
 
     'controllers_namespace' => 'Http\\Controllers',
 
+    'policy_namespace' => 'Policies',
+
     /*
     |--------------------------------------------------------------------------
     | Application Path
@@ -116,6 +118,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Constructor Property Promotion
+    |--------------------------------------------------------------------------
+    |
+    | By default, Blueprint generates class properties explicitly. You may enable
+    | this option to have Blueprint generate code for classes which contain a
+    | constructor to set properties with "constructor property promotion".
+    |
+    */
+    'property_promotion' => false,
+
+    /*
+    |--------------------------------------------------------------------------
     | Generators
     |--------------------------------------------------------------------------
     |
@@ -133,7 +147,8 @@ return [
         'model' => \Blueprint\Generators\ModelGenerator::class,
         'route' => \Blueprint\Generators\RouteGenerator::class,
         'seeder' => \Blueprint\Generators\SeederGenerator::class,
-        'test' => \Blueprint\Generators\TestGenerator::class,
+        'test' => \Blueprint\Generators\PhpUnitTestGenerator::class,
+        // 'test' => \Blueprint\Generators\PestTestGenerator::class,
         'event' => \Blueprint\Generators\Statements\EventGenerator::class,
         'form_request' => \Blueprint\Generators\Statements\FormRequestGenerator::class,
         'job' => \Blueprint\Generators\Statements\JobGenerator::class,
@@ -141,6 +156,7 @@ return [
         'notification' => \Blueprint\Generators\Statements\NotificationGenerator::class,
         'resource' => \Blueprint\Generators\Statements\ResourceGenerator::class,
         'view' => \Blueprint\Generators\Statements\ViewGenerator::class,
+        'policy' => \Blueprint\Generators\PolicyGenerator::class,
     ],
 
 ];
