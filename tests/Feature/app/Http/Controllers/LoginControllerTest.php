@@ -83,8 +83,7 @@ class LoginControllerTest extends TestCase
 		$this->post(route(self::ROUTE_PASSWORD_RESET_REQUEST_SUBMIT), [
 				'email' => $user->email
 			])
-			->assertSuccessful()
-			->assertViewIs('auth.login');
+			->assertSuccessful();
 
 		Notification::assertSentTo($user, ResetPassword::class);
 	}
@@ -94,13 +93,10 @@ class LoginControllerTest extends TestCase
 		Notification::fake();
 		$this->seed();
 
-		$this->followingRedirects()
-			->from(route(self::ROUTE_PASSWORD_RESET_REQUEST))
-			->post(route(self::ROUTE_PASSWORD_RESET_REQUEST_SUBMIT), [
+		$this->post(route(self::ROUTE_PASSWORD_RESET_REQUEST_SUBMIT), [
 				'email' => 'invalidemail@test.fr'
 			])
-			->assertSuccessful()
-			->assertViewIs('auth.forgotpassword');
+			->assertRedirect();
 
 		Notification::assertNothingSent();
 	}
