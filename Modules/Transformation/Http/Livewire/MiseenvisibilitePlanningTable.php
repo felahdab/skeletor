@@ -128,10 +128,10 @@ class MiseenvisibilitePlanningTable extends DataTableComponent
         return $filter;
     }
     
-    public function render()
+    public function render(): \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         $this->planningids = $this->getCurrentItems();
-        $this->emitUp("planningUpdated" , $this->planningids);
+        $this->dispatch("planningUpdated" , $this->planningids);
         return parent::render();
     }
     

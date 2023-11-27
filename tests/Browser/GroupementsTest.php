@@ -17,7 +17,7 @@ class GroupementsTest extends DuskTestCase
         $this->browse(function ($browser)  use ($user) {
             $browser->maximize()
                 ->loginAs($user)
-                ->visit(route('groupements.index'))
+                ->visit(route('groupement.index'))
                 ->assertSee('groupements');
         });
 

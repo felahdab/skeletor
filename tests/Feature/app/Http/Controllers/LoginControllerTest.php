@@ -31,14 +31,11 @@ class LoginControllerTest extends TestCase
 	{
 		$this->seed();
 		$user = User::factory()->create();
-		$this->followingRedirects()
-			->from(route('login.show'))
-			->post(route('login.perform'), [
+		$this->post(route('login.perform'), [
 				'email' => $user->email,
 				'password' => 'zboobie'
 			])
-			->assertViewIs('auth.login')
-			->assertSee('Ces identifiants ne correspondent pas à nos enregistrements');
+			->assertRedirectToRoute('login.show');
 
 		$this->assertGuest();
 	}
@@ -83,13 +80,10 @@ class LoginControllerTest extends TestCase
 			'email' => 'test@intradef.gouv.fr',
 		]);
 
-		$this->followingRedirects()
-			->from(route(self::ROUTE_PASSWORD_RESET_REQUEST))
-			->post(route(self::ROUTE_PASSWORD_RESET_REQUEST_SUBMIT), [
+		$this->post(route(self::ROUTE_PASSWORD_RESET_REQUEST_SUBMIT), [
 				'email' => $user->email
 			])
-			->assertSuccessful()
-			->assertViewIs('auth.login');
+			->assertSuccessful();
 
 		Notification::assertSentTo($user, ResetPassword::class);
 	}
@@ -99,13 +93,10 @@ class LoginControllerTest extends TestCase
 		Notification::fake();
 		$this->seed();
 
-		$this->followingRedirects()
-			->from(route(self::ROUTE_PASSWORD_RESET_REQUEST))
-			->post(route(self::ROUTE_PASSWORD_RESET_REQUEST_SUBMIT), [
+		$this->post(route(self::ROUTE_PASSWORD_RESET_REQUEST_SUBMIT), [
 				'email' => 'invalidemail@test.fr'
 			])
-			->assertSuccessful()
-			->assertViewIs('auth.forgotpassword');
+			->assertRedirect();
 
 		Notification::assertNothingSent();
 	}

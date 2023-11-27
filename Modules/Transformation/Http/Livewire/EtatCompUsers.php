@@ -131,7 +131,7 @@ class EtatCompUsers extends Component
             $transformationService->ValidateSousObjectif($user, $sous_objectif, $date_validation , $commentaire, $valideur);
         }
         // $this->emit('$refresh');
-        $this->dispatchBrowserEvent("resetselection");
+        $this->dispatch("resetselection");
     }
 
     public function showMarinFiltrer($marinSelectionnes){

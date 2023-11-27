@@ -1,10 +1,10 @@
 <div>
     <div class="input-group">
-        <input class="mx-2 form-control" type="text" dusk="input-nom" wire:model.debounce.200ms="nom" placeholder="Nom..."></input>
-        <input class="mx-2 form-control" type="text" wire:model.debounce.200ms="prenom" placeholder="Prénom..."></input>
-        <input class="mx-2 form-control" type="text" wire:model.debounce.200ms="email" placeholder="Email..."></input>
-        <input class="mx-2 form-control" type="text" wire:model.debounce.200ms="entite" placeholder="Entite..."></input>
-        <input class="mx-2 form-control" type="text" wire:model.debounce.200ms="nid" placeholder="nid..."></input>
+        <input class="mx-2 form-control" type="text" dusk="input-nom" wire:model.live.debounce.200ms="nom" placeholder="Nom..."></input>
+        <input class="mx-2 form-control" type="text" wire:model.live.debounce.200ms="prenom" placeholder="Prénom..."></input>
+        <input class="mx-2 form-control" type="text" wire:model.live.debounce.200ms="email" placeholder="Email..."></input>
+        <input class="mx-2 form-control" type="text" wire:model.live.debounce.200ms="entite" placeholder="Entite..."></input>
+        <input class="mx-2 form-control" type="text" wire:model.live.debounce.200ms="nid" placeholder="nid..."></input>
     </div>
     
     @if ($error)

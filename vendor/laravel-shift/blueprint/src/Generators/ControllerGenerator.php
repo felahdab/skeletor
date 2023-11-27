@@ -6,6 +6,7 @@ use Blueprint\Concerns\HandlesImports;
 use Blueprint\Concerns\HandlesTraits;
 use Blueprint\Contracts\Generator;
 use Blueprint\Models\Controller;
+use Blueprint\Models\Policy;
 use Blueprint\Models\Statements\DispatchStatement;
 use Blueprint\Models\Statements\EloquentStatement;
 use Blueprint\Models\Statements\FireStatement;
@@ -24,7 +25,7 @@ class ControllerGenerator extends AbstractClassGenerator implements Generator
 {
     use HandlesImports, HandlesTraits;
 
-    protected $types = ['controllers'];
+    protected array $types = ['controllers'];
 
     public function output(Tree $tree): array
     {
@@ -46,7 +47,7 @@ class ControllerGenerator extends AbstractClassGenerator implements Generator
         return $this->output;
     }
 
-    protected function populateStub(string $stub, Controller $controller)
+    protected function populateStub(string $stub, Controller $controller): string
     {
         $stub = str_replace('{{ namespace }}', $controller->fullyQualifiedNamespace(), $stub);
         $stub = str_replace('{{ class }}', $controller->className(), $stub);
@@ -56,27 +57,62 @@ class ControllerGenerator extends AbstractClassGenerator implements Generator
         return $stub;
     }
 
-    protected function buildMethods(Controller $controller)
+    protected function buildMethods(Controller $controller): string
     {
         $template = $this->filesystem->stub('controller.method.stub');
 
         $methods = '';
 
+        $controllerModelName = Str::singular($controller->prefix());
+
+        if ($controller->policy()?->authorizeResource()) {
+            $methods .= str_replace(
+                [
+                    '{{ modelClass }}',
+                    '{{ modelVariable }}',
+                ],
+                [
+                    Str::studly($controllerModelName),
+                    Str::camel($controllerModelName),
+                ],
+                $this->filesystem->stub('controller.authorize-resource.stub')
+            );
+        }
+
         foreach ($controller->methods() as $name => $statements) {
             $method = str_replace('{{ method }}', $name, $template);
 
             if (in_array($name, ['edit', 'update', 'show', 'destroy'])) {
-                $context = Str::singular($controller->prefix());
-                $reference = $this->fullyQualifyModelReference($controller->namespace(), Str::camel($context));
-                $variable = '$' . Str::camel($context);
+                $reference = $this->fullyQualifyModelReference($controller->namespace(), $controllerModelName);
+                $variable = '$' . Str::camel($controllerModelName);
 
                 $search = '(Request $request';
-                $method = str_replace($search, $search . ', ' . $context . ' ' . $variable, $method);
+                $method = str_replace($search, $search . ', ' . $controllerModelName . ' ' . $variable, $method);
                 $this->addImport($controller, $reference);
             }
 
             $body = '';
             $using_validation = false;
+
+            if ($controller->policy() && !$controller->policy()->authorizeResource()) {
+                if (in_array(Policy::$resourceAbilityMap[$name], $controller->policy()->methods())) {
+                    $body .= self::INDENT . str_replace(
+                        [
+                            '{{ method }}',
+                            '{{ modelClass }}',
+                            '{{ modelVariable }}',
+                        ],
+                        [
+                            $name,
+                            Str::studly($controllerModelName),
+                            '$' . Str::camel($controllerModelName),
+                        ],
+                        in_array($name, ['index', 'create', 'store'])
+                            ? "\$this->authorize('{{ method }}', {{ modelClass }}::class);"
+                            : "\$this->authorize('{{ method }}', {{ modelVariable }});"
+                    ) . PHP_EOL . PHP_EOL;
+                }
+            }
 
             foreach ($statements as $statement) {
                 if ($statement instanceof SendStatement) {
@@ -167,7 +203,7 @@ class ControllerGenerator extends AbstractClassGenerator implements Generator
         return trim($methods);
     }
 
-    private function determineModel(Controller $controller, ?string $reference)
+    private function determineModel(Controller $controller, ?string $reference): string
     {
         if (empty($reference) || $reference === 'id') {
             return $this->fullyQualifyModelReference($controller->namespace(), Str::studly(Str::singular($controller->prefix())));
@@ -180,7 +216,7 @@ class ControllerGenerator extends AbstractClassGenerator implements Generator
         return $this->fullyQualifyModelReference($controller->namespace(), Str::studly($reference));
     }
 
-    private function fullyQualifyModelReference(string $sub_namespace, string $model_name)
+    private function fullyQualifyModelReference(string $sub_namespace, string $model_name): string
     {
         // TODO: get model_name from tree.
         // If not found, assume parallel namespace as controller.

@@ -2,12 +2,13 @@
 
 namespace Rappasoft\LaravelLivewireTables\Views\Filters;
 
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
 
 class SelectFilter extends Filter
 {
-    protected array $options = [];
+    public array $options = [];
+
+    public string $viewPath = 'livewire-tables::components.tools.filters.select';
 
     public function options(array $options = []): SelectFilter
     {
@@ -32,7 +33,7 @@ class SelectFilter extends Filter
             ->toArray();
     }
 
-    public function validate($value)
+    public function validate(string $value): array|string|bool
     {
         if (! in_array($value, $this->getKeys())) {
             return false;
@@ -62,11 +63,8 @@ class SelectFilter extends Filter
         return $this->filterDefaultValue ?? null;
     }
 
-    public function render(DataTableComponent $component)
+    public function render(): string|\Illuminate\Contracts\Foundation\Application|\Illuminate\View\View|\Illuminate\View\Factory
     {
-        return view('livewire-tables::components.tools.filters.select', [
-            'component' => $component,
-            'filter' => $this,
-        ]);
+        return view($this->getViewPath(), $this->getFilterDisplayData());
     }
 }

@@ -2,6 +2,58 @@
 
 All notable changes to `laravel-backup-restore` will be documented in this file.
 
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+## [Unreleased](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.1.3...HEAD)
+
+## [v1.1.3](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.1.2...v1.1.3) - 2023-11-01
+
+### Changed
+
+- Update MySQL Importer to use CLI Arguments instead of Credentials File ([#42](https://github.com/stefanzweifel/laravel-backup-restore/pull/42))
+
+### Fixed
+
+- Respect dump_binary_path setting when importing database ([#40](https://github.com/stefanzweifel/laravel-backup-restore/pull/40))
+
+## [v1.1.2](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.1.1...v1.1.2) - 2023-10-27
+
+### Fixed
+
+- Use DIRECTORY_SEPARATOR to support Windows ([#38](https://github.com/stefanzweifel/laravel-backup-restore/pull/38))
+
+## [v1.1.1](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.1.0...v1.1.1) - 2023-10-17
+
+### Fixed
+
+- Use Database Connection name when generating import shell command ([#34](https://github.com/stefanzweifel/laravel-backup-restore/pull/34))
+
+## [v1.1.0](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.0.2...v1.1.0) - 2023-10-16
+
+### Added
+
+- Add Support for PHP 8.3 ([#31](https://github.com/stefanzweifel/laravel-backup-restore/pull/31))
+
+### Changed
+
+- Replace Symfony Process with Illuminate Process ([#30](https://github.com/stefanzweifel/laravel-backup-restore/pull/30))
+- Update Artisan Command to use Laravel Prompts ([#19](https://github.com/stefanzweifel/laravel-backup-restore/pull/19))
+
+### Removed
+
+- Drop Support for Laravel 9 ([#29](https://github.com/stefanzweifel/laravel-backup-restore/pull/29))
+
+### Fixed
+
+- Check if CLI Dependencies are available before starting restore process ([#28](https://github.com/stefanzweifel/laravel-backup-restore/pull/28))
+
+## v1.0.2 - 2023-08-22
+
+### Fixed
+
+- Use Driver Name when creating DbImporter instead of Connection Name ([#24](https://github.com/stefanzweifel/laravel-backup-restore/pull/24))
+
 ## v1.0.1 - 2023-08-12
 
 ### Changed

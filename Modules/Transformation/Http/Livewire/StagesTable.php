@@ -172,13 +172,13 @@ class StagesTable extends DataTableComponent
     {
         $transformationService = new GererTransformationService;
         $transformationService->attachStage($user, $stage);
-        $this->emit('refreshUser');
+        $this->dispatch('refreshUser');
     }
     
     public function RetirerStage(User $user, Stage $stage)
     {
         $transformationService = new GererTransformationService;
         $transformationService->detachStage($user, $stage);
-        $this->emit('refreshUser');
+        $this->dispatch('refreshUser');
     }
 }

@@ -14,13 +14,13 @@ trait ComponentUtilities
 
     public array $table = [];
 
-    public $theme = null;
+    public ?string $theme = null;
 
     protected Builder $builder;
 
     protected $model;
 
-    protected $primaryKey;
+    protected ?string $primaryKey;
 
     protected array $relationships = [];
 
@@ -28,78 +28,29 @@ trait ComponentUtilities
 
     protected ?string $dataTableFingerprint;
 
-    protected ?string $queryStringAlias;
-
-    protected bool $queryStringStatus = true;
-
     protected bool $offlineIndicatorStatus = true;
 
     protected bool $eagerLoadAllRelationsStatus = false;
-
-    protected array $componentWrapperAttributes = [];
-
-    protected array $tableWrapperAttributes = [];
-
-    protected array $tableAttributes = [];
-
-    protected array $theadAttributes = [];
-
-    protected array $tbodyAttributes = [];
-
-    protected $thAttributesCallback;
-
-    protected $thSortButtonAttributesCallback;
-
-    protected $trAttributesCallback;
-
-    protected $trUrlCallback;
-
-    protected $trUrlTargetCallback;
-
-    protected $tdAttributesCallback;
-
-    protected $collapsingColumnsStatus = true;
 
     protected string $emptyMessage = 'No items found. Try to broaden your search.';
 
     protected array $additionalSelects = [];
 
-    protected bool $hideConfigurableAreasWhenReorderingStatus = true;
-
-    protected array $configurableAreas = [
-        'before-tools' => null,
-        'toolbar-left-start' => null,
-        'toolbar-left-end' => null,
-        'toolbar-right-start' => null,
-        'toolbar-right-end' => null,
-        'before-toolbar' => null,
-        'after-toolbar' => null,
-        'before-pagination' => null,
-        'after-pagination' => null,
-    ];
-
-    /**
-     * Set the custom query string array for this specific table
-     *
-     * @return array<mixed>
-     */
-    public function queryString(): array
+    // Sets the Theme If Not Already Set
+    public function mountComponentUtilities(): void
     {
-        if ($this->queryStringIsEnabled()) {
-            return [
-                $this->getTableName() => ['except' => null, 'as' => $this->getQueryStringAlias()],
-            ];
+        // Sets the Theme - tailwind/bootstrap
+        if (is_null($this->theme)) {
+            $this->setTheme();
         }
-
-        return [];
     }
 
     /**
      * Keep track of any properties on the custom query string key for this specific table
      */
-    public function updated($name, $value): void
+    public function updated(string $name, string|array $value): void
     {
-        if ($name === $this->getTableName().'.search') {
+        if ($name === 'search') {
             $this->resetComputedPage();
 
             // Clear bulk actions on search
@@ -111,7 +62,7 @@ trait ComponentUtilities
             }
         }
 
-        if (Str::contains($name, $this->getTableName().'.filters')) {
+        if (Str::contains($name, 'filterComponents')) {
             $this->resetComputedPage();
 
             // Clear bulk actions on filter
@@ -119,7 +70,7 @@ trait ComponentUtilities
             $this->setSelectAllDisabled();
 
             // Clear filters on empty value
-            $filterName = Str::after($name, $this->getTableName().'.filters.');
+            $filterName = Str::after($name, 'filterComponents.');
             $filter = $this->getFilterByKey($filterName);
 
             if ($filter && $filter->isEmpty($value)) {
@@ -134,15 +85,5 @@ trait ComponentUtilities
     public function hydrate(): void
     {
         $this->restartReorderingIfNecessary();
-    }
-
-    // Sets the Theme If Not Already Set
-    public function mountComponentUtilities()
-    {
-        // Sets the Theme - tailwind/bootstrap
-        if (is_null($this->theme)) {
-            $this->setTheme();
-        }
-
     }
 }

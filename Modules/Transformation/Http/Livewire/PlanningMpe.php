@@ -2,7 +2,7 @@
 
 namespace Modules\Transformation\Http\Livewire;
 
-use App\Http\Livewire\FullCalendar;
+use App\Livewire\FullCalendar;
 
 use App\Service\RandomColorService;
 

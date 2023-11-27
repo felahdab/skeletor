@@ -4,20 +4,25 @@ declare(strict_types=1);
 
 namespace Wnx\LaravelBackupRestore\Databases;
 
-use Symfony\Component\Process\Process;
+use Illuminate\Contracts\Process\ProcessResult;
+use Illuminate\Support\Facades\Process;
 use Wnx\LaravelBackupRestore\Events\DatabaseDumpImportWasSuccessful;
 use Wnx\LaravelBackupRestore\Exceptions\ImportFailed;
 
 abstract class DbImporter
 {
-    abstract public function getImportCommand(string $dumpFile): string;
+    protected string $dumpBinaryPath = '';
+
+    abstract public function getImportCommand(string $dumpFile, string $connection): string;
+
+    abstract public function getCliName(): string;
 
     /**
      * @throws ImportFailed
      */
-    protected function checkIfImportWasSuccessful(Process $process, string $dumpFile): void
+    protected function checkIfImportWasSuccessful(ProcessResult $process, string $dumpFile): void
     {
-        if (! $process->isSuccessful()) {
+        if (! $process->successful()) {
             throw ImportFailed::processDidNotEndSuccessfully($process);
         }
 
@@ -27,19 +32,31 @@ abstract class DbImporter
     /**
      * @throws ImportFailed
      */
-    public function importToDatabase(string $dumpFile): void
+    public function importToDatabase(string $dumpFile, string $connection): void
     {
-        $process = $this->getProcess($dumpFile);
-
-        $process->run();
+        $process = Process::run($this->getImportCommand($dumpFile, $connection));
 
         $this->checkIfImportWasSuccessful($process, $dumpFile);
     }
 
-    protected function getProcess(string $dumpFile): Process
+    public function setDumpBinaryPath(string $dumpBinaryPath): self
     {
-        $command = $this->getImportCommand($dumpFile);
+        if ($dumpBinaryPath !== '' && ! str_ends_with($dumpBinaryPath, DIRECTORY_SEPARATOR)) {
+            $dumpBinaryPath .= DIRECTORY_SEPARATOR;
+        }
 
-        return Process::fromShellCommandline($command, null, null, null, 0);
+        $this->dumpBinaryPath = $dumpBinaryPath;
+
+        return $this;
+    }
+
+    protected function determineQuote(): string
+    {
+        return $this->isWindows() ? '"' : "'";
+    }
+
+    protected function isWindows(): bool
+    {
+        return str_starts_with(strtoupper(PHP_OS), 'WIN');
     }
 }

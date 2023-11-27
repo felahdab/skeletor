@@ -25,7 +25,7 @@ use Barryvdh\Debugbar\Facades\Debugbar;
 
 use Modules\Transformation\Scopes\MemeUnite;
 
-class MiseEnVisibiliteTable extends DataTableComponent
+class MiseenvisibiliteTable extends DataTableComponent
 
 {
     public function builder(): Builder

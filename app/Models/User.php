@@ -144,10 +144,6 @@ class User extends Authenticatable
 
     // protected $appends = ['en_transformation'];
 
-    //private $colls_sous_objs = [];
-    //private $colls_sous_objs_non_orphelins = null;
-
-
     /**
      * Always encrypt password when it is updated.
      *

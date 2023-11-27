@@ -4,14 +4,13 @@ namespace Blueprint\Lexers;
 
 use Blueprint\Contracts\Lexer;
 use Blueprint\Models\Controller;
+use Blueprint\Models\Policy;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class ControllerLexer implements Lexer
 {
-    /**
-     * @var StatementLexer
-     */
-    private $statementLexer;
+    private StatementLexer $statementLexer;
 
     public function __construct(StatementLexer $statementLexer)
     {
@@ -20,7 +19,10 @@ class ControllerLexer implements Lexer
 
     public function analyze(array $tokens): array
     {
-        $registry = ['controllers' => []];
+        $registry = [
+            'controllers' => [],
+            'policies' => [],
+        ];
 
         if (empty($tokens['controllers'])) {
             return $registry;
@@ -48,6 +50,31 @@ class ControllerLexer implements Lexer
                     : $definition['__invoke'] = $definition['invokable'];
 
                 unset($definition['invokable']);
+            }
+
+            if (isset($definition['meta'])) {
+                if (isset($definition['meta']['policies'])) {
+                    $authorizeResource = Arr::get($definition, 'meta.policies', true);
+
+                    $policy = new Policy(
+                        $controller->prefix(),
+                        $authorizeResource === true
+                            ? Policy::$supportedMethods
+                            : array_unique(
+                                array_map(
+                                    fn (string $method): string => Policy::$resourceAbilityMap[$method],
+                                    preg_split('/,([ \t]+)?/', $definition['meta']['policies'])
+                                )
+                            ),
+                        $authorizeResource === true,
+                    );
+
+                    $controller->policy($policy);
+
+                    $registry['policies'][] = $policy;
+                }
+
+                unset($definition['meta']);
             }
 
             foreach ($definition as $method => $body) {
@@ -78,17 +105,17 @@ class ControllerLexer implements Lexer
             ->toArray();
     }
 
-    private function getControllerModelName(Controller $controller)
+    private function getControllerModelName(Controller $controller): string
     {
         return Str::singular($controller->prefix());
     }
 
-    private function resourceTokens()
+    private function resourceTokens(): array
     {
         return [
             'index' => [
                 'query' => 'all:[plural]',
-                'render' => '[singular].index with [plural]',
+                'render' => '[singular].index with:[plural]',
             ],
             'create' => [
                 'render' => '[singular].create',
@@ -139,7 +166,7 @@ class ControllerLexer implements Lexer
         ];
     }
 
-    private function methodsForResource(string $type)
+    private function methodsForResource(string $type): array
     {
         if ($type === 'api') {
             return ['api.index', 'api.store', 'api.show', 'api.update', 'api.destroy'];
@@ -152,7 +179,7 @@ class ControllerLexer implements Lexer
         return array_map('trim', explode(',', strtolower($type)));
     }
 
-    private function hasOnlyApiResourceMethods(array $methods)
+    private function hasOnlyApiResourceMethods(array $methods): bool
     {
         return collect($methods)->every(fn ($item, $key) => Str::startsWith($item, 'api.'));
     }

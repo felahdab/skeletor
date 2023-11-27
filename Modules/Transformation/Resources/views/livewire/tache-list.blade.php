@@ -27,7 +27,7 @@
                             @can('transformation::taches.destroy')
                             <td>
                                 <x-form::form method="DELETE" :action="route('transformation::taches.destroy', $tache->id)">
-                                <button type='submit' class='btn btn-danger btn-sm'>Supprimer</button>
+                                <button class="btn btn-danger btn-sm" type="submit" dusk="delete-btn">Supprimer</button>
                                 </x-form::form>
                             </td>
                             @endcan

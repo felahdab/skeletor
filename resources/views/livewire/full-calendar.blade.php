@@ -65,4 +65,9 @@
         <button class='btn btn-primary mt-4 mb-4' wire:click="refreshCalendar">Rafraichir</button>
         <div id='calendar'></div>
     </div>
+    <input type="text" data-picker>
 </div>
+
+@asset
+<script src="{!! asset('assets/js/fullcalendar_6.1.3.js') !!}" ></script>
+@endasset

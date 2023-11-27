@@ -35,11 +35,11 @@ Vous avez également la possibilité de télécharger directement une version po
     <link rel="icon" type="image/png" sizes="32x32" href="{!! asset('assets/images/favicon-32x32.png') !!}">
     <link rel="icon" type="image/png" sizes="16x16" href="{!! asset('assets/images/favicon-16x16.png') !!}">
 
-    @livewireStyles
+    
     <link href="{!! asset('assets/bootstrap/css/bootstrap.css') !!}" rel="stylesheet">
     <script src="{!! asset('assets/js/jscharts.js') !!}"></script>
     <script src="{!! asset('assets/js/Sortable.js') !!}"></script>
-    <script src="{!! asset('assets/js/fullcalendar_6.1.3.js') !!}"></script>
+    
     <x-sortable-scripts/>
     
     <style>
@@ -64,10 +64,10 @@ Vous avez également la possibilité de télécharger directement une version po
       @yield('content')
     </main>
      
-    @livewireScripts
+    
     <script src="{!! asset('assets/bootstrap/js/bootstrap.bundle.js') !!}"></script>
     <script src="{!! asset('/vendor/livewire-charts/app.js') !!}"></script>
-    <script src="{!! asset('assets/js/alpine.js') !!}"></script>
+    
     <script src="{!! asset('assets/js/apexcharts.js') !!}"></script>
     
     @yield("scripts")

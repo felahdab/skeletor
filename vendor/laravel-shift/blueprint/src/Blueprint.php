@@ -9,11 +9,11 @@ use Symfony\Component\Yaml\Yaml;
 
 class Blueprint
 {
-    private $lexers = [];
+    private array $lexers = [];
 
-    private $generators = [];
+    private array $generators = [];
 
-    public static function relativeNamespace(string $fullyQualifiedClassName)
+    public static function relativeNamespace(string $fullyQualifiedClassName): string
     {
         $namespace = config('blueprint.namespace') . '\\';
         $reference = ltrim($fullyQualifiedClassName, '\\');
@@ -37,6 +37,8 @@ class Blueprint
         if ($strip_dashes) {
             $content = preg_replace('/^(\s*)-\s*/m', '\1', $content);
         }
+
+        $content = $this->transformDuplicatePropertyKeys($content);
 
         $content = preg_replace_callback(
             '/^(\s+)(id|timestamps(Tz)?|softDeletes(Tz)?)$/mi',
@@ -71,7 +73,7 @@ class Blueprint
         return Yaml::parse($content);
     }
 
-    public function analyze(array $tokens)
+    public function analyze(array $tokens): Tree
     {
         $registry = [
             'models' => [],
@@ -98,22 +100,22 @@ class Blueprint
         return $components;
     }
 
-    public function dump(array $generated)
+    public function dump(array $generated): string
     {
         return Yaml::dump($generated);
     }
 
-    public function registerLexer(Lexer $lexer)
+    public function registerLexer(Lexer $lexer): void
     {
         $this->lexers[] = $lexer;
     }
 
-    public function registerGenerator(Generator $generator)
+    public function registerGenerator(Generator $generator): void
     {
         $this->generators[] = $generator;
     }
 
-    public function swapGenerator(string $concrete, Generator $generator)
+    public function swapGenerator(string $concrete, Generator $generator): void
     {
         foreach ($this->generators as $key => $registeredGenerator) {
             if (get_class($registeredGenerator) === $concrete) {
@@ -135,5 +137,60 @@ class Blueprint
         }
 
         return true;
+    }
+
+    private function transformDuplicatePropertyKeys(string $content): string
+    {
+        preg_match('/^controllers:$/m', $content, $matches, PREG_OFFSET_CAPTURE);
+
+        if (empty($matches)) {
+            return $content;
+        }
+
+        $offset = $matches[0][1];
+        $lines = explode("\n", substr($content, $offset));
+
+        $methods = [];
+        $statements = [];
+        foreach ($lines as $index => $line) {
+            $method = preg_match('/^( {2}| {4}|\t){2}\w+:$/', $line);
+            if ($method) {
+                $methods[] = $statements ?? [];
+                $statements = [];
+
+                continue;
+            }
+
+            preg_match('/^( {2}| {4}|\t){3}(dispatch|fire|notify|send):\s/', $line, $matches);
+            if (empty($matches)) {
+                continue;
+            }
+
+            $statements[$index] = $matches[2];
+        }
+
+        $methods[] = $statements ?? [];
+
+        $multiples = collect($methods)
+            ->filter(fn ($statements) => count(array_unique($statements)) !== count($statements))
+            ->mapWithKeys(fn ($statements) => $statements);
+
+        if ($multiples->isEmpty()) {
+            return $content;
+        }
+
+        foreach ($multiples as $line => $statement) {
+            $lines[$line] = preg_replace(
+                '/^(\s+)' . $statement . ':/',
+                '$1' . $statement . '-' . $line . ':',
+                $lines[$line]
+            );
+        }
+
+        return substr_replace(
+            $content,
+            implode("\n", $lines),
+            $offset
+        );
     }
 }

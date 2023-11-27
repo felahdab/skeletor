@@ -13,7 +13,7 @@ class ModelGenerator extends AbstractClassGenerator implements Generator
 {
     use HandlesImports;
 
-    protected $types = ['models'];
+    protected array $types = ['models'];
 
     public function output(Tree $tree): array
     {
@@ -41,7 +41,7 @@ class ModelGenerator extends AbstractClassGenerator implements Generator
             ->all();
     }
 
-    protected function populateStub(string $stub, Model $model)
+    protected function populateStub(string $stub, Model $model): string
     {
         if ($model->isPivot()) {
             $stub = str_replace('class {{ class }} extends Model', 'class {{ class }} extends Pivot', $stub);
@@ -67,7 +67,7 @@ class ModelGenerator extends AbstractClassGenerator implements Generator
         return $stub;
     }
 
-    protected function buildClassPhpDoc(Model $model)
+    protected function buildClassPhpDoc(Model $model): string
     {
         if (!config('blueprint.generate_phpdocs')) {
             return '';
@@ -123,7 +123,7 @@ class ModelGenerator extends AbstractClassGenerator implements Generator
         return $phpDoc;
     }
 
-    protected function buildProperties(Model $model)
+    protected function buildProperties(Model $model): string
     {
         $properties = [];
 
@@ -163,7 +163,7 @@ class ModelGenerator extends AbstractClassGenerator implements Generator
         return trim(implode(PHP_EOL, array_filter($properties, fn ($property) => !empty(trim($property)))));
     }
 
-    protected function buildRelationships(Model $model)
+    protected function buildRelationships(Model $model): string
     {
         $methods = '';
         $template = $this->filesystem->stub('model.method.stub');
@@ -229,7 +229,7 @@ class ModelGenerator extends AbstractClassGenerator implements Generator
                         $relationship .= sprintf('%s->using(%s::class)', PHP_EOL . str_pad(' ', 12), $column_name);
                         $relationship .= sprintf('%s->as(\'%s\')', PHP_EOL . str_pad(' ', 12), Str::snake($column_name));
 
-                        $foreign = $this->tree->modelForContext($column_name);
+                        $foreign = $this->tree->modelForContext($column_name, true);
                         $columns = $this->pivotColumns($foreign->columns(), $foreign->relationships());
                         if ($columns) {
                             $relationship .= sprintf('%s->withPivot(\'%s\')', PHP_EOL . str_pad(' ', 12), implode("', '", $columns));
@@ -269,7 +269,7 @@ class ModelGenerator extends AbstractClassGenerator implements Generator
         return $methods;
     }
 
-    protected function addTraits(Model $model, $stub)
+    protected function addTraits(Model $model, $stub): string
     {
         if (!$model->usesSoftDeletes()) {
             return $stub;
@@ -281,7 +281,7 @@ class ModelGenerator extends AbstractClassGenerator implements Generator
         return $stub;
     }
 
-    private function fillableColumns(array $columns)
+    private function fillableColumns(array $columns): array
     {
         return array_diff(
             array_keys($columns),
@@ -297,7 +297,7 @@ class ModelGenerator extends AbstractClassGenerator implements Generator
         );
     }
 
-    private function hiddenColumns(array $columns)
+    private function hiddenColumns(array $columns): array
     {
         return array_intersect(
             array_keys($columns),
@@ -308,7 +308,7 @@ class ModelGenerator extends AbstractClassGenerator implements Generator
         );
     }
 
-    private function castableColumns(array $columns)
+    private function castableColumns(array $columns): array
     {
         return array_filter(
             array_map(
@@ -331,7 +331,7 @@ class ModelGenerator extends AbstractClassGenerator implements Generator
         );
     }
 
-    private function castForColumn(Column $column)
+    private function castForColumn(Column $column): ?string
     {
         if ($column->dataType() === 'date') {
             return 'date';
@@ -345,7 +345,7 @@ class ModelGenerator extends AbstractClassGenerator implements Generator
             return 'timestamp';
         }
 
-        if (stripos($column->dataType(), 'integer') || $column->dataType() === 'id') {
+        if (stripos($column->dataType(), 'integer') || in_array($column->dataType(), ['id', 'foreign'])) {
             return 'integer';
         }
 
@@ -364,9 +364,11 @@ class ModelGenerator extends AbstractClassGenerator implements Generator
         if ($column->dataType() === 'json') {
             return 'array';
         }
+
+        return null;
     }
 
-    private function pretty_print_array(array $data, $assoc = true)
+    private function pretty_print_array(array $data, bool $assoc = true): string
     {
         $output = var_export($data, true);
         $output = preg_replace('/^\s+/m', '        ', $output);
@@ -379,7 +381,7 @@ class ModelGenerator extends AbstractClassGenerator implements Generator
         return trim(str_replace("\n", PHP_EOL, $output));
     }
 
-    private function phpDataType(string $dataType)
+    private function phpDataType(string $dataType): string
     {
         static $php_data_types = [
             'id' => 'int',
@@ -422,7 +424,7 @@ class ModelGenerator extends AbstractClassGenerator implements Generator
         return $php_data_types[strtolower($dataType)] ?? 'string';
     }
 
-    private function fullyQualifyModelReference(string $model_name)
+    private function fullyQualifyModelReference(string $model_name): ?string
     {
         // TODO: get model_name from tree.
         // If not found, assume parallel namespace as controller.
