@@ -1,3 +1,7 @@
+## 2.1.6a (November 24, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.6 –> 2.1.6a
+- Restaure les propriétés colls_sous_objs et colls_sous_objs_non_orphelins dans User. TODO: voir si on peut les déplacer dans Modules\Transformation\Entities\User
+
 ## 2.1.6 (November 23, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.5a –> 2.1.6
 - Implements art #139971 outil d'analyse de l'utilisation de l'application

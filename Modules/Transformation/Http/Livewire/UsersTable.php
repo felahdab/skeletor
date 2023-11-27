@@ -70,9 +70,9 @@ class UsersTable extends DataTableComponent
             'default' => false,
             'class' => 'table table-hover',
         ]);
-        
-        $this->setAdditionalSelects(['users.date_debarq as date_debarq','users.date_embarq as date_embarq']);
-        $this->setTrAttributes(function($row) {
+
+        $this->setAdditionalSelects(['users.date_embarq as date_embarq']);
+        $this->setTrAttributes(function ($row) {
             if ($row->date_embarq >= date('Y-m-d')) {
                 return ['style' => 'border-left: 10px solid purple !important'];
             }
