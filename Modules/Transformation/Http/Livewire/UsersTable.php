@@ -321,10 +321,28 @@ class UsersTable extends DataTableComponent
                         $builder->where('socle', false);
                     }
                 }),
-            SelectFilter::make('Fonction')
+            /*SelectFilter::make('Fonction')
                 ->options(
                     ['' => 'Tous'] + DB::table('transformation_fonctions')
                         ->pluck('fonction_libcourt', 'id')
+                        ->toArray()
+                )*/
+                SelectFilter::make('Fonction')
+                ->options(
+                    ['' => 'Tous'] + DB::table('transformation_fonctions')
+                        ->join('transformation_type_fonctions', 'transformation_fonctions.typefonction_id', '=', 'transformation_type_fonctions.id')
+                        ->pluck('transformation_fonctions.fonction_libcourt', 'transformation_fonctions.id')
+                        ->mapWithKeys(function ($item, $key) {
+                            $typefonctionLibcourt = DB::table('transformation_type_fonctions')
+                                                      ->where('id', function($query) use ($key) {
+                                                          $query->select('typefonction_id')
+                                                                ->from('transformation_fonctions')
+                                                                ->where('id', $key)
+                                                                ->first();
+                                                      })
+                                                      ->value('typfonction_libcourt');
+                            return [$key => $item . ' (' . $typefonctionLibcourt . ')'];
+                        })
                         ->toArray()
                 )
                 ->filter(function(Builder $builder, string $value) {
