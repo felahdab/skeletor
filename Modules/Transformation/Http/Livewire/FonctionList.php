@@ -54,6 +54,6 @@ class FonctionList extends Component
         $writer = new Xlsx($spreadsheet);
         $writer->save($filePath);
     
-        $this->fileUrl = asset('storage/' . $fileName);
+        $this->fileUrl = asset('public/' . $fileName);
     }
 }
