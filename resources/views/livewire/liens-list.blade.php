@@ -1,5 +1,5 @@
 <div>
-     <input wire:model='filter' type="text" placeholder="Filtrer...">
+     <input wire:model.live='filter' type="text" placeholder="Filtrer...">
 
     <div wire:loading>
         Chargement...

@@ -1,9 +1,9 @@
 <div>
     <div class="input-group mt-4">
-        <input class="form-control" dusk="input-nom" wire:model.debounce.200ms="nom" placeholder="Nom..."></input>
-        <input class="form-control" wire:model.debounce.200ms="prenom" placeholder="Prénom..."></input>
-        <input class="form-control" wire:model.debounce.200ms="email" placeholder="Email..."></input>
-        <input class="form-control" wire:model.debounce.200ms="nid" placeholder="nid..."></input>
+        <input class="form-control" dusk="input-nom" wire:model.live.debounce.200ms="nom" placeholder="Nom..."></input>
+        <input class="form-control" wire:model.live.debounce.200ms="prenom" placeholder="Prénom..."></input>
+        <input class="form-control" wire:model.live.debounce.200ms="email" placeholder="Email..."></input>
+        <input class="form-control" wire:model.live.debounce.200ms="nid" placeholder="nid..."></input>
     </div>
     
     @if ($error)

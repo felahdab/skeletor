@@ -10,7 +10,7 @@
             <div>Sélectionnez ci-dessous la page que vous souhaitez afficher lorsque vous venez de vous connecter. 
             </div>
             <div class="mt-4">
-                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" wire:model="settings.prefered_page">
+                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" wire:model.live="settings.prefered_page">
                     @foreach($listpagesaccueil as $libelle => $route)
                         @can($route)
                             <option value="{{ $route }}">{{ $libelle }}</option>

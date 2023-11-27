@@ -6,9 +6,9 @@
         <div class='col'>
             <div>
                 <label>Sujet: </label>
-                <input dusk="input-sujet" class="form-control" wire:model='sujet'></input>
+                <input dusk="input-sujet" class="form-control" wire:model.live='sujet'></input>
             </div>
-            <textarea class="form-control mt-4" wire:model='corps' cols='40' rows='20'></textarea>
+            <textarea class="form-control mt-4" wire:model.live='corps' cols='40' rows='20'></textarea>
         </div>
         <div class='col'>
             <label>Aperçu: </label>

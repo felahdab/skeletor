@@ -6,7 +6,7 @@
     <button wire:click="decrement">-</button>
 
     <form wire:submit="save">
-        <input type="file" wire:model="photo">
+        <input type="file" wire:model.live="photo">
      
         @error('photo') <span class="error">{{ $message }}</span> @enderror
      
