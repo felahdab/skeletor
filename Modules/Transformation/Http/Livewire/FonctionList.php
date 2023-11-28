@@ -46,7 +46,13 @@ class FonctionList extends Component
         }
         
         $fileName = 'TransformationFonctions_' . time() . '.xlsx';
-        $filePath = storage_path('app/public/transformation_tmp/' . $fileName);
+        $storagePath = config('transformation.storage_path');
+        $filePath = $storagePath . '/' . $fileName;
+
+        /*$fileName = 'TransformationFonctions_' . time() . '.xlsx';
+        $filePath = storage_path('app/public/transformation_tmp/' . $fileName);*/
+
+
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -63,6 +69,6 @@ class FonctionList extends Component
         $writer = new Xlsx($spreadsheet);
         $writer->save($filePath);
 
-        $this->fileUrl = asset('storage/transformation_tmp/' . $fileName);
+        $this->fileUrl = asset($storagePath . '/' . $fileName);
     }
 }
