@@ -41,7 +41,7 @@ class FonctionList extends Component
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setCellValue('A1', 'Fonction Libcourt');
         $sheet->setCellValue('B1', 'Fonction Liblong');
-        $fonctions = Fonction::limit(10)->get();
+        $fonctions = Fonction::get();
         $row = 2;
         foreach ($fonctions as $fonction) {
             $sheet->setCellValue('A' . $row, $fonction->fonction_libcourt);
@@ -49,7 +49,7 @@ class FonctionList extends Component
             $row++;
         }
         $fileName = 'TransformationFonctions_' . time() . '.xlsx';
-        $filePath = storage_path('app/public/' . $fileName);
+        $filePath = storage_path('app/public/tmp/' . $fileName);
     
         $writer = new Xlsx($spreadsheet);
         $writer->save($filePath);

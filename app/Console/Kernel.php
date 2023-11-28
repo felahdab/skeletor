@@ -22,6 +22,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('backup:clean')->daily()->at('07:00');
         $schedule->command('backup:run')->daily()->at('07:15');
+        
+        $schedule->command('purge:tempFiles')->daily()->at('07:00');
     }
 
     /**
