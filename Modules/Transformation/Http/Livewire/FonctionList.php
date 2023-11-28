@@ -40,7 +40,7 @@ class FonctionList extends Component
         ini_set('memory_limit', '512M');
         set_time_limit(300);
         
-        $directoryPath = storage_path('app' . config('transformation.storage_path') );
+        $directoryPath = storage_path('app/' . config('transformation.storage_path') );
         if(!File::exists($directoryPath)){
             File::makeDirectory($directoryPath, 0755, true);
         }
