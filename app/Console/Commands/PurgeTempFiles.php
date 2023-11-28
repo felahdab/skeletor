@@ -27,9 +27,9 @@ class PurgeTempFiles extends Command
      */
     public function handle()
     {
-        $directoryPath = storage_path('app/public/transformation_tmp/');
-        if(File::exists($directoryPath)){
-            $files = File::allFiles($directoryPath);
+        $storagePath = config('transformation.storage_path');
+        if(File::exists($storagePath)){
+            $files = File::allFiles($storagePath);
 
             foreach($files as $file){
                 File::delete($file);

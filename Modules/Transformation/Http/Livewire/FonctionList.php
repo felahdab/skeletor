@@ -39,20 +39,15 @@ class FonctionList extends Component
     public function enregistrerFonctions(){
         ini_set('memory_limit', '512M');
         set_time_limit(300);
-    
-        $directoryPath = storage_path('app/public/transformation_tmp/');
+        
+        $directoryPath = storage_path('app/public/transformation/');
         if(!File::exists($directoryPath)){
             File::makeDirectory($directoryPath, 0755, true);
         }
-        
+
         $fileName = 'TransformationFonctions_' . time() . '.xlsx';
         $storagePath = config('transformation.storage_path');
         $filePath = $storagePath . '/' . $fileName;
-
-        /*$fileName = 'TransformationFonctions_' . time() . '.xlsx';
-        $filePath = storage_path('app/public/transformation_tmp/' . $fileName);*/
-
-
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
