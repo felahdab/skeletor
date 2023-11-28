@@ -40,14 +40,13 @@ class FonctionList extends Component
         ini_set('memory_limit', '512M');
         set_time_limit(300);
         
-        $directoryPath = storage_path('app/public/transformation/');
+        $directoryPath = storage_path('app' . config('transformation.storage_path') );
         if(!File::exists($directoryPath)){
             File::makeDirectory($directoryPath, 0755, true);
         }
 
         $fileName = 'TransformationFonctions_' . time() . '.xlsx';
-        $storagePath = config('transformation.storage_path');
-        $filePath = $storagePath . '/' . $fileName;
+        $filePath = $directoryPath . '/' . $fileName;
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -64,6 +63,6 @@ class FonctionList extends Component
         $writer = new Xlsx($spreadsheet);
         $writer->save($filePath);
 
-        $this->fileUrl = asset($storagePath . '/' . $fileName);
+        $this->fileUrl = asset(config('transformation.storage_path') . '/' . $fileName);
     }
 }
