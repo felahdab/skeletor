@@ -7,6 +7,8 @@ use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Illuminate\Support\Facades\File;
+
 
 use Modules\Transformation\Entities\Fonction;
 
@@ -37,10 +39,20 @@ class FonctionList extends Component
     public function enregistrerFonctions(){
         ini_set('memory_limit', '512M');
         set_time_limit(300);
+    
+        $directoryPath = storage_path('app/public/transformation_tmp/');
+        if(!File::exists($directoryPath)){
+            File::makeDirectory($directoryPath, 0755, true);
+        }
+        
+        $fileName = 'TransformationFonctions_' . time() . '.xlsx';
+        $filePath = storage_path('app/public/transformation_tmp/' . $fileName);
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
+
         $sheet->setCellValue('A1', 'Fonction Libcourt');
         $sheet->setCellValue('B1', 'Fonction Liblong');
+
         $fonctions = Fonction::get();
         $row = 2;
         foreach ($fonctions as $fonction) {
@@ -48,12 +60,9 @@ class FonctionList extends Component
             $sheet->setCellValue('B' . $row, $fonction->fonction_liblong);
             $row++;
         }
-        $fileName = 'TransformationFonctions_' . time() . '.xlsx';
-        $filePath = storage_path('app/public/tmp/' . $fileName);
-    
         $writer = new Xlsx($spreadsheet);
         $writer->save($filePath);
-    
-        $this->fileUrl = asset('public/' . $fileName);
+
+        $this->fileUrl = asset('storage/transformation_tmp/' . $fileName);
     }
 }

@@ -12,7 +12,7 @@ class PurgeTempFiles extends Command
      *
      * @var string
      */
-    protected $signature = 'purge:tempFiles';
+    protected $signature = 'transformation:purge:tempFiles';
 
 
     /**
@@ -27,7 +27,7 @@ class PurgeTempFiles extends Command
      */
     public function handle()
     {
-        $directoryPath = storage_path('app/public/tmp/');
+        $directoryPath = storage_path('app/public/transformation_tmp/');
         if(File::exists($directoryPath)){
             $files = File::allFiles($directoryPath);
 
