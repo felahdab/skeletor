@@ -40,7 +40,7 @@ class UserFactory extends Factory
             'password'   => 'password',
             'secteur_id' => Secteur::query()->inRandomOrder()->first()->id,
             'specialite_id' => Specialite::query()->inRandomOrder()->first()->id,
-            'grade_id'    => Grade::query()->inRandomOrder()->first()->id,
+            'grade_id'    => Grade::query()->where('id', '>=', 8)->inRandomOrder()->first()->id,
             'unite_id'   => 2,
             'diplome_id'  => Diplome::query()->inRandomOrder()->first()->id,
             'unite_destination_id' => null,
