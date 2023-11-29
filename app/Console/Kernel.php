@@ -22,6 +22,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('backup:clean')->daily()->at('07:00');
         $schedule->command('backup:run')->daily()->at('07:15');
+        
+        $schedule->command('transformation:purge:tempFiles')->daily()->at('07:00');
     }
 
     /**
@@ -32,7 +34,6 @@ class Kernel extends ConsoleKernel
     protected function commands()
     {
         $this->load(__DIR__.'/Commands');
-
         require base_path('routes/console.php');
     }
 }
