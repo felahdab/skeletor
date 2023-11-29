@@ -2,7 +2,6 @@
 
 return [
     'name' => 'Transformation',
-    'storage_path' => 'public/transformation',
     'user_settings' => [
         'notifications' => [
             'pour_fonctions' => [

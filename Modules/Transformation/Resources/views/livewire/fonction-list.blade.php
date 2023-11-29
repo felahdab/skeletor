@@ -1,17 +1,5 @@
-
-<div class="mt-4" x-data="{
-    fileUrl: @entangle('fileUrl'),
-    enregistrerFonctions(){
-        $wire.enregistrerFonctions();
-    }
-}"
-x-init="$watch('fileUrl', value => {
-    if (value) window.location.href = value;
-})">
+<div class="mt-4">
     <input wire:model.live='filter' type="text" placeholder="Filtrer...">
-    <button class="btn btn-primary" title="enregistrer les fonctions dans un excel" x-on:click="enregistrerFonctions">
-        <x-bootstrap-icon iconname='floppy.svg' />
-    </button>
 
     <div wire:loading>
         Chargement...
