@@ -1,4 +1,6 @@
-<div>
+<div x-data="{
+    mode : '{{ $mode }}'
+}">
     <div class="lead mt-1 mb-3">Compagnonnage : <b>{{ $comp -> comp_liblong}}</b></div>
     <!-- div avec formulaire de validation -->
     @include('transformation::livewire.livret-transformation.divvalid', ['mode' => "parcomp"])
