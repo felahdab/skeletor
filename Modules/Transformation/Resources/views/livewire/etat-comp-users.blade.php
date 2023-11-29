@@ -181,14 +181,15 @@
     </div>
 </div>
 
-
+@section('styles')
 <style>
     .highlight{
         background-color: #feffa7;
     }
 </style>
+@endsection
 
-<script>
+@section('scripts')
     var input = document.getElementById("searchInput");
     input.addEventListener("input", function() {
         var table = document.getElementById("matable");
@@ -209,9 +210,7 @@
             }
         }
     });
-</script>
 
-<script>
       // Get the table element
       var table = document.getElementById("matable");
 
@@ -240,4 +239,4 @@
           });
         });
       });
-</script>
+@endsection

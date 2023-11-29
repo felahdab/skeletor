@@ -47,7 +47,7 @@ Vous avez également la possibilité de télécharger directement une version po
             display: none;
         }
     </style>
-
+    @yield('styles')
 </head>
 <body>
     
