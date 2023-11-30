@@ -30,6 +30,10 @@ class MisesPourEmploi implements Scope
     {
         $unite = $this->user->unite;
 
+        if ($unite == null) {
+            return;
+        }
+
         $coll_des_mises_en_visibilite_dates = MiseEnVisibilite::query()
             ->whereBelongsTo($unite)
             ->tap(new ActiveNow())
