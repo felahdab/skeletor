@@ -1,4 +1,6 @@
-<div>
+<div x-data="{
+    mode : '{{ $mode }}'
+}">
     <div class="lead mt-1 mb-3">Compagnonnage : <b>{{ $comp -> comp_liblong}}</b></div>
     <!-- div avec formulaire de validation -->
     @include('transformation::livewire.livret-transformation.divvalid', ['mode' => "parcomp"])
@@ -181,14 +183,15 @@
     </div>
 </div>
 
-
+@section('styles')
 <style>
     .highlight{
         background-color: #feffa7;
     }
 </style>
+@endsection
 
-<script>
+@section('scripts')
     var input = document.getElementById("searchInput");
     input.addEventListener("input", function() {
         var table = document.getElementById("matable");
@@ -209,9 +212,7 @@
             }
         }
     });
-</script>
 
-<script>
       // Get the table element
       var table = document.getElementById("matable");
 
@@ -240,4 +241,4 @@
           });
         });
       });
-</script>
+@endsection
