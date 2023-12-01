@@ -110,7 +110,7 @@
                         <x-form::input name="date_embarq" label="Date d'embarquement *" type="date" :value="$user->date_embarq" required/>
                     </div>
                     <div class="col">
-                        @if(auth()->user()->admin)
+                        @if(auth()->user()->can('view_all_users'))
                             <x-form::model-select name="unite_id" 
                             :models="$unites" 
                             label="Unité actuelle" 

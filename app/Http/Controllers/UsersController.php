@@ -37,7 +37,7 @@ class UsersController extends Controller
     public function create() 
     {
         $user_unite_id = auth()->user()->unite_id;
-        if(! auth()->user()->admin){
+        if(! auth()->user()->can('view_all_users')){
             return view('users.create', [
                 'roles' => Role::latest()->get(),
                 'grades' => Grade::orderBy('ordre_classmt', 'asc')->get(),
@@ -131,7 +131,7 @@ class UsersController extends Controller
     public function edit(User $user) 
     {
         $user_unite_id = auth()->user()->unite_id;
-        if(! auth()->user()->admin){
+        if(! auth()->user()->can('view_all_users')){
             return view('users.edit', [
                 'user' => $user,
                 'userRole' => $user->roles->pluck('name')->toArray(),
