@@ -13,9 +13,12 @@ class MemeUnite implements Scope
 {
     public function __construct(Builder $builder, public ?User $user)
     {
-        if ($this->user == null)
-        {
+        if ($this->user == null) {
             $this->user = auth()->user();
+        }
+
+        if ($this->user->unite_id == null){
+            return;
         }
         $this->apply($builder, Personne::make());
     }

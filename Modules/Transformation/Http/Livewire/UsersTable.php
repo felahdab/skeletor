@@ -71,12 +71,11 @@ class UsersTable extends DataTableComponent
             'class' => 'table table-hover',
         ]);
 
-        $this->setAdditionalSelects(['users.date_embarq as date_embarq']);
-        $this->setTrAttributes(function ($row) {
+        $this->setAdditionalSelects(['users.date_debarq as date_debarq','users.date_embarq as date_embarq']);
+        $this->setTrAttributes(function($row) {
             if ($row->date_embarq >= date('Y-m-d')) {
                 return ['style' => 'border-left: 10px solid purple !important'];
-            }
-            elseif($row->date_debarq != null && $this->mode=='dashboard') {
+            } elseif ($row->date_debarq != null && $this->mode == 'dashboard') {
                 return ['style' => 'border-left: 10px solid deepskyblue !important'];
             }
             return [];
@@ -328,6 +327,33 @@ class UsersTable extends DataTableComponent
                         $builder->where('socle', false);
                     }
                 }),
+            SelectFilter::make('Fonction')
+                ->options(
+                    ['' => 'Tous'] + DB::table('transformation_fonctions')
+                        ->pluck('fonction_libcourt', 'id')
+                        ->toArray()
+                )
+                ->filter(function (Builder $builder, string $value) {
+                    if ($value !== '') {
+                        $builder->whereExists(function ($query) use ($value) {
+                            $query->select(DB::raw(1))
+                                ->from('transformation_user_fonction')
+                                ->whereRaw('transformation_user_fonction.user_id = users.id')
+                                ->where('transformation_user_fonction.fonction_id', $value);
+                        });
+                    }
+                }),
+            SelectFilter::make('Unité')
+                ->options(
+                    ['' => 'Tous'] + DB::table('unites')
+                        ->pluck('unite_libcourt', 'id')
+                        ->toArray()
+                )
+                ->filter(function (Builder $builder, string $value) {
+                    if ($value !== '') {
+                        $builder->where('unite_id', $value);
+                    }
+                }),
         ];
 
         switch ($this->mode) {
@@ -350,20 +376,19 @@ class UsersTable extends DataTableComponent
                     });
                 break;
             case "dashboard":
-                $basefilters[]=SelectFilter::make('Date débarquement')
-                ->options([
-                    '' => 'Tous',
-                    '1' => 'Connue',
-                    '0' => 'Non connue',
-                ])
-                ->filter(function(Builder $builder, string $value) {
-                    if ($value === '1') {
-                        $builder->where('date_debarq', '<>', null);
-                    } 
-                    elseif ($value === '0') {
-                        $builder->where('date_debarq', null );
-                    }
-                });
+                $basefilters[] = SelectFilter::make('Date débarquement')
+                    ->options([
+                        '' => 'Tous',
+                        '1' => 'Connue',
+                        '0' => 'Non connue',
+                    ])
+                    ->filter(function (Builder $builder, string $value) {
+                        if ($value === '1') {
+                            $builder->where('date_debarq', '<>', null);
+                        } elseif ($value === '0') {
+                            $builder->where('date_debarq', null);
+                        }
+                    });
 
                 break;
         }

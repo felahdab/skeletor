@@ -115,6 +115,7 @@ class EtatCompUsers extends Component
                                                 'filtres' => $filtres,
                                                 'success' => $this->success,
                                                 'erreur' => $this->erreur,
+                                                'mode' => 'parcomp'
                                             ]);
     }
     public function ValideElementsDuParcoursParcomp( 
