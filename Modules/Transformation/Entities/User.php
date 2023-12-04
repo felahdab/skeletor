@@ -18,6 +18,8 @@ class User extends Personne
     private $colls_sous_objs = [];
     private $colls_sous_objs_non_orphelins = null;
     private $fonctionscount = null;
+    private $colls_sous_objs = [];
+    private $colls_sous_objs_non_orphelins = null;
 
     public function getEnTransformationAttribute()
     {
@@ -28,8 +30,6 @@ class User extends Personne
 
         return $this->fonctionscount > 0;
     }
-
-
 
     public function displayDestination()
     {
