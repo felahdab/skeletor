@@ -12,7 +12,7 @@
     <div id='divmodifobj' class='card ml-3 w-100' >
         <div class='card-header' >Modification d'un lien </div>
         <div style='text-align:right;'>* champs obligatoires </div>
-        <x-form::form method="PATCH" :action="route('liens.update' , $lien->id)">
+        <x-form::form method="PATCH" :action="route('liens.update' , $lien->id)" enctype='multipart/form-data'>
             <div style='padding-left: 15px;'>
                 <div class='form-group row' >
                     <label for='lib_lien' class='col-sm-5 col-form-label'> Libell&eacute; *</label>
