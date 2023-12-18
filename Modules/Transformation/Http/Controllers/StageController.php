@@ -3,8 +3,11 @@
 namespace Modules\Transformation\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Modules\Transformation\Service\GererTransformationService;
+use Modules\Transformation\Services\GererTransformationService;
 use Modules\Transformation\Services\RecalculerTransformationService;
+
+use Modules\Transformation\Dto\ChangementLivretDeTransformationDto;
+use Modules\Transformation\Events\UnLivretDeTransformationAChangeEvent;
 
 use Illuminate\Support\Carbon;
 
@@ -168,6 +171,11 @@ class StageController extends Controller
                 $date_validite= new Carbon($request["date_validation"]);
                 $date_validite = $date_validite->addMonth($nbmois);
             }
+            $event_detail = [
+                "stage" => $stage,
+                "commentaire" => $request["commentaire"],
+                "date_validation" => $request["date_validation"],
+            ];
             foreach (array_keys($userlist) as $userid)
             {
                 $user = User::find($userid);
@@ -176,6 +184,9 @@ class StageController extends Controller
                 $workitem->date_validite = $date_validite;
                 $workitem->commentaire .= ' ' . $request["commentaire"];
                 $workitem->save();
+                //historisation
+                $changement = new ChangementLivretDeTransformationDto(auth()->user(), $user, "VALIDE_STAGE", json_encode($event_detail));
+                UnLivretDeTransformationAChangeEvent::dispatch($changement);
             }
             RecalculerTransformationService::handle();
         }
@@ -193,6 +204,9 @@ class StageController extends Controller
                 $workitem->date_validation = null;
                 $workitem->date_validite = null;
                 $workitem->save();
+                //historisation
+                $changement = new ChangementLivretDeTransformationDto(auth()->user(), $user, "RETIRE_STAGE", json_encode(["stage" => $stage]));
+                UnLivretDeTransformationAChangeEvent::dispatch($changement);
             }
             RecalculerTransformationService::handle();
         }
