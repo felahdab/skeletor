@@ -327,13 +327,7 @@ class UsersTable extends DataTableComponent
                         $builder->where('socle', false);
                     }
                 }),
-            /*SelectFilter::make('Fonction')
-                ->options(
-                    ['' => 'Tous'] + DB::table('transformation_fonctions')
-                        ->pluck('fonction_libcourt', 'id')
-                        ->toArray()
-                )*/
-                SelectFilter::make('Fonction')
+            SelectFilter::make('Fonction')
                 ->options(
                     ['' => 'Tous'] + DB::table('transformation_fonctions')
                         ->join('transformation_type_fonctions', 'transformation_fonctions.typefonction_id', '=', 'transformation_type_fonctions.id')
