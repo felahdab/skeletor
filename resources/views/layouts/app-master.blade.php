@@ -35,10 +35,14 @@ Vous avez également la possibilité de télécharger directement une version po
     <link rel="icon" type="image/png" sizes="32x32" href="{!! asset('assets/images/favicon-32x32.png') !!}">
     <link rel="icon" type="image/png" sizes="16x16" href="{!! asset('assets/images/favicon-16x16.png') !!}">
 
+    @yield('before_styles')
+    @stack('before_styles')
     
-    <link href="{!! asset('assets/bootstrap/css/bootstrap.css') !!}" rel="stylesheet">
-    <script src="{!! asset('assets/js/jscharts.js') !!}"></script>
-    <script src="{!! asset('assets/js/Sortable.js') !!}"></script>
+    <link href="{!! basset('https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css') !!}" rel="stylesheet">
+    <script src="{!! basset('https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js') !!}"></script>
+
+    @bassetArchive('https://github.com/SortableJS/Sortable/archive/refs/tags/1.15.1.zip', 'Sortable-1.15.1')
+    @basset('Sortable-1.15.1/Sortable-1.15.1/Sortable.js')
     
     <x-sortable-scripts/>
     
@@ -48,6 +52,10 @@ Vous avez également la possibilité de télécharger directement une version po
         }
     </style>
     @yield('styles')
+    
+    @yield('after_styles')
+    @stack('after_styles')
+
 </head>
 <body>
     
@@ -57,20 +65,33 @@ Vous avez également la possibilité de télécharger directement une version po
     
     
     <main class="container">
+      @yield('before_breadcrumbs_widgets')
+      @yield('after_breadcrumbs_widgets')
+      @yield('header')
+
       @include('layouts.partials.messages')
+
+      @yield('before_content_widgets')
       @if (isset($slot))
         {{ $slot }}
       @endif
       @yield('content')
+      @yield('after_content_widgets')
+
     </main>
      
+    @yield('before_scripts')
+    @stack('before_scripts')
     
-    <script src="{!! asset('assets/bootstrap/js/bootstrap.bundle.js') !!}"></script>
+    <script src="{!! basset('https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js') !!}"></script>
     <script src="{!! asset('/vendor/livewire-charts/app.js') !!}"></script>
     
-    <script src="{!! asset('assets/js/apexcharts.js') !!}"></script>
+    <script src="{!! basset('https://cdn.jsdelivr.net/npm/apexcharts') !!}"></script>
     
     @yield("scripts")
+    
+    @yield('after_scripts')
+    @stack('after_scripts')
 
   </body>
 </html>

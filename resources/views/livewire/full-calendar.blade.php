@@ -68,6 +68,5 @@
     <input type="text" data-picker>
 </div>
 
-@asset
-<script src="{!! asset('assets/js/fullcalendar_6.1.3.js') !!}" ></script>
-@endasset
+
+<script src="{{ basset('https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.10/index.global.min.js') }}"></script>

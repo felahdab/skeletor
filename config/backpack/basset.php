@@ -18,6 +18,7 @@ return [
     // used to internalize assets in advance with artisan basset:internalize
     'view_paths' => [
         resource_path('views'),
+        base_path('vendor/backpack/theme-coreuiv4/resources/views')
     ],
 
     // content security policy nonce
