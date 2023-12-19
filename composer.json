@@ -6,7 +6,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
-        "asantibanez/livewire-charts": "*",
+        "asantibanez/livewire-charts": "^3.0",
+        "backpack/basset": "^1.2",
         "barryvdh/laravel-debugbar": "^3.7",
         "binarytorch/larecipe": "^2.5",
         "calebporzio/sushi": "^2.4",
