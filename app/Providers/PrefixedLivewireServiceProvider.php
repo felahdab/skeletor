@@ -15,7 +15,7 @@ class PrefixedLivewireServiceProvider extends BaseLivewireServiceProvider
             \App\Providers\LivewireMechanisms\HandleRequests::class,
             \App\Providers\LivewireMechanisms\FrontendAssets::class,
             \Livewire\Mechanisms\ExtendBlade\ExtendBlade::class,
-            \Livewire\Mechanisms\CompileLivewireTags::class,
+            \Livewire\Mechanisms\CompileLivewireTags\CompileLivewireTags::class,
             \Livewire\Mechanisms\ComponentRegistry::class,
             \Livewire\Mechanisms\RenderComponent::class,
             \Livewire\Mechanisms\DataStore::class,

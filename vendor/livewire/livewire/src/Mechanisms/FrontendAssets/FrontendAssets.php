@@ -5,9 +5,10 @@ namespace Livewire\Mechanisms\FrontendAssets;
 use Livewire\Drawer\Utils;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Blade;
+use Livewire\Mechanisms\Mechanism;
 use function Livewire\on;
 
-class FrontendAssets
+class FrontendAssets extends Mechanism
 {
     public $hasRenderedScripts = false;
     public $hasRenderedStyles = false;
@@ -16,16 +17,11 @@ class FrontendAssets
 
     public $scriptTagAttributes = [];
 
-    public function register()
-    {
-        app()->singleton($this::class);
-    }
-
     public function boot()
     {
-        // app($this::class)->setScriptRoute(function ($handle) {
-        //     return Route::get('/livewire/livewire.js', $handle);
-        // });
+        app($this::class)->setScriptRoute(function ($handle) {
+            return Route::get('/livewire/livewire.js', $handle);
+        });
 
         Blade::directive('livewireScripts', [static::class, 'livewireScripts']);
         Blade::directive('livewireScriptConfig', [static::class, 'livewireScriptConfig']);
@@ -187,7 +183,6 @@ class FrontendAssets
             'uri' => app('livewire')->getUpdateUri(),
             'progressBar' => $progressBar,
         ]);
-        dd($attributes);
 
         return <<<HTML
         <script{$nonce} data-navigate-once="true">window.livewireScriptConfig = {$attributes};</script>

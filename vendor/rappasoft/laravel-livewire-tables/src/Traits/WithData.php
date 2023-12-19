@@ -10,15 +10,29 @@ use Illuminate\Pagination\CursorPaginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use Rappasoft\LaravelLivewireTables\Exceptions\DataTableConfigurationException;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 trait WithData
 {
-    // TODO: Test
+    /**
+     * Sets up the Builder instance
+     */
+    public function bootWithData(): void
+    {
+        //Sets up the Builder Instance
+        $this->setBuilder($this->builder());
+    }
+
+    /**
+     * Retrieves the rows for the executed query
+     */
     public function getRows(): Collection|CursorPaginator|Paginator|LengthAwarePaginator
     {
+        // Setup the Base Query
         $this->baseQuery();
 
+        // Execute the Query
         $executedQuery = $this->executeQuery();
 
         // Get All Currently Paginated Items Primary Keys
@@ -26,6 +40,10 @@ trait WithData
 
         // Get Count of Items in Current Page
         $this->paginationCurrentCount = $executedQuery->count();
+
+        // Fire hook for rowsRetrieved
+        $this->callHook('rowsRetrieved', [$executedQuery]);
+        $this->callTraitHook('rowsRetrieved', [$executedQuery]);
 
         return $executedQuery;
     }
@@ -188,6 +206,9 @@ trait WithData
         return $this->getBuilder();
     }
 
+    /**
+     * Gets the table for a given Column
+     */
     protected function getTableForColumn(Column $column): ?string
     {
         $table = null;
@@ -206,6 +227,9 @@ trait WithData
         return $table;
     }
 
+    /**
+     * Retrieves table aliases
+     */
     protected function getTableAlias(?string $currentTableAlias, string $relationPart): string
     {
         if (! $currentTableAlias) {
@@ -213,5 +237,29 @@ trait WithData
         }
 
         return $currentTableAlias.'_'.$relationPart;
+    }
+
+    /**
+     * The base query - typically overridden in child components
+     */
+    public function builder(): Builder
+    {
+        if ($this->hasModel()) {
+            return $this->getModel()::query()->with($this->getRelationships());
+        }
+
+        // If model does not exist
+        throw new DataTableConfigurationException('You must either specify a model or implement the builder method.');
+    }
+
+    /**
+     * Add Rows And Generic Data to View
+     */
+    public function renderingWithData(\Illuminate\View\View $view, array $data = []): void
+    {
+        $view->with([
+            'filterGenericData' => $this->getFilterGenericData(),
+            'rows' => $this->getRows(),
+        ]);
     }
 }

@@ -3,10 +3,42 @@
 All notable changes to `laravel-livewire-tables` will be documented in this file
 
 ## UNRELEASED
-- Add capability to set a custom script path for the scripts/styles by @lrljoe in https://github.com/rappasoft/laravel-livewire-tables/pull/1557
-- Added missing tailwind background colour class for when hovering over the clear button in dark mode by @slakbal in https://github.com/rappasoft/laravel-livewire-tables/pull/1553
+### New Features
+- Add capability to use as a Full Page Component by @amshehzad and @lrljoe in https://github.com/rappasoft/laravel-livewire-tables/pull/1580
+- Add DateColumn by @lrljoe in https://github.com/rappasoft/laravel-livewire-tables/pull/1589
+- Add ColorColumn by @lrljoe in https://github.com/rappasoft/laravel-livewire-tables/pull/1590
+
+### Tweaks
+- Internal - modify GitHub workflows to improve caching, but use unique caches per workflow matrix
+- Internal - remove superfluous PHPStan ignoreErrors
+- Internal - update Test Suite to also test at PHP 8.3
+- Internal - tidying Classes & Traits by @lrljoe
+- Docs - Update Anonymous Column documents to reference ability to use strings as well as views
+
+## [v3.1.4] - 2023-12-04
+### New Features
 - Add capability to hide Column Label by @lrljoe in https://github.com/rappasoft/laravel-livewire-tables/pull/1512
+- Add capability to set a custom script path for the scripts/styles by @lrljoe in https://github.com/rappasoft/laravel-livewire-tables/pull/1557
+- Added rowsRetrieved Lifecycle Hook, expanded documentation for Lifecycle Hooks
+
+### Bug Fixes
+- Added missing tailwind background colour class for when hovering over the clear button in dark mode by @slakbal in https://github.com/rappasoft/laravel-livewire-tables/pull/1553
+- Fixed extraneous space in config.php by @viliusvsx in in https://github.com/rappasoft/laravel-livewire-tables/pull/1577
+- Changed table default vertical overflow to auto by @dmyers in https://github.com/rappasoft/laravel-livewire-tables/pull/1573
+- Fix footer rendering issue with extra td displayed depending on bulk action statuses
+- Create new WithCustomisations Trait
+- Move render data provision into Traits -> WithColumns, WithCustomisations, WithData
+- Add default pint.json with ignore for WithAllTraits
+- Updated tests & test cases to cater for No Primary Key more efficiently
+
+### Tweaks
+- Create additional Exception Classes (NoColumnsException, NoSearchableColumnsException, NoSortableColumnsException)
 - Revert previous splitting of JS Files
+- Add capability to customise Bulk Actions Styling with tests by @lrljoe in https://github.com/rappasoft/laravel-livewire-tables/pull/1564
+  - TH Classes
+  - TH Checkbox Classes
+  - TD Classes
+  - TD Checkbox Classes
 
 ## [v3.1.3] - 2023-11-03
 - Add additional Lifecycle Hook by @lrljoe in https://github.com/rappasoft/laravel-livewire-tables/pull/1534

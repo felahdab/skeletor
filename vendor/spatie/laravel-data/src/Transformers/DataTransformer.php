@@ -69,12 +69,18 @@ class DataTransformer
 
         $payload = [];
 
+        $objVars = get_object_vars($data);
+
         foreach ($dataClass->properties as $property) {
             if ($property->hidden) {
                 continue;
             }
 
             $name = $property->name;
+
+            if ($property->type->isOptional && ! array_key_exists($name, $objVars)) {
+                continue;
+            }
 
             if (! $this->shouldIncludeProperty($name, $data->{$name}, $trees)) {
                 continue;
