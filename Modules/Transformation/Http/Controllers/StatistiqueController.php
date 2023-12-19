@@ -97,6 +97,7 @@ class StatistiqueController extends Controller
         foreach($stages as $stage){
             $idstage = $stage->id;
             $libstage = $stage->stage_libcourt;
+            $nbmarins=$stage->users()->get()->count();
             $nbmarinsavalider = $stage->users()
                                     ->wherePivotNull('date_validation')
                                     ->orWhere(function($query) use ($idstage){
@@ -105,8 +106,14 @@ class StatistiqueController extends Controller
                                                 ->where('transformation_user_stage.date_validite', '<' , now());})
                                     ->get()
                                     ->count();
+            $nbmarinsvalides=$nbmarins-$nbmarinsavalider;
             if($nbmarinsavalider > 0){
-                $ligne=['idstage' => $idstage, 'libstage' => $libstage, 'nbmarinsavalider' =>$nbmarinsavalider];
+                $taux=round($nbmarinsavalider/$nbmarins*100, 2);
+                $ligne=['idstage' => $idstage, 
+                        'libstage' => $libstage, 
+                        'nbmarinsavalider' =>$nbmarinsavalider, 
+                        'nbmarinsvalides' =>$nbmarinsvalides, 
+                        'taux'=>$taux];
                 if($stage->typelicence_id < 4){
                     array_push($stagelic, $ligne);    
                 }

@@ -16,8 +16,10 @@
                         <table class='table table-hover table-bordered'>
                             <thead>
                                 <tr style='background-color:silver;'>
-                                    <th class="align-middle" style='width: 70%; '>Libell&eacute;</th>
+                                    <th class="align-middle" style='width: 50%; '>Libell&eacute;</th>
                                     <th class="align-middle text-center" >Nb marins &agrave; valider</th>
+                                    <th class="align-middle text-center" >Nb marins validés</th>
+                                    <th class="align-middle text-center" >Taux &agrave; valider (%)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -25,6 +27,8 @@
                                     <tr>
                                         <td><a href="{{ route('transformation::stages.show', $stagelic['idstage']) }}">{{$stagelic['libstage']}}</a></td>
                                         <td class="text-end">{{$stagelic['nbmarinsavalider']}}</td>
+                                        <td class="text-end">{{$stagelic['nbmarinsvalides']}}</td>
+                                        <td class="text-end">{{$stagelic['taux']}}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -41,8 +45,10 @@
                         <table class='table table-hover table-bordered'>
                             <thead>
                                 <tr style='background-color:silver;'>
-                                    <th class="align-middle" style='width: 70%; '>Libell&eacute;</th>
+                                    <th class="align-middle" style='width: 50%; '>Libell&eacute;</th>
                                     <th class="align-middle text-center" >Nb marins &agrave; valider</th>
+                                    <th class="align-middle text-center" >Nb marins validés</th>
+                                    <th class="align-middle text-center" >Taux &agrave; valider (%)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -50,6 +56,8 @@
                                     <tr>
                                         <td><a href="{{ route('transformation::stages.show', $stageext['idstage']) }}">{{$stageext['libstage']}}</a></td>
                                         <td class="text-end">{{$stageext['nbmarinsavalider']}}</td>
+                                        <td class="text-end">{{$stageext['nbmarinsvalides']}}</td>
+                                        <td class="text-end">{{$stageext['taux']}}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
