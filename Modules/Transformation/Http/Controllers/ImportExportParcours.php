@@ -180,8 +180,7 @@ class ImportExportParcours extends Controller
         else
             $sheet= $spreadsheet->createSheet();
         $sheet->setTitle('Liste Fonctions');
-        $this->exportFoncStageCompToExcelSheet($sheet);
-        
+        $this->exportFoncStageCompToExcelSheet($sheet);      
 
         foreach (Compagnonage::with('taches.objectifs.sous_objectifs')->get() as $comp)
         {
@@ -189,12 +188,12 @@ class ImportExportParcours extends Controller
                 $sheet = $spreadsheet->getActivesheet();
             else
                 $sheet= $spreadsheet->createSheet();
-            $sheet->setTitle(Str::ascii(substr($comp->comp_libcourt, 0, 31)));
+            
+            $sheet->setTitle(Str::ascii(preg_replace('/[^A-Za-z0-9\-\s]/', '', (substr($comp->comp_libcourt, 0, 31)))));
             $this->exportCompagnonageToExcelSheet($comp, $sheet);
         }
         
         $writer = new Xlsx($spreadsheet);
-
 
         header('Content-Type: application/vnc.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename="parcours.xlsx"');

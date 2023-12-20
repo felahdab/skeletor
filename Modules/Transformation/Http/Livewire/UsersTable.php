@@ -330,30 +330,40 @@ class UsersTable extends DataTableComponent
             SelectFilter::make('Fonction')
                 ->options(
                     ['' => 'Tous'] + DB::table('transformation_fonctions')
-                        ->pluck('fonction_libcourt', 'id')
+                        ->join('transformation_type_fonctions', 'transformation_fonctions.typefonction_id', '=', 'transformation_type_fonctions.id')
+                        ->pluck('transformation_fonctions.fonction_libcourt', 'transformation_fonctions.id')
+                        ->mapWithKeys(function ($item, $key) {
+                            $typefonctionLibcourt = DB::table('transformation_type_fonctions')
+                                                      ->where('id', function($query) use ($key) {
+                                                          $query->select('typefonction_id')
+                                                                ->from('transformation_fonctions')
+                                                                ->where('id', $key)
+                                                                ->first();
+                                                      })
+                                                      ->value('typfonction_libcourt');
+                            return [$key => $item . ' (' . $typefonctionLibcourt . ')'];
+                        })
                         ->toArray()
                 )
-                ->filter(function (Builder $builder, string $value) {
+                ->filter(function(Builder $builder, string $value) {
                     if ($value !== '') {
                         $builder->whereExists(function ($query) use ($value) {
                             $query->select(DB::raw(1))
-                                ->from('transformation_user_fonction')
-                                ->whereRaw('transformation_user_fonction.user_id = users.id')
-                                ->where('transformation_user_fonction.fonction_id', $value);
+                                  ->from('transformation_user_fonction')
+                                  ->whereRaw('transformation_user_fonction.user_id = users.id')
+                                  ->where('transformation_user_fonction.fonction_id', $value);
                         });
-                    }
-                }),
+                    }}),
             SelectFilter::make('Unité')
                 ->options(
                     ['' => 'Tous'] + DB::table('unites')
                         ->pluck('unite_libcourt', 'id')
                         ->toArray()
-                )
-                ->filter(function (Builder $builder, string $value) {
+                    )
+                ->filter(function(Builder $builder, string $value) {
                     if ($value !== '') {
                         $builder->where('unite_id', $value);
-                    }
-                }),
+                    }}),
         ];
 
         switch ($this->mode) {
