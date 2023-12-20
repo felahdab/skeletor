@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
+    "name": "fanlab/skeletor",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "Projet Skeletor: framework applicatif pour les besoins organiques de la FAN",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
