@@ -1,10 +1,11 @@
 {
-    "name": "nwidart/transformation",
-    "description": "",
+    "name": "fanlab/transformation-module",
+    "description": "Suivi de la transformation des marins",
+    "type": "laravel-module",
     "authors": [
         {
-            "name": "Nicolas Widart",
-            "email": "n.widart@gmail.com"
+            "name": "FANLAB",
+            "email": "alfan-fanlab-toulon.accueil.fct@intradef.gouv.fr"
         }
     ],
     "extra": {
