@@ -1,3 +1,88 @@
+## 2.1.7 (December 20, 2023)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.6a –> 2.1.7
+- Merge commit '69b1107df9b8c6236dc449db8232599ea2216bdd'
+- Ajustement de la configuration dusk pour aller chercher les tests Browser dans tous les modules et pas uniquement dans le module Transformation.
+- Ajustement composer.json du module Transformation
+- Mise à jour composer.json: le projet est désormais fanlab/skeletor
+- Merge remote-tracking branch 'origin/master'
+- Recuperation des modifications utiles pour intégrer backpack/basset dans Skeletor, sans intégrer backpack/crud pour autant.
+- basset configuration publication
+- composer require backpack/basset
+- composer update depuis le repo packagist.
+- Implements art #202019 ajout d'indicateurs dans le tableau bilan par stage
+- Implement art #194291 filtres fonction+ type et unité dans le tableau de bord fait par matthieu
+- Merge branch 'tuleap-194291-ajout-type-fonction' into sandrine_courant
+- Implements art #201893 ajout service maj historique pour valid/annul groupé de stages
+- Implements art #197965 rajout filtre pour enlever les Keres speciaux de la chaine de caractere à afficher dans le titre de l'onglet
+- Implement art #197943 telechargement fichier ne marchait pas car pas enctype='multipart/form-data' dans le form.
+- Merge remote-tracking branch 'origin/master' into sandrine_courant
+- Merge branch 'release-2.1.6a' into sandrine_courant
+- declaration de propriété en doublon.
+- Merge branch 'release-2.1.6a'
+- Merge commit '2cfbdd9f35f82c1db36e8bf3189a6b813aebe655'
+- fix art #195184: si l'utilisatuer en cours n'est pas affecte a une unite, la restriction de visibilite ne s'applique pas, et ne genere pas d'erreur.
+- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast
+- Si l'unité d'affectation de l'utilisateur n'est pas definie, on ne peut pas appliquer le scope de mise pour emploi.
+- Réintroduction filtres Fonction et Unite dans le Dashboard.
+- Mise en place du mode='parcomp' dans EtatCompUsers, notamment pour éviter les erreur javascript dans la divvalid.
+- Définition section styles dans le layout principal. Utilisation des directives blades @section en lieu et place des sections xml dans la vue du composant EtatCompUsers
+- Revert "Merge branch 'enregistrement_excel_fonctions_et_tableau_transf_comp' of ssh://forge.intradef.gouv.fr/ffast/app_ffast"
+- Merge branch 'enregistrement_excel_fonctions_et_tableau_transf_comp' of ssh://forge.intradef.gouv.fr/ffast/app_ffast
+- fonctionnel
+- wip
+- modif mineur
+- modifs pour avoir le bon chemin d'acces
+- lors de la création du module de transfo, un dossier dans storage sera créé
+- commande pour créer un dossier de stockage par modules
+- Altération de la Factory User pour ne produire que des marins 'pas trop' gradés.
+- modifs nom dossier et nom commande
+- Commande de nettoyage du dossier tmp
+- Ajustement de l'url générée pour pointer sur le fichier Excel généré précédemment.
+- sauv, création dos excel regroupant les fonctions, non finit
+- Ajustement des wire:model pour conserver le comportement livewire v2
+- Merge branch 'master' into tuleap-194291-ajout-type-fonction
+- Retrait d'un doublon de use suite à un merge antérieur. Changement des paramètres d'un champs wire.model pour rajouter live, suite à upgrade vers livewire v3.
+- Merge branch 'fldb-test-reintegration' into fldb-packages-upgrade
+- typfonction_libcourt a coter du nom de fonction
+- composer upgrade et artisan dusk:install
+- Correction exception dans le job de calcul du taux de transformation.
+- Ajustement des tests de login
+- Ajustement de classes pour la conformite PSR-4
+- Correction test Browser des groupements.
+- Adjust test
+- Merge remote-tracking branch 'github/master' into fldb-upgrade-livewire-v3
+- Implementation d'un test du job de re calcul du taux de transformation.
+- Ajustement des sélecteurs CSS des tests Browser suite à la mise à jour livewire v3 et rappasoft v3.
+- Merge branch 'master' into fldb-test-reintegration
+- Report des dépendances js du Dashboard du module transformation dans le composant.
+- Ajustement du wire:model du composant des preferences utilisateur du module Transformation. Correction de la directive assets du composant fullcalendar.
+- Correction d'un bug de route dans une vue, et retrait des directives livewire du layout principal.
+- WIP ajustement des composants. Correction des méthodes générant des évènements (emit, dispatch, etc.)
+- Re-enable injection of core and third party assets. Remove Alpine.js from main layout (since it is injected by livewire v3)
+- WIP: first test at livewire v3 asset loading for a component. Problem with Alpine starting x-init before the asset are fully loaded.
+- Modify the way we search for modules user preferences components.
+- Adjust livewire components namespace. Remove unused UserList component.
+- Adjust TrustProxies middleware settings to allow file uploads. Implement custom SupportFileUploads feature provider to setup custom routes.
+- Further modifications to make the livewire prefix a configuration parameter.
+- WIP-at this stage livewire v3 works. Still have to figure out a way to control the route publishing feature without altering livewire code.
+- Save previous livewire configuration. Publish livewire v3 configuration.
+- Reactivate auto discovery of livewire/livewire Deactivate PrefixesLivewireServiceProvider
+- livewire, rappasoft and asantibanez upgrade. Correction of render method signature in datatables components. livewire:upgrade not executed.
+- Report des dépendances js du Dashboard du module transformation dans le composant.
+- Ajustement du wire:model du composant des preferences utilisateur du module Transformation. Correction de la directive assets du composant fullcalendar.
+- Correction d'un bug de route dans une vue, et retrait des directives livewire du layout principal.
+- WIP ajustement des composants. Correction des méthodes générant des évènements (emit, dispatch, etc.)
+- Re-enable injection of core and third party assets. Remove Alpine.js from main layout (since it is injected by livewire v3)
+- WIP: first test at livewire v3 asset loading for a component. Problem with Alpine starting x-init before the asset are fully loaded.
+- Modify the way we search for modules user preferences components.
+- Adjust livewire components namespace. Remove unused UserList component.
+- Adjust TrustProxies middleware settings to allow file uploads. Implement custom SupportFileUploads feature provider to setup custom routes.
+- Further modifications to make the livewire prefix a configuration parameter.
+- WIP-at this stage livewire v3 works. Still have to figure out a way to control the route publishing feature without altering livewire code.
+- Save previous livewire configuration. Publish livewire v3 configuration.
+- Reactivate auto discovery of livewire/livewire Deactivate PrefixesLivewireServiceProvider
+- livewire, rappasoft and asantibanez upgrade. Correction of render method signature in datatables components. livewire:upgrade not executed.
+
 ## 2.1.6a (November 24, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.6 –> 2.1.6a
 - Restaure les propriétés colls_sous_objs et colls_sous_objs_non_orphelins dans User. TODO: voir si on peut les déplacer dans Modules\Transformation\Entities\User
