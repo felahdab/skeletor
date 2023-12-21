@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Scope;
 use Modules\Transformation\Entities\MiseEnVisibilite;
 
 use App\Models\User;
-use Modules\Transformation\Entities\Personne;
+use Modules\Transformation\Entities\User as Personne;
 
 class MisesPourEmploi implements Scope
 {
