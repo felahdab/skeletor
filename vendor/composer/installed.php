@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
-        'name' => 'laravel/laravel',
+        'name' => 'fanlab/skeletor',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '9c59c778545b88dc1afc6595ac8778fcab282d5f',
+        'reference' => '2712783d3052a0b394bea6968caf0822218576a1',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -279,6 +279,15 @@
             'install_path' => __DIR__ . '/../fakerphp/faker',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'fanlab/skeletor' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '2712783d3052a0b394bea6968caf0822218576a1',
+            'type' => 'project',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'filp/whoops' => array(
             'pretty_version' => '2.15.4',
@@ -637,15 +646,6 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'laravel/laravel' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => '9c59c778545b88dc1afc6595ac8778fcab282d5f',
-            'type' => 'project',
-            'install_path' => __DIR__ . '/../../',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'laravel/prompts' => array(
             'pretty_version' => 'v0.1.13',
             'version' => '0.1.13.0',
@@ -827,9 +827,9 @@
             'dev_requirement' => false,
         ),
         'mhmiton/laravel-modules-livewire' => array(
-            'pretty_version' => 'v1.6.0',
-            'version' => '1.6.0.0',
-            'reference' => '0123a413a4ac3fbea0fec85e4b7795fd034e2f5d',
+            'pretty_version' => 'v2.2.0',
+            'version' => '2.2.0.0',
+            'reference' => '0466f40384e21e4632a4121585aa20d4201fa189',
             'type' => 'library',
             'install_path' => __DIR__ . '/../mhmiton/laravel-modules-livewire',
             'aliases' => array(),

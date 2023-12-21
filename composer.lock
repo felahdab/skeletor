@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "00382e26d12b8439abac87dbd134fa50",
+    "content-hash": "18f18b79b800a354171c139f6cfff70d",
     "packages": [
         {
             "name": "asantibanez/livewire-charts",
@@ -4612,23 +4612,22 @@
         },
         {
             "name": "mhmiton/laravel-modules-livewire",
-            "version": "v1.6.0",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mhmiton/laravel-modules-livewire.git",
-                "reference": "0123a413a4ac3fbea0fec85e4b7795fd034e2f5d"
+                "reference": "0466f40384e21e4632a4121585aa20d4201fa189"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://pprod-ffast.intradef.gouv.fr/packagist/offline/mhmiton/laravel-modules-livewire/mhmiton-laravel-modules-livewire-0123a413a4ac3fbea0fec85e4b7795fd034e2f5d-zip-035cd4.zip",
-                "reference": "0123a413a4ac3fbea0fec85e4b7795fd034e2f5d",
-                "shasum": "0ecd137446f9b68408ff78beec759d086318dc55"
+                "url": "https://pprod-ffast.intradef.gouv.fr/packagist/offline/mhmiton/laravel-modules-livewire/mhmiton-laravel-modules-livewire-0466f40384e21e4632a4121585aa20d4201fa189-zip-a1629f.zip",
+                "reference": "0466f40384e21e4632a4121585aa20d4201fa189",
+                "shasum": "cdf2bc0a5d29b23a8ef84d12c4da970f1642210e"
             },
             "require": {
-                "php": ">=7.3"
-            },
-            "require-dev": {
-                "laravel/framework": "^7.0|^8.0|^9.0|^10.0"
+                "laravel/framework": "^10.0",
+                "livewire/livewire": "^3.0",
+                "php": ">=8.1"
             },
             "type": "library",
             "extra": {
@@ -4656,7 +4655,12 @@
             ],
             "description": "Using Laravel Livewire in Laravel Modules package with automatically registered livewire components for every modules.",
             "keywords": [
+                "custom-module",
+                "custom-modules",
                 "laravel",
+                "laravel-livewire",
+                "laravel-module",
+                "laravel-modules",
                 "livewire",
                 "mhmiton",
                 "module",
@@ -4665,14 +4669,14 @@
             ],
             "support": {
                 "issues": "https://github.com/mhmiton/laravel-modules-livewire/issues",
-                "source": "https://github.com/mhmiton/laravel-modules-livewire/tree/v1.6.0"
+                "source": "https://github.com/mhmiton/laravel-modules-livewire/tree/v2.2.0"
             },
             "transport-options": {
                 "ssl": {
                     "verify_peer": false
                 }
             },
-            "time": "2023-02-24T11:20:21+00:00"
+            "time": "2023-11-18T16:33:22+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",

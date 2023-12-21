@@ -8,7 +8,6 @@ use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\Livewire;
 use Mhmiton\LaravelModulesLivewire\Support\Decomposer;
-use Nwidart\Modules\Facades\Module;
 use ReflectionClass;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -42,18 +41,22 @@ class LivewireComponentServiceProvider extends ServiceProvider
             return false;
         }
 
-        $modules = Module::toCollection();
+        $modules = \Nwidart\Modules\Facades\Module::toCollection();
 
-        $modulesLivewireNamespace = config('modules-livewire.namespace', 'Http\\Livewire');
+        $modulesLivewireNamespace = config('modules-livewire.namespace', 'Livewire');
 
         $modules->each(function ($module) use ($modulesLivewireNamespace) {
             $directory = (string) Str::of($module->getPath())
-                ->append('/' . $modulesLivewireNamespace)
+                ->append('/'.$modulesLivewireNamespace)
                 ->replace(['\\'], '/');
 
-            $namespace = config('modules.namespace', 'Modules') . '\\' . $module->getName() . '\\' . $modulesLivewireNamespace;
+            $moduleNamespace = method_exists($module, 'getNamespace')
+                ? $module->getNamespace()
+                : config('modules.namespace', 'Modules');
 
-            $this->registerComponentDirectory($directory, $namespace, $module->getLowerName() . '::');
+            $namespace = $moduleNamespace.'\\'.$module->getName().'\\'.$modulesLivewireNamespace;
+
+            $this->registerComponentDirectory($directory, $namespace, $module->getLowerName().'::');
         });
     }
 
@@ -66,17 +69,17 @@ class LivewireComponentServiceProvider extends ServiceProvider
         $modules = collect(config('modules-livewire.custom_modules', []));
 
         $modules->each(function ($module, $moduleName) {
-            $moduleLivewireNamespace = $module['namespace'] ?? config('modules-livewire.namespace', 'Http\\Livewire');
+            $moduleLivewireNamespace = $module['namespace'] ?? config('modules-livewire.namespace', 'Livewire');
 
             $directory = (string) Str::of($module['path'] ?? '')
-                ->append('/' . $moduleLivewireNamespace)
+                ->append('/'.$moduleLivewireNamespace)
                 ->replace(['\\'], '/');
 
-            $namespace = ($module['module_namespace'] ?? $moduleName) . '\\' . $moduleLivewireNamespace;
+            $namespace = ($module['module_namespace'] ?? $moduleName).'\\'.$moduleLivewireNamespace;
 
             $lowerName = $module['name_lower'] ?? strtolower($moduleName);
 
-            $this->registerComponentDirectory($directory, $namespace, $lowerName . '::');
+            $this->registerComponentDirectory($directory, $namespace, $lowerName.'::');
         });
     }
 
@@ -98,8 +101,8 @@ class LivewireComponentServiceProvider extends ServiceProvider
                 return is_subclass_of($class, Component::class) && ! (new ReflectionClass($class))->isAbstract();
             })
             ->each(function ($class) use ($namespace, $aliasPrefix) {
-                $alias = $aliasPrefix . Str::of($class)
-                    ->after($namespace . '\\')
+                $alias = $aliasPrefix.Str::of($class)
+                    ->after($namespace.'\\')
                     ->replace(['/', '\\'], '.')
                     ->explode('.')
                     ->map([Str::class, 'kebab'])
