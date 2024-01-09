@@ -15,6 +15,8 @@ trait CreatesApplication
     {
         $app = require __DIR__.'/../bootstrap/app.php';
 
+        ini_set('memory_limit', '-1');
+
         $app->make(Kernel::class)->bootstrap();
 
         return $app;
