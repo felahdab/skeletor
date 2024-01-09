@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 
 use App\Models\User;
-use Modules\Transformation\Entities\Personne;
+use Modules\Transformation\Entities\User as Personne;
 
 class MemeUnite implements Scope
 {
