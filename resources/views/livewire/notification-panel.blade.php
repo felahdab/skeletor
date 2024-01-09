@@ -18,11 +18,15 @@
   @endauth
 
   @teleport('#notification-space')
+    @auth
     <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationPanel" aria-controls="offcanvasRight">
       <x-bootstrap-icon iconname='bell.svg' />
+      
       @if(auth()->user()->unreadNotifications->count())
         <span class="badge bg-danger">{{ auth()->user()->unreadNotifications->count() }}</span>
       @endif
+      
     </button>
+    @endauth
   @endteleport
 </div>
