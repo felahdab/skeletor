@@ -20,7 +20,16 @@
         <include>
             <directory suffix=".php">./app</directory>
         </include>
+        <include>
+            <directory suffix=".php">./Modules</directory>
+        </include>
+        <report>
+            <clover outputFile="clover.xml"/>
+        </report>
     </coverage>
+    <logging>
+        <junit outputFile="junit.xml"/>
+    </logging>
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="BCRYPT_ROUNDS" value="4"/>

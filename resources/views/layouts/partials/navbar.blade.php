@@ -50,12 +50,7 @@
         
         <button type= "button" class='btn btn-warning' data-bs-toggle="modal" data-bs-target="#bugreport-modal"> Signaler un problème</button> 
         
-        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationPanel" aria-controls="offcanvasRight">
-          <x-bootstrap-icon iconname='bell.svg' />
-          @if(auth()->user()->unreadNotifications->count())
-            <span class="badge bg-danger">{{ auth()->user()->unreadNotifications->count() }}</span>
-          @endif
-        </button>
+        <div id='notification-space'></div>
 
         <div class="dropdown">
           <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

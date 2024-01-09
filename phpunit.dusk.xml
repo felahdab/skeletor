@@ -13,4 +13,7 @@
             <directory suffix="Test.php">./Modules/*/Tests/Browser</directory>
         </testsuite>
     </testsuites>
+    <logging>
+        <junit outputFile="junit_dusk.xml"/>
+    </logging>
 </phpunit>

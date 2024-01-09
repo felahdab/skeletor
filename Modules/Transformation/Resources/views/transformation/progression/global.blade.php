@@ -35,7 +35,7 @@
             </script>
             
 
-            <x-ffast-progression-div :pourcentage="$user->taux_de_transformation" height="35px" style="div"/>
+            <x-transformation::ffast-progression-div :pourcentage="$user->taux_de_transformation" height="35px" style="div"/>
         </div>
         <div style='display: flex; width: 48%; background-color: transparent; margin-top: 2%;'>
             <div class='card border-primary mb-3' style='width:50%;'>
@@ -46,9 +46,9 @@
                         <span style='width:25%;'>{{ $stage->stage_libcourt }}</span>
                         <span style='width:25%; background-color: transparent; margin-top: 5px;'>
                         @if ($user->getTransformationManager()->aValideLeStage($stage))
-                            <x-ffast-progression-div :pourcentage="100" height="20px" style="span"/>
+                            <x-transformation::ffast-progression-div :pourcentage="100" height="20px" style="span"/>
                         @else
-                            <x-ffast-progression-div :pourcentage="0" height="20px" style="span"/>
+                            <x-transformation::ffast-progression-div :pourcentage="0" height="20px" style="span"/>
                         @endif
                         </span>
                     </p>
@@ -62,7 +62,7 @@
                     <p class='card-text' style='margin-bottom: 25px;'>
                         <span style='width:25%;'>{{ $compagnonage->comp_libcourt }}</span>
                         <span style='width:25%; background-color: transparent; margin-top: 5px;'>
-                            <x-ffast-progression-div :pourcentage="$user->getTransformationManager()->taux_de_transformation(null, $compagnonage)" height="20px"  style="span"/>
+                            <x-transformation::ffast-progression-div :pourcentage="$user->getTransformationManager()->taux_de_transformation(null, $compagnonage)" height="20px"  style="span"/>
                         </span>
                     </p>
                 @endforeach
