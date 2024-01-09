@@ -5,6 +5,7 @@ namespace Modules\Transformation\Providers;
 use Illuminate\Support\ServiceProvider;
 
 use Livewire\Livewire;
+use Illuminate\Support\Facades\Blade;
 use Modules\Transformation\Http\Middleware\RestrictVisibility;
 
 class TransformationServiceProvider extends ServiceProvider
@@ -105,6 +106,8 @@ class TransformationServiceProvider extends ServiceProvider
         ], ['views', $this->moduleNameLower . '-module-views']);
 
         $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->moduleNameLower);
+
+        Blade::componentNamespace('Modules\\Transformation\\Views\\Components', 'transformation');
     }
 
     /**

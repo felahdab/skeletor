@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components;
+namespace Modules\Transformation\Views\Components;
 
 use Illuminate\View\Component;
 
@@ -45,17 +45,17 @@ class FfastProgressionDiv extends Component
             $finaltext = $this->text . ": " . $pourcentagestr . "%";
         switch ($this->style){
             case "div":
-            $result = view('components.ffast-progression-div', ['color' => $color,
+            $result = view('transformation::components.ffast-progression-div', ['color' => $color,
                                                     'pourcentagestr' => $pourcentagestr,
                                                     'finaltext' => $finaltext]);
             break;
             case "span":
-            $result = view('components.ffast-progression-span', ['color' => $color,
+            $result = view('transformation::components.ffast-progression-span', ['color' => $color,
                                                     'pourcentagestr' => $pourcentagestr,
                                                     'finaltext' => $finaltext]);
             break;
             case "td":
-            $result = view('components.ffast-progression-td', ['color' => $color,
+            $result = view('transformation::components.ffast-progression-td', ['color' => $color,
                                                     'pourcentagestr' => $pourcentagestr,
                                                     'finaltext' => $finaltext]);
             break;
