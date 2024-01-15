@@ -31,6 +31,10 @@
                 @can('annudef.index')<a class="dropdown-item" href="{{ route('annudef.index')}}">Annudef</a>@endcan
                 @can('mails.index')<a class="dropdown-item" href="{{ route('mails.index')}}">Mails</a>@endcan
                 @can('paramaccueils.index')<a class="dropdown-item" href="{{ route('paramaccueils.index')}}">Page d'accueil</a>@endcan
+                @php
+                  $dashboard_url = \Filament\Pages\Dashboard::getUrl(panel: 'admin');
+                @endphp
+                <a class="dropdown-item" href="{{ $dashboard_url }}">Interface Filament</a>
               </div>
             </div>
             @endcan

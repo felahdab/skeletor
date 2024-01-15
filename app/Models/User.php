@@ -31,7 +31,11 @@ class User extends Authenticatable implements FilamentUser
     
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->IsSuperAdmin();
+        // Par défaut, le panel admin n'est accessible qu'au super admins.
+        // Les autres panels sont accessibles à tout le monde (la sécurité se fera au niveau des ressources et autres elements filament)
+        if ($panel->getID() === 'admin')
+            return $this->IsSuperAdmin();
+        return true;
     }
     /* La surcharge ci-dessous semble inutile, mais elle est là pour outrepasser la surcharge de __call définie
         dans le trait HasSettingsTable qui utilise call_user_func(get_parent_class($this) . '::__call', $name, $args);
@@ -141,12 +145,6 @@ class User extends Authenticatable implements FilamentUser
     {
         return Cache::get($this->cacheKey() . ':mindefConnectInformations');
     }
-
-    // protected $appends = ['en_transformation'];
-
-    // private $colls_sous_objs = [];
-    // private $colls_sous_objs_non_orphelins = null;
-
 
     /**
      * Always encrypt password when it is updated.
@@ -261,14 +259,4 @@ class User extends Authenticatable implements FilamentUser
         
         return 0;
     }
-
-    /**
-     * Permet de récupérer le user grâce à son email
-     * @param string $email
-     * @return User
-     */
-    // static public function getEmailSingle($email)
-    // {
-    //     return User::where('email', '=', $email)->first();
-    // }
 }

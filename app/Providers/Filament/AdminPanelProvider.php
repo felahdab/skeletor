@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
@@ -20,7 +19,9 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 
 use Filament\FontProviders\SpatieGoogleFontProvider;
+use Filament\Navigation\NavigationItem;
 use App\Filament\AvatarProviders\AnnudefAvatarProvider;
+use App\Http\Middleware\FilamentAuthenticate as FilamentAuthenticate;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -29,8 +30,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path(env('APP_PREFIX') . '/filament')
-            ->login()
+            ->path(env('APP_PREFIX') . '/admin')
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -44,7 +44,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                //Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -55,10 +55,17 @@ class AdminPanelProvider extends PanelProvider
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
-                DispatchServingFilamentEvent::class,
+                DispatchServingFilamentEvent::class
             ])
             ->authMiddleware([
-                Authenticate::class,
+                FilamentAuthenticate::class
+            ])
+            ->sidebarCollapsibleOnDesktop()
+            ->navigationItems([
+                NavigationItem::make("Retour à l'interface classique")
+                ->icon('heroicon-o-home')
+                ->url(fn(): string => route('home.index'))
+                ->sort(-3)
             ]);
     }
 }
