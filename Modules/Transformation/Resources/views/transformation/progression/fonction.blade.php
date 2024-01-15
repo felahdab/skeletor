@@ -38,7 +38,7 @@
                     }
                 );
             </script>
-                <x-ffast-progression-div :pourcentage="$fonction->pivot->taux_de_transformation" height="35px"/>
+                <x-transformation::ffast-progression-div :pourcentage="$fonction->pivot->taux_de_transformation" height="35px"/>
         </div>
         <div style='display: flex; width: 48%; background-color: transparent; margin-top: 2%;'>
             <div class='card border-primary mb-3' style='width:50%;'>
@@ -50,9 +50,9 @@
                         <span style='width:25%; background-color: transparent; margin-top: 5px;'>
                             <span style='display:flex; width: 100%; position: relative; '>
                                 @if ($user->getTransformationManager()->aValideLeStage($stage))
-                                    <x-ffast-progression-div :pourcentage="100" height="20px" style="span"/>
+                                    <x-transformation::ffast-progression-div :pourcentage="100" height="20px" style="span"/>
                                 @else
-                                    <x-ffast-progression-div :pourcentage="0" height="20px" style="span"/>
+                                    <x-transformation::ffast-progression-div :pourcentage="0" height="20px" style="span"/>
                                 @endif
                             </span>
                         </span>
@@ -67,7 +67,7 @@
                     <p class='card-text' style='margin-bottom: 25px;'>
                         <span style='width:25%;'>{{$compagnonage->comp_libcourt}}</span>
                         <span style='width:25%; background-color: transparent; margin-top: 5px;'>
-                            <x-ffast-progression-div :pourcentage="$user->getTransformationManager()->taux_de_transformation(null, $compagnonage)" height="20px" style="span"/>
+                            <x-transformation::ffast-progression-div :pourcentage="$user->getTransformationManager()->taux_de_transformation(null, $compagnonage)" height="20px" style="span"/>
                         </span>
                     </p>
                     @endforeach

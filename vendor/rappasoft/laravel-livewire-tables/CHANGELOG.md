@@ -2,7 +2,31 @@
 
 All notable changes to `laravel-livewire-tables` will be documented in this file
 
-## UNRELEASED
+## [v3.2.0] - 2023-01-04
+### Tweaks
+- Migration to new Core Traits, and de-duplication of code by @lrljoe in https://github.com/rappasoft/laravel-livewire-tables/pull/1623 
+
+## [v3.1.9] - 2023-12-29
+### Bug Fixes
+- Fix CHANGELOG.md missing release
+
+## [v3.1.8] - 2023-12-29
+### New Features
+- Add capability to show/hide Pagination Details (Rows x of y) by @lrljoe in https://github.com/rappasoft/laravel-livewire-tables/pull/1618
+- Add perPage to queryString by @lrljoe in https://github.com/rappasoft/laravel-livewire-tables/pull/1618
+
+## [v3.1.7] - 2023-12-29
+### Bug Fixes
+- Fix published view path by @lrljoe in https://github.com/rappasoft/laravel-livewire-tables/pull/1615
+
+## [v3.1.6] - 2023-12-26
+### New Features
+- Add capability to call a new "addAdditionalSelects()" to append select table fields (without impacting setAdditionalSelect) by @lrljoe in https://github.com/rappasoft/laravel-livewire-tables/pull/1609
+
+### Bug Fixes
+- Ensure mount() is called prior to bundler() executing by @lrljoe in https://github.com/rappasoft/laravel-livewire-tables/pull/1603
+
+## [v3.1.5] - 2023-12-09
 ### New Features
 - Add capability to use as a Full Page Component by @amshehzad and @lrljoe in https://github.com/rappasoft/laravel-livewire-tables/pull/1580
 - Add DateColumn by @lrljoe in https://github.com/rappasoft/laravel-livewire-tables/pull/1589

@@ -14,20 +14,14 @@ use Spatie\Permission\Traits\HasRoles;
 
 use App\Service\AnnudefAjaxRequestService;
 
-// use Modules\Transformation\Entities\Stage;
-// use Modules\Transformation\Entities\Fonction;
-// use Modules\Transformation\Entities\Compagnonage;
-// use Modules\Transformation\Entities\Tache;
-// use Modules\Transformation\Entities\Objectif;
-// use Modules\Transformation\Services\TransformationManagerService;
-// use Modules\Transformation\Entities\SousObjectif;
-
 use Glorand\Model\Settings\Traits\HasSettingsTable;
 use Lab404\Impersonate\Models\Impersonate;
-use League\Pipeline\PipelineBuilder;
 use Nwidart\Modules\Facades\Module;
 
-class User extends Authenticatable
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
     use SoftDeletes;
@@ -35,6 +29,10 @@ class User extends Authenticatable
 
     use HasSettingsTable; # provides the ->settings() methods
     
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->IsSuperAdmin();
+    }
     /* La surcharge ci-dessous semble inutile, mais elle est là pour outrepasser la surcharge de __call définie
         dans le trait HasSettingsTable qui utilise call_user_func(get_parent_class($this) . '::__call', $name, $args);
         là ou parent::__call($name, $args) aurait suffit. La méthode utilisée déclenche un appel récursif sans find
@@ -68,6 +66,8 @@ class User extends Authenticatable
         parent::__construct($attributes);
         $this->defaultSettings = static::$modelDefaultSettings;
     }
+
+
 
     /**
      * The database table used by the model.

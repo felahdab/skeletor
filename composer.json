@@ -12,8 +12,11 @@
         "binarytorch/larecipe": "^2.5",
         "calebporzio/sushi": "^2.4",
         "carlos-meneses/laravel-mpdf": "^2.1",
+        "coolsam/modules": "^3.0@beta",
         "darkaonline/l5-swagger": "^8.5",
         "doctrine/dbal": "^3.3",
+        "filament/filament": "^3.1",
+        "filament/spatie-laravel-google-fonts-plugin": "^3.1",
         "glorand/laravel-model-settings": "^6.0",
         "guzzlehttp/guzzle": "^7.2",
         "hisorange/browser-detect": "^4.5",
@@ -31,7 +34,7 @@
         "owen-it/laravel-auditing": "^13.5",
         "phpoffice/phpspreadsheet": "^1.25",
         "predis/predis": "^2.2",
-        "rappasoft/laravel-livewire-tables": "*",
+        "rappasoft/laravel-livewire-tables": "^3.2",
         "socialiteproviders/keycloak": "^5.2",
         "spatie/laravel-backup": "^8.1",
         "spatie/laravel-data": "^3.5",
@@ -70,7 +73,8 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
@@ -99,6 +103,7 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "platform-check": false,
     "repositories": [
         {
             "packagist.org": false

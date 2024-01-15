@@ -4,6 +4,16 @@
     "keywords": ["Blade", "Heroicons", "Laravel"],
     "homepage": "https://github.com/blade-ui-kit/blade-heroicons",
     "license": "MIT",
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/driesvints"
+        },
+        {
+            "type": "paypal",
+            "url": "https://www.paypal.com/paypalme/driesvints"
+        }
+    ],
     "authors": [
         {
             "name": "Dries Vints",
