@@ -5,7 +5,9 @@ namespace Modules\Transformation\Http\Livewire;
 use Livewire\Component;
 
 use Modules\Transformation\Entities\User;
-
+use Livewire\Attributes\Lazy;
+ 
+#[Lazy]
 class FfastFicheBilan extends Component
 {
     public $user=null;
