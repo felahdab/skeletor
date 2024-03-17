@@ -54,8 +54,8 @@ class TransformationServiceProvider extends ServiceProvider
     public function registerDocumentation()
     {
         $this->publishes([
-            module_path($this->moduleName, 'Resources/docs') => base_path('resources/docs/1.0/' . $this->moduleNameLower),
-        ], 'doc-for-larecipe');
+            module_path($this->moduleName, 'Resources/docs') => base_path('resources/docs/' . $this->moduleName),
+        ], 'doc');
     }
 
     /**

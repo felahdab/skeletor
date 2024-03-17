@@ -1,8 +1,0 @@
-- ## Rubriques 
-    - [Généralités](/{{route}}/{{version}}/generalites)
-    - [Connexion](/{{route}}/{{version}}/connexion)
-    - [Administration](/{{route}}/{{version}}/administration)
-    - [Parcours](/{{route}}/{{version}}/parcours)
-    - [Transformation](/{{route}}/{{version}}/transformation)
-    - [Statistiques](/{{route}}/{{version}}/statistiques)
-    

@@ -7,21 +7,25 @@ use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class PublishModuleDocumentationIntoLarecipe extends Command
+use Illuminate\Contracts\Console\PromptsForMissingInput;
+
+class PublishModuleDocumentationIntoLarecipe extends Command implements PromptsForMissingInput
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'module:publish-doc-to-larecipe';
+    protected $name = 'skeletor:publish-module-doc';
+
+    protected $signature = 'skeletor:publish-module-doc {module} {--force}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Publish a module\'s documentation files to the main resources/doc directory for LaRecipe';
+    protected $description = 'Publish a module\'s documentation files to the main resources/doc directory';
 
     /**
      * Execute the console command.
@@ -62,8 +66,8 @@ class PublishModuleDocumentationIntoLarecipe extends Command
     {
         $this->call('vendor:publish', [
             '--provider' => $this->getServiceProviderForModule($module),
-            '--force' => $this->option('force'),
-            '--tag' => ['doc-for-larecipe'],
+            '--force' => true,
+            '--tag' => ['doc'],
         ]);
 
         # TODO: c'est là qu'il faut ajuster comment on intègre la doc 
