@@ -14,11 +14,13 @@ Ce menu permet d’accéder à l'ensemble des composants du parcours de transfor
 > - Chaque fonction comporte éventuellement 1 ou plusieurs stages et dans tous les cas au moins 1 compagnonnage. Chaque compagnonnage comporte au moins 1 tâche. Chaque tâche comporte au moins 1 objectif. Chaque objectif comporte au moins 1 sous-objectif.
 > - n'importe quel objet du parcours peut servir plusieurs fois : par exemple, un compagnonnage peut être utilisé par plusieurs fonctions.
 
-<a name="fonctions">
+<a name="fonctions"></a>
+
 ## Fonctions
+
 Vous retrouvez la liste de toutes les fonctions (1). Un filtre (2) permet d’affiner l’affichage.
 
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/parcours/liste_fonctions.png' )) }}">
+![Liste des fonctions](img/parcours/liste_fonctions.png)
 
 (3) « Ajouter une fonction » pour créer une nouvelle fonction.  
 (4) « Consulter une fonction » pour visualiser une fonction.  
@@ -29,11 +31,12 @@ Vous retrouvez la liste de toutes les fonctions (1). Un filtre (2) permet d’af
 > - Ajout : Il faut compléter et valider le formulaire avant de pouvoir associer des compagnonnages et des stages à la fonction.
 > - Suppression : La suppression d'une fonction n'entraine pas la suppression des compagnonnages ou stages associés.
 
-<a name="compagnonnages">
+<a name="compagnonnages"></a>
+
 ## Compagnonnages
 Vous retrouvez la liste de tous les compagnonnages (1). Un filtre (2) permet d’affiner l’affichage.
 
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/parcours/liste_comps.png' )) }}">
+![Liste des compagnonnages](img/parcours/liste_comps.png)
 
 (3) « Ajouter un compagnonnage » pour créer un nouveau compagnonnage.  
 (4) « Consulter » pour visualiser un compagnonnage.  
@@ -45,11 +48,12 @@ Vous retrouvez la liste de tous les compagnonnages (1). Un filtre (2) permet d�
 > - Suppression : La suppression d'un compagnonnage n'entraine pas la suppression des fonctions ou tâches associées.
 
 
-<a name="taches">
+<a name="taches"></a>
+
 ## Tâches
 Vous retrouvez la liste de toutes les tâches (1). Un filtre (2) permet d’affiner l’affichage.
 
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/parcours/liste_taches.png' )) }}">
+![Liste des taches](img/parcours/liste_taches.png)
 
 (3) « Ajouter une tâche » pour créer une nouvelle tâche.  
 (4) « Consulter » pour visualiser une tâche.  
@@ -61,11 +65,12 @@ Vous retrouvez la liste de toutes les tâches (1). Un filtre (2) permet d’affi
 > - Ajout : Il faut compléter et valider le formulaire avant de pouvoir associer des objectifs à la tâche.
 > - Suppression : La suppression d'une tâche n'entraine pas la suppression des compagnonnages ou objectifs associés.
 
-<a name="objectifs">
+<a name="objectifs"></a>
+
 ## Objectifs
 Vous retrouvez la liste de tous les objectifs (1). Un filtre (2) permet d’affiner l’affichage.
 
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/parcours/liste_objectifs.png' )) }}">
+![Liste des objectifs](img/parcours/liste_objectifs.png)
 
 (3) « Ajouter un objectif » pour créer un nouvel objectif.  
 (4) « Consulter » pour visualiser un objectif.  
@@ -76,7 +81,8 @@ Vous retrouvez la liste de tous les objectifs (1). Un filtre (2) permet d’affi
 > - Ajout : Il faut compléter et valider le formulaire avant de pouvoir associer des sous-objectifs à l'objectif.
 > - Suppression : La suppression d'un objectif **entraine la suppression** des sous objectifs qui lui sont associés.
 
-<a name="ordre-affichage">
+<a name="ordre-affichage"></a>
+
 ## Ordre d'afficgage
 
 Pour chaque élément du parcours de transformation (Fonction, Compagnonnage, Tache et Objectif), la page d'édition permet de
@@ -89,13 +95,14 @@ Une fois l'ordre désiré obtenu à l'écran, cliquer sur le bouton "Enregistrer
 
 Cette possibilité est rappelée dans chacune des pages concernée (voir ci-dessous la page de mofification des objectifs).  
 
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/parcours/modification-ordre-elements-du-parcours.png' )) }}">
+![Modification ordre des elements du parcours](img/parcours/modification-ordre-elements-du-parcours.png)
 
-<a name="stages">
+<a name="stages"></a>
+
 ## Stages
 Vous retrouvez la liste de tous les stages (1). Des filtres (2) permettent d’affiner l’affichage.
 
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/parcours/liste_stages.png' )) }}">
+![Liste des stages](img/parcours/liste_stages.png)
 
 (3) « Ajouter un stage » pour créer un nouveau stage.  
 (4) « Modifier » les données du stage.  
@@ -106,7 +113,8 @@ Vous retrouvez la liste de tous les stages (1). Des filtres (2) permettent d’a
 
 
 
-<a name="export_parcours">
+<a name="export_parcours"></a>
+
 ## Exporter les parcours
 Ce menu permet de créer un fichier Excel qui contient un onglet pour chaque compagnonnage existant. Dans chaque onglet, on retrouve les tâches/objectifs/sous-objectifs associés au compagnonnage.
 
