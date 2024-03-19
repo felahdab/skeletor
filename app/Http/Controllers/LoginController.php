@@ -56,7 +56,7 @@ class LoginController extends Controller
         }
 
         // si le user n'existe pas, test de la variable APP_VALID_MDC pour savoir si on l'enregistre dans la table MDC 
-        if (env('APP_VALID_MDC')){
+        if (! config('skeletor.validation_automatique_des_comptes_mindef_connect')){
             // on cree un compte temporaire ds MDC
             $MCuserexist = MindefConnectUser::where('email', $MCuser->email)->get()->first();
             if ($MCuserexist) {
@@ -95,7 +95,7 @@ class LoginController extends Controller
                     'display_name' => $MCuser->user['display_name'],
                 ]
             );
-            $role= Role::where('name',env('APP_ROLE_DEFAUT'))->get()->first();
+            $role= Role::where('name', config('skeletor.groupe_par_defaut_des_nouveaux_comptes'))->first();
             $Newuser->roles()->attach($role->id);
             $Newuser->storeMindefConnectInformations($MCuser->user);
             Auth::login($Newuser);
