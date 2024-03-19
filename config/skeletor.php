@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'validation_automatique_des_comptes_mindef_connect' => env('APP_VALID_MDC', true),
+    'validation_automatique_des_comptes_mindef_connect' => env('APP_VALID_MDC', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -36,6 +36,6 @@ return [
     | Sinon, le navigateur va tourner en boucle.
     */
     
-    'page_par_defaut' => env('APP_PAGE_ACCUEIL', "transformation::transformation.homeindex"),
+    'page_par_defaut' => env('APP_PAGE_ACCUEIL', false),
     
 ];
