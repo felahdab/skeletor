@@ -1,5 +1,5 @@
-@props(['page' => '', 'version' => env('DOC_VERSION')])
+@props(['page' => '', 'module' => "Skeletor"])
 
 <div>
-   <a href="{{ route('larecipe.show', ['version' => $version, 'page' => $page]) }}" class="dropdown-item" >Aide</a>
+   <a href="{{ url(env('APP_PREFIX') . '/docs/' . $module . '/' . $page . '.md') }}" class="dropdown-item" >Aide</a>
 </div>

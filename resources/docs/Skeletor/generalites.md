@@ -6,7 +6,8 @@
 - [Interface utilisateur](#interface-utilisateur)
 - [Menu principal](#menu-principal)
 
-<a name="besoin-initial">
+<a name="besoin-initial"></a>
+
 ## Besoin initial
 FFAST (Frégates Fortement Automatisé - Suivi de la Transformation) est une application conçue faciliter le suivi du parcours de transformation des marins destinés à être affectés à bord des frégates fortement automatisés.  
 
@@ -14,7 +15,8 @@ Plus besoin de mettre à jour des fichiers bloqués par un autre utilisateur par
 
 Même si FFAST a été conçu initialement pour les besoins des GTR et des FREMM, sa structure générique lui permet de s'adapter à d'autre structures ayant besoin de suivre l'avancement des actions de formations au profit d'un groupe d'élèves.
 
-<a name="parcours-de-transformation">
+<a name="parcours-de-transformation"></a>
+
 ## Le parcours de transformation
 Le coeur de FFAST est constitué par le parcours de transformation.
 Ce parcours, stocké en base de données est totalement configurable.
@@ -26,7 +28,8 @@ En outre, chaque fonction peut se voir attribuer des stages devant normalement �
 
 > {info} Chaque fonction comporte éventuellement 1 ou plusieurs stages et dans tous les cas au moins 1 compagnonnage. Chaque compagnonnage comporte au moins 1 tâche. Chaque tâche comporte au moins 1 objectif. Chaque objectif comporte au moins 1 sous-objectif.
 
-<a name="roles">
+<a name="roles"></a>
+
 ## Les rôles
 Dans FFAST, chaque utilisateur se voit attribuer un ou plusieurs rôles qui déterminent les actions pouvant être réalisées.
 Par défaut, les rôles suivants existent:
@@ -47,26 +50,30 @@ Les actions qu'un utilisateur peut accomplir sont donc la somme de toutes les pe
 
 > {info} Vous retrouvez la liste des rôles qui vous sont attribués dans le menu qui porte votre nom.
 
-<a name="interface-utilisateur">
+<a name="interface-utilisateur"></a>
+
 ## Interface utilisateur
 
 L'interface utilisateur de FFAST orbite autour de la barre de navigation située en haut de l'écran.
 Cette barre rassemble toutes les fonctions auxquelles l'utilisateur a accès.
 Avant que l'utilisateur se connecte, aucune fonction n'est accessible.
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/generalites/home.png' )) }}" width=1000px>
+
+![Page accueil](img/generalites/home.png)
 
 Une fois connecté, les menus apparaissent en fonction des rôles, et donc des permissions, de l'utilisateur.
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/generalites/home_loggedin.png' )) }}" width=1000px>
+
+![Page accueil utilisateur connecte](img/generalites/home_loggedin.png)
 
 Ce principe est également appliqué dans tous les écrans de l'application: si un utilisateur voit un élément dans la page (un bouton, un lien, etc...) c'est qu'il bénéficie de la permission associée à l'action.
 
 > {info} Les éléments affichés à l'écran sont directement liés aux rôles attribués, et donc aux permissions de l'utilisateur.
 
 
-<a name="menu-principal">
+<a name="menu-principal"></a>
+
 # Menu principal
 
-<img src="{{ url(asset('docs/images/' . env('DOC_VERSION') . '/generalites/menu-principal.png' )) }}" width=1000px>
+![Menu principal](img/generalites/menu-principal.png)
 
 1. Menu horizontal proposant les fonctionnalités disponibles :
   - Accueil : pour revenir à la page d’accueil.
