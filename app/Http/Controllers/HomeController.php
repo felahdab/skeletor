@@ -13,22 +13,25 @@ class HomeController extends Controller
 {
     public function index()
     {
-
         $user = auth()->user();
-        if ($user != null) {
-            $preferedroute = $user->settings()->get('prefered_page');
+        if (env('APP_PAGE_ACCUEIL')=='' || ! $user)
+        {    
+            if ($user != null) {
+                $preferedroute = $user->settings()->get('prefered_page');
 
-            if ($preferedroute != null) {
-                return redirect()->route($preferedroute);
+                if ($preferedroute != null) {
+                    return redirect()->route($preferedroute);
+                }
             }
+            $paramaccueil = Paramaccueil::first();
+            if (!$paramaccueil){
+                $paramaccueil= new Paramaccueil;
+                $paramaccueil->paramaccueil_image ='11.jpg';
+                $paramaccueil->paramaccueil_texte ='le texte est modifiable';
+                $paramaccueil->save();
+            }
+            return view('home.index',['paramaccueil' => $paramaccueil]);
         }
-        $paramaccueil = Paramaccueil::first();
-        if (!$paramaccueil){
-            $paramaccueil= new Paramaccueil;
-            $paramaccueil->paramaccueil_image ='11.jpg';
-            $paramaccueil->paramaccueil_texte ='le texte est modifiable';
-            $paramaccueil->save();
-        }
-        return view('home.index',['paramaccueil' => $paramaccueil]);
+        return redirect()->route(env('APP_PAGE_ACCUEIL'));
     }
 }

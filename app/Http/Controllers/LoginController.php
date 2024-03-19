@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
 use App\Models\User;
+use App\Models\Grade;
+use Spatie\Permission\Models\Role;
 use App\Models\MindefConnectUser;
 use App\Models\Paramaccueil;
 
@@ -52,27 +54,53 @@ class LoginController extends Controller
             Auth::login($user);
             return $this->authenticated($request, $user);
         }
-        $MCuserexist = MindefConnectUser::where('email', $MCuser->email)->get()->first();
-        if ($MCuserexist) {
-            $MCuserexist->updated_at = date('Y-m-d G:i:s');
-            $MCuserexist->msg = true;
-        } else {
-            $MCuserexist = MindefConnectUser::create(
+
+        // si le user n'existe pas, test de la variable APP_VALID_MDC pour savoir si on l'enregistre dans la table MDC 
+        if (env('APP_VALID_MDC')){
+            // on cree un compte temporaire ds MDC
+            $MCuserexist = MindefConnectUser::where('email', $MCuser->email)->get()->first();
+            if ($MCuserexist) {
+                $MCuserexist->updated_at = date('Y-m-d G:i:s');
+                $MCuserexist->msg = true;
+            } 
+            else {
+                $MCuserexist = MindefConnectUser::create(
+                    [
+                        'sub' => $MCuser->user['sub'],
+                        'email' => $MCuser->email,
+                        'name' => $MCuser->user['usual_name'],
+                        'prenom' => $MCuser->user['usual_forename'],
+                        'main_department_number' => $MCuser->user['main_department_number'],
+                        'personal_title' => $MCuser->user['personal_title'],
+                        'rank' => $MCuser->user['rank'],
+                        'short_rank' => $MCuser->user['short_rank'],
+                        'display_name' => $MCuser->user['display_name'],
+                    ]
+                );
+            }
+            return view('auth.comebacklater', ['MCuserexist' => $MCuserexist]);
+        }
+        // variable false = on cree directement le user dans user
+        else{
+            $gdeid=null;
+            if ($possibleGrade = Grade::where("grade_liblong", "like", strtoupper($MCuser->user['rank']))->get()->first())
+                $gdeid=$possibleGrade->id;
+            $Newuser=User::create(
                 [
-                    'sub' => $MCuser->user['sub'],
+                    "password" =>substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(10/strlen($x)) )),1,10),
                     'email' => $MCuser->email,
                     'name' => $MCuser->user['usual_name'],
                     'prenom' => $MCuser->user['usual_forename'],
-                    'main_department_number' => $MCuser->user['main_department_number'],
-                    'personal_title' => $MCuser->user['personal_title'],
-                    'rank' => $MCuser->user['rank'],
-                    'short_rank' => $MCuser->user['short_rank'],
+                    'grade_id' => $gdeid,
                     'display_name' => $MCuser->user['display_name'],
                 ]
             );
+            $role= Role::where('name',env('APP_ROLE_DEFAUT'))->get()->first();
+            $Newuser->roles()->attach($role->id);
+            $Newuser->storeMindefConnectInformations($MCuser->user);
+            Auth::login($Newuser);
+            return $this->authenticated($request, $Newuser);
         }
-
-        return view('auth.comebacklater', ['MCuserexist' => $MCuserexist]);
     }
 
     public function newMdcLogin(Request $request, MindefConnectUser $MCuserexist)
