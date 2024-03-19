@@ -1,8 +1,12 @@
 <div style='width:100%; display:""; '
     wire:init="triggerLoad">
+    <div class="d-flex justify-content-center">
+        <div wire:loading class="spinner-border" role="status">
+            <span class="visually-hidden">Chargement...</span>
+        </div>
+    </div>
 
-
-    <div class="container">
+    <div wire:loading.remove class="container">
         <div class="row card">
             <div class="col-12 card-header text-center">
                 <div class="row">
