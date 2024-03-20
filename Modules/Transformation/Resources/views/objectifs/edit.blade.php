@@ -61,7 +61,7 @@
                                             <textarea class="form-control" maxlength='1500' cols='40' rows='6' name='sous_objectifs[{{$ssobj->id}}][ssobj_lib]' placeholder='Libell&eacute;' >{{ $ssobj->ssobj_lib }}</textarea>
                                         </div>
                                         <div class="mt-3 text-center">
-                                            @can("transformation::sousobjectifs.destroy")
+                                            @can("transformation::sous-objectifs.destroy")
                                                 <input class="btn btn-danger" value="Supprimer ce sous objectif" onclick="document.getElementById('deleteform[{{ $ssobj->id }}]').submit();">
                                             @endcan        
                                         </div>
