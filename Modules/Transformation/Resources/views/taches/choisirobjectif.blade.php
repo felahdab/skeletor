@@ -1,7 +1,7 @@
 @extends('layouts.app-master')
 
 @section('helplink')
-< x-help-link page="administration"/>
+<x-help-link module="Transformation" page="administration"/>
 @endsection
 
 
