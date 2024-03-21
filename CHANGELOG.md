@@ -1,3 +1,12 @@
+## 2.1.8 (March 21, 2024)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.7 –> 2.1.8
+- Le composant de Fiche Bilan est désormais Lazy: il se charge uniquement lorsqu'il est affiché. Accélère le chargement du parcours des fiches bilan.
+- Ajustement du composant de generation des url de l'aide. Les modules doivent desormais inclure leur nom dans le composant.
+- Reorganize documentation and associated images for the migration from larecipe to markserv
+- Implements art #210623: intégration de filament dans Skeletor.
+- Implement model chat functionnality and associated livewire component.
+- Mise à profit de @teleport pour ramener tout le code relatif aux notifications dans le composant Livewire. La Navbar ne fournit plus que l'espace pour afficher le bouton.
+
 ## 2.1.7 (December 20, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.6a –> 2.1.7
 - Merge commit '69b1107df9b8c6236dc449db8232599ea2216bdd'
