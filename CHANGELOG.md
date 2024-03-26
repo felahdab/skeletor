@@ -1,3 +1,7 @@
+## 2.1.8a (March 26, 2024)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.8 –> 2.1.8a
+- Fixes art #244096: erreur 500 dans le suivi par fonction / liste des marins
+
 ## 2.1.8 (March 21, 2024)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.7 –> 2.1.8
 - Le composant de Fiche Bilan est désormais Lazy: il se charge uniquement lorsqu'il est affiché. Accélère le chargement du parcours des fiches bilan.
