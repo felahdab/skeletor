@@ -48,7 +48,15 @@
         },
 
         getStepIndex: function (step) {
-            return this.getSteps().findIndex((indexedStep) => indexedStep === step)
+            let index = this.getSteps().findIndex(
+                (indexedStep) => indexedStep === step,
+            )
+
+            if (index === -1) {
+                return 0
+            }
+
+            return index
         },
 
         getSteps: function () {
@@ -119,7 +127,7 @@
         @endif
         role="list"
         @class([
-            'fi-fo-wizard-header grid divide-y divide-gray-200 md:grid-flow-col md:divide-y-0 dark:divide-white/5',
+            'fi-fo-wizard-header grid divide-y divide-gray-200 dark:divide-white/5 md:grid-flow-col md:divide-y-0 md:overflow-x-auto',
             'border-b border-gray-200 dark:border-white/10' => $isContained,
             'rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10' => ! $isContained,
         ])
@@ -138,7 +146,7 @@
                     x-on:click="step = @js($step->getId())"
                     x-bind:disabled="! isStepAccessible(@js($step->getId()))"
                     role="step"
-                    class="fi-fo-wizard-header-step-button flex h-full w-full items-center gap-x-4 px-6 py-4"
+                    class="fi-fo-wizard-header-step-button flex h-full items-center gap-x-4 px-6 py-4 text-start"
                 >
                     <div
                         class="fi-fo-wizard-header-step-icon-ctn flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
@@ -187,7 +195,7 @@
                         @endif
                     </div>
 
-                    <div class="grid justify-items-start">
+                    <div class="grid justify-items-start md:w-max md:max-w-60">
                         @if (! $step->isLabelHidden())
                             <span
                                 class="fi-fo-wizard-header-step-label text-sm font-medium"
@@ -222,7 +230,7 @@
                             fill="none"
                             preserveAspectRatio="none"
                             viewBox="0 0 22 80"
-                            class="h-full w-full text-gray-200 rtl:rotate-180 dark:text-white/5"
+                            class="h-full w-full text-gray-200 dark:text-white/5 rtl:rotate-180"
                         >
                             <path
                                 d="M0 -2L20 40L0 82"

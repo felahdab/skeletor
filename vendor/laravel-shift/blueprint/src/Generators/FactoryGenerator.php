@@ -110,7 +110,7 @@ class FactoryGenerator extends AbstractClassGenerator implements Generator
                     $definition .= sprintf('%s::factory()->create()->%s', $class, $key);
                     $definition .= ',' . PHP_EOL;
                 }
-            } elseif ($column->dataType() === 'id' || ($column->dataType() === 'uuid' && Str::endsWith($column->name(), '_id'))) {
+            } elseif ($column->dataType() === 'id' || (in_array($column->dataType(), ['uuid', 'ulid']) && Str::endsWith($column->name(), '_id'))) {
                 $name = Str::beforeLast($column->name(), '_id');
                 $class = Str::studly($column->attributes()[0] ?? $name);
                 $reference = $this->fullyQualifyModelReference($class) ?? $model;
@@ -156,6 +156,10 @@ class FactoryGenerator extends AbstractClassGenerator implements Generator
                 $definition .= str_repeat(self::INDENT, 3) . "'{$column->name()}' => ";
                 $definition .= 'Str::random(10)';
                 $definition .= ',' . PHP_EOL;
+            } elseif ($column->dataType() === 'ulid') {
+                $definition .= str_repeat(self::INDENT, 3) . "'{$column->name()}' => ";
+                $definition .= '(string) Str::ulid()';
+                $definition .= ',' . PHP_EOL;
             } else {
                 $definition .= str_repeat(self::INDENT, 3) . "'{$column->name()}' => ";
 
@@ -186,7 +190,7 @@ class FactoryGenerator extends AbstractClassGenerator implements Generator
         return trim($definition);
     }
 
-    private function fillableColumns(array $columns): array
+    protected function fillableColumns(array $columns): array
     {
         if (config('blueprint.fake_nullables')) {
             return $columns;

@@ -2,6 +2,126 @@
 
 All notable changes to `laravel-data` will be documented in this file.
 
+## 4.4.0 - 2024-03-13
+
+### What's Changed
+
+* Add support for transformation max depths by @rubenvanassche in https://github.com/spatie/laravel-data/pull/699
+
+**Full Changelog**: https://github.com/spatie/laravel-data/compare/4.3.2...4.4.0
+
+## 4.3.2 - 2024-03-12
+
+### What's Changed
+
+* Provide fallbacks for config values by @sebastiandedeyne in https://github.com/spatie/laravel-data/pull/695
+
+**Full Changelog**: https://github.com/spatie/laravel-data/compare/4.3.1...4.3.2
+
+## 4.3.1 - 2024-03-12
+
+### What's Changed
+
+* Support duration in cache configuration by @sebastiandedeyne in https://github.com/spatie/laravel-data/pull/694
+* Handle `null` for `fieldContext` within `resolvePotentialPartialArray` by @faustbrian in https://github.com/spatie/laravel-data/pull/693
+
+**Full Changelog**: https://github.com/spatie/laravel-data/compare/4.3.0...4.3.1
+
+## 4.3.0 - 2024-03-11
+
+### What's Changed
+
+* Update wrapping.md to clarify collections and paginated collections case by @santigarcor in https://github.com/spatie/laravel-data/pull/675
+* Feature/cast and transformer iterables by @rubenvanassche in https://github.com/spatie/laravel-data/pull/686
+* Add support for passing on partials when not transforming values by @rubenvanassche in https://github.com/spatie/laravel-data/pull/688
+* chore(deps): bump ramsey/composer-install from 2 to 3 by @dependabot in https://github.com/spatie/laravel-data/pull/678
+* Allow data context to be set to null by @sebastiandedeyne in https://github.com/spatie/laravel-data/pull/691
+* Fix iterable casts when there's a global and local cast specified by @sebastiandedeyne in https://github.com/spatie/laravel-data/pull/690
+* Fix iterable values with union types by @sebastiandedeyne in https://github.com/spatie/laravel-data/pull/692
+
+**Full Changelog**: https://github.com/spatie/laravel-data/compare/4.2.0...4.3.0
+
+## 4.2.0 - 2024-03-01
+
+### What's Changed
+
+* Add experimental support for Livewire synths @rubenvanassche in https://github.com/spatie/laravel-data/pull/669
+* Add DataCollectionSynth by @edalzell in https://github.com/spatie/laravel-data/pull/591
+
+**Full Changelog**: https://github.com/spatie/laravel-data/compare/4.1.0...4.2.0
+
+## 3.11.2 - 2024-02-22
+
+- fix: adds environment variable to disable structure caching (#645)
+
+## 3.11.1 - 2024-02-20
+
+### What's Changed
+
+* Backport cache fix to v3 by @jameshulse in https://github.com/spatie/laravel-data/pull/671
+
+**Full Changelog**: https://github.com/spatie/laravel-data/compare/3.11.0...3.11.1
+
+## 4.1.0 - 2024-02-16
+
+- Fix an issue where the cache was queried too much
+- Move the creation process of object rules from constructor to `getRule` to fix issues with caching and typescript transformer
+- Laravel 11 support
+
+## 4.0.2 - 2024-02-14
+
+- Fixes issue where casts could not return `null` or an empty array
+- Prevent out of memory with multiple requests in a test (#665)
+- Allow passing `null` to `collect` and return an empty version of the defined output type
+- Fix templates for Laravel Idea plugin support (#666)
+- Fix an issue where the cache could not be disabled
+
+## 4.0.1 - 2024-02-09
+
+Laravel-data 4.0.0 was released 5 hours ago, time for an update!
+
+- Add support for a collection cast
+- Make sure we check wether a value is Uncastable
+- Fix issue where creating a data object from multiple payloads wasn't always consistent
+- Allow disabling cache
+- Refactor `PropertyRules`
+- Fix issue where install on windows was impossible
+- Fix types for map and through (#640)
+
+## 4.0.0
+
+- Allow arrays, Collections, Paginators, ... to be used as DataCollections
+- Add support for magically creating data collections
+- Rewritten transformation system with respect to includeable properties
+- Addition of collect method
+- Removal of collection method
+- Add support for using Laravel Model attributes as data properties
+- Allow creating data objects using `from` without parameters
+- Add support for a Dto and Resource object
+- It is now a lot easier to validate all the payloads added to laravel-data
+- Added contexts to the creation and transformation process
+- Allow creating a data object or collection using a factory
+- Speed up the process of creating and transforming data objects
+- Add support for BNF syntax
+- Laravel 10 requirement
+- Rewritten docs
+
+**Some more "internal" changes**
+
+- Restructured tests for the future we have ahead
+- The Type system was completely rewritten, allowing for a better performance and more flexibility in the future
+- Benchmarks added to make data even faster
+
+## 3.11.0 - 2023-12-21
+
+- Add support for data structure caching #622
+
+## 3.10.1 - 2023-12-04
+
+- Make ValidationPath Stringable
+- Fix PHPStan
+- Improve performance when optional peoperty exists (#612)
+
 ## 3.10.0 - 2023-12-01
 
 A fresh release after a month of vacation, enjoy!

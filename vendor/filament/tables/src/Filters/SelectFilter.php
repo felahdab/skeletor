@@ -6,6 +6,7 @@ use Closure;
 use Filament\Forms\Components\Select;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
+use Znck\Eloquent\Relations\BelongsToThrough;
 
 class SelectFilter extends BaseFilter
 {
@@ -22,6 +23,8 @@ class SelectFilter extends BaseFilter
     protected bool | Closure $isStatic = false;
 
     protected bool | Closure $isSearchable = false;
+
+    protected bool | Closure $canSelectPlaceholder = true;
 
     protected int | Closure $optionsLimit = 50;
 
@@ -50,10 +53,14 @@ class SelectFilter extends BaseFilter
 
                     $labels = $relationshipQuery
                         ->when(
-                            $filter->getRelationship() instanceof \Znck\Eloquent\Relations\BelongsToThrough,
+                            $filter->getRelationship() instanceof BelongsToThrough,
                             fn (Builder $query) => $query->distinct(),
                         )
-                        ->whereKey($state['values'])
+                        ->when(
+                            $this->getRelationshipKey(),
+                            fn (Builder $query, string $relationshipKey) => $query->whereIn($relationshipKey, $state['values']),
+                            fn (Builder $query) => $query->whereKey($state['values'])
+                        )
                         ->pluck($relationshipQuery->qualifyColumn($filter->getRelationshipTitleAttribute()))
                         ->all();
                 } else {
@@ -81,7 +88,11 @@ class SelectFilter extends BaseFilter
 
             if ($filter->queriesRelationships()) {
                 $label = $filter->getRelationshipQuery()
-                    ->whereKey($state['value'])
+                    ->when(
+                        $this->getRelationshipKey(),
+                        fn (Builder $query, string $relationshipKey) => $query->where($relationshipKey, $state['value']),
+                        fn (Builder $query) => $query->whereKey($state['value'])
+                    )
                     ->first()
                     ?->getAttributeValue($filter->getRelationshipTitleAttribute());
             } else {
@@ -130,7 +141,7 @@ class SelectFilter extends BaseFilter
             $data['values'] ?? null :
             $data['value'] ?? null;
 
-        if (! count(array_filter(
+        if (blank(Arr::first(
             Arr::wrap($values),
             fn ($value) => filled($value),
         ))) {
@@ -146,11 +157,18 @@ class SelectFilter extends BaseFilter
 
         return $query->whereHas(
             $this->getRelationshipName(),
-            function (Builder $query) use ($values) {
+            function (Builder $query) use ($isMultiple, $values) {
                 if ($this->modifyRelationshipQueryUsing) {
                     $query = $this->evaluate($this->modifyRelationshipQueryUsing, [
                         'query' => $query,
                     ]) ?? $query;
+                }
+
+                if ($relationshipKey = $this->getRelationshipKey($query)) {
+                    return $query->{$isMultiple ? 'whereIn' : 'where'}(
+                        $relationshipKey,
+                        $values,
+                    );
                 }
 
                 return $query->whereKey($values);
@@ -196,6 +214,13 @@ class SelectFilter extends BaseFilter
         return $this;
     }
 
+    public function selectablePlaceholder(bool | Closure $condition = true): static
+    {
+        $this->canSelectPlaceholder = $condition;
+
+        return $this;
+    }
+
     public function getAttribute(): string
     {
         return $this->evaluate($this->attribute) ?? $this->getName();
@@ -228,6 +253,7 @@ class SelectFilter extends BaseFilter
             ->multiple($this->isMultiple())
             ->placeholder($this->getPlaceholder())
             ->searchable($this->isSearchable())
+            ->selectablePlaceholder($this->canSelectPlaceholder())
             ->preload($this->isPreloaded())
             ->native($this->isNative())
             ->optionsLimit($this->getOptionsLimit());
@@ -275,6 +301,11 @@ class SelectFilter extends BaseFilter
     public function isSearchable(): bool
     {
         return (bool) $this->evaluate($this->isSearchable);
+    }
+
+    public function canSelectPlaceholder(): bool
+    {
+        return (bool) $this->evaluate($this->canSelectPlaceholder);
     }
 
     public function optionsLimit(int | Closure $limit): static

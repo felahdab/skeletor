@@ -61,17 +61,17 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 
 DatePicker::make('date_of_birth')
-    ->displayFormat(function () {
+    ->displayFormat(function (): string {
         if (auth()->user()->country_id === 'us') {
-            return 'm/d/Y'
-        } else {
-            return 'd/m/Y'
+            return 'm/d/Y';
         }
+
+        return 'd/m/Y';
     })
 
 Select::make('user_id')
-    ->options(function () {
-        return User::all()->pluck('name', 'id');
+    ->options(function (): array {
+        return User::all()->pluck('name', 'id')->all();
     })
 
 TextInput::make('middle_name')
@@ -589,13 +589,29 @@ In this example, the customer's name is not `required()`, and the email address 
 
 ## Inserting Livewire components into a form
 
-You may use insert a Livewire component directly into a form:
+You may insert a Livewire component directly into a form:
 
 ```php
 use Filament\Forms\Components\Livewire;
 use App\Livewire\Foo;
 
 Livewire::make(Foo::class)
+```
+
+If you are rendering multiple of the same Livewire component, please make sure to pass a unique `key()` to each:
+
+```php
+use Filament\Forms\Components\Livewire;
+use App\Livewire\Foo;
+
+Livewire::make(Foo::class)
+    ->key('foo-first')
+
+Livewire::make(Foo::class)
+    ->key('foo-second')
+
+Livewire::make(Foo::class)
+    ->key('foo-third')
 ```
 
 ### Passing parameters to a Livewire component

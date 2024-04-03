@@ -1,9 +1,12 @@
 @extends('layouts.app-master')
 
 @section('helplink')
-<x-help-link module="Transformation" page="parcours"/>
+    <x-help-link module="Transformation" page="parcours"/>
 @endsection
 
+@section('after_styles')
+    @include('layouts.partials.sortable')
+@endsection
 
 @section('content')
     <div class="p-4 rounded">

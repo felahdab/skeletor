@@ -2,7 +2,6 @@
 
 namespace Spatie\LaravelData\Concerns;
 
-use Spatie\LaravelData\Contracts\DataCollectable;
 use Spatie\LaravelData\DataCollection;
 
 /**
@@ -10,14 +9,16 @@ use Spatie\LaravelData\DataCollection;
  * @template TValue
  *
  * @implements \ArrayAccess<TKey, TValue>
- * @implements  DataCollectable<TValue>
  */
 trait EnumerableMethods
 {
     /**
-     * @param callable(TValue, TKey): TValue $through
+     * @template TMapValue
+     *
+     * @param callable(TValue, TKey): TMapValue $through
      *
      * @return static
+     * @deprecated In v5, use a regular Laravel collection instead
      */
     public function through(callable $through): static
     {
@@ -29,9 +30,13 @@ trait EnumerableMethods
     }
 
     /**
-     * @param callable(TValue, TKey): TValue $map
+     * @template TMapValue
+     *
+     * @param callable(TValue, TKey): TMapValue $map
      *
      * @return static
+     * @deprecated In v5, use a regular Laravel collection instead
+     *
      */
     public function map(callable $map): static
     {
@@ -42,6 +47,8 @@ trait EnumerableMethods
      * @param callable(TValue): bool $filter
      *
      * @return static
+     * @deprecated In v5, use a regular Laravel collection instead
+     *
      */
     public function filter(callable $filter): static
     {
@@ -56,6 +63,8 @@ trait EnumerableMethods
      * @param callable(TValue): bool $filter
      *
      * @return static
+     * @deprecated In v5, use a regular Laravel collection instead
+     *
      */
     public function reject(callable $filter): static
     {
@@ -67,12 +76,14 @@ trait EnumerableMethods
     }
 
     /**
-     * @template            TFirstDefault
-     *
      * @param null|         (callable(TValue,TKey): bool) $callback
-     * @param TFirstDefault|(\Closure(): TFirstDefault)  $default
+     * @param TFirstDefault|(\Closure(): TFirstDefault) $default
      *
      * @return TValue|TFirstDefault
+     * @deprecated In v5, use a regular Laravel collection instead
+     *
+     * @template            TFirstDefault
+     *
      */
     public function first(callable|null $callback = null, $default = null)
     {
@@ -80,12 +91,14 @@ trait EnumerableMethods
     }
 
     /**
-     * @template            TLastDefault
-     *
      * @param null|         (callable(TValue,TKey): bool) $callback
-     * @param TLastDefault|(\Closure(): TLastDefault)  $default
+     * @param TLastDefault|(\Closure(): TLastDefault) $default
      *
      * @return TValue|TLastDefault
+     * @deprecated In v5, use a regular Laravel collection instead
+     *
+     * @template            TLastDefault
+     *
      */
     public function last(callable|null $callback = null, $default = null)
     {
@@ -96,6 +109,8 @@ trait EnumerableMethods
      * @param callable(TValue, TKey): mixed $callback
      *
      * @return static
+     * @deprecated In v5, use a regular Laravel collection instead
+     *
      */
     public function each(callable $callback): static
     {
@@ -106,6 +121,8 @@ trait EnumerableMethods
 
     /**
      * @return static<int, TValue>
+     * @deprecated In v5, use a regular Laravel collection instead
+     *
      */
     public function values(): static
     {
@@ -116,6 +133,9 @@ trait EnumerableMethods
         return $cloned;
     }
 
+    /**
+     * @deprecated In v5, use a regular Laravel collection instead
+     */
     public function where(string $key, mixed $operator = null, mixed $value = null): static
     {
         $cloned = clone $this;
@@ -126,13 +146,15 @@ trait EnumerableMethods
     }
 
     /**
-     * @template TReduceInitial
-     * @template TReduceReturnType
-     *
-     * @param callable(TReduceInitial|TReduceReturnType, TValue, TKey): TReduceReturnType  $callback
+     * @param callable(TReduceInitial|TReduceReturnType, TValue, TKey): TReduceReturnType $callback
      * @param TReduceInitial $initial
      *
      * @return TReduceReturnType
+     * @deprecated In v5, use a regular Laravel collection instead
+     *
+     * @template TReduceInitial
+     * @template TReduceReturnType
+     *
      */
     public function reduce(callable $callback, mixed $initial = null)
     {
@@ -140,7 +162,7 @@ trait EnumerableMethods
     }
 
     /**
-     * @param  (callable(TValue, TKey): bool)|string|null  $key
+     * @param (callable(TValue, TKey): bool)|string|null $key
      * @param mixed $operator
      * @param mixed $value
      *
@@ -148,6 +170,8 @@ trait EnumerableMethods
      *
      * @throws \Illuminate\Support\ItemNotFoundException
      * @throws \Illuminate\Support\MultipleItemsFoundException
+     * @deprecated In v5, use a regular Laravel collection instead
+     *
      */
     public function sole(callable|string|null $key = null, mixed $operator = null, mixed $value = null)
     {
@@ -155,6 +179,8 @@ trait EnumerableMethods
     }
 
     /**
+     *
+     *
      * @param DataCollection $collection
      *
      * @return static

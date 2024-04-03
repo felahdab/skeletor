@@ -449,6 +449,30 @@ class Browser
     }
 
     /**
+     * Take a screenshot of a specific element and store it with the given name.
+     *
+     * @param  string  $selector
+     * @param  string  $name
+     * @return $this
+     */
+    public function screenshotElement($selector, $name)
+    {
+        $filePath = sprintf('%s/%s.png', rtrim(static::$storeScreenshotsAt, '/'), $name);
+
+        $directoryPath = dirname($filePath);
+
+        if (! is_dir($directoryPath)) {
+            mkdir($directoryPath, 0777, true);
+        }
+
+        $this->scrollIntoView($selector)
+            ->driver->findElement(WebDriverBy::cssSelector($this->resolver->format($selector)))
+            ->takeElementScreenshot($filePath);
+
+        return $this;
+    }
+
+    /**
      * Store the console output with the given name.
      *
      * @param  string  $name
@@ -586,6 +610,27 @@ class Browser
     }
 
     /**
+     * Return a browser scoped to the given component.
+     *
+     * @param  \Laravel\Dusk\Component  $component
+     * @return \Laravel\Dusk\Browser
+     */
+    public function component(Component $component)
+    {
+        $browser = new static(
+            $this->driver, new ElementResolver($this->driver, $this->resolver->format($component))
+        );
+
+        if ($this->page) {
+            $browser->onWithoutAssert($this->page);
+        }
+
+        $browser->onComponent($component, $this->resolver);
+
+        return $browser;
+    }
+
+    /**
      * Set the current component state.
      *
      * @param  \Laravel\Dusk\Component  $component
@@ -697,7 +742,23 @@ class Browser
      */
     public function dump()
     {
-        dd($this->driver->getPageSource());
+        dump($this->driver->getPageSource());
+
+        return $this;
+    }
+
+    /**
+     * Dump and die the content from the last response.
+     *
+     * @return void
+     */
+    public function dd()
+    {
+        dump($this->driver->getPageSource());
+
+        $this->quit();
+
+        exit;
     }
 
     /**

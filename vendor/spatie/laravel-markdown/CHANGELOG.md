@@ -2,6 +2,42 @@
 
 All notable changes to `laravel-markdown` will be documented in this file.
 
+## 2.4.2 - 2024-01-11
+
+### What's Changed
+
+* Allow Laravel 11 by @TomasVotruba in https://github.com/spatie/laravel-markdown/pull/71
+
+### New Contributors
+
+* @TomasVotruba made their first contribution in https://github.com/spatie/laravel-markdown/pull/71
+
+**Full Changelog**: https://github.com/spatie/laravel-markdown/compare/2.4.1...2.4.2
+
+## 2.4.1 - 2023-12-30
+
+### What's Changed
+
+* Update deprecated function 'convertToHtml' to 'convert' function by @yanalshoubaki in https://github.com/spatie/laravel-markdown/pull/69
+
+### New Contributors
+
+* @yanalshoubaki made their first contribution in https://github.com/spatie/laravel-markdown/pull/69
+
+**Full Changelog**: https://github.com/spatie/laravel-markdown/compare/2.4.0...2.4.1
+
+## 2.4.0 - 2023-08-17
+
+### What's Changed
+
+- Add ability to render anchors as links by @WendellAdriel in https://github.com/spatie/laravel-markdown/pull/66
+
+### New Contributors
+
+- @WendellAdriel made their first contribution in https://github.com/spatie/laravel-markdown/pull/66
+
+**Full Changelog**: https://github.com/spatie/laravel-markdown/compare/2.3.1...2.4.0
+
 ## 2.3.1 - 2023-05-05
 
 ### What's Changed

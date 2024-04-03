@@ -14,9 +14,12 @@ class HandleRequests extends Mechanism
 
     function boot()
     {
-        app($this::class)->setUpdateRoute(function ($handle) {
-            return Route::post('/livewire/update', $handle)->middleware('web');
-        });
+        // Only set it if another provider hasn't already set it....
+        if (! $this->updateRoute) {
+            app($this::class)->setUpdateRoute(function ($handle) {
+                return Route::post('/livewire/update', $handle)->middleware('web');
+            });
+        }
 
         $this->skipRequestPayloadTamperingMiddleware();
     }
@@ -96,7 +99,7 @@ class HandleRequests extends Mechanism
             'assets' => SupportScriptsAndAssets::getAssets(),
         ];
 
-        $finish = trigger('profile.response', $response);
+        $finish = trigger('response', $response);
 
         return $finish($response);
     }

@@ -69,4 +69,4 @@
 </div>
 
 
-<script src="{{ basset('https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.10/index.global.min.js') }}"></script>
+<script src="{{ basset('https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.11/index.global.min.js') }}"></script>

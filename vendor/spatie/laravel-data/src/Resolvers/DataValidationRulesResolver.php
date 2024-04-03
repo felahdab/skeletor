@@ -30,7 +30,7 @@ class DataValidationRulesResolver
         string $class,
         array $fullPayload,
         ValidationPath $path,
-        DataRules $dataRules,
+        DataRules $dataRules
     ): array {
         $dataClass = $this->dataConfig->getDataClass($class);
 
@@ -45,7 +45,7 @@ class DataValidationRulesResolver
                 continue;
             }
 
-            if ($dataProperty->type->isDataObject || $dataProperty->type->isDataCollectable) {
+            if ($dataProperty->type->kind->isDataObject() || $dataProperty->type->kind->isDataCollectable()) {
                 $this->resolveDataSpecificRules(
                     $dataProperty,
                     $fullPayload,
@@ -116,7 +116,7 @@ class DataValidationRulesResolver
             return;
         }
 
-        if ($dataProperty->type->isDataObject) {
+        if ($dataProperty->type->kind->isDataObject()) {
             $this->resolveDataObjectSpecificRules(
                 $dataProperty,
                 $fullPayload,
@@ -128,7 +128,7 @@ class DataValidationRulesResolver
             return;
         }
 
-        if ($dataProperty->type->isDataCollectable) {
+        if ($dataProperty->type->kind->isDataCollectable()) {
             $this->resolveDataCollectionSpecificRules(
                 $dataProperty,
                 $fullPayload,
@@ -269,7 +269,7 @@ class DataValidationRulesResolver
             $path
         );
 
-        foreach ($this->dataConfig->getRuleInferrers() as $inferrer) {
+        foreach ($this->dataConfig->ruleInferrers as $inferrer) {
             $inferrer->handle($property, $rules, $context);
         }
 
