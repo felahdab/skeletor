@@ -74,12 +74,12 @@ class UsersController extends Controller
     {        
         $user = $user->create(array_merge($request->validated(), [ "password" =>$this->generateRandomString()]));
 
-        $user->socle = false;
-        if ($request->has('socle'))
-            $user->socle = true;
-        $user->comete = false;  
-        if ($request->has('comete'))
-            $user->comete = true;
+        // $user->socle = false;
+        // if ($request->has('socle'))
+        //     $user->socle = true;
+        // $user->comete = false;  
+        // if ($request->has('comete'))
+        //     $user->comete = true;
         $user->admin = false;  
         if ($request->has('admin'))
             $user->admin = true;       
@@ -117,7 +117,8 @@ class UsersController extends Controller
     public function show(User $user) 
     {
         return view('users.show', [
-            'user' => $user
+            'user' => $user,
+            'userRole' => $user->roles->pluck('name')->toArray()
         ]);
     }
     
@@ -168,11 +169,11 @@ class UsersController extends Controller
     public function update(User $user, UpdateUserRequest $request) 
     {
         $user->socle = false;
-        if ($request->has('socle'))
-            $user->socle = true;
-        $user->comete = false;
-        if ($request->has('comete'))
-            $user->comete = true;
+        // if ($request->has('socle'))
+        //     $user->socle = true;
+        // $user->comete = false;
+        // if ($request->has('comete'))
+        //     $user->comete = true;
         $user->admin = false;  
         if ($request->has('admin'))
             $user->admin = true;          
