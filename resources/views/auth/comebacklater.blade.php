@@ -4,7 +4,8 @@
 @section('content')
 <div class="d-flex flex-column mb-3 text-center">
     <div class="p-2 mt-3">
-        <img src='{!! asset("assets/images/logo_FFAST_bleu.png") !!}' alt="Logo de l'escouade" style="height:250px; display: block; margin-left:auto; margin-right: auto; ">
+        <x-bootstrap-icon iconname='alarm-fill.svg' />
+        {{-- <img src='{!! asset("assets/images/logo_FFAST_bleu.png") !!}' alt="Logo de l'escouade" style="height:250px; display: block; margin-left:auto; margin-right: auto; "> --}}
     </div>
     @if($MCuserexist->msg)
         <div class="p-2 mt-3">
