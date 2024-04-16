@@ -90,7 +90,7 @@ class DashboardarchiveTable extends DataTableComponent
     public function filters(): array
     {
         $basefilters= [
-            DateFilter::make('Début')
+            DateFilter::make('Debut')
                 ->filter(function(Builder $builder, string $value) {
                     $builder->where('userdata->date_deb', '>=', $value);
                 }),
@@ -128,8 +128,9 @@ class DashboardarchiveTable extends DataTableComponent
     public function render(): \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         $this->archiveids = $this->getCurrentItems();
-        $this->archiveids["datedebut"] = $this->table['filters']['début'];
-        $this->archiveids["datefin"] = $this->table['filters']['fin'];
+        // $this->archiveids["datedebut"] = $this->table['filters']['Debut'];
+        $this->archiveids["datedebut"] = $this->filterComponents['debut'];
+        $this->archiveids["datefin"] = $this->filterComponents['fin'];
         $this->dispatch("archiveListUpdated" , $this->archiveids);
         return parent::render();
     }
