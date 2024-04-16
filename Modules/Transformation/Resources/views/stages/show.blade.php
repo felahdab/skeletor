@@ -73,20 +73,21 @@
                         <tr style='background-color:silver;'>
                             <th scope="col">&#10003;</th>
                             <th scope="col">Grd</th>
-                            <th scope="col">Bvt</th>
                             <th scope="col">Sp&eacute;</th>
                             <th scope="col">Nom</th>
                             <th scope="col">Pr&eacute;nom</th>
                             <th scope="col">Mat</th>
-                            <th scope="col">NID</th>
-                            <th scope="col">Secteur</th>
-                            <th scope="col">Mut</th>
-                            <th scope="col">Date mut</th>
+                            <!--th scope="col">NID</th-->
+                            <th scope="col">Unité</th>
+                            <th scope="col">FPS rat.</th>
+                            <th scope="col">Org.</th>
+                            <!--th scope="col">Mut</th-->
+                            <!--th scope="col">Date mut</th-->
                             @if(auth()->user()->can('transformation::stages.attribuerstage'))
                                 <th scope="col"><x-bootstrap-icon iconname='chat-left-quote.svg' /></th>
                                 <th scope="col"><x-bootstrap-icon iconname='person.svg' /></th>
                             @endif
-                            <th scope="col">Email</th>
+                            <!--th scope="col">Email</th-->
                         </tr>
                     </thead>
                     <tbody>
@@ -98,15 +99,16 @@
                                     name='user[{{ $user->id }}]' 
                                     value='user[{{ $user->id }}]'></td>
                             <td style='height:40px;'>{{$user->displayGrade()}} </td>
-                            <td>{{$user->displayDiplome()}} </td>
                             <td>{{$user->displaySpecialite()}} </td>
                             <td><a href='{{ route("transformation::users.stages", $user->id) }}'>{{$user->name}}</a></td>
                             <td>{{$user->prenom}} </td>
                             <td>{{$user->matricule}}</td>
-                            <td>{{$user->nid}}</td>
-                            <td>{{$user->displaySecteur()}} </td>
-                            <td>{{$user->displayDestination()}}</td>
-                            <td>{{$user->displayDateDebarquement()}}</td>
+                            <!--td>{{$user->nid}}</td-->
+                            <td>{{$user->unite->unite_libcourt}} </td>
+                            <td>{{$user->secteur->secteur_libcourt}} </td>
+                            <td>{{$user->displayDiplome()}} </td>
+                            <!--td>{{$user->displayDestination()}}</td-->
+                            <!--td>{{$user->displayDateDebarquement()}}</td-->
                             @if(auth()->user()->can('transformation::stages.attribuerstage'))
                                 @if ($user->pivot->commentaire == null or trim($user->pivot->commentaire) == '')
                                     <td>&nbsp;</td>
@@ -130,7 +132,7 @@
                                 @endif
                             @endif
                             
-                            <td>{{$user->email}}</td>
+                            <!--td>{{$user->email}}</td-->
                         </tr>
                         @endif
                     @endforeach
@@ -164,12 +166,13 @@
                     <tr style='background-color:silver; font-weight: bold;'>
                         <td>&#10003;</td>
                         <td style='height:40px;'>Grd</td>
-                        <td>Bvt</td>
                         <td>Sp&eacute;</td>
                         <td>Nom</td>
                         <td>Pr&eacute;nom</td>
                         @if(false)<td>Mat</td>@endif
-                        <td>Secteur</td>
+                        <td>Unité</td>
+                        <td>FPS rat.</td>
+                        <td>Org.</td>
                         <td>Date validation</td>
                         <td>Date validité</td>
                         @if(auth()->user()->can('transformation::stages.attribuerstage'))
@@ -186,12 +189,13 @@
                                     name='usercancel[{{ $user->id }}]' 
                                     value='usercancel[{{ $user->id }}]'></td>
                             <td style='height:40px;'>{{$user->displayGrade()}}   </td>
-                            <td>{{$user->displayDiplome()}} </td>
                             <td>{{$user->displaySpecialite()}} </td>
                             <td><a href='{{ route("transformation::users.stages", $user->id) }}'>{{$user->name}} </a></td>
                             <td>{{$user->prenom}} </td>
                             @if(false)<td>{{$user->matricule}}</td>@endif
-                            <td>{{$user->displaySecteur()}} </td>
+                            <td>{{$user->unite->unite_libcourt}} </td>
+                            <td>{{$user->secteur->secteur_libcourt}} </td>
+                            <td>{{$user->displayDiplome()}} </td>
                             <td>{{$user->pivot->date_validation}}</td>
                             <td>{{$user->pivot->date_validite}}</td>
                             @if(auth()->user()->can('transformation::stages.attribuerstage'))
