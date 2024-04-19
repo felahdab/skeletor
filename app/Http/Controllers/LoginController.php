@@ -124,7 +124,8 @@ class LoginController extends Controller
                 ]
             );
 
-        return view('home.index');
+            return redirect()->route(config('skeletor.page_par_defaut'));
+            // return view('home.index');
     }
 
     public function locallogin(LoginRequest $request)
