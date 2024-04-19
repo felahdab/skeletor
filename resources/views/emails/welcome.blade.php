@@ -3,8 +3,7 @@
 
 Votre compte utilisateur a été activé par un administrateur.
 
-Vous pouvez désormais vous connecter à FFAST en vous rendant sur la page suivante:
-<a href="{{route('home.index')}}">FFAST</a>
+Vous pouvez désormais vous connecter à <a href="{{route(config('skeletor.page_par_defaut'))}}">{{config('app.name')}}</a>
 
 *Rappels:* 
 - Si vous êtes à terre (avec une station Intradef normale), le *login auto* vous permet d'être reconnu automatiquement par l'application 
@@ -15,25 +14,18 @@ passe DR-CPT. Il s'agit des informations vous permettant d'accéder à divers se
 recours, adressez un mail à l'équipe FFAST qui s'efforcera de vous aider.
 
 ### Documentation
-La documentation de l'application est disponible à l'adresse suivante:
-
-<a href="{{route('larecipe.index')}}">Documentation en ligne</a>
+La documentation de l'application est disponible sur toutes les pages grace au lien "Aide" dans le menu déroulant à votre nom.
 
 ### Première chose à faire
-Nous vous conseillons de définir un mot de passe local après votre première connexion.
-
-La documentation relative à ce mot de passe local est disponible ici:
-<a href="{{route('larecipe.show', ['version' => env('DOC_VERSION'), 'page' => 'connexion'])}}">Documentation consacrée aux méthodes de connexion</a>
+Nous vous conseillons de définir un mot de passe local après votre première connexion dans le menu déroulant à votre nom. Retrouvez la documentation consacrée aux méthodes de connexion dans l'aide sur la page "Connexion".
 
 ### Obtenir de l'aide
-Si la documentation ne vous permet pas de trouver les réponses à vos questions, n'hésitez pas à le signaler avec le gros bouton jaune situé en haut de chaque page. 
+Si la documentation ne vous permet pas de trouver les réponses à vos questions, n'hésitez pas à le signaler avec le bouton jaune situé en haut de chaque page. 
 L'équipe projet s'efforcera de venir à votre rescousse.
 
 Sinon, il y a aussi le mail:
 <a href="mailto:ffast.notification.tec@intradef.gouv.fr">ffast.notification.tec@intradef.gouv.fr</a>
 
-
-L'équipe projet FFAST.
-<p>
-<img src="{{url(asset('assets/images/InsigneEscouade.jpg'))}}" alt="FFAST" title="FFAST" height="50" width="50"><p>
+Maintenant, à vous de jouer ! Pardon travailler.&#128521;<br>
+L'équipe projet.
 </x-markdown>

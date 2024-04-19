@@ -28,7 +28,7 @@ class WelcomeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'FFAST: Votre compte est activé. Bienvenue !',
+            subject: config('app.name').' : Votre compte est activé. Bienvenue !',
         );
     }
 
