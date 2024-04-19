@@ -4,7 +4,7 @@
 @section('content')
 <div class="d-flex flex-column mb-3 text-center">
     <div class="p-2 mt-3">
-        <x-bootstrap-icon iconname='alarm-fill.svg' />
+        <x-bootstrap-icon iconname='hourglass-split.svg' />
         {{-- <img src='{!! asset("assets/images/logo_FFAST_bleu.png") !!}' alt="Logo de l'escouade" style="height:250px; display: block; margin-left:auto; margin-right: auto; "> --}}
     </div>
     @if($MCuserexist->msg)
@@ -12,7 +12,7 @@
             <h5>Votre demande est en cours de traitement. Vous recevrez un mail lorsque votre pourrez vous connecter.</h5>
         </div>
         <div class="p-2">
-            <a href="{{ route('home.index') }}" class="btn btn-outline-dark">Retour</a>
+            <a href="{{ route(config('skeletor.page_par_defaut')) }}" class="btn btn-outline-dark">Retour</a>
         </div>
     @else
         <form method="post" action="{{ route('login.newMdcLogin', ['MCuserexist' => $MCuserexist]) }}">
