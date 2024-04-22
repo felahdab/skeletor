@@ -9,7 +9,10 @@
     </div>
 @endif
 @section('content')
-    <div class="d-flex justify-content-center mt-5 ">
+<div class="w-100 mt-5 text-center">
+    <h1>{{config('app.name')}}</h1>
+</div>
+<div class="d-flex justify-content-center mt-5 ">
         <div class="card w-50 justify-content-center" >
             <div class="w-100 text-center mt-3">
                 <div class="mb-1"><h4><b>LOGIN Automatique/DR-CPT</b></h4></div>
