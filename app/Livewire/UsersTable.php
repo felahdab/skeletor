@@ -35,24 +35,16 @@ class UsersTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        // switch ($this->mode) {
-        //     case "listmarin":
-        //         $userlist = User::query()->join('transformation_user_fonction', 'users.id', '=', 'user_id')->Where('fonction_id', $this->fonction->id)->get()->pluck('user_id', 'id');
-        //         return User::query()->whereIn('users.id', $userlist);
-        //         break;
-        //     case "dashboard":
-        //         $userlist = DB::table('transformation_user_fonction')->get()->pluck('user_id')->unique();
-        //         return User::query()->whereIn('users.id', $userlist);
-        //         break;
-        //     case "archiv":
-        //         $userlist = User::withTrashed()
-        //             ->whereNotNull('users.deleted_at');  // qui ont ete supprime depuis la liste des utilisateurs
-        //         return $userlist;
-        //         break;
-        //     default:
+        switch ($this->mode) {
+            case "archiv":
+                $userlist = User::withTrashed()
+                    ->whereNotNull('users.deleted_at');  // qui ont ete supprime depuis la liste des utilisateurs
+                return $userlist;
+                break;
+            default:
                 return User::query();
-        //         break;
-        // }
+                break;
+        }
     }
 
     public $mode = 'gestion';
@@ -72,17 +64,14 @@ class UsersTable extends DataTableComponent
 
     public function userActions()
     {
-        // switch ($this->mode) {
-        //     case "gestion":
+        switch ($this->mode) {
+            case "gestion":
                 return view('tables.userstable.gestion');
-        //         break;
-        //     case "transformation":
-        //         return view('tables.userstable.transformation');
-        //         break;
-        //     case "archiv":
-        //         return view('tables.userstable.archivage');
-        //         break;
-        // }
+                break;
+            case "archiv":
+                return view('tables.userstable.archives');
+                break;
+        }
     }
 
     public function columns(): array
@@ -133,97 +122,34 @@ class UsersTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->deSelected(),
-            // Column::make('Comete', 'comete')
-            //     ->deSelected()
-            //     ->searchable()
-            //     ->format(
-            //         fn ($value, $row, Column $column) => view('tables.userstable.comete')->withRow($row)
-            //     ),
-            // Column::make('Socle', 'socle')
-            //     ->deSelected()
-            //     ->searchable()
-            //     ->format(
-            //         fn ($value, $row, Column $column) => view('tables.userstable.socle')->withRow($row)
-            //     ),
+            Column::make('Rôles')
+                ->label(
+                    fn ($row, Column $column) => view('tables.userstable.roles')->withRow($row)
+                ),
         ];
-        // switch ($this->mode) {
-            // case "dashboard":
-            //     return array_merge($basecolumns, [
-            //         Column::make('Taux de transformation', 'taux_de_transformation')
-            //             ->view('tables.userstable.tx_transfo')
-            //             ->sortable(),
-            //         Column::make('Rôles')
-            //             ->label(
-            //                 fn ($row, Column $column) => view('tables.userstable.roles')->withRow($row)
-            //             ),
-            //     ]);
-            //     break;
-            // case "gestion":
+        switch ($this->mode) {
+            case "gestion":
                 return array_merge($basecolumns, [
-                    Column::make('Rôles')
-                        ->label(
-                            fn ($row, Column $column) => view('tables.userstable.roles')->withRow($row)
-                        ),
                     Column::make('Actions')
                         ->label(
                             fn ($row, Column $column) => $this->userActions()->withRow($row)
                         ),
                 ]);
-                // break;
-            // case "transformation":
-            //     return array_merge($basecolumns, [
-            //         Column::make('Actions')
-            //             ->label(
-            //                 fn ($row, Column $column) => $this->userActions()->withRow($row)
-            //             ),
-            //     ]);
-            //     break;
-            // case "listmarin":
-            //     return array_merge($basecolumns, [
-            //         Column::make('Tx transfo')
-            //             ->label(
-            //                 fn ($row, Column $column) => $row->pourcentage_valides_pour_fonction($this->fonction, true)
-            //             ),
-            //         // ne fonctionne pas avec false car renvoie null. ???????
-            //         Column::make('Laché')
-            //             ->label(
-            //                 fn ($row, Column $column) => $row->fonctions()->find($this->fonction)->pivot->date_lache
-            //             ),
-            //         Column::make('Nb jours')
-            //             ->label(
-            //                 fn ($row, Column $column) => $row->fonctions()->find($this->fonction)->pivot->nb_jours_pour_validation
-            //             ),
-            //         Column::make('Date Embarq', 'date_embarq')
-            //             ->sortable(),
-            //     ]);
-            //     break;
-            // case "archiv":
-            //     return array_merge($basecolumns, [
-            //         Column::make('Supprimé', 'deleted_at')
-            //             ->deSelected(),
-            //         Column::make('Débarq.', 'date_debarq')
-            //             ->sortable()
-            //             ->searchable(),
-            //         Column::make("Date d'archivage", 'date_archivage')
-            //             ->searchable()
-            //             ->deselected(),
-            //         Column::make('Actions')
-            //             ->label(
-            //                 fn ($row, Column $column) => $this->userActions()->withRow($row)
-            //             ),
-            //     ]);
-            // case "selection":
-            //     return array_merge($basecolumns, [
-            //         Column::make('Actions')
-            //             ->label(
-            //                 fn ($row, Column $column) => $this->userActions()->withRow($row)
-            //             ),
-            //     ]);
-            //     break;
-        //     default:
-        //         return $basecolumns;
-        //         break;
-        // }
+                break;
+            case "archiv":
+                return array_merge($basecolumns, [
+                    Column::make('Supprimé', 'deleted_at')
+                        ->deSelected(),
+                    Column::make('Actions')
+                        ->label(
+                            fn ($row, Column $column) => $this->userActions()->withRow($row)
+                        ),
+                ]);
+                break;
+            default:
+                return $basecolumns;
+                break;
+        }
     }
 
     public function filters(): array
@@ -269,26 +195,6 @@ class UsersTable extends DataTableComponent
                     if ($secteur != null)
                         $builder->where('secteur_id', $secteur->id);
                 }),
-            // TextFilter::make('Service')
-            //     ->config([
-            //         'placeholder' => 'LAS...',
-            //         'maxlength'   => 5
-            //     ])
-            //     ->filter(function (Builder $builder, string $value) {
-            //         $service = Service::where('service_libcourt', 'like', $value . '%')->get()->first();
-            //         if ($service != null)
-            //             $builder->where('service_id', $service->id);
-            //     }),
-            // TextFilter::make('Gpmt')
-            //     ->config([
-            //         'placeholder' => 'NAV...',
-            //         'maxlength'   => 5
-            //     ])
-            //     ->filter(function (Builder $builder, string $value) {
-            //         $gpmt = Groupement::where('groupement_libcourt', 'like', $value . '%')->get()->first();
-            //         if ($gpmt != null)
-            //             $builder->where('groupement_id', $gpmt->id);
-            //     }),
             TextFilter::make('U-actuelle')
                 ->config([
                     'placeholder' => 'LGC...',
@@ -311,55 +217,7 @@ class UsersTable extends DataTableComponent
                     if ($unite != null)
                         $builder->whereIn('unite_destination_id', $unite);
                 }),
-            // SelectFilter::make('Comete')
-            //     ->options([
-            //         '' => 'Tous',
-            //         '1' => 'Embarqué',
-            //         '0' => 'Non embarqué',
-            //     ])
-            //     ->filter(function (Builder $builder, string $value) {
-            //         if ($value === '1') {
-            //             $builder->where('comete', true);
-            //         } elseif ($value === '0') {
-            //             $builder->where('comete', false);
-            //         }
-            //     }),
-            // SelectFilter::make('Socle')
-            //     ->options([
-            //         '' => 'Tous',
-            //         '1' => 'Socle',
-            //         '0' => 'Transformation',
-            //     ])
-            //     ->filter(function (Builder $builder, string $value) {
-            //         if ($value === '1') {
-            //             $builder->where('socle', true);
-            //         } elseif ($value === '0') {
-            //             $builder->where('socle', false);
-            //         }
-            //     }),
         ];
-
-        // switch ($this->mode) {
-        //     case "gestion":
-        //     case "listmarins":
-        //     case "dashboard":
-        //         $basefilters[] = MultiSelectFilter::make('Roles')
-        //             ->options(
-        //                 Role::query()
-        //                     ->orderBy('name')
-        //                     ->get()
-        //                     ->keyBy('id')
-        //                     ->map(fn ($role) => $role->name)
-        //                     ->toArray()
-        //             )
-        //             // ->setFirstOption('Tous') // Pour MultiSelectDropdownFilter
-        //             ->filter(function (Builder $builder, array $values) {
-        //                 $roles = Role::whereIn('id',  $values)->get();
-        //                 $builder->role($roles);
-        //             });
-        //         break;
-        // }
-
         return $basefilters;
     }
 

@@ -31,6 +31,7 @@
                 @can('annudef.index')<a class="dropdown-item" href="{{ route('annudef.index')}}">Annudef</a>@endcan
                 @can('mails.index')<a class="dropdown-item" href="{{ route('mails.index')}}">Mails</a>@endcan
                 @can('paramaccueils.index')<a class="dropdown-item" href="{{ route('paramaccueils.index')}}">Page d'accueil</a>@endcan
+                @can('archives.index')<a class="dropdown-item" href="{{ route('archives.index')}}">Marins archivés</a>@endcan
                 @php
                   $dashboard_url = \Filament\Pages\Dashboard::getUrl(panel: 'admin');
                 @endphp

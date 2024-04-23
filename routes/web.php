@@ -19,6 +19,7 @@ use App\Http\Controllers\SecteurController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserPreferencesController;
 use App\Http\Controllers\ParamaccueilsController;
+use App\Http\Controllers\ArchivesController;
 
 use App\Http\Middleware\RestrictVisibility;
 use App\Livewire\TestComponent;
@@ -148,6 +149,11 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             Route::get('/', [ParamaccueilsController::class, 'index'])->name('paramaccueils.index');
             Route::patch('/', [ParamaccueilsController::class, 'update'])->name('paramaccueils.update');
         });
+ 
+        Route::get('archives', [ArchivesController::class, 'index'])->name('archives.index');
+        Route::get('archives/{user}/restore', [ArchivesController::class, 'restore'])->name('archives.restore');
+        Route::get('archives/{user}/delete', [ArchivesController::class, 'destroy'])->name('archives.destroy');
+ 
 
     });
 });
