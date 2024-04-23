@@ -16,12 +16,12 @@ class HomeController extends Controller
         $user = auth()->user();
 
         if ($user) {
-            $preferedroute = $user->settings()->get('prefered_page');
+            $destination = $user->settings()->get('prefered_page');
 
-            if ($preferedroute != null) {
-                return redirect()->route($preferedroute);
+            if ($destination == null) {
+                $destination = config('skeletor.page_par_defaut');
             }
-            if (config('skeletor.page_par_defaut') != '') {
+            if ($destination != Route::currentRouteName()) {
                 return redirect()->route(config('skeletor.page_par_defaut'));
             }
         }

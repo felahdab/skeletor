@@ -1539,6 +1539,7 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'App\\Providers\\PrefixedLivewireServiceProvider' => __DIR__ . '/../..' . '/app/Providers/PrefixedLivewireServiceProvider.php',
         'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
         'App\\Rules\\IntradefEmailValidation' => __DIR__ . '/../..' . '/app/Rules/IntradefEmailValidation.php',
+        'App\\Rules\\SIC21EmailValidation' => __DIR__ . '/../..' . '/app/Rules/SIC21EmailValidation.php',
         'App\\Scopes\\MemeUnite' => __DIR__ . '/../..' . '/app/Scopes/MemeUnite.php',
         'App\\Scopes\\ScopedMacro' => __DIR__ . '/../..' . '/app/Scopes/ScopedMacro.php',
         'App\\Service\\AnnudefAjaxRequestService' => __DIR__ . '/../..' . '/app/Service/AnnudefAjaxRequestService.php',

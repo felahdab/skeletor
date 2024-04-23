@@ -380,6 +380,7 @@ return array(
     'App\\Providers\\PrefixedLivewireServiceProvider' => $baseDir . '/app/Providers/PrefixedLivewireServiceProvider.php',
     'App\\Providers\\RouteServiceProvider' => $baseDir . '/app/Providers/RouteServiceProvider.php',
     'App\\Rules\\IntradefEmailValidation' => $baseDir . '/app/Rules/IntradefEmailValidation.php',
+    'App\\Rules\\SIC21EmailValidation' => $baseDir . '/app/Rules/SIC21EmailValidation.php',
     'App\\Scopes\\MemeUnite' => $baseDir . '/app/Scopes/MemeUnite.php',
     'App\\Scopes\\ScopedMacro' => $baseDir . '/app/Scopes/ScopedMacro.php',
     'App\\Service\\AnnudefAjaxRequestService' => $baseDir . '/app/Service/AnnudefAjaxRequestService.php',

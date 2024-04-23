@@ -28,7 +28,7 @@ class StoreMindefConnectUserRequest extends FormRequest
         return [
             'name' => 'required',
             'prenom' => 'required',
-            'email' =>  [ 'required', 'email:rfc,dns', 'unique:users,email', new SIC21EmailValidation],
+            'email' =>  [ 'required', 'email:rfc', 'unique:users,email', new SIC21EmailValidation],
             // 'matricule' => 'required',
             'date_embarq' => 'required|date', 
             'date_debarq' => 'date|nullable',
