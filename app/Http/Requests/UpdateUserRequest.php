@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-use App\Rules\IntradefEmailValidation;
+use App\Rules\SIC21EmailValidation;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -32,7 +32,7 @@ class UpdateUserRequest extends FormRequest
         return [
             'name' => 'required',
             'prenom' => 'required',
-            'email' =>  [ 'required', 'email:rfc,dns', Rule::unique('users')->ignore($user->id), new IntradefEmailValidation],
+            'email' =>  [ 'required', 'email:rfc,dns', Rule::unique('users')->ignore($user->id), new SIC21EmailValidation],
             'matricule' => 'nullable',
             'date_embarq' => 'required|date',
             'date_debarq' => 'date|nullable',

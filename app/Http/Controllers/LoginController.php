@@ -64,17 +64,50 @@ class LoginController extends Controller
                 $MCuserexist->msg = true;
             } 
             else {
+                // SocialiteProviders\Manager\OAuth2\User {#2421 ▼
+                //     +id: "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
+                //     +nickname: "f.el-ahdab"
+                //     +name: "Florian El-Ahdab"
+                //     +email: "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
+                //     +avatar: null
+                //     +user: array:7 [▼
+                //       "sub" => "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
+                //       "email_verified" => true
+                //       "name" => "Florian El-Ahdab"
+                //       "preferred_username" => "f.el-ahdab"
+                //       "given_name" => "Florian"
+                //       "family_name" => "El-Ahdab"
+                //       "email" => "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
+                //     ]
+                //     +attributes: array:4 [▼
+                //       "id" => "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
+                //       "nickname" => "f.el-ahdab"
+                //       "name" => "Florian El-Ahdab"
+                //       "email" => "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
+                //     ]
+                //     +token: "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MTM4NjI2MzYsImlhdCI6MTcxMzg2MjMzNiwi ▶"
+                //     +refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJmZjEwOThhZC1iYjg1LTQ1MzQtOWRlYi0xZDNiOGI4MGMxOTMifQ.eyJleHAiOjE3MTM4NjQxMzYsImlhdCI6MTcxMzg2MjMzNiwianRpIjoiN ▶"
+                //     +expiresIn: 300
+                //     +approvedScopes: null
+                //     +accessTokenResponseBody: array:9 [▼
+                //       "access_token" => "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MTM4NjI2MzYsImlhdCI6MTcxMzg2MjMzNiwi ▶"
+                //       "expires_in" => 300
+                //       "refresh_expires_in" => 1800
+                //       "refresh_token" => "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJmZjEwOThhZC1iYjg1LTQ1MzQtOWRlYi0xZDNiOGI4MGMxOTMifQ.eyJleHAiOjE3MTM4NjQxMzYsImlhdCI6MTcxMzg2MjMzNiwianRpIjoiN ▶"
+                //       "token_type" => "Bearer"
+                //       "id_token" => "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MTM4NjI2MzYsImlhdCI6MTcxMzg2MjMzNiwi ▶"
+                //       "not-before-policy" => 0
+                //       "session_state" => "1fe77c94-e6f9-410c-bace-23a3669c3eb4"
+                //       "scope" => "openid profile email"
+                //     ]
+                //   }
                 $MCuserexist = MindefConnectUser::create(
                     [
                         'sub' => $MCuser->user['sub'],
                         'email' => $MCuser->email,
-                        'name' => $MCuser->user['usual_name'],
-                        'prenom' => $MCuser->user['usual_forename'],
-                        'main_department_number' => $MCuser->user['main_department_number'],
-                        'personal_title' => $MCuser->user['personal_title'],
-                        'rank' => $MCuser->user['rank'],
-                        'short_rank' => $MCuser->user['short_rank'],
-                        'display_name' => $MCuser->user['display_name'],
+                        'name' => $MCuser->user['family_name'],
+                        'prenom' => $MCuser->user['given_name'],
+                        'display_name' => $MCuser->user['name'],
                     ]
                 );
             }

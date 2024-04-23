@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Rules\IntradefEmailValidation;
+use App\Rules\SIC21EmailValidation;
 
 class StoreMindefConnectUserRequest extends FormRequest
 {
@@ -28,7 +28,7 @@ class StoreMindefConnectUserRequest extends FormRequest
         return [
             'name' => 'required',
             'prenom' => 'required',
-            'email' =>  [ 'required', 'email:rfc,dns', 'unique:users,email', new IntradefEmailValidation],
+            'email' =>  [ 'required', 'email:rfc,dns', 'unique:users,email', new SIC21EmailValidation],
             // 'matricule' => 'required',
             'date_embarq' => 'required|date', 
             'date_debarq' => 'date|nullable',
