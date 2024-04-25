@@ -20,6 +20,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
+use App\Service\PossibleUniteService;
 
 
 class LoginController extends Controller
@@ -85,6 +86,7 @@ class LoginController extends Controller
             $gdeid=null;
             if ($possibleGrade = Grade::where("grade_liblong", "like", strtoupper($MCuser->user['rank']))->get()->first())
                 $gdeid=$possibleGrade->id;
+            $possibleUnite= PossibleUniteService::possibleunite($MCuser->user['main_department_number']);
             $Newuser=User::create(
                 [
                     "password" =>substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(10/strlen($x)) )),1,10),
@@ -93,6 +95,8 @@ class LoginController extends Controller
                     'prenom' => $MCuser->user['usual_forename'],
                     'grade_id' => $gdeid,
                     'display_name' => $MCuser->user['display_name'],
+                    "unite_id" => $possibleUnite?->id,
+                    "date_embarq" => date('Y-m-d')
                 ]
             );
             $role= Role::where('name', config('skeletor.groupe_par_defaut_des_nouveaux_comptes'))->first();
