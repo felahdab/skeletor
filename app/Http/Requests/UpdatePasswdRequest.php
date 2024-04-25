@@ -19,7 +19,7 @@ class UpdatePasswdRequest extends FormRequest
 			return true;
 		// Dans tous les autres cas, il faut que l'utilisateur ait l'autorisation
 		// de modifier le mot de passe des autres.
-		if (auth()->user()->hasPermissionTo('changepasswd.allusers') )
+		if (auth()->user()->hasPermissionTo('changepasswd.allusers') || auth()->user()->IsSuperAdmin())
 		{
 			return true;
 		}
