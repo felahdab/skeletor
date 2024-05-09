@@ -15,6 +15,7 @@
                 @php
                     $historique = $user->getTransformationManager()->historique_validation_sous_objectifs_cumulatif($fonction);
                 @endphp
+                document.addEventListener("DOMContentLoaded", (event) => {
                 var ctx = document.getElementById('fonc{!!$fonction->id!!}');
                 var chart = new Chart(ctx, {
                     type: 'line',
@@ -37,6 +38,7 @@
                         }
                     }
                 );
+            })
             </script>
                 <x-transformation::ffast-progression-div :pourcentage="$fonction->pivot->taux_de_transformation" height="35px"/>
         </div>

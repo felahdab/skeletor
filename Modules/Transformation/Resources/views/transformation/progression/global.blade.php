@@ -5,11 +5,11 @@
                 <h1>Taux de transformation global</h1>
             </div>
             <div class='flex'><canvas id='global_canvas' style='width:100%;'></canvas></div>
-            <script>
+            <script defer>
             @php
                 $historique = $user->getTransformationManager()->historique_validation_sous_objectifs_cumulatif();
             @endphp
-            
+            document.addEventListener("DOMContentLoaded", (event) => {
                 var ctx = document.getElementById('global_canvas');
                 var chart = new Chart(ctx, {
                     type: 'line',
@@ -32,6 +32,7 @@
                         }
                     }
                 );
+            })
             </script>
             
 
