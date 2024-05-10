@@ -39,8 +39,6 @@ Vous avez également la possibilité de télécharger directement une version po
     @stack('before_styles')
     @vite(['../resources/js/app.js', '../resources/css/app.css'])
 
-    @bassetArchive('https://github.com/SortableJS/Sortable/archive/refs/tags/1.15.1.zip', 'Sortable-1.15.1')
-    @basset('Sortable-1.15.1/Sortable-1.15.1/Sortable.js')
     
     <style>
         [x-cloak] {
@@ -81,8 +79,6 @@ Vous avez également la possibilité de télécharger directement une version po
     
     
     <script src="{!! asset('vendor/livewire-charts/app.js') !!}"></script>
-    
-    <script src="{!! basset('https://cdn.jsdelivr.net/npm/apexcharts') !!}"></script>
     
     @yield("scripts")
     
