@@ -85,9 +85,9 @@ class UsersTable extends DataTableComponent
     public function userActions()
     {
         switch ($this->mode) {
-            case "gestion":
-                return view('transformation::tables.userstable.gestion');
-                break;
+            // case "gestion":
+            //     return view('transformation::tables.userstable.gestion');
+            //     break;
             case "transformation":
                 return view('transformation::tables.userstable.transformation');
                 break;
@@ -102,7 +102,7 @@ class UsersTable extends DataTableComponent
         $basecolumns = [
             Column::make('Grade', 'grade.grade_libcourt')
                 ->searchable(),
-            Column::make('Brevet', 'diplome.diplome_libcourt')
+            Column::make('Orga-FCM', 'diplome.diplome_libcourt')
                 ->searchable(),
             Column::make('Spécialité', 'specialite.specialite_libcourt')
                 ->searchable(),
@@ -126,28 +126,35 @@ class UsersTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->deSelected(),
-            Column::make('Secteur', 'secteur.secteur_libcourt')
+            Column::make('FPS-rattach', 'secteur.secteur_libcourt')
                 ->searchable(),
             Column::make('Service', 'secteur.service.service_libcourt')
-                ->searchable(),
+                ->searchable()
+                ->deSelected(),
             Column::make('Groupement', 'secteur.service.groupement.groupement_libcourt')
-                ->searchable(),
+                ->searchable()
+                ->deSelected(),
+            Column::make('U-actuelle', 'unite_id')
+                ->sortable()
+                ->format(
+                    fn ($value, $row, Column $column) => view('tables.userstable.libunite')->withRow($row)
+                ),
             Column::make('U-dest', 'unite_destination.unite_libcourt')
                 ->sortable()
                 ->searchable()
                 ->deSelected(),
-            Column::make('Comete', 'comete')
-                ->deSelected()
-                ->searchable()
-                ->format(
-                    fn ($value, $row, Column $column) => view('transformation::tables.userstable.comete')->withRow($row)
-                ),
-            Column::make('Socle', 'socle')
-                ->deSelected()
-                ->searchable()
-                ->format(
-                    fn ($value, $row, Column $column) => view('transformation::tables.userstable.socle')->withRow($row)
-                ),
+            // Column::make('Comete', 'comete')
+            //     ->deSelected()
+            //     ->searchable()
+            //     ->format(
+            //         fn ($value, $row, Column $column) => view('transformation::tables.userstable.comete')->withRow($row)
+            //     ),
+            // Column::make('Socle', 'socle')
+            //     ->deSelected()
+            //     ->searchable()
+            //     ->format(
+            //         fn ($value, $row, Column $column) => view('transformation::tables.userstable.socle')->withRow($row)
+            //     ),
         ];
         switch ($this->mode) {
             case "dashboard":
@@ -161,18 +168,18 @@ class UsersTable extends DataTableComponent
                         ),
                 ]);
                 break;
-            case "gestion":
-                return array_merge($basecolumns, [
-                    Column::make('Rôles')
-                        ->label(
-                            fn ($row, Column $column) => view('transformation::tables.userstable.roles')->withRow($row)
-                        ),
-                    Column::make('Actions')
-                        ->label(
-                            fn ($row, Column $column) => $this->userActions()->withRow($row)
-                        ),
-                ]);
-                break;
+            // case "gestion":
+            //     return array_merge($basecolumns, [
+            //         Column::make('Rôles')
+            //             ->label(
+            //                 fn ($row, Column $column) => view('transformation::tables.userstable.roles')->withRow($row)
+            //             ),
+            //         Column::make('Actions')
+            //             ->label(
+            //                 fn ($row, Column $column) => $this->userActions()->withRow($row)
+            //             ),
+            //     ]);
+            //     break;
             case "transformation":
                 return array_merge($basecolumns, [
                     Column::make('Actions')
@@ -241,7 +248,7 @@ class UsersTable extends DataTableComponent
                     if ($grade != null)
                         $builder->where('grade_id', $grade->id);
                 }),
-            TextFilter::make('Brevet')
+            TextFilter::make('Orga-FCM')
                 ->config([
                     'placeholder' => 'BAT...',
                     'maxlength'   => 50
@@ -261,7 +268,7 @@ class UsersTable extends DataTableComponent
                     if ($specialite != null)
                         $builder->where('specialite_id', $specialite->id);
                 }),
-            TextFilter::make('Secteur')
+            TextFilter::make('FPS-rattach')
                 ->config([
                     'placeholder' => 'DEM...',
                     'maxlength'   => 50
@@ -271,62 +278,72 @@ class UsersTable extends DataTableComponent
                     if ($secteur != null)
                         $builder->where('secteur_id', $secteur->id);
                 }),
-            TextFilter::make('Service')
-                ->config([
-                    'placeholder' => 'LAS...',
-                    'maxlength'   => 5
-                ])
-                ->filter(function (Builder $builder, string $value) {
-                    $service = Service::where('service_libcourt', 'like', $value . '%')->get()->first();
-                    if ($service != null)
-                        $builder->where('service_id', $service->id);
-                }),
-            TextFilter::make('Gpmt')
-                ->config([
-                    'placeholder' => 'NAV...',
-                    'maxlength'   => 5
-                ])
-                ->filter(function (Builder $builder, string $value) {
-                    $gpmt = Groupement::where('groupement_libcourt', 'like', $value . '%')->get()->first();
-                    if ($gpmt != null)
-                        $builder->where('groupement_id', $gpmt->id);
-                }),
+            // TextFilter::make('Service')
+            //     ->config([
+            //         'placeholder' => 'LAS...',
+            //         'maxlength'   => 5
+            //     ])
+            //     ->filter(function (Builder $builder, string $value) {
+            //         $service = Service::where('service_libcourt', 'like', $value . '%')->get()->first();
+            //         if ($service != null)
+            //             $builder->where('service_id', $service->id);
+            //     }),
+            // TextFilter::make('Gpmt')
+            //     ->config([
+            //         'placeholder' => 'NAV...',
+            //         'maxlength'   => 5
+            //     ])
+            //     ->filter(function (Builder $builder, string $value) {
+            //         $gpmt = Groupement::where('groupement_libcourt', 'like', $value . '%')->get()->first();
+            //         if ($gpmt != null)
+            //             $builder->where('groupement_id', $gpmt->id);
+            //     }),
+            SelectFilter::make('U-actuelle')
+                ->options(
+                    ['' => 'Tous'] + DB::table('unites')
+                        ->pluck('unite_libcourt', 'id')
+                        ->toArray()
+                    )
+                ->filter(function(Builder $builder, string $value) {
+                    if ($value !== '') {
+                        $builder->where('unite_id', $value);
+                    }}),
             TextFilter::make('U-dest')
                 ->config([
                     'placeholder' => 'LGC...',
-                    'maxlength'   => 10
+                    'maxlength'   => 5
                 ])
                 ->filter(function (Builder $builder, string $value) {
                     $unite = Unite::where('unite_libcourt', 'like', '%' . $value . '%')->get()->pluck('id');
                     if ($unite != null)
                         $builder->whereIn('unite_destination_id', $unite);
                 }),
-            SelectFilter::make('Comete')
-                ->options([
-                    '' => 'Tous',
-                    '1' => 'Embarqué',
-                    '0' => 'Non embarqué',
-                ])
-                ->filter(function (Builder $builder, string $value) {
-                    if ($value === '1') {
-                        $builder->where('comete', true);
-                    } elseif ($value === '0') {
-                        $builder->where('comete', false);
-                    }
-                }),
-            SelectFilter::make('Socle')
-                ->options([
-                    '' => 'Tous',
-                    '1' => 'Socle',
-                    '0' => 'Transformation',
-                ])
-                ->filter(function (Builder $builder, string $value) {
-                    if ($value === '1') {
-                        $builder->where('socle', true);
-                    } elseif ($value === '0') {
-                        $builder->where('socle', false);
-                    }
-                }),
+            // SelectFilter::make('Comete')
+            //     ->options([
+            //         '' => 'Tous',
+            //         '1' => 'Embarqué',
+            //         '0' => 'Non embarqué',
+            //     ])
+            //     ->filter(function (Builder $builder, string $value) {
+            //         if ($value === '1') {
+            //             $builder->where('comete', true);
+            //         } elseif ($value === '0') {
+            //             $builder->where('comete', false);
+            //         }
+            //     }),
+            // SelectFilter::make('Socle')
+            //     ->options([
+            //         '' => 'Tous',
+            //         '1' => 'Socle',
+            //         '0' => 'Transformation',
+            //     ])
+            //     ->filter(function (Builder $builder, string $value) {
+            //         if ($value === '1') {
+            //             $builder->where('socle', true);
+            //         } elseif ($value === '0') {
+            //             $builder->where('socle', false);
+            //         }
+            //     }),
             SelectFilter::make('Fonction')
                 ->options(
                     ['' => 'Tous'] + DB::table('transformation_fonctions')
@@ -353,16 +370,6 @@ class UsersTable extends DataTableComponent
                                   ->whereRaw('transformation_user_fonction.user_id = users.id')
                                   ->where('transformation_user_fonction.fonction_id', $value);
                         });
-                    }}),
-            SelectFilter::make('Unité')
-                ->options(
-                    ['' => 'Tous'] + DB::table('unites')
-                        ->pluck('unite_libcourt', 'id')
-                        ->toArray()
-                    )
-                ->filter(function(Builder $builder, string $value) {
-                    if ($value !== '') {
-                        $builder->where('unite_id', $value);
                     }}),
         ];
 

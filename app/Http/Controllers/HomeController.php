@@ -16,16 +16,21 @@ class HomeController extends Controller
         $user = auth()->user();
 
         if ($user) {
-            $preferedroute = $user->settings()->get('prefered_page');
-
-            if ($preferedroute != null) {
-                return redirect()->route($preferedroute);
+            $destination = $user->settings()->get('prefered_page');
+            
+            if ($destination == null && config('skeletor.page_par_defaut') != '') {
+                $destination = config('skeletor.page_par_defaut');
             }
-            if (config('skeletor.page_par_defaut') != '') {
-                return redirect()->route(config('skeletor.page_par_defaut'));
+
+            if ($destination != null && $destination != Route::currentRouteName())
+            {
+                // On ne redirige que si ce n'est pas vers la route actuelle. Sinon, ça provoque un bouclage.
+                // Si la configuration demande a rediriger vers la route actuelle, on ne fait rien, et on sert donc
+                // la page d'accueil générale, configurée par ParamAccueil.
+                return redirect()->route($destination);
             }
         }
-        
+
         $paramaccueil = Paramaccueil::first();
         if (!$paramaccueil) {
             $paramaccueil = new Paramaccueil;

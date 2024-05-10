@@ -7,6 +7,9 @@ use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
+use App\Listeners\RestoreUserListener;
+use App\Listeners\DeleteUserListener;
+
 use SocialiteProviders\Keycloak\KeycloakExtendSocialite;
 
 class EventServiceProvider extends ServiceProvider
@@ -29,7 +32,14 @@ class EventServiceProvider extends ServiceProvider
         ],
         Illuminate\Foundation\Http\Events\RequestHandled::class => [
             'App\Listeners\RecordUsageDataListener@handle',
-        ]
+        ],
+        RestoreUserEvent::class => [
+            RestoreUserListener::class
+        ],
+        DeleteUserEvent::class => [
+            DeleteUserListener::class
+        ],
+
     ];
 
     /**

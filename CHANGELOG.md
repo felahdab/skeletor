@@ -1,3 +1,28 @@
+## 2.1.9 (April 23, 2024)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.8a –> 2.1.9
+- ajout test
+- creation menu archives dans skeletor
+- ajout affichage nom application
+- ajout commentaire user si can(user.update)
+- Evolution mail accueil pour prendre en compte instances différentes.
+- correction route page accueil
+- correction bug redirection page accueil par défaut
+- modif affichages boutons signaler pb et notification
+- evolution affichage skeletor
+- correction bug droits rectifiés
+- evolution affichages FCM
+- correction bug car page ne s'affichait pas
+- évoltion interface fiches marin
+- ??? pas moi qui l'ai fait
+- Ajustement du HomeController pour éviter les redirections en boucle.
+- Merge branch 'release-2.1.8a'
+- Réintégration des fonctions de recherche de l'unite actuelle de l'utilisateur depuis Annudef dans Skeletor.
+- Rajout des nouvelles valeurs de configuration par defaut dans les .env*.slug
+
+## 2.1.8a (March 26, 2024)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.8 –> 2.1.8a
+- Fixes art #244096: erreur 500 dans le suivi par fonction / liste des marins
+
 ## 2.1.8 (March 21, 2024)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.7 –> 2.1.8
 - Le composant de Fiche Bilan est désormais Lazy: il se charge uniquement lorsqu'il est affiché. Accélère le chargement du parcours des fiches bilan.

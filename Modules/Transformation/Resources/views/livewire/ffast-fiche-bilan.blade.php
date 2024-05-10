@@ -10,11 +10,20 @@
         <div class="row card">
             <div class="col-12 card-header text-center">
                 <div class="row">
-                    <div class="col-11"><h1>{{$user->display_name}}</h1></div>
-                    <div class="col-1">
+                    <div class="col-10"><h1>{{$user->display_name}}</h1></div>
+                    <div class="col-2 text-end">
                         @if ($mode=="proposition")
                             <a href="{{ route('transformation::transformation.mafichebilanpdf', $user->id) }}" class="btn btn-default" title="Imprimer"><x-bootstrap-icon iconname='printer.svg' /></a>
                         @else
+                            @if ($user->user_comment)
+                                @can('user.update')
+                                    <a class="btn btn-default" title="{{$user->user_comment}}">
+                                    <span class="d-inline-block" data-bs-toggle="popover" data-bs-placement="right" data-bs-content="{{$user->user_comment}}">
+                                        <x-bootstrap-icon iconname='person.svg' />
+                                    </span>
+                                    </a>
+                                @endcan
+                            @endif
                             <a href="{{ route('transformation::transformation.fichebilanpdf', $user->id) }}" class="btn btn-default" title="Imprimer"><x-bootstrap-icon iconname='printer.svg' /></a>
                         @endif
                     </div>
@@ -29,8 +38,10 @@
                         <div class="text-center mb-3 mt-3"><h1>{{round($user->taux_de_transformation, 2)}}%</h1></div>
                         <div class="card "><div class=" m-2">
                             <div><b>Sp&eacute;cialit&eacute; : </b>{{$user->displaySpecialite()}}</div>
-                            <div><b>Secteur : </b>{{$user->displaySecteur()}}</div>
+                            <div><b>FPS-rattach : </b>{{$user->displaySecteur()}}</div>
                             <div><b>Date d'embarquement : </b>{{$user->date_embarq}}</div>
+                            <div><b>Unité actuelle : </b>{{$user->unite->unite_libcourt}}</div>     
+                            <div><b>Date débarquement : </b>{{$user->date_debarq}}</div>
                             <div><b>Unité destination : </b>{{$user->displayDestination()}}</div>     
                         </div></div>           
                     </div>
