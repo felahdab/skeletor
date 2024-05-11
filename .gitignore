@@ -19,3 +19,5 @@ php-fpm.log
 scheduler.log
 worker.log
 modules_statuses.json
+junit.xml
+junit_dusk.xml
