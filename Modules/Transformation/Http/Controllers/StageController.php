@@ -17,6 +17,8 @@ use Modules\Transformation\Entities\Stage;
 use Modules\Transformation\Entities\TypeLicence;
 use Modules\Transformation\Entities\User;
 
+use App\Service\NettoyageKreSpeciauxService;
+
 use Illuminate\Http\Request;
 
 class StageController extends Controller
@@ -65,7 +67,7 @@ class StageController extends Controller
         $stage->stage_capamax = $request->stage['stage_capamax'];
         $stage->stage_date_fin_licence = $request->stage['stage_date_fin_licence'];
         $stage->stage_lienurl = $request->stage['stage_lienurl'];
-        $stage->stage_commentaire = $request->stage['stage_commentaire'];
+        $stage->stage_commentaire = NettoyageKreSpeciauxService::nettoyer($request->stage['stage_commentaire']);
         $stage->save();
         return redirect()->route('transformation::stages.edit', $stage);
     }
@@ -127,7 +129,7 @@ class StageController extends Controller
         }
         $stage->stage_capamax = $request->stage['stage_capamax'];
         $stage->stage_date_fin_licence = $request->stage['stage_date_fin_licence'];
-        $stage->stage_commentaire = $request->stage['stage_commentaire'];
+        $stage->stage_commentaire = NettoyageKreSpeciauxService::nettoyer($request->stage['stage_commentaire']);
         $stage->stage_lienurl = $request->stage['stage_lienurl'];
         if($stage->save() && $stage->duree_validite != $olddureevalidite){
             if($stage->duree_validite != $olddureevalidite){
@@ -171,9 +173,10 @@ class StageController extends Controller
                 $date_validite= new Carbon($request["date_validation"]);
                 $date_validite = $date_validite->addMonth($nbmois);
             }
+            $comment = NettoyageKreSpeciauxService::nettoyer($request["commentaire"]);
             $event_detail = [
                 "stage" => $stage,
-                "commentaire" => $request["commentaire"],
+                "commentaire" => $comment,
                 "date_validation" => $request["date_validation"],
             ];
             foreach (array_keys($userlist) as $userid)
@@ -182,7 +185,7 @@ class StageController extends Controller
                 $workitem = $user->stages()->find($stage)->pivot;
                 $workitem->date_validation = $request["date_validation"];
                 $workitem->date_validite = $date_validite;
-                $workitem->commentaire .= ' ' . $request["commentaire"];
+                $workitem->commentaire .= ' ' . $comment;
                 $workitem->save();
                 //historisation
                 $changement = new ChangementLivretDeTransformationDto(auth()->user(), $user, "VALIDE_STAGE", json_encode($event_detail));

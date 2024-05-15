@@ -7,6 +7,8 @@ use Modules\Transformation\Dto\ChangementLivretDeTransformationDto;
 
 use Illuminate\Support\Carbon;
 
+use App\Service\NettoyageKreSpeciauxService;
+
 use Modules\Transformation\Entities\Stage;
 use Modules\Transformation\Entities\Fonction;
 use Modules\Transformation\Entities\Objectif;
@@ -51,6 +53,7 @@ class GererTransformationService
     public function validateStage(User $user, Stage $stage, $commentaire, $date_validation)
     {
         $workitem = $user->stages()->find($stage)->pivot;
+        $commentaire=NettoyageKreSpeciauxService::nettoyer($commentaire);
         if ($workitem != null) {
             $nbmois = $stage->duree_validite;
             $date_validite = null;
@@ -60,7 +63,7 @@ class GererTransformationService
             }
             $workitem->date_validite = $date_validite;
             $workitem->date_validation = $date_validation;
-            $workitem->commentaire = " " . $commentaire;
+            $workitem->commentaire = $workitem->commentaire . " " . $commentaire;
             $workitem->save();
         }
         $event_detail = [
@@ -75,6 +78,7 @@ class GererTransformationService
     public function validateCommentStage(User $user, Stage $stage, $commentaire)
     {
         $workitem = $user->stages()->find($stage)->pivot;
+        $commentaire=NettoyageKreSpeciauxService::nettoyer($commentaire);
         if ($workitem != null) {
             $workitem->commentaire = $commentaire;
             $workitem->save();
@@ -123,7 +127,7 @@ class GererTransformationService
     {
         $fieldname = $proposition ? 'date_proposition_validation' : 'date_validation';
         $logtype = $proposition ? 'PROPOSE_VALIDATION_SOUS_OBJECTIF' : 'VALIDE_SOUS_OBJECTIF';
-
+        $commentaire=NettoyageKreSpeciauxService::nettoyer($commentaire);
         $date_validation = new Carbon($date_validation);
         $date_emb = new Carbon($user->date_embarq);
         $nbjours = $date_emb->diffInDays($date_validation, false);
@@ -197,7 +201,7 @@ class GererTransformationService
 
         $event_detail = [
             "tache" => $tache,
-            "commentaire" => $commentaire,
+            "commentaire" => NettoyageKreSpeciauxService::nettoyer($commentaire),
             $fieldname => $date_validation,
             "valideur" => $valideur,
             "proposition" => $proposition
@@ -231,7 +235,8 @@ class GererTransformationService
     {
         $fieldname = $proposition ? 'date_proposition_lache' : 'date_lache';
         $logtype = $proposition ? 'PROPOSITION_VALIDATION_LACHE_FONCTION' : 'VALIDE_LACHE_FONCTION';
-
+        $commentaire=NettoyageKreSpeciauxService::nettoyer($commentaire);
+        
         $userfonc = $user->fonctions->find($fonction);
         if ($userfonc == null)
             return;
@@ -322,6 +327,7 @@ class GererTransformationService
     {
         $fieldname = $proposition ? 'date_proposition_double' : 'date_double';
         $logtype = $proposition ? 'PROPOSE_VALIDATION_DOUBLE_FONCTION' : 'VALIDE_DOUBLE_FONCTION';
+        $commentaire=NettoyageKreSpeciauxService::nettoyer($commentaire);
 
         $userfonc = $user->fonctions->find($fonction);
 
