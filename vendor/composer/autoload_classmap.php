@@ -435,6 +435,8 @@ return array(
     'Asantibanez\\LivewireCharts\\Models\\RadarChartModel' => $vendorDir . '/asantibanez/livewire-charts/src/Models/RadarChartModel.php',
     'Asantibanez\\LivewireCharts\\Models\\TreeMapChartModel' => $vendorDir . '/asantibanez/livewire-charts/src/Models/TreeMapChartModel.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+    'AxonC\\FilamentCopyablePlaceholder\\FilamentCopyablePlaceholderServiceProvider' => $vendorDir . '/axonc/filament-copyable-placeholder/src/FilamentCopyablePlaceholderServiceProvider.php',
+    'AxonC\\FilamentCopyablePlaceholder\\Forms\\Components\\CopyablePlaceholder' => $vendorDir . '/axonc/filament-copyable-placeholder/src/Forms/Components/CopyablePlaceholder.php',
     'Backpack\\Basset\\BassetManager' => $vendorDir . '/backpack/basset/src/BassetManager.php',
     'Backpack\\Basset\\BassetServiceProvider' => $vendorDir . '/backpack/basset/src/BassetServiceProvider.php',
     'Backpack\\Basset\\Console\\Commands\\BassetCache' => $vendorDir . '/backpack/basset/src/Console/Commands/BassetCache.php',

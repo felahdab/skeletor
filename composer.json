@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.0",
         "asantibanez/livewire-charts": "^3.0",
+        "axonc/filament-copyable-placeholder": "^0.3.0",
         "backpack/basset": "^1.2",
         "barryvdh/laravel-debugbar": "^3.7",
         "calebporzio/sushi": "^2.4",

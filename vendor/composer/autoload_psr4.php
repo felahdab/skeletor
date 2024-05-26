@@ -190,6 +190,8 @@ return array(
     'BladeUI\\Heroicons\\' => array($vendorDir . '/blade-ui-kit/blade-heroicons/src'),
     'Barryvdh\\Debugbar\\' => array($vendorDir . '/barryvdh/laravel-debugbar/src'),
     'Backpack\\Basset\\' => array($vendorDir . '/backpack/basset/src'),
+    'AxonC\\FilamentCopyablePlaceholder\\Database\\Factories\\' => array($vendorDir . '/axonc/filament-copyable-placeholder/database/factories'),
+    'AxonC\\FilamentCopyablePlaceholder\\' => array($vendorDir . '/axonc/filament-copyable-placeholder/src'),
     'Asantibanez\\LivewireCharts\\' => array($vendorDir . '/asantibanez/livewire-charts/src'),
     'App\\' => array($baseDir . '/app'),
     'AnourValar\\EloquentSerialize\\' => array($vendorDir . '/anourvalar/eloquent-serialize/src'),

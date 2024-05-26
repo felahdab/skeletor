@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7a3aef2aa8424ce911130afa8aaa1d6c",
+    "content-hash": "2c273129b9dc7e03f6d5f7e407fe3c82",
     "packages": [
         {
             "name": "amphp/amp",
@@ -992,6 +992,78 @@
                 "source": "https://github.com/asantibanez/livewire-charts/tree/v3.0.1"
             },
             "time": "2023-11-07T19:50:23+00:00"
+        },
+        {
+            "name": "axonc/filament-copyable-placeholder",
+            "version": "v0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/AxonC/filament-copyable-placeholder.git",
+                "reference": "82c77ba39e71c1b0f4f604587500f43404f70d07"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/AxonC/filament-copyable-placeholder/zipball/82c77ba39e71c1b0f4f604587500f43404f70d07",
+                "reference": "82c77ba39e71c1b0f4f604587500f43404f70d07",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^3.0-stable",
+                "php": "^8.1",
+                "spatie/laravel-package-tools": "^1.14.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^7.9",
+                "nunomaduro/larastan": "^2.0.1",
+                "orchestra/testbench": "^8.0",
+                "pestphp/pest": "^2.0",
+                "pestphp/pest-plugin-arch": "^2.0",
+                "pestphp/pest-plugin-laravel": "^2.0",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "AxonC\\FilamentCopyablePlaceholder\\FilamentCopyablePlaceholderServiceProvider"
+                    ],
+                    "aliases": {
+                        "FilamentCopyablePlaceholder": "AxonC\\FilamentCopyablePlaceholder\\Facades\\FilamentCopyablePlaceholder"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "AxonC\\FilamentCopyablePlaceholder\\": "src/",
+                    "AxonC\\FilamentCopyablePlaceholder\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Callum Axon",
+                    "email": "git@callumaxon.uk",
+                    "role": "Developer"
+                }
+            ],
+            "description": "This is my package filament-copyable-placeholder",
+            "homepage": "https://github.com/axonc/filament-copyable-placeholder",
+            "keywords": [
+                "AxonC",
+                "filament-copyable-placeholder",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/AxonC/filament-copyable-placeholder/issues",
+                "source": "https://github.com/AxonC/filament-copyable-placeholder/tree/v0.3.0"
+            },
+            "time": "2023-10-14T17:40:33+00:00"
         },
         {
             "name": "backpack/basset",
