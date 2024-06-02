@@ -3,7 +3,7 @@
         'name' => 'fanlab/skeletor',
         'pretty_version' => 'dev-3.x-dev-test-merge',
         'version' => 'dev-3.x-dev-test-merge',
-        'reference' => '28c4c9d93739ea3ee972458d52c8e0ca25c89f96',
+        'reference' => '7caf98b7e145f5d2785591cc28884277303f4f42',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -391,7 +391,7 @@
         'fanlab/skeletor' => array(
             'pretty_version' => 'dev-3.x-dev-test-merge',
             'version' => 'dev-3.x-dev-test-merge',
-            'reference' => '28c4c9d93739ea3ee972458d52c8e0ca25c89f96',
+            'reference' => '7caf98b7e145f5d2785591cc28884277303f4f42',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

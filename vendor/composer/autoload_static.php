@@ -229,6 +229,10 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
             'Modules\\Transformation\\' => 23,
             'Modules\\Socle\\' => 14,
             'Modules\\RH\\' => 11,
+            'Modules\\Fleetprogram\\Tests\\' => 27,
+            'Modules\\Fleetprogram\\Database\\Seeders\\' => 38,
+            'Modules\\Fleetprogram\\Database\\Factories\\' => 40,
+            'Modules\\Fleetprogram\\' => 21,
             'Mockery\\' => 8,
             'Mhmiton\\LaravelModulesLivewire\\' => 31,
             'Matrix\\' => 7,
@@ -784,6 +788,22 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'Modules\\RH\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Modules/RH',
+        ),
+        'Modules\\Fleetprogram\\Tests\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/Fleetprogram/tests',
+        ),
+        'Modules\\Fleetprogram\\Database\\Seeders\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/Fleetprogram/database/seeders',
+        ),
+        'Modules\\Fleetprogram\\Database\\Factories\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/Fleetprogram/database/factories',
+        ),
+        'Modules\\Fleetprogram\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/Fleetprogram/app',
         ),
         'Mockery\\' => 
         array (
@@ -6610,6 +6630,9 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'Mockery\\Undefined' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Undefined.php',
         'Mockery\\VerificationDirector' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/VerificationDirector.php',
         'Mockery\\VerificationExpectation' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/VerificationExpectation.php',
+        'Modules\\Fleetprogram\\Http\\Controllers\\FleetprogramController' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Http/Controllers/FleetprogramController.php',
+        'Modules\\Fleetprogram\\Providers\\FleetprogramServiceProvider' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Providers/FleetprogramServiceProvider.php',
+        'Modules\\Fleetprogram\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Providers/RouteServiceProvider.php',
         'Modules\\RH\\Database\\Seeders\\RHDatabaseSeeder' => __DIR__ . '/../..' . '/Modules/RH/Database/Seeders/RHDatabaseSeeder.php',
         'Modules\\RH\\Database\\factories\\PersonneFactory' => __DIR__ . '/../..' . '/Modules/RH/Database/factories/PersonneFactory.php',
         'Modules\\RH\\Entities\\Personne' => __DIR__ . '/../..' . '/Modules/RH/Entities/Personne.php',
