@@ -102,5 +102,19 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "packagist.org": false
+        },
+        {
+            "type": "composer",
+            "url": "https://pprod-ffast.intradef.gouv.fr/packagist",
+            "options": {
+                "ssl": {
+                    "verify_peer": false
+                }
+            }
+        }
+    ]
 }
