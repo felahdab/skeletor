@@ -7,40 +7,37 @@
     "require": {
         "php": "^8.0",
         "asantibanez/livewire-charts": "^3.0",
+        "axonc/filament-copyable-placeholder": "^0.3.0",
         "backpack/basset": "^1.2",
         "barryvdh/laravel-debugbar": "^3.7",
-        "binarytorch/larecipe": "^2.5",
         "calebporzio/sushi": "^2.4",
-        "carlos-meneses/laravel-mpdf": "^2.1",
-        "coolsam/modules": "^3.0@beta",
+        "coolsam/modules": "^3",
         "darkaonline/l5-swagger": "^8.5",
-        "doctrine/dbal": "^3.3",
         "filament/filament": "^3.1",
         "filament/spatie-laravel-google-fonts-plugin": "^3.1",
-        "glorand/laravel-model-settings": "^6.0",
+        "glorand/laravel-model-settings": "^7.0",
         "guzzlehttp/guzzle": "^7.2",
-        "hisorange/browser-detect": "^4.5",
+        "hisorange/browser-detect": "^5.0",
         "joshbrw/laravel-module-installer": "^2.0",
         "lab404/laravel-impersonate": "^1.7",
         "laravel-shift/blueprint": "^2.7",
         "laravel/framework": "^10.0",
-        "laravel/sanctum": "^3.2",
+        "laravel/sanctum": "^3.0",
         "laravel/socialite": "^5.5",
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^3.0",
-        "mhmiton/laravel-modules-livewire": "^2.0",
-        "mpdf/mpdf": "8.1.0",
-        "nwidart/laravel-modules": "^10.0",
+        "mhmiton/laravel-modules-livewire": "^3.0",
+        "nunomaduro/collision": "^7.0",
+        "nwidart/laravel-modules": "^11.0",
         "owen-it/laravel-auditing": "^13.5",
-        "phpoffice/phpspreadsheet": "^1.25",
         "predis/predis": "^2.2",
         "rappasoft/laravel-livewire-tables": "^3.2",
         "socialiteproviders/keycloak": "^5.2",
         "spatie/laravel-backup": "^8.1",
-        "spatie/laravel-data": "^3.5",
+        "spatie/laravel-data": "^4.0",
         "spatie/laravel-html": "^3.2",
         "spatie/laravel-markdown": "^2.2",
-        "spatie/laravel-permission": "^5.5",
+        "spatie/laravel-permission": "^6.0",
         "stancl/tenancy": "^3.7",
         "tomsix/laravel-components-library": "^2.0",
         "twbs/bootstrap-icons": "^1.10",
@@ -49,18 +46,15 @@
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
         "laravel-shift/blueprint": "^2.7",
-        "laravel/dusk": "7.11.4",
+        "laravel/dusk": "^8.0",
         "laravel/sail": "^1.0.1",
-        "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^6.1",
-        "phpunit/phpunit": "^9.5.10",
-        "san-kumar/laravel-crud": "^1.01",
+        "mockery/mockery": "^1.6",
+        "phpunit/phpunit": "^10.0",
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
         "psr-4": {
             "App\\": "app/",
-            "Modules\\": "Modules/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }
@@ -91,6 +85,11 @@
             "dont-discover": [
                 "livewire/livewire"
             ]
+        },
+        "merge-plugin": {
+            "include": [
+                "Modules/*/composer.json"
+            ]
         }
     },
     "config": {
@@ -98,24 +97,10 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "joshbrw/laravel-module-installer": true
+            "joshbrw/laravel-module-installer": true,
+            "wikimedia/composer-merge-plugin": true
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "platform-check": false,
-    "repositories": [
-        {
-            "packagist.org": false
-        },
-        {
-            "type": "composer",
-            "url": "https://pprod-ffast.intradef.gouv.fr/packagist",
-            "options": {
-                "ssl": {
-                    "verify_peer": false
-                }
-            }
-        }
-    ]
+    "prefer-stable": true
 }

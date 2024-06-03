@@ -7,6 +7,7 @@ use DanHarrin\LivewireRateLimiting\WithRateLimiting;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
+use Filament\Events\Auth\Registered;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\TextInput;
@@ -14,6 +15,7 @@ use Filament\Forms\Form;
 use Filament\Http\Responses\Auth\Contracts\RegistrationResponse;
 use Filament\Notifications\Auth\VerifyEmail;
 use Filament\Notifications\Notification;
+use Filament\Pages\Concerns\CanUseDatabaseTransactions;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\SimplePage;
 use Illuminate\Auth\EloquentUserProvider;
@@ -29,6 +31,7 @@ use Illuminate\Validation\Rules\Password;
  */
 class Register extends SimplePage
 {
+    use CanUseDatabaseTransactions;
     use InteractsWithFormActions;
     use WithRateLimiting;
 
@@ -50,7 +53,11 @@ class Register extends SimplePage
             redirect()->intended(Filament::getUrl());
         }
 
+        $this->callHook('beforeFill');
+
         $this->form->fill();
+
+        $this->callHook('afterFill');
     }
 
     public function register(): ?RegistrationResponse
@@ -73,9 +80,27 @@ class Register extends SimplePage
             return null;
         }
 
-        $data = $this->form->getState();
+        $user = $this->wrapInDatabaseTransaction(function () {
+            $this->callHook('beforeValidate');
 
-        $user = $this->getUserModel()::create($data);
+            $data = $this->form->getState();
+
+            $this->callHook('afterValidate');
+
+            $data = $this->mutateFormDataBeforeRegister($data);
+
+            $this->callHook('beforeRegister');
+
+            $user = $this->handleRegistration($data);
+
+            $this->form->model($user)->saveRelationships();
+
+            $this->callHook('afterRegister');
+
+            return $user;
+        });
+
+        event(new Registered($user));
 
         $this->sendEmailVerificationNotification($user);
 
@@ -84,6 +109,14 @@ class Register extends SimplePage
         session()->regenerate();
 
         return app(RegistrationResponse::class);
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    protected function handleRegistration(array $data): Model
+    {
+        return $this->getUserModel()::create($data);
     }
 
     protected function sendEmailVerificationNotification(Model $user): void
@@ -156,6 +189,7 @@ class Register extends SimplePage
         return TextInput::make('password')
             ->label(__('filament-panels::pages/auth/register.form.password.label'))
             ->password()
+            ->revealable(filament()->arePasswordsRevealable())
             ->required()
             ->rule(Password::default())
             ->dehydrateStateUsing(fn ($state) => Hash::make($state))
@@ -168,6 +202,7 @@ class Register extends SimplePage
         return TextInput::make('passwordConfirmation')
             ->label(__('filament-panels::pages/auth/register.form.password_confirmation.label'))
             ->password()
+            ->revealable(filament()->arePasswordsRevealable())
             ->required()
             ->dehydrated(false);
     }
@@ -225,5 +260,14 @@ class Register extends SimplePage
     protected function hasFullWidthFormActions(): bool
     {
         return true;
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    protected function mutateFormDataBeforeRegister(array $data): array
+    {
+        return $data;
     }
 }

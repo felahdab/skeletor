@@ -4,6 +4,7 @@ namespace Filament\Panel\Concerns;
 
 use Closure;
 use Filament\Facades\Filament;
+use Filament\Navigation\NavigationManager;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Laravel\SerializableClosure\Serializers\Native;
@@ -155,42 +156,32 @@ trait HasRoutes
         if ($tenant) {
             $originalTenant = Filament::getTenant();
             Filament::setTenant($tenant, isQuiet: true);
-
-            $isNavigationMountedOriginally = $this->isNavigationMounted;
-            $originalNavigationItems = $this->navigationItems;
-            $originalNavigationGroups = $this->navigationGroups;
-
-            $this->isNavigationMounted = false;
-            $this->navigationItems = [];
-            $this->navigationGroups = [];
-
-            $navigation = $this->getNavigation();
         }
 
-        $navigation = $this->getNavigation();
+        $this->navigationManager = new NavigationManager();
+
+        $navigation = $this->navigationManager->get();
 
         try {
             $firstGroup = Arr::first($navigation);
 
             if (! $firstGroup) {
-                return null;
+                return url($this->getPath());
             }
 
             $firstItem = Arr::first($firstGroup->getItems());
 
             if (! $firstItem) {
-                return null;
+                return url($this->getPath());
             }
 
             return $firstItem->getUrl();
         } finally {
             if ($tenant) {
                 Filament::setTenant($originalTenant, isQuiet: true);
-
-                $this->isNavigationMounted = $isNavigationMountedOriginally;
-                $this->navigationItems = $originalNavigationItems;
-                $this->navigationGroups = $originalNavigationGroups;
             }
+
+            $this->navigationManager = null;
         }
     }
 }

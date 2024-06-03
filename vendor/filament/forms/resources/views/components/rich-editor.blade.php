@@ -12,7 +12,7 @@
                 state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')") }},
             }"
             x-html="state"
-            class="fi-fo-rich-editor fi-disabled prose block w-full max-w-none rounded-lg bg-gray-50 px-3 py-3 text-gray-500 shadow-sm ring-1 ring-gray-950/10 dark:prose-invert sm:text-sm dark:bg-transparent dark:text-gray-400 dark:ring-white/10"
+            class="fi-fo-rich-editor fi-disabled prose block w-full max-w-none rounded-lg bg-gray-50 px-3 py-3 text-gray-500 shadow-sm ring-1 ring-gray-950/10 dark:prose-invert dark:bg-transparent dark:text-gray-400 dark:ring-white/10 sm:text-sm"
         ></div>
     @else
         <x-filament::input.wrapper
@@ -53,9 +53,27 @@
                         },
                     )
                 "
-                x-on:trix-change="state = $event.target.value"
+                x-on:trix-change="
+                    let value = $event.target.value
+
+                    $nextTick(() => {
+                        if (! $refs.trix) {
+                            return
+                        }
+
+                        state = value
+                    })
+                "
                 @if ($isLiveDebounced())
-                    x-on:trix-change.debounce.{{ $getLiveDebounce() }}="$wire.call('$refresh')"
+                    x-on:trix-change.debounce.{{ $getLiveDebounce() }}="
+                        $nextTick(() => {
+                            if (! $refs.trix) {
+                                return
+                            }
+
+                            $wire.call('$refresh')
+                        })
+                    "
                 @endif
                 @if (! $hasToolbarButton('attachFiles'))
                     x-on:trix-file-accept="$event.preventDefault()"
@@ -479,7 +497,7 @@
                     wire:ignore
                     {{
                         $getExtraInputAttributeBag()->class([
-                            'prose min-h-[theme(spacing.48)] max-w-none !border-none px-3 py-1.5 text-base text-gray-950 dark:prose-invert focus-visible:outline-none sm:text-sm sm:leading-6 dark:text-white',
+                            'prose min-h-[theme(spacing.48)] max-w-none !border-none px-3 py-1.5 text-base text-gray-950 dark:prose-invert focus-visible:outline-none dark:text-white sm:text-sm sm:leading-6',
                         ])
                     }}
                 ></trix-editor>

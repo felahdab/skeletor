@@ -1,1 +1,0 @@
-<li class="breadcrumb-item"><a href="{!! $href  !!}"> {!! $anchortext  !!}</a></li>

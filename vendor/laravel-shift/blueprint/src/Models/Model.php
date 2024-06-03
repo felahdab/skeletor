@@ -19,6 +19,8 @@ class Model implements BlueprintModel
 
     private string|bool $softDeletes = false;
 
+    private ?string $connection;
+
     private string $table;
 
     private array $columns = [];
@@ -76,6 +78,9 @@ class Model implements BlueprintModel
         $this->columns[$column->name()] = $column;
     }
 
+    /**
+     * @return Column[]
+     */
     public function columns(): array
     {
         return $this->columns;
@@ -96,9 +101,23 @@ class Model implements BlueprintModel
         return $this->primaryKey !== false;
     }
 
+    public function usesUlids(): bool
+    {
+        return $this->usesPrimaryKey() && $this->columns[$this->primaryKey]->dataType() === 'ulid';
+    }
+
     public function usesUuids(): bool
     {
         return $this->usesPrimaryKey() && $this->columns[$this->primaryKey]->dataType() === 'uuid';
+    }
+
+    public function idType(): ?string
+    {
+        if (!$this->usesPrimaryKey()) {
+            return null;
+        }
+
+        return $this->columns[$this->primaryKey]->dataType();
     }
 
     public function disablePrimaryKey(): void
@@ -114,6 +133,21 @@ class Model implements BlueprintModel
     public function setPivot(): void
     {
         $this->pivot = true;
+    }
+
+    public function usesCustomDatabaseConnection(): bool
+    {
+        return isset($this->connection);
+    }
+
+    public function databaseConnection(): ?string
+    {
+        return $this->connection;
+    }
+
+    public function setDatabaseConnection(string $connection)
+    {
+        $this->connection = $connection;
     }
 
     public function usesCustomTableName(): bool
@@ -171,7 +205,7 @@ class Model implements BlueprintModel
         return isset($this->columns[$name]);
     }
 
-    public function column(string $name)
+    public function column(string $name): Column
     {
         return $this->columns[$name];
     }

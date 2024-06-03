@@ -23,8 +23,7 @@ class RestrictVisibilityTest extends TestCase
     
     public function testSingleUserInAUnitSeesOnlyHimself()
     {
-        $this->artisan('module:seed', ['Transformation']);
-
+        $this->artisan('module:seed', ['module' => 'Transformation']);
         $newUsers = User::factory(10)->create(); // by default they get unite_id=2
         // We move one user to unite 3.
         $newUsers[0]->update(['unite_id'=> 3]);
@@ -37,8 +36,7 @@ class RestrictVisibilityTest extends TestCase
 
     public function testMultipleUsersInAUnitSeeThemselves()
     {
-        $this->artisan('module:seed', ['Transformation']);
-
+        $this->artisan('module:seed', ['module' => 'Transformation']);
         $newUsers = User::factory(10)->create(); // by default they get unite_id=2
 
         // We move two user to unite 3.
@@ -53,8 +51,7 @@ class RestrictVisibilityTest extends TestCase
 
     public function testAUserSeesAUserFromAnotherUnitWithMpeSansDates()
     {
-        $this->artisan('module:seed', ['Transformation']);
-
+        $this->artisan('module:seed', ['module' => 'Transformation']);
         $newUsers = User::factory(10)->create(); // by default they get unite_id=2
 
         // We move one user to unite 3.
@@ -78,8 +75,7 @@ class RestrictVisibilityTest extends TestCase
 
     public function testAUserSeesAUserFromAnotherUnitWithMpeAvecDatesValides()
     {
-        $this->artisan('module:seed', ['Transformation']);
-
+        $this->artisan('module:seed', ['module' => 'Transformation']);
         $newUsers = User::factory(10)->create(); // by default they get unite_id=2
 
         // We move one user to unite 3.
@@ -105,8 +101,7 @@ class RestrictVisibilityTest extends TestCase
 
     public function testAUserSeesNotAUserFromAnotherUnitWithMpeAvecDatesNonValides()
     {
-        $this->artisan('module:seed', ['Transformation']);
-
+        $this->artisan('module:seed', ['module' => 'Transformation']);
         $newUsers = User::factory(10)->create(); // by default they get unite_id=2
 
         // We move one user to unite 3.
@@ -136,8 +131,7 @@ class RestrictVisibilityTest extends TestCase
 
     public function testAUserSeesUsersFromHisUnitAndWithMpe()
     {
-        $this->artisan('module:seed', ['Transformation']);
-
+        $this->artisan('module:seed', ['module' => 'Transformation']);
         $newUsers = User::factory(10)->create(); // by default they get unite_id=2
 
         // We move one user to unite 3.
@@ -165,8 +159,7 @@ class RestrictVisibilityTest extends TestCase
 
     public function testAUserSeesUsersFromHisUnitButNotThoseWithInvalidMpe()
     {
-        $this->artisan('module:seed', ['Transformation']);
-
+        $this->artisan('module:seed', ['module' => 'Transformation']);
         $newUsers = User::factory(10)->create(); // by default they get unite_id=2
 
         // We move one user to unite 3.

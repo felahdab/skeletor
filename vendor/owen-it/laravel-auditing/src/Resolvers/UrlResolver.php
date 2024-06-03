@@ -13,7 +13,7 @@ class UrlResolver implements \OwenIt\Auditing\Contracts\Resolver
      */
     public static function resolve(Auditable $auditable): string
     {
-        if (! empty($auditable->preloadedResolverData['url'])) {
+        if (! empty($auditable->preloadedResolverData['url'] ?? null)) {
             return $auditable->preloadedResolverData['url'];
         }
 
@@ -26,7 +26,7 @@ class UrlResolver implements \OwenIt\Auditing\Contracts\Resolver
 
     public static function resolveCommandLine(): string
     {
-        $command = \Request::server('argv', null);
+        $command = Request::server('argv', null);
         if (is_array($command)) {
             return implode(' ', $command);
         }

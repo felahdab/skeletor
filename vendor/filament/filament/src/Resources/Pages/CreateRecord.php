@@ -7,12 +7,16 @@ use Filament\Actions\ActionGroup;
 use Filament\Facades\Filament;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
+use Filament\Pages\Concerns\CanUseDatabaseTransactions;
+use Filament\Pages\Concerns\HasUnsavedDataChangesAlert;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Support\Exceptions\Halt;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Support\Js;
+use Throwable;
 
 use function Filament\Support\is_app_url;
 
@@ -21,6 +25,8 @@ use function Filament\Support\is_app_url;
  */
 class CreateRecord extends Page
 {
+    use CanUseDatabaseTransactions;
+    use HasUnsavedDataChangesAlert;
     use InteractsWithFormActions;
 
     /**
@@ -55,8 +61,6 @@ class CreateRecord extends Page
 
     protected function authorizeAccess(): void
     {
-        static::authorizeResourceAccess();
-
         abort_unless(static::getResource()::canCreate(), 403);
     }
 
@@ -74,6 +78,8 @@ class CreateRecord extends Page
         $this->authorizeAccess();
 
         try {
+            $this->beginDatabaseTransaction();
+
             $this->callHook('beforeValidate');
 
             $data = $this->form->getState();
@@ -89,9 +95,21 @@ class CreateRecord extends Page
             $this->form->model($this->getRecord())->saveRelationships();
 
             $this->callHook('afterCreate');
+
+            $this->commitDatabaseTransaction();
         } catch (Halt $exception) {
+            $exception->shouldRollbackDatabaseTransaction() ?
+                $this->rollBackDatabaseTransaction() :
+                $this->commitDatabaseTransaction();
+
             return;
+        } catch (Throwable $exception) {
+            $this->rollBackDatabaseTransaction();
+
+            throw $exception;
         }
+
+        $this->rememberData();
 
         $this->getCreatedNotification()?->send();
 
@@ -220,7 +238,7 @@ class CreateRecord extends Page
     {
         return Action::make('cancel')
             ->label(__('filament-panels::resources/pages/create-record.form.actions.cancel.label'))
-            ->url($this->previousUrl ?? static::getResource()::getUrl())
+            ->alpineClickHandler('document.referrer ? window.history.back() : (window.location.href = ' . Js::from($this->previousUrl ?? static::getResource()::getUrl()) . ')')
             ->color('gray');
     }
 

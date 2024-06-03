@@ -4,6 +4,81 @@ All Notable changes to `laravel-modules` will be documented in this file.
 
 ## Next
 
+## 11.0.3 - 2024-03-24
+
+## Added 
+
+- [@enterprime](https://github.com/enterprime) Passing the values of vendor, author's name, and author's email in a line during module creation.
+- [@enterprime](https://github.com/enterprime) control the author through the .env configuration file.
+
+## 11.0.2 - 2024-03-24
+
+## Fixed 
+
+- [@enterprime](https://github.com/enterprime) fixed module:migrate-rollback command
+
+## 11.0.1 - 2024-03-23
+
+## Added
+
+- [@alissn](https://github.com/alissn) add RouteServiceProvider Configuration in Generator 
+- [@alissn](https://github.com/alissn) added Laravel Modules package version to command 'about'
+- [@dcblogdev](https://github.com/dcblogdev) Added view:make command to generate views
+
+## Changed
+
+- [@alissn](https://github.com/alissn) Run command php-cs-fixer fix
+- [@solomon-ochepa](https://github.com/solomon-ochepa) updated route-provider.stub to loose the optional namespace
+
+## 11.0.0 - 2024-03-19
+
+## Fixed
+
+- [@Subtixx](https://github.com/subtixx) Fix Issue #1752 - Hardcoded string + undefined variable
+- [@jaymeh](https://github.com/jaymeh) fix: Failed to load module script for static assets such as images
+- [@alissn](https://github.com/alissn) Fixing failing tests
+
+## Changed
+
+- [@dcblogdev](https://github.com/dcblogdev) ensure class_exists for both Capital and lower case namespaces
+- [@dcblogdev](https://github.com/dcblogdev) create database folders by default
+- [@dcblogdev](https://github.com/dcblogdev) set route service provider to use blank namespace by default
+- [@dcblogdev](https://github.com/dcblogdev) updated tests for compatability with PhpUnit 12
+- [@dcblogdev](https://github.com/dcblogdev) added replacement placeholders in config for API stubs
+- [@dcblogdev](https://github.com/dcblogdev) updated vite to rename placeholder with module name
+- [@dcblogdev](https://github.com/dcblogdev) Added support for Laravel 11
+- [@solomon-ochepa](https://github.com/solomon-ochepa) updated API route stub to use controller
+- [@solomon-ochepa](https://github.com/solomon-ochepa) updated config comments
+- [@alissn](https://github.com/alissn) rearrange Command Classes into Folders and Update Namespace Structure
+- [@alissn](https://github.com/alissn) delete command module:migrate-fresh
+- [@alissn](https://github.com/alissn) Fixing Case of tests/Unit and tests/Feature
+- [@alissn](https://github.com/alissn) Updated commands to use Laravel Prompt
+- [@dcblogdev](https://github.com/dcblogdev) updated event stub to include Dispatchable and InteractsWithSockets traits
+
+## 10.0.6 - 2024-01-28
+
+## Added
+
+- [@alissn](https://github.com/alissn) Add command module prune
+
+## 10.0.5 - 2024-01-22
+
+## Added
+
+- [@azim-kordpour](https://github.com/azim-kordpour) Add PHPDoc static to all methods in Module facade
+
+## Changed
+
+- [@dcblogdev](https://github.com/dcblogdev) Reverted config to use `App` and `Database` namespace / folders by default
+- [@alissn](https://github.com/alissn) Command Synchronization and Alphabetical Sorting in ConsoleServiceProvider
+- [@fpermana](https://github.com/fpermana) Update ObserverMakeCommand.php
+
+## Fixed
+
+- [@alissn](https://github.com/alissn) revert extend class to ShowModelCommand
+- [@benjaminniess](https://github.com/benjaminniess) Fix ModelShowCommand extends property
+
+
 ## 10.0.4 - 2023-11-13
 
 ## Changed

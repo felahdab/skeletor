@@ -28,6 +28,14 @@ class User extends Authenticatable implements FilamentUser
     use Impersonate;
 
     use HasSettingsTable; # provides the ->settings() methods
+
+    protected function casts(): array
+    {
+        return [
+            'data' => 'array',
+            'email_verified_at' => 'datetime'
+        ];
+    }
     
     public function canAccessPanel(Panel $panel): bool
     {
@@ -115,15 +123,6 @@ class User extends Authenticatable implements FilamentUser
     protected $hidden = [
         'password',
         'remember_token',
-    ];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime'
     ];
 
     public function cacheKey()

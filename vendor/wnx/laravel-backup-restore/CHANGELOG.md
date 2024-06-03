@@ -5,7 +5,39 @@ All notable changes to `laravel-backup-restore` will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.1.3...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.3.0...HEAD)
+
+## [v1.3.0](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.2.0...v1.3.0) - 2024-02-07
+
+### Added
+
+- Add Support for Laravel 11 ([#49](https://github.com/stefanzweifel/laravel-backup-restore/pull/49))
+
+## [v1.2.0](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.1.5...v1.2.0) - 2024-01-31
+
+### Added
+
+- Add Support to import bz2 compressed database dumps ([#61](https://github.com/stefanzweifel/laravel-backup-restore/pull/61))
+
+### Changed
+
+- Better unpacked dump detection ([#62](https://github.com/stefanzweifel/laravel-backup-restore/pull/62))
+
+## [v1.1.5](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.1.4...v1.1.5) - 2024-01-09
+
+### Changed
+
+- Upgrade Pest to v2 ([#50](https://github.com/stefanzweifel/laravel-backup-restore/pull/50))
+
+### Fixed
+
+- Disable Process Timeout when importing Database backup ([#55](https://github.com/stefanzweifel/laravel-backup-restore/pull/55))
+
+## [v1.1.4](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.1.3...v1.1.4) - 2023-11-13
+
+### Fixed
+
+- Add --host Option to psql command ([#46](https://github.com/stefanzweifel/laravel-backup-restore/pull/46))
 
 ## [v1.1.3](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.1.2...v1.1.3) - 2023-11-01
 

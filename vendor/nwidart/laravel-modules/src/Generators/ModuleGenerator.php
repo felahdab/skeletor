@@ -48,7 +48,6 @@ class ModuleGenerator extends Generator
      */
     protected $component;
 
-
     /**
      * The activator instance
      *
@@ -83,6 +82,22 @@ class ModuleGenerator extends Generator
      * @var bool
      */
     protected $isActive = false;
+
+    /**
+     * Module author
+     *
+     * @var array
+     */
+    protected array $author = [
+        'name', 'email'
+    ];
+
+    /**
+     * Vendor name
+     *
+     * @var string
+     */
+    protected ?string $vendor = null;
 
     /**
      * The constructor.
@@ -246,6 +261,7 @@ class ModuleGenerator extends Generator
     public function setComponent(\Illuminate\Console\View\Components\Factory $component): self
     {
         $this->component = $component;
+
         return $this;
     }
 
@@ -269,6 +285,34 @@ class ModuleGenerator extends Generator
     public function setModule($module)
     {
         $this->module = $module;
+
+        return $this;
+    }
+
+    /**
+     * Setting the author from the command
+     *
+     * @param string|null $name
+     * @param string|null $email
+     * @return $this
+     */
+    function setAuthor(string $name = null, string $email = null)
+    {
+        $this->author['name'] = $name;
+        $this->author['email'] = $email;
+
+        return $this;
+    }
+
+    /**
+     * Installing vendor from the command
+     *
+     * @param string|null $vendor
+     * @return $this
+     */
+    function setVendor(string $vendor = null)
+    {
+        $this->vendor = $vendor;
 
         return $this;
     }
@@ -361,7 +405,7 @@ class ModuleGenerator extends Generator
 
             $path = $this->module->getModulePath($this->getName()) . '/' . $folder->getPath();
 
-            $this->filesystem->makeDirectory($path, 0755, true);
+            $this->filesystem->ensureDirectoryExists($path, 0755, true);
             if (config('modules.stubs.gitkeep')) {
                 $this->generateGitKeep($path);
             }
@@ -386,7 +430,7 @@ class ModuleGenerator extends Generator
         foreach ($this->getFiles() as $stub => $file) {
             $path = $this->module->getModulePath($this->getName()) . $file;
 
-            $this->component->task("Generating file {$path}",function () use ($stub, $path) {
+            $this->component->task("Generating file {$path}", function () use ($stub, $path) {
                 if (!$this->filesystem->isDirectory($dir = dirname($path))) {
                     $this->filesystem->makeDirectory($dir, 0775, true);
                 }
@@ -409,23 +453,48 @@ class ModuleGenerator extends Generator
             ]);
         }
 
-        if (GenerateConfigReader::read('provider')->generate() === true) {
+        $providerGenerator = GenerateConfigReader::read('provider');
+        if ($providerGenerator->generate() === true) {
             $this->console->call('module:make-provider', [
                 'name' => $this->getName() . 'ServiceProvider',
                 'module' => $this->getName(),
                 '--master' => true,
             ]);
+        } else {
+            // delete register ServiceProvider on module.json
+            $path           = $this->module->getModulePath($this->getName()) . DIRECTORY_SEPARATOR . 'module.json';
+            $module_file  =   $this->filesystem->get($path);
+            $this->filesystem->put(
+                $path,
+                preg_replace('/"providers": \[.*?\],/s', '"providers": [ ],', $module_file)
+            );
+        }
+
+        $routeGeneratorConfig = GenerateConfigReader::read('route-provider');
+        if (
+            (is_null($routeGeneratorConfig->getPath()) && $providerGenerator->generate())
+            || (!is_null($routeGeneratorConfig->getPath()) && $routeGeneratorConfig->generate())
+        ) {
             $this->console->call('module:route-provider', [
                 'module' => $this->getName(),
             ]);
+        } else {
+            if ($providerGenerator->generate()) {
+                // comment register RouteServiceProvider
+                $this->filesystem->replaceInFile(
+                    '$this->app->register(Route',
+                    '// $this->app->register(Route',
+                    $this->module->getModulePath($this->getName()) . DIRECTORY_SEPARATOR . $providerGenerator->getPath() . DIRECTORY_SEPARATOR . sprintf('%sServiceProvider.php', $this->getName())
+                );
+            }
         }
 
         if (GenerateConfigReader::read('controller')->generate() === true) {
-            $options = $this->type=='api' ? ['--api'=>true] : [];
+            $options = $this->type == 'api' ? ['--api' => true] : [];
             $this->console->call('module:make-controller', [
                 'controller' => $this->getName() . 'Controller',
                 'module' => $this->getName(),
-            ]+$options);
+            ] + $options);
         }
     }
 
@@ -444,8 +513,6 @@ class ModuleGenerator extends Generator
         )
         )->render();
     }
-
-
 
     /**
      * get the list for the replacements.
@@ -497,7 +564,7 @@ class ModuleGenerator extends Generator
     {
         $path = $this->module->getModulePath($this->getName()) . 'module.json';
 
-        $this->component->task("Generating file $path",function () use ($path) {
+        $this->component->task("Generating file $path", function () use ($path) {
             if (!$this->filesystem->isDirectory($dir = dirname($path))) {
                 $this->filesystem->makeDirectory($dir, 0775, true);
             }
@@ -552,7 +619,7 @@ class ModuleGenerator extends Generator
      */
     protected function getVendorReplacement()
     {
-        return $this->module->config('composer.vendor');
+        return $this->vendor ?: $this->module->config('composer.vendor');
     }
 
     /**
@@ -572,7 +639,7 @@ class ModuleGenerator extends Generator
      */
     private function getControllerNamespaceReplacement(): string
     {
-        return str_replace('/', '\\', $this->module->config('paths.generator.controller.namespace') ?: $this->module->config('paths.generator.controller.path', 'Controller'));
+        return str_replace('/', '\\', $this->module->config('paths.generator.controller.namespace') ?: ltrim($this->module->config('paths.generator.controller.path', 'Controller'), config('modules.paths.app_folder')));
     }
 
     /**
@@ -582,7 +649,7 @@ class ModuleGenerator extends Generator
      */
     protected function getAuthorNameReplacement()
     {
-        return $this->module->config('composer.author.name');
+        return $this->author['name'] ?: $this->module->config('composer.author.name');
     }
 
     /**
@@ -592,7 +659,7 @@ class ModuleGenerator extends Generator
      */
     protected function getAuthorEmailReplacement()
     {
-        return $this->module->config('composer.author.email');
+        return $this->author['email'] ?: $this->module->config('composer.author.email');
     }
 
     protected function getProviderNamespaceReplacement(): string

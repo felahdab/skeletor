@@ -9,7 +9,6 @@ use Blueprint\Contracts\Generator;
 use Blueprint\Contracts\Model as BlueprintModel;
 use Blueprint\Models\Column;
 use Blueprint\Models\Controller;
-use Blueprint\Models\Model;
 use Blueprint\Models\Statements\DispatchStatement;
 use Blueprint\Models\Statements\EloquentStatement;
 use Blueprint\Models\Statements\FireStatement;
@@ -99,6 +98,7 @@ class PestTestGenerator extends AbstractClassGenerator implements Generator
                 'mock' => [],
             ];
             $request_data = [];
+            $model_columns = [];
             $tested_bits = 0;
 
             $model = $controller->prefix();
@@ -227,11 +227,17 @@ class PestTestGenerator extends AbstractClassGenerator implements Generator
                                 } else {
                                     $this->addImport($controller, 'function Pest\\Faker\\fake');
 
-                                    $faker = sprintf('$%s = fake()->%s;', $data, FakerRegistry::fakerData($local_column->name()) ?? FakerRegistry::fakerDataType($local_model->column($column)->dataType()));
+                                    if ($local_column->isDate()) {
+                                        $this->addImport($controller, 'Illuminate\\Support\\Carbon');
+                                        $faker = sprintf('$%s = Carbon::parse(fake()->%s);', $data, FakerRegistry::fakerData($local_column->name()) ?? FakerRegistry::fakerDataType($local_model->column($column)->dataType()));
+                                    } else {
+                                        $faker = sprintf('$%s = fake()->%s;', $data, FakerRegistry::fakerData($local_column->name()) ?? FakerRegistry::fakerDataType($local_model->column($column)->dataType()));
+                                    }
                                 }
 
                                 $setup['data'][] = $faker;
                                 $request_data[$data] = '$' . $variable_name;
+                                $model_columns[$data] = '$' . $variable_name;
                             } elseif (!is_null($local_model)) {
                                 foreach ($local_model->columns() as $local_column) {
                                     if (in_array($local_column->name(), ['id', 'softdeletes', 'softdeletestz'])) {
@@ -248,12 +254,28 @@ class PestTestGenerator extends AbstractClassGenerator implements Generator
                                     } else {
                                         $this->addImport($controller, 'function Pest\\Faker\\fake');
 
-                                        $faker = sprintf('$%s = fake()->%s;', $local_column->name(), FakerRegistry::fakerData($local_column->name()) ?? FakerRegistry::fakerDataType($local_column->dataType()));
+                                        if ($local_column->isDate()) {
+                                            $this->addImport($controller, 'Illuminate\\Support\\Carbon');
+                                            $faker = sprintf('$%s = Carbon::parse(fake()->%s);', $local_column->name(), FakerRegistry::fakerData($local_column->name()) ?? FakerRegistry::fakerDataType($local_column->dataType()));
+                                        } else {
+                                            $faker = sprintf('$%s = fake()->%s;', $local_column->name(), FakerRegistry::fakerData($local_column->name()) ?? FakerRegistry::fakerDataType($local_column->dataType()));
+                                        }
+
                                         $variable_name = $local_column->name();
                                     }
 
                                     $setup['data'][] = $faker;
-                                    $request_data[$local_column->name()] = '$' . $variable_name;
+                                    if ($local_column->isDate()) {
+                                        if ($local_column->dataType() === 'date') {
+                                            $request_data[$local_column->name()] = '$' . $variable_name . '->toDateString()';
+                                        } else {
+                                            $request_data[$local_column->name()] = '$' . $variable_name . '->toDateTimeString()';
+                                        }
+                                    } else {
+                                        $request_data[$local_column->name()] = '$' . $variable_name;
+                                    }
+
+                                    $model_columns[$local_column->name()] = '$' . $variable_name;
                                 }
                             }
                         }
@@ -354,10 +376,7 @@ class PestTestGenerator extends AbstractClassGenerator implements Generator
                 } elseif ($statement instanceof RedirectStatement) {
                     $tested_bits |= self::TESTS_REDIRECT;
 
-                    $assertion = sprintf(
-                        '$response->assertRedirect(route(\'%s\'',
-                        config('blueprint.plural_routes') ? Str::plural(Str::kebab($statement->route())) : Str::kebab($statement->route())
-                    );
+                    $assertion = sprintf('$response->assertRedirect(route(\'%s\'', $statement->route());
 
                     if ($statement->data()) {
                         $parameters = array_map(fn ($parameter) => '$' . $parameter, $statement->data());
@@ -404,11 +423,11 @@ class PestTestGenerator extends AbstractClassGenerator implements Generator
                     if ($statement->operation() === 'save') {
                         $tested_bits |= self::TESTS_SAVE;
 
-                        if ($request_data) {
+                        if ($model_columns) {
                             $indent = str_pad(' ', 8);
                             $plural = Str::plural($variable);
                             $assertion = sprintf('$%s = %s::query()', $plural, $model);
-                            foreach ($request_data as $key => $datum) {
+                            foreach ($model_columns as $key => $datum) {
                                 $assertion .= PHP_EOL . sprintf('%s->where(\'%s\', %s)', $indent, $key, $datum);
                             }
                             $assertion .= PHP_EOL . $indent . '->get();';
@@ -441,13 +460,12 @@ class PestTestGenerator extends AbstractClassGenerator implements Generator
                     } elseif ($statement->operation() === 'update') {
                         $assertions['sanity'][] = sprintf('$%s->refresh();', $variable);
 
-                        if ($request_data) {
+                        if ($model_columns) {
                             /** @var \Blueprint\Models\Model $local_model */
                             $local_model = $this->tree->modelForContext($model);
-                            foreach ($request_data as $key => $datum) {
-                                if (!is_null($local_model) && $local_model->hasColumn($key) && $local_model->column($key)->dataType() === 'date') {
-                                    $this->addImport($controller, 'Carbon\\Carbon');
-                                    $assertions['generic'][] = sprintf('expect(Carbon::parse(%s))->toEqual($%s->%s);', $datum, $variable, $key);
+                            foreach ($model_columns as $key => $datum) {
+                                if (!is_null($local_model) && $local_model->hasColumn($key) && $local_model->column($key)->dataType() === 'timestamp') {
+                                    $assertions['generic'][] = sprintf('expect(%s->timestamp)->toEqual($%s->%s);', $datum, $variable, $key);
                                 } else {
                                     $assertions['generic'][] = sprintf('expect(%s)->toEqual($%s->%s);', $datum, $variable, $key);
                                 }
@@ -464,7 +482,7 @@ class PestTestGenerator extends AbstractClassGenerator implements Generator
             $call = sprintf(
                 '$response = %s(route(\'%s.%s\'',
                 $this->httpMethodForAction($name),
-                config('blueprint.plural_routes') ? Str::plural(Str::kebab($context)) : Str::kebab($context),
+                config('blueprint.singular_routes') ? Str::kebab($context) : Str::plural(Str::kebab($context)),
                 $name
             );
 
@@ -505,13 +523,63 @@ class PestTestGenerator extends AbstractClassGenerator implements Generator
         return trim($this->buildTraits($controller) . PHP_EOL . $test_cases);
     }
 
-    private function testCaseStub()
+    protected function testCaseStub()
     {
         if (empty($this->stubs['test-case'])) {
             $this->stubs['test-case'] = $this->filesystem->stub('pest.test.case.stub');
         }
 
         return $this->stubs['test-case'];
+    }
+
+    protected function buildFormRequestName(Controller $controller, string $name): string
+    {
+        if (empty($controller->namespace())) {
+            return $controller->name() . Str::studly($name) . 'Request';
+        }
+
+        return $controller->namespace() . '\\' . $controller->name() . Str::studly($name) . 'Request';
+    }
+
+    protected function buildFormRequestTestCase(string $controller, string $action, string $form_request): string
+    {
+        return <<<END
+test('{$action} uses form request validation')
+    ->assertActionUsesFormRequest(
+        \\{$controller}::class,
+        '{$action}',
+        \\{$form_request}::class
+    );
+END;
+    }
+
+    private function splitField($field): array
+    {
+        if (Str::contains($field, '.')) {
+            return explode('.', $field, 2);
+        }
+
+        return [null, $field];
+    }
+
+    protected function generateReferenceFactory(Column $local_column, Controller $controller, string $modelNamespace): ?array
+    {
+        if (!in_array($local_column->dataType(), ['id', 'uuid']) && !($local_column->attributes() && Str::endsWith($local_column->name(), '_id'))) {
+            return null;
+        }
+
+        $reference = Str::beforeLast($local_column->name(), '_id');
+        $variable_name = $reference . '->id';
+
+        if ($local_column->attributes()) {
+            $reference = $local_column->attributes()[0];
+        }
+
+        $faker = sprintf('$%s = %s::factory()->create();', Str::beforeLast($local_column->name(), '_id'), Str::studly($reference));
+
+        $this->addImport($controller, $modelNamespace . '\\' . Str::studly($reference));
+
+        return [$faker, $variable_name];
     }
 
     private function determineModel(string $prefix, ?string $reference): string
@@ -527,27 +595,6 @@ class PestTestGenerator extends AbstractClassGenerator implements Generator
         return Str::studly($reference);
     }
 
-    private function buildFormRequestName(Controller $controller, string $name): string
-    {
-        if (empty($controller->namespace())) {
-            return $controller->name() . Str::studly($name) . 'Request';
-        }
-
-        return $controller->namespace() . '\\' . $controller->name() . Str::studly($name) . 'Request';
-    }
-
-    private function buildFormRequestTestCase(string $controller, string $action, string $form_request): string
-    {
-        return <<<END
-test('{$action} uses form request validation')
-    ->assertActionUsesFormRequest(
-        \\{$controller}::class,
-        '{$action}',
-        \\{$form_request}::class
-    );
-END;
-    }
-
     private function httpMethodForAction(string $action): string
     {
         return match ($action) {
@@ -558,7 +605,14 @@ END;
         };
     }
 
-    private function buildTestCaseName(string $name, int $tested_bits): string
+    private function uniqueSetupLines(array $setup)
+    {
+        return collect($setup)->filter()
+            ->map(fn ($lines) => array_unique($lines))
+            ->toArray();
+    }
+
+    protected function buildTestCaseName(string $name, int $tested_bits): string
     {
         $verifications = [];
 
@@ -598,41 +652,5 @@ END;
     private function buildLines($lines): string
     {
         return str_pad(' ', 4) . implode(PHP_EOL . str_pad(' ', 4), $lines);
-    }
-
-    private function splitField($field): array
-    {
-        if (Str::contains($field, '.')) {
-            return explode('.', $field, 2);
-        }
-
-        return [null, $field];
-    }
-
-    private function uniqueSetupLines(array $setup)
-    {
-        return collect($setup)->filter()
-            ->map(fn ($lines) => array_unique($lines))
-            ->toArray();
-    }
-
-    private function generateReferenceFactory(Column $local_column, Controller $controller, string $modelNamespace): ?array
-    {
-        if (!in_array($local_column->dataType(), ['id', 'uuid']) && !($local_column->attributes() && Str::endsWith($local_column->name(), '_id'))) {
-            return null;
-        }
-
-        $reference = Str::beforeLast($local_column->name(), '_id');
-        $variable_name = $reference . '->id';
-
-        if ($local_column->attributes()) {
-            $reference = $local_column->attributes()[0];
-        }
-
-        $faker = sprintf('$%s = %s::factory()->create();', Str::beforeLast($local_column->name(), '_id'), Str::studly($reference));
-
-        $this->addImport($controller, $modelNamespace . '\\' . Str::studly($reference));
-
-        return [$faker, $variable_name];
     }
 }

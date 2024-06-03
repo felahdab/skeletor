@@ -37,14 +37,8 @@ Vous avez également la possibilité de télécharger directement une version po
 
     @yield('before_styles')
     @stack('before_styles')
-    
-    <link href="{!! basset('https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css') !!}" rel="stylesheet">
-    <script src="{!! basset('https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js') !!}"></script>
+    @vite(['../resources/js/app.js', '../resources/css/app.css'])
 
-    @bassetArchive('https://github.com/SortableJS/Sortable/archive/refs/tags/1.15.1.zip', 'Sortable-1.15.1')
-    @basset('Sortable-1.15.1/Sortable-1.15.1/Sortable.js')
-    
-    <x-sortable-scripts/>
     
     <style>
         [x-cloak] {
@@ -83,10 +77,8 @@ Vous avez également la possibilité de télécharger directement une version po
     @yield('before_scripts')
     @stack('before_scripts')
     
-    <script src="{!! basset('https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js') !!}"></script>
-    <script src="{!! asset('vendor/livewire-charts/app.js') !!}"></script>
     
-    <script src="{!! basset('https://cdn.jsdelivr.net/npm/apexcharts') !!}"></script>
+    <script src="{!! asset('vendor/livewire-charts/app.js') !!}"></script>
     
     @yield("scripts")
     

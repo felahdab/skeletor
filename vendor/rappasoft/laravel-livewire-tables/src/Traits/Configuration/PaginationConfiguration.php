@@ -134,4 +134,25 @@ trait PaginationConfiguration
 
         return $this;
     }
+
+    /**
+     * Set a default per-page value (if not set already by session or querystring)
+     */
+    public function setDefaultPerPage(int $perPage): self
+    {
+        $defaultPerPage = $perPage;
+
+        if ($this->perPage == 10) {
+            $this->setPerPage($perPage);
+        }
+
+        return $this;
+    }
+
+    public function setPerPageFieldAttributes(array $attributes = []): self
+    {
+        $this->perPageFieldAttributes = [...$this->perPageFieldAttributes, ...$attributes];
+
+        return $this;
+    }
 }

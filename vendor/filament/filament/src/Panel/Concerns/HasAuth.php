@@ -15,6 +15,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 
 trait HasAuth
 {
@@ -25,6 +26,12 @@ trait HasAuth
      */
     protected string | Closure | array | null $emailVerificationRouteAction = null;
 
+    protected string $emailVerificationPromptRouteSlug = 'prompt';
+
+    protected string $emailVerificationRouteSlug = 'verify';
+
+    protected string $emailVerificationRoutePrefix = 'email-verification';
+
     protected bool $isEmailVerificationRequired = false;
 
     /**
@@ -32,26 +39,40 @@ trait HasAuth
      */
     protected string | Closure | array | null $loginRouteAction = null;
 
+    protected string $loginRouteSlug = 'login';
+
     /**
      * @var string | Closure | array<class-string, string> | null
      */
     protected string | Closure | array | null $registrationRouteAction = null;
+
+    protected string $registrationRouteSlug = 'register';
 
     /**
      * @var string | Closure | array<class-string, string> | null
      */
     protected string | Closure | array | null $requestPasswordResetRouteAction = null;
 
+    protected string $requestPasswordResetRouteSlug = 'request';
+
     /**
      * @var string | Closure | array<class-string, string> | null
      */
     protected string | Closure | array | null $resetPasswordRouteAction = null;
 
+    protected string $resetPasswordRouteSlug = 'reset';
+
+    protected string $resetPasswordRoutePrefix = 'password-reset';
+
     protected ?string $profilePage = null;
+
+    protected bool $isProfilePageSimple = true;
 
     protected string $authGuard = 'web';
 
     protected ?string $authPasswordBroker = null;
+
+    protected bool | Closure $arePasswordsRevealable = true;
 
     /**
      * @param  string | Closure | array<class-string, string> | null  $promptAction
@@ -60,6 +81,27 @@ trait HasAuth
     {
         $this->emailVerificationRouteAction = $promptAction;
         $this->requiresEmailVerification($isRequired);
+
+        return $this;
+    }
+
+    public function emailVerificationPromptRouteSlug(string $slug): static
+    {
+        $this->emailVerificationPromptRouteSlug = $slug;
+
+        return $this;
+    }
+
+    public function emailVerificationRouteSlug(string $slug): static
+    {
+        $this->emailVerificationRouteSlug = $slug;
+
+        return $this;
+    }
+
+    public function emailVerificationRoutePrefix(string $prefix): static
+    {
+        $this->emailVerificationRoutePrefix = $prefix;
 
         return $this;
     }
@@ -88,6 +130,13 @@ trait HasAuth
         return $this;
     }
 
+    public function loginRouteSlug(string $slug): static
+    {
+        $this->loginRouteSlug = $slug;
+
+        return $this;
+    }
+
     /**
      * @param  string | Closure | array<class-string, string> | null  $requestAction
      * @param  string | Closure | array<class-string, string> | null  $resetAction
@@ -96,6 +145,27 @@ trait HasAuth
     {
         $this->requestPasswordResetRouteAction = $requestAction;
         $this->resetPasswordRouteAction = $resetAction;
+
+        return $this;
+    }
+
+    public function passwordResetRequestRouteSlug(string $slug): static
+    {
+        $this->requestPasswordResetRouteSlug = $slug;
+
+        return $this;
+    }
+
+    public function passwordResetRouteSlug(string $slug): static
+    {
+        $this->resetPasswordRouteSlug = $slug;
+
+        return $this;
+    }
+
+    public function passwordResetRoutePrefix(string $prefix): static
+    {
+        $this->resetPasswordRoutePrefix = $prefix;
 
         return $this;
     }
@@ -110,9 +180,24 @@ trait HasAuth
         return $this;
     }
 
-    public function profile(?string $page = EditProfile::class): static
+    public function registrationRouteSlug(string $slug): static
+    {
+        $this->registrationRouteSlug = $slug;
+
+        return $this;
+    }
+
+    public function profile(?string $page = EditProfile::class, bool $isSimple = true): static
     {
         $this->profilePage = $page;
+        $this->simpleProfilePage($isSimple);
+
+        return $this;
+    }
+
+    public function simpleProfilePage(bool $condition = true): static
+    {
+        $this->isProfilePageSimple = $condition;
 
         return $this;
     }
@@ -149,6 +234,11 @@ trait HasAuth
     public function getProfilePage(): ?string
     {
         return $this->profilePage;
+    }
+
+    public function isProfilePageSimple(): bool
+    {
+        return $this->isProfilePageSimple;
     }
 
     /**
@@ -273,12 +363,32 @@ trait HasAuth
         return $this->emailVerificationRouteAction;
     }
 
+    public function getEmailVerificationPromptRouteSlug(): string
+    {
+        return Str::start($this->emailVerificationPromptRouteSlug, '/');
+    }
+
+    public function getEmailVerificationRouteSlug(string $suffix): string
+    {
+        return Str::start($this->emailVerificationRouteSlug, '/') . $suffix;
+    }
+
+    public function getEmailVerificationRoutePrefix(): string
+    {
+        return Str::start($this->emailVerificationRoutePrefix, '/');
+    }
+
     /**
      * @return string | Closure | array<class-string, string> | null
      */
     public function getLoginRouteAction(): string | Closure | array | null
     {
         return $this->loginRouteAction;
+    }
+
+    public function getLoginRouteSlug(): string
+    {
+        return Str::start($this->loginRouteSlug, '/');
     }
 
     /**
@@ -289,6 +399,11 @@ trait HasAuth
         return $this->registrationRouteAction;
     }
 
+    public function getRegistrationRouteSlug(): string
+    {
+        return Str::start($this->registrationRouteSlug, '/');
+    }
+
     /**
      * @return string | Closure | array<class-string, string> | null
      */
@@ -297,12 +412,27 @@ trait HasAuth
         return $this->requestPasswordResetRouteAction;
     }
 
+    public function getRequestPasswordResetRouteSlug(): string
+    {
+        return Str::start($this->requestPasswordResetRouteSlug, '/');
+    }
+
     /**
      * @return string | Closure | array<class-string, string> | null
      */
     public function getResetPasswordRouteAction(): string | Closure | array | null
     {
         return $this->resetPasswordRouteAction;
+    }
+
+    public function getResetPasswordRouteSlug(): string
+    {
+        return Str::start($this->resetPasswordRouteSlug, '/');
+    }
+
+    public function getResetPasswordRoutePrefix(): string
+    {
+        return Str::start($this->resetPasswordRoutePrefix, '/');
     }
 
     public function hasEmailVerification(): bool
@@ -333,5 +463,17 @@ trait HasAuth
     public function getAuthPasswordBroker(): ?string
     {
         return $this->authPasswordBroker;
+    }
+
+    public function revealablePasswords(bool | Closure $condition = true): static
+    {
+        $this->arePasswordsRevealable = $condition;
+
+        return $this;
+    }
+
+    public function arePasswordsRevealable(): bool
+    {
+        return (bool) $this->evaluate($this->arePasswordsRevealable);
     }
 }
