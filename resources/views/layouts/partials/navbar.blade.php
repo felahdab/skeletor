@@ -16,7 +16,7 @@
     </button>
     <div class="collapse navbar-collapse container-fluid" id="navbarTogglerDemo01">
         <ul class="navbar-nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 mr-auto mt-2 mt-lg-0">
-             <a href="{{ route('home.index') }}" class="tw-inline-block tw-align-middle tw-text-center tw-select-none tw-border tw-font-normal tw-whitespace-no-wrap tw-rounded-lg tw-py-1 tw-px-3 tw-leading-normal tw-no-underline tw-bg-gray-900 tw-text-white hover:tw-bg-gray-600 tw-w-full">Accueil</a>
+             <a href="{{ route('home.index') }}" class="btn btn-outline-light me-2">Accueil</a>
             @auth
             @can('users.index')
             <div class="dropdown nav-item" >
