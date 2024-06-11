@@ -35,7 +35,7 @@
                 <div class='form-group row' >
                     <label for='image_lien' class='col-sm-5 col-form-label'>Logo actuel</label>
                     <div class='col-sm-5 mt-2'>
-                        <img src="{{asset(env('APP_PREFIX') . 'public/images/' . $lien->lien_image)}}" alt="logo" style="height: 30px;">
+                        <img src="{{asset(config('skeletor.instance_prefix') . 'public/images/' . $lien->lien_image)}}" alt="logo" style="height: 30px;">
                     </div>
                 </div>
                 <div class='form-group row' >

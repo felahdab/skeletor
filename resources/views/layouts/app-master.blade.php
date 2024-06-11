@@ -4,18 +4,18 @@
 
     <html lang="en">
     <head>
-    <title>Polaris Online</title>
+    <title>{{ config('skeletor.instance_titre') }}</title>
     <link rel="icon" type="image/png" sizes="32x32" href="{!! asset('assets/images/favicon-32x32.png') !!}">
     <link rel="icon" type="image/png" sizes="16x16" href="{!! asset('assets/images/favicon-16x16.png') !!}">
 </head>
 <body>
-<div><center><h1>Bienvenue sur Polaris Online !</h1></center></div>
+<div><center><h1>Bienvenue sur {{ config('skeletor.instance_titre') }} !</h1></center></div>
 <div>
     <img src='{!! asset("assets/images/Logo_C2N.jpg") !!}' alt="Logo du C2N" style="height:450px; display: block; margin-left:auto; margin-right: auto; ">
 </div>
 <div>
 <center>
-Votre navigateur est trop ancien pour utiliser les fonctionnalités de Polaris Online.<p>
+Votre navigateur est trop ancien pour utiliser les fonctionnalités de {{ config('skeletor.instance_titre') }}.<p>
 Veuillez le mettre à jour.<p>
 Vous avez également la possibilité de télécharger directement une version portable de Firefox.<p>
 <a href="{!! asset('FirefoxPortableUtilisateurPolarisOnline.zip') !!}">Firefox Portable</a>
@@ -31,7 +31,7 @@ Vous avez également la possibilité de télécharger directement une version po
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="Contributors from the GTR/T">
-    <title>Polaris Online</title>
+    <title>{{ config('skeletor.instance_titre') }}</title>
     <link rel="icon" type="image/png" sizes="32x32" href="{!! asset('assets/images/favicon-32x32.png') !!}">
     <link rel="icon" type="image/png" sizes="16x16" href="{!! asset('assets/images/favicon-16x16.png') !!}">
 

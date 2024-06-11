@@ -55,6 +55,8 @@ class LoginController extends Controller
             return $this->authenticated($request, $user);
         }
 
+        dd($MCuser);
+
         // si le user n'existe pas, test de la variable APP_VALID_MDC pour savoir si on l'enregistre dans la table MDC 
         if (! config('skeletor.validation_automatique_des_comptes_mindef_connect')){
             // on cree un compte temporaire ds MDC
@@ -64,6 +66,7 @@ class LoginController extends Controller
                 $MCuserexist->msg = true;
             } 
             else {
+                // Mindef Connect
                 // SocialiteProviders\Manager\OAuth2\User {#2421 ▼
                 //     +id: "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
                 //     +nickname: "f.el-ahdab"
@@ -98,6 +101,47 @@ class LoginController extends Controller
                 //       "id_token" => "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MTM4NjI2MzYsImlhdCI6MTcxMzg2MjMzNiwi ▶"
                 //       "not-before-policy" => 0
                 //       "session_state" => "1fe77c94-e6f9-410c-bace-23a3669c3eb4"
+                //       "scope" => "openid profile email"
+                //     ]
+                //   }
+
+                // POLARIS Online
+                // SocialiteProviders\Manager\OAuth2\User {#2567 ▼ // app/Http/Controllers/LoginController.php:58
+                //     +id: "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
+                //     +nickname: "f.el-ahdab"
+                //     +name: "Florian El-Ahdab"
+                //     +email: "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
+                //     +avatar: null
+                //     +user: array:7 [▶]
+                //     +attributes: array:4 [▼
+                //       "id" => "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
+                //       "nickname" => "f.el-ahdab"
+                //       "name" => "Florian El-Ahdab"
+                //       "email" => "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
+                //     ]
+                //     +token: "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MTgwOTk1MjcsImlhdCI6MTcxODA5OTIyNywi
+                //    ▶
+                //   "
+                //     +refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJmZjEwOThhZC1iYjg1LTQ1MzQtOWRlYi0xZDNiOGI4MGMxOTMifQ.eyJleHAiOjE3MTgxMDEwMjcsImlhdCI6MTcxODA5OTIyNywianRpIjoiO
+                //    ▶
+                //   "
+                //     +expiresIn: 300
+                //     +approvedScopes: null
+                //     +accessTokenResponseBody: array:9 [▼
+                //       "access_token" => "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MTgwOTk1MjcsImlhdCI6MTcxODA5OTIyNywi
+                //    ▶
+                //   "
+                //       "expires_in" => 300
+                //       "refresh_expires_in" => 1800
+                //       "refresh_token" => "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJmZjEwOThhZC1iYjg1LTQ1MzQtOWRlYi0xZDNiOGI4MGMxOTMifQ.eyJleHAiOjE3MTgxMDEwMjcsImlhdCI6MTcxODA5OTIyNywianRpIjoiO
+                //    ▶
+                //   "
+                //       "token_type" => "Bearer"
+                //       "id_token" => "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MTgwOTk1MjcsImlhdCI6MTcxODA5OTIyNywi
+                //    ▶
+                //   "
+                //       "not-before-policy" => 0
+                //       "session_state" => "a7d5834e-0e08-4d9e-b2be-1dc4c4ac0420"
                 //       "scope" => "openid profile email"
                 //     ]
                 //   }

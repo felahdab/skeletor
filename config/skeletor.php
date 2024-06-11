@@ -18,6 +18,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Recherche d'équivalence avec les grades depuis le provider OpenID
+    |--------------------------------------------------------------------------
+    |
+    | Par défaut, cette option est à true: Skeletor essaiera de chercher le grade
+    | de l'utilisateur en fonction des données transmises par le provider OpenID
+    | Fonctionne bien sur Intradef avec MindefConnect
+    | Sur POLARIS Online, le provider ne renvoit pas de grade, donc doit être
+    | désactivé (false)
+    |
+    */
+
+    'matches_user_rank_if_possible' => false ,
+
+    /*
+    |--------------------------------------------------------------------------
     | Compte par defaut pour la creation automatique du compte
     |--------------------------------------------------------------------------
     */
@@ -37,5 +52,25 @@ return [
     */
     
     'page_par_defaut' => env('APP_PAGE_ACCUEIL', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Prefixe de l'instance
+    |--------------------------------------------------------------------------
+    | Ce paramètre détermine le préfixe à appliquer à toutes les urls déclarées
+    | dans l'application.
+    */
+
+    'instance_prefix' => env('APP_PREFIX', "instance"),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Titre général de l'application
+    |--------------------------------------------------------------------------
+    | Ce paramètre détermine le titre général de l'application, tel que renseigné
+    | dans le layout des vues (resources/views/layout/app-master.blade.php)
+    */
+
+    'instance_titre' => env('SKELETOR_TITLE', "Skeletor"),
     
 ];

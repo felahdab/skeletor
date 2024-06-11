@@ -42,8 +42,8 @@ class RecordUsageDataListener
         }
 
         foreach (config('analytics.exclude', []) as $except) {
-            if (!Str::contains($except, env('APP_PREFIX'))) {
-                $prefix = Str::startsWith($except, '/') ? env('APP_PREFIX')  : env('APP_PREFIX') . '/';
+            if (!Str::contains($except, config('skeletor.instance_prefix'))) {
+                $prefix = Str::startsWith($except, '/') ? config('skeletor.instance_prefix')  : config('skeletor.instance_prefix') . '/';
                 $except = $prefix . $except;
             }
 
