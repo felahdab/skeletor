@@ -247,8 +247,9 @@ class User extends Authenticatable implements FilamentUser
 
     public function getAnnudefPictureUrl()
     {
-        $url = AnnudefAjaxRequestService::searchPictureForEmail($this->email);
-        return $url;
+        return Cache::remember($this->getKey() . '::getAnnudefPictureUrl', 60*5, function () {
+            return AnnudefAjaxRequestService::searchPictureForEmail($this->email);
+        });
     }
 
     public function IsSuperAdmin()
