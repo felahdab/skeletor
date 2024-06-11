@@ -229,6 +229,10 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
             'Modules\\Transformation\\' => 23,
             'Modules\\Socle\\' => 14,
             'Modules\\RH\\' => 11,
+            'Modules\\PolarisOnline\\Tests\\' => 28,
+            'Modules\\PolarisOnline\\Database\\Seeders\\' => 39,
+            'Modules\\PolarisOnline\\Database\\Factories\\' => 41,
+            'Modules\\PolarisOnline\\' => 22,
             'Mockery\\' => 8,
             'Mhmiton\\LaravelModulesLivewire\\' => 31,
             'Matrix\\' => 7,
@@ -782,6 +786,22 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'Modules\\RH\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Modules/RH',
+        ),
+        'Modules\\PolarisOnline\\Tests\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/PolarisOnline/tests',
+        ),
+        'Modules\\PolarisOnline\\Database\\Seeders\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/PolarisOnline/database/seeders',
+        ),
+        'Modules\\PolarisOnline\\Database\\Factories\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/PolarisOnline/database/factories',
+        ),
+        'Modules\\PolarisOnline\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/PolarisOnline/app',
         ),
         'Mockery\\' => 
         array (
@@ -6583,6 +6603,9 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'Mockery\\Undefined' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Undefined.php',
         'Mockery\\VerificationDirector' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/VerificationDirector.php',
         'Mockery\\VerificationExpectation' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/VerificationExpectation.php',
+        'Modules\\PolarisOnline\\Http\\Controllers\\PolarisOnlineController' => __DIR__ . '/../..' . '/Modules/PolarisOnline/app/Http/Controllers/PolarisOnlineController.php',
+        'Modules\\PolarisOnline\\Providers\\PolarisOnlineServiceProvider' => __DIR__ . '/../..' . '/Modules/PolarisOnline/app/Providers/PolarisOnlineServiceProvider.php',
+        'Modules\\PolarisOnline\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/PolarisOnline/app/Providers/RouteServiceProvider.php',
         'Modules\\RH\\Database\\Seeders\\RHDatabaseSeeder' => __DIR__ . '/../..' . '/Modules/RH/Database/Seeders/RHDatabaseSeeder.php',
         'Modules\\RH\\Database\\factories\\PersonneFactory' => __DIR__ . '/../..' . '/Modules/RH/Database/factories/PersonneFactory.php',
         'Modules\\RH\\Entities\\Personne' => __DIR__ . '/../..' . '/Modules/RH/Entities/Personne.php',
