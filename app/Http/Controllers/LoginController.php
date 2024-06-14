@@ -48,6 +48,8 @@ class LoginController extends Controller
 
         $MCuser = $driver->stateless()->user();
 
+        //ddd($MCuser);
+
         $user = User::where('email', $MCuser->email)->get()->first();
         if ($user != null) {
             $user->storeMindefConnectInformations($MCuser->user);
@@ -55,7 +57,7 @@ class LoginController extends Controller
             return $this->authenticated($request, $user);
         }
 
-        dd($MCuser);
+        
 
         // si le user n'existe pas, test de la variable APP_VALID_MDC pour savoir si on l'enregistre dans la table MDC 
         if (! config('skeletor.validation_automatique_des_comptes_mindef_connect')){

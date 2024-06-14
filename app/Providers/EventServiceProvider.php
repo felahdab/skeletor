@@ -27,7 +27,7 @@ class EventServiceProvider extends ServiceProvider
         \SocialiteProviders\Manager\SocialiteWasCalled::class => [
             'SocialiteProviders\Keycloak\KeycloakExtendSocialite@handle',
         ],
-        Illuminate\Foundation\Http\Events\RequestHandled::class => [
+        \Illuminate\Foundation\Http\Events\RequestHandled::class => [
             'App\Listeners\RecordUsageDataListener@handle',
         ]
     ];
