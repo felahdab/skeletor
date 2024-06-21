@@ -235,11 +235,18 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
             'Modules\\Simualfan\\' => 18,
             'Modules\\RH\\' => 11,
             'Modules\\ProgrammationActivite\\' => 30,
-            'Modules\\FCMUnite\\Tests\\' => 23,
-            'Modules\\FCMUnite\\Database\\Seeders\\' => 34,
-            'Modules\\FCMUnite\\Database\\Factories\\' => 36,
-            'Modules\\FCMUnite\\App\\' => 21,
-            'Modules\\FCMUnite\\' => 17,
+            'Modules\\FcmUnite\\Tests\\' => 23,
+            'Modules\\FcmUnite\\Database\\Seeders\\' => 34,
+            'Modules\\FcmUnite\\Database\\Factories\\' => 36,
+            'Modules\\FcmUnite\\' => 17,
+            'Modules\\FcmCommun\\Tests\\' => 24,
+            'Modules\\FcmCommun\\Database\\Seeders\\' => 35,
+            'Modules\\FcmCommun\\Database\\Factories\\' => 37,
+            'Modules\\FcmCommun\\' => 18,
+            'Modules\\FcmCentral\\Tests\\' => 25,
+            'Modules\\FcmCentral\\Database\\Seeders\\' => 36,
+            'Modules\\FcmCentral\\Database\\Factories\\' => 38,
+            'Modules\\FcmCentral\\' => 19,
             'Modules\\CarnetDeSante\\' => 22,
             'Mockery\\' => 8,
             'Mhmiton\\LaravelModulesLivewire\\' => 31,
@@ -821,25 +828,53 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         array (
             0 => __DIR__ . '/../..' . '/Modules/ProgrammationActivite',
         ),
-        'Modules\\FCMUnite\\Tests\\' => 
+        'Modules\\FcmUnite\\Tests\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/Modules/FCMUnite/tests',
+            0 => __DIR__ . '/../..' . '/Modules/FcmUnite/tests',
         ),
-        'Modules\\FCMUnite\\Database\\Seeders\\' => 
+        'Modules\\FcmUnite\\Database\\Seeders\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/Modules/FCMUnite/database/seeders',
+            0 => __DIR__ . '/../..' . '/Modules/FcmUnite/database/seeders',
         ),
-        'Modules\\FCMUnite\\Database\\Factories\\' => 
+        'Modules\\FcmUnite\\Database\\Factories\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/Modules/FCMUnite/database/factories',
+            0 => __DIR__ . '/../..' . '/Modules/FcmUnite/database/factories',
         ),
-        'Modules\\FCMUnite\\App\\' => 
+        'Modules\\FcmUnite\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/Modules/FCMUnite/app',
+            0 => __DIR__ . '/../..' . '/Modules/FcmUnite/app',
         ),
-        'Modules\\FCMUnite\\' => 
+        'Modules\\FcmCommun\\Tests\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/Modules/FCMUnite',
+            0 => __DIR__ . '/../..' . '/Modules/FcmCommun/tests',
+        ),
+        'Modules\\FcmCommun\\Database\\Seeders\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/FcmCommun/database/seeders',
+        ),
+        'Modules\\FcmCommun\\Database\\Factories\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/FcmCommun/database/factories',
+        ),
+        'Modules\\FcmCommun\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/FcmCommun/app',
+        ),
+        'Modules\\FcmCentral\\Tests\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/FcmCentral/tests',
+        ),
+        'Modules\\FcmCentral\\Database\\Seeders\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/FcmCentral/database/seeders',
+        ),
+        'Modules\\FcmCentral\\Database\\Factories\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/FcmCentral/database/factories',
+        ),
+        'Modules\\FcmCentral\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/FcmCentral/app',
         ),
         'Modules\\CarnetDeSante\\' => 
         array (
@@ -6741,18 +6776,15 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'Modules\\CarnetDeSante\\Http\\Livewire\\TypeTable' => __DIR__ . '/../..' . '/Modules/CarnetDeSante/Http/Livewire/TypeTable.php',
         'Modules\\CarnetDeSante\\Providers\\CarnetDeSanteServiceProvider' => __DIR__ . '/../..' . '/Modules/CarnetDeSante/Providers/CarnetDeSanteServiceProvider.php',
         'Modules\\CarnetDeSante\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/CarnetDeSante/Providers/RouteServiceProvider.php',
-        'Modules\\FCMUnite\\Database\\Seeders\\FCMUniteDatabaseSeeder' => __DIR__ . '/../..' . '/Modules/FCMUnite/Database/Seeders/FCMUniteDatabaseSeeder.php',
-        'Modules\\FCMUnite\\Entities\\Competence' => __DIR__ . '/../..' . '/Modules/FCMUnite/Entities/Competence.php',
-        'Modules\\FCMUnite\\Entities\\Fonction' => __DIR__ . '/../..' . '/Modules/FCMUnite/Entities/Fonction.php',
-        'Modules\\FCMUnite\\Entities\\Objectif' => __DIR__ . '/../..' . '/Modules/FCMUnite/Entities/Objectif.php',
-        'Modules\\FCMUnite\\Entities\\Parcours' => __DIR__ . '/../..' . '/Modules/FCMUnite/Entities/Parcours.php',
-        'Modules\\FCMUnite\\Entities\\Post' => __DIR__ . '/../..' . '/Modules/FCMUnite/Entities/Post.php',
-        'Modules\\FCMUnite\\Entities\\SavoirFaire' => __DIR__ . '/../..' . '/Modules/FCMUnite/Entities/SavoirFaire.php',
-        'Modules\\FCMUnite\\Entities\\SavoirFare' => __DIR__ . '/../..' . '/Modules/FCMUnite/Entities/SavoirFare.php',
-        'Modules\\FCMUnite\\Http\\Controllers\\FCMUniteController' => __DIR__ . '/../..' . '/Modules/FCMUnite/Http/Controllers/FCMUniteController.php',
-        'Modules\\FCMUnite\\Providers\\FCMUniteServiceProvider' => __DIR__ . '/../..' . '/Modules/FCMUnite/Providers/FCMUniteServiceProvider.php',
-        'Modules\\FCMUnite\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/FCMUnite/Providers/RouteServiceProvider.php',
-        'Modules\\FCMUnite\\Traits\\HasTablePrefix' => __DIR__ . '/../..' . '/Modules/FCMUnite/Traits/HasTablePrefix.php',
+        'Modules\\FcmCentral\\Http\\Controllers\\FcmCentralController' => __DIR__ . '/../..' . '/Modules/FcmCentral/app/Http/Controllers/FcmCentralController.php',
+        'Modules\\FcmCentral\\Providers\\FcmCentralServiceProvider' => __DIR__ . '/../..' . '/Modules/FcmCentral/app/Providers/FcmCentralServiceProvider.php',
+        'Modules\\FcmCentral\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/FcmCentral/app/Providers/RouteServiceProvider.php',
+        'Modules\\FcmCommun\\Http\\Controllers\\FcmCommunController' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/Http/Controllers/FcmCommunController.php',
+        'Modules\\FcmCommun\\Providers\\FcmCommunServiceProvider' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/Providers/FcmCommunServiceProvider.php',
+        'Modules\\FcmCommun\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/Providers/RouteServiceProvider.php',
+        'Modules\\FcmUnite\\Http\\Controllers\\FcmUniteController' => __DIR__ . '/../..' . '/Modules/FcmUnite/app/Http/Controllers/FcmUniteController.php',
+        'Modules\\FcmUnite\\Providers\\FcmUniteServiceProvider' => __DIR__ . '/../..' . '/Modules/FcmUnite/app/Providers/FcmUniteServiceProvider.php',
+        'Modules\\FcmUnite\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/FcmUnite/app/Providers/RouteServiceProvider.php',
         'Modules\\ProgrammationActivite\\Database\\Seeders\\ProgrammationActiviteDatabaseSeeder' => __DIR__ . '/../..' . '/Modules/ProgrammationActivite/Database/Seeders/ProgrammationActiviteDatabaseSeeder.php',
         'Modules\\ProgrammationActivite\\Entities\\Activite' => __DIR__ . '/../..' . '/Modules/ProgrammationActivite/Entities/Activite.php',
         'Modules\\ProgrammationActivite\\Http\\Controllers\\ActiviteController' => __DIR__ . '/../..' . '/Modules/ProgrammationActivite/Http/Controllers/ActiviteController.php',
