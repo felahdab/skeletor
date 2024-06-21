@@ -15,11 +15,10 @@ use App\Models\Diplome;
 use App\Models\Grade;
 use App\Models\Unite;
 
-use App\Models\Fonction;
-use App\Models\TypeFonction;
-
 use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeMail;
+
+use App\Service\PossibleUniteService;
 
 use App\Events\UnUtilisateurDoitEtreRestaureEvent;
 
@@ -107,36 +106,8 @@ class MindefConnectUserController extends Controller
         $userGrade = strtoupper($User->rank);
         $possibleGrade = Grade::where("grade_liblong", "like", $userGrade)->get()->first();
         
-        $possibleUnite=null;
-        $affectation = $User->main_department_number;
-        if (str_contains($affectation, "GTR FREMM TOULON"))
-            $possibleUnite = Unite::where("unite_libcourt", "GTR/T")->get()->first();
-        elseif (str_contains($affectation, "GTR BREST"))
-            $possibleUnite = Unite::where("unite_libcourt", "GTR/B")->get()->first();
-        elseif (str_contains($affectation, "BATIMENTS TOULON/ALSACE"))
-            $possibleUnite = Unite::where("unite_libcourt", "ALS")->get()->first();
-        elseif (str_contains($affectation, "BATIMENTS TOULON/AUVERGNE"))
-            $possibleUnite = Unite::where("unite_libcourt", "AVG")->get()->first();
-        elseif (str_contains($affectation, "BATIMENTS TOULON/LANGUEDOC/LANGUEDOC A"))
-            $possibleUnite = Unite::where("unite_libcourt", "LGC_A")->get()->first();
-        elseif (str_contains($affectation, "BATIMENTS TOULON/LANGUEDOC/LANGUEDOC B"))
-            $possibleUnite = Unite::where("unite_libcourt", "LGC_B")->get()->first();
-        elseif (str_contains($affectation, "BATIMENTS TOULON/PROVENCE/PROVENCE A"))
-            $possibleUnite = Unite::where("unite_libcourt", "PCE_A")->get()->first();
-        elseif (str_contains($affectation, "BATIMENTS TOULON/PROVENCE/PROVENCE B"))
-            $possibleUnite = Unite::where("unite_libcourt", "PCE_B")->get()->first();
-        elseif (str_contains($affectation, "BATIMENTS BREST/AQUITAINE/AQUITAINE A"))
-            $possibleUnite = Unite::where("unite_libcourt", "AQN_A")->get()->first();
-        elseif (str_contains($affectation, "BATIMENTS BREST/AQUITAINE/AQUITAINE B"))
-            $possibleUnite = Unite::where("unite_libcourt", "AQN_B")->get()->first();
-        elseif (str_contains($affectation, "BATIMENTS BREST/BRETAGNE/BRETAGNE A"))
-            $possibleUnite = Unite::where("unite_libcourt", "BTE_A")->get()->first();
-        elseif (str_contains($affectation, "BATIMENTS BREST/BRETAGNE/BRETAGNE B"))
-            $possibleUnite = Unite::where("unite_libcourt", "BTE_B")->get()->first();
-        elseif (str_contains($affectation, "BATIMENTS BREST/LORRAINE"))
-            $possibleUnite = Unite::where("unite_libcourt", "LRN")->get()->first();
-        elseif (str_contains($affectation, "BATIMENTS BREST/NORMANDIE"))
-            $possibleUnite = Unite::where("unite_libcourt", "NMD")->get()->first();
+        $possibleUnite= PossibleUniteService::possibleunite($User->main_department_number);
+
         $cpte_exist=false;
         if (User::withTrashed()->where ("email", $User->email)->get()->first()) {$cpte_exist=true;}            
         

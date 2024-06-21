@@ -13,6 +13,8 @@ use App\Models\Specialite;
 use App\Models\Diplome;
 use App\Models\Grade;
 use App\Models\Unite;
+use Illuminate\Support\Str;
+use App\Service\NettoyageKreSpeciauxService;
 
 use Modules\Transformation\Entities\Fonction;
 
@@ -86,6 +88,7 @@ class UsersController extends Controller
         $user->name = strtoupper($user->name);
         $user->prenom = ucfirst(strtolower($user->prenom));
         $user->display_name = $user->displayString();
+        $user->user_comment = NettoyageKreSpeciauxService::nettoyer($user->user_comment);
         $user->save();
         $user->syncRoles($request->get('role'));
         
@@ -181,6 +184,8 @@ class UsersController extends Controller
         $user->name = strtoupper($user->name);
         $user->prenom = ucfirst(strtolower($user->prenom));
         $user->display_name = $user->displayString();
+        $user->user_comment = NettoyageKreSpeciauxService::nettoyer($user->user_comment);
+//        dd($user->user_comment);
         $user->save();
 
         $user->syncRoles($request->get('role'));

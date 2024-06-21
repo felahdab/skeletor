@@ -217,6 +217,19 @@ class UsersTable extends DataTableComponent
                     if ($unite != null)
                         $builder->whereIn('unite_destination_id', $unite);
                 }),
+            MultiSelectFilter::make('Roles')
+                ->options(
+                    Role::query()
+                    ->orderBy('name')
+                    ->get()
+                    ->keyBy('id')
+                    ->map(fn ($role) => $role->name)
+                    ->toArray()
+                )
+                ->filter(function (Builder $builder, array $values) {
+                $roles = Role::whereIn('id',  $values)->get();
+                $builder->role($roles);
+                }),
         ];
         return $basefilters;
     }

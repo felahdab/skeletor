@@ -4,7 +4,7 @@
 - [Généralités](#generalite)
 - [Login MindefConnect](#login_auto)
 - [Login Local](#login_local)
-- [Instance de démonstration](#inst_demo)
+<!-- - [Instance de démonstration](#inst_demo) -->
 
 <a name="generalite"></a>
 
@@ -77,12 +77,12 @@ Saisissez deux fois votre nouveau mot de passe (minimum 8 caractères)!
 Si la réinitialisation du mot de passe DR-CPT n’est pas possible ou ne peut pas être faite, et que vous n'avez pas initialisé vos identifiants locaux, il faut l’intervention d’un administrateur de FFAST. Il suffit donc d’envoyer un mail à l’adresse: ffast.notification.tec@intradef.gouv.fr.
 D’une façon générale, l’administrateur de FFAST s’efforcera de communiquer un mot de passe temporaire à l’utilisateur et à un cadre de proximité. Il sera alors conseillé à l’utilisateur de modifier son mot de passe à la première connexion.
 
-<a name="inst_demo"></a>
+<!-- <a name="inst_demo"></a>
 
-## Instance de démonstration
+ ## Instance de démonstration
 Une instance permettant de comprendre le fonctionnement de l'application est accessible à tous. Retrouvez les indications de connexion dans la page "Login local".
 
 <a href='https://pprod-ffast.intradef.gouv.fr/demo-ffast'>Accéder à l'instance de démo</a>
 
-** Remarque : ** La base de données est réinitialisée quotidiennement avec quelques données basiques. Toutes les modifications apportées ne seront pas conservées.
+** Remarque : ** La base de données est réinitialisée quotidiennement avec quelques données basiques. Toutes les modifications apportées ne seront pas conservées. -->
 
