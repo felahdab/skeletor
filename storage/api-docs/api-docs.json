@@ -10,6 +10,93 @@
         }
     ],
     "paths": {
+        "/api/v1/postevent": {
+            "post": {
+                "operationId": "a662d9b41a078ecdee0912d6d1472a6b",
+                "requestBody": {
+                    "description": "Evenement serialise",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Depose un evenement genere dans une instance distante."
+                    }
+                },
+                "security": [
+                    {
+                        "api token": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/get_user_uuid": {
+            "get": {
+                "operationId": "f6cc1c0a091078ac336a7f8c75192a20",
+                "requestBody": {
+                    "description": "Evenement serialise",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Obtenir le UUID d'un utilisateur."
+                    }
+                },
+                "security": [
+                    {
+                        "api token": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/get_user_history": {
+            "get": {
+                "operationId": "8b6b2331c813dc30dd192b27d6bc964b",
+                "requestBody": {
+                    "description": "Evenement serialise",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Récupérer l'historique complet d'une utilisateur."
+                    }
+                },
+                "security": [
+                    {
+                        "api token": []
+                    }
+                ]
+            }
+        },
         "/api/v1/fonctions": {
             "get": {
                 "operationId": "448e1de43fce93a8f14ae881dbad2bdc",
@@ -40,9 +127,9 @@
                 ]
             }
         },
-        "/api/v1/user": {
+        "/api/v1/whoami": {
             "get": {
-                "operationId": "c3bf57b51f4b3c695ba341b069d2ffec",
+                "operationId": "f04fef830351762bfeb0747cc1a67e46",
                 "responses": {
                     "200": {
                         "description": "Renvoie l'utilisateur pour le compte duquel la requete a ete faite."
