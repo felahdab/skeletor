@@ -30,7 +30,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path(env('APP_PREFIX') . '/admin')
+            ->path(config('skeletor.prefixe_instance') . '/admin')
             ->colors([
                 'primary' => Color::Amber,
             ])

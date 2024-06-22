@@ -186,12 +186,12 @@ Le ```RouteServiceProvider``` fourni par défaut lors de la création d'un proje
 ```php 
 public function map()
 {
-    Route::prefix(env('APP_PREFIX') . '/api')
+    Route::prefix(config('skeletor.prefixe_instance') . '/api')
         ->middleware('api')
         ->namespace($this->namespace)
         ->group(base_path('routes/api.php'));
 
-    Route::prefix(env('APP_PREFIX'))
+    Route::prefix(config('skeletor.prefixe_instance'))
         ->middleware('web')
         ->namespace($this->namespace)
         ->group(base_path('routes/web.php'));
@@ -214,7 +214,7 @@ Ce package déclare 1 route et prévoit un paramètre de configuration pour pré
 utiliser la valeur de  ```APP_PREFIX```:
 
 ```php
-   'prefix' => env('APP_PREFIX'),
+   'prefix' => config('skeletor.prefixe_instance'),
 ```
 <br><br>
 
@@ -236,7 +236,7 @@ utiliser la valeur de  ```APP_PREFIX```:
     |
     */
 
-    'housekeeping_endpoint_prefix' => env('APP_PREFIX') . '/_ignition',
+    'housekeeping_endpoint_prefix' => config('skeletor.prefixe_instance') . '/_ignition',
 ```
 <br><br>
 
@@ -257,7 +257,7 @@ Ce package déclare 5 routes et prévoit un paramètre de configuration pour raj
      | from trying to overcome bugs like this: http://trac.nginx.org/nginx/ticket/97
      |
      */
-    'route_prefix' => env('APP_PREFIX')== '' ? '_debugbar':  env('APP_PREFIX') . '/_debugbar',
+    'route_prefix' => config('skeletor.prefixe_instance')== '' ? '_debugbar':  config('skeletor.prefixe_instance') . '/_debugbar',
 ```
 <br><br>
 
@@ -281,7 +281,7 @@ Ce package déclare 5 routes et prévoit un paramètre de configuration pour pr�
     */
 
     'docs'        => [
-        'route'   => '/' . env('APP_PREFIX') . '/docs',
+        'route'   => '/' . config('skeletor.prefixe_instance') . '/docs',
         'path'    => '/resources/docs',
         'landing' => 'generalites',
         'middleware' => ['web'],
@@ -310,7 +310,7 @@ Ce package déclare 4 routes et prévoit des paramètres de configuration pour p
     /*
         * Route for accessing api documentation interface
     */
-    'api' => env('APP_PREFIX'). '/api/documentation',
+    'api' => config('skeletor.prefixe_instance'). '/api/documentation',
  ],
 
 'defaults' => [
@@ -318,12 +318,12 @@ Ce package déclare 4 routes et prévoit des paramètres de configuration pour p
         /*
             * Route for accessing parsed swagger annotations.
         */
-        'docs' => env('APP_PREFIX'). '/api/docs',
+        'docs' => config('skeletor.prefixe_instance'). '/api/docs',
 
         /*
             * Route for Oauth2 authentication callback.
         */
-        'oauth2_callback' => env('APP_PREFIX'). '/api/oauth2-callback',
+        'oauth2_callback' => config('skeletor.prefixe_instance'). '/api/oauth2-callback',
     ]
 ]
 
@@ -390,7 +390,7 @@ Ce ```ServiceProvider``` utilise le paramètre de configuration rajouté dans la
     |
     */
 
-    'route_prefix' => env('APP_PREFIX'),
+    'route_prefix' => config('skeletor.prefixe_instance'),
 ```
 
 

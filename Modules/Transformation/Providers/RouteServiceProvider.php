@@ -47,7 +47,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
-        Route::prefix(env('APP_PREFIX'))
+        Route::prefix(config('skeletor.prefixe_instance'))
             ->middleware('web')
             //->namespace($this->moduleNamespace)
             ->group(module_path('Transformation', '/Routes/web.php'));
@@ -62,7 +62,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes()
     {
-        Route::prefix(env('APP_PREFIX') . '/api')
+        Route::prefix(config('skeletor.prefixe_instance') . '/api')
             ->middleware('api')
             ->group(module_path('Transformation', '/Routes/api.php'));
     }

@@ -37,5 +37,15 @@ return [
     */
     
     'page_par_defaut' => env('APP_PAGE_ACCUEIL', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Prefixe de l'instance
+    |--------------------------------------------------------------------------
+    | Ce parametre determine le prefixe de l'instance qui doit être rajoute a toutes
+    | les urls générées.
+    */
+    
+    'prefixe_instance' => env('APP_PREFIX', ''),
     
 ];
