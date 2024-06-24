@@ -97,6 +97,7 @@ class PhpUnitTestGenerator extends AbstractClassGenerator implements Generator
                 'mock' => [],
             ];
             $request_data = [];
+            $model_columns = [];
             $tested_bits = 0;
 
             $model = $controller->prefix();
@@ -227,11 +228,17 @@ class PhpUnitTestGenerator extends AbstractClassGenerator implements Generator
                                 if ($factory) {
                                     [$faker, $variable_name] = $factory;
                                 } else {
-                                    $faker = sprintf('$%s = $this->faker->%s;', $data, FakerRegistry::fakerData($local_column->name()) ?? FakerRegistry::fakerDataType($local_model->column($column)->dataType()));
+                                    if ($local_column->isDate()) {
+                                        $this->addImport($controller, 'Illuminate\\Support\\Carbon');
+                                        $faker = sprintf('$%s = Carbon::parse($this->faker->%s);', $data, FakerRegistry::fakerData($local_column->name()) ?? FakerRegistry::fakerDataType($local_model->column($column)->dataType()));
+                                    } else {
+                                        $faker = sprintf('$%s = $this->faker->%s;', $data, FakerRegistry::fakerData($local_column->name()) ?? FakerRegistry::fakerDataType($local_model->column($column)->dataType()));
+                                    }
                                 }
 
                                 $setup['data'][] = $faker;
                                 $request_data[$data] = '$' . $variable_name;
+                                $model_columns[$data] = '$' . $variable_name;
                             } elseif (!is_null($local_model)) {
                                 foreach ($local_model->columns() as $local_column) {
                                     if (in_array($local_column->name(), ['id', 'softdeletes', 'softdeletestz'])) {
@@ -246,12 +253,27 @@ class PhpUnitTestGenerator extends AbstractClassGenerator implements Generator
                                     if ($factory) {
                                         [$faker, $variable_name] = $factory;
                                     } else {
-                                        $faker = sprintf('$%s = $this->faker->%s;', $local_column->name(), FakerRegistry::fakerData($local_column->name()) ?? FakerRegistry::fakerDataType($local_column->dataType()));
+                                        if ($local_column->isDate()) {
+                                            $this->addImport($controller, 'Illuminate\\Support\\Carbon');
+                                            $faker = sprintf('$%s = Carbon::parse($this->faker->%s);', $local_column->name(), FakerRegistry::fakerData($local_column->name()) ?? FakerRegistry::fakerDataType($local_column->dataType()));
+                                        } else {
+                                            $faker = sprintf('$%s = $this->faker->%s;', $local_column->name(), FakerRegistry::fakerData($local_column->name()) ?? FakerRegistry::fakerDataType($local_column->dataType()));
+                                        }
                                         $variable_name = $local_column->name();
                                     }
 
                                     $setup['data'][] = $faker;
-                                    $request_data[$local_column->name()] = '$' . $variable_name;
+                                    if ($local_column->isDate()) {
+                                        if ($local_column->dataType() === 'date') {
+                                            $request_data[$local_column->name()] = '$' . $variable_name . '->toDateString()';
+                                        } else {
+                                            $request_data[$local_column->name()] = '$' . $variable_name . '->toDateTimeString()';
+                                        }
+                                    } else {
+                                        $request_data[$local_column->name()] = '$' . $variable_name;
+                                    }
+
+                                    $model_columns[$local_column->name()] = '$' . $variable_name;
                                 }
                             }
                         }
@@ -352,10 +374,7 @@ class PhpUnitTestGenerator extends AbstractClassGenerator implements Generator
                 } elseif ($statement instanceof RedirectStatement) {
                     $tested_bits |= self::TESTS_REDIRECT;
 
-                    $assertion = sprintf(
-                        '$response->assertRedirect(route(\'%s\'',
-                        config('blueprint.plural_routes') ? Str::plural(Str::kebab($statement->route())) : Str::kebab($statement->route())
-                    );
+                    $assertion = sprintf('$response->assertRedirect(route(\'%s\'', $statement->route());
 
                     if ($statement->data()) {
                         $parameters = array_map(fn ($parameter) => '$' . $parameter, $statement->data());
@@ -404,11 +423,11 @@ class PhpUnitTestGenerator extends AbstractClassGenerator implements Generator
                     if ($statement->operation() === 'save') {
                         $tested_bits |= self::TESTS_SAVE;
 
-                        if ($request_data) {
+                        if ($model_columns) {
                             $indent = str_pad(' ', 12);
                             $plural = Str::plural($variable);
                             $assertion = sprintf('$%s = %s::query()', $plural, $model);
-                            foreach ($request_data as $key => $datum) {
+                            foreach ($model_columns as $key => $datum) {
                                 $assertion .= PHP_EOL . sprintf('%s->where(\'%s\', %s)', $indent, $key, $datum);
                             }
                             $assertion .= PHP_EOL . $indent . '->get();';
@@ -435,13 +454,12 @@ class PhpUnitTestGenerator extends AbstractClassGenerator implements Generator
                     } elseif ($statement->operation() === 'update') {
                         $assertions['sanity'][] = sprintf('$%s->refresh();', $variable);
 
-                        if ($request_data) {
+                        if ($model_columns) {
                             /** @var \Blueprint\Models\Model $local_model */
                             $local_model = $this->tree->modelForContext($model);
-                            foreach ($request_data as $key => $datum) {
-                                if (!is_null($local_model) && $local_model->hasColumn($key) && $local_model->column($key)->dataType() === 'date') {
-                                    $this->addImport($controller, 'Carbon\\Carbon');
-                                    $assertions['generic'][] = sprintf('$this->assertEquals(Carbon::parse(%s), $%s->%s);', $datum, $variable, $key);
+                            foreach ($model_columns as $key => $datum) {
+                                if (!is_null($local_model) && $local_model->hasColumn($key) && $local_model->column($key)->dataType() === 'timestamp') {
+                                    $assertions['generic'][] = sprintf('$this->assertEquals(%s->timestamp, $%s->%s);', $datum, $variable, $key);
                                 } else {
                                     $assertions['generic'][] = sprintf('$this->assertEquals(%s, $%s->%s);', $datum, $variable, $key);
                                 }
@@ -459,7 +477,7 @@ class PhpUnitTestGenerator extends AbstractClassGenerator implements Generator
             $call = sprintf(
                 '$response = $this->%s(route(\'%s.%s\'',
                 $this->httpMethodForAction($name),
-                config('blueprint.plural_routes') ? Str::plural(Str::kebab($context)) : Str::kebab($context),
+                config('blueprint.singular_routes') ? Str::kebab($context) : Str::plural(Str::kebab($context)),
                 $name
             );
 
@@ -497,7 +515,7 @@ class PhpUnitTestGenerator extends AbstractClassGenerator implements Generator
         return trim($this->buildTraits($controller) . PHP_EOL . $test_cases);
     }
 
-    private function testCaseStub()
+    protected function testCaseStub()
     {
         if (empty($this->stubs['test-case'])) {
             $this->stubs['test-case'] = $this->filesystem->stub('phpunit.test.case.stub');
@@ -506,20 +524,13 @@ class PhpUnitTestGenerator extends AbstractClassGenerator implements Generator
         return $this->stubs['test-case'];
     }
 
-    private function determineModel(string $prefix, ?string $reference): string
+    private function addTestAssertionsTrait(Controller $controller): void
     {
-        if (empty($reference) || $reference === 'id') {
-            return Str::studly(Str::singular($prefix));
-        }
-
-        if (Str::contains($reference, '.')) {
-            return Str::studly(Str::before($reference, '.'));
-        }
-
-        return Str::studly($reference);
+        $this->addImport($controller, 'JMac\\Testing\\Traits\AdditionalAssertions');
+        $this->addTrait($controller, 'AdditionalAssertions');
     }
 
-    private function buildFormRequestName(Controller $controller, string $name): string
+    protected function buildFormRequestName(Controller $controller, string $name): string
     {
         if (empty($controller->namespace())) {
             return $controller->name() . Str::studly($name) . 'Request';
@@ -528,7 +539,7 @@ class PhpUnitTestGenerator extends AbstractClassGenerator implements Generator
         return $controller->namespace() . '\\' . $controller->name() . Str::studly($name) . 'Request';
     }
 
-    private function buildFormRequestTestCase(string $controller, string $action, string $form_request): string
+    protected function buildFormRequestTestCase(string $controller, string $action, string $form_request): string
     {
         return <<<END
     #[Test]
@@ -549,16 +560,52 @@ END;
         $this->addTrait($controller, 'WithFaker');
     }
 
-    private function addTestAssertionsTrait(Controller $controller): void
+    private function splitField($field): array
     {
-        $this->addImport($controller, 'JMac\\Testing\\Traits\AdditionalAssertions');
-        $this->addTrait($controller, 'AdditionalAssertions');
+        if (Str::contains($field, '.')) {
+            return explode('.', $field, 2);
+        }
+
+        return [null, $field];
+    }
+
+    protected function generateReferenceFactory(Column $local_column, Controller $controller, string $modelNamespace): ?array
+    {
+        if (!in_array($local_column->dataType(), ['id', 'uuid']) && !($local_column->attributes() && Str::endsWith($local_column->name(), '_id'))) {
+            return null;
+        }
+
+        $reference = Str::beforeLast($local_column->name(), '_id');
+        $variable_name = $reference . '->id';
+
+        if ($local_column->attributes()) {
+            $reference = $local_column->attributes()[0];
+        }
+
+        $faker = sprintf('$%s = %s::factory()->create();', Str::beforeLast($local_column->name(), '_id'), Str::studly($reference));
+
+        $this->addImport($controller, $modelNamespace . '\\' . Str::studly($reference));
+
+        return [$faker, $variable_name];
     }
 
     private function addRefreshDatabaseTrait(Controller $controller): void
     {
         $this->addImport($controller, 'Illuminate\\Foundation\\Testing\\RefreshDatabase');
         $this->addTrait($controller, 'RefreshDatabase');
+    }
+
+    private function determineModel(string $prefix, ?string $reference): string
+    {
+        if (empty($reference) || $reference === 'id') {
+            return Str::studly(Str::singular($prefix));
+        }
+
+        if (Str::contains($reference, '.')) {
+            return Str::studly(Str::before($reference, '.'));
+        }
+
+        return Str::studly($reference);
     }
 
     private function httpMethodForAction(string $action): string
@@ -571,7 +618,14 @@ END;
         };
     }
 
-    private function buildTestCaseName(string $name, int $tested_bits): string
+    private function uniqueSetupLines(array $setup)
+    {
+        return collect($setup)->filter()
+            ->map(fn ($lines) => array_unique($lines))
+            ->toArray();
+    }
+
+    protected function buildTestCaseName(string $name, int $tested_bits): string
     {
         $verifications = [];
 
@@ -611,41 +665,5 @@ END;
     private function buildLines($lines): string
     {
         return str_pad(' ', 8) . implode(PHP_EOL . str_pad(' ', 8), $lines);
-    }
-
-    private function splitField($field): array
-    {
-        if (Str::contains($field, '.')) {
-            return explode('.', $field, 2);
-        }
-
-        return [null, $field];
-    }
-
-    private function uniqueSetupLines(array $setup)
-    {
-        return collect($setup)->filter()
-            ->map(fn ($lines) => array_unique($lines))
-            ->toArray();
-    }
-
-    private function generateReferenceFactory(Column $local_column, Controller $controller, string $modelNamespace): ?array
-    {
-        if (!in_array($local_column->dataType(), ['id', 'uuid']) && !($local_column->attributes() && Str::endsWith($local_column->name(), '_id'))) {
-            return null;
-        }
-
-        $reference = Str::beforeLast($local_column->name(), '_id');
-        $variable_name = $reference . '->id';
-
-        if ($local_column->attributes()) {
-            $reference = $local_column->attributes()[0];
-        }
-
-        $faker = sprintf('$%s = %s::factory()->create();', Str::beforeLast($local_column->name(), '_id'), Str::studly($reference));
-
-        $this->addImport($controller, $modelNamespace . '\\' . Str::studly($reference));
-
-        return [$faker, $variable_name];
     }
 }

@@ -4,8 +4,8 @@ BASEDIRECTORY=$(realpath $SCRIPTDIRECTORY)
 APPDIRECTORY=$BASEDIRECTORY/..
 cd $APPDIRECTORY || exit 1
 
-chown -R fanlabuser:fanlabgroup *
-chown -R fanlabuser:fanlabgroup .*
+chown -R 1111:1111 *
+chown -R 1111:1111 .*
 chmod -R g+rwx .
 # chmod -R o+rx .
 # chmod -R o+rwx database/migrations

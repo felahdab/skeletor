@@ -2,6 +2,7 @@
 
 namespace Filament\Commands;
 
+use Filament\Clusters\Cluster;
 use Filament\Facades\Filament;
 use Filament\Forms\Commands\Concerns\CanGenerateForms;
 use Filament\Panel;
@@ -11,10 +12,12 @@ use Filament\Support\Commands\Concerns\CanReadModelSchemas;
 use Filament\Tables\Commands\Concerns\CanGenerateTables;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
+use Symfony\Component\Console\Attribute\AsCommand;
 
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 
+#[AsCommand(name: 'make:filament-resource')]
 class MakeResourceCommand extends Command
 {
     use CanGenerateForms;
@@ -185,7 +188,21 @@ class MakeResourceCommand extends Command
 
         $tableBulkActions = implode(PHP_EOL, $tableBulkActions);
 
+        $potentialCluster = (string) str($namespace)->beforeLast('\Resources');
+        $clusterAssignment = null;
+        $clusterImport = null;
+
+        if (
+            class_exists($potentialCluster) &&
+            is_subclass_of($potentialCluster, Cluster::class)
+        ) {
+            $clusterAssignment = $this->indentString(PHP_EOL . PHP_EOL . 'protected static ?string $cluster = ' . class_basename($potentialCluster) . '::class;');
+            $clusterImport = "use {$potentialCluster};" . PHP_EOL;
+        }
+
         $this->copyStubToApp('Resource', $resourcePath, [
+            'clusterAssignment' => $clusterAssignment,
+            'clusterImport' => $clusterImport,
             'eloquentQuery' => $this->indentString($eloquentQuery, 1),
             'formSchema' => $this->indentString($this->option('generate') ? $this->getResourceFormSchema(
                 $modelNamespace . ($modelSubNamespace !== '' ? "\\{$modelSubNamespace}" : '') . '\\' . $modelClass,

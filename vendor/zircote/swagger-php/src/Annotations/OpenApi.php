@@ -137,7 +137,7 @@ class OpenApi extends AbstractAnnotation
     /**
      * @inheritdoc
      */
-    public function validate(array $stack = null, array $skip = null, string $ref = '', $context = null): bool
+    public function validate(?array $stack = null, ?array $skip = null, string $ref = '', $context = null): bool
     {
         if ($stack !== null || $skip !== null || $ref !== '') {
             $this->_context->logger->warning('Nested validation for ' . $this->identity() . ' not allowed');
@@ -262,7 +262,7 @@ class OpenApi extends AbstractAnnotation
     {
         $data = parent::jsonSerialize();
 
-        if (false === $this->_context->isVersion(OpenApi::VERSION_3_1_0)) {
+        if (false === $this->isOpenApiVersion(OpenApi::VERSION_3_1_0)) {
             unset($data->webhooks);
         }
 

@@ -437,8 +437,11 @@ Sometimes you need to calculate the state of a column, instead of directly readi
 By passing a callback function to the `state()` method, you can customize the returned state for that column based on the `$record`:
 
 ```php
-Tables\Columns\TextColumn::make('amount_including_vat')
-    ->state(function (Model $record): float {
+use App\Models\Order;
+use Filament\Tables\Columns\TextColumn;
+
+TextColumn::make('amount_including_vat')
+    ->state(function (Order $record): float {
         return $record->amount * (1 + $record->vat_rate);
     })
 ```
@@ -466,7 +469,7 @@ TextColumn::make('title')
     ->tooltip(fn (Model $record): string => "By {$record->author->name}")
 ```
 
-## Aligning column content
+## Horizontally aligning column content
 
 Table columns are aligned to the start (left in LTR interfaces or right in RTL interfaces) by default. You may change the alignment using the `alignment()` method, and passing it `Alignment::Start`, `Alignment::Center`, `Alignment::End` or `Alignment::Justify` options:
 
@@ -487,6 +490,106 @@ use Filament\Tables\Columns\TextColumn;
 
 TextColumn::make('name')
     ->alignEnd()
+```
+
+## Vertically aligning column content
+
+Table column content is vertically centered by default. You may change the vertical alignment using the `verticalAlignment()` method, and passing it `VerticalAlignment::Start`, `VerticalAlignment::Center` or `VerticalAlignment::End` options:
+
+```php
+use Filament\Support\Enums\VerticalAlignment;
+use Filament\Tables\Columns\TextColumn;
+
+TextColumn::make('name')
+    ->verticalAlignment(VerticalAlignment::Start)
+```
+
+<AutoScreenshot name="tables/columns/vertical-alignment" alt="Table with column vertically aligned to the start" version="3.x" />
+
+Alternatively, you may use shorthand methods like `verticallyAlignStart()`:
+
+```php
+use Filament\Support\Enums\VerticalAlignment;
+use Filament\Tables\Columns\TextColumn;
+
+TextColumn::make('name')
+    ->verticallyAlignStart()
+```
+
+## Allowing column headers to wrap
+
+By default, column headers will not wrap onto multiple lines, if they need more space. You may allow them to wrap using the `wrapHeader()` method:
+
+```php
+use Filament\Tables\Columns\TextColumn;
+
+TextColumn::make('name')
+    ->wrapHeader()
+```
+
+## Controlling the width of columns
+
+By default, columns will take up as much space as they need. You may allow some columns to consume more space than others by using the `grow()` method:
+
+```php
+use Filament\Tables\Columns\TextColumn;
+
+TextColumn::make('name')
+    ->grow()
+```
+
+Alternatively, you can define a width for the column, which is passed to the header cell using the `style` attribute, so you can use any valid CSS value:
+
+```php
+use Filament\Tables\Columns\IconColumn;
+
+IconColumn::make('is_paid')
+    ->label('Paid')
+    ->boolean()
+    ->width('1%')
+```
+
+## Grouping columns
+
+You group multiple columns together underneath a single heading using a `ColumnGroup` object:
+
+```php
+use Filament\Tables\Columns\ColumnGroup;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+
+public function table(Table $table): Table
+{
+    return $table
+        ->columns([
+            TextColumn::make('title'),
+            TextColumn::make('slug'),
+            ColumnGroup::make('Visibility', [
+                TextColumn::make('status'),
+                IconColumn::make('is_featured'),
+            ]),
+            TextColumn::make('author.name'),
+        ]);
+}
+```
+
+The first argument is the label of the group, and the second is an array of column objects that belong to that group.
+
+<AutoScreenshot name="tables/columns/grouping" alt="Table with grouped columns" version="3.x" />
+
+You can also control the group header [alignment](#horizontally-aligning-column-content) and [wrapping](#allowing-column-headers-to-wrap) on the `ColumnGroup` object. To improve the multi-line fluency of the API, you can chain the `columns()` onto the object instead of passing it as the second argument:
+
+```php
+use Filament\Support\Enums\Alignment;
+use Filament\Tables\Columns\ColumnGroup;
+
+ColumnGroup::make('Website visibility')
+    ->columns([
+        // ...
+    ])
+    ->alignment(Alignment::Center)
+    ->wrapHeader()
 ```
 
 ## Custom attributes

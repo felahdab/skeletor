@@ -66,6 +66,10 @@ class AugmentProperties implements ProcessorInterface
             if (Generator::isDefault($property->example) && ($example = $this->extractExampleDescription((string) $context->comment))) {
                 $property->example = $example;
             }
+
+            if (Generator::isDefault($property->deprecated) && ($deprecated = $this->isDeprecated($context->comment))) {
+                $property->deprecated = $deprecated;
+            }
         }
     }
 
@@ -80,7 +84,7 @@ class AugmentProperties implements ProcessorInterface
             }
 
             $allTypes = $this->stripNull($allTypes);
-            preg_match('/^([^\[]+)(.*$)/', $allTypes, $typeMatches);
+            preg_match('/^([^\[\<]+)(.*$)/', $allTypes, $typeMatches);
             $type = $typeMatches[1];
 
             // finalise property type/ref
@@ -116,6 +120,34 @@ class AugmentProperties implements ProcessorInterface
                         $property->ref = Generator::UNDEFINED;
                     }
                     $property->type = 'array';
+                }
+            } elseif ($property->type === 'integer' && str_starts_with($typeMatches[2], '<') && str_ends_with($typeMatches[2], '>')) {
+                [$min, $max] = explode(',', substr($typeMatches[2], 1, -1));
+
+                if (is_numeric($min)) {
+                    $property->minimum = (int) $min;
+                }
+                if (is_numeric($max)) {
+                    $property->maximum = (int) $max;
+                }
+            } elseif ($type === 'positive-int') {
+                $property->type = 'integer';
+                $property->minimum = 1;
+            } elseif ($type === 'negative-int') {
+                $property->type = 'integer';
+                $property->maximum = -1;
+            } elseif ($type === 'non-positive-int') {
+                $property->type = 'integer';
+                $property->maximum = 0;
+            } elseif ($type === 'non-negative-int') {
+                $property->type = 'integer';
+                $property->minimum = 0;
+            } elseif ($type === 'non-zero-int') {
+                $property->type = 'integer';
+                if ($property->isOpenApiVersion(OA\OpenApi::VERSION_3_1_0)) {
+                    $property->not = ['const' => 0];
+                } else {
+                    $property->not = ['enum' => [0]];
                 }
             }
         }

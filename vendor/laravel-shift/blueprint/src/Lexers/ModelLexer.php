@@ -81,6 +81,7 @@ class ModelLexer implements Lexer
         'unsignedmediuminteger' => 'unsignedMediumInteger',
         'unsignedsmallinteger' => 'unsignedSmallInteger',
         'unsignedtinyinteger' => 'unsignedTinyInteger',
+        'ulid' => 'ulid',
         'uuid' => 'uuid',
         'year' => 'year',
     ];
@@ -131,6 +132,10 @@ class ModelLexer implements Lexer
         $model = new Model($name);
 
         if (isset($columns['meta']) && is_array($columns['meta'])) {
+            if (isset($columns['meta']['connection'])) {
+                $model->setDatabaseConnection($columns['meta']['connection']);
+            }
+
             if (isset($columns['meta']['table'])) {
                 $model->setTableName($columns['meta']['table']);
             }

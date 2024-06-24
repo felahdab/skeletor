@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\Expression;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Kirschbaum\PowerJoins\JoinsHelper;
 use Kirschbaum\PowerJoins\PowerJoinClause;
@@ -115,6 +116,11 @@ class JoinRelationship
                 return $this;
             }
 
+            $relationCallback = $callback;
+            if ($callback && is_array($callback) && isset($callback[$relationName]) && is_array($callback[$relationName])) {
+                $relationCallback = $callback[$relationName];
+            }
+
             $relation = $this->getModel()->{$relationName}();
             $relationQuery = $relation->getQuery();
             $alias = $joinHelper->getAliasName(
@@ -122,7 +128,7 @@ class JoinRelationship
                 $relation,
                 $relationName,
                 $relationQuery->getModel()->getTable(),
-                $callback
+                $relationCallback
             );
 
             if ($relation instanceof BelongsToMany && !is_array($alias)) {
@@ -131,12 +137,13 @@ class JoinRelationship
                     $relation,
                     $relationName,
                     $relation->getTable(),
-                    $callback
+                    $relationCallback
                 );
                 $alias = [$extraAlias, $alias];
             }
 
             $aliasString = is_array($alias) ? implode('.', $alias) : $alias;
+            $useAlias = $alias ? true : $useAlias;
 
             $relationJoinCache = $alias
                 ? "{$aliasString}.{$relationQuery->getModel()->getTable()}.{$relationName}"
@@ -146,6 +153,9 @@ class JoinRelationship
                 return $this;
             }
 
+            if ($useAlias) {
+                StaticCache::setTableAliasForModel($relation->getModel(), $alias);
+            }
 
             $joinHelper->markRelationshipAsAlreadyJoined($this->getModel(), $relationJoinCache);
             StaticCache::clear();
@@ -153,14 +163,13 @@ class JoinRelationship
             $relation->performJoinForEloquentPowerJoins(
                 builder: $this,
                 joinType: $joinType,
-                callback: $callback,
+                callback: $relationCallback,
                 alias: $alias,
                 disableExtraConditions: $disableExtraConditions,
                 morphable: $morphable,
             );
 
             return $this;
-
         };
     }
 
@@ -353,7 +362,8 @@ class JoinRelationship
             }, $this->getModel());
 
             if ($aggregation) {
-                $aliasName = sprintf('%s_%s_%s',
+                $aliasName = sprintf(
+                    '%s_%s_%s',
                     $latestRelationshipModel->getTable(),
                     $column,
                     $aggregation
@@ -369,7 +379,7 @@ class JoinRelationship
                     )
                 )
                     ->groupBy(sprintf('%s.%s', $this->getModel()->getTable(), $this->getModel()->getKeyName()))
-                    ->orderBy(sprintf('%s', $aliasName), $direction);
+                    ->orderBy(DB::raw(sprintf('%s', $aliasName)), $direction);
             } else {
                 if ($column instanceof Expression) {
                     $this->orderBy($column, $direction);
@@ -382,7 +392,6 @@ class JoinRelationship
             }
             return $this;
         };
-
     }
 
     public function orderByLeftPowerJoins(): Closure
@@ -517,7 +526,7 @@ class JoinRelationship
             foreach ($relations as $index => $relation) {
                 $relationName = $relation;
 
-                if (! $latestRelation) {
+                if (!$latestRelation) {
                     $relation = $this->getRelationWithoutConstraintsProxy($relation);
                 } else {
                     $relation = $latestRelation->getModel()->query()->getRelationWithoutConstraintsProxy($relation);
@@ -540,7 +549,6 @@ class JoinRelationship
         return function ($relation, $boolean = 'and', Closure $callback = null) {
             return $this->powerJoinHas($relation, '<', 1, $boolean, $callback);
         };
-
     }
 
     public function powerJoinWhereHas(): Closure

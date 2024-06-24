@@ -27,7 +27,7 @@ class CalculateUserTransformationRatiosTest extends TestCase
     public function test_calculate_taux_de_transformation()
     {
         $this->seed();
-        Artisan::call('module:seed');
+        $this->artisan('module:seed', ['module' => 'Transformation']);
         Event::fake();
 
         $user = User::first();

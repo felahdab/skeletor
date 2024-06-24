@@ -247,9 +247,15 @@ class PowerJoinClause extends JoinClause
         } else {
             if (static::hasMacro($name)) {
                 return $this->macroCall($name, $arguments);
-            } else {
-                throw new InvalidArgumentException(sprintf('Method %s does not exist in PowerJoinClause class', $name));
             }
+
+            $eloquentBuilder = $this->getModel()->newEloquentBuilder($this);
+            if (method_exists($eloquentBuilder, $name)) {
+                $eloquentBuilder->setModel($this->getModel());
+                return $eloquentBuilder->{$name}(...$arguments);
+            }
+
+            throw new InvalidArgumentException(sprintf('Method %s does not exist in PowerJoinClause class', $name));
         }
     }
 }

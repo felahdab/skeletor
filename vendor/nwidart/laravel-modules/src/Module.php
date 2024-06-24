@@ -6,7 +6,6 @@ use Illuminate\Cache\CacheManager;
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Translation\Translator;
@@ -89,6 +88,11 @@ abstract class Module
 
             if (is_array($files)) {
                 foreach ($files as $file) {
+                    // Ignore files which aren't entrypoints.
+                    if (empty($file['isEntry'])) {
+                        continue;
+                    }
+
                     if (isset($file['src'])) {
                         $paths[] = $file['src'];
                     }
@@ -167,6 +171,18 @@ abstract class Module
     public function getPath(): string
     {
         return $this->path;
+    }
+
+    /**
+     * Get app path.
+     *
+     * @return string
+     */
+    public function getAppPath(): string
+    {
+        $app_path = rtrim($this->getExtraPath(config('modules.paths.app_folder', '')), '/');
+
+        return is_dir($app_path) ? $app_path : $this->getPath();
     }
 
     /**
@@ -284,6 +300,7 @@ abstract class Module
     {
         $this->app['events']->dispatch(sprintf('modules.%s.' . $event, $this->getLowerName()), [$this]);
     }
+
     /**
      * Register the aliases from this module.
      */

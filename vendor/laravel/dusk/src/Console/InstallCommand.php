@@ -3,9 +3,13 @@
 namespace Laravel\Dusk\Console;
 
 use Illuminate\Console\Command;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'dusk:install')]
 class InstallCommand extends Command
 {
+    use Concerns\InteractsWithTestingFrameworks;
+
     /**
      * The name and signature of the console command.
      *
@@ -50,16 +54,48 @@ class InstallCommand extends Command
         }
 
         $stubs = [
-            'ExampleTest.stub' => base_path('tests/Browser/ExampleTest.php'),
             'HomePage.stub' => base_path('tests/Browser/Pages/HomePage.php'),
             'DuskTestCase.stub' => base_path('tests/DuskTestCase.php'),
             'Page.stub' => base_path('tests/Browser/Pages/Page.php'),
         ];
 
+        if ($this->usingPest()) {
+            $stubs['ExampleTest.pest.stub'] = base_path('tests/Browser/ExampleTest.php');
+
+            $contents = file_get_contents(base_path('tests/Pest.php'));
+
+            $contents = str_replace('<?php', <<<EOT
+            <?php
+
+            uses(
+                Tests\DuskTestCase::class,
+                // Illuminate\Foundation\Testing\DatabaseMigrations::class,
+            )->in('Browser');
+            EOT, $contents);
+
+            file_put_contents(base_path('tests/Pest.php'), $contents);
+        } else {
+            $stubs['ExampleTest.stub'] = base_path('tests/Browser/ExampleTest.php');
+        }
+
         foreach ($stubs as $stub => $file) {
             if (! is_file($file)) {
                 copy(__DIR__.'/../../stubs/'.$stub, $file);
             }
+        }
+
+        $baseTestCase = file_get_contents(base_path('tests/DuskTestCase.php'));
+
+        if (! trait_exists(\Tests\CreatesApplication::class)) {
+            file_put_contents(base_path('tests/DuskTestCase.php'), str_replace(<<<'EOT'
+                {
+                    use CreatesApplication;
+
+                EOT, <<<'EOT'
+                {
+                EOT,
+                $baseTestCase,
+            ));
         }
 
         $this->info('Dusk scaffolding installed successfully.');

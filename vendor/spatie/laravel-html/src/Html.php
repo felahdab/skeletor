@@ -131,7 +131,7 @@ class Html
     }
 
     /**
-     * @param \Spatie\Html\HtmlElement|string|null $contents
+     * @param \Spatie\Html\HtmlElement|string|iterable|int|float|null $contents
      *
      * @return \Spatie\Html\Elements\Div
      */
@@ -149,6 +149,17 @@ class Html
     public function email($name = null, $value = null)
     {
         return $this->input('email', $name, $value);
+    }
+
+    /**
+     * @param string|null $name
+     * @param string|null $value
+     *
+     * @return \Spatie\Html\Elements\Input
+     */
+    public function search($name = null, $value = null)
+    {
+        return $this->input('search', $name, $value);
     }
 
     /**

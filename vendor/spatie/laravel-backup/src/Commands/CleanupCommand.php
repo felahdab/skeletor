@@ -3,13 +3,14 @@
 namespace Spatie\Backup\Commands;
 
 use Exception;
+use Illuminate\Contracts\Console\Isolatable;
 use Spatie\Backup\BackupDestination\BackupDestinationFactory;
 use Spatie\Backup\Events\CleanupHasFailed;
 use Spatie\Backup\Tasks\Cleanup\CleanupJob;
 use Spatie\Backup\Tasks\Cleanup\CleanupStrategy;
 use Spatie\Backup\Traits\Retryable;
 
-class CleanupCommand extends BaseCommand
+class CleanupCommand extends BaseCommand implements Isolatable
 {
     use Retryable;
 

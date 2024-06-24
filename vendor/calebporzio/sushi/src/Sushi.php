@@ -5,6 +5,7 @@ namespace Sushi;
 use Closure;
 use Illuminate\Database\Connectors\ConnectionFactory;
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Str;
 
 trait Sushi
@@ -36,13 +37,29 @@ trait Sushi
         return static::$sushiConnection;
     }
 
+    protected function sushiCachePath()
+    {
+        return implode(DIRECTORY_SEPARATOR, [
+            $this->sushiCacheDirectory(),
+            $this->sushiCacheFileName(),
+        ]);
+    }
+
+    protected function sushiCacheFileName()
+    {
+        return config('sushi.cache-prefix', 'sushi').'-'.Str::kebab(str_replace('\\', '', static::class)).'.sqlite';
+    }
+
+    protected function sushiCacheDirectory()
+    {
+        return realpath(config('sushi.cache-path', storage_path('framework/cache')));
+    }
+
     public static function bootSushi()
     {
         $instance = (new static);
 
-        $cacheFileName = config('sushi.cache-prefix', 'sushi').'-'.Str::kebab(str_replace('\\', '', static::class)).'.sqlite';
-        $cacheDirectory = realpath(config('sushi.cache-path', storage_path('framework/cache')));
-        $cachePath = $cacheDirectory.'/'.$cacheFileName;
+        $cachePath = $instance->sushiCachePath();
         $dataPath = $instance->sushiCacheReferencePath();
 
         $states = [
@@ -74,7 +91,7 @@ trait Sushi
                 $states['cache-file-found-and-up-to-date']();
                 break;
 
-            case file_exists($cacheDirectory) && is_writable($cacheDirectory):
+            case file_exists($instance->sushiCacheDirectory()) && is_writable($instance->sushiCacheDirectory()):
                 $states['cache-file-not-found-or-stale']();
                 break;
 
@@ -82,6 +99,15 @@ trait Sushi
                 $states['no-caching-capabilities']();
                 break;
         }
+    }
+
+    protected function newRelatedInstance($class)
+    {
+        return tap(new $class, function ($instance) {
+            if (!$instance->getConnectionName()) {
+                $instance->setConnection($this->getConnectionResolver()->getDefaultConnection());
+            }
+        });
     }
 
     protected static function setSqliteConnection($database)
@@ -108,7 +134,7 @@ trait Sushi
         }
 
         foreach (array_chunk($rows, $this->getSushiInsertChunkSize()) ?? [] as $inserts) {
-            if (!empty($inserts)) {
+            if (! empty($inserts)) {
                 static::insert($inserts);
             }
         }
@@ -155,7 +181,14 @@ trait Sushi
             if ($this->usesTimestamps() && (! in_array('updated_at', array_keys($firstRow)) || ! in_array('created_at', array_keys($firstRow)))) {
                 $table->timestamps();
             }
+
+            $this->afterMigrate($table);
         });
+    }
+
+    protected function afterMigrate(BluePrint $table)
+    {
+       //
     }
 
     public function createTableWithNoData(string $tableName)

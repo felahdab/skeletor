@@ -1,3 +1,26 @@
+## 2.2.1 (June 21, 2024)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.2.0 –> 2.2.1
+- Suppression vues inutiles de Skeletor
+- Mise en cache de l'url de la photo de profil annudef. Influe énormément sur les performances apparentes en cas de difficultés côté Annudef (400ms vs 5s pour afficher une page avec la photo de profil).
+- remise en place du filtre role dans usertable
+- suppr lien instance demo car ne concerne pas skeletor
+- Ajout correction des caractères spéciaux dans les commentaires user/stage/valid transfo
+- Implements art #256270 correction bug droit changpassword pour superadmin
+- Implements art#243101 debut gestion unite annudef tache
+
+## 2.2.0 (June 03, 2024)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.9 –> 2.2.0
+- Ajout des assets au repo git pour ne pas avoir à les rebuilder
+- Update coolsam/modules to v3
+- Installation axonc/filament-copyable-placeholder
+- Add junit files to git ignored files.
+- Add data to casted attributes of User model.
+- API regeneration and composer autoload update.
+- Implements RemoteSystem handling: new api guard, new model for Remote Systems and AccessTokens and Filament ressource to handle all this.
+- Introduce Vite asset bundling. Make bootstrap and chartjs available thru asset bundling. Adjust javascript execution in Transformation Module to defer until asset loaded. Include node_modules into the versionned files.
+- Upgrade all php packages, javascript and css dependencies to the latest possible versions. Cela inclue le passage a PHP 8.2 qui nécessite un changement des images
+  docker utilisees pour le déploiement.
+
 ## 2.1.9 (April 23, 2024)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.8a –> 2.1.9
 - ajout test

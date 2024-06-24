@@ -124,9 +124,6 @@ class Generator
         };
     }
 
-    /**
-     * @param mixed $value
-     */
     public static function isDefault($value): bool
     {
         return $value === Generator::UNDEFINED;
@@ -261,6 +258,7 @@ class Generator
                 new Processors\ExpandTraits(),
                 new Processors\ExpandEnums(),
                 new Processors\AugmentSchemas(),
+                new Processors\AugmentRequestBody(),
                 new Processors\AugmentProperties(),
                 new Processors\BuildPaths(),
                 new Processors\AugmentParameters(),

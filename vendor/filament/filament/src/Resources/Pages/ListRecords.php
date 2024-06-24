@@ -3,10 +3,13 @@
 namespace Filament\Resources\Pages;
 
 use Filament\Actions\Action;
+use Filament\Actions\Contracts\HasRecord;
 use Filament\Actions\CreateAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Form;
 use Filament\Infolists\Infolist;
+use Filament\Navigation\NavigationGroup;
+use Filament\Navigation\NavigationItem;
 use Filament\Resources\Concerns\HasTabs;
 use Filament\Tables;
 use Filament\Tables\Actions\BulkAction;
@@ -68,7 +71,6 @@ class ListRecords extends Page implements Tables\Contracts\HasTable
 
     protected function authorizeAccess(): void
     {
-        static::authorizeResourceAccess();
     }
 
     public function getBreadcrumb(): ?string
@@ -254,6 +256,10 @@ class ListRecords extends Page implements Tables\Contracts\HasTable
 
                     $action->record($record);
 
+                    if (($actionGroup = $action->getGroup()) instanceof HasRecord) {
+                        $actionGroup->record($record);
+                    }
+
                     if ($action->isHidden()) {
                         continue;
                     }
@@ -277,6 +283,10 @@ class ListRecords extends Page implements Tables\Contracts\HasTable
                     }
 
                     $action->record($record);
+
+                    if (($actionGroup = $action->getGroup()) instanceof HasRecord) {
+                        $actionGroup->record($record);
+                    }
 
                     if ($action->isHidden()) {
                         continue;
@@ -323,6 +333,18 @@ class ListRecords extends Page implements Tables\Contracts\HasTable
      */
     protected function getForms(): array
     {
+        return [];
+    }
+
+    /**
+     * @return array<NavigationItem | NavigationGroup>
+     */
+    public function getSubNavigation(): array
+    {
+        if (filled($cluster = static::getCluster())) {
+            return $this->generateNavigationItems($cluster::getClusteredComponents());
+        }
+
         return [];
     }
 }

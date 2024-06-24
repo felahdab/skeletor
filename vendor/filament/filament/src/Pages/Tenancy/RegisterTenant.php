@@ -15,8 +15,7 @@ use Filament\Support\Facades\FilamentView;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Route;
+use Throwable;
 
 use function Filament\authorize;
 use function Filament\Support\is_app_url;
@@ -26,6 +25,7 @@ use function Filament\Support\is_app_url;
  */
 abstract class RegisterTenant extends SimplePage
 {
+    use Concerns\CanUseDatabaseTransactions;
     use Concerns\HasRoutes;
     use InteractsWithFormActions;
 
@@ -43,25 +43,14 @@ abstract class RegisterTenant extends SimplePage
 
     abstract public static function getLabel(): string;
 
-    public static function routes(Panel $panel): void
+    public static function getRelativeRouteName(): string
     {
-        $slug = static::getSlug();
-
-        Route::get("/{$slug}", static::class)
-            ->middleware(static::getRouteMiddleware($panel))
-            ->withoutMiddleware(static::getWithoutRouteMiddleware($panel))
-            ->name('registration');
+        return 'registration';
     }
 
-    /**
-     * @return string | array<string>
-     */
-    public static function getRouteMiddleware(Panel $panel): string | array
+    public static function isTenantSubscriptionRequired(Panel $panel): bool
     {
-        return [
-            ...(static::isEmailVerificationRequired($panel) ? [static::getEmailVerifiedMiddleware($panel)] : []),
-            ...Arr::wrap(static::$routeMiddleware),
-        ];
+        return false;
     }
 
     public function mount(): void
@@ -83,6 +72,8 @@ abstract class RegisterTenant extends SimplePage
     public function register(): void
     {
         try {
+            $this->beginDatabaseTransaction();
+
             $this->callHook('beforeValidate');
 
             $data = $this->form->getState();
@@ -98,8 +89,18 @@ abstract class RegisterTenant extends SimplePage
             $this->form->model($this->tenant)->saveRelationships();
 
             $this->callHook('afterRegister');
+
+            $this->commitDatabaseTransaction();
         } catch (Halt $exception) {
+            $exception->shouldRollbackDatabaseTransaction() ?
+                $this->rollBackDatabaseTransaction() :
+                $this->commitDatabaseTransaction();
+
             return;
+        } catch (Throwable $exception) {
+            $this->rollBackDatabaseTransaction();
+
+            throw $exception;
         }
 
         if ($redirectUrl = $this->getRedirectUrl()) {

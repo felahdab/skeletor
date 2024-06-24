@@ -60,8 +60,6 @@ If you'd like to save time, Filament can automatically generate the [form](#reso
 php artisan make:filament-resource Customer --generate
 ```
 
-> If your table contains ENUM columns, the `doctrine/dbal` package we use is unable to scan your table and will crash. Hence, Filament is unable to generate the schema for your resource if it contains an ENUM column. Read more about this issue [here](https://github.com/doctrine/dbal/issues/3819#issuecomment-573419808).
-
 ### Handling soft deletes
 
 By default, you will not be able to interact with deleted records in the app. If you'd like to add functionality to restore, force delete and filter trashed records in your resource, use the `--soft-deletes` flag when generating the resource:
@@ -303,7 +301,9 @@ protected static ?string $navigationIcon = 'heroicon-o-user-group';
 Alternatively, you may set a dynamic navigation icon in the `getNavigationIcon()` method:
 
 ```php
-public static function getNavigationIcon(): ?string
+use Illuminate\Contracts\Support\Htmlable;
+
+public static function getNavigationIcon(): string | Htmlable | null
 {
     return 'heroicon-o-user-group';
 }
@@ -363,6 +363,8 @@ public static function getNavigationParentItem(): ?string
     return __('filament/navigation.groups.shop.items.products');
 }
 ```
+
+> If you're reaching for a third level of navigation like this, you should consider using [clusters](clusters) instead, which are a logical grouping of resources and [custom pages](../pages), which can share their own separate navigation.
 
 ## Generating URLs to resource pages
 
@@ -505,6 +507,8 @@ public static function getRecordSubNavigation(Page $page): array
 ```
 
 Each item in the sub-navigation can be customized using the [same navigation methods as normal pages](../navigation).
+
+> If you're looking to add sub-navigation to switch *between* entire resources and [custom pages](../pages), you might be looking for [clusters](../clusters), which are used to group these together. The `getRecordSubNavigation()` method is intended to construct a navigation between pages that relate to a particular record *inside* a resource.
 
 ### Sub-navigation position
 

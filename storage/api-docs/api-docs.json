@@ -6,7 +6,7 @@
     },
     "servers": [
         {
-            "url": "http://localfanlab.el-ahdab.fr/ffast"
+            "url": "https://c2n.adalfantln.marine.defensecdd.gouv.fr/ffast"
         }
     ],
     "paths": {
@@ -42,6 +42,7 @@
         },
         "/api/v1/user": {
             "get": {
+                "operationId": "c3bf57b51f4b3c695ba341b069d2ffec",
                 "responses": {
                     "200": {
                         "description": "Renvoie l'utilisateur pour le compte duquel la requete a ete faite."
