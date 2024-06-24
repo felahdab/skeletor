@@ -6759,7 +6759,6 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'Modules\\FcmCentral\\Providers\\Filament\\FcmcentralPanelProvider' => __DIR__ . '/../..' . '/Modules/FcmCentral/app/Providers/Filament/FcmcentralPanelProvider.php',
         'Modules\\FcmCentral\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/FcmCentral/app/Providers/RouteServiceProvider.php',
         'Modules\\FcmCentral\\Traits\\HasTablePrefix' => __DIR__ . '/../..' . '/Modules/FcmCentral/app/Traits/HasTablePrefix.php',
-        'Modules\\FcmCommun\\Commands\\TestParcoursArchitecture' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/Commands/TestParcoursArchitecture.php',
         'Modules\\FcmCommun\\DataObjects\\CompetenceDto' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/DataObjects/CompetenceDto.php',
         'Modules\\FcmCommun\\DataObjects\\FonctionDto' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/DataObjects/FonctionDto.php',
         'Modules\\FcmCommun\\DataObjects\\ObjectifDto' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/DataObjects/ObjectifDto.php',

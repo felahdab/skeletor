@@ -5510,7 +5510,6 @@ return array(
     'Modules\\FcmCentral\\Providers\\Filament\\FcmcentralPanelProvider' => $baseDir . '/Modules/FcmCentral/app/Providers/Filament/FcmcentralPanelProvider.php',
     'Modules\\FcmCentral\\Providers\\RouteServiceProvider' => $baseDir . '/Modules/FcmCentral/app/Providers/RouteServiceProvider.php',
     'Modules\\FcmCentral\\Traits\\HasTablePrefix' => $baseDir . '/Modules/FcmCentral/app/Traits/HasTablePrefix.php',
-    'Modules\\FcmCommun\\Commands\\TestParcoursArchitecture' => $baseDir . '/Modules/FcmCommun/app/Commands/TestParcoursArchitecture.php',
     'Modules\\FcmCommun\\DataObjects\\CompetenceDto' => $baseDir . '/Modules/FcmCommun/app/DataObjects/CompetenceDto.php',
     'Modules\\FcmCommun\\DataObjects\\FonctionDto' => $baseDir . '/Modules/FcmCommun/app/DataObjects/FonctionDto.php',
     'Modules\\FcmCommun\\DataObjects\\ObjectifDto' => $baseDir . '/Modules/FcmCommun/app/DataObjects/ObjectifDto.php',
