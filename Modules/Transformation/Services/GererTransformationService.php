@@ -126,7 +126,7 @@ class GererTransformationService
     public function ValidateSousObjectif(User $user, SousObjectif $sous_objectif, $date_validation, $commentaire, $valideur, $proposition = false)
     {
         $fieldname = $proposition ? 'date_proposition_validation' : 'date_validation';
-        $logtype = $proposition ? 'PROPOSE_VALIDATION_SOUS_OBJECTIF' : 'VALIDE_SOUS_OBJECTIF';
+        $logtype = $proposition ? 'PROPOSE_VALIDATION_ACTIVITE' : 'VALIDE_ACTIVITE';
         $commentaire=NettoyageKreSpeciauxService::nettoyer($commentaire);
         $date_validation = new Carbon($date_validation);
         $date_emb = new Carbon($user->date_embarq);
@@ -166,7 +166,7 @@ class GererTransformationService
 
     public function UnValidateSousObjectif(User $user, SousObjectif $sous_objectif, $proposition = false)
     {
-        $logtype = $proposition ? 'ANNULE_PROPOSITION_DE_VALIDATION_SOUS_OBJECTIF' : 'DEVALIDE_SOUS_OBJECTIF';
+        $logtype = $proposition ? 'ANNULE_PROPOSITION_DE_VALIDATION_ACTIVITE' : 'DEVALIDE_ACTIVITE';
 
         if ($proposition) {
             $ssobj = $user->sous_objectifs->find($sous_objectif);
@@ -197,7 +197,7 @@ class GererTransformationService
     public function ValidateTache(User $user, Tache $tache, $date_validation, $commentaire, $valideur, $proposition = false)
     {
         $fieldname = $proposition ? 'date_proposition_validation' : 'date_validation';
-        $logtype = $proposition ? 'PROPOSE_VALIDATION_TACHE' : 'VALIDE_TACHE';
+        $logtype = $proposition ? 'PROPOSE_VALIDATION_COMPETENCE' : 'VALIDE_COMPETENCE';
 
         $event_detail = [
             "tache" => $tache,
@@ -217,7 +217,7 @@ class GererTransformationService
 
     public function UnValidateTache(User $user, Tache $tache, $proposition = false)
     {
-        $logtype = $proposition ? 'ANNULE_PROPOSITION_VALIDATION_TACHE' : 'DEVALIDE_TACHE';
+        $logtype = $proposition ? 'ANNULE_PROPOSITION_VALIDATION_COMPETENCE' : 'DEVALIDE_COMPETENCE';
 
         $event_detail = [
             "tache" => $tache

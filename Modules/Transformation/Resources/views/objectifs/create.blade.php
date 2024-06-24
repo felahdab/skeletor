@@ -11,7 +11,7 @@
         <h2>Objectifs</h2>
     </div>
     <div id='divmodifobj' class='card ml-3 w-100' >
-        <div class='card-header' >Création objectif </div>
+        <div class='card-header' >Création savoir-faire </div>
         <div style='text-align:right;'>* champs obligatoires </div>
         <x-form::form method="POST" :action="route('transformation::objectifs.store')">
             <div style='padding-left: 15px;'>

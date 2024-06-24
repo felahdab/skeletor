@@ -8,10 +8,10 @@
 @section('content')
 
     <div class="p-4 rounded">
-        <h2>Objectifs</h2>
+        <h2>Savoir-faire</h2>
     </div>
     <div id='divmodifobj' class='card ml-3 w-100' >
-        <div class='card-header' >Consultation objectif </div>
+        <div class='card-header' >Consultation savoir-faire </div>
         <div style='text-align:right;'>&nbsp;</div>
         <div style='padding-left: 15px;'>
             <div class='form-group row' >
@@ -36,7 +36,7 @@
             <div style='text-align:right;'>
                 <ul  class='navbar-nav mr-auto' >
                     <li class='dropdown'>
-                        <a href='#' class='dropdown-toogle' data-bs-toggle='dropdown'>Tache(s) associée(s)</a>
+                        <a href='#' class='dropdown-toogle' data-bs-toggle='dropdown'>Compétence(s) associée(s)</a>
                         <div class='dropdown-menu'>
                             @foreach ($objectif->taches()->get() as $tache)
                                 <a class="dropdown-item" href="{{ route('transformation::taches.show', $tache->id) }}">{{ $tache->tache_libcourt }}</a>
@@ -48,7 +48,7 @@
         </div>
     </div>
     <div class='card ml-3 w-100'>
-        <div class='card-header ml-n3 mr-n4 mb-3' ><b>Sous-objectif(s) associ&eacute;(s)</b></div>
+        <div class='card-header ml-n3 mr-n4 mb-3' ><b>Actvité(s) associ&eacute;e(s)</b></div>
         @foreach ($objectif->sous_objectifs()->orderBy("ordre")->get() as $ssobj)
             @php 
                 $lieu= $lieux->where('id', $ssobj->lieu_id)->first();

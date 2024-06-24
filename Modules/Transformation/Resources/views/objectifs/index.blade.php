@@ -8,10 +8,10 @@
 @section('content')
 
     <div class="p-4 rounded">
-        <h2>Objectifs</h2>
+        <h2>Savoir-faire</h2>
         <div class="lead">
-            Gérer les objectifs.
-        <a href="{{ route('transformation::objectifs.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un objectif</a>
+            Gérer les savoir-faire.
+        <a href="{{ route('transformation::objectifs.create') }}" class="btn btn-primary btn-sm float-right">Ajouter un savoir-faire</a>
         </div>
         
         @livewire('transformation::objectif-list')

@@ -16,9 +16,9 @@
             <div class="accordion-body">
             <table class='table table-bordered' x-data='{ active : false }'>
                 <tr class='table-active text-center'>
-                    <th style='width:20%;'>Tâche</td>
-                    <th style='width:25%;'>Objectif</td>
-                    <th style='width:25%;'>Détail du compagnonnage</td>
+                    <th style='width:20%;'>Compétence</td>
+                    <th style='width:25%;'>Savoir-faire</td>
+                    <th style='width:25%;'>Activité</td>
                     <th style='width:5%;'>Durée (h)</td>
                     <th style='width:10%;'>Date de Visa</td>
                     <th style='width:10%;'>Viseur</td>

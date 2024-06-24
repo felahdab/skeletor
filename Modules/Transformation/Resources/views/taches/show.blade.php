@@ -8,10 +8,10 @@
 @section('content')
 
     <div class="  p-4 rounded">
-        <h2>Tâches</h2>
+        <h2>Compétences</h2>
     </div>
     <div id='divmodifobj' class='card ml-3 w-100' >
-        <div class='card-header' >Consultation tâche </div>
+        <div class='card-header' >Consultation compétence </div>
         <div style='text-align:right;'>&nbsp;</div>
         <div style='padding-left: 15px;'>
             <div class='form-group row' >
@@ -48,7 +48,7 @@
         </div>
     </div>
     <div class='card ml-3 w-100'>
-        <div class='card-header ml-n3 mr-n4 mb-3' ><b>Objectif(s) associ&eacute;(s)</b></div>
+        <div class='card-header ml-n3 mr-n4 mb-3' ><b>Savoir-faire associ&eacute;(s)</b></div>
         <input type='hidden' name='tache_id' id='tache_id'  value='{{ $tache->id }}'>
         @foreach ($tache->objectifs()->get() as $objectif)
             <div class="card">

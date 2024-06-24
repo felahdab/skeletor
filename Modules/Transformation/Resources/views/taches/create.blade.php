@@ -8,10 +8,10 @@
 @section('content')
 
     <div class="  p-4 rounded">
-        <h2>T&acirc;ches</h2>
+        <h2>Compétences</h2>
     </div>
     <div id='divmodifobj' class='card   ml-3 w-100' >
-        <div class='card-header' >Création tâche </div>
+        <div class='card-header' >Création compétence </div>
         <div style='text-align:right;'>* champs obligatoires </div>
         <x-form::form method="POST" :action="route('transformation::taches.store')">
             <div style='padding-left: 15px;'>

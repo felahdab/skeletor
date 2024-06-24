@@ -12,8 +12,8 @@
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 @can('transformation::fonctions.index')<a class="dropdown-item" href="{{ route('transformation::fonctions.index')}}">Fonctions</a>@endcan
                 @can('transformation::compagnonages.index')<a class="dropdown-item" href="{{ route('transformation::compagnonages.index')}}">Compagnonnages</a>@endcan
-                @can('transformation::taches.index')<a class="dropdown-item" href="{{ route('transformation::taches.index')}}">Tâches</a>@endcan
-                @can('transformation::objectifs.index')<a class="dropdown-item" href="{{ route('transformation::objectifs.index')}}">Objectifs</a>@endcan
+                @can('transformation::taches.index')<a class="dropdown-item" href="{{ route('transformation::taches.index')}}">Compétences</a>@endcan
+                @can('transformation::objectifs.index')<a class="dropdown-item" href="{{ route('transformation::objectifs.index')}}">Savoir-faire</a>@endcan
                 @can('transformation::stages.index')<a class="dropdown-item" href="{{ route('transformation::stages.index')}}">Stages</a>@endcan
                 @can('transformation::transformation.exportparcours')<a class="dropdown-item" href="{{ route('transformation::transformation.exportparcours')}}">Exporter les parcours</a>@endcan
               </div>

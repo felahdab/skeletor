@@ -8,8 +8,8 @@
 @section('content')
 
     <div class="  p-4 rounded">
-        <h2>Objectifs</h2>
-        <div class='lead'>Ajout d'un objectif pour la tâche {!!$tache->tache_libcourt !!} </div>
+        <h2>Savoir-faire</h2>
+        <div class='lead'>Ajout d'un savoir-faire pour la compétence {!!$tache->tache_libcourt !!} </div>
     </div>
     
     @livewire('transformation::objectif-list', ['tache' => $tache, 'mode' => 'selection'])
