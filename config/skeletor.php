@@ -37,5 +37,7 @@ return [
     */
     
     'page_par_defaut' => env('APP_PAGE_ACCUEIL', false),
+
+    'prefixe_instance' => env('APP_PREFIX', ''),
     
 ];
