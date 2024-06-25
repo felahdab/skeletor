@@ -1,3 +1,8 @@
+## 2.2.1a (June 25, 2024)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.2.1 –> 2.2.1a
+- Merge branch 'tuleap-276553-le-bouton-de-recherche-annudef-de-la-page-de-creation-des-utilisateurs-ne-fonctionne-plus'
+- Ajustement de la génération des assets javascript pour rendre bootstrap accessible dans le namespace de la fenetre. Désactivation de l'analyse des appels AJAX dans la debugbar.
+
 ## 2.2.1 (June 21, 2024)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.2.0 –> 2.2.1
 - Suppression vues inutiles de Skeletor
