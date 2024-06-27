@@ -18,6 +18,7 @@
         "glorand/laravel-model-settings": "^7.0",
         "guzzlehttp/guzzle": "^7.2",
         "hisorange/browser-detect": "^5.0",
+        "ijpatricio/mingle": "^0.0.14",
         "joshbrw/laravel-module-installer": "^2.0",
         "lab404/laravel-impersonate": "^1.7",
         "laravel-shift/blueprint": "^2.7",

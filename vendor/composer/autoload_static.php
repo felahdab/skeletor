@@ -287,6 +287,8 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         array (
             'Illuminate\\Support\\' => 19,
             'Illuminate\\' => 11,
+            'Ijpatricio\\Mingle\\Database\\Factories\\' => 37,
+            'Ijpatricio\\Mingle\\' => 18,
         ),
         'G' => 
         array (
@@ -987,6 +989,14 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'Illuminate\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate',
+        ),
+        'Ijpatricio\\Mingle\\Database\\Factories\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ijpatricio/mingle/database/factories',
+        ),
+        'Ijpatricio\\Mingle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ijpatricio/mingle/src',
         ),
         'GuzzleHttp\\UriTemplate\\' => 
         array (
@@ -4373,6 +4383,18 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'Hamcrest\\Type\\IsString' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Type/IsString.php',
         'Hamcrest\\Util' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Util.php',
         'Hamcrest\\Xml\\HasXPath' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Xml/HasXPath.php',
+        'Ijpatricio\\Mingle\\Actions\\AddDemoViewAndRoute' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Actions/AddDemoViewAndRoute.php',
+        'Ijpatricio\\Mingle\\Actions\\ChangeLayoutFile' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Actions/ChangeLayoutFile.php',
+        'Ijpatricio\\Mingle\\Actions\\ChangeViteConfig' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Actions/ChangeViteConfig.php',
+        'Ijpatricio\\Mingle\\Actions\\ReplaceContents' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Actions/ReplaceContents.php',
+        'Ijpatricio\\Mingle\\Commands\\MingleInstallerCommand' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Commands/MingleInstallerCommand.php',
+        'Ijpatricio\\Mingle\\Commands\\MingleMakeCommand' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Commands/MingleMakeCommand.php',
+        'Ijpatricio\\Mingle\\Concerns\\InteractsWithMingles' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Concerns/InteractsWithMingles.php',
+        'Ijpatricio\\Mingle\\Contracts\\HasMingles' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Contracts/HasMingles.php',
+        'Ijpatricio\\Mingle\\Facades\\Mingle' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Facades/Mingle.php',
+        'Ijpatricio\\Mingle\\Mingle' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Mingle.php',
+        'Ijpatricio\\Mingle\\MingleServiceProvider' => __DIR__ . '/..' . '/ijpatricio/mingle/src/MingleServiceProvider.php',
+        'Ijpatricio\\Mingle\\Replacement' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Replacement.php',
         'Illuminate\\Auth\\Access\\AuthorizationException' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Access/AuthorizationException.php',
         'Illuminate\\Auth\\Access\\Events\\GateEvaluated' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Access/Events/GateEvaluated.php',
         'Illuminate\\Auth\\Access\\Gate' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Access/Gate.php',
