@@ -14,16 +14,18 @@ class HomeController extends Controller
     public function index()
     {
         $user = auth()->user();
+        $destination = null;
 
         if ($user) {
             $destination = $user->settings()->get('prefered_page');
 
-            if ($destination == null) {
-                $destination = config('skeletor.page_par_defaut');
-            }
-            if ($destination != Route::currentRouteName()) {
-                return redirect()->route(config('skeletor.page_par_defaut'));
-            }
+        }
+
+        if ($destination == null) {
+            $destination = config('skeletor.page_par_defaut');
+        }
+        if ($destination != Route::currentRouteName()) {
+            return redirect()->route(config('skeletor.page_par_defaut'));
         }
         
         $paramaccueil = Paramaccueil::first();
