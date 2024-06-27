@@ -1,11 +1,17 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import { resolve } from 'path';
+import path from 'path';
 
 // import react from '@vitejs/plugin-react';
-// import vue from '@vitejs/plugin-vue';
+import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
+    resolve: {
+        alias: {
+            "@mingle": path.resolve("/app/vendor/ijpatricio/mingle/resources/js"),
+        },
+    },
     plugins: [
         laravel({
             input: [
@@ -16,14 +22,14 @@ export default defineConfig({
         }),
         
         // react(),
-        // vue({
-        //     template: {
-        //         transformAssetUrls: {
-        //             base: null,
-        //             includeAbsolute: false,
-        //         },
-        //     },
-        // }),
+        vue({
+            template: {
+                transformAssetUrls: {
+                    base: null,
+                    includeAbsolute: false,
+                },
+            },
+        }),
     ],
     host: "0.0.0.0"
 });
