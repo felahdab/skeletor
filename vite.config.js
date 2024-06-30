@@ -7,6 +7,11 @@ import path from 'path';
 import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
+    build : {
+        outDir: './public/assets/build/',
+        emptyOutDir: true,
+        manifest: true
+    },
     resolve: {
         alias: {
             "@mingle": path.resolve("/app/vendor/ijpatricio/mingle/resources/js"),

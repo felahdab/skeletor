@@ -2,7 +2,8 @@
     "private": true,
     "scripts": {
         "dev": "vite --host",
-        "build": "tailwindcss -c tailwind.config.js --output resources/css/app.css ; vite build; rm -Rf public/assets/build/ ; mv public/build public/assets/"
+        "build": "tailwindcss -c tailwind.config.js --output resources/css/app.css ; vite build;",
+        "postbuild" : "mv public/assets/build/.vite/manifest.json public/assets/build/"
     },
     "devDependencies": {
         "axios": "^0.25",
