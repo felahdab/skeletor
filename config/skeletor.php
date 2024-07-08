@@ -72,5 +72,17 @@ return [
     */
 
     'instance_titre' => env('SKELETOR_TITLE', "Skeletor"),
+
+     /*
+    |--------------------------------------------------------------------------
+    | Adresse email vers laquelle envoyer les mails systématiquement lors des phases de test
+    |--------------------------------------------------------------------------
+    |
+    | Lors l'application n'est pas en environnement de production, les mails ne doivent pas
+    | être envoyés aux destinataires réels, mais vers cette adresse de test.
+    |
+    */
+
+    'destinataire_email_non_production' => env('SKELETOR_TEST_EMAIL', 'florian.el-ahdab@intradef.gouv.fr'),
     
 ];
