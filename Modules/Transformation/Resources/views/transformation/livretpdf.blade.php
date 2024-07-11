@@ -316,7 +316,7 @@
         <tr class="4bords">
             <td class='tdcomp w-15 br' >Compétence</td>
             <td class='tdcomp w-25 br'>Savoir-faire</td>
-            <td class='tdcomp w-35 br'>Activité</td>
+            <td class='tdcomp w-35 br'>Tâche</td>
             <td class='tdcomp w-5 br'>Durée (h)</td>
             <td class='tdcomp w-15 br'>Date <br>Valideur</td>
             <td class='tdcomp w-5 '>Lieu form.</td>

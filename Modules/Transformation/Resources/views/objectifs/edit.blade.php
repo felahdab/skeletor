@@ -49,7 +49,7 @@
             </div>
 
             <div class='card w-100'>
-                <div class='card-header ml-n3 mr-n4 mb-3' >Activité(s) associ&eacute;e(s) <span style="font-size:x-small;">(Glissez/déplacez les activités puis enregistrez pour modifier leur ordre d'affichage dans l'application)</span></div>
+                <div class='card-header ml-n3 mr-n4 mb-3' >Tâche(s) associ&eacute;e(s) <span style="font-size:x-small;">(Glissez/déplacez les tâches puis enregistrez pour modifier leur ordre d'affichage dans l'application)</span></div>
                 <input type='hidden' name='objectif_id' id='objectif_id'  value='{{ $objectif->id }}'>
                 <x-sortable name="sort_order">
                     @foreach ($objectif->sous_objectifs->sortBy('ordre') as $ssobj)
@@ -104,7 +104,7 @@
                 <div class='text-center mb-1'>
                     <x-form::form method="POST" :action="route('transformation::sous-objectifs.store')">
                         <input type='hidden' name='objectif_id' id='objectif_id'  value='{{ $objectif->id }}'>
-                        <button class='btn btn-primary btn-sm' type='submit' >Ajouter une nouvelle activité</button>
+                        <button class='btn btn-primary btn-sm' type='submit' >Ajouter une nouvelle tâche</button>
                     </x-form:::form>
                 </div>
                 <!-- Cette partie contient les formulaires actives par javascript pour provoquer la suppression

@@ -48,7 +48,7 @@
         </div>
     </div>
     <div class='card ml-3 w-100'>
-        <div class='card-header ml-n3 mr-n4 mb-3' ><b>Actvité(s) associ&eacute;e(s)</b></div>
+        <div class='card-header ml-n3 mr-n4 mb-3' ><b>Tâche(s) associ&eacute;e(s)</b></div>
         @foreach ($objectif->sous_objectifs()->orderBy("ordre")->get() as $ssobj)
             @php 
                 $lieu= $lieux->where('id', $ssobj->lieu_id)->first();
