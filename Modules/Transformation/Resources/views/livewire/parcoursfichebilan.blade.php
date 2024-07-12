@@ -26,7 +26,7 @@
                                     </button>
                                 </div>
                                 <div class="col-sm-10">
-                                    <a href="{{ route('transformation::transformation.livret', $fiche['user']->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
+                                    <a href="{{ route('transformation::transformation.livret', $fiche['user']->id) }}" class="btn btn-warning btn-sm">PPA du marin</a>
                                     <a href="{{ route('transformation::transformation.progression', $fiche['user']->id) }}" class="btn btn-primary btn-sm">Progression</a>
                                     @can('transformation::users.stages')
                                         <a href="{{ route('transformation::users.stages', $fiche['user']->id) }}" class="btn btn-danger btn-sm">Stages</a>
