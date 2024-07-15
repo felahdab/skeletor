@@ -7,7 +7,7 @@
 
 @section('content')
     <div  class="p-4">
-        <h2>Transformation - Fonctions</h2>
+        <h2>Suivi par fonction</h2>
         <div class="lead">
             Liste des fonctions pour validation collective
         </div>

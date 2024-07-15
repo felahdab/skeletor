@@ -62,10 +62,10 @@
             @if($user->en_transformation)
             <div class="dropdown" >
               <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Mes données
+              Mon parcours
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="{{route('transformation::transformation.monlivret')}}">Mon livret</a>
+                <a class="dropdown-item" href="{{route('transformation::transformation.monlivret')}}">Mon PPA</a>
                 <a class="dropdown-item" href="{{route('transformation::transformation.maprogression')}}">Ma progression</a>
                 <a class="dropdown-item" href="{{route('transformation::transformation.mafichebilan')}}">Ma fiche bilan</a>
               </div>

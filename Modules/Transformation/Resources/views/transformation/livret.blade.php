@@ -7,7 +7,7 @@
 
 @section('content')
     <div class="p-4">
-        <h1>Transformation</h1>
+        <h1>Parcours professionnel en alternance</h1>
         <div class="lead">
             PPA de {{$user->display_name}}
         </div>
