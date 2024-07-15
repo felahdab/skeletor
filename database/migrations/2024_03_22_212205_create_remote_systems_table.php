@@ -6,6 +6,9 @@ use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
+    /**
+     * Apply the migrations.
+     */
     public function up(): void
     {
         Schema::create('remotesystems', function (Blueprint $table) {
@@ -17,5 +20,13 @@ return new class extends Migration
 
             $table->index('uuid');
         });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('remotesystems');
     }
 };
