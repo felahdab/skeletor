@@ -79,6 +79,7 @@ return array(
     'SocialiteProviders\\Manager\\' => array($vendorDir . '/socialiteproviders/manager/src'),
     'SocialiteProviders\\Keycloak\\' => array($vendorDir . '/socialiteproviders/keycloak'),
     'Shift\\Faker\\' => array($vendorDir . '/laravel-shift/faker-registry/src'),
+    'Saade\\FilamentFullCalendar\\' => array($vendorDir . '/saade/filament-fullcalendar/src'),
     'RyanChandler\\BladeCaptureDirective\\Database\\Factories\\' => array($vendorDir . '/ryangjchandler/blade-capture-directive/database/factories'),
     'RyanChandler\\BladeCaptureDirective\\' => array($vendorDir . '/ryangjchandler/blade-capture-directive/src'),
     'Revolt\\' => array($vendorDir . '/revolt/event-loop/src'),

@@ -33,6 +33,7 @@
         "owen-it/laravel-auditing": "^13.5",
         "predis/predis": "^2.2",
         "rappasoft/laravel-livewire-tables": "^3.2",
+        "saade/filament-fullcalendar": "^3.0",
         "socialiteproviders/keycloak": "^5.2",
         "spatie/laravel-backup": "^8.1",
         "spatie/laravel-data": "^4.0",
