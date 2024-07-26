@@ -83,7 +83,7 @@
       @guest
         <div class="text-end">
           <span class="btn btn-outline-light me-2">@yield('helplink')</span>
-          <a href="{{ route('login.show') }}" class="btn btn-outline-light me-2">Login</a>
+          <a href="{{ route('login') }}" class="btn btn-outline-light me-2">Login</a>
         </div>
       @endguest
       

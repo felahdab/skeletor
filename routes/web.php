@@ -60,8 +60,9 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
 
-    Route::get('/login', [LoginController::class, 'show'])->name('login.show');
+    Route::get('/login', [LoginController::class, 'show'])->name('login');
     Route::post('/login', [LoginController::class, 'locallogin'])->name('login.perform');
+    
     Route::post('/login/{MCuserexist:sub}/newMdc', [LoginController::class, 'newMdcLogin'])->name('login.newMdcLogin');
     
 

@@ -21,8 +21,8 @@ class LoginControllerTest extends TestCase
 
 	public function test_locallogin_page_displays()
 	{
-		//            print_r(route('login.show'));    
-		$response = $this->get(route('login.show'));
+		//            print_r(route('login'));    
+		$response = $this->get(route('login'));
 
 		$response->assertSuccessful();
 	}
@@ -35,7 +35,7 @@ class LoginControllerTest extends TestCase
 				'email' => $user->email,
 				'password' => 'zboobie'
 			])
-			->assertRedirectToRoute('login.show');
+			->assertRedirectToRoute('login');
 
 		$this->assertGuest();
 	}
@@ -45,7 +45,7 @@ class LoginControllerTest extends TestCase
 		$this->seed();
 		$user = User::factory()->create();
 		$this->followingRedirects()
-			->from(route('login.show'))
+			->from(route('login'))
 			->post(route('login.perform'), [
 				'email' => $user->email,
 				'password' => 'password'

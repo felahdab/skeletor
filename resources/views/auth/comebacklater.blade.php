@@ -27,7 +27,7 @@
             </div>
             <div class="p-2">
                 <button class="btn btn-primary" type="submit">Envoyer</button>
-                <a href="{{ route('login.show') }}" class="btn btn-outline-dark">Annuler</a>
+                <a href="{{ route('login') }}" class="btn btn-outline-dark">Annuler</a>
             </div>
         </form>
     @endif
