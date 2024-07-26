@@ -13,10 +13,6 @@
             ? $getPanelPath($panel)
             : null;
 
-    $modalWidth = 'screen';
-    $isSlideOver = false;
-    $heading = 'heading';
-    $renderIconAsImage = false;
     $iconSize = 16 ;
 
 @endphp
@@ -34,19 +30,11 @@
                     "ring-2 ring-primary-600" => $panel->getId() === $currentPanel->getId(),
                 ])
             >
-                @if ($renderIconAsImage)
-                    <img
-                        class="rounded-lg panel-switch-card-image"
-                        style="width: {{ $iconSize * 4 }}px; height: {{ $iconSize * 4 }}px;"
-                        src="{{ $icons[$panel->getId()] ?? 'https://raw.githubusercontent.com/bezhanSalleh/filament-panel-switch/3.x/art/banner.jpg' }}"
-                        alt="Panel Image"
-                    >
-                @else
-                    @php
-                        $iconName = $icons[$panel->getId()] ?? 'heroicon-s-square-2-stack' ;
-                    @endphp
-                    @svg($iconName, 'text-primary-600 panel-switch-card-icon', ['style' => 'width: ' . ($iconSize * 4) . 'px; height: ' . ($iconSize * 4). 'px;'])
-                @endif
+
+                @php
+                    $iconName = $icons[$panel->getId()] ?? 'heroicon-s-square-2-stack' ;
+                @endphp
+                @svg($iconName, 'text-primary-600 panel-switch-card-icon', ['style' => 'width: ' . ($iconSize * 4) . 'px; height: ' . ($iconSize * 4). 'px;'])
             </div>
             <span
                 @class([
