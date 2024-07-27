@@ -3,13 +3,22 @@
         'name' => 'fanlab/skeletor',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '8458cf1d7ac8a71644cff9d8eec2ff5c4943ec76',
+        'reference' => '3575d58ec8eb94398da96a8648706602d8b6f0d4',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
+        'althinect/filament-spatie-roles-permissions' => array(
+            'pretty_version' => 'v2.2.29',
+            'version' => '2.2.29.0',
+            'reference' => '7c7a0268c85e98ee9d5589f78dcb2417e566f1b2',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../althinect/filament-spatie-roles-permissions',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'amphp/amp' => array(
             'pretty_version' => 'v3.0.0',
             'version' => '3.0.0.0',
@@ -391,7 +400,7 @@
         'fanlab/skeletor' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '8458cf1d7ac8a71644cff9d8eec2ff5c4943ec76',
+            'reference' => '3575d58ec8eb94398da96a8648706602d8b6f0d4',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

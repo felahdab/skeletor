@@ -226,4 +226,5 @@ return array(
     'Amp\\Cache\\' => array($vendorDir . '/amphp/cache/src'),
     'Amp\\ByteStream\\' => array($vendorDir . '/amphp/byte-stream/src'),
     'Amp\\' => array($vendorDir . '/amphp/amp/src'),
+    'Althinect\\FilamentSpatieRolesPermissions\\' => array($vendorDir . '/althinect/filament-spatie-roles-permissions/src'),
 );
