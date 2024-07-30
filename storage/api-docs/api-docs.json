@@ -39,23 +39,76 @@
                 ]
             }
         },
-        "/api/v1/get_user_uuid": {
+        "/api/fcmcentral/v1/parcours": {
             "get": {
-                "operationId": "f6cc1c0a091078ac336a7f8c75192a20",
-                "requestBody": {
-                    "description": "Evenement serialise",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "email",
-                                    "password"
-                                ]
-                            }
-                        }
+                "operationId": "38666fbb827bb719d23e28691fe2491e",
+                "responses": {
+                    "200": {
+                        "description": "La liste des parcours existants."
                     }
                 },
+                "security": [
+                    {
+                        "api token": []
+                    }
+                ]
+            }
+        },
+        "/api/fcmcentral/v1/parcours/{parcours}": {
+            "get": {
+                "operationId": "3fcecfbbd4cc01af0f2decd82a5a3010",
+                "parameters": [
+                    {
+                        "name": "parcours",
+                        "in": "path",
+                        "description": "The token from an active user session",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "La description du parcours et ses versions successives."
+                    }
+                },
+                "security": [
+                    {
+                        "api token": []
+                    }
+                ]
+            }
+        },
+        "/api/fcmcentral/v1/tous_parcours_serialises": {
+            "get": {
+                "operationId": "d7229059b72ebdba77a91adfb709bf32",
+                "responses": {
+                    "200": {
+                        "description": "La liste des parcours serialises existants avec leur description complete."
+                    }
+                },
+                "security": [
+                    {
+                        "api token": []
+                    }
+                ]
+            }
+        },
+        "/api/fcmcentral/v1/get_user_uuid": {
+            "get": {
+                "operationId": "877b0c70719c71fab0863093a12c0282",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "user email adress",
+                        "required": false
+                    },
+                    {
+                        "name": "nid",
+                        "in": "query",
+                        "description": "user NID",
+                        "required": false
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Obtenir le UUID d'un utilisateur."
@@ -68,23 +121,17 @@
                 ]
             }
         },
-        "/api/v1/get_user_history": {
+        "/api/fcmcentral/v1/get_user_history/{uuid}": {
             "get": {
-                "operationId": "8b6b2331c813dc30dd192b27d6bc964b",
-                "requestBody": {
-                    "description": "Evenement serialise",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "email",
-                                    "password"
-                                ]
-                            }
-                        }
+                "operationId": "e3694562da65a0e4798e92b870a73f54",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "Identifiant unique de l'utilisateur",
+                        "required": true
                     }
-                },
+                ],
                 "responses": {
                     "200": {
                         "description": "Récupérer l'historique complet d'une utilisateur."
