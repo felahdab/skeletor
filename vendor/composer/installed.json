@@ -10455,18 +10455,89 @@
             "install-path": "../saade/filament-fullcalendar"
         },
         {
-            "name": "saloonphp/saloon",
-            "version": "v3.9.1",
-            "version_normalized": "3.9.1.0",
+            "name": "saloonphp/laravel-plugin",
+            "version": "v3.5.0",
+            "version_normalized": "3.5.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/saloonphp/saloon.git",
-                "reference": "113332a57c698ee2af24fb68691490b91f56ad33"
+                "url": "https://github.com/saloonphp/laravel-plugin.git",
+                "reference": "15be0d587e61f11076f93d6df30561b88ff837c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/saloonphp/saloon/zipball/113332a57c698ee2af24fb68691490b91f56ad33",
-                "reference": "113332a57c698ee2af24fb68691490b91f56ad33",
+                "url": "https://api.github.com/repos/saloonphp/laravel-plugin/zipball/15be0d587e61f11076f93d6df30561b88ff837c1",
+                "reference": "15be0d587e61f11076f93d6df30561b88ff837c1",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "^10.0 || ^11.0",
+                "illuminate/support": "^10.0 || ^11.0",
+                "php": "^8.1",
+                "saloonphp/saloon": "^3.5",
+                "symfony/finder": "^6.4 || ^7.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.48",
+                "orchestra/testbench": "^8.21 || ^9.0",
+                "pestphp/pest": "^2.32",
+                "phpstan/phpstan": "^1.10.56"
+            },
+            "time": "2024-03-13T18:48:03+00:00",
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Saloon": "Saloon\\Laravel\\Facades\\Saloon"
+                    },
+                    "providers": [
+                        "Saloon\\Laravel\\SaloonServiceProvider"
+                    ]
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Saloon\\Laravel\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sam Carré",
+                    "email": "29132017+Sammyjo20@users.noreply.github.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The official Laravel plugin for Saloon",
+            "homepage": "https://github.com/saloonphp/laravel-plugin",
+            "keywords": [
+                "api",
+                "api-integrations",
+                "saloon",
+                "saloonphp",
+                "sdk"
+            ],
+            "support": {
+                "source": "https://github.com/saloonphp/laravel-plugin/tree/v3.5.0"
+            },
+            "install-path": "../saloonphp/laravel-plugin"
+        },
+        {
+            "name": "saloonphp/saloon",
+            "version": "v3.10.0",
+            "version_normalized": "3.10.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/saloonphp/saloon.git",
+                "reference": "69c2cbc7636b0a36024479c880a48aad40b781d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/saloonphp/saloon/zipball/69c2cbc7636b0a36024479c880a48aad40b781d3",
+                "reference": "69c2cbc7636b0a36024479c880a48aad40b781d3",
                 "shasum": ""
             },
             "require": {
@@ -10485,7 +10556,7 @@
                 "friendsofphp/php-cs-fixer": "^3.5",
                 "illuminate/collections": "^9.39 || ^10.0",
                 "league/flysystem": "^3.0",
-                "pestphp/pest": "^2.6",
+                "pestphp/pest": "^2.10",
                 "phpstan/phpstan": "^1.11.4",
                 "saloonphp/xml-wrangler": "^1.1",
                 "spatie/ray": "^1.33",
@@ -10498,7 +10569,7 @@
                 "symfony/dom-crawler": "Required for the response dom() method.",
                 "symfony/var-dumper": "Required for default debugging drivers."
             },
-            "time": "2024-06-26T06:26:47+00:00",
+            "time": "2024-08-03T14:11:59+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -10528,7 +10599,7 @@
             ],
             "support": {
                 "issues": "https://github.com/saloonphp/saloon/issues",
-                "source": "https://github.com/saloonphp/saloon/tree/v3.9.1"
+                "source": "https://github.com/saloonphp/saloon/tree/v3.10.0"
             },
             "funding": [
                 {
