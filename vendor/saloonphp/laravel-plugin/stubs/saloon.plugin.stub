@@ -1,0 +1,13 @@
+<?php
+
+namespace {{ namespace }};
+
+use Saloon\Http\PendingRequest;
+
+trait {{ class }}
+{
+    public function boot{{ class }}(PendingRequest $pendingRequest): void
+    {
+        //
+    }
+}
