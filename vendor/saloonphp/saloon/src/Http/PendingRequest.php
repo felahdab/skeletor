@@ -23,6 +23,7 @@ use Saloon\Traits\Auth\AuthenticatesRequests;
 use Saloon\Http\Middleware\ValidateProperties;
 use Saloon\Http\Middleware\DetermineMockResponse;
 use Saloon\Exceptions\InvalidResponseClassException;
+use Saloon\Exceptions\Request\FatalRequestException;
 use Saloon\Traits\PendingRequest\ManagesPsrRequests;
 use Saloon\Http\PendingRequest\MergeRequestProperties;
 use Saloon\Http\PendingRequest\BootConnectorAndRequest;
@@ -150,6 +151,14 @@ class PendingRequest
     public function executeResponsePipeline(Response $response): Response
     {
         return $this->middleware()->executeResponsePipeline($response);
+    }
+
+    /**
+     * Execute the fatal pipeline.
+     */
+    public function executeFatalPipeline(FatalRequestException $throwable): void
+    {
+        $this->middleware()->executeFatalPipeline($throwable);
     }
 
     /**

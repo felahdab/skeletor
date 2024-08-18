@@ -31,7 +31,7 @@
         "friendsofphp/php-cs-fixer": "^3.5",
         "illuminate/collections": "^9.39 || ^10.0",
         "league/flysystem": "^3.0",
-        "pestphp/pest": "^2.6",
+        "pestphp/pest": "^2.10",
         "phpstan/phpstan": "^1.11.4",
         "saloonphp/xml-wrangler": "^1.1",
         "spatie/ray": "^1.33",

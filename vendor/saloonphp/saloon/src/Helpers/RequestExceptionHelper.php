@@ -14,6 +14,7 @@ use Saloon\Exceptions\Request\Statuses\ForbiddenException;
 use Saloon\Exceptions\Request\Statuses\UnauthorizedException;
 use Saloon\Exceptions\Request\Statuses\GatewayTimeoutException;
 use Saloon\Exceptions\Request\Statuses\RequestTimeOutException;
+use Saloon\Exceptions\Request\Statuses\PaymentRequiredException;
 use Saloon\Exceptions\Request\Statuses\TooManyRequestsException;
 use Saloon\Exceptions\Request\Statuses\MethodNotAllowedException;
 use Saloon\Exceptions\Request\Statuses\ServiceUnavailableException;
@@ -32,6 +33,7 @@ class RequestExceptionHelper
         $requestException = match (true) {
             // Built-in exceptions
             $status === 401 => UnauthorizedException::class,
+            $status === 402 => PaymentRequiredException::class,
             $status === 403 => ForbiddenException::class,
             $status === 404 => NotFoundException::class,
             $status === 405 => MethodNotAllowedException::class,

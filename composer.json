@@ -35,6 +35,7 @@
         "predis/predis": "^2.2",
         "rappasoft/laravel-livewire-tables": "^3.2",
         "saade/filament-fullcalendar": "^3.0",
+        "saloonphp/laravel-plugin": "^3.0",
         "saloonphp/saloon": "^3.0",
         "socialiteproviders/keycloak": "^5.2",
         "spatie/laravel-backup": "^8.1",

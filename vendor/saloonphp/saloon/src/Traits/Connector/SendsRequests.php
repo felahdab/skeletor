@@ -92,6 +92,11 @@ trait SendsRequests
 
                 $exceptionResponse = $exception instanceof RequestException ? $exception->getResponse() : null;
 
+                // If the exception is a FatalRequestException, we'll execute the fatal pipeline
+                if($exception instanceof FatalRequestException) {
+                    $exception->getPendingRequest()->executeFatalPipeline($exception);
+                }
+
                 // If we've reached our max attempts - we won't try again, but we'll either
                 // return the last response made or just throw an exception.
 

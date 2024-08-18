@@ -23,8 +23,6 @@ trait HasDelay
 
     /**
      * Default Delay
-     *
-     * @return ?int
      */
     protected function defaultDelay(): ?int
     {
