@@ -24,14 +24,22 @@ use Filament\Navigation\NavigationItem;
 use App\Filament\AvatarProviders\AnnudefAvatarProvider;
 use App\Http\Middleware\FilamentAuthenticate as FilamentAuthenticate;
 
+use App\Http\Middleware\InitializeTenancyByPath;
+use App\Http\Middleware\SetTenantCookieMiddleware;
+use App\Http\Middleware\SetTenantDefaultForRoutesMiddleware;
+
+use App\Providers\Filament\Traits\UsesSkeletorPrefixAndMultitenancyTrait;
+
 class AdminPanelProvider extends PanelProvider
 {
+    use UsesSkeletorPrefixAndMultitenancyTrait;
+
     public function panel(Panel $panel): Panel
     {
         return $panel
             ->default()
             ->id('admin')
-            ->path(config('skeletor.prefixe_instance') . '/admin')
+            ->path($this->prefix . '/admin')
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -52,12 +60,15 @@ class AdminPanelProvider extends PanelProvider
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
+                InitializeTenancyByPath::class,
+                SetTenantDefaultForRoutesMiddleware::class,
+                SetTenantCookieMiddleware::class,
                 AuthenticateSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
-                DispatchServingFilamentEvent::class
+                DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
                 FilamentAuthenticate::class

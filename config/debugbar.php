@@ -272,4 +272,11 @@ return [
      | If you need larger stacktraces, you can increase this number. Setting it to 0 will result in no limit.
      */
     'debug_backtrace_limit' => 50,
+
+    'route_middleware' => [
+        \App\Http\Middleware\EncryptCookies::class,
+        \App\Http\Middleware\InitializeTenancyByCookieData::class,
+        \App\Http\Middleware\SetTenantCookieMiddleware::class,
+        \App\Http\Middleware\SetTenantDefaultForRoutesMiddleware::class,
+    ],
 ];

@@ -4,6 +4,11 @@ namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
+use App\Http\Middleware\SetTenantCookieMiddleware;
+use App\Http\Middleware\SetTenantDefaultForRoutesMiddleware;
+use App\Http\Middleware\InitializeTenancyByPath;
+use App\Http\Middleware\InitializeTenancyByCookieData;
+
 class Kernel extends HttpKernel
 {
     /**
@@ -30,7 +35,9 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
+            InitializeTenancyByPath::class,
             \App\Http\Middleware\EncryptCookies::class,
+            InitializeTenancyByCookieData::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             // \Illuminate\Session\Middleware\AuthenticateSession::class,
@@ -38,12 +45,16 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\RecordRequestHandlingTime::class,
+            SetTenantDefaultForRoutesMiddleware::class,
+            SetTenantCookieMiddleware::class
         ],
 
         'api' => [
+            InitializeTenancyByPath::class,
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            SetTenantDefaultForRoutesMiddleware::class,
         ],
     ];
 

@@ -47,5 +47,24 @@ return [
     */
     
     'prefixe_instance' => env('APP_PREFIX', ''),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Activation du fonctionnement multi tenant
+    |--------------------------------------------------------------------------
+    |
+    | Par défaut, cette option est à false. 
+    | Lorsque cette option est à true, de multiples changements ont lieu dans l'application.
+    | - les routes sont toutes modifiées pour rajouter un paramètre {tenant} destiné à identifier
+    | le tenant souhaité.
+    | - certains middlewares sont activés (pour déclancher le changement de tenant, y compris pour
+    | les services comme Livewire)
+    |
+    | Attention: une fois qu'une instance est initialisée, elle ne peut être que multi tenant ou 
+    | single tenant. Rien n'est prévu pour réaliser la transition à chaud entre les 2 modes.
+    |
+    */
+
+    'multi_tenancy' => env('SKELETOR_MULTI_TENANCY', false),
     
 ];

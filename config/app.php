@@ -178,6 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\PrefixedLivewireServiceProvider::class,
         App\Providers\LaravelBladeSortableServiceProvider::class,
+        App\Providers\TenancyServiceProvider::class,
     ],
 
     /*
@@ -192,7 +193,6 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        'PDF' => Meneses\LaravelMpdf\Facades\LaravelMpdf::class,
         'Browser' => hisorange\BrowserDetect\Facade::class,
         'Debugbar' => Barryvdh\Debugbar\Facades\Debugbar::class,
     ])->toArray(),
