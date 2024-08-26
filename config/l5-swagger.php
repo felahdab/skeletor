@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\InitializeTenancyByPath;
+use App\Http\Middleware\SetTenantDefaultForRoutesMiddleware;
+
 return [
     'default' => 'default',
     'documentations' => [
@@ -12,7 +15,7 @@ return [
                 /*
                  * Route for accessing api documentation interface
                 */
-                'api' => env('APP_PREFIX'). '/api/documentation',
+                'api' => env('APP_PREFIX'). '/{tenant}/api/documentation',
             ],
             'paths' => [
                 /*
@@ -51,7 +54,7 @@ return [
             /*
              * Route for accessing parsed swagger annotations.
             */
-            'docs' => env('APP_PREFIX'). '/api/docs',
+            'docs' => env('APP_PREFIX'). '/{tenant}/api/docs',
 
             /*
              * Route for Oauth2 authentication callback.
@@ -62,9 +65,9 @@ return [
              * Middleware allows to prevent unexpected access to API documentation
             */
             'middleware' => [
-                'api' => [],
-                'asset' => [],
-                'docs' => [],
+                'api' => [InitializeTenancyByPath::class, SetTenantDefaultForRoutesMiddleware::class],
+                'asset' => [InitializeTenancyByPath::class, SetTenantDefaultForRoutesMiddleware::class],
+                'docs' => [InitializeTenancyByPath::class, SetTenantDefaultForRoutesMiddleware::class],
                 'oauth2_callback' => [],
             ],
 
@@ -297,7 +300,7 @@ return [
          */
         'constants' => [
             'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://my-default-host.com'),
-            'L5_SWAGGER_BASE_PATH' => env('APP_URL') . "/" . env('APP_PREFIX'),
+            'L5_SWAGGER_BASE_PATH' => config('skeletor.multi_tenancy') ? env('APP_URL') . "/" . env('APP_PREFIX') : env('APP_URL') . "/" . env('APP_PREFIX') . "/{tenant}",
             'L5_SWAGGER_PREFIX' => "/" . env('APP_PREFIX'),
         ],
     ],

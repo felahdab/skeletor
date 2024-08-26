@@ -1,5 +1,4 @@
 @php
-    $canSwitchPanels = true;
     $currentPanel = filament()->getCurrentPanel();
     $panels = filament()->getPanels();
 
@@ -9,8 +8,8 @@
             ? str(collect($domains)->first())->prepend($getUrlScheme)->toString()
             : str($panel->getPath())->prepend('/')->toString();
 
-    $getHref = fn (\Filament\Panel $panel): ?string => $canSwitchPanels && $panel->getId() !== $currentPanel->getId()
-            ? $getPanelPath($panel)
+    $getHref = fn (\Filament\Panel $panel): ?string => $panel->getId() !== $currentPanel->getId()
+            ? \Filament\Pages\Dashboard::getUrl( panel: $panel->getId())
             : null;
 
     $iconSize = 16 ;
