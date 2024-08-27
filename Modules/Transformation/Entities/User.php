@@ -11,9 +11,9 @@ use Modules\Transformation\Entities\SousObjectif;
 
 use Modules\Transformation\Services\TransformationManagerService;
 
-use Modules\RH\Entities\Personne;
+use Modules\RH\Entities\PersonneLegacy;
 
-class User extends Personne
+class User extends PersonneLegacy
 {
     private $colls_sous_objs = [];
     private $colls_sous_objs_non_orphelins = null;
