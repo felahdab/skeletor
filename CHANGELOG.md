@@ -1,3 +1,21 @@
+## 2.2.2 (septembre 02, 2024)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.2.1a –> 2.2.2
+- changement titre pour test
+- evolution affichage livret pour FCM
+- suite pb bootstrap not defined : Commentaire en title pour ssobj
+- ajout des migrations + correction du chemin par defaut de creation d'un migration
+- suite remplacement transfo
+- remplacement du mot transformation
+- pb des popover contourné avec un title
+- ajout keres spéciaux à gerer dans les commentaires
+- Merge remote-tracking branch 'origin/master' into sandrine_courant
+- suite augmentation taille filtres
+- augmentation taile des filtres
+- suite modifs libellés activité -> tache
+- changements libelles competence savoir faire activite
+- correction bug possible unite
+- Merge remote-tracking branch 'origin/master' into sandrine_courant
+
 ## 2.2.1a (June 25, 2024)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.2.1 –> 2.2.1a
 - Merge branch 'tuleap-276553-le-bouton-de-recherche-annudef-de-la-page-de-creation-des-utilisateurs-ne-fonctionne-plus'
