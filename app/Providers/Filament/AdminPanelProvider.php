@@ -43,6 +43,9 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->login()
+            ->profile()
+            ->favicon(asset('assets/images/favicon-32x32.png'))
             ->font('Inter', provider: SpatieGoogleFontProvider::class)
             ->defaultAvatarProvider(AnnudefAvatarProvider::class)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
