@@ -8,7 +8,7 @@ class NettoyageKreSpeciauxService
 {
     public static function nettoyer($chaine)
     {
-       return preg_replace('/[^ A-Za-z0-9àéèêç*;,:.\-\/\'\_\(\)]/', '*',$chaine);
+       return preg_replace('/[^ A-Za-z0-9àéèêçÇÉÈÀî*;,:.\-\/\'\_\(\)]/', '*',$chaine);
 
     }
 }

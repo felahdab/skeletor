@@ -114,20 +114,26 @@
                                     <td>&nbsp;</td>
                                 @else
                                     <td>
-                                        <span class="d-inline-block" data-bs-toggle="popover" data-bs-placement="left" 
+                                        {{-- ajout du title sur le lien car popover ne fonctionne pas Uncaught ReferenceError: bootstrap is not defined --}}
+                                        <a class="btn btn-default" title="{{$user->pivot->commentaire}}">
+                                            <span class="d-inline-block" data-bs-toggle="popover" data-bs-placement="left" 
                                                  data-bs-content="{{$user->pivot->commentaire}}">
-                                            <x-bootstrap-icon iconname='chat-left-quote.svg' />
-                                        </span>
+                                                <x-bootstrap-icon iconname='chat-left-quote.svg' />
+                                            </span>
+                                        </a>
                                     </td>
                                 @endif
                                 @if ($user->user_comment == null or trim($user->user_comment) == '')
                                     <td>&nbsp;</td>
                                 @else
                                     <td>
-                                        <span class="d-inline-block" data-bs-toggle="popover" data-bs-placement="right" 
+                                        {{-- ajout du title sur le lien car popover ne fonctionne pas --}}
+                                        <a class="btn btn-default" title="{{$user->user_comment}}">
+                                            <span class="d-inline-block" data-bs-toggle="popover" data-bs-placement="right" 
                                                 data-bs-content="{{$user->user_comment}}">
-                                            <x-bootstrap-icon iconname='person.svg' />
-                                        </span>
+                                                <x-bootstrap-icon iconname='person.svg' />
+                                            </span>
+                                        </a>
                                     </td>
                                 @endif
                             @endif
@@ -203,20 +209,26 @@
                                 <td>&nbsp;</td>
                                 @else
                                     <td>
-                                        <span class="d-inline-block" data-bs-toggle="popover" data-bs-placement="left" 
+                                        {{-- ajout du title sur le lien car popover ne fonctionne pas --}}
+                                        <a class="btn btn-default" title="{{$user->pivot->commentaire}}">
+                                            <span class="d-inline-block" data-bs-toggle="popover" data-bs-placement="left" 
                                                 data-bs-content="{{$user->pivot->commentaire}}">
-                                            <x-bootstrap-icon iconname='chat-left-quote.svg' />
-                                        </span>
+                                                <x-bootstrap-icon iconname='chat-left-quote.svg' />
+                                            </span>
+                                        </a>
                                     </td>
                                 @endif
                                 @if ($user->user_comment == null or trim($user->user_comment) == '')
                                     <td>&nbsp;</td>
                                 @else
                                     <td>
-                                        <span class="d-inline-block" data-bs-toggle="popover" data-bs-placement="right" 
+                                        {{-- ajout du title sur le lien car popover ne fonctionne pas --}}
+                                        <a class="btn btn-default" title="{{$user->user_comment}}">
+                                            <span class="d-inline-block" data-bs-toggle="popover" data-bs-placement="right" 
                                                 data-bs-content="{{$user->user_comment}}">
-                                            <x-bootstrap-icon iconname='person.svg' />
-                                        </span>
+                                                <x-bootstrap-icon iconname='person.svg' />
+                                            </span>
+                                        </a>
                                     </td>
                                 @endif
                             @endif

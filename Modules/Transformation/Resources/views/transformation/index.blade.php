@@ -8,9 +8,9 @@
 @section('content')
     
     <div class="p-4">
-        <h2>Transformation - Marins</h2>
+        <h2>Suivi par marin</h2>
         <div class="lead">
-            Liste des marins en transformation
+            Liste des marins
         </div>
 
         <div class="mt-3">

@@ -35,7 +35,7 @@
         }
 
     }">
-    <div>Cliquez sur un sous objectif pour mettre la colonne en surbrillance</div>
+    <div>Cliquez sur une activité pour mettre la colonne en surbrillance</div>
     <div class="sticky-top" style="top:5rem;  background: white; width:100%; z-index: 9999;">
         <button type="submit" 
         form="ssobjsusers"

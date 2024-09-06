@@ -50,7 +50,7 @@
         </div>       
 
         <div class='card ml-3 w-100'>
-            <div class='card-header ml-n3 mr-n4 mb-3' ><b>Tâche(s) associ&eacute;e(s)</b> <span style="font-size:x-small;">(Glissez/déplacez les taches puis enregistrez pour modifier leur ordre d'affichage dans l'application)</span></div>
+            <div class='card-header ml-n3 mr-n4 mb-3' ><b>Compétence(s) associ&eacute;e(s)</b> <span style="font-size:x-small;">(Glissez/déplacez les taches puis enregistrez pour modifier leur ordre d'affichage dans l'application)</span></div>
             <input type='hidden' name='compagnonage_id' id='compagnonage_id'  value='{{ $compagnonage->id }}'>
             
             <x-sortable name="sort_order">
@@ -64,7 +64,7 @@
                                 <div class="p-2 w-25"> => {{ $tache->tache_libcourt }} </div>
                                 <div class="p-2 w-25 text-end">
                                     @can("transformation::compagnonages.removetache")
-                                        <button dusk="retirer-tache" type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('removetache[{{ $tache->id }}]').submit()">Retirer cette tâche</button>
+                                        <button dusk="retirer-tache" type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('removetache[{{ $tache->id }}]').submit()">Retirer cette compétence</button>
                                     @endcan
                                 </div>
                             </div>
@@ -85,7 +85,7 @@
 
             @can("transformation::compagnonages.choisirtache")
             <div class="text-center mt-1 mb-1">
-                <a dusk="ajouter_tache" class="btn btn-primary btn-sm" href="{{ route('transformation::compagnonages.choisirtache', $compagnonage)}}">Ajouter une nouvelle tâche</a>
+                <a dusk="ajouter_tache" class="btn btn-primary btn-sm" href="{{ route('transformation::compagnonages.choisirtache', $compagnonage)}}">Ajouter une nouvelle compétence</a>
             </div>
             @endcan
         </div>

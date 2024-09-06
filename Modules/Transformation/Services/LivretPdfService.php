@@ -22,10 +22,10 @@ class LivretPdfService
                             'margin_top' => 15,
                             'margin_bottom' => 15
                             ]);
-        $mpdf->SetTitle('Livret de transformation');
+        $mpdf->SetTitle('PPA du marin');
         $mpdf->setFooter('{PAGENO}/{nb}');
         $mpdf->WriteHTML($html);
-        $nomfic=date('Ymd')."_Livret de transformation de ".$user->name."_".$user->prenom.".pdf";
+        $nomfic=date('Ymd')."_PPA de ".$user->name."_".$user->prenom.".pdf";
         
         if($mode=='archiv'){
             //sauvegarde sur serveur

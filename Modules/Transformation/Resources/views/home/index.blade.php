@@ -11,7 +11,7 @@
                 <div class="col-md-3 mt-5">
                 <p style="text-align:justify">Ce site vous permet de suivre votre parcours de transformation. Il présente l’ensemble des compétences et étapes que vous devrez acquérir et valider.<br><br>
                     <b>C’est votre outil de travail quotidien, qui vous guidera tout au long de votre parcours.</b></p><br>
-                    <p class="text-center"><br><a href="{{ route('transformation::transformation.monlivret') }}" class="btn btn-warning btn-lg">Mon livret de transformation</a></p>
+                    <p class="text-center"><br><a href="{{ route('transformation::transformation.monlivret') }}" class="btn btn-warning btn-lg">Mon PPA</a></p>
                 </div>
                 <div class="col-md-6 mt-5">
                     <div><p class="text-center"><font size="6%">Taux de transformation</font></p></div>

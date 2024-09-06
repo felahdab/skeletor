@@ -47,7 +47,7 @@
         </div>
     </div>
     <div class='card ml-3 w-100' >
-        <div class='card-header ml-n3 mr-n4 mb-3' ><b>Tâche(s) associ&eacute;e(s)</b></div>
+        <div class='card-header ml-n3 mr-n4 mb-3' ><b>Compétence(s) associ&eacute;e(s)</b></div>
         <input type='hidden' name='compagnonage_id' id='compagnonage_id'  value='{{ $compagnonage->id }}'>
         
         @foreach ($compagnonage->taches()->get() as $tache)

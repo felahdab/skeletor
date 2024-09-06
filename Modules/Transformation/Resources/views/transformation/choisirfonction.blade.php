@@ -25,7 +25,7 @@
             <button type='submit' class='btn btn-primary'>Attribuer cette fonction</button>
             </x-form::form>
             <a href="{{ route('transformation::transformation.index') }}" class="btn btn-outline-dark"> Annuler </button>
-            <a href="{{ route('transformation::transformation.livret', $user->id) }}" class="btn btn-warning">Livret de transformation</a>
+            <a href="{{ route('transformation::transformation.livret', $user->id) }}" class="btn btn-warning">PPA du marin</a>
         </div>
         
         <div class="container mt-4">
