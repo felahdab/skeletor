@@ -10,6 +10,9 @@ use Rappasoft\LaravelLivewireTables\Traits\Mechanisms\WithRappasoftTableStyles;
 use Rappasoft\LaravelLivewireTables\Traits\Mechanisms\WithRappasoftTableThirdPartyScripts;
 use Rappasoft\LaravelLivewireTables\Traits\Mechanisms\WithRappasoftTableThirdPartyStyles;
 
+use App\Http\Middleware\InitializeTenancyByCookieData;
+use App\Http\Middleware\SetTenantDefaultForRoutesMiddleware;
+
 class RappasoftFrontendAssets
 {
     use WithRappasoftTableScripts;
@@ -28,28 +31,36 @@ class RappasoftFrontendAssets
         app($this::class)->setRappasoftTableScriptRoute(function ($handle) {
             $scriptPath = rtrim(config('livewire-tables.script_base_path', '/rappasoft/laravel-livewire-tables'), '/').'/core.min.js';
 
-            return Route::get($scriptPath, $handle);
+            return Route::get($scriptPath, $handle)->middleware([\App\Http\Middleware\EncryptCookies::class,
+            InitializeTenancyByCookieData::class, 
+            SetTenantDefaultForRoutesMiddleware::class]);
         });
 
         // Set the CSS route for the core tables CSS
         app($this::class)->setRappasoftTableStylesRoute(function ($handle) {
             $stylesPath = rtrim(config('livewire-tables.script_base_path', '/rappasoft/laravel-livewire-tables'), '/').'/core.min.css';
 
-            return Route::get($stylesPath, $handle);
+            return Route::get($stylesPath, $handle)->middleware([\App\Http\Middleware\EncryptCookies::class,
+            InitializeTenancyByCookieData::class, 
+            SetTenantDefaultForRoutesMiddleware::class]);
         });
 
         // Set the JS route for the third party JS
         app($this::class)->setRappasoftTableThirdPartyScriptRoute(function ($handle) {
             $scriptPath = rtrim(config('livewire-tables.script_base_path', '/rappasoft/laravel-livewire-tables'), '/').'/thirdparty.min.js';
 
-            return Route::get($scriptPath, $handle);
+            return Route::get($scriptPath, $handle)->middleware([\App\Http\Middleware\EncryptCookies::class,
+            InitializeTenancyByCookieData::class, 
+            SetTenantDefaultForRoutesMiddleware::class]);
         });
 
         // Set the CSS route for the third party CSS
         app($this::class)->setRappasoftTableThirdPartyStylesRoute(function ($handle) {
             $stylesPath = rtrim(config('livewire-tables.script_base_path', '/rappasoft/laravel-livewire-tables'), '/').'/thirdparty.css';
 
-            return Route::get($stylesPath, $handle);
+            return Route::get($stylesPath, $handle)->middleware([\App\Http\Middleware\EncryptCookies::class,
+            InitializeTenancyByCookieData::class, 
+            SetTenantDefaultForRoutesMiddleware::class]);
         });
 
         static::registerBladeDirectives();
