@@ -1,98 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="" tests="50" assertions="87" errors="0" warnings="0" failures="0" skipped="0" time="142.135845">
-    <testsuite name="Browser Test Suite" tests="24" assertions="36" errors="0" warnings="0" failures="0" skipped="0" time="67.476427">
-      <testsuite name="Tests\Browser\AnnudefTest" file="/app/tests/Browser/AnnudefTest.php" tests="2" assertions="2" errors="0" warnings="0" failures="0" skipped="0" time="9.567326">
-        <testcase name="test_annudef_page_displays" class="Tests\Browser\AnnudefTest" classname="Tests.Browser.AnnudefTest" file="/app/tests/Browser/AnnudefTest.php" line="14" assertions="1" time="6.074667"/>
-        <testcase name="test_annudef_search_by_name_doesnt_crash" class="Tests\Browser\AnnudefTest" classname="Tests.Browser.AnnudefTest" file="/app/tests/Browser/AnnudefTest.php" line="30" assertions="1" time="3.492659"/>
+  <testsuite name="/app/phpunit.dusk.xml" tests="50" assertions="87" errors="0" failures="1" skipped="0" time="154.352000">
+    <testsuite name="Browser Test Suite" tests="24" assertions="36" errors="0" failures="0" skipped="0" time="74.711987">
+      <testsuite name="Tests\Browser\AnnudefTest" file="/app/tests/Browser/AnnudefTest.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time="13.665687">
+        <testcase name="test_annudef_page_displays" file="/app/tests/Browser/AnnudefTest.php" line="14" class="Tests\Browser\AnnudefTest" classname="Tests.Browser.AnnudefTest" assertions="1" time="10.822031"/>
+        <testcase name="test_annudef_search_by_name_doesnt_crash" file="/app/tests/Browser/AnnudefTest.php" line="30" class="Tests\Browser\AnnudefTest" classname="Tests.Browser.AnnudefTest" assertions="1" time="2.843657"/>
       </testsuite>
-      <testsuite name="Tests\Browser\ArchivesTest" file="/app/tests/Browser/ArchivesTest.php" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="3.746327">
-        <testcase name="test_archives_page_displays" class="Tests\Browser\ArchivesTest" classname="Tests.Browser.ArchivesTest" file="/app/tests/Browser/ArchivesTest.php" line="14" assertions="1" time="3.746327"/>
+      <testsuite name="Tests\Browser\ArchivesTest" file="/app/tests/Browser/ArchivesTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="2.907541">
+        <testcase name="test_archives_page_displays" file="/app/tests/Browser/ArchivesTest.php" line="14" class="Tests\Browser\ArchivesTest" classname="Tests.Browser.ArchivesTest" assertions="1" time="2.907541"/>
       </testsuite>
-      <testsuite name="Tests\Browser\CodeEditorTest" file="/app/tests/Browser/CodeEditorTest.php" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="1.010098">
-        <testcase name="test_code_editor_login_displays" class="Tests\Browser\CodeEditorTest" classname="Tests.Browser.CodeEditorTest" file="/app/tests/Browser/CodeEditorTest.php" line="16" assertions="1" time="1.010098"/>
+      <testsuite name="Tests\Browser\CodeEditorTest" file="/app/tests/Browser/CodeEditorTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.980233">
+        <testcase name="test_code_editor_login_displays" file="/app/tests/Browser/CodeEditorTest.php" line="16" class="Tests\Browser\CodeEditorTest" classname="Tests.Browser.CodeEditorTest" assertions="1" time="0.980233"/>
       </testsuite>
-      <testsuite name="Tests\Browser\GroupementsTest" file="/app/tests/Browser/GroupementsTest.php" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="2.291767">
-        <testcase name="test_groupements_list_displays" class="Tests\Browser\GroupementsTest" classname="Tests.Browser.GroupementsTest" file="/app/tests/Browser/GroupementsTest.php" line="11" assertions="1" time="2.291767"/>
+      <testsuite name="Tests\Browser\GroupementsTest" file="/app/tests/Browser/GroupementsTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="2.539820">
+        <testcase name="test_groupements_list_displays" file="/app/tests/Browser/GroupementsTest.php" line="11" class="Tests\Browser\GroupementsTest" classname="Tests.Browser.GroupementsTest" assertions="1" time="2.539820"/>
       </testsuite>
-      <testsuite name="Tests\Browser\LiensTest" file="/app/tests/Browser/LiensTest.php" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="2.390340">
-        <testcase name="test_liens_page_displays" class="Tests\Browser\LiensTest" classname="Tests.Browser.LiensTest" file="/app/tests/Browser/LiensTest.php" line="14" assertions="1" time="2.390340"/>
+      <testsuite name="Tests\Browser\LiensTest" file="/app/tests/Browser/LiensTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="2.565890">
+        <testcase name="test_liens_page_displays" file="/app/tests/Browser/LiensTest.php" line="14" class="Tests\Browser\LiensTest" classname="Tests.Browser.LiensTest" assertions="1" time="2.565890"/>
       </testsuite>
-      <testsuite name="Tests\Browser\LocalLoginTest" file="/app/tests/Browser/LocalLoginTest.php" tests="2" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="4.455174">
-        <testcase name="test_local_login_page" class="Tests\Browser\LocalLoginTest" classname="Tests.Browser.LocalLoginTest" file="/app/tests/Browser/LocalLoginTest.php" line="18" assertions="1" time="1.686954"/>
-        <testcase name="test_local_login_as_admin" class="Tests\Browser\LocalLoginTest" classname="Tests.Browser.LocalLoginTest" file="/app/tests/Browser/LocalLoginTest.php" line="27" assertions="2" time="2.768219"/>
+      <testsuite name="Tests\Browser\LocalLoginTest" file="/app/tests/Browser/LocalLoginTest.php" tests="2" assertions="3" errors="0" failures="0" skipped="0" time="4.787197">
+        <testcase name="test_local_login_page" file="/app/tests/Browser/LocalLoginTest.php" line="18" class="Tests\Browser\LocalLoginTest" classname="Tests.Browser.LocalLoginTest" assertions="1" time="1.706164"/>
+        <testcase name="test_local_login_as_admin" file="/app/tests/Browser/LocalLoginTest.php" line="27" class="Tests\Browser\LocalLoginTest" classname="Tests.Browser.LocalLoginTest" assertions="2" time="3.081033"/>
       </testsuite>
-      <testsuite name="Tests\Browser\MailsTest" file="/app/tests/Browser/MailsTest.php" tests="2" assertions="4" errors="0" warnings="0" failures="0" skipped="0" time="10.541933">
-        <testcase name="test_mails_page_displays" class="Tests\Browser\MailsTest" classname="Tests.Browser.MailsTest" file="/app/tests/Browser/MailsTest.php" line="14" assertions="1" time="3.805040"/>
-        <testcase name="test_create_and_save_new_mail" class="Tests\Browser\MailsTest" classname="Tests.Browser.MailsTest" file="/app/tests/Browser/MailsTest.php" line="31" assertions="3" time="6.736893"/>
+      <testsuite name="Tests\Browser\MailsTest" file="/app/tests/Browser/MailsTest.php" tests="2" assertions="4" errors="0" failures="0" skipped="0" time="9.729116">
+        <testcase name="test_mails_page_displays" file="/app/tests/Browser/MailsTest.php" line="14" class="Tests\Browser\MailsTest" classname="Tests.Browser.MailsTest" assertions="1" time="2.255372"/>
+        <testcase name="test_create_and_save_new_mail" file="/app/tests/Browser/MailsTest.php" line="31" class="Tests\Browser\MailsTest" classname="Tests.Browser.MailsTest" assertions="3" time="7.473745"/>
       </testsuite>
-      <testsuite name="Tests\Browser\MetabaseTest" file="/app/tests/Browser/MetabaseTest.php" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="0.034653">
-        <testcase name="test_metabase_responds" class="Tests\Browser\MetabaseTest" classname="Tests.Browser.MetabaseTest" file="/app/tests/Browser/MetabaseTest.php" line="16" assertions="1" time="0.034653"/>
+      <testsuite name="Tests\Browser\MetabaseTest" file="/app/tests/Browser/MetabaseTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.045443">
+        <testcase name="test_metabase_responds" file="/app/tests/Browser/MetabaseTest.php" line="16" class="Tests\Browser\MetabaseTest" classname="Tests.Browser.MetabaseTest" assertions="1" time="0.045443"/>
       </testsuite>
-      <testsuite name="Tests\Browser\NavbarTest" file="/app/tests/Browser/NavbarTest.php" tests="2" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="4.023614">
-        <testcase name="test_main_menu_displays" class="Tests\Browser\NavbarTest" classname="Tests.Browser.NavbarTest" file="/app/tests/Browser/NavbarTest.php" line="13" assertions="1" time="2.525863"/>
-        <testcase name="test_users_table_displays" class="Tests\Browser\NavbarTest" classname="Tests.Browser.NavbarTest" file="/app/tests/Browser/NavbarTest.php" line="29" assertions="2" time="1.497751"/>
+      <testsuite name="Tests\Browser\NavbarTest" file="/app/tests/Browser/NavbarTest.php" tests="2" assertions="3" errors="0" failures="0" skipped="0" time="4.670408">
+        <testcase name="test_main_menu_displays" file="/app/tests/Browser/NavbarTest.php" line="13" class="Tests\Browser\NavbarTest" classname="Tests.Browser.NavbarTest" assertions="1" time="2.716390"/>
+        <testcase name="test_users_table_displays" file="/app/tests/Browser/NavbarTest.php" line="29" class="Tests\Browser\NavbarTest" classname="Tests.Browser.NavbarTest" assertions="2" time="1.954018"/>
       </testsuite>
-      <testsuite name="Tests\Browser\PasswordResetTest" file="/app/tests/Browser/PasswordResetTest.php" tests="4" assertions="5" errors="0" warnings="0" failures="0" skipped="0" time="8.960006">
-        <testcase name="test_request_password_reset_page" class="Tests\Browser\PasswordResetTest" classname="Tests.Browser.PasswordResetTest" file="/app/tests/Browser/PasswordResetTest.php" line="19" assertions="1" time="1.614256"/>
-        <testcase name="test_request_password_reset_page_error_when_invalid_email" class="Tests\Browser\PasswordResetTest" classname="Tests.Browser.PasswordResetTest" file="/app/tests/Browser/PasswordResetTest.php" line="28" assertions="1" time="2.126991"/>
-        <testcase name="test_request_password_reset_page_when_valid_email_redirects_to_login_page" class="Tests\Browser\PasswordResetTest" classname="Tests.Browser.PasswordResetTest" file="/app/tests/Browser/PasswordResetTest.php" line="39" assertions="1" time="1.624439"/>
-        <testcase name="test_request_password_error_when_too_many_tries" class="Tests\Browser\PasswordResetTest" classname="Tests.Browser.PasswordResetTest" file="/app/tests/Browser/PasswordResetTest.php" line="53" assertions="2" time="3.594320"/>
+      <testsuite name="Tests\Browser\PasswordResetTest" file="/app/tests/Browser/PasswordResetTest.php" tests="4" assertions="5" errors="0" failures="0" skipped="0" time="9.593694">
+        <testcase name="test_request_password_reset_page" file="/app/tests/Browser/PasswordResetTest.php" line="19" class="Tests\Browser\PasswordResetTest" classname="Tests.Browser.PasswordResetTest" assertions="1" time="1.858890"/>
+        <testcase name="test_request_password_reset_page_error_when_invalid_email" file="/app/tests/Browser/PasswordResetTest.php" line="28" class="Tests\Browser\PasswordResetTest" classname="Tests.Browser.PasswordResetTest" assertions="1" time="2.237008"/>
+        <testcase name="test_request_password_reset_page_when_valid_email_redirects_to_login_page" file="/app/tests/Browser/PasswordResetTest.php" line="39" class="Tests\Browser\PasswordResetTest" classname="Tests.Browser.PasswordResetTest" assertions="1" time="1.869047"/>
+        <testcase name="test_request_password_error_when_too_many_tries" file="/app/tests/Browser/PasswordResetTest.php" line="53" class="Tests\Browser\PasswordResetTest" classname="Tests.Browser.PasswordResetTest" assertions="2" time="3.628748"/>
       </testsuite>
-      <testsuite name="Tests\Browser\PhpmyadminTest" file="/app/tests/Browser/PhpmyadminTest.php" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="1.114924">
-        <testcase name="test_phpmyadin_homepage_displays" class="Tests\Browser\PhpmyadminTest" classname="Tests.Browser.PhpmyadminTest" file="/app/tests/Browser/PhpmyadminTest.php" line="16" assertions="1" time="1.114924"/>
+      <testsuite name="Tests\Browser\PhpmyadminTest" file="/app/tests/Browser/PhpmyadminTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="2.242012">
+        <testcase name="test_phpmyadin_homepage_displays" file="/app/tests/Browser/PhpmyadminTest.php" line="16" class="Tests\Browser\PhpmyadminTest" classname="Tests.Browser.PhpmyadminTest" assertions="1" time="2.242012"/>
       </testsuite>
-      <testsuite name="Tests\Browser\SecteursTest" file="/app/tests/Browser/SecteursTest.php" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="2.419573">
-        <testcase name="test_secteurs_list_displays" class="Tests\Browser\SecteursTest" classname="Tests.Browser.SecteursTest" file="/app/tests/Browser/SecteursTest.php" line="11" assertions="1" time="2.419573"/>
+      <testsuite name="Tests\Browser\SecteursTest" file="/app/tests/Browser/SecteursTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="2.353856">
+        <testcase name="test_secteurs_list_displays" file="/app/tests/Browser/SecteursTest.php" line="11" class="Tests\Browser\SecteursTest" classname="Tests.Browser.SecteursTest" assertions="1" time="2.353856"/>
       </testsuite>
-      <testsuite name="Tests\Browser\ServicesTest" file="/app/tests/Browser/ServicesTest.php" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="2.289566">
-        <testcase name="test_groupements_list_displays" class="Tests\Browser\ServicesTest" classname="Tests.Browser.ServicesTest" file="/app/tests/Browser/ServicesTest.php" line="11" assertions="1" time="2.289566"/>
+      <testsuite name="Tests\Browser\ServicesTest" file="/app/tests/Browser/ServicesTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="2.578286">
+        <testcase name="test_groupements_list_displays" file="/app/tests/Browser/ServicesTest.php" line="11" class="Tests\Browser\ServicesTest" classname="Tests.Browser.ServicesTest" assertions="1" time="2.578286"/>
       </testsuite>
-      <testsuite name="Tests\Browser\UsersTableTest" file="/app/tests/Browser/UsersTableTest.php" tests="4" assertions="11" errors="0" warnings="0" failures="0" skipped="0" time="14.631126">
-        <testcase name="test_users_table_gestion_displays" class="Tests\Browser\UsersTableTest" classname="Tests.Browser.UsersTableTest" file="/app/tests/Browser/UsersTableTest.php" line="18" assertions="1" time="2.362480"/>
-        <testcase name="test_users_table_gestion_search" class="Tests\Browser\UsersTableTest" classname="Tests.Browser.UsersTableTest" file="/app/tests/Browser/UsersTableTest.php" line="34" assertions="3" time="2.670515"/>
-        <testcase name="test_users_deletion_fails_if_not_date_debarq" class="Tests\Browser\UsersTableTest" classname="Tests.Browser.UsersTableTest" file="/app/tests/Browser/UsersTableTest.php" line="54" assertions="4" time="4.290966"/>
-        <testcase name="test_users_deletion_succeeds_if_date_debarq" class="Tests\Browser\UsersTableTest" classname="Tests.Browser.UsersTableTest" file="/app/tests/Browser/UsersTableTest.php" line="82" assertions="3" time="5.307165"/>
+      <testsuite name="Tests\Browser\UsersTableTest" file="/app/tests/Browser/UsersTableTest.php" tests="4" assertions="11" errors="0" failures="0" skipped="0" time="16.052804">
+        <testcase name="test_users_table_gestion_displays" file="/app/tests/Browser/UsersTableTest.php" line="18" class="Tests\Browser\UsersTableTest" classname="Tests.Browser.UsersTableTest" assertions="1" time="2.370554"/>
+        <testcase name="test_users_table_gestion_search" file="/app/tests/Browser/UsersTableTest.php" line="34" class="Tests\Browser\UsersTableTest" classname="Tests.Browser.UsersTableTest" assertions="3" time="3.772656"/>
+        <testcase name="test_users_deletion_fails_if_not_date_debarq" file="/app/tests/Browser/UsersTableTest.php" line="54" class="Tests\Browser\UsersTableTest" classname="Tests.Browser.UsersTableTest" assertions="4" time="4.553679"/>
+        <testcase name="test_users_deletion_succeeds_if_date_debarq" file="/app/tests/Browser/UsersTableTest.php" line="82" class="Tests\Browser\UsersTableTest" classname="Tests.Browser.UsersTableTest" assertions="3" time="5.355915"/>
       </testsuite>
     </testsuite>
-    <testsuite name="Browser Test Suite" tests="26" assertions="51" errors="0" warnings="0" failures="0" skipped="0" time="74.659419">
-      <testsuite name="Modules\Transformation\Tests\Browser\ArchivageTest" file="/app/Modules/Transformation/Tests/Browser/ArchivageTest.php" tests="7" assertions="21" errors="0" warnings="0" failures="0" skipped="0" time="29.597544">
-        <testcase name="test_archivage_page_displays" class="Modules\Transformation\Tests\Browser\ArchivageTest" classname="Modules.Transformation.Tests.Browser.ArchivageTest" file="/app/Modules/Transformation/Tests/Browser/ArchivageTest.php" line="15" assertions="1" time="2.350746"/>
-        <testcase name="test_soft_deleted_user_displays" class="Modules\Transformation\Tests\Browser\ArchivageTest" classname="Modules.Transformation.Tests.Browser.ArchivageTest" file="/app/Modules/Transformation/Tests/Browser/ArchivageTest.php" line="31" assertions="1" time="1.713906"/>
-        <testcase name="test_soft_deleted_user_is_restored_with_data" class="Modules\Transformation\Tests\Browser\ArchivageTest" classname="Modules.Transformation.Tests.Browser.ArchivageTest" file="/app/Modules/Transformation/Tests/Browser/ArchivageTest.php" line="55" assertions="5" time="4.494775"/>
-        <testcase name="test_soft_deleted_user_is_restored_without_data" class="Modules\Transformation\Tests\Browser\ArchivageTest" classname="Modules.Transformation.Tests.Browser.ArchivageTest" file="/app/Modules/Transformation/Tests/Browser/ArchivageTest.php" line="90" assertions="5" time="4.493003"/>
-        <testcase name="test_soft_deleted_user_cannot_be_deleted_if_not_date_archivage" class="Modules\Transformation\Tests\Browser\ArchivageTest" classname="Modules.Transformation.Tests.Browser.ArchivageTest" file="/app/Modules/Transformation/Tests/Browser/ArchivageTest.php" line="126" assertions="2" time="2.828694"/>
-        <testcase name="test_soft_deleted_user_without_date_archivage_can_be_deleted_after_archivage" class="Modules\Transformation\Tests\Browser\ArchivageTest" classname="Modules.Transformation.Tests.Browser.ArchivageTest" file="/app/Modules/Transformation/Tests/Browser/ArchivageTest.php" line="154" assertions="3" time="7.256981"/>
-        <testcase name="test_soft_deleted_user_with_date_archivage_can_be_force_deleted" class="Modules\Transformation\Tests\Browser\ArchivageTest" classname="Modules.Transformation.Tests.Browser.ArchivageTest" file="/app/Modules/Transformation/Tests/Browser/ArchivageTest.php" line="189" assertions="4" time="6.459439"/>
+    <testsuite name="Browser Test Suite" tests="26" assertions="51" errors="0" failures="1" skipped="0" time="79.640013">
+      <testsuite name="Modules\Transformation\Tests\Browser\ArchivageTest" file="/app/Modules/Transformation/Tests/Browser/ArchivageTest.php" tests="7" assertions="21" errors="0" failures="0" skipped="0" time="29.190903">
+        <testcase name="test_archivage_page_displays" file="/app/Modules/Transformation/Tests/Browser/ArchivageTest.php" line="15" class="Modules\Transformation\Tests\Browser\ArchivageTest" classname="Modules.Transformation.Tests.Browser.ArchivageTest" assertions="1" time="2.733575"/>
+        <testcase name="test_soft_deleted_user_displays" file="/app/Modules/Transformation/Tests/Browser/ArchivageTest.php" line="31" class="Modules\Transformation\Tests\Browser\ArchivageTest" classname="Modules.Transformation.Tests.Browser.ArchivageTest" assertions="1" time="1.637765"/>
+        <testcase name="test_soft_deleted_user_is_restored_with_data" file="/app/Modules/Transformation/Tests/Browser/ArchivageTest.php" line="55" class="Modules\Transformation\Tests\Browser\ArchivageTest" classname="Modules.Transformation.Tests.Browser.ArchivageTest" assertions="5" time="4.550182"/>
+        <testcase name="test_soft_deleted_user_is_restored_without_data" file="/app/Modules/Transformation/Tests/Browser/ArchivageTest.php" line="90" class="Modules\Transformation\Tests\Browser\ArchivageTest" classname="Modules.Transformation.Tests.Browser.ArchivageTest" assertions="5" time="4.670556"/>
+        <testcase name="test_soft_deleted_user_cannot_be_deleted_if_not_date_archivage" file="/app/Modules/Transformation/Tests/Browser/ArchivageTest.php" line="126" class="Modules\Transformation\Tests\Browser\ArchivageTest" classname="Modules.Transformation.Tests.Browser.ArchivageTest" assertions="2" time="2.775439"/>
+        <testcase name="test_soft_deleted_user_without_date_archivage_can_be_deleted_after_archivage" file="/app/Modules/Transformation/Tests/Browser/ArchivageTest.php" line="154" class="Modules\Transformation\Tests\Browser\ArchivageTest" classname="Modules.Transformation.Tests.Browser.ArchivageTest" assertions="3" time="6.381204"/>
+        <testcase name="test_soft_deleted_user_with_date_archivage_can_be_force_deleted" file="/app/Modules/Transformation/Tests/Browser/ArchivageTest.php" line="189" class="Modules\Transformation\Tests\Browser\ArchivageTest" classname="Modules.Transformation.Tests.Browser.ArchivageTest" assertions="4" time="6.442181"/>
       </testsuite>
-      <testsuite name="Modules\Transformation\Tests\Browser\GestionCompTest" file="/app/Modules/Transformation/Tests/Browser/GestionCompTest.php" tests="5" assertions="8" errors="0" warnings="0" failures="0" skipped="0" time="11.665524">
-        <testcase name="test_comps_s_affichent" class="Modules\Transformation\Tests\Browser\GestionCompTest" classname="Modules.Transformation.Tests.Browser.GestionCompTest" file="/app/Modules/Transformation/Tests/Browser/GestionCompTest.php" line="15" assertions="1" time="2.421144"/>
-        <testcase name="test_comp_consultation" class="Modules\Transformation\Tests\Browser\GestionCompTest" classname="Modules.Transformation.Tests.Browser.GestionCompTest" file="/app/Modules/Transformation/Tests/Browser/GestionCompTest.php" line="31" assertions="1" time="1.370659"/>
-        <testcase name="test_comp_edition" class="Modules\Transformation\Tests\Browser\GestionCompTest" classname="Modules.Transformation.Tests.Browser.GestionCompTest" file="/app/Modules/Transformation/Tests/Browser/GestionCompTest.php" line="49" assertions="1" time="1.155769"/>
-        <testcase name="test_comp_edition_ajouter_tache" class="Modules\Transformation\Tests\Browser\GestionCompTest" classname="Modules.Transformation.Tests.Browser.GestionCompTest" file="/app/Modules/Transformation/Tests/Browser/GestionCompTest.php" line="67" assertions="3" time="3.862367"/>
-        <testcase name="test_comp_edition_retirer_tache" class="Modules\Transformation\Tests\Browser\GestionCompTest" classname="Modules.Transformation.Tests.Browser.GestionCompTest" file="/app/Modules/Transformation/Tests/Browser/GestionCompTest.php" line="91" assertions="2" time="2.855585"/>
+      <testsuite name="Modules\Transformation\Tests\Browser\GestionCompTest" file="/app/Modules/Transformation/Tests/Browser/GestionCompTest.php" tests="5" assertions="8" errors="0" failures="0" skipped="0" time="13.069105">
+        <testcase name="test_comps_s_affichent" file="/app/Modules/Transformation/Tests/Browser/GestionCompTest.php" line="15" class="Modules\Transformation\Tests\Browser\GestionCompTest" classname="Modules.Transformation.Tests.Browser.GestionCompTest" assertions="1" time="2.417422"/>
+        <testcase name="test_comp_consultation" file="/app/Modules/Transformation/Tests/Browser/GestionCompTest.php" line="31" class="Modules\Transformation\Tests\Browser\GestionCompTest" classname="Modules.Transformation.Tests.Browser.GestionCompTest" assertions="1" time="1.505816"/>
+        <testcase name="test_comp_edition" file="/app/Modules/Transformation/Tests/Browser/GestionCompTest.php" line="49" class="Modules\Transformation\Tests\Browser\GestionCompTest" classname="Modules.Transformation.Tests.Browser.GestionCompTest" assertions="1" time="1.601230"/>
+        <testcase name="test_comp_edition_ajouter_tache" file="/app/Modules/Transformation/Tests/Browser/GestionCompTest.php" line="67" class="Modules\Transformation\Tests\Browser\GestionCompTest" classname="Modules.Transformation.Tests.Browser.GestionCompTest" assertions="3" time="4.498375"/>
+        <testcase name="test_comp_edition_retirer_tache" file="/app/Modules/Transformation/Tests/Browser/GestionCompTest.php" line="91" class="Modules\Transformation\Tests\Browser\GestionCompTest" classname="Modules.Transformation.Tests.Browser.GestionCompTest" assertions="2" time="3.046262"/>
       </testsuite>
-      <testsuite name="Modules\Transformation\Tests\Browser\GestionFonctionTest" file="/app/Modules/Transformation/Tests/Browser/GestionFonctionTest.php" tests="7" assertions="13" errors="0" warnings="0" failures="0" skipped="0" time="18.441570">
-        <testcase name="test_fonctions_s_affichent" class="Modules\Transformation\Tests\Browser\GestionFonctionTest" classname="Modules.Transformation.Tests.Browser.GestionFonctionTest" file="/app/Modules/Transformation/Tests/Browser/GestionFonctionTest.php" line="15" assertions="1" time="2.268738"/>
-        <testcase name="test_fonction_consultation" class="Modules\Transformation\Tests\Browser\GestionFonctionTest" classname="Modules.Transformation.Tests.Browser.GestionFonctionTest" file="/app/Modules/Transformation/Tests/Browser/GestionFonctionTest.php" line="31" assertions="1" time="1.195316"/>
-        <testcase name="test_fonction_edition" class="Modules\Transformation\Tests\Browser\GestionFonctionTest" classname="Modules.Transformation.Tests.Browser.GestionFonctionTest" file="/app/Modules/Transformation/Tests/Browser/GestionFonctionTest.php" line="49" assertions="1" time="1.332664"/>
-        <testcase name="test_fonction_edition_ajouter_compagnonnage" class="Modules\Transformation\Tests\Browser\GestionFonctionTest" classname="Modules.Transformation.Tests.Browser.GestionFonctionTest" file="/app/Modules/Transformation/Tests/Browser/GestionFonctionTest.php" line="67" assertions="3" time="3.723728"/>
-        <testcase name="test_fonction_edition_ajouter_stage" class="Modules\Transformation\Tests\Browser\GestionFonctionTest" classname="Modules.Transformation.Tests.Browser.GestionFonctionTest" file="/app/Modules/Transformation/Tests/Browser/GestionFonctionTest.php" line="91" assertions="3" time="3.881767"/>
-        <testcase name="test_fonction_edition_retirer_stage" class="Modules\Transformation\Tests\Browser\GestionFonctionTest" classname="Modules.Transformation.Tests.Browser.GestionFonctionTest" file="/app/Modules/Transformation/Tests/Browser/GestionFonctionTest.php" line="115" assertions="2" time="3.098535"/>
-        <testcase name="test_fonction_edition_retirer_compagnonnage" class="Modules\Transformation\Tests\Browser\GestionFonctionTest" classname="Modules.Transformation.Tests.Browser.GestionFonctionTest" file="/app/Modules/Transformation/Tests/Browser/GestionFonctionTest.php" line="137" assertions="2" time="2.940823"/>
+      <testsuite name="Modules\Transformation\Tests\Browser\GestionFonctionTest" file="/app/Modules/Transformation/Tests/Browser/GestionFonctionTest.php" tests="7" assertions="13" errors="0" failures="0" skipped="0" time="21.109292">
+        <testcase name="test_fonctions_s_affichent" file="/app/Modules/Transformation/Tests/Browser/GestionFonctionTest.php" line="15" class="Modules\Transformation\Tests\Browser\GestionFonctionTest" classname="Modules.Transformation.Tests.Browser.GestionFonctionTest" assertions="1" time="2.297847"/>
+        <testcase name="test_fonction_consultation" file="/app/Modules/Transformation/Tests/Browser/GestionFonctionTest.php" line="31" class="Modules\Transformation\Tests\Browser\GestionFonctionTest" classname="Modules.Transformation.Tests.Browser.GestionFonctionTest" assertions="1" time="1.482756"/>
+        <testcase name="test_fonction_edition" file="/app/Modules/Transformation/Tests/Browser/GestionFonctionTest.php" line="49" class="Modules\Transformation\Tests\Browser\GestionFonctionTest" classname="Modules.Transformation.Tests.Browser.GestionFonctionTest" assertions="1" time="2.307555"/>
+        <testcase name="test_fonction_edition_ajouter_compagnonnage" file="/app/Modules/Transformation/Tests/Browser/GestionFonctionTest.php" line="67" class="Modules\Transformation\Tests\Browser\GestionFonctionTest" classname="Modules.Transformation.Tests.Browser.GestionFonctionTest" assertions="3" time="4.169186"/>
+        <testcase name="test_fonction_edition_ajouter_stage" file="/app/Modules/Transformation/Tests/Browser/GestionFonctionTest.php" line="91" class="Modules\Transformation\Tests\Browser\GestionFonctionTest" classname="Modules.Transformation.Tests.Browser.GestionFonctionTest" assertions="3" time="4.240048"/>
+        <testcase name="test_fonction_edition_retirer_stage" file="/app/Modules/Transformation/Tests/Browser/GestionFonctionTest.php" line="115" class="Modules\Transformation\Tests\Browser\GestionFonctionTest" classname="Modules.Transformation.Tests.Browser.GestionFonctionTest" assertions="2" time="3.281794"/>
+        <testcase name="test_fonction_edition_retirer_compagnonnage" file="/app/Modules/Transformation/Tests/Browser/GestionFonctionTest.php" line="137" class="Modules\Transformation\Tests\Browser\GestionFonctionTest" classname="Modules.Transformation.Tests.Browser.GestionFonctionTest" assertions="2" time="3.330105"/>
       </testsuite>
-      <testsuite name="Modules\Transformation\Tests\Browser\LivretMultipleTest" file="/app/Modules/Transformation/Tests/Browser/LivretMultipleTest.php" tests="2" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="4.656894">
-        <testcase name="test_livret_multiple_displays" class="Modules\Transformation\Tests\Browser\LivretMultipleTest" classname="Modules.Transformation.Tests.Browser.LivretMultipleTest" file="/app/Modules/Transformation/Tests/Browser/LivretMultipleTest.php" line="20" assertions="1" time="2.742464"/>
-        <testcase name="test_livret_multiple_shows_assigned_user" class="Modules\Transformation\Tests\Browser\LivretMultipleTest" classname="Modules.Transformation.Tests.Browser.LivretMultipleTest" file="/app/Modules/Transformation/Tests/Browser/LivretMultipleTest.php" line="41" assertions="2" time="1.914429"/>
+      <testsuite name="Modules\Transformation\Tests\Browser\LivretMultipleTest" file="/app/Modules/Transformation/Tests/Browser/LivretMultipleTest.php" tests="2" assertions="3" errors="0" failures="0" skipped="0" time="5.126396">
+        <testcase name="test_livret_multiple_displays" file="/app/Modules/Transformation/Tests/Browser/LivretMultipleTest.php" line="20" class="Modules\Transformation\Tests\Browser\LivretMultipleTest" classname="Modules.Transformation.Tests.Browser.LivretMultipleTest" assertions="1" time="3.046862"/>
+        <testcase name="test_livret_multiple_shows_assigned_user" file="/app/Modules/Transformation/Tests/Browser/LivretMultipleTest.php" line="41" class="Modules\Transformation\Tests\Browser\LivretMultipleTest" classname="Modules.Transformation.Tests.Browser.LivretMultipleTest" assertions="2" time="2.079534"/>
       </testsuite>
-      <testsuite name="Modules\Transformation\Tests\Browser\StatistiquesTest" file="/app/Modules/Transformation/Tests/Browser/StatistiquesTest.php" tests="2" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="4.777797">
-        <testcase name="test_bilanglobal_page_displays" class="Modules\Transformation\Tests\Browser\StatistiquesTest" classname="Modules.Transformation.Tests.Browser.StatistiquesTest" file="/app/Modules/Transformation/Tests/Browser/StatistiquesTest.php" line="14" assertions="1" time="2.131418"/>
-        <testcase name="test_link_in_bilan_global_displays" class="Modules\Transformation\Tests\Browser\StatistiquesTest" classname="Modules.Transformation.Tests.Browser.StatistiquesTest" file="/app/Modules/Transformation/Tests/Browser/StatistiquesTest.php" line="30" assertions="2" time="2.646379"/>
+      <testsuite name="Modules\Transformation\Tests\Browser\StatistiquesTest" file="/app/Modules/Transformation/Tests/Browser/StatistiquesTest.php" tests="2" assertions="3" errors="0" failures="0" skipped="0" time="4.861683">
+        <testcase name="test_bilanglobal_page_displays" file="/app/Modules/Transformation/Tests/Browser/StatistiquesTest.php" line="14" class="Modules\Transformation\Tests\Browser\StatistiquesTest" classname="Modules.Transformation.Tests.Browser.StatistiquesTest" assertions="1" time="2.455446"/>
+        <testcase name="test_link_in_bilan_global_displays" file="/app/Modules/Transformation/Tests/Browser/StatistiquesTest.php" line="30" class="Modules\Transformation\Tests\Browser\StatistiquesTest" classname="Modules.Transformation.Tests.Browser.StatistiquesTest" assertions="2" time="2.406237"/>
       </testsuite>
-      <testsuite name="Modules\Transformation\Tests\Browser\SuiviTransformationTest" file="/app/Modules/Transformation/Tests/Browser/SuiviTransformationTest.php" tests="3" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="5.520090">
-        <testcase name="test_suivi_par_fonction_saffiche" class="Modules\Transformation\Tests\Browser\SuiviTransformationTest" classname="Modules.Transformation.Tests.Browser.SuiviTransformationTest" file="/app/Modules/Transformation/Tests/Browser/SuiviTransformationTest.php" line="16" assertions="1" time="2.312745"/>
-        <testcase name="test_suivi_par_stage_saffiche" class="Modules\Transformation\Tests\Browser\SuiviTransformationTest" classname="Modules.Transformation.Tests.Browser.SuiviTransformationTest" file="/app/Modules/Transformation/Tests/Browser/SuiviTransformationTest.php" line="32" assertions="1" time="1.737711"/>
-        <testcase name="test_suivi_par_compagnonage_saffiche" class="Modules\Transformation\Tests\Browser\SuiviTransformationTest" classname="Modules.Transformation.Tests.Browser.SuiviTransformationTest" file="/app/Modules/Transformation/Tests/Browser/SuiviTransformationTest.php" line="48" assertions="1" time="1.469634"/>
+      <testsuite name="Modules\Transformation\Tests\Browser\SuiviTransformationTest" file="/app/Modules/Transformation/Tests/Browser/SuiviTransformationTest.php" tests="3" assertions="3" errors="0" failures="1" skipped="0" time="6.282634">
+        <testcase name="test_suivi_par_fonction_saffiche" file="/app/Modules/Transformation/Tests/Browser/SuiviTransformationTest.php" line="16" class="Modules\Transformation\Tests\Browser\SuiviTransformationTest" classname="Modules.Transformation.Tests.Browser.SuiviTransformationTest" assertions="1" time="2.221021"/>
+        <testcase name="test_suivi_par_stage_saffiche" file="/app/Modules/Transformation/Tests/Browser/SuiviTransformationTest.php" line="32" class="Modules\Transformation\Tests\Browser\SuiviTransformationTest" classname="Modules.Transformation.Tests.Browser.SuiviTransformationTest" assertions="1" time="1.883072"/>
+        <testcase name="test_suivi_par_compagnonage_saffiche" file="/app/Modules/Transformation/Tests/Browser/SuiviTransformationTest.php" line="48" class="Modules\Transformation\Tests\Browser\SuiviTransformationTest" classname="Modules.Transformation.Tests.Browser.SuiviTransformationTest" assertions="1" time="2.178541">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Modules\Transformation\Tests\Browser\SuiviTransformationTest::test_suivi_par_compagnonage_saffiche
+Did not see expected text [Transformation par compagnonnage] within element [body].
+Failed asserting that false is true.
+
+/app/vendor/laravel/dusk/src/Concerns/MakesAssertions.php:181
+/app/vendor/laravel/dusk/src/Concerns/MakesAssertions.php:153
+/app/Modules/Transformation/Tests/Browser/SuiviTransformationTest.php:58
+/app/vendor/laravel/dusk/src/Concerns/ProvidesBrowser.php:70
+/app/Modules/Transformation/Tests/Browser/SuiviTransformationTest.php:54
+/app/vendor/laravel/framework/src/Illuminate/Foundation/Testing/TestCase.php:61</failure>
+        </testcase>
       </testsuite>
     </testsuite>
   </testsuite>
