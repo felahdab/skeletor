@@ -103,6 +103,7 @@ return [
         'disks' => [
             'local',
             'public',
+            'framework_cache'
             // 's3',
         ],
 
