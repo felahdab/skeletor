@@ -32,7 +32,7 @@ class SkeletorCreateTenantCommand extends Command implements PromptsForMissingIn
     public function handle()
     {
         if (! config('skeletor.multi_tenancy')){
-            $this->fail('Cette command n a pas de sens: Skeletor est configure en mono tenant.');
+            $this->fail('Cette commande n a pas de sens: Skeletor est configure en mono tenant.');
         }
 
         $tenant_slug =  $this->argument('tenantid');
@@ -44,6 +44,9 @@ class SkeletorCreateTenantCommand extends Command implements PromptsForMissingIn
         // Il faut aussi creer le dossier de cache suivant: (notamment pour le preview Livewire)
         ///app/storage/instancecourbet/framework/cache/
         Storage::disk('framework_cache')->makeDirectory('framework/cache/');
+
+        // Il faut aussi s'occuper des assets:
+        //- Google fonts
 
         tenancy()->end();
     }
