@@ -1,0 +1,22 @@
+<?php
+
+namespace {{ namespace }};
+
+use Saloon\Http\PendingRequest;
+use Saloon\Contracts\Authenticator;
+
+class {{ class }} implements Authenticator
+{
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Apply the authentication to the request.
+     */
+    public function set(PendingRequest $pendingRequest): void
+    {
+        //
+    }
+}

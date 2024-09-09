@@ -2,7 +2,8 @@
     "private": true,
     "scripts": {
         "dev": "vite --host",
-        "build": "tailwindcss -c tailwind.config.js --output resources/css/app.css ; vite build"
+        "build": "tailwindcss -c tailwind.config.js --output resources/css/app.css ; vite build;",
+        "postbuild" : "mv public/assets/build/.vite/manifest.json public/assets/build/"
     },
     "devDependencies": {
         "axios": "^0.25",
@@ -15,8 +16,10 @@
     "type": "module",
     "dependencies": {
         "@popperjs/core": "^2.11.8",
+        "@vitejs/plugin-vue": "^5.0.5",
         "bootstrap": "^5.3.3",
         "chart.js": "^4.4.2",
-        "sass": "^1.76.0"
+        "sass": "^1.76.0",
+        "vue": "^3.4.30"
     }
 }

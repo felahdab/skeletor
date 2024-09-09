@@ -92,7 +92,7 @@ return [
         |
         */
 
-        'migration' => base_path('database/migrations'),
+        'migration' => base_path('Database/Migrations'),
 
         /*
         |--------------------------------------------------------------------------
@@ -139,9 +139,9 @@ return [
             'config' => ['path' => 'config', 'generate' => true],
 
             // database/
-            'migration' => ['path' => 'database/migrations', 'generate' => true],
-            'seeder' => ['path' => 'database/seeders', 'generate' => true],
-            'factory' => ['path' => 'database/factories', 'generate' => true],
+            'migration' => ['path' => 'Database/Migrations', 'generate' => true],
+            'seeder' => ['path' => 'Database/Seeders', 'generate' => true],
+            'factory' => ['path' => 'Database/factories', 'generate' => true],
 
             // lang/
             'lang' => ['path' => 'lang', 'generate' => false],

@@ -12,8 +12,13 @@ namespace App\Api\v1;
 *    scheme="bearer",
 * )
 * @OA\Get(
-*       path= "/api/v1/user",
+*       path="/{tenant}/api/v1/whoami",
 *       security={{"api token": {}}},
+*       @OA\Parameter(
+*           in="path",
+*           description="The tenant for which you wish to query",
+*           name="tenant",
+*           required=true),
 *       @OA\Response(response= 200, description= "Renvoie l'utilisateur pour le compte duquel la requete a ete faite.")
 * )
 */

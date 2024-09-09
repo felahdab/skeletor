@@ -37,7 +37,10 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->configureRateLimiting();
 
-        
+        if (config('skeletor.multi_tenancy'))
+        {
+            app()['config']->set('skeletor.prefixe_instance', config('skeletor.prefixe_instance') . '/{tenant}/');
+        }
     }
 
     /**
@@ -54,12 +57,12 @@ class RouteServiceProvider extends ServiceProvider
     
     public function map()
     {
-        Route::prefix(env('APP_PREFIX') . '/api')
+        Route::prefix(config('skeletor.prefixe_instance') . 'api')
             ->middleware('api')
             ->namespace($this->namespace)
             ->group(base_path('routes/api.php'));
 
-        Route::prefix(env('APP_PREFIX'))
+        Route::prefix(config('skeletor.prefixe_instance'))
             ->middleware('web')
             ->namespace($this->namespace)
             ->group(base_path('routes/web.php'));

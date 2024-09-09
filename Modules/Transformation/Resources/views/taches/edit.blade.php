@@ -11,10 +11,10 @@
 @section('content')
 
     <div class="  p-4 rounded">
-        <h2>Tâches</h2>
+        <h2>Compétences</h2>
     </div>
     <div id='divmodifobj' class='card   ml-3 w-100' >
-        <div class='card-header' >Modification tâche </div>
+        <div class='card-header' >Modification compétence </div>
         <div style='text-align:right;'>* champs obligatoires </div>
         
         <x-form::form method="PATCH" :action="route('transformation::taches.update', $tache->id)">
@@ -51,7 +51,7 @@
             </div>
         </div>
         <div class='card ml-3 w-100'>
-            <div class='card-header ml-n3 mr-n4 mb-3' ><b>Objectif(s) associ&eacute;(s)</b> <span style="font-size:x-small;">(Glissez/déplacez les objectifs puis enregistrez pour modifier leur ordre d'affichage dans l'application)</span></div>
+            <div class='card-header ml-n3 mr-n4 mb-3' ><b>Savoir-faire associ&eacute;(s)</b> <span style="font-size:x-small;">(Glissez/déplacez les objectifs puis enregistrez pour modifier leur ordre d'affichage dans l'application)</span></div>
             <input type='hidden' name='tache_id' id='tache_id'  value='{{ $tache->id }}'>
             
             <x-sortable name="sort_order">
@@ -65,7 +65,7 @@
                                     <div class="p-2 w-25"> => {{ $objectif->objectif_liblong }} </div>
                                     <div class="p-2 w-25 text-end">
                                         @can("transformation::objectifs.destroy")
-                                            <button type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('removeobj[{{ $objectif->id }}]').submit()">Retirer cet objectif</button>
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('removeobj[{{ $objectif->id }}]').submit()">Retirer ce savoir-faire</button>
                                         @endcan
                                     </div>
                                 </div>
@@ -76,7 +76,7 @@
             </x-sortable>
         
             <div  class='text-center mt-1 mb-1'>
-                <a class='btn btn-primary btn-sm' href="{{ route('transformation::taches.choisirobjectif', $tache->id) }}">Ajouter un nouvel objectif</a>
+                <a class='btn btn-primary btn-sm' href="{{ route('transformation::taches.choisirobjectif', $tache->id) }}">Ajouter un nouveau savoir-faire</a>
             </div>
         </div>
         </x-form::form>

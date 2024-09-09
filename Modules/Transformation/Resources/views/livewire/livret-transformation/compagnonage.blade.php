@@ -16,14 +16,18 @@
             <div class="accordion-body">
             <table class='table table-bordered' x-data='{ active : false }'>
                 <tr class='table-active text-center'>
-                    <th style='width:20%;'>Tâche</td>
-                    <th style='width:25%;'>Objectif</td>
-                    <th style='width:25%;'>Détail du compagnonnage</td>
+                    {{-- <th style='width:20%;'>Compétence</td>
+                    <th style='width:25%;'>Savoir-faire</td>
+                    <th style='width:25%;'>Tâche</td>
                     <th style='width:5%;'>Durée (h)</td>
                     <th style='width:10%;'>Date de Visa</td>
                     <th style='width:10%;'>Viseur</td>
-                    <th style='width:5%;'>Lieu de formation</td>
-                </tr>
+                    <th style='width:5%;'>Lieu de formation</td> --}}
+                    <th style='width:20%;'>Compétence</td>
+                    <th style='width:25%;'>Savoir-faire</td>
+                    <th style='width:40%;'>Tâche</td>
+                    <th style='width:15%;'>Visa</td>
+                    </tr>
                 @foreach($compagnonage->taches->sortBy('pivot.ordre') as $tache)
                 <tr class='ligneTache'>
                     @if ($mode!='modificationmultiple')

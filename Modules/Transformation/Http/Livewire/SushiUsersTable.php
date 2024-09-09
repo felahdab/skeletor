@@ -285,7 +285,7 @@ class SushiUsersTable extends DataTableComponent
             TextFilter::make('Orga-FCM')
                 ->config([
                     'placeholder' => 'BAT...',
-                    'maxlength'   => 3
+                    'maxlength'   => 50
                 ])
                 ->filter(function (Builder $builder, string $value) {
                     $diplome = Diplome::where('diplome_libcourt', 'like', '%' . $value . '%')->get()->first();
@@ -305,7 +305,7 @@ class SushiUsersTable extends DataTableComponent
             TextFilter::make('FPS-rattach')
                 ->config([
                     'placeholder' => 'DEM...',
-                    'maxlength'   => 5
+                    'maxlength'   => 20
                 ])
                 ->filter(function (Builder $builder, string $value) {
                     $secteur = Secteur::where('secteur_libcourt', 'like', $value . '%')->get()->first();
@@ -345,7 +345,7 @@ class SushiUsersTable extends DataTableComponent
             TextFilter::make('U-dest')
                 ->config([
                     'placeholder' => 'LGC...',
-                    'maxlength'   => 5
+                    'maxlength'   => 50
                 ])
                 ->filter(function (Builder $builder, string $value) {
                     $unite = Unite::where('unite_libcourt', 'like', '%' . $value . '%')->get()->pluck('id');

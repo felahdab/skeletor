@@ -9,9 +9,9 @@
     
 
     <div class="  p-4 rounded">
-        <h2>Transformation - Recalcul</h2>
+        <h2>Recalcul des taux</h2>
         <div class="lead">
-            Calcul de tous les taux de transformation pour tous les marins.
+            Calcul de tous les taux pour tous les marins.
         </div>
         <p class="mt-5 mb-5"><b><u>Attention</u></b> : Ce traitement peut durer quelques minutes.</p>
 

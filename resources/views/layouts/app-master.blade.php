@@ -37,7 +37,10 @@ Vous avez également la possibilité de télécharger directement une version po
 
     @yield('before_styles')
     @stack('before_styles')
-    @vite(['../resources/js/app.js', '../resources/css/app.css'])
+    @stack('styles')
+
+    @stack('scripts')
+    @vite(['resources/js/app.js', 'resources/css/app.css'])
 
     
     <style>
@@ -46,7 +49,7 @@ Vous avez également la possibilité de télécharger directement une version po
         }
     </style>
     @yield('styles')
-    
+
     @yield('after_styles')
     @stack('after_styles')
 

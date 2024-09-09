@@ -9,7 +9,7 @@
     
 
     <div class="  p-4 rounded">
-        <h2>Historique des modifications de la transformation</h2>
+        <h2>Historique des modifications des PPA pour les marins</h2>
 
         <div class="mt-3">
             <livewire:transformation::transformation-history-table>

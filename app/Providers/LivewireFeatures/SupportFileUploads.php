@@ -11,6 +11,8 @@ use Livewire\Features\SupportFileUploads\FileUploadController;
 use Livewire\Features\SupportFileUploads\FilePreviewController;
 use Livewire\Features\SupportFileUploads\FileUploadSynth;
 
+use App\Http\Middleware\InitializeTenancyByPath;
+
 class SupportFileUploads extends ComponentHook
 {
     static function provide()
@@ -39,10 +41,12 @@ class SupportFileUploads extends ComponentHook
 
         Route::post('/' . $route_prefix . '/livewire/upload-file', [FileUploadController::class, 'handle'])
             ->name('livewire.upload-file')
-            ->middleware('web');
+            ->middleware('web')
+            ->withoutMiddleware(InitializeTenancyByPath::class);
 
         Route::get('/' . $route_prefix . '/livewire/preview-file/{filename}', [FilePreviewController::class, 'handle'])
             ->name('livewire.preview-file')
-            ->middleware('web');
+            ->middleware('web')
+            ->withoutMiddleware(InitializeTenancyByPath::class);
     }
 }

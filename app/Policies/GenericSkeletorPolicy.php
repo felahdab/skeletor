@@ -3,12 +3,17 @@
 namespace App\Policies;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Access\Response;
 
 class GenericSkeletorPolicy
 {
+    protected $slug = '';
 
-    public $slug = '';
+    public function getSlug()
+    {
+        return $this->slug;
+    }
     /**
      * Determine whether the user can view any models.
      */
@@ -20,7 +25,7 @@ class GenericSkeletorPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, User $model): bool
+    public function view(User $user, Model $model): bool
     {
         return $user->can($this->slug . '.index');
     }
@@ -39,7 +44,7 @@ class GenericSkeletorPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, User $model): bool
+    public function update(User $user, Model $model): bool
     {
         return $user->hasAnyPermission([
             $this->slug . '.update'
@@ -49,7 +54,7 @@ class GenericSkeletorPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, User $model): bool
+    public function delete(User $user, Model $model): bool
     {
         return $user->hasAnyPermission([
             $this->slug . '.delete'
@@ -57,9 +62,19 @@ class GenericSkeletorPolicy
     }
 
     /**
+     * Determine whether the user can delete any model.
+     */
+    public function deleteAny(User $user): bool
+    {
+        return $user->hasAnyPermission([
+            $this->slug . '.deleteAny'
+        ]);
+    }
+
+    /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, User $model): bool
+    public function restore(User $user, Model $model): bool
     {
         return $user->hasAnyPermission([
             $this->slug . '.restore'
@@ -69,10 +84,30 @@ class GenericSkeletorPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, User $model): bool
+    public function forceDelete(User $user, Model $model): bool
     {
         return $user->hasAnyPermission([
             $this->slug . '.forceDelete'
+        ]);
+    }
+
+    /**
+     * Determine whether the user can permanently delete any model.
+     */
+    public function forceDeleteAny(User $user): bool
+    {
+        return $user->hasAnyPermission([
+            $this->slug . '.forceDeleteAny'
+        ]);
+    }
+
+    /**
+     * Determine whether the user can reorder the model.
+     */
+    public function reorder(User $user): bool
+    {
+        return $user->hasAnyPermission([
+            $this->slug . '.reorder'
         ]);
     }
 }

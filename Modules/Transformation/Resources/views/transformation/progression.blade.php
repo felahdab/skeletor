@@ -12,7 +12,7 @@
             Suivi de la progression de {{$user->prenom}} {{$user->name}}
         </div>
         @if($mode !="proposition")
-            <a href="{{ route('transformation::transformation.livret', $user->id) }}" class="btn btn-warning btn-sm">Livret de transformation</a>
+            <a href="{{ route('transformation::transformation.livret', $user->id) }}" class="btn btn-warning btn-sm">PPA du marin</a>
             <a href="{{ route('transformation::transformation.progression', $user->id) }}" class="btn btn-primary btn-sm">Progression</a>
             <a href="{{ route('transformation::transformation.fichebilan', $user->id) }}" class="btn btn-secondary btn-sm">Fiche bilan</a>
             @can('transformation::users.stages')
@@ -20,7 +20,7 @@
             @endcan
             <a href="{{ url()->previous() }}" class="btn btn-default btn-sm">Annuler</a>
         @else
-            <a href="{{ route('transformation::transformation.monlivret') }}" class="btn btn-warning btn-sm">Mon livret de transformation</a>
+            <a href="{{ route('transformation::transformation.monlivret') }}" class="btn btn-warning btn-sm">Mon PPA</a>
             <a href="{{ route('transformation::transformation.maprogression') }}" class="btn btn-primary btn-sm">Ma progression</a>
             <a href="{{ route('transformation::transformation.mafichebilan') }}" class="btn btn-secondary btn-sm">Ma fiche bilan</a>
         @endif

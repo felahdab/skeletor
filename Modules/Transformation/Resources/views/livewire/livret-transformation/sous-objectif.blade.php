@@ -4,7 +4,7 @@
     @endif
     {{$sous_objectif->ssobj_lib}}
 </td>
-<td>{{$sous_objectif->ssobj_duree}}</td>
+{{-- <td>{{$sous_objectif->ssobj_duree}}</td> --}}
 <td>
     @if ($mode == "validelacherdouble" || $mode == "consultation" || ($mode== 'proposition' && $user->getTransformationManager()->aValideLeSousObjectif($sous_objectif) )  )
     @else
@@ -26,13 +26,14 @@
     @endphp
     @if ($mode!='consultation' && $comment)
         <span class="d-inline-block" data-bs-toggle="popover" data-bs-placement="right" 
-                data-bs-trigger="focus" tabindex="0" data-bs-content="{{$comment}}">
+                data-bs-trigger="focus" tabindex="0" data-bs-content="{{$comment}}" title="{{$comment}}">
             <x-bootstrap-icon iconname='chat-left-quote.svg' />
         </span>
     @endif
     @if ($mode!='modificationmultiple'  && $user->getTransformationManager()->aValideLeSousObjectif($sous_objectif))
-        <button class='btn btn-success' type='button' disabled>
-        VALIDE {{ $user->getTransformationManager()->dateDeValidationDuSousObjectif($sous_objectif) }}
+        <button class='btn btn-success  btn-sm' type='button' disabled>
+        VALIDE <br>{{ $user->getTransformationManager()->dateDeValidationDuSousObjectif($sous_objectif) }}<br>
+        <span style="font-size:smaller">{{ $user->getTransformationManager()->valideurDeValidationDuSousObjectif($sous_objectif) }}</span>
         </button>
     @endif
     @if ($mode!='modificationmultiple'  && $user->getTransformationManager()->aProposeLeSousObjectif($sous_objectif))
@@ -41,12 +42,12 @@
         </button>
     @endif
 </td>
-@if ($mode!='modificationmultiple' && ( $user->getTransformationManager()->aValideLeSousObjectif($sous_objectif) || $user->getTransformationManager()->aProposeLeSousObjectif($sous_objectif) ) )
+{{-- @if ($mode!='modificationmultiple' && ( $user->getTransformationManager()->aValideLeSousObjectif($sous_objectif) || $user->getTransformationManager()->aProposeLeSousObjectif($sous_objectif) ) )
     <td>
         {{ $user->getTransformationManager()->valideurDeValidationDuSousObjectif($sous_objectif) }}
     </td>
 @else
     <td>&nbsp;</td>
-@endif
-<td>{{$sous_objectif->lieu->lieu_libcourt}}</td>
+@endif --}}
+{{-- <td>{{$sous_objectif->lieu->lieu_libcourt}}</td> --}}
 </tr>

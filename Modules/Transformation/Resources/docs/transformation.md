@@ -17,7 +17,7 @@
 
 Ce menu permet d’accéder : 
  
-1. à la liste des marins en cours de transformation. Un lien vers son livret de transformation permet la validation d’objectifs.
+1. à la liste des marins en cours de transformation. Un lien vers son PPA permet la validation d’objectifs.
 2. à la liste des fonctions. Un lien vers le livret associé à la fonction permet la validation collective d’objectifs.
 3. à la liste des compagnonnages. La selection d'un compagnonnage permet de consulter et valider les marins ayant ce compagnonnage associé à une de ses fonctions.
 4. à la liste des stages. La selection d'un stage permet de consulter la liste des marins en attente de ce stage ou ceux l’ayant déjà validé.

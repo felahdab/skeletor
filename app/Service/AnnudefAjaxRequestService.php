@@ -31,6 +31,7 @@ class AnnudefAjaxRequestService
         try {
             $response = Http::acceptJson()
                 ->timeout(1)
+                ->connectTimeout(1)
                 ->asForm()
                 ->post("http://annudef-consultation.intradef.gouv.fr/index.php?c=AJAXpagesjaunesbl&a=Recherche", $request_params);
         } catch (ConnectionException $e) {
@@ -76,6 +77,7 @@ class AnnudefAjaxRequestService
         try {
             $response = Http::acceptJson()
                 ->timeout(1)
+                ->connectTimeout(1)
                 ->asForm()
                 ->post("http://annudef-consultation.intradef.gouv.fr/index.php?c=AJAXparcourir&a=RemplirFicheIndividuelle&type=user&uid=" . $uid, null);
         } catch (ConnectionException $e) {
