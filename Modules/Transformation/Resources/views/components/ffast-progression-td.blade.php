@@ -1,1 +1,0 @@
-<td style='width:25%; background-color:{{ $color }}'>{{ $finaltext}}</b></td>
