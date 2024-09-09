@@ -22,21 +22,19 @@ use App\Http\Controllers\ParamaccueilsController;
 use App\Http\Controllers\ArchivesController;
 
 use App\Http\Middleware\RestrictVisibility;
+
+use Dedoc\Scramble\Scramble;
+
 use App\Livewire\TestComponent;
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::get('/test', TestComponent::class);
 
 Route::impersonate();
+
+Route::group([], function() {
+    Scramble::registerUiRoute('scramble/doc');
+    Scramble::registerJsonSpecificationRoute('api.json');
+});
 
 Route::get('/auth/redirect', function () {
     return Socialite::driver('keycloak')->stateless()->redirect();
