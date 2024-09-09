@@ -49,6 +49,20 @@ class Kernel extends HttpKernel
             SetTenantCookieMiddleware::class
         ],
 
+        'webexcepttenancybypath' => [
+            \App\Http\Middleware\EncryptCookies::class,
+            InitializeTenancyByCookieData::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            // \Illuminate\Session\Middleware\AuthenticateSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\RecordRequestHandlingTime::class,
+            SetTenantDefaultForRoutesMiddleware::class,
+            SetTenantCookieMiddleware::class
+        ],
+
         'api' => [
             InitializeTenancyByPath::class,
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
