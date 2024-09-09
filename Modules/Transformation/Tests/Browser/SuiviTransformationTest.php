@@ -55,7 +55,7 @@ class SuiviTransformationTest extends DuskTestCase
             $browser->maximize()
                 ->loginAs($user)
                 ->visit(route('transformation::transformation.indexparcomp'))
-                ->assertSee('Transformation par compagnonnage');
+                ->assertSee('Suivi par compagnonnage');
         });
 
         $user->forceDelete();
