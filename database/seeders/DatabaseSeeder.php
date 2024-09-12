@@ -17,16 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
                     PermissionsSeeder::class,
                     RolesSeeder::class,
-                    DiplomeSeeder::class,
-                    GradeSeeder::class,
-                    GroupementSeeder::class,
-                    ServiceSeeder::class,
-                    SecteurSeeder::class,
-                    SpecialiteSeeder::class,
-                    UniteSeeder::class,
                     CreateAdminUserSeeder::class,
-                    LieuSeeder::class,
-                    LiensSeeder::class,
                 ]);
 
     }

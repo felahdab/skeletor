@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('email')->unique();
-            $table->string('name')->default('');
+            $table->string('nom')->default('');
             $table->string('prenom')->default('');
             $table->string('main_department_number')->default('');
             $table->string('personal_title')->default('');

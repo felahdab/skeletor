@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Models;
 use App\Policies;
+use Spatie\Permission\Models\Permission;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -17,6 +18,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Models\User::class => Policies\UserPolicy::class,
+        Permission::class => Policies\PermissionPolicy::class,
+
     ];
 
     /**
