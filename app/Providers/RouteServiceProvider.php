@@ -57,7 +57,7 @@ class RouteServiceProvider extends ServiceProvider
     
     public function map()
     {
-        Route::prefix(config('skeletor.prefixe_instance') . 'api')
+        Route::prefix(config('skeletor.prefixe_instance') . '/api')
             ->middleware('api')
             ->namespace($this->namespace)
             ->group(base_path('routes/api.php'));
