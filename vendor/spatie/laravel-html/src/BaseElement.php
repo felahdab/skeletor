@@ -7,6 +7,7 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Spatie\Html\Exceptions\InvalidChild;
 use Spatie\Html\Exceptions\InvalidHtml;
@@ -14,6 +15,8 @@ use Spatie\Html\Exceptions\MissingTag;
 
 abstract class BaseElement implements Htmlable, HtmlElement
 {
+    use Conditionable;
+
     use Macroable {
         __call as __macro_call;
     }
@@ -167,6 +170,17 @@ abstract class BaseElement implements Htmlable, HtmlElement
     public function data($name, $value = null)
     {
         return $this->attribute("data-{$name}", $value);
+    }
+
+    /**
+     * @param string $attribute
+     * @param string|null $value
+     *
+     * @return static
+     */
+    public function aria($attribute, $value = null)
+    {
+        return $this->attribute("aria-{$attribute}", $value);
     }
 
     /**
@@ -465,6 +479,8 @@ abstract class BaseElement implements Htmlable, HtmlElement
     {
         if ($children instanceof HtmlElement) {
             $children = [$children];
+        } elseif ($children instanceof Htmlable) {
+            $children = $children->toHtml();
         }
 
         $children = Collection::make($children);

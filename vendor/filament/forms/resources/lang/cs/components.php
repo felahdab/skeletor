@@ -11,11 +11,63 @@ return [
             ],
 
             'add' => [
+
                 'label' => 'Přidat k :label',
+
+                'modal' => [
+
+                    'heading' => 'Přidat k :label',
+
+                    'actions' => [
+
+                        'add' => [
+                            'label' => 'Přidat',
+                        ],
+
+                    ],
+
+                ],
+
             ],
 
             'add_between' => [
+
                 'label' => 'Vložit',
+
+                'modal' => [
+
+                    'heading' => 'Přidat k :label',
+
+                    'actions' => [
+
+                        'add' => [
+                            'label' => 'Přidat',
+                        ],
+
+                    ],
+
+                ],
+
+            ],
+
+            'edit' => [
+
+                'label' => 'Upravit',
+
+                'modal' => [
+
+                    'heading' => 'Upravit blok',
+
+                    'actions' => [
+
+                        'save' => [
+                            'label' => 'Uložit',
+                        ],
+
+                    ],
+
+                ],
+
             ],
 
             'delete' => [
@@ -417,6 +469,31 @@ return [
 
     'tags_input' => [
         'placeholder' => 'Nový štítek',
+    ],
+
+    'text_input' => [
+
+        'actions' => [
+
+            'hide_password' => [
+                'label' => 'Skrýt heslo',
+            ],
+
+            'show_password' => [
+                'label' => 'Zobrazit heslo',
+            ],
+
+        ],
+
+    ],
+
+    'toggle_buttons' => [
+
+        'boolean' => [
+            'true' => 'Ano',
+            'false' => 'Ne',
+        ],
+
     ],
 
     'wizard' => [

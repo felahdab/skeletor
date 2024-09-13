@@ -81,11 +81,11 @@ final class IsEqualWithDelta extends Constraint
     /**
      * Returns a string representation of the constraint.
      */
-    public function toString(bool $exportObjects = false): string
+    public function toString(): string
     {
         return sprintf(
             'is equal to %s with delta <%F>',
-            Exporter::export($this->value, $exportObjects),
+            Exporter::export($this->value),
             $this->delta,
         );
     }

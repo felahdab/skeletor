@@ -5,6 +5,8 @@ namespace Filament\Actions\Concerns;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Actions\ImportAction;
+use Filament\Actions\Imports\Events\ImportCompleted;
+use Filament\Actions\Imports\Events\ImportStarted;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Jobs\ImportCsv;
@@ -27,10 +29,16 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Number;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\File;
+use Illuminate\Validation\ValidationException;
+use League\Csv\ByteSequence;
+use League\Csv\CharsetConverter;
 use League\Csv\Info;
 use League\Csv\Reader as CsvReader;
 use League\Csv\Statement;
 use League\Csv\Writer;
+use Livewire\Component;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use SplTempFileObject;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -57,6 +65,11 @@ trait CanImportRecords
      */
     protected array | Closure $options = [];
 
+    /**
+     * @var array<string | array<mixed> | Closure>
+     */
+    protected array $fileValidationRules = [];
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -75,10 +88,19 @@ trait CanImportRecords
             FileUpload::make('file')
                 ->label(__('filament-actions::import.modal.form.file.label'))
                 ->placeholder(__('filament-actions::import.modal.form.file.placeholder'))
-                ->acceptedFileTypes(['text/csv', 'text/x-csv', 'application/csv', 'application/x-csv', 'text/comma-separated-values', 'text/x-comma-separated-values', 'text/plain'])
-                ->afterStateUpdated(function (Forms\Set $set, ?TemporaryUploadedFile $state) use ($action) {
+                ->acceptedFileTypes(['text/csv', 'text/x-csv', 'application/csv', 'application/x-csv', 'text/comma-separated-values', 'text/x-comma-separated-values', 'text/plain', 'application/vnd.ms-excel'])
+                ->rules($action->getFileValidationRules())
+                ->afterStateUpdated(function (FileUpload $component, Component $livewire, Forms\Set $set, ?TemporaryUploadedFile $state) use ($action) {
                     if (! $state instanceof TemporaryUploadedFile) {
                         return;
+                    }
+
+                    try {
+                        $livewire->validateOnly($component->getStatePath());
+                    } catch (ValidationException $exception) {
+                        $component->state([]);
+
+                        throw $exception;
                     }
 
                     $csvStream = $this->getUploadedFileStream($state);
@@ -97,7 +119,7 @@ trait CanImportRecords
 
                     $csvColumns = $csvReader->getHeader();
 
-                    $lowercaseCsvColumnValues = array_map('strtolower', $csvColumns);
+                    $lowercaseCsvColumnValues = array_map(Str::lower(...), $csvColumns);
                     $lowercaseCsvColumnKeys = array_combine(
                         $lowercaseCsvColumnValues,
                         $csvColumns,
@@ -217,17 +239,21 @@ trait CanImportRecords
             $import->unsetRelation('user');
 
             $importJobs = collect($importChunks)
-                ->map(fn (array $importChunk): object => new ($job)(
-                    $import,
-                    rows: base64_encode(serialize($importChunk)),
-                    columnMap: $data['columnMap'],
-                    options: $options,
-                ));
+                ->map(fn (array $importChunk): object => app($job, [
+                    'import' => $import,
+                    'rows' => base64_encode(serialize($importChunk)),
+                    'columnMap' => $data['columnMap'],
+                    'options' => $options,
+                ]));
+
+            $columnMap = $data['columnMap'];
 
             $importer = $import->getImporter(
-                columnMap: $data['columnMap'],
+                columnMap: $columnMap,
                 options: $options,
             );
+
+            event(new ImportStarted($import, $columnMap, $options));
 
             Bus::batch($importJobs->all())
                 ->allowFailures()
@@ -243,8 +269,10 @@ trait CanImportRecords
                     filled($jobBatchName = $importer->getJobBatchName()),
                     fn (PendingBatch $batch) => $batch->name($jobBatchName),
                 )
-                ->finally(function () use ($import) {
+                ->finally(function () use ($import, $columnMap, $options) {
                     $import->touch('completed_at');
+
+                    event(new ImportCompleted($import, $columnMap, $options));
 
                     if (! $import->user instanceof Authenticatable) {
                         return;
@@ -253,7 +281,7 @@ trait CanImportRecords
                     $failedRowsCount = $import->getFailedRowsCount();
 
                     Notification::make()
-                        ->title(__('filament-actions::import.notifications.completed.title'))
+                        ->title($import->importer::getCompletedNotificationTitle($import))
                         ->body($import->importer::getCompletedNotificationBody($import))
                         ->when(
                             ! $failedRowsCount,
@@ -279,7 +307,7 @@ trait CanImportRecords
                                     ->markAsRead(),
                             ]),
                         )
-                        ->sendToDatabase($import->user);
+                        ->sendToDatabase($import->user, isEventDispatched: true);
                 })
                 ->dispatch();
 
@@ -302,7 +330,8 @@ trait CanImportRecords
                 ->action(function (): StreamedResponse {
                     $columns = $this->getImporter()::getColumns();
 
-                    $csv = Writer::createFromFileObject(new SplTempFileObject());
+                    $csv = Writer::createFromFileObject(new SplTempFileObject);
+                    $csv->setOutputBOM(ByteSequence::BOM_UTF8);
 
                     if (filled($csvDelimiter = $this->getCsvDelimiter())) {
                         $csv->setDelimiter($csvDelimiter);
@@ -313,17 +342,26 @@ trait CanImportRecords
                         $columns,
                     ));
 
-                    $example = array_map(
-                        fn (ImportColumn $column) => $column->getExample(),
+                    $columnExamples = array_map(
+                        fn (ImportColumn $column): array => $column->getExamples(),
                         $columns,
                     );
 
-                    if (array_filter(
-                        $example,
-                        fn ($value): bool => filled($value),
-                    )) {
-                        $csv->insertOne($example);
+                    $exampleRowsCount = array_reduce(
+                        $columnExamples,
+                        fn (int $count, array $exampleData): int => max($count, count($exampleData)),
+                        initial: 0,
+                    );
+
+                    $exampleRows = [];
+
+                    foreach ($columnExamples as $exampleData) {
+                        for ($i = 0; $i < $exampleRowsCount; $i++) {
+                            $exampleRows[$i][] = $exampleData[$i] ?? '';
+                        }
                     }
+
+                    $csv->insertAll($exampleRows);
 
                     return response()->streamDownload(function () use ($csv) {
                         echo $csv->toString();
@@ -347,23 +385,71 @@ trait CanImportRecords
      */
     public function getUploadedFileStream(TemporaryUploadedFile $file)
     {
+        /** @phpstan-ignore-next-line */
+        $fileDisk = invade($file)->disk;
+
         $filePath = $file->getRealPath();
 
-        if (config('filesystems.disks.' . config('filament.default_filesystem_disk') . '.driver') !== 's3') {
-            return fopen($filePath, mode: 'r');
+        if (config("filesystems.disks.{$fileDisk}.driver") !== 's3') {
+            $resource = fopen($filePath, mode: 'r');
+        } else {
+            /** @var AwsS3V3Adapter $s3Adapter */
+            $s3Adapter = Storage::disk($fileDisk)->getAdapter();
+
+            invade($s3Adapter)->client->registerStreamWrapper(); /** @phpstan-ignore-line */
+            $fileS3Path = 's3://' . config("filesystems.disks.{$fileDisk}.bucket") . '/' . $filePath;
+
+            $resource = fopen($fileS3Path, mode: 'r', context: stream_context_create([
+                's3' => [
+                    'seekable' => true,
+                ],
+            ]));
         }
 
-        /** @var AwsS3V3Adapter $s3Adapter */
-        $s3Adapter = Storage::disk('s3')->getAdapter();
+        $inputEncoding = $this->detectCsvEncoding($resource);
+        $outputEncoding = 'UTF-8';
 
-        invade($s3Adapter)->client->registerStreamWrapper(); /** @phpstan-ignore-line */
-        $fileS3Path = 's3://' . config('filesystems.disks.s3.bucket') . '/' . $filePath;
+        if (
+            filled($inputEncoding) &&
+            (Str::lower($inputEncoding) !== Str::lower($outputEncoding))
+        ) {
+            CharsetConverter::register();
 
-        return fopen($fileS3Path, mode: 'r', context: stream_context_create([
-            's3' => [
-                'seekable' => true,
-            ],
-        ]));
+            stream_filter_append(
+                $resource,
+                CharsetConverter::getFiltername($inputEncoding, $outputEncoding),
+                STREAM_FILTER_READ,
+            );
+        }
+
+        return $resource;
+    }
+
+    protected function detectCsvEncoding(mixed $resource): ?string
+    {
+        $fileHeader = fgets($resource);
+
+        // The encoding of a subset should be declared before the encoding of its superset.
+        $encodings = [
+            'UTF-8',
+            'SJIS-win',
+            'EUC-KR',
+            'ISO-8859-1',
+            'GB18030',
+            'Windows-1251',
+            'Windows-1252',
+            'EUC-JP',
+        ];
+
+        foreach ($encodings as $encoding) {
+            if (! mb_check_encoding($fileHeader, $encoding)) {
+                continue;
+            }
+
+            return $encoding;
+        }
+
+        return null;
     }
 
     public static function getDefaultName(): ?string
@@ -482,5 +568,82 @@ trait CanImportRecords
     public function getOptions(): array
     {
         return $this->evaluate($this->options);
+    }
+
+    /**
+     * @param  string | array<mixed> | Closure  $rules
+     */
+    public function fileRules(string | array | Closure $rules): static
+    {
+        $this->fileValidationRules = [
+            ...$this->fileValidationRules,
+            $rules,
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function getFileValidationRules(): array
+    {
+        $fileRules = [
+            'extensions:csv,txt',
+            File::types(['csv', 'txt'])->rules([
+                function (string $attribute, mixed $value, Closure $fail) {
+                    $csvStream = $this->getUploadedFileStream($value);
+
+                    if (! $csvStream) {
+                        return;
+                    }
+
+                    $csvReader = CsvReader::createFromStream($csvStream);
+
+                    if (filled($csvDelimiter = $this->getCsvDelimiter($csvReader))) {
+                        $csvReader->setDelimiter($csvDelimiter);
+                    }
+
+                    $csvReader->setHeaderOffset($this->getHeaderOffset() ?? 0);
+
+                    $csvColumns = $csvReader->getHeader();
+
+                    $duplicateCsvColumns = [];
+
+                    foreach (array_count_values($csvColumns) as $header => $count) {
+                        if ($count <= 1) {
+                            continue;
+                        }
+
+                        $duplicateCsvColumns[] = $header;
+                    }
+
+                    if (empty($duplicateCsvColumns)) {
+                        return;
+                    }
+
+                    $filledDuplicateCsvColumns = array_filter($duplicateCsvColumns, fn ($value): bool => filled($value));
+
+                    $fail(trans_choice('filament-actions::import.modal.form.file.rules.duplicate_columns', count($filledDuplicateCsvColumns), [
+                        'columns' => implode(', ', $filledDuplicateCsvColumns),
+                    ]));
+                },
+            ]),
+        ];
+
+        foreach ($this->fileValidationRules as $rules) {
+            $rules = $this->evaluate($rules);
+
+            if (is_string($rules)) {
+                $rules = explode('|', $rules);
+            }
+
+            $fileRules = [
+                ...$fileRules,
+                ...$rules,
+            ];
+        }
+
+        return $fileRules;
     }
 }

@@ -62,7 +62,7 @@ class MakeRelationManagerCommand extends Command
         $panel = $this->option('panel');
 
         if ($panel) {
-            $panel = Filament::getPanel($panel);
+            $panel = Filament::getPanel($panel, isStrict: false);
         }
 
         if (! $panel) {
@@ -161,8 +161,8 @@ class MakeRelationManagerCommand extends Command
             $modifyQueryUsing .= PHP_EOL . '    SoftDeletingScope::class,';
             $modifyQueryUsing .= PHP_EOL . ']))';
 
-            $tableBulkActions[] = 'Tables\Actions\RestoreBulkAction::make(),';
             $tableBulkActions[] = 'Tables\Actions\ForceDeleteBulkAction::make(),';
+            $tableBulkActions[] = 'Tables\Actions\RestoreBulkAction::make(),';
         }
 
         $tableBulkActions = implode(PHP_EOL, $tableBulkActions);

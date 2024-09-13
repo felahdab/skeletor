@@ -12,12 +12,14 @@ use Illuminate\Support\Facades\Route;
 
 class Panel extends Component
 {
+    use Panel\Concerns\CanGenerateResourceUrls;
     use Panel\Concerns\HasAssets;
     use Panel\Concerns\HasAuth;
     use Panel\Concerns\HasAvatars;
     use Panel\Concerns\HasBrandLogo;
     use Panel\Concerns\HasBrandName;
     use Panel\Concerns\HasBreadcrumbs;
+    use Panel\Concerns\HasBroadcasting;
     use Panel\Concerns\HasColors;
     use Panel\Concerns\HasComponents;
     use Panel\Concerns\HasDarkMode;
@@ -45,7 +47,10 @@ class Panel extends Component
 
     protected bool $isDefault = false;
 
-    protected ?Closure $bootUsing = null;
+    /**
+     * @var array<array-key, Closure>
+     */
+    protected array $bootCallbacks = [];
 
     public static function make(): static
     {
@@ -97,14 +102,14 @@ class Panel extends Component
             $plugin->boot($this);
         }
 
-        if ($callback = $this->bootUsing) {
+        foreach ($this->bootCallbacks as $callback) {
             $callback($this);
         }
     }
 
     public function bootUsing(?Closure $callback): static
     {
-        $this->bootUsing = $callback;
+        $this->bootCallbacks[] = $callback;
 
         return $this;
     }

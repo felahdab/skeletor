@@ -2,6 +2,69 @@
 
 All notable changes to `laravel-html` will be documented in this file.
 
+## 3.10.1 - 2024-07-15
+
+### What's Changed
+
+* Fix value omitted when input created with no name by @raveren in https://github.com/spatie/laravel-html/pull/235
+* Fix value omitted when input created with no name by @raveren in https://github.com/spatie/laravel-html/pull/236
+* Fix for Select and model's relationships by @nikosv in https://github.com/spatie/laravel-html/pull/237
+
+### New Contributors
+
+* @nikosv made their first contribution in https://github.com/spatie/laravel-html/pull/237
+
+**Full Changelog**: https://github.com/spatie/laravel-html/compare/3.10.0...3.10.1
+
+## 3.10.0 - 2024-07-03
+
+### What's Changed
+
+* Update docs for name attribute by @bskl in https://github.com/spatie/laravel-html/pull/225
+* Add Conditionable trait: now `->when()` helper is available on all elements by @raveren in https://github.com/spatie/laravel-html/pull/234
+
+**Full Changelog**: https://github.com/spatie/laravel-html/compare/3.9.0...3.10.0
+
+## 3.9.0 - 2024-04-25
+
+### What's Changed
+
+* Add use statement by @bskl in https://github.com/spatie/laravel-html/pull/222
+* Add aria helper method by @bskl in https://github.com/spatie/laravel-html/pull/226
+
+**Full Changelog**: https://github.com/spatie/laravel-html/compare/3.8.0...3.9.0
+
+## 3.8.0 - 2024-04-24
+
+### What's Changed
+
+* Add autocomplete attribute helper to the form element by @raveren in https://github.com/spatie/laravel-html/pull/221
+* Added support for Htmlable contents in BaseElement by @hemmesdev in https://github.com/spatie/laravel-html/pull/215
+* Register Service Provider in Laravel 11 by @gqrdev in https://github.com/spatie/laravel-html/pull/224
+* Add name attribute to form element by @bskl in https://github.com/spatie/laravel-html/pull/223
+
+### New Contributors
+
+* @hemmesdev made their first contribution in https://github.com/spatie/laravel-html/pull/215
+* @gqrdev made their first contribution in https://github.com/spatie/laravel-html/pull/224
+
+**Full Changelog**: https://github.com/spatie/laravel-html/compare/3.7.0...3.8.0
+
+## 3.7.0 - 2024-03-23
+
+### What's Changed
+
+* Fix return value in docs in element-methods.md by @raveren in https://github.com/spatie/laravel-html/pull/218
+* Add autocomplete attribute helper to input, select and textarea by @raveren in https://github.com/spatie/laravel-html/pull/219
+* Fix link with version in documentation by @fey in https://github.com/spatie/laravel-html/pull/217
+
+### New Contributors
+
+* @raveren made their first contribution in https://github.com/spatie/laravel-html/pull/218
+* @fey made their first contribution in https://github.com/spatie/laravel-html/pull/217
+
+**Full Changelog**: https://github.com/spatie/laravel-html/compare/3.6.0...3.7.0
+
 ## 3.6.0 - 2024-03-08
 
 ### What's Changed

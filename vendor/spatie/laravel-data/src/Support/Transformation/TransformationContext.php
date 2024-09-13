@@ -2,8 +2,7 @@
 
 namespace Spatie\LaravelData\Support\Transformation;
 
-use Spatie\LaravelData\Contracts\BaseData;
-use Spatie\LaravelData\Contracts\BaseDataCollectable;
+use Spatie\LaravelData\Contracts\ContextableData;
 use Spatie\LaravelData\Contracts\IncludeableData;
 use Spatie\LaravelData\Support\Partials\Partial;
 use Spatie\LaravelData\Support\Partials\PartialsCollection;
@@ -144,11 +143,8 @@ class TransformationContext implements Stringable
         }
     }
 
-    /**
-     * @param IncludeableData&(BaseData|BaseDataCollectable) $data
-     */
     public function mergePartialsFromDataContext(
-        IncludeableData $data
+        IncludeableData&ContextableData $data
     ): self {
         $dataContext = $data->getDataContext();
 
@@ -217,19 +213,19 @@ class TransformationContext implements Stringable
     public function __clone(): void
     {
         if ($this->includePartials !== null) {
-            $this->includePartials = clone $this->includePartials;
+            $this->includePartials = $this->includePartials->manualClone();
         }
 
         if ($this->excludePartials !== null) {
-            $this->excludePartials = clone $this->excludePartials;
+            $this->excludePartials = $this->excludePartials->manualClone();
         }
 
         if ($this->onlyPartials !== null) {
-            $this->onlyPartials = clone $this->onlyPartials;
+            $this->onlyPartials = $this->onlyPartials->manualClone();
         }
 
         if ($this->exceptPartials !== null) {
-            $this->exceptPartials = clone $this->exceptPartials;
+            $this->exceptPartials = $this->exceptPartials->manualClone();
         }
     }
 

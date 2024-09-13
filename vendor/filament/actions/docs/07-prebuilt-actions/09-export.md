@@ -14,9 +14,11 @@ php artisan make:notifications-table
 # Laravel 10
 php artisan queue:batches-table
 php artisan notifications:table
+```
 
+```bash
+# All apps
 php artisan vendor:publish --tag=filament-actions-migrations
-
 php artisan migrate
 ```
 
@@ -95,7 +97,7 @@ To define the columns that can be exported, you need to override the `getColumns
 ```php
 use Filament\Actions\Exports\ExportColumn;
 
-public function getColumns(): array
+public static function getColumns(): array
 {
     return [
         ExportColumn::make('name'),

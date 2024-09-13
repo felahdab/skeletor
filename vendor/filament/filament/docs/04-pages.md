@@ -37,7 +37,7 @@ Since all pages are Livewire components, you can [add actions](../actions/adding
 
 ### Header actions
 
-You can also easily add actions to the header of any page, including [resource pages](resources/getting-started). You don't need to worry about adding anything to the Blade, we handle that for you. Just return your actions from the `getHeaderActions()` method of the page class:
+You can also easily add actions to the header of any page, including [resource pages](resources/getting-started). You don't need to worry about adding anything to the Blade template, we handle that for you. Just return your actions from the `getHeaderActions()` method of the page class:
 
 ```php
 use Filament\Actions\Action;
@@ -52,6 +52,35 @@ protected function getHeaderActions(): array
             ->action(fn () => $this->post->delete()),
     ];
 }
+```
+
+### Opening an action modal when a page loads
+
+You can also open an action when a page loads by setting the `$defaultAction` property to the name of the action you want to open:
+
+```php
+use Filament\Actions\Action;
+
+public $defaultAction = 'onboarding';
+
+public function onboardingAction(): Action
+{
+    return Action::make('onboarding')
+        ->modalHeading('Welcome')
+        ->visible(fn (): bool => ! auth()->user()->isOnBoarded());
+}
+```
+
+You can also pass an array of arguments to the default action using the `$defaultActionArguments` property:
+
+```php
+public $defaultActionArguments = ['step' => 2];
+```
+
+Alternatively, you can open an action modal when a page loads by specifying the `action` as a query string parameter to the page:
+
+```
+/admin/products/edit/932510?action=onboarding
 ```
 
 ### Refreshing form data

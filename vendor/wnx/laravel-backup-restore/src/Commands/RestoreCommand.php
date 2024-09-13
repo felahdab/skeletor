@@ -68,9 +68,11 @@ class RestoreCommand extends Command
         // Dependencies-check is currently disabled. Custom binary paths are currently not supported by the Action.
         // $checkDependenciesAction->execute($connection);
 
+        $diskToRestoreFrom = $this->getDestinationDiskToRestoreFrom();
+
         $pendingRestore = PendingRestore::make(
-            disk: $this->getDestinationDiskToRestoreFrom(),
-            backup: $this->getBackupToRestore($this->getDestinationDiskToRestoreFrom()),
+            disk: $diskToRestoreFrom,
+            backup: $this->getBackupToRestore($diskToRestoreFrom),
             connection: $connection,
             backupPassword: $this->getPassword(),
         );
@@ -130,9 +132,7 @@ class RestoreCommand extends Command
             ->filter(fn ($file) => Str::endsWith($file, '.zip'));
 
         if ($listOfBackups->count() === 0) {
-            if (isset($disk)) {
-                error("No backups found on {$disk}.");
-            }
+            error("No backups found on {$disk}.");
             throw NoBackupsFound::onDisk($disk);
         }
 

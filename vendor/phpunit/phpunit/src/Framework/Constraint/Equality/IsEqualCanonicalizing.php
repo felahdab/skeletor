@@ -82,7 +82,7 @@ final class IsEqualCanonicalizing extends Constraint
     /**
      * Returns a string representation of the constraint.
      */
-    public function toString(bool $exportObjects = false): string
+    public function toString(): string
     {
         if (is_string($this->value)) {
             if (str_contains($this->value, "\n")) {
@@ -97,7 +97,7 @@ final class IsEqualCanonicalizing extends Constraint
 
         return sprintf(
             'is equal to %s',
-            Exporter::export($this->value, $exportObjects),
+            Exporter::export($this->value),
         );
     }
 }

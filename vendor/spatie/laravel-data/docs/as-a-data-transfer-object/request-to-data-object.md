@@ -63,7 +63,7 @@ class UpdateSongController
 }
 ```
 
-We have a complete section within these docs dedicated to validation, you can find it [here](/docs/laravel-data/v4/validation).
+We have a complete section within these docs dedicated to validation, you can find it [here](/docs/laravel-data/v4/validation/introduction).
 
 ## Getting the data object filled with request data from anywhere
 
@@ -73,7 +73,7 @@ You can resolve a data object from the container.
 app(SongData::class);
 ```
 
-We resolve a data object from the container, it's properties will allready be filled by the values of the request with matching key names.
+We resolve a data object from the container, its properties will already be filled by the values of the request with matching key names.
 If the request contains data that is not compatible with the data object, a validation exception will be thrown.
 
 

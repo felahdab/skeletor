@@ -5,9 +5,13 @@ namespace Nwidart\Modules\Commands\Make;
 use Illuminate\Console\Command;
 use Nwidart\Modules\Exceptions\FileAlreadyExistException;
 use Nwidart\Modules\Generators\FileGenerator;
+use Nwidart\Modules\Module;
+use Nwidart\Modules\Traits\PathNamespace;
 
 abstract class GeneratorCommand extends Command
 {
+    use PathNamespace;
+
     /**
      * The name of 'name' argument.
      *
@@ -36,7 +40,7 @@ abstract class GeneratorCommand extends Command
     {
         $path = str_replace('\\', '/', $this->getDestinationFilePath());
 
-        if (!$this->laravel['files']->isDirectory($dir = dirname($path))) {
+        if (! $this->laravel['files']->isDirectory($dir = dirname($path))) {
             $this->laravel['files']->makeDirectory($dir, 0777, true);
         }
 
@@ -47,7 +51,6 @@ abstract class GeneratorCommand extends Command
                 $overwriteFile = $this->hasOption('force') ? $this->option('force') : false;
                 (new FileGenerator($path, $contents))->withFileOverwrite($overwriteFile)->generate();
             });
-
         } catch (FileAlreadyExistException $e) {
             $this->components->error("File : {$path} already exists.");
 
@@ -69,8 +72,6 @@ abstract class GeneratorCommand extends Command
 
     /**
      * Get default namespace.
-     *
-     * @return string
      */
     public function getDefaultNamespace(): string
     {
@@ -80,26 +81,18 @@ abstract class GeneratorCommand extends Command
     /**
      * Get class namespace.
      *
-     * @param \Nwidart\Modules\Module $module
-     *
+     * @param  \Nwidart\Modules\Module  $module
      * @return string
      */
     public function getClassNamespace($module)
     {
-        $extra = str_replace($this->getClass(), '', $this->argument($this->argumentName));
+        $path_namespace = $this->path_namespace(str_replace($this->getClass(), '', $this->argument($this->argumentName)));
 
-        $extra = str_replace('/', '\\', $extra);
+        return $this->module_namespace($module->getStudlyName(), $this->getDefaultNamespace().($path_namespace ? '\\'.$path_namespace : ''));
+    }
 
-        $namespace = $this->laravel['modules']->config('namespace');
-
-        $namespace .= '\\' . $module->getStudlyName();
-
-        $namespace .= '\\' . $this->getDefaultNamespace();
-
-        $namespace .= '\\' . $extra;
-
-        $namespace = str_replace('/', '\\', $namespace);
-
-        return trim($namespace, '\\');
+    public function module(?string $name = null): Module
+    {
+        return $this->laravel['modules']->findOrFail($name ?? $this->getModuleName());
     }
 }

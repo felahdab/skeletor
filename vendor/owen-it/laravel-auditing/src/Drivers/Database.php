@@ -14,9 +14,7 @@ class Database implements AuditDriver
      */
     public function audit(Auditable $model): ?Audit
     {
-        $implementation = Config::get('audit.implementation', \OwenIt\Auditing\Models\Audit::class);
-
-        return call_user_func([$implementation, 'create'], $model->toAudit());
+        return call_user_func([get_class($model->audits()->getModel()), 'create'], $model->toAudit());
     }
 
     /**
@@ -25,17 +23,23 @@ class Database implements AuditDriver
     public function prune(Auditable $model): bool
     {
         if (($threshold = $model->getAuditThreshold()) > 0) {
-            $forRemoval = $model->audits()
-                ->latest()
-                ->get()
-                ->slice($threshold)
-                ->pluck('id');
+            $auditClass = get_class($model->audits()->getModel());
+            $auditModel = new $auditClass;
 
-            if (!$forRemoval->isEmpty()) {
-                return $model->audits()
-                    ->whereIn('id', $forRemoval)
-                    ->delete() > 0;
-            }
+            return $model->audits()
+                ->leftJoinSub(
+                    $model->audits()->select($auditModel->getKeyName())->limit($threshold)->latest(),
+                    'audit_threshold',
+                    function ($join) use ($auditModel) {
+                        $join->on(
+                            $auditModel->gettable().'.'.$auditModel->getKeyName(),
+                            '=',
+                            'audit_threshold.'.$auditModel->getKeyName()
+                        );
+                    }
+                )
+                ->whereNull('audit_threshold.'.$auditModel->getKeyName())
+                ->delete() > 0;
         }
 
         return false;

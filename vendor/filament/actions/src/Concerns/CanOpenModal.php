@@ -80,6 +80,10 @@ trait CanOpenModal
 
     protected bool | Closure | null $isModalClosedByClickingAway = null;
 
+    protected bool | Closure | null $isModalClosedByEscaping = null;
+
+    protected bool | Closure | null $isModalAutofocused = null;
+
     protected string | Closure | null $modalIcon = null;
 
     /**
@@ -90,6 +94,13 @@ trait CanOpenModal
     public function closeModalByClickingAway(bool | Closure | null $condition = true): static
     {
         $this->isModalClosedByClickingAway = $condition;
+
+        return $this;
+    }
+
+    public function closeModalByEscaping(bool | Closure | null $condition = true): static
+    {
+        $this->isModalClosedByEscaping = $condition;
 
         return $this;
     }
@@ -116,6 +127,13 @@ trait CanOpenModal
     public function modalCloseButton(bool | Closure | null $condition = true): static
     {
         $this->hasModalCloseButton = $condition;
+
+        return $this;
+    }
+
+    public function modalAutofocus(bool | Closure | null $condition = true): static
+    {
+        $this->isModalAutofocused = $condition;
 
         return $this;
     }
@@ -416,7 +434,8 @@ trait CanOpenModal
 
         if (
             ($this instanceof HasRecord) &&
-            ($action instanceof HasRecord)
+            ($action instanceof HasRecord) &&
+            (! $action->hasRecord())
         ) {
             $action->record($this->getRecord());
         }
@@ -494,7 +513,7 @@ trait CanOpenModal
 
     public function getModalAlignment(): Alignment | string
     {
-        return $this->evaluate($this->modalAlignment) ?? (in_array($this->getModalWidth(), [MaxWidth::ExtraSmall, MaxWidth::Small, 'xs', 'sm'])) ? Alignment::Center : Alignment::Start;
+        return $this->evaluate($this->modalAlignment) ?? (in_array($this->getModalWidth(), [MaxWidth::ExtraSmall, MaxWidth::Small, 'xs', 'sm']) ? Alignment::Center : Alignment::Start);
     }
 
     public function getModalSubmitActionLabel(): string
@@ -598,6 +617,16 @@ trait CanOpenModal
     public function isModalClosedByClickingAway(): bool
     {
         return (bool) ($this->evaluate($this->isModalClosedByClickingAway) ?? Modal::$isClosedByClickingAway);
+    }
+
+    public function isModalClosedByEscaping(): bool
+    {
+        return (bool) ($this->evaluate($this->isModalClosedByEscaping) ?? Modal::$isClosedByEscaping);
+    }
+
+    public function isModalAutofocused(): bool
+    {
+        return $this->evaluate($this->isModalAutofocused) ?? Modal::$isAutofocused;
     }
 
     /**

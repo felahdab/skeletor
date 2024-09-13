@@ -39,7 +39,7 @@ class RuleDenormalizer
             return [$rule->getRule($path)];
         }
 
-        if($rule instanceof CustomValidationAttribute) {
+        if ($rule instanceof CustomValidationAttribute) {
             return Arr::wrap($rule->getRules($path));
         }
 
@@ -61,7 +61,6 @@ class RuleDenormalizer
         $parameters = collect($rule->parameters())
             ->map(fn (mixed $value) => $this->normalizeRuleParameter($value, $path))
             ->reject(fn (mixed $value) => $value === null);
-
 
         if ($parameters->isEmpty()) {
             return [$rule->keyword()];

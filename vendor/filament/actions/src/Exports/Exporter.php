@@ -28,8 +28,7 @@ abstract class Exporter
         protected Export $export,
         protected array $columnMap,
         protected array $options,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<mixed>
@@ -73,6 +72,11 @@ abstract class Exporter
     }
 
     abstract public static function getCompletedNotificationBody(Export $export): string;
+
+    public static function getCompletedNotificationTitle(Export $export): string
+    {
+        return __('filament-actions::export.notifications.completed.title');
+    }
 
     /**
      * @return array<int, object>

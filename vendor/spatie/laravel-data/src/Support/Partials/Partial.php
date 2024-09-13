@@ -4,8 +4,7 @@ namespace Spatie\LaravelData\Support\Partials;
 
 use Closure;
 use Laravel\SerializableClosure\SerializableClosure;
-use Spatie\LaravelData\Contracts\BaseData;
-use Spatie\LaravelData\Contracts\BaseDataCollectable;
+use Spatie\LaravelData\Contracts\IncludeableData;
 use Spatie\LaravelData\Support\Partials\Segments\AllPartialSegment;
 use Spatie\LaravelData\Support\Partials\Segments\FieldsPartialSegment;
 use Spatie\LaravelData\Support\Partials\Segments\NestedPartialSegment;
@@ -218,7 +217,7 @@ class Partial implements Stringable
         return $this->segments[$this->pointer] ?? null;
     }
 
-    public function isRequired(BaseData|BaseDataCollectable $data): bool
+    public function isRequired(IncludeableData $data): bool
     {
         if ($this->condition === null) {
             return true;
@@ -264,5 +263,31 @@ class Partial implements Stringable
     public function __toString(): string
     {
         return implode('.', $this->segments)." (current: {$this->pointer})";
+    }
+
+    public function __serialize(): array
+    {
+        return [
+            'segmentCount' => $this->segmentCount,
+            'endsInAll' => $this->endsInAll,
+            'segments' => $this->segments,
+            'condition' => $this->condition
+                ? serialize(new SerializableClosure($this->condition))
+                : null,
+            'permanent' => $this->permanent,
+            'pointer' => $this->pointer,
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->segmentCount = $data['segmentCount'];
+        $this->endsInAll = $data['endsInAll'];
+        $this->segments = $data['segments'];
+        $this->pointer = $data['pointer'];
+        $this->condition = $data['condition']
+            ? unserialize($data['condition'])->getClosure()
+            : null;
+        $this->permanent = $data['permanent'];
     }
 }

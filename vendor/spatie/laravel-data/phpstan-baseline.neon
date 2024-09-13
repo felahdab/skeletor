@@ -121,9 +121,9 @@ parameters:
 			path: src/Support/DataConfig.php
 
 		-
-			message: "#^Parameter \\#1 \\$storage of method SplObjectStorage\\<Spatie\\\\LaravelData\\\\Support\\\\Partials\\\\Partial,null\\>\\:\\:removeAll\\(\\) expects SplObjectStorage\\<object, mixed\\>, Spatie\\\\LaravelData\\\\Support\\\\Partials\\\\PartialsCollection given\\.$#"
+			message: "#^Call to method Illuminate\\\\Support\\\\Collection\\<\\(int\\|string\\),string\\|null\\>\\:\\:isEmpty\\(\\) will always evaluate to false\\.$#"
 			count: 1
-			path: src/Support/Transformation/DataContext.php
+			path: src/Support/Validation/RuleDenormalizer.php
 
 		-
 			message: "#^Call to an undefined method DateTimeInterface\\:\\:setTimezone\\(\\)\\.$#"

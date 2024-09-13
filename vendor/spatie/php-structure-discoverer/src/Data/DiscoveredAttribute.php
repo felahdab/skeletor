@@ -11,6 +11,9 @@ class DiscoveredAttribute
     ) {
     }
 
+    /**
+     * @param ReflectionAttribute<object> $reflectionAttribute
+     */
     public static function fromReflection(
         ReflectionAttribute $reflectionAttribute,
     ): self {

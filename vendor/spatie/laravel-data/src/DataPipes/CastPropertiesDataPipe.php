@@ -3,15 +3,18 @@
 namespace Spatie\LaravelData\DataPipes;
 
 use Illuminate\Support\Enumerable;
+use Spatie\LaravelData\Casts\BuiltinTypeCast;
 use Spatie\LaravelData\Casts\IterableItemCast;
 use Spatie\LaravelData\Casts\Uncastable;
 use Spatie\LaravelData\Enums\DataTypeKind;
+use Spatie\LaravelData\Exceptions\CannotCreateData;
 use Spatie\LaravelData\Lazy;
 use Spatie\LaravelData\Optional;
 use Spatie\LaravelData\Support\Creation\CreationContext;
 use Spatie\LaravelData\Support\DataClass;
 use Spatie\LaravelData\Support\DataConfig;
 use Spatie\LaravelData\Support\DataProperty;
+use Spatie\LaravelData\Support\Types\CombinationType;
 
 class CastPropertiesDataPipe implements DataPipe
 {
@@ -27,7 +30,7 @@ class CastPropertiesDataPipe implements DataPipe
         CreationContext $creationContext
     ): array {
         foreach ($properties as $name => $value) {
-            $dataProperty = $class->properties->first(fn (DataProperty $dataProperty) => $dataProperty->name === $name);
+            $dataProperty = $class->properties[$name] ?? null;
 
             if ($dataProperty === null) {
                 continue;
@@ -85,11 +88,27 @@ class CastPropertiesDataPipe implements DataPipe
             $property->type->kind->isDataObject()
             || $property->type->kind->isDataCollectable()
         ) {
-            $context = $creationContext->next($property->type->dataClass, $property->name);
+            try {
+                $context = $creationContext->next($property->type->dataClass, $property->name);
 
-            return $property->type->kind->isDataObject()
-                ? $context->from($value)
-                : $context->collect($value, $property->type->iterableClass);
+                $data = $property->type->kind->isDataObject()
+                    ? $context->from($value)
+                    : $context->collect($value, $property->type->iterableClass);
+
+                $creationContext->previous();
+
+                return $data;
+            } catch (CannotCreateData $exception) {
+                $creationContext->previous();
+
+                if ($property->type->type instanceof CombinationType) {
+                    // Try another type in the union (which will need to be a simple type like string, int)
+                    // In the future we should deterministically choose the correct type to cast to
+                    return $value;
+                }
+
+                throw $exception;
+            }
         }
 
         if (
@@ -127,10 +146,6 @@ class CastPropertiesDataPipe implements DataPipe
         array $properties,
         CreationContext $creationContext
     ): iterable {
-        if (empty($values)) {
-            return $values;
-        }
-
         if ($values instanceof Enumerable) {
             $values = $values->all();
         }
@@ -160,6 +175,10 @@ class CastPropertiesDataPipe implements DataPipe
         array $properties,
         CreationContext $creationContext
     ): array {
+        if (empty($values)) {
+            return $values;
+        }
+
         /** @var ?IterableItemCast $cast */
         $cast = $this->findCastForIterableItems($property, $values, $properties, $creationContext);
 
@@ -196,6 +215,10 @@ class CastPropertiesDataPipe implements DataPipe
             if (! $casted instanceof Uncastable) {
                 return $possibleCast;
             }
+        }
+
+        if (in_array($property->type->iterableItemType, ['bool', 'int', 'float', 'array', 'string'])) {
+            return new BuiltinTypeCast($property->type->iterableItemType);
         }
 
         return null;

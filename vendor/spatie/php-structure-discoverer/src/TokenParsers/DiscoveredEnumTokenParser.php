@@ -2,9 +2,9 @@
 
 namespace Spatie\StructureDiscoverer\TokenParsers;
 
-use Exception;
 use Spatie\StructureDiscoverer\Collections\TokenCollection;
 use Spatie\StructureDiscoverer\Collections\UsageCollection;
+use Spatie\StructureDiscoverer\Data\DiscoveredAttribute;
 use Spatie\StructureDiscoverer\Data\DiscoveredEnum;
 use Spatie\StructureDiscoverer\Enums\DiscoveredEnumType;
 
@@ -15,6 +15,9 @@ class DiscoveredEnumTokenParser
     ) {
     }
 
+    /**
+     * @param DiscoveredAttribute[] $attributes
+     */
     public function execute(
         int $index,
         TokenCollection $tokens,
@@ -55,7 +58,5 @@ class DiscoveredEnumTokenParser
         if ($typeToken->text === 'string') {
             return DiscoveredEnumType::String;
         }
-
-        throw new Exception('Unknown enum type');
     }
 }

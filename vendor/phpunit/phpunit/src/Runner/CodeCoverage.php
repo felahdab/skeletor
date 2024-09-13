@@ -12,7 +12,6 @@ namespace PHPUnit\Runner;
 use function file_put_contents;
 use function sprintf;
 use PHPUnit\Event\Facade as EventFacade;
-use PHPUnit\Event\TestData\MoreThanOneDataSetFromDataProviderException;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\TextUI\Configuration\CodeCoverageFilterRegistry;
 use PHPUnit\TextUI\Configuration\Configuration;
@@ -38,7 +37,11 @@ use SebastianBergmann\Timer\NoActiveTimerException;
 use SebastianBergmann\Timer\Timer;
 
 /**
+ * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
+ *
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
+ *
+ * @codeCoverageIgnore
  */
 final class CodeCoverage
 {
@@ -50,7 +53,7 @@ final class CodeCoverage
     private ?Timer $timer                                               = null;
 
     /**
-     * @psalm-var array<string,list<int>>
+     * @var array<string,list<int>>
      */
     private array $linesToBeIgnored = [];
 
@@ -121,7 +124,7 @@ final class CodeCoverage
     }
 
     /**
-     * @psalm-assert-if-true !null $this->instance
+     * @phpstan-assert-if-true !null $this->instance
      */
     public function isActive(): bool
     {
@@ -138,9 +141,6 @@ final class CodeCoverage
         return $this->driver;
     }
 
-    /**
-     * @throws MoreThanOneDataSetFromDataProviderException
-     */
     public function start(TestCase $test): void
     {
         if ($this->collecting) {
@@ -167,6 +167,10 @@ final class CodeCoverage
         $this->collecting = true;
     }
 
+    /**
+     * @param array<string,list<int>>|false $linesToBeCovered
+     * @param array<string,list<int>>       $linesToBeUsed
+     */
     public function stop(bool $append = true, array|false $linesToBeCovered = [], array $linesToBeUsed = []): void
     {
         if (!$this->collecting) {
@@ -335,7 +339,7 @@ final class CodeCoverage
     }
 
     /**
-     * @psalm-param array<string,list<int>> $linesToBeIgnored
+     * @param array<string,list<int>> $linesToBeIgnored
      */
     public function ignoreLines(array $linesToBeIgnored): void
     {
@@ -343,7 +347,7 @@ final class CodeCoverage
     }
 
     /**
-     * @psalm-return array<string,list<int>>
+     * @return array<string,list<int>>
      */
     public function linesToBeIgnored(): array
     {

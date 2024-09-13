@@ -27,6 +27,7 @@ class PendingRestore
     {
         $restoreName = now()->format('Y-m-d-h-i-s').'-'.Str::uuid();
 
+        /** @phpstan-ignore-next-line */
         return new self(
             ...$attributes,
             restoreName: $restoreName,
@@ -67,12 +68,17 @@ class PendingRestore
             ->has($this->getPathToLocalDecompressedBackup().DIRECTORY_SEPARATOR.'db-dumps');
     }
 
-    public function getAvailableDbDumps(): Collection
+    public function getAvailableFilesInDbDumpsDirectory(): Collection
     {
         $files = Storage::disk($this->restoreDisk)
             ->files($this->getPathToLocalDecompressedBackup().DIRECTORY_SEPARATOR.'db-dumps');
 
-        return collect($files)
+        return collect($files);
+    }
+
+    public function getAvailableDbDumps(): Collection
+    {
+        return $this->getAvailableFilesInDbDumpsDirectory()
             ->filter(fn ($file) => Str::endsWith($file, ['.sql', '.sql.gz', '.sql.bz2']));
     }
 }

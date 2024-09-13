@@ -38,7 +38,7 @@ class Dimensions extends ObjectValidationAttribute
 
     public function getRule(ValidationPath $path): object|string
     {
-        if($this->rule) {
+        if ($this->rule) {
             return $this->rule;
         }
 
@@ -80,7 +80,7 @@ class Dimensions extends ObjectValidationAttribute
             $rule->ratio($ratio);
         }
 
-        return $this->rule = $rule;
+        return $rule;
     }
 
     public static function keyword(): string
