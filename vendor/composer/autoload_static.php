@@ -159,7 +159,6 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
             'Spatie\\Backtrace\\' => 17,
             'SocialiteProviders\\Manager\\' => 27,
             'SocialiteProviders\\Keycloak\\' => 28,
-            'Shift\\Faker\\' => 12,
             'Saloon\\Laravel\\' => 15,
             'Saloon\\' => 7,
             'Saade\\FilamentFullCalendar\\' => 27,
@@ -201,10 +200,10 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'M' => 
         array (
             'Monolog\\' => 8,
-            'Modules\\RH\\Tests\\' => 17,
-            'Modules\\RH\\Database\\Seeders\\' => 28,
-            'Modules\\RH\\Database\\Factories\\' => 30,
-            'Modules\\RH\\' => 11,
+            'Modules\\Fleetprogram\\Tests\\' => 27,
+            'Modules\\Fleetprogram\\Database\\Seeders\\' => 38,
+            'Modules\\Fleetprogram\\Database\\Factories\\' => 40,
+            'Modules\\Fleetprogram\\' => 21,
             'Modules\\FcmUnite\\Tests\\' => 23,
             'Modules\\FcmUnite\\Database\\Seeders\\' => 34,
             'Modules\\FcmUnite\\Database\\Factories\\' => 36,
@@ -315,7 +314,6 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'B' => 
         array (
             'Brick\\Math\\' => 11,
-            'Blueprint\\' => 10,
             'BladeUI\\Icons\\' => 14,
             'BladeUI\\Heroicons\\' => 18,
             'Barryvdh\\Debugbar\\' => 18,
@@ -612,10 +610,6 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         array (
             0 => __DIR__ . '/..' . '/socialiteproviders/keycloak',
         ),
-        'Shift\\Faker\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/laravel-shift/faker-registry/src',
-        ),
         'Saloon\\Laravel\\' => 
         array (
             0 => __DIR__ . '/..' . '/saloonphp/laravel-plugin/src',
@@ -721,21 +715,21 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
-        'Modules\\RH\\Tests\\' => 
+        'Modules\\Fleetprogram\\Tests\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/Modules/RH/tests',
+            0 => __DIR__ . '/../..' . '/Modules/Fleetprogram/tests',
         ),
-        'Modules\\RH\\Database\\Seeders\\' => 
+        'Modules\\Fleetprogram\\Database\\Seeders\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/Modules/RH/database/seeders',
+            0 => __DIR__ . '/../..' . '/Modules/Fleetprogram/database/seeders',
         ),
-        'Modules\\RH\\Database\\Factories\\' => 
+        'Modules\\Fleetprogram\\Database\\Factories\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/Modules/RH/database/factories',
+            0 => __DIR__ . '/../..' . '/Modules/Fleetprogram/database/factories',
         ),
-        'Modules\\RH\\' => 
+        'Modules\\Fleetprogram\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/Modules/RH/app',
+            0 => __DIR__ . '/../..' . '/Modules/Fleetprogram/app',
         ),
         'Modules\\FcmUnite\\Tests\\' => 
         array (
@@ -1059,10 +1053,6 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'Brick\\Math\\' => 
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
-        ),
-        'Blueprint\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/laravel-shift/blueprint/src',
         ),
         'BladeUI\\Icons\\' => 
         array (
@@ -1624,63 +1614,6 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'BladeUI\\Icons\\Generation\\IconGenerator' => __DIR__ . '/..' . '/blade-ui-kit/blade-icons/src/Generation/IconGenerator.php',
         'BladeUI\\Icons\\IconsManifest' => __DIR__ . '/..' . '/blade-ui-kit/blade-icons/src/IconsManifest.php',
         'BladeUI\\Icons\\Svg' => __DIR__ . '/..' . '/blade-ui-kit/blade-icons/src/Svg.php',
-        'Blueprint\\Blueprint' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Blueprint.php',
-        'Blueprint\\BlueprintServiceProvider' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/BlueprintServiceProvider.php',
-        'Blueprint\\Builder' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Builder.php',
-        'Blueprint\\Commands\\BuildCommand' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Commands/BuildCommand.php',
-        'Blueprint\\Commands\\EraseCommand' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Commands/EraseCommand.php',
-        'Blueprint\\Commands\\InitCommand' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Commands/InitCommand.php',
-        'Blueprint\\Commands\\NewCommand' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Commands/NewCommand.php',
-        'Blueprint\\Commands\\PublishStubsCommand' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Commands/PublishStubsCommand.php',
-        'Blueprint\\Commands\\TraceCommand' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Commands/TraceCommand.php',
-        'Blueprint\\Concerns\\HandlesImports' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Concerns/HandlesImports.php',
-        'Blueprint\\Concerns\\HandlesTraits' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Concerns/HandlesTraits.php',
-        'Blueprint\\Contracts\\Generator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Contracts/Generator.php',
-        'Blueprint\\Contracts\\Lexer' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Contracts/Lexer.php',
-        'Blueprint\\Contracts\\Model' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Contracts/Model.php',
-        'Blueprint\\FileMixins' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/FileMixins.php',
-        'Blueprint\\Generators\\AbstractClassGenerator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Generators/AbstractClassGenerator.php',
-        'Blueprint\\Generators\\ControllerGenerator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Generators/ControllerGenerator.php',
-        'Blueprint\\Generators\\FactoryGenerator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Generators/FactoryGenerator.php',
-        'Blueprint\\Generators\\MigrationGenerator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Generators/MigrationGenerator.php',
-        'Blueprint\\Generators\\ModelGenerator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Generators/ModelGenerator.php',
-        'Blueprint\\Generators\\PestTestGenerator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Generators/PestTestGenerator.php',
-        'Blueprint\\Generators\\PhpUnitTestGenerator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Generators/PhpUnitTestGenerator.php',
-        'Blueprint\\Generators\\PolicyGenerator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Generators/PolicyGenerator.php',
-        'Blueprint\\Generators\\RouteGenerator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Generators/RouteGenerator.php',
-        'Blueprint\\Generators\\SeederGenerator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Generators/SeederGenerator.php',
-        'Blueprint\\Generators\\StatementGenerator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Generators/StatementGenerator.php',
-        'Blueprint\\Generators\\Statements\\EventGenerator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Generators/Statements/EventGenerator.php',
-        'Blueprint\\Generators\\Statements\\FormRequestGenerator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Generators/Statements/FormRequestGenerator.php',
-        'Blueprint\\Generators\\Statements\\JobGenerator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Generators/Statements/JobGenerator.php',
-        'Blueprint\\Generators\\Statements\\MailGenerator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Generators/Statements/MailGenerator.php',
-        'Blueprint\\Generators\\Statements\\NotificationGenerator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Generators/Statements/NotificationGenerator.php',
-        'Blueprint\\Generators\\Statements\\ResourceGenerator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Generators/Statements/ResourceGenerator.php',
-        'Blueprint\\Generators\\Statements\\ViewGenerator' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Generators/Statements/ViewGenerator.php',
-        'Blueprint\\Lexers\\ConfigLexer' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Lexers/ConfigLexer.php',
-        'Blueprint\\Lexers\\ControllerLexer' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Lexers/ControllerLexer.php',
-        'Blueprint\\Lexers\\ModelLexer' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Lexers/ModelLexer.php',
-        'Blueprint\\Lexers\\SeederLexer' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Lexers/SeederLexer.php',
-        'Blueprint\\Lexers\\StatementLexer' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Lexers/StatementLexer.php',
-        'Blueprint\\Models\\Column' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Models/Column.php',
-        'Blueprint\\Models\\Controller' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Models/Controller.php',
-        'Blueprint\\Models\\Index' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Models/Index.php',
-        'Blueprint\\Models\\Model' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Models/Model.php',
-        'Blueprint\\Models\\Policy' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Models/Policy.php',
-        'Blueprint\\Models\\Statements\\DispatchStatement' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Models/Statements/DispatchStatement.php',
-        'Blueprint\\Models\\Statements\\EloquentStatement' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Models/Statements/EloquentStatement.php',
-        'Blueprint\\Models\\Statements\\FireStatement' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Models/Statements/FireStatement.php',
-        'Blueprint\\Models\\Statements\\QueryStatement' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Models/Statements/QueryStatement.php',
-        'Blueprint\\Models\\Statements\\RedirectStatement' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Models/Statements/RedirectStatement.php',
-        'Blueprint\\Models\\Statements\\RenderStatement' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Models/Statements/RenderStatement.php',
-        'Blueprint\\Models\\Statements\\ResourceStatement' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Models/Statements/ResourceStatement.php',
-        'Blueprint\\Models\\Statements\\RespondStatement' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Models/Statements/RespondStatement.php',
-        'Blueprint\\Models\\Statements\\SendStatement' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Models/Statements/SendStatement.php',
-        'Blueprint\\Models\\Statements\\SessionStatement' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Models/Statements/SessionStatement.php',
-        'Blueprint\\Models\\Statements\\ValidateStatement' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Models/Statements/ValidateStatement.php',
-        'Blueprint\\Tracer' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Tracer.php',
-        'Blueprint\\Translators\\Rules' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Translators/Rules.php',
-        'Blueprint\\Tree' => __DIR__ . '/..' . '/laravel-shift/blueprint/src/Tree.php',
         'Brick\\Math\\BigDecimal' => __DIR__ . '/..' . '/brick/math/src/BigDecimal.php',
         'Brick\\Math\\BigInteger' => __DIR__ . '/..' . '/brick/math/src/BigInteger.php',
         'Brick\\Math\\BigNumber' => __DIR__ . '/..' . '/brick/math/src/BigNumber.php',
@@ -6767,6 +6700,7 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'Modules\\FcmCommun\\Filament\\Fcmcommun\\Resources\\UserResource\\Pages\\ListUsers' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/Filament/Fcmcommun/Resources/UserResource/Pages/ListUsers.php',
         'Modules\\FcmCommun\\Filament\\Fcmcommun\\Resources\\UserResource\\Pages\\LivretDeTransformation' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/Filament/Fcmcommun/Resources/UserResource/Pages/LivretDeTransformation.php',
         'Modules\\FcmCommun\\Http\\Controllers\\FcmCommunController' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/Http/Controllers/FcmCommunController.php',
+        'Modules\\FcmCommun\\Http\\Livewire\\Livret' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/Http/Livewire/Livret.php',
         'Modules\\FcmCommun\\Http\\Livewire\\LivretDeTransformation' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/Http/Livewire/LivretDeTransformation.php',
         'Modules\\FcmCommun\\Listeners\\LocalUserGeneratedEventListener' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/Listeners/LocalUserGeneratedEventListener.php',
         'Modules\\FcmCommun\\Listeners\\StoreUserGeneratedEventListener' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/Listeners/StoreUserGeneratedEventListener.php',
@@ -6781,6 +6715,7 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'Modules\\FcmCommun\\Providers\\FcmCommunServiceProvider' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/Providers/FcmCommunServiceProvider.php',
         'Modules\\FcmCommun\\Providers\\Filament\\FcmcommunPanelProvider' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/Providers/Filament/FcmcommunPanelProvider.php',
         'Modules\\FcmCommun\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/Providers/RouteServiceProvider.php',
+        'Modules\\FcmCommun\\Services\\LivretService' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/Services/LivretService.php',
         'Modules\\FcmCommun\\Services\\ParcoursService' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/Services/ParcoursService.php',
         'Modules\\FcmCommun\\Traits\\HasTablePrefix' => __DIR__ . '/../..' . '/Modules/FcmCommun/app/Traits/HasTablePrefix.php',
         'Modules\\FcmUnite\\Console\\CheckAvailableDataFromCentralInstance' => __DIR__ . '/../..' . '/Modules/FcmUnite/app/Console/CheckAvailableDataFromCentralInstance.php',
@@ -6817,19 +6752,18 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'Modules\\FcmUnite\\Services\\ParcoursService' => __DIR__ . '/../..' . '/Modules/FcmUnite/app/Services/ParcoursService.php',
         'Modules\\FcmUnite\\Services\\RemoteApiClientService' => __DIR__ . '/../..' . '/Modules/FcmUnite/app/Services/RemoteApiClientService.php',
         'Modules\\FcmUnite\\Traits\\HasTablePrefix' => __DIR__ . '/../..' . '/Modules/FcmUnite/app/Traits/HasTablePrefix.php',
-        'Modules\\RH\\Database\\Seeders\\BrevetSeeder' => __DIR__ . '/../..' . '/Modules/RH/database/seeders/BrevetSeeder.php',
-        'Modules\\RH\\Database\\Seeders\\GradeSeeder' => __DIR__ . '/../..' . '/Modules/RH/database/seeders/GradeSeeder.php',
-        'Modules\\RH\\Database\\Seeders\\RHDatabaseSeeder' => __DIR__ . '/../..' . '/Modules/RH/database/seeders/RHDatabaseSeeder.php',
-        'Modules\\RH\\Database\\Seeders\\SpecialiteSeeder' => __DIR__ . '/../..' . '/Modules/RH/database/seeders/SpecialiteSeeder.php',
-        'Modules\\RH\\Database\\Seeders\\UniteSeeder' => __DIR__ . '/../..' . '/Modules/RH/database/seeders/UniteSeeder.php',
-        'Modules\\RH\\Models\\Brevet' => __DIR__ . '/../..' . '/Modules/RH/app/Models/Brevet.php',
-        'Modules\\RH\\Models\\Grade' => __DIR__ . '/../..' . '/Modules/RH/app/Models/Grade.php',
-        'Modules\\RH\\Models\\Personne' => __DIR__ . '/../..' . '/Modules/RH/app/Models/Personne.php',
-        'Modules\\RH\\Models\\Specialite' => __DIR__ . '/../..' . '/Modules/RH/app/Models/Specialite.php',
-        'Modules\\RH\\Models\\Unite' => __DIR__ . '/../..' . '/Modules/RH/app/Models/Unite.php',
-        'Modules\\RH\\Providers\\RHServiceProvider' => __DIR__ . '/../..' . '/Modules/RH/app/Providers/RHServiceProvider.php',
-        'Modules\\RH\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/RH/app/Providers/RouteServiceProvider.php',
-        'Modules\\RH\\Traits\\HasTablePrefix' => __DIR__ . '/../..' . '/Modules/RH/app/Traits/HasTablePrefix.php',
+        'Modules\\Fleetprogram\\Database\\Seeders\\FleetprogramDatabaseSeeder' => __DIR__ . '/../..' . '/Modules/Fleetprogram/database/seeders/FleetprogramDatabaseSeeder.php',
+        'Modules\\Fleetprogram\\Filament\\Resources\\ActiviteResource' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Filament/Resources/ActiviteResource.php',
+        'Modules\\Fleetprogram\\Filament\\Resources\\ActiviteResource\\Pages\\CreateActivite' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Filament/Resources/ActiviteResource/Pages/CreateActivite.php',
+        'Modules\\Fleetprogram\\Filament\\Resources\\ActiviteResource\\Pages\\EditActivite' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Filament/Resources/ActiviteResource/Pages/EditActivite.php',
+        'Modules\\Fleetprogram\\Filament\\Resources\\ActiviteResource\\Pages\\ListActivites' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Filament/Resources/ActiviteResource/Pages/ListActivites.php',
+        'Modules\\Fleetprogram\\Filament\\Resources\\ActiviteResource\\Widgets\\ActiviteCalendarWidget' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Filament/Resources/ActiviteResource/Widgets/ActiviteCalendarWidget.php',
+        'Modules\\Fleetprogram\\Http\\Controllers\\FleetprogramController' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Http/Controllers/FleetprogramController.php',
+        'Modules\\Fleetprogram\\Models\\Activite' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Models/Activite.php',
+        'Modules\\Fleetprogram\\Providers\\Filament\\FleetprogramPanelProvider' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Providers/Filament/FleetprogramPanelProvider.php',
+        'Modules\\Fleetprogram\\Providers\\FleetprogramServiceProvider' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Providers/FleetprogramServiceProvider.php',
+        'Modules\\Fleetprogram\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Providers/RouteServiceProvider.php',
+        'Modules\\Fleetprogram\\Traits\\HasTablePrefix' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Traits/HasTablePrefix.php',
         'Monolog\\Attribute\\AsMonologProcessor' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Attribute/AsMonologProcessor.php',
         'Monolog\\Attribute\\WithMonologChannel' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Attribute/WithMonologChannel.php',
         'Monolog\\DateTimeImmutable' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/DateTimeImmutable.php',
@@ -9953,7 +9887,6 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'SebastianBergmann\\Type\\UnknownType' => __DIR__ . '/..' . '/sebastian/type/src/type/UnknownType.php',
         'SebastianBergmann\\Type\\VoidType' => __DIR__ . '/..' . '/sebastian/type/src/type/VoidType.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
-        'Shift\\Faker\\Registry' => __DIR__ . '/..' . '/laravel-shift/faker-registry/src/Registry.php',
         'SocialiteProviders\\Keycloak\\KeycloakExtendSocialite' => __DIR__ . '/..' . '/socialiteproviders/keycloak/KeycloakExtendSocialite.php',
         'SocialiteProviders\\Keycloak\\Provider' => __DIR__ . '/..' . '/socialiteproviders/keycloak/Provider.php',
         'SocialiteProviders\\Manager\\Config' => __DIR__ . '/..' . '/socialiteproviders/manager/src/Config.php',
