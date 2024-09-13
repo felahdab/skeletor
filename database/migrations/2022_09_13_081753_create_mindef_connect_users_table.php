@@ -24,6 +24,8 @@ return new class extends Migration
             $table->string('rank')->default('');
             $table->string('short_rank')->default('');
             $table->string('display_name')->default('');
+            $table->string('commentaire')->nullable(true)->default(NULL); 
+            $table->string('sub')->nullable(true)->default(NULL);
         });
     }
 
