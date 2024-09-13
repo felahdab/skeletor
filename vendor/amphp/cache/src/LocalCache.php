@@ -104,7 +104,7 @@ final class LocalCache implements Cache, \Countable, \IteratorAggregate
         return $value;
     }
 
-    public function set(string $key, mixed $value, int $ttl = null): void
+    public function set(string $key, mixed $value, ?int $ttl = null): void
     {
         if ($value === null) {
             throw new CacheException('Cannot store NULL in ' . self::class);

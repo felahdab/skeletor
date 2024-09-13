@@ -93,7 +93,7 @@ class Message
      * @param int $type Value of the message type field
      * @throws \RangeException When the supplied message type is outside the valid range 0 - 1
      */
-    public function __construct(RecordCollectionFactory $recordCollectionFactory, int $type = null)
+    public function __construct(RecordCollectionFactory $recordCollectionFactory, ?int $type = null)
     {
         $this->questionRecords = $recordCollectionFactory->create(RecordTypes::QUESTION);
         $this->answerRecords = $recordCollectionFactory->create(RecordTypes::RESOURCE);
@@ -186,7 +186,7 @@ class Message
      * @param bool $newValue The new value
      * @return bool The old value
      */
-    public function isAuthoritative(bool $newValue = null): bool
+    public function isAuthoritative(?bool $newValue = null): bool
     {
         $result = $this->authoritative;
 
@@ -203,7 +203,7 @@ class Message
      * @param bool $newValue The new value
      * @return bool The old value
      */
-    public function isTruncated(bool $newValue = null): bool
+    public function isTruncated(?bool $newValue = null): bool
     {
         $result = $this->truncated;
 
@@ -220,7 +220,7 @@ class Message
      * @param bool $newValue The new value
      * @return bool The old value
      */
-    public function isRecursionDesired(bool $newValue = null): bool
+    public function isRecursionDesired(?bool $newValue = null): bool
     {
         $result = $this->recursionDesired;
 
@@ -237,7 +237,7 @@ class Message
      * @param bool $newValue The new value
      * @return bool The old value
      */
-    public function isRecursionAvailable(bool $newValue = null): bool
+    public function isRecursionAvailable(?bool $newValue = null): bool
     {
         $result = $this->recursionAvailable;
 

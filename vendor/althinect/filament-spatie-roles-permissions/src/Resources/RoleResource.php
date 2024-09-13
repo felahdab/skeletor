@@ -107,6 +107,7 @@ class RoleResource extends Resource
                                         name: 'permissions',
                                         modifyQueryUsing: fn (Builder $query) => $query->orderBy('name'),
                                     )
+                                    ->visible(config('filament-spatie-roles-permissions.should_show_permissions_for_roles'))
                                     ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->name} ({$record->guard_name})")
                                     ->searchable(['name', 'guard_name']) // searchable on both name and guard_name
                                     ->preload(config('filament-spatie-roles-permissions.preload_permissions')),
@@ -156,9 +157,12 @@ class RoleResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->emptyStateActions([
-                Tables\Actions\CreateAction::make(),
-            ]);
+            ->emptyStateActions(
+                config('filament-spatie-roles-permissions.should_remove_empty_state_actions.roles') ? [] :
+                    [
+                        Tables\Actions\CreateAction::make()
+                    ]
+            );
     }
 
     public static function getRelations(): array
@@ -171,6 +175,12 @@ class RoleResource extends Resource
 
     public static function getPages(): array
     {
+        if (config('filament-spatie-roles-permissions.should_use_simple_modal_resource.roles')) {
+            return [
+                'index' => ListRoles::route('/'),
+            ];
+        }
+
         return [
             'index' => ListRoles::route('/'),
             'create' => CreateRole::route('/create'),

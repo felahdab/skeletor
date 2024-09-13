@@ -33,7 +33,7 @@ abstract class Type
      * @param string $value Internal value
      * @throws \RuntimeException When the supplied value is invalid
      */
-    public function __construct(string $value = null)
+    public function __construct(?string $value = null)
     {
         if (isset($value)) {
             $this->setValue($value);
