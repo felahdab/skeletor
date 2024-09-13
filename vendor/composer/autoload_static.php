@@ -200,6 +200,10 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'M' => 
         array (
             'Monolog\\' => 8,
+            'Modules\\RH\\Tests\\' => 17,
+            'Modules\\RH\\Database\\Seeders\\' => 28,
+            'Modules\\RH\\Database\\Factories\\' => 30,
+            'Modules\\RH\\' => 11,
             'Modules\\Fleetprogram\\Tests\\' => 27,
             'Modules\\Fleetprogram\\Database\\Seeders\\' => 38,
             'Modules\\Fleetprogram\\Database\\Factories\\' => 40,
@@ -714,6 +718,22 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'Modules\\RH\\Tests\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/RH/tests',
+        ),
+        'Modules\\RH\\Database\\Seeders\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/RH/database/seeders',
+        ),
+        'Modules\\RH\\Database\\Factories\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/RH/database/factories',
+        ),
+        'Modules\\RH\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/RH/app',
         ),
         'Modules\\Fleetprogram\\Tests\\' => 
         array (
@@ -6764,6 +6784,19 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'Modules\\Fleetprogram\\Providers\\FleetprogramServiceProvider' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Providers/FleetprogramServiceProvider.php',
         'Modules\\Fleetprogram\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Providers/RouteServiceProvider.php',
         'Modules\\Fleetprogram\\Traits\\HasTablePrefix' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Traits/HasTablePrefix.php',
+        'Modules\\RH\\Database\\Seeders\\BrevetSeeder' => __DIR__ . '/../..' . '/Modules/RH/database/seeders/BrevetSeeder.php',
+        'Modules\\RH\\Database\\Seeders\\GradeSeeder' => __DIR__ . '/../..' . '/Modules/RH/database/seeders/GradeSeeder.php',
+        'Modules\\RH\\Database\\Seeders\\RHDatabaseSeeder' => __DIR__ . '/../..' . '/Modules/RH/database/seeders/RHDatabaseSeeder.php',
+        'Modules\\RH\\Database\\Seeders\\SpecialiteSeeder' => __DIR__ . '/../..' . '/Modules/RH/database/seeders/SpecialiteSeeder.php',
+        'Modules\\RH\\Database\\Seeders\\UniteSeeder' => __DIR__ . '/../..' . '/Modules/RH/database/seeders/UniteSeeder.php',
+        'Modules\\RH\\Models\\Brevet' => __DIR__ . '/../..' . '/Modules/RH/app/Models/Brevet.php',
+        'Modules\\RH\\Models\\Grade' => __DIR__ . '/../..' . '/Modules/RH/app/Models/Grade.php',
+        'Modules\\RH\\Models\\Personne' => __DIR__ . '/../..' . '/Modules/RH/app/Models/Personne.php',
+        'Modules\\RH\\Models\\Specialite' => __DIR__ . '/../..' . '/Modules/RH/app/Models/Specialite.php',
+        'Modules\\RH\\Models\\Unite' => __DIR__ . '/../..' . '/Modules/RH/app/Models/Unite.php',
+        'Modules\\RH\\Providers\\RHServiceProvider' => __DIR__ . '/../..' . '/Modules/RH/app/Providers/RHServiceProvider.php',
+        'Modules\\RH\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/RH/app/Providers/RouteServiceProvider.php',
+        'Modules\\RH\\Traits\\HasTablePrefix' => __DIR__ . '/../..' . '/Modules/RH/app/Traits/HasTablePrefix.php',
         'Monolog\\Attribute\\AsMonologProcessor' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Attribute/AsMonologProcessor.php',
         'Monolog\\Attribute\\WithMonologChannel' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Attribute/WithMonologChannel.php',
         'Monolog\\DateTimeImmutable' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/DateTimeImmutable.php',
