@@ -6818,6 +6818,8 @@ class ComposerStaticInit38ca01747505a9257e2bcfa82df3b293
         'Modules\\FcmUnite\\Services\\RemoteApiClientService' => __DIR__ . '/../..' . '/Modules/FcmUnite/app/Services/RemoteApiClientService.php',
         'Modules\\FcmUnite\\Traits\\HasTablePrefix' => __DIR__ . '/../..' . '/Modules/FcmUnite/app/Traits/HasTablePrefix.php',
         'Modules\\RH\\Database\\Seeders\\BrevetSeeder' => __DIR__ . '/../..' . '/Modules/RH/database/seeders/BrevetSeeder.php',
+        'Modules\\RH\\Database\\Seeders\\GradeSeeder' => __DIR__ . '/../..' . '/Modules/RH/database/seeders/GradeSeeder.php',
+        'Modules\\RH\\Database\\Seeders\\RHDatabaseSeeder' => __DIR__ . '/../..' . '/Modules/RH/database/seeders/RHDatabaseSeeder.php',
         'Modules\\RH\\Database\\Seeders\\SpecialiteSeeder' => __DIR__ . '/../..' . '/Modules/RH/database/seeders/SpecialiteSeeder.php',
         'Modules\\RH\\Database\\Seeders\\UniteSeeder' => __DIR__ . '/../..' . '/Modules/RH/database/seeders/UniteSeeder.php',
         'Modules\\RH\\Models\\Brevet' => __DIR__ . '/../..' . '/Modules/RH/app/Models/Brevet.php',

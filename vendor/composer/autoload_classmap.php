@@ -5677,6 +5677,8 @@ return array(
     'Modules\\FcmUnite\\Services\\RemoteApiClientService' => $baseDir . '/Modules/FcmUnite/app/Services/RemoteApiClientService.php',
     'Modules\\FcmUnite\\Traits\\HasTablePrefix' => $baseDir . '/Modules/FcmUnite/app/Traits/HasTablePrefix.php',
     'Modules\\RH\\Database\\Seeders\\BrevetSeeder' => $baseDir . '/Modules/RH/database/seeders/BrevetSeeder.php',
+    'Modules\\RH\\Database\\Seeders\\GradeSeeder' => $baseDir . '/Modules/RH/database/seeders/GradeSeeder.php',
+    'Modules\\RH\\Database\\Seeders\\RHDatabaseSeeder' => $baseDir . '/Modules/RH/database/seeders/RHDatabaseSeeder.php',
     'Modules\\RH\\Database\\Seeders\\SpecialiteSeeder' => $baseDir . '/Modules/RH/database/seeders/SpecialiteSeeder.php',
     'Modules\\RH\\Database\\Seeders\\UniteSeeder' => $baseDir . '/Modules/RH/database/seeders/UniteSeeder.php',
     'Modules\\RH\\Models\\Brevet' => $baseDir . '/Modules/RH/app/Models/Brevet.php',
