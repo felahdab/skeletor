@@ -199,7 +199,6 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        'Browser' => hisorange\BrowserDetect\Facade::class,
         'Debugbar' => Barryvdh\Debugbar\Facades\Debugbar::class,
     ])->toArray(),
 
