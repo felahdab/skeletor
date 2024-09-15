@@ -4,7 +4,7 @@ namespace App\Providers\Filament\Traits;
 
 trait UsesSkeletorPrefixAndMultitenancyTrait
 {
-    public string $prefix;
+    public string $prefix="";
 
     public function register(): void
     {

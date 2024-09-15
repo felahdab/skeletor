@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Facade;
 
+use Nwidart\Modules\LaravelModulesServiceProvider;
+use Filament\FilamentServiceProvider;
+
 return [
 
     /*
@@ -175,6 +178,9 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\Filament\AdminPanelProvider::class,
+        LaravelModulesServiceProvider::class,
+        FilamentServiceProvider::class,
+
         App\Providers\RouteServiceProvider::class,
         App\Providers\PrefixedLivewireServiceProvider::class,
         App\Providers\LaravelBladeSortableServiceProvider::class,

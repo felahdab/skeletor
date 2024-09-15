@@ -80,7 +80,9 @@
     "extra": {
         "laravel": {
             "dont-discover": [
-                "livewire/livewire"
+                "livewire/livewire",
+                "nwidart/laravel-modules",
+                "filament/filament"
             ]
         },
         "merge-plugin": {

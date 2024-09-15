@@ -5775,6 +5775,7 @@ return array(
     'Modules\\RH\\Models\\Personne' => $baseDir . '/Modules/RH/app/Models/Personne.php',
     'Modules\\RH\\Models\\Specialite' => $baseDir . '/Modules/RH/app/Models/Specialite.php',
     'Modules\\RH\\Models\\Unite' => $baseDir . '/Modules/RH/app/Models/Unite.php',
+    'Modules\\RH\\Providers\\Filament\\RHPanelProvider' => $baseDir . '/Modules/RH/app/Providers/Filament/RHPanelProvider.php',
     'Modules\\RH\\Providers\\RHServiceProvider' => $baseDir . '/Modules/RH/app/Providers/RHServiceProvider.php',
     'Modules\\RH\\Providers\\RouteServiceProvider' => $baseDir . '/Modules/RH/app/Providers/RouteServiceProvider.php',
     'Modules\\RH\\Traits\\HasTablePrefix' => $baseDir . '/Modules/RH/app/Traits/HasTablePrefix.php',
