@@ -1,4 +1,0 @@
-import mingle from '{{ $mingleFrameworkImport }}'
-import {{ $basename }} from './{{ $componentFile }}'
-
-mingle('{{ $path }}', {{ $basename }})

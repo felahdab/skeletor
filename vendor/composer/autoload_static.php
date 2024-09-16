@@ -264,8 +264,6 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         array (
             'Illuminate\\Support\\' => 19,
             'Illuminate\\' => 11,
-            'Ijpatricio\\Mingle\\Database\\Factories\\' => 37,
-            'Ijpatricio\\Mingle\\' => 18,
         ),
         'G' => 
         array (
@@ -930,14 +928,6 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'Illuminate\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate',
-        ),
-        'Ijpatricio\\Mingle\\Database\\Factories\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/ijpatricio/mingle/database/factories',
-        ),
-        'Ijpatricio\\Mingle\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/ijpatricio/mingle/src',
         ),
         'GuzzleHttp\\UriTemplate\\' => 
         array (
@@ -4361,18 +4351,6 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'Hamcrest\\Type\\IsString' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Type/IsString.php',
         'Hamcrest\\Util' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Util.php',
         'Hamcrest\\Xml\\HasXPath' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Xml/HasXPath.php',
-        'Ijpatricio\\Mingle\\Actions\\AddDemoViewAndRoute' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Actions/AddDemoViewAndRoute.php',
-        'Ijpatricio\\Mingle\\Actions\\ChangeLayoutFile' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Actions/ChangeLayoutFile.php',
-        'Ijpatricio\\Mingle\\Actions\\ChangeViteConfig' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Actions/ChangeViteConfig.php',
-        'Ijpatricio\\Mingle\\Actions\\ReplaceContents' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Actions/ReplaceContents.php',
-        'Ijpatricio\\Mingle\\Commands\\MingleInstallerCommand' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Commands/MingleInstallerCommand.php',
-        'Ijpatricio\\Mingle\\Commands\\MingleMakeCommand' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Commands/MingleMakeCommand.php',
-        'Ijpatricio\\Mingle\\Concerns\\InteractsWithMingles' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Concerns/InteractsWithMingles.php',
-        'Ijpatricio\\Mingle\\Contracts\\HasMingles' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Contracts/HasMingles.php',
-        'Ijpatricio\\Mingle\\Facades\\Mingle' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Facades/Mingle.php',
-        'Ijpatricio\\Mingle\\Mingle' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Mingle.php',
-        'Ijpatricio\\Mingle\\MingleServiceProvider' => __DIR__ . '/..' . '/ijpatricio/mingle/src/MingleServiceProvider.php',
-        'Ijpatricio\\Mingle\\Replacement' => __DIR__ . '/..' . '/ijpatricio/mingle/src/Replacement.php',
         'Illuminate\\Auth\\Access\\AuthorizationException' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Access/AuthorizationException.php',
         'Illuminate\\Auth\\Access\\Events\\GateEvaluated' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Access/Events/GateEvaluated.php',
         'Illuminate\\Auth\\Access\\Gate' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Access/Gate.php',
@@ -6844,11 +6822,11 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'Modules\\FcmCentral\\Models\\Activite' => __DIR__ . '/../..' . '/Modules/FcmCentral/app/Models/Activite.php',
         'Modules\\FcmCentral\\Models\\Competence' => __DIR__ . '/../..' . '/Modules/FcmCentral/app/Models/Competence.php',
         'Modules\\FcmCentral\\Models\\Fonction' => __DIR__ . '/../..' . '/Modules/FcmCentral/app/Models/Fonction.php',
+        'Modules\\FcmCentral\\Models\\Marin' => __DIR__ . '/../..' . '/Modules/FcmCentral/app/Models/Marin.php',
         'Modules\\FcmCentral\\Models\\Parcours' => __DIR__ . '/../..' . '/Modules/FcmCentral/app/Models/Parcours.php',
         'Modules\\FcmCentral\\Models\\ParcoursSerialise' => __DIR__ . '/../..' . '/Modules/FcmCentral/app/Models/ParcoursSerialise.php',
         'Modules\\FcmCentral\\Models\\SavoirFaire' => __DIR__ . '/../..' . '/Modules/FcmCentral/app/Models/SavoirFaire.php',
         'Modules\\FcmCentral\\Models\\StoredEvent' => __DIR__ . '/../..' . '/Modules/FcmCentral/app/Models/StoredEvent.php',
-        'Modules\\FcmCentral\\Models\\User' => __DIR__ . '/../..' . '/Modules/FcmCentral/app/Models/User.php',
         'Modules\\FcmCentral\\Models\\UserParcours' => __DIR__ . '/../..' . '/Modules/FcmCentral/app/Models/UserParcours.php',
         'Modules\\FcmCentral\\Policies\\ActivitePolicy' => __DIR__ . '/../..' . '/Modules/FcmCentral/app/Policies/ActivitePolicy.php',
         'Modules\\FcmCentral\\Policies\\CompetencePolicy' => __DIR__ . '/../..' . '/Modules/FcmCentral/app/Policies/CompetencePolicy.php',

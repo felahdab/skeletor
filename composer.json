@@ -15,7 +15,6 @@
         "filament/filament": "^3.1",
         "filament/spatie-laravel-google-fonts-plugin": "^3.1",
         "guzzlehttp/guzzle": "^7.2",
-        "ijpatricio/mingle": "^0.0.14",
         "joshbrw/laravel-module-installer": "^2.0",
         "lab404/laravel-impersonate": "^1.0",
         "laravel/framework": "^11.0",

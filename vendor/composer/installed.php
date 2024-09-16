@@ -3,7 +3,7 @@
         'name' => 'fanlab/skeletor',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '5d44f3a900e4160ad460093b032028db5ee8aed3',
+        'reference' => 'a80c7d3fb9f3db8f4b3cced39b7bf5a57b0caadd',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -346,7 +346,7 @@
         'fanlab/skeletor' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '5d44f3a900e4160ad460093b032028db5ee8aed3',
+            'reference' => 'a80c7d3fb9f3db8f4b3cced39b7bf5a57b0caadd',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -513,15 +513,6 @@
             'install_path' => __DIR__ . '/../hamcrest/hamcrest-php',
             'aliases' => array(),
             'dev_requirement' => true,
-        ),
-        'ijpatricio/mingle' => array(
-            'pretty_version' => 'v0.0.14',
-            'version' => '0.0.14.0',
-            'reference' => '5695f9823502b6b45dea45a5219dcc203ed27eac',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../ijpatricio/mingle',
-            'aliases' => array(),
-            'dev_requirement' => false,
         ),
         'illuminate/auth' => array(
             'dev_requirement' => false,
