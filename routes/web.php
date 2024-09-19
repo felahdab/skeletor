@@ -19,18 +19,11 @@ use App\Http\Controllers\ArchivesController;
 
 use App\Http\Middleware\RestrictVisibility;
 
-use Dedoc\Scramble\Scramble;
-
 use App\Livewire\TestComponent;
 
 Route::get('/test', TestComponent::class);
 
 Route::impersonate();
-
-Route::group([], function() {
-    Scramble::registerUiRoute('scramble/doc');
-    Scramble::registerJsonSpecificationRoute('api.json');
-});
 
 Route::get('/auth/redirect', function () {
     return Socialite::driver('keycloak')->stateless()->redirect();

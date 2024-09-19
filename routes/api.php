@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Api\v1\SkeletorController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,10 +16,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'App\Api\v1' , 'prefix' => 'v1', 'middleware' => ['forcejson', 'auth:sanctum'], "as" => "api.v1."], function() 
     {
-    Route::get('/whoami', function (Request $request) 
-    {
-        return $request->user();
-    }
-    );
+    Route::get('/whoami', [SkeletorController::class, 'who_am_i']);
     
 });

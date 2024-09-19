@@ -63,23 +63,27 @@ class InitializeTenancyByCookieData extends IdentificationMiddleware implements 
                 return $next($request);
             }
 
-            if ($request->method() !== 'OPTIONS') {
-                return $this->initializeTenancy($request, $next, $this->getPayload($request));
+            if ($cookiePayload = $request->cookie(static::$cookieParameter))
+            {
+                if (tenancy()->find($cookiePayload)){
+                    return $this->initializeTenancy($request, $next, $cookiePayload);
+                }
             }
+
         }
 
         return $next($request);
     }
 
-    protected function getPayload(Request $request): ?string
-    {
-        $tenant = null;
+    // protected function getPayload(Request $request): ?string
+    // {
+    //     $tenant = null;
 
-        if ($request->cookie(static::$cookieParameter))
-        {
-            return $request->cookie(static::$cookieParameter);
-        }
+    //     if ($request->cookie(static::$cookieParameter))
+    //     {
+    //         return $request->cookie(static::$cookieParameter);
+    //     }
 
-        return $tenant;
-    }
+    //     return $tenant;
+    // }
 }

@@ -27,6 +27,7 @@ use App\Http\Middleware\FilamentAuthenticate as FilamentAuthenticate;
 use App\Http\Middleware\InitializeTenancyByPath;
 use App\Http\Middleware\SetTenantCookieMiddleware;
 use App\Http\Middleware\SetTenantDefaultForRoutesMiddleware;
+use App\Http\Middleware\ReconfigureSessionDatabaseWhenTenantInitialized;
 
 use App\Providers\Filament\Traits\UsesSkeletorPrefixAndMultitenancyTrait;
 
@@ -64,6 +65,7 @@ class AdminPanelProvider extends PanelProvider
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
                 InitializeTenancyByPath::class,
+                //ReconfigureSessionDatabaseWhenTenantInitialized::class,
                 SetTenantDefaultForRoutesMiddleware::class,
                 SetTenantCookieMiddleware::class,
                 AuthenticateSession::class,

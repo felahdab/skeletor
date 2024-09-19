@@ -99,8 +99,6 @@ class TenancyServiceProvider extends ServiceProvider
         if (config("skeletor.multi_tenancy")){
             app('config')->set('session.connection','tenant');
         }
-        Log::info(__FILE__ . " registered");
-
     }
 
     public function boot()
@@ -109,7 +107,6 @@ class TenancyServiceProvider extends ServiceProvider
         $this->mapRoutes();
 
         $this->makeTenancyMiddlewareHighestPriority();
-        Log::info(__FILE__ . " booted");
     }
 
     protected function bootEvents()

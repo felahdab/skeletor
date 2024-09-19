@@ -76,7 +76,7 @@ return [
      * ],
      * ```
      */
-    'servers' => null,
+    'servers' => null, 
 
     'middleware' => [
         'webexcepttenancybypath',

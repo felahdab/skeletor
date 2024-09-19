@@ -26,6 +26,7 @@ class RecordUsageDataListener
      */
     public function handle(RequestHandled $event): void
     {
+        return;
         $request = $event->request;
         $response = $event->response;
 
