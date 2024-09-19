@@ -17,4 +17,9 @@ class Remotesystem  extends Authenticatable
     protected $fillable = ['uuid', 'name'];
 
     protected function getDefaultGuardName(): string { return 'api'; }
+
+    public function IsSuperAdmin()
+    {
+        return false;
+    }
 }

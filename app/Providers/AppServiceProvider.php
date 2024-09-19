@@ -7,8 +7,13 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+
+use Illuminate\Routing\Route;
 
 use Dedoc\Scramble\Scramble;
+use Dedoc\Scramble\Support\Generator\OpenApi;
+use Dedoc\Scramble\Support\Generator\SecurityScheme;
 
 use App\Scopes\ScopedMacro;
 
@@ -44,6 +49,14 @@ class AppServiceProvider extends ServiceProvider
             $query = $this;
             \assert($query instanceof Builder);
             return (new ScopedMacro($query))($scope, ...$parameters);
+        });
+
+        Scramble::routes(function (Route $route) {
+            return Str::startsWith($route->uri, config('skeletor.prefixe_instance') . '/api/');
+        });
+
+        Scramble::afterOpenApiGenerated(function (OpenApi $openApi) {
+            $openApi->secure(SecurityScheme::http('bearer', 'JWT'));
         });
     }
 }
