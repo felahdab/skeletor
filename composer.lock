@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "43c355d5dad6ed63a899ed33e0af2fdd",
+    "content-hash": "4dfff91910995e8e75a80a2b68f12547",
     "packages": [
         {
             "name": "althinect/filament-spatie-roles-permissions",
@@ -1715,16 +1715,16 @@
         },
         {
             "name": "dedoc/scramble",
-            "version": "v0.11.13",
+            "version": "v0.11.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dedoc/scramble.git",
-                "reference": "3bc745c93cc874f441f8c4026172c6de964950ed"
+                "reference": "cca33ec9ef057b4e03928b68a69dea236a337562"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dedoc/scramble/zipball/3bc745c93cc874f441f8c4026172c6de964950ed",
-                "reference": "3bc745c93cc874f441f8c4026172c6de964950ed",
+                "url": "https://api.github.com/repos/dedoc/scramble/zipball/cca33ec9ef057b4e03928b68a69dea236a337562",
+                "reference": "cca33ec9ef057b4e03928b68a69dea236a337562",
                 "shasum": ""
             },
             "require": {
@@ -1778,7 +1778,7 @@
             ],
             "support": {
                 "issues": "https://github.com/dedoc/scramble/issues",
-                "source": "https://github.com/dedoc/scramble/tree/v0.11.13"
+                "source": "https://github.com/dedoc/scramble/tree/v0.11.14"
             },
             "funding": [
                 {
@@ -1786,7 +1786,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-06T07:03:40+00:00"
+            "time": "2024-09-16T12:13:46+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
