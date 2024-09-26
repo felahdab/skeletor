@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Facade;
 
+use Nwidart\Modules\LaravelModulesServiceProvider;
+use Filament\FilamentServiceProvider;
+
 return [
 
     /*
@@ -175,9 +178,13 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\Filament\AdminPanelProvider::class,
+        LaravelModulesServiceProvider::class,
+        FilamentServiceProvider::class,
+
         App\Providers\RouteServiceProvider::class,
         App\Providers\PrefixedLivewireServiceProvider::class,
         App\Providers\LaravelBladeSortableServiceProvider::class,
+        App\Providers\TenancyServiceProvider::class,
     ],
 
     /*
@@ -192,8 +199,6 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        'PDF' => Meneses\LaravelMpdf\Facades\LaravelMpdf::class,
-        'Browser' => hisorange\BrowserDetect\Facade::class,
         'Debugbar' => Barryvdh\Debugbar\Facades\Debugbar::class,
     ])->toArray(),
 

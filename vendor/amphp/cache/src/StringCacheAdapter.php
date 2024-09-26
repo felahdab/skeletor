@@ -27,7 +27,7 @@ final class StringCacheAdapter implements StringCache
         return $value;
     }
 
-    public function set(string $key, string $value, int $ttl = null): void
+    public function set(string $key, string $value, ?int $ttl = null): void
     {
         $this->cache->set($key, $value, $ttl);
     }

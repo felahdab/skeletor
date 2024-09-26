@@ -19,7 +19,7 @@
 
   @teleport('#notification-space')
     @auth
-    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationPanel" aria-controls="offcanvasRight">
+    <button class="btn btn-outline-info" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationPanel" aria-controls="offcanvasRight">
       <x-bootstrap-icon iconname='bell.svg' />
       
       @if(auth()->user()->unreadNotifications->count())

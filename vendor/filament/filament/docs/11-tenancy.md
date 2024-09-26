@@ -24,7 +24,7 @@ class Post extends Model
     protected static function booted(): void
     {
         static::addGlobalScope('team', function (Builder $query) {
-            if (auth()->check()) {
+            if (auth()->hasUser()) {
                 $query->where('team_id', auth()->user()->team_id);
                 // or with a `team` relationship defined:
                 $query->whereBelongsTo(auth()->user()->team);
@@ -41,7 +41,7 @@ class PostObserver
 {
     public function creating(Post $post): void
     {
-        if (auth()->check()) {
+        if (auth()->hasUser()) {
             $post->team_id = auth()->user()->team_id;
             // or with a `team` relationship defined:
             $post->team()->associate(auth()->user()->team);
@@ -294,7 +294,7 @@ If you're using the `requiresTenantSubscription()` configuration method, then yo
 
 ### Writing a custom billing integration
 
-Billing integrations are quite simple to write. You just need a class that implements the `Filament\Billing\Contracts\Provider` interface. This interface has two methods.
+Billing integrations are quite simple to write. You just need a class that implements the `Filament\Billing\Providers\Contracts\Provider` interface. This interface has two methods.
 
 `getRouteAction()` is used to get the route action that should be run when the user visits the billing page. This could be a callback function, or the name of a controller, or a Livewire component - anything that works when using `Route::get()` in Laravel normally. For example, you could put in a simple redirect to your own billing page using a callback function.
 
@@ -304,7 +304,7 @@ Here's an example billing provider that uses a callback function for the route a
 
 ```php
 use App\Http\Middleware\RedirectIfUserNotSubscribed;
-use Filament\Billing\Contracts\Provider;
+use Filament\Billing\Providers\Contracts\Provider;
 use Illuminate\Http\RedirectResponse;
 
 class ExampleBillingProvider implements Provider
@@ -776,7 +776,7 @@ Select::make('author_id')
     ->relationship(
         name: 'author',
         titleAttribute: 'name',
-        modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant())),
+        modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()),
     );
 ```
 

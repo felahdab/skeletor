@@ -4,7 +4,7 @@
     "license": "MIT",
     "keywords": ["dns"],
     "require": {
-        "php": ">=7.0",
+        "php": ">=7.1",
         "ext-ctype": "*"
     },
     "autoload": {

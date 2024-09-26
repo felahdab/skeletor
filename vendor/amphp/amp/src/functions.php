@@ -2,13 +2,12 @@
 
 namespace Amp;
 
-use Amp\Internal\FutureState;
 use Revolt\EventLoop;
 use Revolt\EventLoop\UnsupportedFeatureException;
 
 /**
- * Creates a new fiber asynchronously using the given closure, returning a Future that is completed with the
- * eventual return value of the passed function or will fail if the closure throws an exception.
+ * Creates a new fiber to execute the given closure asynchronously. A Future is returned which is completed with the
+ * return value of the passed closure or will fail if the closure throws an exception.
  *
  * @template T
  *
@@ -21,7 +20,7 @@ function async(\Closure $closure, mixed ...$args): Future
 {
     static $run = null;
 
-    $run ??= static function (FutureState $state, \Closure $closure, array $args): void {
+    $run ??= static function (Internal\FutureState $state, \Closure $closure, array $args): void {
         $s = $state;
         $c = $closure;
 
@@ -37,7 +36,7 @@ function async(\Closure $closure, mixed ...$args): Future
         }
     };
 
-    $state = new Internal\FutureState;
+    $state = new Internal\FutureState();
 
     EventLoop::queue($run, $state, $closure, $args);
 
@@ -132,9 +131,9 @@ function trapSignal(int|array $signals, bool $reference = true, ?Cancellation $c
  *
  * @template TReturn
  *
- * @param \Closure(mixed...):TReturn $closure
+ * @param \Closure(...):TReturn $closure
  *
- * @return \Closure(mixed...):TReturn
+ * @return \Closure(...):TReturn
  */
 function weakClosure(\Closure $closure): \Closure
 {
@@ -145,30 +144,30 @@ function weakClosure(\Closure $closure): \Closure
         return $closure;
     }
 
+    $reference = \WeakReference::create($that);
+
     // For internal classes use \Closure::bindTo() without scope.
     $scope = $reflection->getClosureScopeClass();
     $useBindTo = !$scope || $that::class !== $scope->name || $scope->isInternal();
 
-    $method = $reflection->getShortName();
-    if ($method !== '{closure}') {
+    $methodName = $reflection->getShortName();
+    if (!\str_starts_with($methodName, '{closure')) {
         // Closure from first-class callable or \Closure::fromCallable(), declare an anonymous closure to rebind.
         /** @psalm-suppress InvalidScope Closure is bound before being invoked. */
-        $closure = fn (mixed ...$args): mixed => $this->{$method}(...$args);
+        $closure = fn (mixed ...$args): mixed => $this->{$methodName}(...$args);
         if ($useBindTo && $scope) {
             $closure = $closure->bindTo(null, $scope->name);
-
-            if (!$closure) {
-                throw new \RuntimeException('Unable to rebind function to type ' . $scope->name);
-            }
         }
     } else {
         // Rebind to remove reference to $that
-        $closure = $closure->bindTo(new \stdClass());
+        $closure = $closure->bindTo($reference);
     }
 
-    $reference = \WeakReference::create($that);
+    if (!$closure) {
+        throw new \RuntimeException('Unable to rebind closure scoped to ' . ($scope?->name ?? $that::class));
+    }
 
-    /** @var \Closure(mixed...):TReturn */
+    /** @var \Closure(...):TReturn */
     return static function (mixed ...$args) use ($reference, $closure, $useBindTo): mixed {
         $that = $reference->get();
         if (!$that) {

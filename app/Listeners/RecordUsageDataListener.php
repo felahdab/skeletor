@@ -26,6 +26,7 @@ class RecordUsageDataListener
      */
     public function handle(RequestHandled $event): void
     {
+        return;
         $request = $event->request;
         $response = $event->response;
 
@@ -42,8 +43,8 @@ class RecordUsageDataListener
         }
 
         foreach (config('analytics.exclude', []) as $except) {
-            if (!Str::contains($except, config('skeletor.instance_prefix'))) {
-                $prefix = Str::startsWith($except, '/') ? config('skeletor.instance_prefix')  : config('skeletor.instance_prefix') . '/';
+            if (!Str::contains($except, config('skeletor.prefixe_instance'))) {
+                $prefix = Str::startsWith($except, '/') ? config('skeletor.prefixe_instance')  : config('skeletor.prefixe_instance') . '/';
                 $except = $prefix . $except;
             }
 

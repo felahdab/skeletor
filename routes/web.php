@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\RolesController;
 use App\Http\Controllers\MindefConnectUserController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ChangeUserCurrentRole;
@@ -14,24 +13,13 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\BugReportController;
 use App\Http\Controllers\AnnudefController;
-use App\Http\Controllers\GroupementController;
-use App\Http\Controllers\SecteurController;
-use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserPreferencesController;
 use App\Http\Controllers\ParamaccueilsController;
+use App\Http\Controllers\ArchivesController;
 
 use App\Http\Middleware\RestrictVisibility;
+
 use App\Livewire\TestComponent;
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::get('/test', TestComponent::class);
 
@@ -59,8 +47,9 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
 
-    Route::get('/login', [LoginController::class, 'show'])->name('login.show');
+    Route::get('/login', [LoginController::class, 'show'])->name('login');
     Route::post('/login', [LoginController::class, 'locallogin'])->name('login.perform');
+    
     Route::post('/login/{MCuserexist:sub}/newMdc', [LoginController::class, 'newMdcLogin'])->name('login.newMdcLogin');
     
 
@@ -108,46 +97,18 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     
         });
 
-        Route::resource('roles',          RolesController::class);
-        Route::resource('permissions',    PermissionsController::class);
 
         Route::post('bugreport', [BugReportController::class, 'store'])->name('bugreports.store');
 
-        Route::resource('liens', LienController::class);
-
-        Route::group(['prefix' => 'secteurs'], function () {
-            Route::get('/', [SecteurController::class, 'index'])->name('secteurs.index');
-            Route::get('/create', [SecteurController::class, 'create'])->name('secteurs.create');
-            Route::post('/create', [SecteurController::class, 'store'])->name('secteurs.store');
-            Route::get('/{secteur}/show', [SecteurController::class, 'show'])->name('secteurs.show');
-            Route::get('/{secteur}/edit', [SecteurController::class, 'edit'])->name('secteurs.edit');
-            Route::patch('/{secteur}/update', [SecteurController::class, 'update'])->name('secteurs.update');
-            Route::delete('/{secteur}/delete', [SecteurController::class, 'destroy'])->name('secteurs.destroy');
-        });
-
-        Route::group(['prefix' => 'groupements'], function () {
-            Route::get('/', [GroupementController::class, 'index'])->name('groupement.index');
-            Route::get('/create', [GroupementController::class, 'create'])->name('groupement.create');
-            Route::post('/create', [GroupementController::class, 'store'])->name('groupement.store');
-            Route::get('/{groupement}/show', [GroupementController::class, 'show'])->name('groupement.show');
-            Route::get('/{groupement}/edit', [GroupementController::class, 'edit'])->name('groupement.edit');
-            Route::patch('/{groupement}/update', [GroupementController::class, 'update'])->name('groupement.update');
-            Route::delete('/{groupement}/delete', [GroupementController::class, 'destroy'])->name('groupement.destroy');
-        });
-        Route::group(['prefix' => 'services'], function () {
-            Route::get('/', [ServiceController::class, 'index'])->name('services.index');
-            Route::get('/create', [ServiceController::class, 'create'])->name('services.create');
-            Route::post('/create', [ServiceController::class, 'store'])->name('services.store');
-            Route::get('/{service}/show', [ServiceController::class, 'show'])->name('services.show');
-            Route::get('/{service}/edit', [ServiceController::class, 'edit'])->name('services.edit');
-            Route::patch('/{service}/update', [ServiceController::class, 'update'])->name('services.update');
-            Route::delete('/{service}/delete', [ServiceController::class, 'destroy'])->name('services.destroy');
-        });
-        
         Route::group(['prefix' => 'paramaccueils'], function () {
             Route::get('/', [ParamaccueilsController::class, 'index'])->name('paramaccueils.index');
             Route::patch('/', [ParamaccueilsController::class, 'update'])->name('paramaccueils.update');
         });
+ 
+        Route::get('archives', [ArchivesController::class, 'index'])->name('archives.index');
+        Route::get('archives/{user}/restore', [ArchivesController::class, 'restore'])->name('archives.restore');
+        Route::get('archives/{user}/delete', [ArchivesController::class, 'destroy'])->name('archives.destroy');
+ 
 
     });
 });

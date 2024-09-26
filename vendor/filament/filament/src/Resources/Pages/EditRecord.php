@@ -114,7 +114,7 @@ class EditRecord extends Page
     /**
      * @param  array<string>  $attributes
      */
-    protected function refreshFormData(array $attributes): void
+    public function refreshFormData(array $attributes): void
     {
         $this->data = [
             ...$this->data,
@@ -131,7 +131,7 @@ class EditRecord extends Page
         return $data;
     }
 
-    public function save(bool $shouldRedirect = true): void
+    public function save(bool $shouldRedirect = true, bool $shouldSendSavedNotification = true): void
     {
         $this->authorizeAccess();
 
@@ -140,13 +140,13 @@ class EditRecord extends Page
 
             $this->callHook('beforeValidate');
 
-            $data = $this->form->getState();
+            $data = $this->form->getState(afterValidate: function () {
+                $this->callHook('afterValidate');
 
-            $this->callHook('afterValidate');
+                $this->callHook('beforeSave');
+            });
 
             $data = $this->mutateFormDataBeforeSave($data);
-
-            $this->callHook('beforeSave');
 
             $this->handleRecordUpdate($this->getRecord(), $data);
 
@@ -167,7 +167,9 @@ class EditRecord extends Page
 
         $this->rememberData();
 
-        $this->getSavedNotification()?->send();
+        if ($shouldSendSavedNotification) {
+            $this->getSavedNotification()?->send();
+        }
 
         if ($shouldRedirect && ($redirectUrl = $this->getRedirectUrl())) {
             $this->redirect($redirectUrl, navigate: FilamentView::hasSpaMode() && is_app_url($redirectUrl));

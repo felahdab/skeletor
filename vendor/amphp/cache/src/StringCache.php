@@ -28,7 +28,7 @@ interface StringCache
      *
      * @throws CacheException On failure to store the cached value
      */
-    public function set(string $key, string $value, int $ttl = null): void;
+    public function set(string $key, string $value, ?int $ttl = null): void;
 
     /**
      * Deletes a value associated with the given key if it exists.

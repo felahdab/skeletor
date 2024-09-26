@@ -1,7 +1,12 @@
-<a href="{{ route('users.edit', $row->id) }}" class="btn btn-info btn-sm">Modifier</a>
+@can('users.show')
+    <a href="{{ route('users.show', $row->id) }}" class="btn btn-primary btn-sm">Consulter</a>
+@endcan
+@can('users.edit')
+    <a href="{{ route('users.edit', $row->id) }}" class="btn btn-info btn-sm">Modifier</a>
+@endcan
 @can('users.destroy')
     <x-form::form method="DELETE" :action="route('users.destroy', $row->id)">
-        <button type='submit' class='btn btn-danger btn-sm' dusk='delete-btn'>Supprimer</button>
+        <button type='submit' class='btn btn-danger btn-sm' dusk='delete-btn'>Archiver</button>
     </x-form::form>
 @endcan
 @can('changepasswd.allusers')

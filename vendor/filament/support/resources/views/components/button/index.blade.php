@@ -7,6 +7,7 @@
 @props([
     'badge' => null,
     'badgeColor' => 'primary',
+    'badgeSize' => 'xs',
     'color' => 'primary',
     'disabled' => false,
     'form' => null,
@@ -62,9 +63,9 @@
             // @deprecated `fi-btn-color-*` has been replaced by `fi-color-*` and `fi-color-custom`.
             is_string($color) ? "fi-btn-color-{$color}" : null,
             is_string($color) ? "fi-color-{$color}" : null,
-            "fi-size-{$size->value}" => $size instanceof ActionSize,
+            ($size instanceof ActionSize) ? "fi-size-{$size->value}" : null,
             // @deprecated `fi-btn-size-*` has been replaced by `fi-size-*`.
-            "fi-btn-size-{$size->value}" => $size instanceof ActionSize,
+            ($size instanceof ActionSize) ? "fi-btn-size-{$size->value}" : null,
             match ($size) {
                 ActionSize::ExtraSmall => 'gap-1 px-2 py-1.5 text-xs',
                 ActionSize::Small => 'gap-1 px-2.5 py-1.5 text-sm',
@@ -98,7 +99,8 @@
                     'ring-1 ring-gray-950/10 dark:ring-white/20' => (($color === 'gray') || ($tag === 'label')) && (! $grouped),
                     'bg-custom-600 text-white hover:bg-custom-500 focus-visible:ring-custom-500/50 dark:bg-custom-500 dark:hover:bg-custom-400 dark:focus-visible:ring-custom-400/50' => ($color !== 'gray') && ($tag !== 'label'),
                     '[input:checked+&]:bg-custom-600 [input:checked+&]:text-white [input:checked+&]:ring-0 [input:checked+&]:hover:bg-custom-500 dark:[input:checked+&]:bg-custom-500 dark:[input:checked+&]:hover:bg-custom-400 [input:checked:focus-visible+&]:ring-custom-500/50 dark:[input:checked:focus-visible+&]:ring-custom-400/50 [input:focus-visible+&]:z-10 [input:focus-visible+&]:ring-2 [input:focus-visible+&]:ring-gray-950/10 dark:[input:focus-visible+&]:ring-white/20' => ($color !== 'gray') && ($tag === 'label'),
-                ]
+                    '[input:checked+&]:bg-gray-400 [input:checked+&]:text-white [input:checked+&]:ring-0 [input:checked+&]:hover:bg-gray-300 dark:[input:checked+&]:bg-gray-600 dark:[input:checked+&]:hover:bg-gray-500' => ($color === 'gray'),
+                    ]
         ),
     ]);
 
@@ -123,7 +125,7 @@
         '[:checked+*>&]:text-white' => $tag === 'label',
     ]);
 
-    $badgeContainerClasses = 'fi-btn-badge-ctn absolute -top-1 start-full z-[1] -ms-1 w-max -translate-x-1/2 rounded-md bg-white dark:bg-gray-900 rtl:translate-x-1/2';
+    $badgeContainerClasses = 'fi-btn-badge-ctn absolute start-full top-0 z-[1] w-max -translate-x-1/2 -translate-y-1/2 rounded-md bg-white dark:bg-gray-900 rtl:translate-x-1/2';
 
     $labelClasses = \Illuminate\Support\Arr::toCssClasses([
         'fi-btn-label',
@@ -183,7 +185,8 @@
         x-data="{}"
     @endif
     @if ($keyBindings)
-        x-mousetrap.global.{{ collect($keyBindings)->map(fn (string $keyBinding): string => str_replace('+', '-', $keyBinding))->implode('.') }}
+        x-bind:id="$id('key-bindings')"
+        x-mousetrap.global.{{ collect($keyBindings)->map(fn (string $keyBinding): string => str_replace('+', '-', $keyBinding))->implode('.') }}="document.getElementById($el.id).click()"
     @endif
     @if ($hasTooltip)
         x-tooltip="{
@@ -321,7 +324,7 @@
 
     @if (filled($badge))
         <div class="{{ $badgeContainerClasses }}">
-            <x-filament::badge :color="$badgeColor" size="xs">
+            <x-filament::badge :color="$badgeColor" :size="$badgeSize">
                 {{ $badge }}
             </x-filament::badge>
         </div>

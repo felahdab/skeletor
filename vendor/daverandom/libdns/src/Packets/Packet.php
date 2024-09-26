@@ -55,7 +55,7 @@ class Packet
      * @return string
      * @throws \OutOfBoundsException When the pointer position is invalid or the supplied length is negative
      */
-    public function read(int $length = null): string
+    public function read(?int $length = null): string
     {
         if ($this->pointer > $this->length) {
             throw new \OutOfBoundsException('Pointer position invalid');

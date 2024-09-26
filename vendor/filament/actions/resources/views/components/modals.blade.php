@@ -6,10 +6,13 @@
 
         <x-filament::modal
             :alignment="$action?->getModalAlignment()"
+            :autofocus="$action?->isModalAutofocused()"
             :close-button="$action?->hasModalCloseButton()"
             :close-by-clicking-away="$action?->isModalClosedByClickingAway()"
+            :close-by-escaping="$action?->isModalClosedByEscaping()"
             :description="$action?->getModalDescription()"
             display-classes="block"
+            :extra-modal-window-attribute-bag="$action?->getExtraModalWindowAttributeBag()"
             :footer-actions="$action?->getVisibleModalFooterActions()"
             :footer-actions-alignment="$action?->getModalFooterActionsAlignment()"
             :heading="$action?->getModalHeading()"
@@ -34,7 +37,7 @@
                     return
                 }
 
-                $wire.unmountAction(false)
+                $wire.unmountAction(false, false)
             "
             x-on:opened-form-component-action-modal.window="if ($event.detail.id === '{{ $this->getId() }}') close()"
         >
@@ -65,10 +68,13 @@
 
         <x-filament::modal
             :alignment="$action?->getModalAlignment()"
+            :autofocus="$action?->isModalAutofocused()"
             :close-button="$action?->hasModalCloseButton()"
             :close-by-clicking-away="$action?->isModalClosedByClickingAway()"
+            :close-by-escaping="$action?->isModalClosedByEscaping()"
             :description="$action?->getModalDescription()"
             display-classes="block"
+            :extra-modal-window-attribute-bag="$action?->getExtraModalWindowAttributeBag()"
             :footer-actions="$action?->getVisibleModalFooterActions()"
             :footer-actions-alignment="$action?->getModalFooterActionsAlignment()"
             :heading="$action?->getModalHeading()"
@@ -93,7 +99,7 @@
                     return
                 }
 
-                $wire.unmountTableAction(false)
+                $wire.unmountTableAction(false, false)
             "
             x-on:opened-form-component-action-modal.window="if ($event.detail.id === '{{ $this->getId() }}') close()"
         >
@@ -118,10 +124,13 @@
 
         <x-filament::modal
             :alignment="$action?->getModalAlignment()"
+            :autofocus="$action?->isModalAutofocused()"
             :close-button="$action?->hasModalCloseButton()"
             :close-by-clicking-away="$action?->isModalClosedByClickingAway()"
+            :close-by-escaping="$action?->isModalClosedByEscaping()"
             :description="$action?->getModalDescription()"
             display-classes="block"
+            :extra-modal-window-attribute-bag="$action?->getExtraModalWindowAttributeBag()"
             :footer-actions="$action?->getVisibleModalFooterActions()"
             :footer-actions-alignment="$action?->getModalFooterActionsAlignment()"
             :heading="$action?->getModalHeading()"
@@ -177,10 +186,13 @@
 
         <x-filament::modal
             :alignment="$action?->getModalAlignment()"
+            :autofocus="$action?->isModalAutofocused()"
             :close-button="$action?->hasModalCloseButton()"
             :close-by-clicking-away="$action?->isModalClosedByClickingAway()"
+            :close-by-escaping="$action?->isModalClosedByEscaping()"
             :description="$action?->getModalDescription()"
             display-classes="block"
+            :extra-modal-window-attribute-bag="$action?->getExtraModalWindowAttributeBag()"
             :footer-actions="$action?->getVisibleModalFooterActions()"
             :footer-actions-alignment="$action?->getModalFooterActionsAlignment()"
             :heading="$action?->getModalHeading()"
@@ -205,7 +217,7 @@
                     return
                 }
 
-                $wire.unmountInfolistAction(false)
+                $wire.unmountInfolistAction(false, false)
             "
             x-on:opened-form-component-action-modal.window="if ($event.detail.id === '{{ $this->getId() }}') close()"
         >
@@ -236,10 +248,13 @@
     <form wire:submit.prevent="callMountedFormComponentAction">
         <x-filament::modal
             :alignment="$action?->getModalAlignment()"
+            :autofocus="$action?->isModalAutofocused()"
             :close-button="$action?->hasModalCloseButton()"
             :close-by-clicking-away="$action?->isModalClosedByClickingAway()"
+            :close-by-escaping="$action?->isModalClosedByEscaping()"
             :description="$action?->getModalDescription()"
             display-classes="block"
+            :extra-modal-window-attribute-bag="$action?->getExtraModalWindowAttributeBag()"
             :footer-actions="$action?->getVisibleModalFooterActions()"
             :footer-actions-alignment="$action?->getModalFooterActionsAlignment()"
             :heading="$action?->getModalHeading()"
@@ -256,7 +271,7 @@
                 const mountedFormComponentActionShouldOpenModal = {{ \Illuminate\Support\Js::from($action && $this->mountedFormComponentActionShouldOpenModal()) }}
 
                 if (mountedFormComponentActionShouldOpenModal) {
-                    $wire.unmountFormComponentAction(false)
+                    $wire.unmountFormComponentAction(false, false)
                 }
             "
         >

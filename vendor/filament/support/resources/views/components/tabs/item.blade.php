@@ -8,6 +8,8 @@
     'badge' => null,
     'badgeColor' => null,
     'badgeTooltip' => null,
+    'badgeIcon' => null,
+    'badgeIconPosition' => IconPosition::Before,
     'href' => null,
     'icon' => null,
     'iconColor' => 'gray',
@@ -49,7 +51,7 @@
     @endif
     @if ($hasAlpineActiveClasses)
         x-bind:class="{
-            @js($inactiveItemClasses): ! {{ $alpineActive }},
+            @js($inactiveItemClasses): {{-- format-ignore-start --}} ! ({{ $alpineActive }}) {{-- format-ignore-end --}},
             @js($activeItemClasses): {{ $alpineActive }},
         }"
     @endif
@@ -81,7 +83,7 @@
     <span
         @if ($hasAlpineActiveClasses)
             x-bind:class="{
-                @js($inactiveLabelClasses): ! {{ $alpineActive }},
+                @js($inactiveLabelClasses): {{-- format-ignore-start --}} ! ({{ $alpineActive }}) {{-- format-ignore-end --}},
                 @js($activeLabelClasses): {{ $alpineActive }},
             }"
         @endif
@@ -109,6 +111,8 @@
     @if (filled($badge))
         <x-filament::badge
             :color="$badgeColor"
+            :icon="$badgeIcon"
+            :icon-position="$badgeIconPosition"
             size="sm"
             :tooltip="$badgeTooltip"
             class="w-max"

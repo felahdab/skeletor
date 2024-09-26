@@ -13,14 +13,14 @@ class DefaultStrategy extends CleanupStrategy
 {
     protected ?Backup $newestBackup = null;
 
-    public function deleteOldBackups(BackupCollection $backups)
+    public function deleteOldBackups(BackupCollection $backups): void
     {
         // Don't ever delete the newest backup.
         $this->newestBackup = $backups->shift();
 
         $dateRanges = $this->calculateDateRanges();
 
-        /** @var Collection<(string|BackupCollection)> */
+        /** @var Collection<string, BackupCollection> $backupsPerPeriod */
         $backupsPerPeriod = $dateRanges->map(function (Period $period) use ($backups) {
             return $backups
                 ->filter(fn (Backup $backup) => $backup->date()->between($period->startDate(), $period->endDate()));
@@ -38,6 +38,7 @@ class DefaultStrategy extends CleanupStrategy
         $this->removeOldBackupsUntilUsingLessThanMaximumStorage($backups);
     }
 
+    /** @return Collection<string, Period> */
     protected function calculateDateRanges(): Collection
     {
         $config = $this->config->get('backup.cleanup.default_strategy');
@@ -70,15 +71,16 @@ class DefaultStrategy extends CleanupStrategy
         return collect(compact('daily', 'weekly', 'monthly', 'yearly'));
     }
 
-    protected function groupByDateFormat(Collection $backups, string $dateFormat): Collection
+    protected function groupByDateFormat(BackupCollection $backups, string $dateFormat): BackupCollection
     {
         return $backups->groupBy(fn (Backup $backup) => $backup->date()->format($dateFormat));
     }
 
-    protected function removeBackupsForAllPeriodsExceptOne(Collection $backupsPerPeriod)
+    /** @param Collection<string, BackupCollection> $backupsPerPeriod */
+    protected function removeBackupsForAllPeriodsExceptOne(Collection $backupsPerPeriod): void
     {
         $backupsPerPeriod->each(function (Collection $groupedBackupsByDateProperty, string $periodName) {
-            $groupedBackupsByDateProperty->each(function (Collection $group) {
+            $groupedBackupsByDateProperty->each(function (BackupCollection $group) {
                 $group->shift();
 
                 $group->each(fn (Backup $backup) => $backup->delete());
@@ -86,29 +88,42 @@ class DefaultStrategy extends CleanupStrategy
         });
     }
 
-    protected function removeBackupsOlderThan(Carbon $endDate, BackupCollection $backups)
+    protected function removeBackupsOlderThan(Carbon $endDate, BackupCollection $backups): void
     {
         $backups
             ->filter(fn (Backup $backup) => $backup->exists() && $backup->date()->lt($endDate))
             ->each(fn (Backup $backup) => $backup->delete());
     }
 
-    protected function removeOldBackupsUntilUsingLessThanMaximumStorage(BackupCollection $backups)
+    protected function removeOldBackupsUntilUsingLessThanMaximumStorage(BackupCollection $backups): void
     {
-        if (! $oldest = $backups->oldest()) {
+        if (! $this->shouldRemoveOldestBackup($backups)) {
             return;
         }
 
-        $maximumSize = $this->config->get('backup.cleanup.default_strategy.delete_oldest_backups_when_using_more_megabytes_than')
-            * 1024 * 1024;
-
-        if (($backups->size() + $this->newestBackup->sizeInBytes()) <= $maximumSize) {
-            return;
-        }
-        $oldest->delete();
+        $backups->oldest()->delete();
 
         $backups = $backups->filter(fn (Backup $backup) => $backup->exists());
 
         $this->removeOldBackupsUntilUsingLessThanMaximumStorage($backups);
+    }
+
+    protected function shouldRemoveOldestBackup(BackupCollection $backups): bool
+    {
+        if (! $backups->oldest()) {
+            return false;
+        }
+
+        $maximumSize = $this->config->get('backup.cleanup.default_strategy.delete_oldest_backups_when_using_more_megabytes_than');
+
+        if ($maximumSize === null) {
+            return false;
+        }
+
+        if (($backups->size() + $this->newestBackup->sizeInBytes()) <= $maximumSize * 1024 * 1024) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -37,11 +37,11 @@ Vous avez également la possibilité de télécharger directement une version po
 
     @yield('before_styles')
     @stack('before_styles')
-    
-    <link href="{!! basset('https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css') !!}" rel="stylesheet">
-    <script src="{!! basset('https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js') !!}"></script>
+    @stack('styles')
 
-    
+    @stack('scripts')
+    @vite(['resources/js/app.js', 'resources/css/app.css'])
+
     
     <style>
         [x-cloak] {
@@ -49,7 +49,7 @@ Vous avez également la possibilité de télécharger directement une version po
         }
     </style>
     @yield('styles')
-    
+
     @yield('after_styles')
     @stack('after_styles')
 
@@ -80,7 +80,8 @@ Vous avez également la possibilité de télécharger directement une version po
     @yield('before_scripts')
     @stack('before_scripts')
     
-    <script src="{!! basset('https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js') !!}"></script>
+    
+    <script src="{!! asset('vendor/livewire-charts/app.js') !!}"></script>
     
     @yield("scripts")
     

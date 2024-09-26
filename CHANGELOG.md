@@ -1,3 +1,74 @@
+## 2.2.2 (septembre 02, 2024)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.2.1a –> 2.2.2
+- changement titre pour test
+- evolution affichage livret pour FCM
+- suite pb bootstrap not defined : Commentaire en title pour ssobj
+- ajout des migrations + correction du chemin par defaut de creation d'un migration
+- suite remplacement transfo
+- remplacement du mot transformation
+- pb des popover contourné avec un title
+- ajout keres spéciaux à gerer dans les commentaires
+- Merge remote-tracking branch 'origin/master' into sandrine_courant
+- suite augmentation taille filtres
+- augmentation taile des filtres
+- suite modifs libellés activité -> tache
+- changements libelles competence savoir faire activite
+- correction bug possible unite
+- Merge remote-tracking branch 'origin/master' into sandrine_courant
+
+## 2.2.1a (June 25, 2024)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.2.1 –> 2.2.1a
+- Merge branch 'tuleap-276553-le-bouton-de-recherche-annudef-de-la-page-de-creation-des-utilisateurs-ne-fonctionne-plus'
+- Ajustement de la génération des assets javascript pour rendre bootstrap accessible dans le namespace de la fenetre. Désactivation de l'analyse des appels AJAX dans la debugbar.
+
+## 2.2.1 (June 21, 2024)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.2.0 –> 2.2.1
+- Suppression vues inutiles de Skeletor
+- Mise en cache de l'url de la photo de profil annudef. Influe énormément sur les performances apparentes en cas de difficultés côté Annudef (400ms vs 5s pour afficher une page avec la photo de profil).
+- remise en place du filtre role dans usertable
+- suppr lien instance demo car ne concerne pas skeletor
+- Ajout correction des caractères spéciaux dans les commentaires user/stage/valid transfo
+- Implements art #256270 correction bug droit changpassword pour superadmin
+- Implements art#243101 debut gestion unite annudef tache
+
+## 2.2.0 (June 03, 2024)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.9 –> 2.2.0
+- Ajout des assets au repo git pour ne pas avoir à les rebuilder
+- Update coolsam/modules to v3
+- Installation axonc/filament-copyable-placeholder
+- Add junit files to git ignored files.
+- Add data to casted attributes of User model.
+- API regeneration and composer autoload update.
+- Implements RemoteSystem handling: new api guard, new model for Remote Systems and AccessTokens and Filament ressource to handle all this.
+- Introduce Vite asset bundling. Make bootstrap and chartjs available thru asset bundling. Adjust javascript execution in Transformation Module to defer until asset loaded. Include node_modules into the versionned files.
+- Upgrade all php packages, javascript and css dependencies to the latest possible versions. Cela inclue le passage a PHP 8.2 qui nécessite un changement des images
+  docker utilisees pour le déploiement.
+
+## 2.1.9 (April 23, 2024)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.8a –> 2.1.9
+- ajout test
+- creation menu archives dans skeletor
+- ajout affichage nom application
+- ajout commentaire user si can(user.update)
+- Evolution mail accueil pour prendre en compte instances différentes.
+- correction route page accueil
+- correction bug redirection page accueil par défaut
+- modif affichages boutons signaler pb et notification
+- evolution affichage skeletor
+- correction bug droits rectifiés
+- evolution affichages FCM
+- correction bug car page ne s'affichait pas
+- évoltion interface fiches marin
+- ??? pas moi qui l'ai fait
+- Ajustement du HomeController pour éviter les redirections en boucle.
+- Merge branch 'release-2.1.8a'
+- Réintégration des fonctions de recherche de l'unite actuelle de l'utilisateur depuis Annudef dans Skeletor.
+- Rajout des nouvelles valeurs de configuration par defaut dans les .env*.slug
+
+## 2.1.8a (March 26, 2024)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.8 –> 2.1.8a
+- Fixes art #244096: erreur 500 dans le suivi par fonction / liste des marins
+
 ## 2.1.8 (March 21, 2024)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.7 –> 2.1.8
 - Le composant de Fiche Bilan est désormais Lazy: il se charge uniquement lorsqu'il est affiché. Accélère le chargement du parcours des fiches bilan.

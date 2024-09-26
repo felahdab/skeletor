@@ -38,7 +38,7 @@ final class PosixRunner implements ProcessRunner
     public function start(
         string $command,
         Cancellation $cancellation,
-        string $workingDirectory = null,
+        ?string $workingDirectory = null,
         array $environment = [],
         array $options = [],
     ): ProcessContext {

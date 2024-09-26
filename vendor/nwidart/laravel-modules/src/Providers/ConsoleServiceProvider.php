@@ -20,8 +20,6 @@ class ConsoleServiceProvider extends ServiceProvider
 
     /**
      * Get the package default commands.
-     *
-     * @return Collection
      */
     public static function defaultCommands(): Collection
     {
@@ -49,13 +47,21 @@ class ConsoleServiceProvider extends ServiceProvider
             Commands\Database\SeedCommand::class,
 
             // Make Commands
+            Commands\Make\ActionMakeCommand::class,
+            Commands\Make\CastMakeCommand::class,
             Commands\Make\ChannelMakeCommand::class,
+            Commands\Make\ClassMakeCommand::class,
             Commands\Make\CommandMakeCommand::class,
             Commands\Make\ComponentClassMakeCommand::class,
             Commands\Make\ComponentViewMakeCommand::class,
             Commands\Make\ControllerMakeCommand::class,
             Commands\Make\EventMakeCommand::class,
+            Commands\Make\EventProviderMakeCommand::class,
+            Commands\Make\EnumMakeCommand::class,
+            Commands\Make\ExceptionMakeCommand::class,
             Commands\Make\FactoryMakeCommand::class,
+            Commands\Make\InterfaceMakeCommand::class,
+            Commands\Make\HelperMakeCommand::class,
             Commands\Make\JobMakeCommand::class,
             Commands\Make\ListenerMakeCommand::class,
             Commands\Make\MailMakeCommand::class,
@@ -67,11 +73,15 @@ class ConsoleServiceProvider extends ServiceProvider
             Commands\Make\ObserverMakeCommand::class,
             Commands\Make\PolicyMakeCommand::class,
             Commands\Make\ProviderMakeCommand::class,
+            Commands\Make\RepositoryMakeCommand::class,
             Commands\Make\RequestMakeCommand::class,
             Commands\Make\ResourceMakeCommand::class,
             Commands\Make\RouteProviderMakeCommand::class,
             Commands\Make\RuleMakeCommand::class,
+            Commands\Make\ScopeMakeCommand::class,
             Commands\Make\SeedMakeCommand::class,
+            Commands\Make\ServiceMakeCommand::class,
+            Commands\Make\TraitMakeCommand::class,
             Commands\Make\TestMakeCommand::class,
             Commands\Make\ViewMakeCommand::class,
 
@@ -84,9 +94,11 @@ class ConsoleServiceProvider extends ServiceProvider
             // Other Commands
             Commands\ComposerUpdateCommand::class,
             Commands\LaravelModulesV6Migrator::class,
+            Commands\ModuleDiscoverCommand::class,
+            Commands\ModuleClearCompiledCommand::class,
             Commands\SetupCommand::class,
 
-            Commands\MigrateFreshCommand::class,
+            Commands\Database\MigrateFreshCommand::class,
         ]);
     }
 }

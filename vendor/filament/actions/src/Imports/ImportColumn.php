@@ -20,6 +20,8 @@ class ImportColumn extends Component
 
     protected bool | Closure $isMappingRequired = false;
 
+    protected bool | Closure $isMappingRequiredForNewRecordsOnly = false;
+
     protected int | Closure | null $decimalPlaces = null;
 
     protected bool | Closure $isNumeric = false;
@@ -51,7 +53,10 @@ class ImportColumn extends Component
 
     protected ?Importer $importer = null;
 
-    protected mixed $example = null;
+    /**
+     * @var array<mixed> | Closure
+     */
+    protected array | Closure $examples = [];
 
     protected string | Closure | null $exampleHeader = null;
 
@@ -72,6 +77,8 @@ class ImportColumn extends Component
     protected string $evaluationIdentifier = 'column';
 
     protected string | Htmlable | Closure | null $helperText = null;
+
+    protected bool | Closure $isSensitive = false;
 
     final public function __construct(string $name)
     {
@@ -111,7 +118,21 @@ class ImportColumn extends Component
 
     public function example(mixed $example): static
     {
-        $this->example = $example;
+        $this->examples($example);
+
+        return $this;
+    }
+
+    public function examples(mixed $examples): static
+    {
+        if (
+            (! is_array($examples)) &&
+            (! $examples instanceof Closure)
+        ) {
+            $examples = Arr::wrap($examples);
+        }
+
+        $this->examples = $examples;
 
         return $this;
     }
@@ -126,6 +147,13 @@ class ImportColumn extends Component
     public function requiredMapping(bool | Closure $condition = true): static
     {
         $this->isMappingRequired = $condition;
+
+        return $this;
+    }
+
+    public function requiredMappingForNewRecordsOnly(bool | Closure $condition = true): static
+    {
+        $this->isMappingRequiredForNewRecordsOnly = $condition;
 
         return $this;
     }
@@ -332,7 +360,7 @@ class ImportColumn extends Component
                     return;
                 }
 
-                $fail(__('validation.exists', ['attribute' => $attribute]));
+                $fail('validation.exists')->translate();
             };
         }
 
@@ -432,9 +460,20 @@ class ImportColumn extends Component
         return $this->importer;
     }
 
+    /**
+     * @deprecated Use `getExamples()` instead.
+     */
     public function getExample(): mixed
     {
-        return $this->evaluate($this->example);
+        return Arr::first($this->getExamples());
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function getExamples(): array
+    {
+        return Arr::wrap($this->evaluate($this->examples));
     }
 
     /**
@@ -472,6 +511,11 @@ class ImportColumn extends Component
     public function isMappingRequired(): bool
     {
         return (bool) $this->evaluate($this->isMappingRequired);
+    }
+
+    public function isMappingRequiredForNewRecordsOnly(): bool
+    {
+        return (bool) $this->evaluate($this->isMappingRequiredForNewRecordsOnly);
     }
 
     public function hasRelationship(): bool
@@ -531,7 +575,7 @@ class ImportColumn extends Component
 
     protected function castNumericStateItem(mixed $state): int | float
     {
-        $state = floatval(preg_replace('/[^0-9.]/', '', $state));
+        $state = floatval(preg_replace('/[^0-9.-]/', '', $state));
 
         $decimalPlaces = $this->getDecimalPlaces();
 
@@ -563,5 +607,17 @@ class ImportColumn extends Component
             Model::class, $record ? $record::class : null => [$record],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
+    }
+
+    public function sensitive(bool | Closure $condition = true): static
+    {
+        $this->isSensitive = $condition;
+
+        return $this;
+    }
+
+    public function isSensitive(): bool
+    {
+        return (bool) $this->evaluate($this->isSensitive);
     }
 }

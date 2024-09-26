@@ -67,7 +67,7 @@
             <div
                 x-ignore
                 @if (FilamentView::hasSpaMode())
-                    ax-load="visible"
+                    {{-- format-ignore-start --}}ax-load="visible || event (ax-modal-opened)"{{-- format-ignore-end --}}
                 @else
                     ax-load
                 @endif
@@ -77,7 +77,7 @@
                                 '{{ convert_date_format($getDisplayFormat())->to('day.js') }}',
                             firstDayOfWeek: {{ $getFirstDayOfWeek() }},
                             isAutofocused: @js($isAutofocused()),
-                            locale: @js(app()->getLocale()),
+                            locale: @js($getLocale()),
                             shouldCloseOnDateSelection: @js($shouldCloseOnDateSelection()),
                             state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')") }},
                         })"
@@ -214,11 +214,13 @@
                                                 focusedDate.date() !== day &&
                                                 ! dayIsDisabled(day),
                                             'bg-gray-50 dark:bg-white/5':
-                                                focusedDate.date() === day && ! dayIsSelected(day),
+                                                focusedDate.date() === day &&
+                                                ! dayIsSelected(day) &&
+                                                ! dayIsDisabled(day),
                                             'text-primary-600 bg-gray-50 dark:bg-white/5 dark:text-primary-400':
                                                 dayIsSelected(day),
                                             'pointer-events-none': dayIsDisabled(day),
-                                            'opacity-50': focusedDate.date() !== day && dayIsDisabled(day),
+                                            'opacity-50': dayIsDisabled(day),
                                         }"
                                         class="rounded-full text-center text-sm leading-loose transition duration-75"
                                     ></div>

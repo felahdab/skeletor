@@ -30,7 +30,7 @@ class Unique extends ObjectValidationAttribute
 
     public function getRule(ValidationPath $path): object|string
     {
-        if($this->rule) {
+        if ($this->rule) {
             return $this->rule;
         }
 
@@ -59,7 +59,7 @@ class Unique extends ObjectValidationAttribute
             $rule->where($this->where);
         }
 
-        return $this->rule = $rule;
+        return $rule;
     }
 
     public static function keyword(): string

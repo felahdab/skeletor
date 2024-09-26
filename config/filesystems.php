@@ -40,7 +40,19 @@ return [
             'root' => '/backups',
         ],
 
+        'framework_cache' => [
+            'driver' => 'local',
+            'root' => storage_path(),
+        ],
+
         'public' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public'),
+            'url' => env('APP_URL').'/' . env('APP_PREFIX') . '/public',
+            'visibility' => 'public',
+        ],
+
+        'public_no_tenancy' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/' . env('APP_PREFIX') . '/public',

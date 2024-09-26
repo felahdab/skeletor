@@ -422,6 +422,18 @@ trait ValidatesAttributes
     }
 
     /**
+     * Validate that an attribute is a list.
+     *
+     * @param  string  $attribute
+     * @param  mixed  $value
+     * @return bool
+     */
+    public function validateList($attribute, $value)
+    {
+        return is_array($value) && array_is_list($value);
+    }
+
+    /**
      * Validate that an array has all of the given keys.
      *
      * @param  string  $attribute
@@ -481,11 +493,35 @@ trait ValidatesAttributes
      *
      * @param  string  $attribute
      * @param  mixed  $value
+     * @param  array{0: string}  $parameters
      * @return bool
      */
-    public function validateConfirmed($attribute, $value)
+    public function validateConfirmed($attribute, $value, $parameters)
     {
-        return $this->validateSame($attribute, $value, [$attribute.'_confirmation']);
+        return $this->validateSame($attribute, $value, [$parameters[0] ?? $attribute.'_confirmation']);
+    }
+
+    /**
+     * Validate an attribute contains a list of values.
+     *
+     * @param  string  $attribute
+     * @param  mixed  $value
+     * @param  array<int, int|string>  $parameters
+     * @return bool
+     */
+    public function validateContains($attribute, $value, $parameters)
+    {
+        if (! is_array($value)) {
+            return false;
+        }
+
+        foreach ($parameters as $parameter) {
+            if (! in_array($parameter, $value)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -705,12 +741,12 @@ trait ValidatesAttributes
 
         $parameters = $this->parseNamedParameters($parameters);
 
-        if ($this->failsBasicDimensionChecks($parameters, $width, $height) ||
-            $this->failsRatioCheck($parameters, $width, $height)) {
-            return false;
-        }
-
-        return true;
+        return ! (
+            $this->failsBasicDimensionChecks($parameters, $width, $height) ||
+            $this->failsRatioCheck($parameters, $width, $height) ||
+            $this->failsMinRatioCheck($parameters, $width, $height) ||
+            $this->failsMaxRatioCheck($parameters, $width, $height)
+        );
     }
 
     /**
@@ -749,9 +785,51 @@ trait ValidatesAttributes
             [1, 1], array_filter(sscanf($parameters['ratio'], '%f/%d'))
         );
 
-        $precision = 1 / (max($width, $height) + 1);
+        $precision = 1 / (max(($width + $height) / 2, $height) + 1);
 
         return abs($numerator / $denominator - $width / $height) > $precision;
+    }
+
+    /**
+     * Determine if the given parameters fail a dimension minimum ratio check.
+     *
+     * @param  array<string,string>  $parameters
+     * @param  int  $width
+     * @param  int  $height
+     * @return bool
+     */
+    private function failsMinRatioCheck($parameters, $width, $height)
+    {
+        if (! isset($parameters['min_ratio'])) {
+            return false;
+        }
+
+        [$minNumerator, $minDenominator] = array_replace(
+            [1, 1], array_filter(sscanf($parameters['min_ratio'], '%f/%d'))
+        );
+
+        return ($width / $height) > ($minNumerator / $minDenominator);
+    }
+
+    /**
+     * Determine if the given parameters fail a dimension maximum ratio check.
+     *
+     * @param  array<string,string>  $parameters
+     * @param  int  $width
+     * @param  int  $height
+     * @return bool
+     */
+    private function failsMaxRatioCheck($parameters, $width, $height)
+    {
+        if (! isset($parameters['max_ratio'])) {
+            return false;
+        }
+
+        [$maxNumerator, $maxDenominator] = array_replace(
+            [1, 1], array_filter(sscanf($parameters['max_ratio'], '%f/%d'))
+        );
+
+        return ($width / $height) < ($maxNumerator / $maxDenominator);
     }
 
     /**
@@ -1448,7 +1526,7 @@ trait ValidatesAttributes
     }
 
     /**
-     * Validate the size of an attribute is less than a maximum value.
+     * Validate the size of an attribute is less than or equal to a maximum value.
      *
      * @param  string  $attribute
      * @param  mixed  $value
@@ -1554,7 +1632,7 @@ trait ValidatesAttributes
     }
 
     /**
-     * Validate the size of an attribute is greater than a minimum value.
+     * Validate the size of an attribute is greater than or equal to a minimum value.
      *
      * @param  string  $attribute
      * @param  mixed  $value
@@ -1943,6 +2021,25 @@ trait ValidatesAttributes
         $this->requireParameterCount(1, $parameters, 'required_if_accepted');
 
         if ($this->validateAccepted($parameters[0], $this->getValue($parameters[0]))) {
+            return $this->validateRequired($attribute, $value);
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate that an attribute exists when another attribute was "declined".
+     *
+     * @param  string  $attribute
+     * @param  mixed  $value
+     * @param  mixed  $parameters
+     * @return bool
+     */
+    public function validateRequiredIfDeclined($attribute, $value, $parameters)
+    {
+        $this->requireParameterCount(1, $parameters, 'required_if_declined');
+
+        if ($this->validateDeclined($parameters[0], $this->getValue($parameters[0]))) {
             return $this->validateRequired($attribute, $value);
         }
 

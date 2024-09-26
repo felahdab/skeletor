@@ -51,11 +51,11 @@
                     <div class="col">
                         <x-form::model-select name="secteur_id" 
                             :models="$secteurs" 
-                            label="Secteur" 
+                            label="FPS rattach" 
                             key-attribute="id" 
                             value-attribute="secteur_libcourt"
                             :value="$user->secteur">
-                            <option value="">Secteur</option>
+                            <option value="">FPS rattach</option>
                         </x-form::model-select>
                     </div>
                 </div>
@@ -66,11 +66,11 @@
                     <div class="col">
                         <x-form::model-select name="diplome_id" 
                             :models="$diplomes" 
-                            label="Brevet" 
+                            label="Orga FCM" 
                             key-attribute="id" 
                             value-attribute="diplome_libcourt"
                             :value="$user->diplome">
-                            <option value="">Brevet</option>
+                            <option value="">Orga FCM</option>
                         </x-form::model-select>
                     </div>
                 </div>
@@ -79,31 +79,13 @@
                         <x-form::input name="nid" label="NID" placeholder="NID..." type="text" :value="$user->nid"/>
                     </div>
                     <div class="col ms-4">
-                        @if(auth()->user()->IsSuperAdmin())
-                            <div class="row mt-4">
-                                <div class="col-3 form-check form-switch">
-                                    <x-form::checkbox name="admin" value="0" :checked="$user->admin" label="SuperAdmin" class="form-check-input "/>
-                                </div>
-                                <div class="col">
-                                    <span class="text-danger"><x-bootstrap-icon iconname='exclamation-triangle.svg' /></span>
-                                    Si vous cochez la case SuperAdmin, l'utilisateur aura tous les droits sur l'application, quels que soient les rôles séléctionnés.
-                                </div>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-                <div class="row mt-4">
-                    <div class="col">
-                        
-                    </div>
-                    <div class="col">
                         <div class="mb-3">
                             <div class="form-group" >
                                 <label class="form-label" for="name">Photo Annudef:</label>
                                 <img src="{{ $user->getAnnudefPictureUrl() }}" height="75px">
                             </div>
                         </div>
-                    </div>                        
+                    </div>
                 </div>
                 <div class="row mt-4">
                     <div class="col">
@@ -113,10 +95,11 @@
                         @if(auth()->user()->can('view_all_users'))
                             <x-form::model-select name="unite_id" 
                             :models="$unites" 
-                            label="Unité actuelle" 
+                            label="Unité actuelle *" 
                             key-attribute="id" 
                             value-attribute="unite_liblong"
-                            :value="$user->unite">
+                            :value="$user->unite"
+                            required>
                             <option value="">Non renseigné</option>
                             </x-form::model-select>
                         @else
@@ -130,12 +113,12 @@
                 </div>
                 <div class="row mt-4">
                     <div class="col">
-                        <x-form::input name="date_debarq" label="Date de débarquement *" type="date" :value="$user->date_debarq"/>
+                        <x-form::input name="date_debarq" label="Date de débarquement" type="date" :value="$user->date_debarq"/>
                     </div>
                     <div class="col">
                         <x-form::model-select name="unite_destination_id" 
                             :models="$unites" 
-                            label="Unité destination ou temporaire" 
+                            label="Unité destination" 
                             key-attribute="id" 
                             value-attribute="unite_liblong"
                             :value="$user->unite_destination">
@@ -143,17 +126,28 @@
                         </x-form::model-select>
                     </div>
                 </div>
-                <div class="row mt-4">
+                {{-- <div class="row mt-4">
                     <div class="col">
                         <x-form::checkbox name="comete" value="1" :checked="$user->comete" label="Embarqué COMETE" />
                     </div>
                     <div class="col">
                         <x-form::checkbox name="socle" value="1" :checked="$user->socle" label="Socle" />
                     </div>
-                </div>
+                </div> --}}
                 <div class="row mt-4">
                     <div class="col">
                         <div class="row">
+                            @if(auth()->user()->IsSuperAdmin())
+                                <div class="row mt-4">
+                                    <div class="col-3 form-check form-switch">
+                                        <x-form::checkbox name="admin" value="0" :checked="$user->admin" label="SuperAdmin" class="form-check-input "/>
+                                    </div>
+                                    <div class="col">
+                                        <span class="text-danger"><x-bootstrap-icon iconname='exclamation-triangle.svg' /></span>
+                                        Si vous cochez la case SuperAdmin, l'utilisateur aura tous les droits sur l'application, quels que soient les rôles séléctionnés.
+                                    </div>
+                                </div>
+                            @endif
                             <div x-data='{ allchecked : false }' >
                                 <table class="table table-striped">
                                     <thead>
@@ -188,12 +182,6 @@
                         <x-form::textarea name="user_comment" label="Commentaire" placeholder="Commentaire..." type="textarea" :value="$user->user_comment" cols=50 rows=12/>
                     </div>
                 </div>
-
-
-
-
-
-
                 <button class="btn btn-primary" type="submit">Mettre à jour</button>
                 <a href="{{ route('users.index') }}" class="btn btn-default">Annuler</a>
             </x-form:::form>

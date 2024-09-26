@@ -44,7 +44,7 @@ class BitMap extends Type
      * @param bool $newValue The new value
      * @return bool The old value
      */
-    public function isBitSet(int $index, bool $newValue = null): bool
+    public function isBitSet(int $index, ?bool $newValue = null): bool
     {
         $charIndex = (int)($index / 8);
         $bitMask = 0b10000000 >> ($index % 8);

@@ -158,7 +158,7 @@ Cet écran va permettre d'archiver les marins. Vous y retrouvez les marins suppr
 
 Le bouton "Restaurer AVEC données" (1) permet de recréer la fiche du marin en conservant toutes les données liées à sa transformation. Le bouton "Restaurer SANS données" (2) permet de recréer la fiche du marin en supprimant toutes les données liées à sa transformation.
 Le bouton "Télécharger livret" (3) permet d'obtenir le livret du marin au format pdf pour une sauvegarde en local.
-Le bouton "Archivage" (4) supprime le marin de l'application. Son livret de transformation est sauvegardé sur le serveur et ses données enregistrées pour établir des statistiques. Il faudra restaurer son compte avec les menus annudef ou mindefconnect si vous voulez le faire réapparaitre dans vos listes.
+Le bouton "Archivage" (4) supprime le marin de l'application. Son PPA est sauvegardé sur le serveur et ses données enregistrées pour établir des statistiques. Il faudra restaurer son compte avec les menus annudef ou mindefconnect si vous voulez le faire réapparaitre dans vos listes.
 
 <a name="mails"></a>
 

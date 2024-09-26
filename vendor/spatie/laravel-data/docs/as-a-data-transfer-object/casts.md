@@ -39,7 +39,7 @@ SongData::from([
 ]);
 ```
 
-And get an error because the first two properties are simple PHP types(string, int's, floats, booleans, arrays), but the following two properties are more complex types: `DateTime` and `Enum`, respectively.
+And get an error because the first two properties are simple PHP types(strings, ints, floats, booleans, arrays), but the following two properties are more complex types: `DateTime` and `Enum`, respectively.
 
 These types cannot be automatically created. A cast is needed to construct them from a string.
 
@@ -160,5 +160,5 @@ ReleaseData::from([
 For this feature to work, a cast should not only implement the `Cast` interface but also the `IterableItemCast`. The
 signatures of the `cast` and `castIterableItem` methods are exactly the same, but they're called on different times.
 When casting a property like a DateTime from a string, the `cast` method will be used, when transforming an iterable
-property like an arrat or Laravel Collection where the iterable item is typed using an annotation, then each item of the
+property like an array or Laravel Collection where the iterable item is typed using an annotation, then each item of the
 provided iterable will trigger a call to the `castIterableItem` method.

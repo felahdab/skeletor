@@ -21,6 +21,18 @@ protected function setUp(): void
 }
 ```
 
+### Testing multiple panels
+
+If you have multiple panels and you would like to test a non-default panel, you will need to tell Filament which panel you are testing. This can be done in the `setUp()` method of the test case, or you can do it at the start of a particular test. Filament usually does this in a middleware when you access the panel through a request, so if you're not making a request in your test like when testing a Livewire component, you need to set the current panel manually:
+
+```php
+use Filament\Facades\Filament;
+
+Filament::setCurrentPanel(
+    Filament::getPanel('app'), // Where `app` is the ID of the panel you want to test.
+);
+```
+
 ## Resources
 
 ### Pages
@@ -252,7 +264,7 @@ it('can render page', function () {
 
 ##### Filling existing data
 
-To check that the form is filled with the correct data from the database, you may `assertSet()` that the data in the form matches that of the record:
+To check that the form is filled with the correct data from the database, you may `assertFormSet()` that the data in the form matches that of the record:
 
 ```php
 use function Pest\Livewire\livewire;

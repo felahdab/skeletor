@@ -17,13 +17,15 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('email')->unique();
-            $table->string('name')->default('');
+            $table->string('nom')->default('');
             $table->string('prenom')->default('');
             $table->string('main_department_number')->default('');
             $table->string('personal_title')->default('');
             $table->string('rank')->default('');
             $table->string('short_rank')->default('');
             $table->string('display_name')->default('');
+            $table->string('commentaire')->nullable(true)->default(NULL); 
+            $table->string('sub')->nullable(true)->default(NULL);
         });
     }
 

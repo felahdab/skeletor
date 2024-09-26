@@ -31,8 +31,7 @@ final class WindowsRunner implements ProcessRunner
     ];
 
     private const WRAPPER_EXE_PATH = PHP_INT_SIZE === 8
-        ? BIN_DIR . '\\windows\\ProcessWrapper64.exe'
-        : BIN_DIR . '\\windows\\ProcessWrapper.exe';
+        ? (BIN_DIR . '\\windows\\ProcessWrapper64.exe') : (BIN_DIR . '\\windows\\ProcessWrapper.exe');
 
     private static ?string $pharWrapperPath = null;
 
@@ -46,7 +45,7 @@ final class WindowsRunner implements ProcessRunner
     public function start(
         string $command,
         Cancellation $cancellation,
-        string $workingDirectory = null,
+        ?string $workingDirectory = null,
         array $environment = [],
         array $options = []
     ): ProcessContext {

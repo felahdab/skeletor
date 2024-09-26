@@ -24,7 +24,7 @@
         >
             <div
                 @if (FilamentView::hasSpaMode())
-                    ax-load="visible"
+                    {{-- format-ignore-start --}}ax-load="visible || event (ax-modal-opened)"{{-- format-ignore-end --}}
                 @else
                     ax-load
                 @endif
@@ -80,7 +80,11 @@
                 @endif
                 {{ $getExtraAlpineAttributeBag() }}
             >
-                <input id="trix-value-{{ $id }}" type="hidden" />
+                <input
+                    id="trix-value-{{ $id }}"
+                    x-ref="trixValue"
+                    type="hidden"
+                />
 
                 <trix-toolbar
                     id="trix-toolbar-{{ $id }}"
@@ -100,7 +104,6 @@
                                         data-trix-key="b"
                                         title="{{ __('filament-forms::components.rich_editor.toolbar_buttons.bold') }}"
                                         tabindex="-1"
-                                        title="{{ __('filament-forms::components.rich_editor.toolbar_buttons.bold') }}"
                                     >
                                         <svg
                                             class="-mx-4 h-4 dark:fill-current"
@@ -148,6 +151,7 @@
                                 @if ($hasToolbarButton('underline'))
                                     <x-filament-forms::rich-editor.toolbar.button
                                         data-trix-attribute="underline"
+                                        data-trix-key="u"
                                         title="{{ __('filament-forms::components.rich_editor.toolbar_buttons.underline') }}"
                                         tabindex="-1"
                                     >
@@ -172,6 +176,7 @@
                                 @if ($hasToolbarButton('strike'))
                                     <x-filament-forms::rich-editor.toolbar.button
                                         data-trix-attribute="strike"
+                                        data-trix-key="s"
                                         title="{{ __('filament-forms::components.rich_editor.toolbar_buttons.strike') }}"
                                         tabindex="-1"
                                     >
@@ -458,7 +463,8 @@
                                     name="href"
                                     placeholder="{{ __('filament-forms::components.rich_editor.dialogs.link.placeholder') }}"
                                     required
-                                    type="url"
+                                    type="text"
+                                    inputmode="url"
                                     class="trix-input trix-input--dialog"
                                 />
 

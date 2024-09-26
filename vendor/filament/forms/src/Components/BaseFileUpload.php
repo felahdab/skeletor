@@ -597,10 +597,12 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
 
             $name = $this->getName();
 
+            $validationMessages = $this->getValidationMessages();
+
             $validator = Validator::make(
                 [$name => $files],
                 ["{$name}.*" => ['file', ...parent::getValidationRules()]],
-                [],
+                $validationMessages ? ["{$name}.*" => $validationMessages] : [],
                 ["{$name}.*" => $this->getValidationAttribute()],
             );
 
@@ -824,7 +826,7 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
         return (bool) $this->evaluate($this->isMultiple);
     }
 
-    public function getUploadedFileNameForStorageUsing(Closure $callback): static
+    public function getUploadedFileNameForStorageUsing(?Closure $callback): static
     {
         $this->getUploadedFileNameForStorageUsing = $callback;
 

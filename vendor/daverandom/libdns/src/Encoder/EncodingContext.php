@@ -95,7 +95,7 @@ class EncodingContext
      * @param bool $truncate
      * @return bool
      */
-    public function isTruncated(bool $truncate = null): bool
+    public function isTruncated(?bool $truncate = null): bool
     {
         $result = $this->truncate;
 

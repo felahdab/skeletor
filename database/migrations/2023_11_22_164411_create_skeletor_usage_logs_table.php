@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('skeletor_usage_logs', function (Blueprint $table) {
             $table->id();
-            $table->string('uri');
+            $table->string('uri', length: 2048);
             $table->string('route');
             $table->string('session')->nullable();
             $table->string('source')->nullable();

@@ -28,7 +28,7 @@ class TypeFactory
      * @param string $value
      * @return \LibDNS\Records\Types\Anything
      */
-    public function createAnything(string $value = null)
+    public function createAnything(?string $value = null)
     {
         return new Anything($value);
     }
@@ -39,7 +39,7 @@ class TypeFactory
      * @param string $value
      * @return \LibDNS\Records\Types\BitMap
      */
-    public function createBitMap(string $value = null)
+    public function createBitMap(?string $value = null)
     {
         return new BitMap($value);
     }
@@ -50,7 +50,7 @@ class TypeFactory
      * @param int $value
      * @return \LibDNS\Records\Types\Char
      */
-    public function createChar(int $value = null)
+    public function createChar(?int $value = null)
     {
         return new Char((string)$value);
     }
@@ -61,7 +61,7 @@ class TypeFactory
      * @param string $value
      * @return \LibDNS\Records\Types\CharacterString
      */
-    public function createCharacterString(string $value = null)
+    public function createCharacterString(?string $value = null)
     {
         return new CharacterString($value);
     }
@@ -105,7 +105,7 @@ class TypeFactory
      * @param int $value
      * @return \LibDNS\Records\Types\Long
      */
-    public function createLong(int $value = null)
+    public function createLong(?int $value = null)
     {
         return new Long((string)$value);
     }
@@ -116,7 +116,7 @@ class TypeFactory
      * @param int $value
      * @return \LibDNS\Records\Types\Short
      */
-    public function createShort(int $value = null)
+    public function createShort(?int $value = null)
     {
         return new Short((string)$value);
     }

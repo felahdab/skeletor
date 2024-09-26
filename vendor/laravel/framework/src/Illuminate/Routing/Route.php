@@ -2,6 +2,7 @@
 
 namespace Illuminate\Routing;
 
+use BackedEnum;
 use Closure;
 use Illuminate\Container\Container;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Contracts\CallableDispatcher;
 use Illuminate\Routing\Contracts\ControllerDispatcher as ControllerDispatcherContract;
 use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Matching\HostValidator;
 use Illuminate\Routing\Matching\MethodValidator;
 use Illuminate\Routing\Matching\SchemeValidator;
@@ -16,6 +18,7 @@ use Illuminate\Routing\Matching\UriValidator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
+use InvalidArgumentException;
 use Laravel\SerializableClosure\SerializableClosure;
 use LogicException;
 use Symfony\Component\Routing\Route as SymfonyRoute;
@@ -751,13 +754,19 @@ class Route
     /**
      * Get or set the domain for the route.
      *
-     * @param  string|null  $domain
+     * @param  \BackedEnum|string|null  $domain
      * @return $this|string|null
+     *
+     * @throws \InvalidArgumentException
      */
     public function domain($domain = null)
     {
         if (is_null($domain)) {
             return $this->getDomain();
+        }
+
+        if ($domain instanceof BackedEnum && ! is_string($domain = $domain->value)) {
+            throw new InvalidArgumentException('Enum must be string backed.');
         }
 
         $parsed = RouteUri::parse($domain);
@@ -795,7 +804,7 @@ class Route
     /**
      * Add a prefix to the route URI.
      *
-     * @param  string  $prefix
+     * @param  string|null  $prefix
      * @return $this
      */
     public function prefix($prefix)
@@ -873,11 +882,17 @@ class Route
     /**
      * Add or change the route name.
      *
-     * @param  string  $name
+     * @param  \BackedEnum|string  $name
      * @return $this
+     *
+     * @throws \InvalidArgumentException
      */
     public function name($name)
     {
+        if ($name instanceof BackedEnum && ! is_string($name = $name->value)) {
+            throw new InvalidArgumentException('Enum must be string backed.');
+        }
+
         $this->action['as'] = isset($this->action['as']) ? $this->action['as'].$name : $name;
 
         return $this;
@@ -1117,11 +1132,15 @@ class Route
      */
     protected function staticallyProvidedControllerMiddleware(string $class, string $method)
     {
-        return collect($class::middleware())->reject(function ($middleware) use ($method) {
+        return collect($class::middleware())->map(function ($middleware) {
+            return $middleware instanceof Middleware
+                ? $middleware
+                : new Middleware($middleware);
+        })->reject(function ($middleware) use ($method) {
             return static::methodExcludedByOptions(
                 $method, ['only' => $middleware->only, 'except' => $middleware->except]
             );
-        })->map->middleware->values()->all();
+        })->map->middleware->flatten()->values()->all();
     }
 
     /**

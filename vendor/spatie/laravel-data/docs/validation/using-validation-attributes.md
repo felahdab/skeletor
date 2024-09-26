@@ -29,7 +29,7 @@ So it is not required to add the `required` and `string` rule, these will be add
 ]
 ```
 
-For each Laravel validation rule we've got a matching validation attribute, you can find a list of them [here](/docs/laravel-data/v4/advanced-usage/using-attributes).
+For each Laravel validation rule we've got a matching validation attribute, you can find a list of them [here](/docs/laravel-data/v4/advanced-usage/validation-attributes).
 
 ## Referencing route parameters
 
@@ -157,7 +157,7 @@ class CustomRule extends CustomValidationAttribute
     /**
      * @return array<object|string>|object|string
      */
-    public function getRules(ValidationPath $path): array|object|string;
+    public function getRules(ValidationPath $path): array|object|string
     {
         return [new CustomRule()];
     }

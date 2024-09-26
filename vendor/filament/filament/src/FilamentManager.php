@@ -34,6 +34,8 @@ use Illuminate\Support\Facades\Event;
 
 class FilamentManager
 {
+    protected ?string $currentDomain = null;
+
     protected ?Panel $currentPanel = null;
 
     protected bool $isServing = false;
@@ -182,6 +184,11 @@ class FilamentManager
         return $this->getCurrentPanel()->getGlobalSearchKeyBindings();
     }
 
+    public function getGlobalSearchFieldSuffix(): ?string
+    {
+        return $this->getCurrentPanel()->getGlobalSearchFieldSuffix();
+    }
+
     public function getGlobalSearchProvider(): ?GlobalSearchProvider
     {
         return $this->getCurrentPanel()->getGlobalSearchProvider();
@@ -272,9 +279,9 @@ class FilamentManager
         return $this->getCurrentPanel()->getPages();
     }
 
-    public function getPanel(?string $id = null): Panel
+    public function getPanel(?string $id = null, bool $isStrict = true): Panel
     {
-        return app(PanelRegistry::class)->get($id);
+        return app(PanelRegistry::class)->get($id, $isStrict);
     }
 
     /**
@@ -333,6 +340,14 @@ class FilamentManager
     public function getResources(): array
     {
         return $this->getCurrentPanel()->getResources();
+    }
+
+    /**
+     * @param  array<mixed>  $parameters
+     */
+    public function getResourceUrl(string | Model $model, string $name = 'index', array $parameters = [], bool $isAbsolute = true, ?Model $tenant = null): string
+    {
+        return $this->getCurrentPanel()->getResourceUrl($model, $name, $parameters, $isAbsolute, $tenant);
     }
 
     public function getSidebarWidth(): string
@@ -440,8 +455,6 @@ class FilamentManager
 
     public function getUserAvatarUrl(Model | Authenticatable $user): string
     {
-        $avatar = null;
-
         if ($user instanceof HasAvatar) {
             $avatar = $user->getFilamentAvatarUrl();
         } else {
@@ -526,6 +539,11 @@ class FilamentManager
     public function hasBreadcrumbs(): bool
     {
         return $this->getCurrentPanel()->hasBreadcrumbs();
+    }
+
+    public function hasBroadcasting(): bool
+    {
+        return $this->getCurrentPanel()->hasBroadcasting();
     }
 
     public function hasCollapsibleNavigationGroups(): bool
@@ -669,6 +687,11 @@ class FilamentManager
     public function serving(Closure $callback): void
     {
         Event::listen(ServingFilament::class, $callback);
+    }
+
+    public function currentDomain(?string $domain): void
+    {
+        $this->currentDomain = $domain;
     }
 
     public function setCurrentPanel(?Panel $panel): void
@@ -846,5 +869,22 @@ class FilamentManager
     public function arePasswordsRevealable(): bool
     {
         return $this->getCurrentPanel()->arePasswordsRevealable();
+    }
+
+    public function getCurrentDomain(?string $testingDomain = null): string
+    {
+        if (filled($this->currentDomain)) {
+            return $this->currentDomain;
+        }
+
+        if (app()->runningUnitTests()) {
+            return $testingDomain;
+        }
+
+        if (app()->runningInConsole()) {
+            throw new Exception('The current domain is not set, but multiple domains are registered for the panel. Please use [Filament::currentDomain(\'example.com\')] to set the current domain to ensure that panel URLs are generated correctly.');
+        }
+
+        return request()->getHost();
     }
 }

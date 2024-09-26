@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Blade;
 use function Livewire\on;
 
+use App\Http\Middleware\InitializeTenancyByCookieData;
+use App\Http\Middleware\SetTenantDefaultForRoutesMiddleware;
+
 class FrontendAssets extends BaseFrontendAssets
 {
     public function register()
@@ -18,7 +21,10 @@ class FrontendAssets extends BaseFrontendAssets
         $route_prefix = config('livewire.route_prefix');
 
         app(\Livewire\Mechanisms\FrontendAssets\FrontendAssets::class)->setScriptRoute(function ($handle) use($route_prefix ) {
-            return Route::get('/' . $route_prefix . '/livewire/livewire.js', $handle);
+            return Route::get('/' . $route_prefix . '/livewire/livewire.js', $handle)
+                    ->middleware([\App\Http\Middleware\EncryptCookies::class,
+                        InitializeTenancyByCookieData::class, 
+                        SetTenantDefaultForRoutesMiddleware::class]);
         });
 
         Blade::directive('livewireScripts', [static::class, 'livewireScripts']);

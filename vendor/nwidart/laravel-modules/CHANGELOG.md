@@ -4,6 +4,73 @@ All Notable changes to `laravel-modules` will be documented in this file.
 
 ## Next
 
+- [@omerbaflah](https://github.com/omerbaflah) Fixes Invokable Controller Stub
+- [@solomon-ochepa](https://github.com/solomon-ochepa) Added create module:make-class command
+
+## 11.0.10 - 2024-05-05
+
+- [@dcblogdev](https://github.com/dcblogdev) Update controller, service, helper, and action methods
+- [@omerbaflah](https://github.com/omerbaflah) Update service stubs
+- [@omerbaflah](https://github.com/omerbaflah) Update action stubs
+- [@AbdulkarimOmer](https://github.com/AbdulkarimOmer) Added invokable option into make-controller command
+- [@dcblogdev](https://github.com/dcblogdev) Updated vite-module-loader.js to handle case when a modules does not have a vite.config.js file
+- [@alissn](https://github.com/alissn) Added direction option to command module:seed
+
+## 11.0.9 - 2024-04-30
+
+- [@dcblogdev](https://github.com/dcblogdev) added make-event-provider command, modules come with event as default now
+
+## 11.0.8 - 2024-04-29
+
+- [@solomon-ochepa](https://github.com/solomon-ochepa) Remove custom namespaces from generator [factory and seeder]
+- [@dcblogdev](https://github.com/dcblogdev) added make-action command
+- [@dcblogdev](https://github.com/dcblogdev) added make-cast command
+- [@dcblogdev](https://github.com/dcblogdev) added make-enum command
+- [@dcblogdev](https://github.com/dcblogdev) added make-exception command
+- [@dcblogdev](https://github.com/dcblogdev) added make-helper command
+- [@dcblogdev](https://github.com/dcblogdev) added make-interface command
+- [@dcblogdev](https://github.com/dcblogdev) added make-scope command
+- [@dcblogdev](https://github.com/dcblogdev) added make-trait command
+- [@dcblogdev](https://github.com/dcblogdev) added missing return type for make-service command
+- [@dcblogdev](https://github.com/dcblogdev) updated config
+
+## 11.0.7 - 2024-04-25
+
+## Changes
+
+- [@dcblogdev](https://github.com/dcblogdev) Force the config replacement option for composer 'APP_FOLDER_NAME', to be handled even when its not present.
+- [@solomon-ochepa](https://github.com/solomon-ochepa) Path Namespace - generate a well-formatted StudlyCase namespace from paths
+- [@korridor](https://github.com/korridor) Fixed public path for octane setup
+- [@dcblogdev](https://github.com/dcblogdev) added invokable and force options into make-service command
+- [@dcblogdev](https://github.com/dcblogdev) Restrict fresh migration to module scope
+- [@kowston](https://github.com/kowston) Changed wording for command descriptions to be consistent 
+
+## 11.0.6 - 2024-04-21
+
+- [@alissn](https://github.com/alissn) change package version to Pretty on php artisan about
+- [@alissn](https://github.com/alissn) fix stubs composer for app_folder
+- [@dcblogdev](https://github.com/dcblogdev) added make-service command
+
+## 11.0.5 - 2024-04-17
+
+## Changes
+
+- [@alissn](https://github.com/alissn) check command has direction option, load module with 'priority' 
+
+
+## 11.0.4 - 2024-04-08
+
+## Changes
+
+- [@dcblogdev](https://github.com/dcblogdev) Updated config to use namespace and path for seeders and factories
+- [@solomon-ochepa](https://github.com/solomon-ochepa) Updated vendor / author keys for config/.env
+- [@enterprime](https://github.com/enterprime) Corrected factories to Factories and added cache options to ENV
+
+## Added
+
+- [@dcblogdev](https://github.com/dcblogdev) Added return type array definition
+- [@dcblogdev](https://github.com/dcblogdev) Added test to confirm author details
+
 ## 11.0.3 - 2024-03-24
 
 ## Added 

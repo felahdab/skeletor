@@ -31,7 +31,7 @@ class DataFromArrayResolver
         $data = $this->createData($dataClass, $properties);
 
         foreach ($dataClass->properties as $property) {
-            if(
+            if (
                 $property->isPromoted
                 || $property->isReadonly
                 || ! array_key_exists($property->name, $properties)
@@ -54,7 +54,11 @@ class DataFromArrayResolver
             }
 
             if ($property->computed) {
-                throw CannotSetComputedValue::create($property);
+                if (! config('data.features.ignore_exception_when_trying_to_set_computed_property_value')) {
+                    throw CannotSetComputedValue::create($property);
+                }
+
+                continue; // Ignore the value being passed into the computed property and let it be recalculated
             }
 
             $data->{$property->name} = $properties[$property->name];

@@ -4,6 +4,7 @@ namespace Spatie\Html;
 
 use BackedEnum;
 use DateTimeImmutable;
+use Exception;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -210,7 +211,7 @@ class Html
      *
      * @return \Spatie\Html\Elements\Input
      */
-    public function range($name = '', $value = '', $min = null, $max = null, $step = null)
+    public function range($name = '', $value = null, $min = null, $max = null, $step = null)
     {
         return $this->input('range', $name, $value)
             ->attributeIfNotNull($min, 'min', $min)
@@ -255,7 +256,7 @@ class Html
      */
     public function input($type = null, $name = null, $value = null)
     {
-        $hasValue = $name && ($type !== 'password' && ! is_null($this->old($name, $value)) || ! is_null($value));
+        $hasValue = ! is_null($value) || ($type !== 'password' && ! is_null($this->old($name, $value)));
 
         return Input::create()
             ->attributeIf($type, 'type', $type)
@@ -271,8 +272,9 @@ class Html
      */
     public function fieldset($legend = null)
     {
-        return $legend ?
-            Fieldset::create()->legend($legend) : Fieldset::create();
+        return $legend
+            ? Fieldset::create()->legend($legend)
+            : Fieldset::create();
     }
 
     /**
@@ -389,9 +391,9 @@ class Html
     public function number($name = null, $value = null, $min = null, $max = null, $step = null)
     {
         return $this->input('number', $name, $value)
-                ->attributeIfNotNull($min, 'min', $min)
-                ->attributeIfNotNull($max, 'max', $max)
-                ->attributeIfNotNull($step, 'step', $step);
+            ->attributeIfNotNull($min, 'min', $min)
+            ->attributeIfNotNull($max, 'max', $max)
+            ->attributeIfNotNull($step, 'step', $step);
     }
 
     /**
@@ -594,7 +596,7 @@ class Html
     protected function old($name, $value = null)
     {
         if (empty($name)) {
-            return;
+            return $value;
         }
 
         // Convert array format (sth[1]) to dot notation (sth.1)
@@ -658,7 +660,7 @@ class Html
             $date = new DateTimeImmutable($value);
 
             return $date->format($format);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $value;
         }
     }
@@ -672,7 +674,7 @@ class Html
     protected function getEnumValue($value)
     {
         return $value instanceof BackedEnum
-                ? $value->value
-                : $value->name;
+            ? $value->value
+            : $value->name;
     }
 }

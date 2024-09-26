@@ -11,12 +11,26 @@ return [
     'date_format' => DATE_ATOM,
 
     /**
+     * When transforming or casting dates, the following timezone will be used to
+     * convert the date to the correct timezone. If set to null no timezone will
+     * be passed.
+     */
+    'date_timezone' => null,
+
+    /**
      * It is possible to enable certain features of the package, these would otherwise
      * be breaking changes, and thus they are disabled by default. In the next major
      * version of the package, these features will be enabled by default.
      */
     'features' => [
         'cast_and_transform_iterables' => false,
+
+        /**
+         * When trying to set a computed property value, the package will throw an exception.
+         * You can disable this behaviour by setting this option to true, which will then just
+         * ignore the value being passed into the computed property and recalculate it.
+         */
+        'ignore_exception_when_trying_to_set_computed_property_value' => false,
     ],
 
     /**
@@ -96,7 +110,7 @@ return [
         'enabled' => true,
         'directories' => [app_path('Data')],
         'cache' => [
-            'store' => env('CACHE_DRIVER', 'file'),
+            'store' => env('CACHE_STORE', env('CACHE_DRIVER', 'file')),
             'prefix' => 'laravel-data',
             'duration' => null,
         ],

@@ -37,9 +37,7 @@ trait HasBulkActions
 
     protected EloquentCollection | Collection $cachedSelectedTableRecords;
 
-    protected function configureTableBulkAction(BulkAction $action): void
-    {
-    }
+    protected function configureTableBulkAction(BulkAction $action): void {}
 
     /**
      * @param  array<string, mixed>  $arguments
@@ -70,12 +68,16 @@ trait HasBulkActions
             if ($this->mountedTableBulkActionHasForm(mountedBulkAction: $action)) {
                 $action->callBeforeFormValidated();
 
-                $action->formData($form->getState());
+                $form->getState(afterValidate: function (array $state) use ($action) {
+                    $action->callAfterFormValidated();
 
-                $action->callAfterFormValidated();
+                    $action->formData($state);
+
+                    $action->callBefore();
+                });
+            } else {
+                $action->callBefore();
             }
-
-            $action->callBefore();
 
             $result = $action->call([
                 'form' => $form,

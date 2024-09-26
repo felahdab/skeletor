@@ -64,14 +64,18 @@ class ExportCsv implements ShouldQueue
         /** @var Authenticatable $user */
         $user = $this->export->user;
 
-        auth()->login($user);
+        if (method_exists(auth()->guard(), 'login')) {
+            auth()->login($user);
+        } else {
+            auth()->setUser($user);
+        }
 
         $exceptions = [];
 
         $processedRows = 0;
         $successfulRows = 0;
 
-        $csv = Writer::createFromFileObject(new SplTempFileObject());
+        $csv = Writer::createFromFileObject(new SplTempFileObject);
         $csv->setDelimiter($this->exporter::getCsvDelimiter());
 
         $query = EloquentSerializeFacade::unserialize($this->query);

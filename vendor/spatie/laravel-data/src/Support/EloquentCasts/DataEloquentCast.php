@@ -3,6 +3,7 @@
 namespace Spatie\LaravelData\Support\EloquentCasts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Support\Facades\Crypt;
 use Spatie\LaravelData\Contracts\BaseData;
 use Spatie\LaravelData\Contracts\TransformableData;
 use Spatie\LaravelData\Exceptions\CannotCastData;
@@ -23,6 +24,10 @@ class DataEloquentCast implements CastsAttributes
 
     public function get($model, string $key, $value, array $attributes): ?BaseData
     {
+        if (is_string($value) && in_array('encrypted', $this->arguments)) {
+            $value = Crypt::decryptString($value);
+        }
+
         if (is_null($value) && in_array('default', $this->arguments)) {
             $value = '{}';
         }
@@ -63,14 +68,19 @@ class DataEloquentCast implements CastsAttributes
             throw CannotCastData::shouldBeTransformableData($model::class, $key);
         }
 
-        if ($isAbstractClassCast) {
-            return json_encode([
+        $value = $isAbstractClassCast
+            ? json_encode([
                 'type' => $this->dataConfig->morphMap->getDataClassAlias($value::class) ?? $value::class,
                 'data' => json_decode($value->toJson(), associative: true, flags: JSON_THROW_ON_ERROR),
-            ]);
+            ])
+            : $value->toJson();
+        ;
+
+        if (in_array('encrypted', $this->arguments)) {
+            return Crypt::encryptString($value);
         }
 
-        return $value->toJson();
+        return $value;
     }
 
     protected function isAbstractClassCast(): bool

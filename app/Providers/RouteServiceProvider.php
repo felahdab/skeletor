@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
+use Dedoc\Scramble\Scramble;
+
 class RouteServiceProvider extends ServiceProvider
 {
     /**
@@ -37,7 +39,10 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->configureRateLimiting();
 
-        
+        if (config('skeletor.multi_tenancy'))
+        {
+            app()['config']->set('skeletor.prefixe_instance', config('skeletor.prefixe_instance') . '/{tenant}');
+        }
     }
 
     /**
@@ -54,12 +59,19 @@ class RouteServiceProvider extends ServiceProvider
     
     public function map()
     {
-        Route::prefix(config('skeletor.instance_prefix') . '/api')
+        Route::prefix(env('APP_PREFIX'))
+            //->middleware('webwithoutanytenancy')
+            ->group(function() {
+                Scramble::registerUiRoute('scramble/doc');
+                Scramble::registerJsonSpecificationRoute('api.json');       
+            });
+
+        Route::prefix(config('skeletor.prefixe_instance') . '/api')
             ->middleware('api')
             ->namespace($this->namespace)
             ->group(base_path('routes/api.php'));
 
-        Route::prefix(config('skeletor.instance_prefix'))
+        Route::prefix(config('skeletor.prefixe_instance'))
             ->middleware('web')
             ->namespace($this->namespace)
             ->group(base_path('routes/web.php'));

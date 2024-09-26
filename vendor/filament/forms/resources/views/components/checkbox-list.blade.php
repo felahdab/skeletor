@@ -33,6 +33,10 @@
                 this.visibleCheckboxListOptions.forEach((checkboxLabel) => {
                     checkbox = checkboxLabel.querySelector('input[type=checkbox]')
 
+                    if (checkbox.disabled) {
+                        return
+                    }
+
                     checkbox.checked = state
                     checkbox.dispatchEvent(new Event('change'))
                 })
@@ -123,7 +127,7 @@
                     <span
                         x-show="! areAllCheckboxesChecked"
                         x-on:click="toggleAllCheckboxes()"
-                        wire:key="{{ $this->getId() }}.{{ $statePath }}.{{ $field::class }}.actions.select_all"
+                        wire:key="{{ $this->getId() }}.{{ $statePath }}.{{ $field::class }}.actions.select-all"
                     >
                         {{ $getAction('selectAll') }}
                     </span>
@@ -131,7 +135,7 @@
                     <span
                         x-show="areAllCheckboxesChecked"
                         x-on:click="toggleAllCheckboxes()"
-                        wire:key="{{ $this->getId() }}.{{ $statePath }}.{{ $field::class }}.actions.deselect_all"
+                        wire:key="{{ $this->getId() }}.{{ $statePath }}.{{ $field::class }}.actions.deselect-all"
                     >
                         {{ $getAction('deselectAll') }}
                     </span>
@@ -196,7 +200,7 @@
 
                         <div class="grid text-sm leading-6">
                             <span
-                                class="fi-fo-checkbox-list-option-label font-medium text-gray-950 dark:text-white"
+                                class="fi-fo-checkbox-list-option-label overflow-hidden break-words font-medium text-gray-950 dark:text-white"
                             >
                                 {{ $label }}
                             </span>

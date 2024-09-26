@@ -45,6 +45,32 @@ it('can automatically generate a slug from the title', function () {
 
 > If you have multiple forms on a Livewire component, you can specify which form you want to check using `assertFormSet([...], 'createPostForm')`.
 
+You may also find it useful to pass a function to the `assertFormSet()` method, which allows you to access the form `$state` and perform additional assertions:
+
+```php
+use Illuminate\Support\Str;
+use function Pest\Livewire\livewire;
+
+it('can automatically generate a slug from the title without any spaces', function () {
+    $title = fake()->sentence();
+
+    livewire(CreatePost::class)
+        ->fillForm([
+            'title' => $title,
+        ])
+        ->assertFormSet(function (array $state): array {
+            expect($state['slug'])
+                ->not->toContain(' ');
+                
+            return [
+                'slug' => Str::slug($title),
+            ];
+        });
+});
+```
+
+You can return an array from the function if you want Filament to continue to assert the form state after the function has been run.
+
 ## Validation
 
 Use `assertHasFormErrors()` to ensure that data is properly validated in a form:
@@ -119,6 +145,17 @@ it('has a title field', function () {
 });
 ```
 
+To assert that a form does not have a given field, pass the field name to `assertFormFieldDoesNotExist()`:
+
+```php
+use function Pest\Livewire\livewire;
+
+it('does not have a conditional field', function () {
+    livewire(CreatePost::class)
+        ->assertFormFieldDoesNotExist('no-such-field');
+});
+```
+
 > If you have multiple forms on a Livewire component, you can specify which form you want to check for the existence of the field like `assertFormFieldExists('title', 'createPostForm')`.
 
 ### Hidden fields
@@ -172,6 +209,132 @@ test('title is disabled', function () {
 ```
 
 > For both `assertFormFieldIsEnabled()` and `assertFormFieldIsDisabled()` you can pass the name of a specific form the field belongs to as the second argument like `assertFormFieldIsEnabled('title', 'createPostForm')`.
+
+## Layout components
+
+If you need to check if a particular layout component exists rather than a field, you may use `assertFormComponentExists()`.  As layout components do not have names, this method uses the `key()` provided by the developer:
+
+```php
+use Filament\Forms\Components\Section;
+
+Section::make('Comments')
+    ->key('comments-section')
+    ->schema([
+        //
+    ])
+```
+
+```php
+use function Pest\Livewire\livewire;
+
+test('comments section exists' function () {
+    livewire(EditPost::class)
+        ->assertFormComponentExists('comments-section');
+});
+```
+
+To assert that a form does not have a given component, pass the component key to `assertFormComponentDoesNotExist()`:
+
+```php
+use function Pest\Livewire\livewire;
+
+it('does not have a conditional component', function () {
+    livewire(CreatePost::class)
+        ->assertFormComponentDoesNotExist('no-such-section');
+});
+```
+
+To check if the component exists and passes a given truth test, you can pass a function to the second argument of `assertFormComponentExists()`, returning true or false if the component passes the test or not:
+
+```php
+use Filament\Forms\Components\Component;
+
+use function Pest\Livewire\livewire;
+
+test('comments section has heading' function () {
+    livewire(EditPost::class)
+        ->assertFormComponentExists(
+            'comments-section',
+            function (Component $component): bool {
+                return $component->getHeading() === 'Comments';
+            },
+        );
+});
+```
+
+If you want more informative test results, you can embed an assertion within your truth test callback:
+
+```php
+use Filament\Forms\Components\Component;
+use Illuminate\Testing\Assert;
+
+use function Pest\Livewire\livewire;
+
+test('comments section is enabled' function () {
+    livewire(EditPost::class)
+        ->assertFormComponentExists(
+            'comments-section',
+            function (Component $component): bool {
+                Assert::assertTrue(
+                    $component->isEnabled(),
+                    'Failed asserting that comments-section is enabled.',
+                );
+                
+                return true;
+            },
+        );
+});
+```
+
+### Wizard
+
+To go to a wizard's next step, use `goToNextWizardStep()`:
+
+```php
+use function Pest\Livewire\livewire;
+
+it('moves to next wizard step', function () {
+    livewire(CreatePost::class)
+        ->goToNextWizardStep()
+        ->assertHasFormErrors(['title']);
+});
+```
+
+You can also go to the previous step by calling `goToPreviousWizardStep()`:
+
+```php
+use function Pest\Livewire\livewire;
+
+it('moves to next wizard step', function () {
+    livewire(CreatePost::class)
+        ->goToPreviousWizardStep()
+        ->assertHasFormErrors(['title']);
+});
+```
+
+If you want to go to a specific step, use `goToWizardStep()`, then the `assertWizardCurrentStep` method which can ensure you are on the desired step without validation errors from the previous:
+
+```php
+use function Pest\Livewire\livewire;
+
+it('moves to the wizards second step', function () {
+    livewire(CreatePost::class)
+        ->goToWizardStep(2)
+        ->assertWizardCurrentStep(2);
+});
+```
+
+If you have multiple forms on a single Livewire component, any of the wizard test helpers can accept a `formName` parameter:
+
+```php
+use function Pest\Livewire\livewire;
+
+it('moves to next wizard step only for fooForm', function () {
+    livewire(CreatePost::class)
+        ->goToNextWizardStep(formName: 'fooForm')
+        ->assertHasFormErrors(['title'], formName: 'fooForm');
+});
+```
 
 ## Actions
 

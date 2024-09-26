@@ -45,7 +45,7 @@ class ControllerMakeCommand extends GeneratorCommand
 
         $controllerPath = GenerateConfigReader::read('controller');
 
-        return $path . $controllerPath->getPath() . '/' . $this->getControllerName() . '.php';
+        return $path.$controllerPath->getPath().'/'.$this->getControllerName().'.php';
     }
 
     /**
@@ -56,16 +56,16 @@ class ControllerMakeCommand extends GeneratorCommand
         $module = $this->laravel['modules']->findOrFail($this->getModuleName());
 
         return (new Stub($this->getStubName(), [
-            'MODULENAME'        => $module->getStudlyName(),
-            'CONTROLLERNAME'    => $this->getControllerName(),
-            'NAMESPACE'         => $module->getStudlyName(),
-            'CLASS_NAMESPACE'   => $this->getClassNamespace($module),
-            'CLASS'             => $this->getControllerNameWithoutNamespace(),
-            'LOWER_NAME'        => $module->getLowerName(),
-            'MODULE'            => $this->getModuleName(),
-            'NAME'              => $this->getModuleName(),
-            'STUDLY_NAME'       => $module->getStudlyName(),
-            'MODULE_NAMESPACE'  => $this->laravel['modules']->config('namespace'),
+            'MODULENAME' => $module->getStudlyName(),
+            'CONTROLLERNAME' => $this->getControllerName(),
+            'NAMESPACE' => $module->getStudlyName(),
+            'CLASS_NAMESPACE' => $this->getClassNamespace($module),
+            'CLASS' => $this->getControllerNameWithoutNamespace(),
+            'LOWER_NAME' => $module->getLowerName(),
+            'MODULE' => $this->getModuleName(),
+            'NAME' => $this->getModuleName(),
+            'STUDLY_NAME' => $module->getStudlyName(),
+            'MODULE_NAMESPACE' => $this->laravel['modules']->config('namespace'),
         ]))->render();
     }
 
@@ -90,6 +90,7 @@ class ControllerMakeCommand extends GeneratorCommand
         return [
             ['plain', 'p', InputOption::VALUE_NONE, 'Generate a plain controller', null],
             ['api', null, InputOption::VALUE_NONE, 'Exclude the create and edit methods from the controller.'],
+            ['invokable', 'i', InputOption::VALUE_NONE, 'Generate a single method, invokable controller class'],
         ];
     }
 
@@ -123,6 +124,7 @@ class ControllerMakeCommand extends GeneratorCommand
 
     /**
      * Get the stub file name based on the options
+     *
      * @return string
      */
     protected function getStubName()
@@ -131,6 +133,8 @@ class ControllerMakeCommand extends GeneratorCommand
             $stub = '/controller-plain.stub';
         } elseif ($this->option('api') === true) {
             $stub = '/controller-api.stub';
+        } elseif ($this->option('invokable') === true) {
+            $stub = '/controller.invokable.stub';
         } else {
             $stub = '/controller.stub';
         }

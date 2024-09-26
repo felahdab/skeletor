@@ -31,6 +31,7 @@
                 @can('annudef.index')<a class="dropdown-item" href="{{ route('annudef.index')}}">Annudef</a>@endcan
                 @can('mails.index')<a class="dropdown-item" href="{{ route('mails.index')}}">Mails</a>@endcan
                 @can('paramaccueils.index')<a class="dropdown-item" href="{{ route('paramaccueils.index')}}">Page d'accueil</a>@endcan
+                @can('archives.index')<a class="dropdown-item" href="{{ route('archives.index')}}">Marins archivés</a>@endcan
                 @php
                   $dashboard_url = \Filament\Pages\Dashboard::getUrl(panel: 'admin');
                 @endphp
@@ -52,9 +53,9 @@
             <a href="{{ route('impersonate.leave') }}" class="btn btn-outline-danger me-2">Redevenir soi-m&ecirc;me</a>
 	      @endImpersonating
         
-        <button type= "button" class='btn btn-warning' data-bs-toggle="modal" data-bs-target="#bugreport-modal"> Signaler un problème</button> 
+        <button type= "button" class='btn btn-outline-warning  me-2' data-bs-toggle="modal" data-bs-target="#bugreport-modal"> Signaler un problème</button> 
         
-        <div id='notification-space'></div>
+        <div id='notification-space' class="me-2"></div>
 
         <div class="dropdown">
           <button class="btn btn-dark dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -82,7 +83,7 @@
       @guest
         <div class="text-end">
           <span class="btn btn-outline-light me-2">@yield('helplink')</span>
-          <a href="{{ route('login.show') }}" class="btn btn-outline-light me-2">Login</a>
+          <a href="{{ route('login') }}" class="btn btn-outline-light me-2">Login</a>
         </div>
       @endguest
       
