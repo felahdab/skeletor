@@ -20,8 +20,8 @@
   @teleport('#notification-space')
     @auth
     <button class="btn btn-outline-info" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationPanel" aria-controls="offcanvasRight">
-      <x-bootstrap-icon iconname='bell.svg' />
-      
+    <x-heroicon-o-bell class="h-6 w-6 text-red-600" />     
+
       @if(auth()->user()->unreadNotifications->count())
         <span class="badge bg-danger">{{ auth()->user()->unreadNotifications->count() }}</span>
       @endif
