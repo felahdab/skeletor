@@ -28,7 +28,7 @@ class RemotesystemResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                Forms\Components\TextInput::make('nom')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -42,7 +42,7 @@ class RemotesystemResource extends Resource
                     ->label('UUID')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('name')
+                Tables\Columns\TextColumn::make('nom')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
