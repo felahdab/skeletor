@@ -14,7 +14,7 @@ class Remotesystem  extends Authenticatable
 {
     use HasApiTokens, HasRoles;
 
-    protected $fillable = ['uuid', 'name'];
+    protected $fillable = ['uuid', 'nom'];
 
     protected function getDefaultGuardName(): string { return 'api'; }
 
