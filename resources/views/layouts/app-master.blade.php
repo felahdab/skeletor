@@ -1,30 +1,4 @@
 <!doctype html>
-@if ( (Browser::browserFamily() == "Firefox" and Browser::browserVersionMajor() < 60) 
-       or (Browser::browserFamily() == "Internet Explorer" and Browser::browserVersionMajor() <= 11)  )
-
-    <html lang="en">
-    <head>
-    <title>{{ config('skeletor.instance_titre') }}</title>
-    <link rel="icon" type="image/png" sizes="32x32" href="{!! asset('assets/images/favicon-32x32.png') !!}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{!! asset('assets/images/favicon-16x16.png') !!}">
-</head>
-<body>
-<div><center><h1>Bienvenue sur {{ config('skeletor.instance_titre') }} !</h1></center></div>
-<div>
-    <img src='{!! asset("assets/images/Logo_C2N.jpg") !!}' alt="Logo du C2N" style="height:450px; display: block; margin-left:auto; margin-right: auto; ">
-</div>
-<div>
-<center>
-Votre navigateur est trop ancien pour utiliser les fonctionnalités de {{ config('skeletor.instance_titre') }}.<p>
-Veuillez le mettre à jour.<p>
-Vous avez également la possibilité de télécharger directement une version portable de Firefox.<p>
-<a href="{!! asset('FirefoxPortableUtilisateurPolarisOnline.zip') !!}">Firefox Portable</a>
-</center>
-</body>
-</html>
-@else
-
-
 <html lang="en">
     <head>
     <meta charset="utf-8">
@@ -57,7 +31,6 @@ Vous avez également la possibilité de télécharger directement une version po
 <body>
     
     @include('layouts.partials.navbar')
-    @include('layouts.partials.bugreport')
     @include('layouts.partials.notifications')
     
     
@@ -90,5 +63,3 @@ Vous avez également la possibilité de télécharger directement une version po
 
   </body>
 </html>
-
-@endif

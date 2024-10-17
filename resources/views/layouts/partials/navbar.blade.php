@@ -26,8 +26,6 @@
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 @can('mindefconnect.index')<a class="dropdown-item" href="{{ route('mindefconnect.index') }}">Demandes Mindef Connect</a>@endcan
                 <a class="dropdown-item" href="{{ route('users.index') }}">Fiches des marins</a>
-                @can('roles.index')<a class="dropdown-item" href="{{ route('roles.index')}}">Roles</a>@endcan
-                @can('liens.index')<a class="dropdown-item" href="{{ route('liens.index')}}">Liens</a>@endcan
                 @can('annudef.index')<a class="dropdown-item" href="{{ route('annudef.index')}}">Annudef</a>@endcan
                 @can('mails.index')<a class="dropdown-item" href="{{ route('mails.index')}}">Mails</a>@endcan
                 @can('paramaccueils.index')<a class="dropdown-item" href="{{ route('paramaccueils.index')}}">Page d'accueil</a>@endcan
@@ -39,19 +37,14 @@
               </div>
             </div>
             @endcan
-            
-            @foreach(Module::allEnabled() as $module)
-              @includeIf($module->getLowerName() . "::partials.navbar") 
-            @endforeach
+          
             
             @endauth
         </ul>
       
 
       @auth
-        @impersonating()
-            <a href="{{ route('impersonate.leave') }}" class="btn btn-outline-danger me-2">Redevenir soi-m&ecirc;me</a>
-	      @endImpersonating
+
         
         <button type= "button" class='btn btn-outline-warning  me-2' data-bs-toggle="modal" data-bs-target="#bugreport-modal"> Signaler un problème</button> 
         
@@ -73,9 +66,6 @@
             <a class="dropdown-item" href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2">Déconnexion</a>
             <hr>
             <span class="dropdown-item">Skeletor {{env('APP_VERSION')}}</span>
-            @foreach(Module::allEnabled() as $module)
-              <span class="dropdown-item">Module {{ $module->getName() }} {{ Config::get($module->getLowerName() . '.version') }}</span>
-            @endforeach
           </div>
         </div>
       @endauth
