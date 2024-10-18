@@ -12,6 +12,7 @@
         "calebporzio/sushi": "^2.4",
         "coolsam/modules": "^4",
         "dedoc/scramble": "^0.11",
+        "doode/filament-map-picker": "^1.1",
         "filament/filament": "^3.1",
         "filament/spatie-laravel-google-fonts-plugin": "^3.1",
         "guzzlehttp/guzzle": "^7.2",
@@ -27,7 +28,7 @@
         "nwidart/laravel-modules": "^11.0",
         "owen-it/laravel-auditing": "^13.5",
         "predis/predis": "^2.2",
-        "saade/filament-fullcalendar": "^3.0",
+        "saade/filament-fullcalendar": "florianthecoder-introduce-methods-to-use-resources-dev",
         "saloonphp/laravel-plugin": "^3.0",
         "saloonphp/saloon": "^3.0",
         "socialiteproviders/keycloak": "^5.2",
@@ -106,6 +107,14 @@
         "type": "path",
         "url": "./packages/filament-map-picker/",
         "only": ["dotswan/filament-map-picker"],
+        "options": {
+            "symlink": true
+        }
+    },
+    {
+        "type": "path",
+        "url": "./packages/filament-fullcalendar/",
+        "only": ["saade/filament-fullcalendar"],
         "options": {
             "symlink": true
         }

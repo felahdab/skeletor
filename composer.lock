@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4dfff91910995e8e75a80a2b68f12547",
+    "content-hash": "7e6cc2a547bded30387d3a0868f55f14",
     "packages": [
         {
             "name": "althinect/filament-spatie-roles-permissions",
@@ -2185,6 +2185,86 @@
                 }
             ],
             "time": "2024-02-05T11:56:58+00:00"
+        },
+        {
+            "name": "doode/filament-map-picker",
+            "version": "v1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vitormicillo/filament-map-picker.git",
+                "reference": "d61754624bc1c3525aed95b439f45db367484e3b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vitormicillo/filament-map-picker/zipball/d61754624bc1c3525aed95b439f45db367484e3b",
+                "reference": "d61754624bc1c3525aed95b439f45db367484e3b",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^3.2",
+                "illuminate/contracts": "^10.0 || ^11.0",
+                "php": "^8.1",
+                "spatie/laravel-package-tools": "^1.15.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^7.9",
+                "nunomaduro/larastan": "^2.0.1",
+                "orchestra/testbench": "^8.0",
+                "pestphp/pest": "^2.0",
+                "pestphp/pest-plugin-arch": "^2.0",
+                "pestphp/pest-plugin-laravel": "^2.0",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Doode\\MapPicker\\MapPickerServiceProvider"
+                    ],
+                    "aliases": {
+                        "MapPicker": "Doode\\MapPicker\\Facades\\MapPicker"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Doode\\MapPicker\\": "src/",
+                    "Doode\\MapPicker\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Doode",
+                    "email": "doode@doode.com.br",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Easily pick and retrieve geo-coordinates using a map-based interface with geoman extension map draw tools.",
+            "homepage": "https://github.com/vitormicillo/filament-map-picker",
+            "keywords": [
+                "doode",
+                "filament",
+                "filament-map-picker",
+                "filament-v3",
+                "filamentphp",
+                "geoman",
+                "laravel",
+                "leaflet-geoman",
+                "leaflet-map-picker",
+                "map-picker"
+            ],
+            "support": {
+                "issues": "https://github.com/vitormicillo/filament-map-picker/issues",
+                "source": "https://github.com/vitormicillo/filament-map-picker"
+            },
+            "time": "2024-09-23T13:58:35+00:00"
         },
         {
             "name": "dragonmantank/cron-expression",
@@ -7757,17 +7837,11 @@
         },
         {
             "name": "saade/filament-fullcalendar",
-            "version": "v3.2.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/saade/filament-fullcalendar.git",
-                "reference": "d40410e6bc46057628fb9fa8f62b6090452914d3"
-            },
+            "version": "dev-florianthecoder-introduce-methods-to-use-resources",
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/saade/filament-fullcalendar/zipball/d40410e6bc46057628fb9fa8f62b6090452914d3",
-                "reference": "d40410e6bc46057628fb9fa8f62b6090452914d3",
-                "shasum": ""
+                "type": "path",
+                "url": "./packages/filament-fullcalendar",
+                "reference": "cd6345d38537276ad5369ce41ad5584b57565bd3"
             },
             "require": {
                 "filament/filament": "^3.0",
@@ -7799,7 +7873,17 @@
                     "Saade\\FilamentFullCalendar\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "scripts": {
+                "analyse": [
+                    "vendor/bin/phpstan analyse"
+                ],
+                "test": [
+                    "vendor/bin/pest"
+                ],
+                "test-coverage": [
+                    "vendor/bin/pest coverage"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -7817,17 +7901,10 @@
                 "laravel",
                 "saade"
             ],
-            "support": {
-                "issues": "https://github.com/saade/filament-fullcalendar/issues",
-                "source": "https://github.com/saade/filament-fullcalendar/tree/v3.2.2"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/saade",
-                    "type": "github"
-                }
-            ],
-            "time": "2024-05-02T13:04:39+00:00"
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         },
         {
             "name": "saloonphp/laravel-plugin",
@@ -14506,7 +14583,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "saade/filament-fullcalendar": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

@@ -3,7 +3,7 @@
         'name' => 'fanlab/skeletor',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'f4679a93d99e80a6d10a36aae75c75ff2cec6147',
+        'reference' => '5ab99fd9f6207c881a10a9bd4820109ce652f4a2',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -301,6 +301,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'doode/filament-map-picker' => array(
+            'pretty_version' => 'v1.1.1',
+            'version' => '1.1.1.0',
+            'reference' => 'd61754624bc1c3525aed95b439f45db367484e3b',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../doode/filament-map-picker',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'dragonmantank/cron-expression' => array(
             'pretty_version' => 'v3.3.3',
             'version' => '3.3.3.0',
@@ -346,7 +355,7 @@
         'fanlab/skeletor' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'f4679a93d99e80a6d10a36aae75c75ff2cec6147',
+            'reference' => '5ab99fd9f6207c881a10a9bd4820109ce652f4a2',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
