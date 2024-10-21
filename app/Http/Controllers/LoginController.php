@@ -56,7 +56,58 @@ class LoginController extends Controller
             return $this->authenticated($request, $user);
         }
 
-        dd($MCuser);
+        //dd($MCuser);
+        // SocialiteProviders\Manager\OAuth2\User {#2604 ▼ // app/Http/Controllers/LoginController.php:59
+        //     +id: "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
+        //     +nickname: "f.el-ahdab"
+        //     +name: "Florian El-Ahdab"
+        //     +email: "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
+        //     +avatar: null
+        //     +user: array:7 [▼
+        //       "sub" => "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
+        //       "email_verified" => true
+        //       "name" => "Florian El-Ahdab"
+        //       "preferred_username" => "f.el-ahdab"
+        //       "given_name" => "Florian"
+        //       "family_name" => "El-Ahdab"
+        //       "email" => "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
+        //     ]
+        //     +attributes: array:4 [▼
+        //       "id" => "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
+        //       "nickname" => "f.el-ahdab"
+        //       "name" => "Florian El-Ahdab"
+        //       "email" => "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
+        //     ]
+        //     +token: "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MjkyNTg1OTgsImlhdCI6MTcyOTI1ODI5OCwi
+        //    ▶
+        //   "
+        //     +refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJmZjEwOThhZC1iYjg1LTQ1MzQtOWRlYi0xZDNiOGI4MGMxOTMifQ.eyJleHAiOjE3MjkyNjAwOTgsImlhdCI6MTcyOTI1ODI5OCwianRpIjoiY
+        //    ▶
+        //   "
+        //     +expiresIn: 300
+        //     +approvedScopes: array:3 [▼
+        //       0 => "openid"
+        //       1 => "profile"
+        //       2 => "email"
+        //     ]
+        //     +accessTokenResponseBody: array:9 [▼
+        //       "access_token" => "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MjkyNTg1OTgsImlhdCI6MTcyOTI1ODI5OCwi
+        //    ▶
+        //   "
+        //       "expires_in" => 300
+        //       "refresh_expires_in" => 1800
+        //       "refresh_token" => "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJmZjEwOThhZC1iYjg1LTQ1MzQtOWRlYi0xZDNiOGI4MGMxOTMifQ.eyJleHAiOjE3MjkyNjAwOTgsImlhdCI6MTcyOTI1ODI5OCwianRpIjoiY
+        //    ▶
+        //   "
+        //       "token_type" => "Bearer"
+        //       "id_token" => "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MjkyNTg1OTgsImlhdCI6MTcyOTI1ODI5OCwi
+        //    ▶
+        //   "
+        //       "not-before-policy" => 0
+        //       "session_state" => "c2d897e9-5ffb-4342-a216-d91362b1e82a"
+        //       "scope" => "openid profile email"
+        //     ]
+        //   }
 
         // si le user n'existe pas, test de la variable APP_VALID_MDC pour savoir si on l'enregistre dans la table MDC 
         if (! config('skeletor.validation_automatique_des_comptes_mindef_connect')){
@@ -67,85 +118,6 @@ class LoginController extends Controller
                 $MCuserexist->msg = true;
             } 
             else {
-                // Mindef Connect
-                // SocialiteProviders\Manager\OAuth2\User {#2421 ▼
-                //     +id: "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
-                //     +nickname: "f.el-ahdab"
-                //     +name: "Florian El-Ahdab"
-                //     +email: "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
-                //     +avatar: null
-                //     +user: array:7 [▼
-                //       "sub" => "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
-                //       "email_verified" => true
-                //       "name" => "Florian El-Ahdab"
-                //       "preferred_username" => "f.el-ahdab"
-                //       "given_name" => "Florian"
-                //       "family_name" => "El-Ahdab"
-                //       "email" => "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
-                //     ]
-                //     +attributes: array:4 [▼
-                //       "id" => "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
-                //       "nickname" => "f.el-ahdab"
-                //       "name" => "Florian El-Ahdab"
-                //       "email" => "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
-                //     ]
-                //     +token: "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MTM4NjI2MzYsImlhdCI6MTcxMzg2MjMzNiwi ▶"
-                //     +refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJmZjEwOThhZC1iYjg1LTQ1MzQtOWRlYi0xZDNiOGI4MGMxOTMifQ.eyJleHAiOjE3MTM4NjQxMzYsImlhdCI6MTcxMzg2MjMzNiwianRpIjoiN ▶"
-                //     +expiresIn: 300
-                //     +approvedScopes: null
-                //     +accessTokenResponseBody: array:9 [▼
-                //       "access_token" => "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MTM4NjI2MzYsImlhdCI6MTcxMzg2MjMzNiwi ▶"
-                //       "expires_in" => 300
-                //       "refresh_expires_in" => 1800
-                //       "refresh_token" => "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJmZjEwOThhZC1iYjg1LTQ1MzQtOWRlYi0xZDNiOGI4MGMxOTMifQ.eyJleHAiOjE3MTM4NjQxMzYsImlhdCI6MTcxMzg2MjMzNiwianRpIjoiN ▶"
-                //       "token_type" => "Bearer"
-                //       "id_token" => "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MTM4NjI2MzYsImlhdCI6MTcxMzg2MjMzNiwi ▶"
-                //       "not-before-policy" => 0
-                //       "session_state" => "1fe77c94-e6f9-410c-bace-23a3669c3eb4"
-                //       "scope" => "openid profile email"
-                //     ]
-                //   }
-
-                // POLARIS Online
-                // SocialiteProviders\Manager\OAuth2\User {#2567 ▼ // app/Http/Controllers/LoginController.php:58
-                //     +id: "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
-                //     +nickname: "f.el-ahdab"
-                //     +name: "Florian El-Ahdab"
-                //     +email: "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
-                //     +avatar: null
-                //     +user: array:7 [▶]
-                //     +attributes: array:4 [▼
-                //       "id" => "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
-                //       "nickname" => "f.el-ahdab"
-                //       "name" => "Florian El-Ahdab"
-                //       "email" => "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
-                //     ]
-                //     +token: "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MTgwOTk1MjcsImlhdCI6MTcxODA5OTIyNywi
-                //    ▶
-                //   "
-                //     +refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJmZjEwOThhZC1iYjg1LTQ1MzQtOWRlYi0xZDNiOGI4MGMxOTMifQ.eyJleHAiOjE3MTgxMDEwMjcsImlhdCI6MTcxODA5OTIyNywianRpIjoiO
-                //    ▶
-                //   "
-                //     +expiresIn: 300
-                //     +approvedScopes: null
-                //     +accessTokenResponseBody: array:9 [▼
-                //       "access_token" => "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MTgwOTk1MjcsImlhdCI6MTcxODA5OTIyNywi
-                //    ▶
-                //   "
-                //       "expires_in" => 300
-                //       "refresh_expires_in" => 1800
-                //       "refresh_token" => "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJmZjEwOThhZC1iYjg1LTQ1MzQtOWRlYi0xZDNiOGI4MGMxOTMifQ.eyJleHAiOjE3MTgxMDEwMjcsImlhdCI6MTcxODA5OTIyNywianRpIjoiO
-                //    ▶
-                //   "
-                //       "token_type" => "Bearer"
-                //       "id_token" => "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MTgwOTk1MjcsImlhdCI6MTcxODA5OTIyNywi
-                //    ▶
-                //   "
-                //       "not-before-policy" => 0
-                //       "session_state" => "a7d5834e-0e08-4d9e-b2be-1dc4c4ac0420"
-                //       "scope" => "openid profile email"
-                //     ]
-                //   }
                 $MCuserexist = MindefConnectUser::create(
                     [
                         'sub' => $MCuser->user['sub'],
@@ -160,20 +132,14 @@ class LoginController extends Controller
         }
         // variable false = on cree directement le user dans user
         else{
-            $gdeid=null;
-            if ($possibleGrade = Grade::where("grade_liblong", "like", strtoupper($MCuser->user['rank']))->get()->first())
-                $gdeid=$possibleGrade->id;
-            $possibleUnite= PossibleUniteService::possibleunite($MCuser->user['main_department_number']);
+
             $Newuser=User::create(
                 [
                     "password" =>substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(10/strlen($x)) )),1,10),
                     'email' => $MCuser->email,
-                    'name' => $MCuser->user['usual_name'],
-                    'prenom' => $MCuser->user['usual_forename'],
-                    'grade_id' => $gdeid,
-                    'display_name' => $MCuser->user['display_name'],
-                    "unite_id" => $possibleUnite?->id,
-                    "date_embarq" => date('Y-m-d')
+                    'nom' => $MCuser->user['family_name'],
+                    'prenom' => $MCuser->user['given_name'],
+                    'display_name' => $MCuser->user['name']
                 ]
             );
             $role= Role::where('name', config('skeletor.groupe_par_defaut_des_nouveaux_comptes'))->first();
