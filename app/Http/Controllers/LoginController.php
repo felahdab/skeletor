@@ -49,6 +49,8 @@ class LoginController extends Controller
 
         $MCuser = $driver->stateless()->user();
 
+        //ddd($MCuser);
+
         $user = User::where('email', $MCuser->email)->get()->first();
         if ($user != null) {
             $user->storeMindefConnectInformations($MCuser->user);

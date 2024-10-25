@@ -26,7 +26,9 @@ class LogoutController extends Controller
         $request->session()->regenerateToken();
 
         $redirectUri = URL::to(route('home.index'));
-        $logoutUrl = Socialite::driver('keycloak')->getLogoutUrl($redirectUri);
+        $logoutUrl = Socialite::driver('keycloak')
+                ->getLogoutUrl(redirectUri: $redirectUri, 
+                                clientId: env('KEYCLOAK_CLIENT_ID'));
 
         return redirect($logoutUrl);
    }

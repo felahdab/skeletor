@@ -39,7 +39,9 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
 
         if (env('APP_ENV') != 'production') {
-            Mail::fake();
+            //logger('Setting non production global destination email adres.');
+            $email=config('skeletor.destinataire_email_non_production');
+            Mail::alwaysTo($email);
         }
 
         if (env('APP_SCHEME') == 'https')

@@ -15,16 +15,16 @@
 <div class="d-flex justify-content-center mt-5 ">
         <div class="card w-50 justify-content-center" >
             <div class="w-100 text-center mt-3">
-                <div class="mb-1"><h4><b>LOGIN Automatique/DR-CPT</b></h4></div>
+                <div class="mb-1"><h4><b>LOGIN Automatique</b></h4></div>
                 <a href="{{ route('keycloak.login.redirect') }}" class="btn btn-light w-50" >
                     <div class="card">
                         <div class="row g-0">
-                          <div class="col-md-4 p-2" >
-                            <img src='{!! asset("assets/images/MDC_intradef.png") !!}' alt="Logo MDconnect" style="width:70px">
+                          <div class="col-md-6 my-auto" >
+                            <img src='{!! asset("assets/images/Keycloak.png") !!}' alt="Logo MDconnect" style="width:100%">
                           </div>
-                          <div class="col-md-8 border-start d-flex align-items-center">
+                          <div class="col-md-6 border-start d-flex align-items-center">
                                 <div class="card-body ">
-                                    Se connecter
+                                    Se connecter via POLARIS Online
                                 </div>
                           </div>
                         </div>

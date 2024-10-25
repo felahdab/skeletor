@@ -10,6 +10,7 @@ class HomeController extends Controller
     public function index()
     {
         $user = auth()->user();
+        $destination = null;
 
         if ($user) {
             $settings = Arr::get($user->data, "settings", []);
