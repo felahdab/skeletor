@@ -744,22 +744,6 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         array (
             0 => __DIR__ . '/../..' . '/Modules/Fleetprogram/app',
         ),
-        'Modules\\PolarisOnline\\Tests\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/Modules/PolarisOnline/tests',
-        ),
-        'Modules\\PolarisOnline\\Database\\Seeders\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/Modules/PolarisOnline/database/seeders',
-        ),
-        'Modules\\PolarisOnline\\Database\\Factories\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/Modules/PolarisOnline/database/factories',
-        ),
-        'Modules\\PolarisOnline\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/Modules/PolarisOnline/app',
-        ),
         'Mockery\\' => 
         array (
             0 => __DIR__ . '/..' . '/mockery/mockery/library/Mockery',
