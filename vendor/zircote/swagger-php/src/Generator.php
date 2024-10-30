@@ -508,6 +508,7 @@ class Generator
 
             // validation
             if ($validate) {
+                dd($analysis);
                 $analysis->validate();
             }
         } finally {
