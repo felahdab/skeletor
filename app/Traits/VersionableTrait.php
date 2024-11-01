@@ -305,10 +305,17 @@ trait VersionableTrait
             "reason" => $versions[0]->reason
         ];
 
+        $isFirst = true;
         $previous_version = $versions[0];
         foreach ($versions as $version){
-            $changes = $version->diffRaw($previous_version);
-            $ret[] = $changes;
+            if ($isFirst)
+            {
+                $isFirst =false;
+            }
+            else {   
+                $changes = $version->diffRaw($previous_version);
+                $ret[] = $changes;
+            }
             $previous_version=$version;
         }
         return $ret;
