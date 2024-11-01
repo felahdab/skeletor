@@ -6782,6 +6782,7 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'Mockery\\VerificationDirector' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/VerificationDirector.php',
         'Mockery\\VerificationExpectation' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/VerificationExpectation.php',
         'Modules\\Fleetprogram\\Database\\Seeders\\FleetprogramDatabaseSeeder' => __DIR__ . '/../..' . '/Modules/Fleetprogram/database/seeders/FleetprogramDatabaseSeeder.php',
+        'Modules\\Fleetprogram\\Filament\\Exports\\ActiviteExporter' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Filament/Exports/ActiviteExporter.php',
         'Modules\\Fleetprogram\\Filament\\Resources\\ActiviteResource' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Filament/Resources/ActiviteResource.php',
         'Modules\\Fleetprogram\\Filament\\Resources\\ActiviteResource\\Pages\\CreateActivite' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Filament/Resources/ActiviteResource/Pages/CreateActivite.php',
         'Modules\\Fleetprogram\\Filament\\Resources\\ActiviteResource\\Pages\\EditActivite' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Filament/Resources/ActiviteResource/Pages/EditActivite.php',

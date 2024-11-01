@@ -5623,6 +5623,7 @@ return array(
     'Mockery\\VerificationDirector' => $vendorDir . '/mockery/mockery/library/Mockery/VerificationDirector.php',
     'Mockery\\VerificationExpectation' => $vendorDir . '/mockery/mockery/library/Mockery/VerificationExpectation.php',
     'Modules\\Fleetprogram\\Database\\Seeders\\FleetprogramDatabaseSeeder' => $baseDir . '/Modules/Fleetprogram/database/seeders/FleetprogramDatabaseSeeder.php',
+    'Modules\\Fleetprogram\\Filament\\Exports\\ActiviteExporter' => $baseDir . '/Modules/Fleetprogram/app/Filament/Exports/ActiviteExporter.php',
     'Modules\\Fleetprogram\\Filament\\Resources\\ActiviteResource' => $baseDir . '/Modules/Fleetprogram/app/Filament/Resources/ActiviteResource.php',
     'Modules\\Fleetprogram\\Filament\\Resources\\ActiviteResource\\Pages\\CreateActivite' => $baseDir . '/Modules/Fleetprogram/app/Filament/Resources/ActiviteResource/Pages/CreateActivite.php',
     'Modules\\Fleetprogram\\Filament\\Resources\\ActiviteResource\\Pages\\EditActivite' => $baseDir . '/Modules/Fleetprogram/app/Filament/Resources/ActiviteResource/Pages/EditActivite.php',
