@@ -13,6 +13,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+use STS\FilamentImpersonate\Tables\Actions\Impersonate;
+
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
@@ -84,6 +86,9 @@ class UserResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Impersonate::make()
+                    ->redirectTo(route('home.index')),
+                
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

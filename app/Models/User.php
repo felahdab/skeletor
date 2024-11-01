@@ -21,11 +21,15 @@ use Filament\Models\Contracts\HasName;
 
 use Filament\Panel;
 
+use Lab404\Impersonate\Models\Impersonate;
+
+
 #[ObservedBy([UserObserver::class])]
 class User extends Authenticatable implements FilamentUser, HasName
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
     use SoftDeletes;
+    use Impersonate;
 
     protected function casts(): array
     {
@@ -115,6 +119,7 @@ class User extends Authenticatable implements FilamentUser, HasName
 
     public function getAnnudefPictureUrl()
     {
+        return "";
         $result = Cache::remember($this->cacheKey() . ':annudef_picture_url', 60*5, function () {
             return AnnudefAjaxRequestService::searchPictureForEmail($this->email);
         });
@@ -130,5 +135,10 @@ class User extends Authenticatable implements FilamentUser, HasName
             return 1;
         
         return 0;
+    }
+
+    public function canImpersonate()
+    {
+        return $this->admin;
     }
 }
