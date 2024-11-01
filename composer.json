@@ -84,8 +84,7 @@
             "dont-discover": [
                 "livewire/livewire",
                 "nwidart/laravel-modules",
-                "filament/filament",
-                "dedoc/scramble"
+                "filament/filament"
             ]
         },
         "merge-plugin": {
