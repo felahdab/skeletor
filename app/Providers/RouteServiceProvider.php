@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
-use Dedoc\Scramble\Scramble;
+//use Dedoc\Scramble\Scramble;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -59,12 +59,11 @@ class RouteServiceProvider extends ServiceProvider
     
     public function map()
     {
-        Route::prefix(env('APP_PREFIX'))
-            //->middleware('webwithoutanytenancy')
-            ->group(function() {
-                Scramble::registerUiRoute('scramble/doc');
-                Scramble::registerJsonSpecificationRoute('api.json');       
-            });
+        // Route::prefix(env('APP_PREFIX'))
+        //     ->group(function() {
+        //         Scramble::registerUiRoute('scramble/doc');
+        //         Scramble::registerJsonSpecificationRoute('api.json');       
+        //     });
 
         Route::prefix(config('skeletor.prefixe_instance') . '/api')
             ->middleware('api')
