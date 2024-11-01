@@ -122,6 +122,22 @@ class Version extends Eloquent
         $diff  = $againstVersion ? $againstVersion->model_data : $this->versionable()->withTrashed()->first()->currentVersion()->model_data;
         $against_data = Arr::dot(unserialize($diff));
 
+        // Ca marche mais c'est pas terrible...
+        foreach ($this_data as $key=>$value)
+        {
+            if ($value == [])
+            {
+                $this_data[$key] = null;
+            }
+        }
+        foreach ($against_data as $key=>$value)
+        {
+            if ($value == [])
+            {
+                $against_data[$key] = null;
+            }
+        }
+
         $changed_keys = array_diff_assoc($this_data, $against_data);
         
 
