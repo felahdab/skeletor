@@ -17,5 +17,8 @@ use App\Api\v1\SkeletorController;
 Route::group(['namespace' => 'App\Api\v1' , 'prefix' => 'v1', 'middleware' => ['forcejson', 'auth:sanctum'], "as" => "api.v1."], function() 
     {
     Route::get('/whoami', [SkeletorController::class, 'who_am_i']);
+    Route::get('/status', [SkeletorController::class, 'status']);
+    Route::get('/status-detailed', [SkeletorController::class, 'status_detailed']);
+
     
 });

@@ -101,5 +101,16 @@ return [
     */
 
     'multi_tenancy' => env('SKELETOR_MULTI_TENANCY', false),
+
+     /*
+    |--------------------------------------------------------------------------
+    | Destinataire des mails lorsque l'application n'est pas en production
+    |--------------------------------------------------------------------------
+    |
+    | Lorque l'application n'est pas en production (variable d'environnement APP_ENV != "production"),
+    | tous les mails sont envoyés à l'adresse indiquée ci-dessous:
+    |
+    */
+    'destinataire_email_non_production'=> env('SKELETOR_EMAIL_NON_PRODUCTION', 'nomail'),
     
 ];
