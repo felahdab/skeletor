@@ -9,7 +9,7 @@
             : str($panel->getPath())->prepend('/')->toString();
 
     $getHref = fn (\Filament\Panel $panel): ?string => $panel->getId() !== $currentPanel->getId()
-            ? \Filament\Pages\Dashboard::getUrl( panel: $panel->getId())
+            ? url($panel->getPath())
             : null;
 
     $acceptsGuests = function (\Filament\Panel $panel)
