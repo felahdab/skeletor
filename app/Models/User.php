@@ -41,7 +41,6 @@ class User extends Authenticatable implements FilamentUser, HasName
     
     public function canAccessPanel(Panel $panel): bool
     {
-        $this->newUniqueId();
         // Par défaut, le panel admin n'est accessible qu'au super admins.
         // Les autres panels sont accessibles à tout le monde (la sécurité se fera au niveau des ressources et autres elements filament)
         // if ($panel->getID() === 'admin')
