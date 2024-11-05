@@ -12,9 +12,29 @@
             ? \Filament\Pages\Dashboard::getUrl( panel: $panel->getId())
             : null;
 
+    $acceptsGuests = function (\Filament\Panel $panel)
+    {
+        return $panel->getAuthMiddleware() == [];
+    };
+
     $iconSize = 16 ;
 
 @endphp
+
+@guest
+@php
+    $newpanels = [];
+    foreach ($panels as $panel)
+    {
+        if ($acceptsGuests($panel))
+        {
+            $newpanels[] = $panel;
+        }
+    }
+    $panels = $newpanels;
+
+@endphp
+@endguest
 
 <div class="flex flex-wrap items-center justify-center gap-4 md:gap-6">
     @foreach ($panels as $panel)
