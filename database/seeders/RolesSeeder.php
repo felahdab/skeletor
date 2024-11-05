@@ -26,11 +26,6 @@ class RolesSeeder extends Seeder
         $role = Role::findOrCreate('user');
         $rolepermissions = [
             'logout.perform',
-            'currentrole.show',
-            'currentrole.store',
-            'changepasswd.show',
-            'changepasswd.store',
-            'bugreports.store',
         ];
         $role->syncPermissions($rolepermissions);
     }
