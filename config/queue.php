@@ -37,7 +37,7 @@ return [
         'database' => [
             'driver' => 'database',
             'table' => 'jobs',
-            'queue' => 'mysql',
+            'queue' => 'pgsql',
             'retry_after' => 90,
             'after_commit' => false,
         ],
