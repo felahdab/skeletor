@@ -7637,6 +7637,7 @@ return array(
     'Pest\\Laravel\\Commands\\PestTestCommand' => $vendorDir . '/pestphp/pest-plugin-laravel/src/Commands/PestTestCommand.php',
     'Pest\\Laravel\\PestServiceProvider' => $vendorDir . '/pestphp/pest-plugin-laravel/src/PestServiceProvider.php',
     'Pest\\Laravel\\Plugin' => $vendorDir . '/pestphp/pest-plugin-laravel/src/Plugin.php',
+    'Pest\\Livewire\\InteractsWithLivewire' => $vendorDir . '/pestphp/pest-plugin-livewire/src/InteractsWithLivewire.php',
     'Pest\\Logging\\Converter' => $vendorDir . '/pestphp/pest/src/Logging/Converter.php',
     'Pest\\Logging\\TeamCity\\ServiceMessage' => $vendorDir . '/pestphp/pest/src/Logging/TeamCity/ServiceMessage.php',
     'Pest\\Logging\\TeamCity\\Subscriber\\Subscriber' => $vendorDir . '/pestphp/pest/src/Logging/TeamCity/Subscriber/Subscriber.php',
