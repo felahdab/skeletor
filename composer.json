@@ -10,6 +10,7 @@
         "axonc/filament-copyable-placeholder": "^0.3.0",
         "barryvdh/laravel-debugbar": "^3.7",
         "calebporzio/sushi": "^2.4",
+        "clickbar/laravel-magellan": "^1.6",
         "coolsam/modules": "^4",
         "darkaonline/l5-swagger": "^8.6",
         "dedoc/scramble": "^0.11",

@@ -3,7 +3,7 @@
         'name' => 'fanlab/skeletor',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '748e599686dcd177ca688ed25ef1e17cb9898888',
+        'reference' => '64f92be43753d0a578756b386ec834f1e0b94c51',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -199,6 +199,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'clickbar/laravel-magellan' => array(
+            'pretty_version' => '1.6.1',
+            'version' => '1.6.1.0',
+            'reference' => '8421042561c28bc3730257ef2aa79a878e04f7d4',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../clickbar/laravel-magellan',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'coolsam/modules' => array(
             'pretty_version' => 'v4.0.6',
             'version' => '4.0.6.0',
@@ -373,7 +382,7 @@
         'fanlab/skeletor' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '748e599686dcd177ca688ed25ef1e17cb9898888',
+            'reference' => '64f92be43753d0a578756b386ec834f1e0b94c51',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

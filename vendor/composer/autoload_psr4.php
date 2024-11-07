@@ -184,6 +184,8 @@ return array(
     'Cron\\' => array($vendorDir . '/dragonmantank/cron-expression/src/Cron'),
     'Coolsam\\Modules\\Database\\Factories\\' => array($vendorDir . '/coolsam/modules/database/factories'),
     'Coolsam\\Modules\\' => array($vendorDir . '/coolsam/modules/src'),
+    'Clickbar\\Magellan\\Database\\Factories\\' => array($vendorDir . '/clickbar/laravel-magellan/database/factories'),
+    'Clickbar\\Magellan\\' => array($vendorDir . '/clickbar/laravel-magellan/src'),
     'Carbon\\Doctrine\\' => array($vendorDir . '/carbonphp/carbon-doctrine-types/src/Carbon/Doctrine'),
     'Carbon\\' => array($vendorDir . '/nesbot/carbon/src/Carbon'),
     'Brick\\Math\\' => array($vendorDir . '/brick/math/src'),
