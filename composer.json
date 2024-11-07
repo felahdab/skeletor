@@ -49,7 +49,8 @@
         "laravel/dusk": "^8.0",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.6",
-        "phpunit/phpunit": "^11.0",
+        "pestphp/pest": "^3.5",
+        "pestphp/pest-plugin-laravel": "^3.0",
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
@@ -100,7 +101,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "joshbrw/laravel-module-installer": true,
-            "wikimedia/composer-merge-plugin": true
+            "wikimedia/composer-merge-plugin": true,
+            "pestphp/pest-plugin": true
         }
     },
     "minimum-stability": "dev",
