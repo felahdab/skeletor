@@ -40,6 +40,7 @@
         "spatie/laravel-permission": "^6.0",
         "spatie/laravel-query-builder": "^6.0",
         "stancl/tenancy": "^3.7",
+        "staudenmeir/eloquent-json-relations": "^1.1",
         "stechstudio/filament-impersonate": "^3.14",
         "valentin-morice/filament-json-column": "^1.5",
         "wnx/laravel-backup-restore": "^1.0"

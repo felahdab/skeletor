@@ -146,6 +146,8 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Component\\Clock\\' => 24,
             'Sushi\\' => 6,
+            'Staudenmeir\\EloquentJsonRelations\\' => 34,
+            'Staudenmeir\\EloquentHasManyDeepContracts\\' => 41,
             'Stancl\\VirtualColumn\\' => 21,
             'Stancl\\Tenancy\\' => 15,
             'Stancl\\JobPipeline\\' => 19,
@@ -226,6 +228,10 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'M' => 
         array (
             'Monolog\\' => 8,
+            'Modules\\SOE\\Tests\\' => 18,
+            'Modules\\SOE\\Database\\Seeders\\' => 29,
+            'Modules\\SOE\\Database\\Factories\\' => 31,
+            'Modules\\SOE\\' => 12,
             'Modules\\RH\\Tests\\' => 17,
             'Modules\\RH\\Database\\Seeders\\' => 28,
             'Modules\\RH\\Database\\Factories\\' => 30,
@@ -543,6 +549,14 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         array (
             0 => __DIR__ . '/..' . '/calebporzio/sushi/src',
         ),
+        'Staudenmeir\\EloquentJsonRelations\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src',
+        ),
+        'Staudenmeir\\EloquentHasManyDeepContracts\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/staudenmeir/eloquent-has-many-deep-contracts/src',
+        ),
         'Stancl\\VirtualColumn\\' => 
         array (
             0 => __DIR__ . '/..' . '/stancl/virtualcolumn/src',
@@ -805,6 +819,22 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'Modules\\SOE\\Tests\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/SOE/tests',
+        ),
+        'Modules\\SOE\\Database\\Seeders\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/SOE/database/seeders',
+        ),
+        'Modules\\SOE\\Database\\Factories\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/SOE/database/factories',
+        ),
+        'Modules\\SOE\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/SOE/app',
         ),
         'Modules\\RH\\Tests\\' => 
         array (
@@ -1520,7 +1550,6 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'App\\Http\\Controllers\\AnnudefController' => __DIR__ . '/../..' . '/app/Http/Controllers/AnnudefController.php',
         'App\\Http\\Controllers\\ArchivesController' => __DIR__ . '/../..' . '/app/Http/Controllers/ArchivesController.php',
         'App\\Http\\Controllers\\BugReportController' => __DIR__ . '/../..' . '/app/Http/Controllers/BugReportController.php',
-        'App\\Http\\Controllers\\ChangeUserCurrentRole' => __DIR__ . '/../..' . '/app/Http/Controllers/ChangeUserCurrentRole.php',
         'App\\Http\\Controllers\\ChangeUserPassword' => __DIR__ . '/../..' . '/app/Http/Controllers/ChangeUserPassword.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\GroupementController' => __DIR__ . '/../..' . '/app/Http/Controllers/GroupementController.php',
@@ -7057,6 +7086,30 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'Modules\\RH\\Providers\\RHServiceProvider' => __DIR__ . '/../..' . '/Modules/RH/app/Providers/RHServiceProvider.php',
         'Modules\\RH\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/RH/app/Providers/RouteServiceProvider.php',
         'Modules\\RH\\Traits\\HasTablePrefix' => __DIR__ . '/../..' . '/Modules/RH/app/Traits/HasTablePrefix.php',
+        'Modules\\SOE\\Database\\Seeders\\PermissionSeeder' => __DIR__ . '/../..' . '/Modules/SOE/database/seeders/PermissionSeeder.php',
+        'Modules\\SOE\\Database\\Seeders\\RoleSeeder' => __DIR__ . '/../..' . '/Modules/SOE/database/seeders/RoleSeeder.php',
+        'Modules\\SOE\\Database\\Seeders\\SOEDatabaseSeeder' => __DIR__ . '/../..' . '/Modules/SOE/database/seeders/SOEDatabaseSeeder.php',
+        'Modules\\SOE\\Filament\\Exports\\ActiviteExporter' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Exports/ActiviteExporter.php',
+        'Modules\\SOE\\Filament\\Pages\\Dashboard' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Pages/Dashboard.php',
+        'Modules\\SOE\\Filament\\Resources\\ActiviteResource' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ActiviteResource.php',
+        'Modules\\SOE\\Filament\\Resources\\ActiviteResource\\Pages\\CreateActivite' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ActiviteResource/Pages/CreateActivite.php',
+        'Modules\\SOE\\Filament\\Resources\\ActiviteResource\\Pages\\EditActivite' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ActiviteResource/Pages/EditActivite.php',
+        'Modules\\SOE\\Filament\\Resources\\ActiviteResource\\Pages\\ListActivites' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ActiviteResource/Pages/ListActivites.php',
+        'Modules\\SOE\\Filament\\Resources\\ActiviteResource\\Pages\\ViewActivite' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ActiviteResource/Pages/ViewActivite.php',
+        'Modules\\SOE\\Filament\\Resources\\ActiviteResource\\Widgets\\ActiviteTimelineWidget' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ActiviteResource/Widgets/ActiviteTimelineWidget.php',
+        'Modules\\SOE\\Filament\\Resources\\ParticipantResource' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ParticipantResource.php',
+        'Modules\\SOE\\Filament\\Resources\\ParticipantResource\\Pages\\CreateParticipant' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ParticipantResource/Pages/CreateParticipant.php',
+        'Modules\\SOE\\Filament\\Resources\\ParticipantResource\\Pages\\EditParticipant' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ParticipantResource/Pages/EditParticipant.php',
+        'Modules\\SOE\\Filament\\Resources\\ParticipantResource\\Pages\\ListParticipants' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ParticipantResource/Pages/ListParticipants.php',
+        'Modules\\SOE\\Filament\\Widgets\\PanelSwitcherWidget' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Widgets/PanelSwitcherWidget.php',
+        'Modules\\SOE\\Models\\Activite' => __DIR__ . '/../..' . '/Modules/SOE/app/Models/Activite.php',
+        'Modules\\SOE\\Models\\Geometry' => __DIR__ . '/../..' . '/Modules/SOE/app/Models/Geometry.php',
+        'Modules\\SOE\\Models\\Participant' => __DIR__ . '/../..' . '/Modules/SOE/app/Models/Participant.php',
+        'Modules\\SOE\\Policies\\ActivitePolicy' => __DIR__ . '/../..' . '/Modules/SOE/app/Policies/ActivitePolicy.php',
+        'Modules\\SOE\\Providers\\Filament\\SOEPanelProvider' => __DIR__ . '/../..' . '/Modules/SOE/app/Providers/Filament/SOEPanelProvider.php',
+        'Modules\\SOE\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/SOE/app/Providers/RouteServiceProvider.php',
+        'Modules\\SOE\\Providers\\SOEServiceProvider' => __DIR__ . '/../..' . '/Modules/SOE/app/Providers/SOEServiceProvider.php',
+        'Modules\\SOE\\Traits\\HasTablePrefix' => __DIR__ . '/../..' . '/Modules/SOE/app/Traits/HasTablePrefix.php',
         'Monolog\\Attribute\\AsMonologProcessor' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Attribute/AsMonologProcessor.php',
         'Monolog\\Attribute\\WithMonologChannel' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Attribute/WithMonologChannel.php',
         'Monolog\\DateTimeImmutable' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/DateTimeImmutable.php',
@@ -11931,6 +11984,40 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'Stancl\\Tenancy\\UUIDGenerator' => __DIR__ . '/..' . '/stancl/tenancy/src/UUIDGenerator.php',
         'Stancl\\Tenancy\\Vite' => __DIR__ . '/..' . '/stancl/tenancy/src/Vite.php',
         'Stancl\\VirtualColumn\\VirtualColumn' => __DIR__ . '/..' . '/stancl/virtualcolumn/src/VirtualColumn.php',
+        'Staudenmeir\\EloquentHasManyDeepContracts\\Interfaces\\ConcatenableRelation' => __DIR__ . '/..' . '/staudenmeir/eloquent-has-many-deep-contracts/src/Interfaces/ConcatenableRelation.php',
+        'Staudenmeir\\EloquentJsonRelations\\Casts\\Uuid' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Casts/Uuid.php',
+        'Staudenmeir\\EloquentJsonRelations\\Grammars\\JsonGrammar' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Grammars/JsonGrammar.php',
+        'Staudenmeir\\EloquentJsonRelations\\Grammars\\MariaDbGrammar' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Grammars/MariaDbGrammar.php',
+        'Staudenmeir\\EloquentJsonRelations\\Grammars\\MySqlGrammar' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Grammars/MySqlGrammar.php',
+        'Staudenmeir\\EloquentJsonRelations\\Grammars\\PostgresGrammar' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Grammars/PostgresGrammar.php',
+        'Staudenmeir\\EloquentJsonRelations\\Grammars\\SQLiteGrammar' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Grammars/SQLiteGrammar.php',
+        'Staudenmeir\\EloquentJsonRelations\\Grammars\\SqlServerGrammar' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Grammars/SqlServerGrammar.php',
+        'Staudenmeir\\EloquentJsonRelations\\Grammars\\Traits\\CompilesMySqlJsonQueries' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Grammars/Traits/CompilesMySqlJsonQueries.php',
+        'Staudenmeir\\EloquentJsonRelations\\HasJsonRelationships' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/HasJsonRelationships.php',
+        'Staudenmeir\\EloquentJsonRelations\\IdeHelperServiceProvider' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/IdeHelperServiceProvider.php',
+        'Staudenmeir\\EloquentJsonRelations\\IdeHelper\\JsonRelationsHook' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/IdeHelper/JsonRelationsHook.php',
+        'Staudenmeir\\EloquentJsonRelations\\JsonKey' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/JsonKey.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\BelongsToJson' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/BelongsToJson.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\HasManyJson' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/HasManyJson.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\HasOneJson' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/HasOneJson.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\InteractsWithPivotRecords' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/InteractsWithPivotRecords.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\Postgres\\BelongsTo' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/Postgres/BelongsTo.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\Postgres\\HasMany' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/Postgres/HasMany.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\Postgres\\HasManyThrough' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/Postgres/HasManyThrough.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\Postgres\\HasOne' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/Postgres/HasOne.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\Postgres\\HasOneOrMany' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/Postgres/HasOneOrMany.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\Postgres\\HasOneOrManyThrough' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/Postgres/HasOneOrManyThrough.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\Postgres\\HasOneThrough' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/Postgres/HasOneThrough.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\Postgres\\IsPostgresRelation' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/Postgres/IsPostgresRelation.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\Postgres\\MorphMany' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/Postgres/MorphMany.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\Postgres\\MorphOne' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/Postgres/MorphOne.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\Postgres\\MorphOneOrMany' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/Postgres/MorphOneOrMany.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\Traits\\CompositeKeys\\SupportsBelongsToJsonCompositeKeys' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/Traits/CompositeKeys/SupportsBelongsToJsonCompositeKeys.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\Traits\\CompositeKeys\\SupportsHasManyJsonCompositeKeys' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/Traits/CompositeKeys/SupportsHasManyJsonCompositeKeys.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\Traits\\Concatenation\\IsConcatenableBelongsToJsonRelation' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/Traits/Concatenation/IsConcatenableBelongsToJsonRelation.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\Traits\\Concatenation\\IsConcatenableHasManyJsonRelation' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/Traits/Concatenation/IsConcatenableHasManyJsonRelation.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\Traits\\Concatenation\\IsConcatenableRelation' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/Traits/Concatenation/IsConcatenableRelation.php',
+        'Staudenmeir\\EloquentJsonRelations\\Relations\\Traits\\IsJsonRelation' => __DIR__ . '/..' . '/staudenmeir/eloquent-json-relations/src/Relations/Traits/IsJsonRelation.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'Sushi\\Sushi' => __DIR__ . '/..' . '/calebporzio/sushi/src/Sushi.php',
         'Symfony\\Component\\Clock\\Clock' => __DIR__ . '/..' . '/symfony/clock/Clock.php',
