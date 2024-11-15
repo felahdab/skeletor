@@ -83,7 +83,7 @@ class Store implements Session
     public function start()
     {
         $this->loadSession();
-
+        
         if (! $this->has('_token')) {
             $this->regenerateToken();
         }

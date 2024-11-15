@@ -53,14 +53,12 @@ class StartSession
         if (! $this->sessionConfigured()) {
             return $next($request);
         }
-
         $session = $this->getSession($request);
 
         if ($this->manager->shouldBlock() ||
             ($request->route() instanceof Route && $request->route()->locksFor())) {
             return $this->handleRequestWhileBlocking($request, $session, $next);
         }
-
         return $this->handleStatefulRequest($request, $session, $next);
     }
 
