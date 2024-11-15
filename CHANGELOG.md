@@ -1,3 +1,81 @@
+## 3.0.0 (November 15, 2024)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 2.2.2 –> 3.0.0
+- Ajout staudenmeir/eloquent-json-relations
+- Ajout logo C2N
+- Suppresion controlleur inutile
+- adaptation valeur par defaut du port pgsql
+- Retrait permissions inexistantes dans le seeder des roles
+- Première série de tests pour le panneau filament Admin.
+- Ajustement de la Factory du modele User pour tenir compte de la simplification du modele dans Skeletor.
+- Conversion du test de mise en cache des routes pour pest. Mise en attente de ce test.
+- Ajustement configuration phpunit et Pest
+- Installation plugins pest pour Livewire et Faker
+- Installation pest et pest laravel plugin.
+- Installation clickbar/laravel-magellan
+- Ajout de la bannière de non production.
+- Retrait des permissions devenues inutiles de Skeletor du role user
+- Ajustement du widget PanelSwitcher pour masquer les panneaux auxquels l'accès invité est impossible pour les utilisateurs non loggés. Retrait du Widget Filament du Dashboard Admin.
+- Ajustement des fichiers .env pour l'environnement Polaris Online
+- Ajustement du panneau d'administration et du widget panel switcher pour masquer les panneau nécessitant une authentification aux visiteurs non loggés.
+- Ajustements divers sur API, envoi de mail et panneau Filament d'admin.
+- Suppression modèle Blueprint.
+- Désactivation des anciennes routes FFAST.
+- Ajustement modele Version. TODO: à rendre plus générique.
+- Ajout des migrations necessaires pour les imports/exports Filament.
+- Ajustement pour scramble / swagger UI
+- Suppression des composants Livewire antérieurs utilisant rappasoft/data table
+- Ajout de l'action d'impersonate dans le panneau d'admin.
+- Ajustement du code generant les versions successives pour eviter l'entree vide en 2nd position.
+- Retour en arrière: utilisation de scramble pour extraire la documentation des API. Affichage avec Swagger UI.
+- reactivation de la decouverte automatique de scramble
+- Restauration de la déclaration par défaut de l'API Skeletor pour faire fonctionner l5-swagger
+- Ajout du plugin stechstudio/filament-impersonate pour la fonctionnalité de personnification.
+- Modification valentin-morice pour inclure jsoneditor en local.
+- Integration Valentin-morice\filament-json-column
+- Retrait de saade/full-calendar. Reintroduction de l5-swagger
+- Ajout de la fonctionnalité de suivi de version des modèles Eloquent.
+- Rajout des domaines polaris online a la commande de correction des fichiers google fonts.
+- Modifications de Skeletor pour faire fonctionner la gestion des permissions et des roles pour les remote systems comme pour les utilisateurs.
+- Ajustement. Utilisation de la page de Login legacy de FFAST. Désactivation de la page de Login du panneau Filament admin.
+- Cree le necessaire pour faire tourner les jobs d'arriere plan depuis la base de donnees centrale en mode multi-tenant.
+- Fait en sorte que les polices Google Fonts soient toutes chargees depuis Skeletor, et pas depuis l'espace de chaque instance.
+- On introduit un middleware pour limiter la frequence de repetition des jobs.
+- Ajout du modele Setting pour stocker les parametres de configuration. Permet un stockage y compris en environnement multi tenant.
+- Ajout d'un uuid au modele User. Autmatisation de son attribution.
+- Constraint the service provider register order to make filament panel from modules appear
+- Retrait de blueprint
+- Retrait des modules nodejs et php
+- Correction declaration prefixe des routes API.
+- Nettoyage - Retrait du module de Transformation, du Socle et RH.
+- Definition de la pile de middleware webexcepttenancybypath
+- Ajustement de la commande de creation de Tenant. 
+- Ajustement des routes des api. configuration de scramble pour fonctionner au moins en mode mono tenant.
+- Mise en place scramble
+- Initialisation d'une commande artisan pour creer les nouveaux tenants.
+- Ajout de l'icone inconnu pour les avatars. Ajustement du mecanisme d'upload de fichier Livewire pour la multi tenancy.
+- Travail sur SwaggerUI: comment documenter l'API indifféremment de la configuration multi tenancy?
+- Premières modifications pour rendre Skeletor multi-tenant capable si besoin.
+- Install saloon and spatie/laravel-query-builder
+- Installation du plugin althinect/filament-spatie-role-permissions
+- Le modele Personne du module RH fait desormais usage des UUID.
+- Renommage de la route de login local vers login a la place de login.show
+- Creation d'un widget Filament pour pouvoir changer de panel.
+- Inclusion du plugin fullcalendar pour Filament
+- Adaptation des modeles interimaires au nouveau modele de donnees FCM
+- Adaptation de la configuration vite a mingle et vue.
+- Installation vue et vitejs plugin vue
+- Installation de ijpatricio/mingle
+- Renvoit vers une page par défaut définie dans la configuration de l'application y compris pour les utilisateurs non authentifiés.
+- Le endpoint user devient whoami: permet de prendre en compte les remote systems aussi.
+- Reference a config('skeletor.prefixe_instance') plutot qu'a env('APP_PREFIX')
+- Ajustement du client Socialite à Keycloak 18+. Correction type dans les evenements.
+- Ajustement logo et vue pour le login automatique via Keyloak
+- Remplacement env par config pour instance_prefix. Utilisation config instance_title dans le layout général.
+- Mise à jour layout des pages pour refléter le nouveau nom de l'application et pointer vers un navigateur portable adapté à l'environnement.
+- Suppression des logos des FREMM. Mise à jour de l'icone avec celle du C2N.
+- Désactivation de la vérification DNS pour la validité des mails des utilisateurs.
+- Ajustement a l'environnement SIC21
+
 ## 2.2.2 (septembre 02, 2024)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.2.1a –> 2.2.2
 - changement titre pour test
