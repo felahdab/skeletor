@@ -1,3 +1,7 @@
+## 3.0.1 (November 21, 2024)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.0 –> 3.0.1
+- Ajustement configuration database pour MySQL.
+
 ## 3.0.0 (November 15, 2024)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.2.2 –> 3.0.0
 - Ajout staudenmeir/eloquent-json-relations
