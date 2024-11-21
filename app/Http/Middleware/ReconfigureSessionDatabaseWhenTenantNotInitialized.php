@@ -16,7 +16,7 @@ class ReconfigureSessionDatabaseWhenTenantNotInitialized
 
         if ($tenant == null){
             # C'est là.
-            app('config')->set('session.connection','pgsql');
+            app('config')->set('session.connection','mysql');
         }
 
         $response = $next($request);

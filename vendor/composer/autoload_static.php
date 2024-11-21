@@ -228,10 +228,6 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'M' => 
         array (
             'Monolog\\' => 8,
-            'Modules\\SOE\\Tests\\' => 18,
-            'Modules\\SOE\\Database\\Seeders\\' => 29,
-            'Modules\\SOE\\Database\\Factories\\' => 31,
-            'Modules\\SOE\\' => 12,
             'Modules\\RH\\Tests\\' => 17,
             'Modules\\RH\\Database\\Seeders\\' => 28,
             'Modules\\RH\\Database\\Factories\\' => 30,
@@ -819,22 +815,6 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
-        ),
-        'Modules\\SOE\\Tests\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/Modules/SOE/tests',
-        ),
-        'Modules\\SOE\\Database\\Seeders\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/Modules/SOE/database/seeders',
-        ),
-        'Modules\\SOE\\Database\\Factories\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/Modules/SOE/database/factories',
-        ),
-        'Modules\\SOE\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/Modules/SOE/app',
         ),
         'Modules\\RH\\Tests\\' => 
         array (
@@ -6999,6 +6979,7 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'Mockery\\Undefined' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Undefined.php',
         'Mockery\\VerificationDirector' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/VerificationDirector.php',
         'Mockery\\VerificationExpectation' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/VerificationExpectation.php',
+        'Modules\\Fleetprogram\\Console\\ImportFichierFleetprogram' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Console/ImportFichierFleetprogram.php',
         'Modules\\Fleetprogram\\Database\\Factories\\ActiviteFactory' => __DIR__ . '/../..' . '/Modules/Fleetprogram/database/factories/ActiviteFactory.php',
         'Modules\\Fleetprogram\\Database\\Seeders\\FleetprogramDatabaseSeeder' => __DIR__ . '/../..' . '/Modules/Fleetprogram/database/seeders/FleetprogramDatabaseSeeder.php',
         'Modules\\Fleetprogram\\Database\\Seeders\\PermissionSeeder' => __DIR__ . '/../..' . '/Modules/Fleetprogram/database/seeders/PermissionSeeder.php',
@@ -7092,30 +7073,6 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'Modules\\RH\\Providers\\RHServiceProvider' => __DIR__ . '/../..' . '/Modules/RH/app/Providers/RHServiceProvider.php',
         'Modules\\RH\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/RH/app/Providers/RouteServiceProvider.php',
         'Modules\\RH\\Traits\\HasTablePrefix' => __DIR__ . '/../..' . '/Modules/RH/app/Traits/HasTablePrefix.php',
-        'Modules\\SOE\\Database\\Seeders\\PermissionSeeder' => __DIR__ . '/../..' . '/Modules/SOE/database/seeders/PermissionSeeder.php',
-        'Modules\\SOE\\Database\\Seeders\\RoleSeeder' => __DIR__ . '/../..' . '/Modules/SOE/database/seeders/RoleSeeder.php',
-        'Modules\\SOE\\Database\\Seeders\\SOEDatabaseSeeder' => __DIR__ . '/../..' . '/Modules/SOE/database/seeders/SOEDatabaseSeeder.php',
-        'Modules\\SOE\\Filament\\Exports\\ActiviteExporter' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Exports/ActiviteExporter.php',
-        'Modules\\SOE\\Filament\\Pages\\Dashboard' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Pages/Dashboard.php',
-        'Modules\\SOE\\Filament\\Resources\\ActiviteResource' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ActiviteResource.php',
-        'Modules\\SOE\\Filament\\Resources\\ActiviteResource\\Pages\\CreateActivite' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ActiviteResource/Pages/CreateActivite.php',
-        'Modules\\SOE\\Filament\\Resources\\ActiviteResource\\Pages\\EditActivite' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ActiviteResource/Pages/EditActivite.php',
-        'Modules\\SOE\\Filament\\Resources\\ActiviteResource\\Pages\\ListActivites' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ActiviteResource/Pages/ListActivites.php',
-        'Modules\\SOE\\Filament\\Resources\\ActiviteResource\\Pages\\ViewActivite' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ActiviteResource/Pages/ViewActivite.php',
-        'Modules\\SOE\\Filament\\Resources\\ActiviteResource\\Widgets\\ActiviteTimelineWidget' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ActiviteResource/Widgets/ActiviteTimelineWidget.php',
-        'Modules\\SOE\\Filament\\Resources\\ParticipantResource' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ParticipantResource.php',
-        'Modules\\SOE\\Filament\\Resources\\ParticipantResource\\Pages\\CreateParticipant' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ParticipantResource/Pages/CreateParticipant.php',
-        'Modules\\SOE\\Filament\\Resources\\ParticipantResource\\Pages\\EditParticipant' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ParticipantResource/Pages/EditParticipant.php',
-        'Modules\\SOE\\Filament\\Resources\\ParticipantResource\\Pages\\ListParticipants' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Resources/ParticipantResource/Pages/ListParticipants.php',
-        'Modules\\SOE\\Filament\\Widgets\\PanelSwitcherWidget' => __DIR__ . '/../..' . '/Modules/SOE/app/Filament/Widgets/PanelSwitcherWidget.php',
-        'Modules\\SOE\\Models\\Activite' => __DIR__ . '/../..' . '/Modules/SOE/app/Models/Activite.php',
-        'Modules\\SOE\\Models\\Geometry' => __DIR__ . '/../..' . '/Modules/SOE/app/Models/Geometry.php',
-        'Modules\\SOE\\Models\\Participant' => __DIR__ . '/../..' . '/Modules/SOE/app/Models/Participant.php',
-        'Modules\\SOE\\Policies\\ActivitePolicy' => __DIR__ . '/../..' . '/Modules/SOE/app/Policies/ActivitePolicy.php',
-        'Modules\\SOE\\Providers\\Filament\\SOEPanelProvider' => __DIR__ . '/../..' . '/Modules/SOE/app/Providers/Filament/SOEPanelProvider.php',
-        'Modules\\SOE\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/SOE/app/Providers/RouteServiceProvider.php',
-        'Modules\\SOE\\Providers\\SOEServiceProvider' => __DIR__ . '/../..' . '/Modules/SOE/app/Providers/SOEServiceProvider.php',
-        'Modules\\SOE\\Traits\\HasTablePrefix' => __DIR__ . '/../..' . '/Modules/SOE/app/Traits/HasTablePrefix.php',
         'Monolog\\Attribute\\AsMonologProcessor' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Attribute/AsMonologProcessor.php',
         'Monolog\\Attribute\\WithMonologChannel' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Attribute/WithMonologChannel.php',
         'Monolog\\DateTimeImmutable' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/DateTimeImmutable.php',
