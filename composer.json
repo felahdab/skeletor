@@ -29,6 +29,8 @@
         "nunomaduro/collision": "^8.1",
         "nwidart/laravel-modules": "^11.0",
         "owen-it/laravel-auditing": "^13.5",
+        "phpoffice/phpspreadsheet": "^3.5",
+        "phpoffice/phpword": "^1.3",
         "predis/predis": "^2.2",
         "saloonphp/laravel-plugin": "^3.0",
         "saloonphp/saloon": "^3.0",
