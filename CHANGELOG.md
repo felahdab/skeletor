@@ -1,3 +1,9 @@
+## 3.0.2 (November 25, 2024)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.1 –> 3.0.2
+- Introduction des mécanismes de configuration de Skeletor liés au réseau de déploiement, afin de maintenir la plus grande homogénéité possible entre SIC21 et Intradef.
+- Include phpoffice phpspreadsheet et phpword
+- Augmentation de la taille du champs de commentaire (reason) du suivi de versions.
+
 ## 3.0.1 (November 21, 2024)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.0 –> 3.0.1
 - Ajustement configuration database pour MySQL.
