@@ -277,6 +277,7 @@ return array(
     'App\\Events\\UnUtilisateurDoitEtreRestaureEvent' => $baseDir . '/app/Events/UnUtilisateurDoitEtreRestaureEvent.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\Filament\\AvatarProviders\\AnnudefAvatarProvider' => $baseDir . '/app/Filament/AvatarProviders/AnnudefAvatarProvider.php',
+    'App\\Filament\\AvatarProviders\\SkeletorAvatarProvider' => $baseDir . '/app/Filament/AvatarProviders/SkeletorAvatarProvider.php',
     'App\\Filament\\Resources\\RemotesystemResource' => $baseDir . '/app/Filament/Resources/RemotesystemResource.php',
     'App\\Filament\\Resources\\RemotesystemResource\\Pages\\CreateRemotesystem' => $baseDir . '/app/Filament/Resources/RemotesystemResource/Pages/CreateRemotesystem.php',
     'App\\Filament\\Resources\\RemotesystemResource\\Pages\\EditRemotesystem' => $baseDir . '/app/Filament/Resources/RemotesystemResource/Pages/EditRemotesystem.php',
@@ -318,6 +319,7 @@ return array(
     'App\\Http\\Middleware\\RecordRequestHandlingTime' => $baseDir . '/app/Http/Middleware/RecordRequestHandlingTime.php',
     'App\\Http\\Middleware\\RedirectIfAuthenticated' => $baseDir . '/app/Http/Middleware/RedirectIfAuthenticated.php',
     'App\\Http\\Middleware\\RestrictVisibility' => $baseDir . '/app/Http/Middleware/RestrictVisibility.php',
+    'App\\Http\\Middleware\\SetTenantAwareKeycloakCallbackRedirect' => $baseDir . '/app/Http/Middleware/SetTenantAwareKeycloakCallbackRedirect.php',
     'App\\Http\\Middleware\\SetTenantCookieMiddleware' => $baseDir . '/app/Http/Middleware/SetTenantCookieMiddleware.php',
     'App\\Http\\Middleware\\SetTenantDefaultForRoutesMiddleware' => $baseDir . '/app/Http/Middleware/SetTenantDefaultForRoutesMiddleware.php',
     'App\\Http\\Middleware\\TrimStrings' => $baseDir . '/app/Http/Middleware/TrimStrings.php',
@@ -5758,11 +5760,7 @@ return array(
     'Mockery\\Undefined' => $vendorDir . '/mockery/mockery/library/Mockery/Undefined.php',
     'Mockery\\VerificationDirector' => $vendorDir . '/mockery/mockery/library/Mockery/VerificationDirector.php',
     'Mockery\\VerificationExpectation' => $vendorDir . '/mockery/mockery/library/Mockery/VerificationExpectation.php',
-<<<<<<< HEAD
     'Modules\\Fleetprogram\\Console\\ImportFichierFleetprogram' => $baseDir . '/Modules/Fleetprogram/app/Console/ImportFichierFleetprogram.php',
-=======
-    'Modules\\Fleetprogram\\Console\\ExportExcelFile' => $baseDir . '/Modules/Fleetprogram/app/Console/ExportExcelFile.php',
->>>>>>> internet/fldb-reunification-sic21-intradef
     'Modules\\Fleetprogram\\Database\\Factories\\ActiviteFactory' => $baseDir . '/Modules/Fleetprogram/database/factories/ActiviteFactory.php',
     'Modules\\Fleetprogram\\Database\\Seeders\\FleetprogramDatabaseSeeder' => $baseDir . '/Modules/Fleetprogram/database/seeders/FleetprogramDatabaseSeeder.php',
     'Modules\\Fleetprogram\\Database\\Seeders\\PermissionSeeder' => $baseDir . '/Modules/Fleetprogram/database/seeders/PermissionSeeder.php',
@@ -5777,7 +5775,6 @@ return array(
     'Modules\\Fleetprogram\\Filament\\Resources\\ActiviteResource\\Widgets\\ActiviteTimelineWidget' => $baseDir . '/Modules/Fleetprogram/app/Filament/Resources/ActiviteResource/Widgets/ActiviteTimelineWidget.php',
     'Modules\\Fleetprogram\\Filament\\Widgets\\PanelSwitcherWidget' => $baseDir . '/Modules/Fleetprogram/app/Filament/Widgets/PanelSwitcherWidget.php',
     'Modules\\Fleetprogram\\Http\\Controllers\\FleetprogramController' => $baseDir . '/Modules/Fleetprogram/app/Http/Controllers/FleetprogramController.php',
-    'Modules\\Fleetprogram\\Jobs\\ExportExcelFileJob' => $baseDir . '/Modules/Fleetprogram/app/Jobs/ExportExcelFileJob.php',
     'Modules\\Fleetprogram\\Models\\Activite' => $baseDir . '/Modules/Fleetprogram/app/Models/Activite.php',
     'Modules\\Fleetprogram\\Models\\Geometry' => $baseDir . '/Modules/Fleetprogram/app/Models/Geometry.php',
     'Modules\\Fleetprogram\\Policies\\ActivitePolicy' => $baseDir . '/Modules/Fleetprogram/app/Policies/ActivitePolicy.php',

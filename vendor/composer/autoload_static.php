@@ -1570,6 +1570,7 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'App\\Events\\UnUtilisateurDoitEtreRestaureEvent' => __DIR__ . '/../..' . '/app/Events/UnUtilisateurDoitEtreRestaureEvent.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Filament\\AvatarProviders\\AnnudefAvatarProvider' => __DIR__ . '/../..' . '/app/Filament/AvatarProviders/AnnudefAvatarProvider.php',
+        'App\\Filament\\AvatarProviders\\SkeletorAvatarProvider' => __DIR__ . '/../..' . '/app/Filament/AvatarProviders/SkeletorAvatarProvider.php',
         'App\\Filament\\Resources\\RemotesystemResource' => __DIR__ . '/../..' . '/app/Filament/Resources/RemotesystemResource.php',
         'App\\Filament\\Resources\\RemotesystemResource\\Pages\\CreateRemotesystem' => __DIR__ . '/../..' . '/app/Filament/Resources/RemotesystemResource/Pages/CreateRemotesystem.php',
         'App\\Filament\\Resources\\RemotesystemResource\\Pages\\EditRemotesystem' => __DIR__ . '/../..' . '/app/Filament/Resources/RemotesystemResource/Pages/EditRemotesystem.php',
@@ -1611,6 +1612,7 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'App\\Http\\Middleware\\RecordRequestHandlingTime' => __DIR__ . '/../..' . '/app/Http/Middleware/RecordRequestHandlingTime.php',
         'App\\Http\\Middleware\\RedirectIfAuthenticated' => __DIR__ . '/../..' . '/app/Http/Middleware/RedirectIfAuthenticated.php',
         'App\\Http\\Middleware\\RestrictVisibility' => __DIR__ . '/../..' . '/app/Http/Middleware/RestrictVisibility.php',
+        'App\\Http\\Middleware\\SetTenantAwareKeycloakCallbackRedirect' => __DIR__ . '/../..' . '/app/Http/Middleware/SetTenantAwareKeycloakCallbackRedirect.php',
         'App\\Http\\Middleware\\SetTenantCookieMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/SetTenantCookieMiddleware.php',
         'App\\Http\\Middleware\\SetTenantDefaultForRoutesMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/SetTenantDefaultForRoutesMiddleware.php',
         'App\\Http\\Middleware\\TrimStrings' => __DIR__ . '/../..' . '/app/Http/Middleware/TrimStrings.php',
@@ -7051,11 +7053,7 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'Mockery\\Undefined' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Undefined.php',
         'Mockery\\VerificationDirector' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/VerificationDirector.php',
         'Mockery\\VerificationExpectation' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/VerificationExpectation.php',
-<<<<<<< HEAD
         'Modules\\Fleetprogram\\Console\\ImportFichierFleetprogram' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Console/ImportFichierFleetprogram.php',
-=======
-        'Modules\\Fleetprogram\\Console\\ExportExcelFile' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Console/ExportExcelFile.php',
->>>>>>> internet/fldb-reunification-sic21-intradef
         'Modules\\Fleetprogram\\Database\\Factories\\ActiviteFactory' => __DIR__ . '/../..' . '/Modules/Fleetprogram/database/factories/ActiviteFactory.php',
         'Modules\\Fleetprogram\\Database\\Seeders\\FleetprogramDatabaseSeeder' => __DIR__ . '/../..' . '/Modules/Fleetprogram/database/seeders/FleetprogramDatabaseSeeder.php',
         'Modules\\Fleetprogram\\Database\\Seeders\\PermissionSeeder' => __DIR__ . '/../..' . '/Modules/Fleetprogram/database/seeders/PermissionSeeder.php',
@@ -7070,7 +7068,6 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'Modules\\Fleetprogram\\Filament\\Resources\\ActiviteResource\\Widgets\\ActiviteTimelineWidget' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Filament/Resources/ActiviteResource/Widgets/ActiviteTimelineWidget.php',
         'Modules\\Fleetprogram\\Filament\\Widgets\\PanelSwitcherWidget' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Filament/Widgets/PanelSwitcherWidget.php',
         'Modules\\Fleetprogram\\Http\\Controllers\\FleetprogramController' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Http/Controllers/FleetprogramController.php',
-        'Modules\\Fleetprogram\\Jobs\\ExportExcelFileJob' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Jobs/ExportExcelFileJob.php',
         'Modules\\Fleetprogram\\Models\\Activite' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Models/Activite.php',
         'Modules\\Fleetprogram\\Models\\Geometry' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Models/Geometry.php',
         'Modules\\Fleetprogram\\Policies\\ActivitePolicy' => __DIR__ . '/../..' . '/Modules/Fleetprogram/app/Policies/ActivitePolicy.php',
