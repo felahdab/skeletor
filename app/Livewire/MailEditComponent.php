@@ -57,7 +57,7 @@ class MailEditComponent extends Component
         $this->makeQuery();
         $newMail = new ManualMail($this->corps, $this->sujet);
         SupportMail::to($this->recipients)
-                //->bcc('ffast.notification.tec@intradef.gouv.fr')
+                ->bcc(config('skeletor.destinataire_systematique_bcc'))
                 ->queue($newMail);
     }
     

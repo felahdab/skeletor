@@ -4,6 +4,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Réseau de déploiement
+    |--------------------------------------------------------------------------
+    |
+    | Cette option permet de préciser sur quel réseau l'application est déployée. Les valeurs possibles sont:
+    |  - intradef
+    |  - sic21
+    |
+    */
+
+    'reseau_de_deploiement' => env('SKELETOR_RESEAU', "intradef"),
+
+    /*
+    |--------------------------------------------------------------------------
     | Politique de création des comptes pour les utilisateurs authentifies par Mindef Connect
     |--------------------------------------------------------------------------
     |
@@ -102,7 +115,7 @@ return [
 
     'multi_tenancy' => env('SKELETOR_MULTI_TENANCY', false),
 
-     /*
+    /*
     |--------------------------------------------------------------------------
     | Destinataire des mails lorsque l'application n'est pas en production
     |--------------------------------------------------------------------------
@@ -112,5 +125,16 @@ return [
     |
     */
     'destinataire_email_non_production'=> env('SKELETOR_EMAIL_NON_PRODUCTION', 'nomail'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Destinataire caché systématique des mails envoyés
+    |--------------------------------------------------------------------------
+    |
+    | Lorque cette valeur est définie, elle est utilisée comme destinataire caché de tous les mails
+    | produits depuis le composant MailEditComponent.
+    |
+    */
+    'destinataire_systematique_bcc'=> env('SKELETOR_BCC_RECIPIENT', []),
     
 ];

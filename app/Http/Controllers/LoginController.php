@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
 use App\Service\PossibleUniteService;
+use App\Service\RandomPasswordGeneratorService;
 
 
 class LoginController extends Controller
@@ -32,7 +33,12 @@ class LoginController extends Controller
      */
     public function show()
     {
-        return view('auth.login');
+        [$logo, $sso_name] = match (config('skeletor.reseau_de_deploiement')){
+            "intradef" => [asset("assets/images/MDC_intradef.png"), "Mindef Connect"],
+            "sic21" => [asset("assets/images/Keycloak.png"), "POLARIS Online"]
+        };
+        
+        return view('auth.login', ["logo" => $logo, "sso_name" => $sso_name]);
     }
 
     /**
@@ -55,6 +61,7 @@ class LoginController extends Controller
         if ($user != null) {
             $user->storeMindefConnectInformations($MCuser->user);
             Auth::login($user);
+
             return $this->authenticated($request, $user);
         }
 
@@ -120,34 +127,61 @@ class LoginController extends Controller
                 $MCuserexist->msg = true;
             } 
             else {
-                $MCuserexist = MindefConnectUser::create(
-                    [
+                $mapping = match (config('skeletor.reseau_de_deploiement')){
+                    "intradef" => [
+                        'sub' => $MCuser->user['sub'],
+                        'email' => $MCuser->email,
+                        'name' => $MCuser->user['usual_name'],
+                        'prenom' => $MCuser->user['usual_forename'],
+                        'main_department_number' => $MCuser->user['main_department_number'],
+                        'personal_title' => $MCuser->user['personal_title'],
+                        'rank' => $MCuser->user['rank'],
+                        'short_rank' => $MCuser->user['short_rank'],
+                        'display_name' => $MCuser->user['display_name'],
+                    ],
+                    "sic21" => [
                         'sub' => $MCuser->user['sub'],
                         'email' => $MCuser->email,
                         'name' => $MCuser->user['family_name'],
                         'prenom' => $MCuser->user['given_name'],
                         'display_name' => $MCuser->user['name'],
                     ]
-                );
+                };
+                $MCuserexist = MindefConnectUser::create($mapping);
             }
             return view('auth.comebacklater', ['MCuserexist' => $MCuserexist]);
         }
         // variable false = on cree directement le user dans user
         else{
-
-            $Newuser=User::create(
-                [
-                    "password" =>substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(10/strlen($x)) )),1,10),
+            $mapping = match (config('skeletor.reseau_de_deploiement')){
+                "intradef" => [
+                    "password" => RandomPasswordGeneratorService::generateRandomString(),
+                    'email' => $MCuser->email,
+                    'name' => $MCuser->user['usual_name'],
+                    'prenom' => $MCuser->user['usual_forename'],
+                    'display_name' => $MCuser->user['display_name'],
+                    "date_embarq" => date('Y-m-d')
+                ],
+                "sic21" => [
+                    "password" => RandomPasswordGeneratorService::generateRandomString(),
                     'email' => $MCuser->email,
                     'nom' => $MCuser->user['family_name'],
                     'prenom' => $MCuser->user['given_name'],
                     'display_name' => $MCuser->user['name']
                 ]
-            );
+            };
+
+            $Newuser=User::create($mapping);
+
             $role= Role::where('name', config('skeletor.groupe_par_defaut_des_nouveaux_comptes'))->first();
-            $Newuser->roles()->attach($role->id);
+             if ($role){
+                $Newuser->roles()->attach($role->id);
+            }
+            
             $Newuser->storeMindefConnectInformations($MCuser->user);
+
             Auth::login($Newuser);
+            
             return $this->authenticated($request, $Newuser);
         }
     }
@@ -158,23 +192,26 @@ class LoginController extends Controller
         $MCuserexist->commentaire = $request->comment_mdconnect;
         $MCuserexist->save();
 
-        $response = Http::withoutVerifying()
-            ->withHeaders(["X-Auth-AccessKey" => env("TULEAP_TOKEN")])
-            ->post(
-                env("TULEAP_URL") . "api/artifacts",
-                [
-                    "tracker" =>  ["id" => env('TULEAP_TRACKER_MINDEFCONNECT')],
-                    "values_by_field" => [
-                        "affectation" =>  ["value"  => $MCuserexist->main_department_number],
-                        "user" => ["value" => $MCuserexist->display_name],
-                        "raison" => ["value" => $MCuserexist->commentaire],
-                        "instance" => ["value" => env("APP_PREFIX")]
-                    ]
-                ]
-            );
+        if (config('skeletor.reseau_de_deploiement') == "intradef") {
 
-            return redirect()->route(config('skeletor.page_par_defaut'));
-            // return view('home.index');
+            $response = Http::withoutVerifying()
+                ->withHeaders(["X-Auth-AccessKey" => env("TULEAP_TOKEN")])
+                ->post(
+                    env("TULEAP_URL") . "api/artifacts",
+                    [
+                        "tracker" =>  ["id" => env('TULEAP_TRACKER_MINDEFCONNECT')],
+                        "values_by_field" => [
+                            "affectation" =>  ["value"  => $MCuserexist->main_department_number],
+                            "user" => ["value" => $MCuserexist->display_name],
+                            "raison" => ["value" => $MCuserexist->commentaire],
+                            "instance" => ["value" => env("APP_PREFIX")]
+                        ]
+                    ]
+                );
+        }
+
+        return redirect()->route(config('skeletor.page_par_defaut'));
+        // return view('home.index');
     }
 
     public function locallogin(LoginRequest $request)
