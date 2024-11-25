@@ -43,7 +43,13 @@ class GenerateApiDocsJsonCommand extends Command
         {
             foreach ($path_description as $method => $method_description){
                 $tags = Arr::get($api_doc, "paths." . $path. "." . $method . ".tags");
-                Arr::set($api_doc, "paths." . $path. "." . $method . ".tags", [ $tags[0] ]);
+
+                $maxlength = max(array_map('strlen', $tags));
+                $longest_tag = array_filter($tags, function($value) use ($maxlength){
+                    return strlen($value) === $maxlength;
+                });
+
+                Arr::set($api_doc, "paths." . $path. "." . $method . ".tags", [ $longest_tag ]);
             }
         }
         
