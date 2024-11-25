@@ -15,7 +15,11 @@ class ReconfigureSessionDatabaseWhenTenantNotInitialized
         }
 
         if ($tenant == null){
-            app('config')->set('session.connection','mysql');
+            // C'est necessaire lorsque skeletor.multi_tenancy est à true car le TenancyServiceProvider reconfigure la connection
+            // des sessions pour utiliser la base 'tenant' par défaut.
+            // Donc quand on n'est pas dans un tenant, il faut repartir sur la base centrale.
+            # C'est là.
+            app('config')->set('session.connection', config('database.default'));
         }
 
         $response = $next($request);

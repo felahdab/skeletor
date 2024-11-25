@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\Cache;
 
 use Spatie\Permission\Traits\HasRoles;
 
-use App\Service\AnnudefAjaxRequestService;
-
 use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
@@ -21,11 +19,17 @@ use Filament\Models\Contracts\HasName;
 
 use Filament\Panel;
 
+use Lab404\Impersonate\Models\Impersonate;
+
+use App\Filament\AvatarProviders\AnnudefAvatarProvider;
+
+
 #[ObservedBy([UserObserver::class])]
 class User extends Authenticatable implements FilamentUser, HasName
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
     use SoftDeletes;
+    use Impersonate;
 
     protected function casts(): array
     {
@@ -37,7 +41,6 @@ class User extends Authenticatable implements FilamentUser, HasName
     
     public function canAccessPanel(Panel $panel): bool
     {
-        $this->newUniqueId();
         // Par défaut, le panel admin n'est accessible qu'au super admins.
         // Les autres panels sont accessibles à tout le monde (la sécurité se fera au niveau des ressources et autres elements filament)
         // if ($panel->getID() === 'admin')
@@ -113,14 +116,16 @@ class User extends Authenticatable implements FilamentUser, HasName
         $this->attributes['password'] = bcrypt($value);
     }
 
+    /**
+     * Renvoie l'url de l'image de profil
+     *
+     * @deprecated A retirer des que possible. Remplacé par le gestionnaire d'avatar de Filament.
+     * @return string
+     */
     public function getAnnudefPictureUrl()
     {
-        $result = Cache::remember($this->cacheKey() . ':annudef_picture_url', 60*5, function () {
-            return AnnudefAjaxRequestService::searchPictureForEmail($this->email);
-        });
-        return $result;
-        //$url = AnnudefAjaxRequestService::searchPictureForEmail($this->email);
-        //return $url;
+        $avatarProvider = new AnnudefAvatarProvider();
+        return $avatarProvider->get($this);
     }
 
     public function IsSuperAdmin()
@@ -130,5 +135,10 @@ class User extends Authenticatable implements FilamentUser, HasName
             return 1;
         
         return 0;
+    }
+
+    public function canImpersonate()
+    {
+        return $this->admin;
     }
 }

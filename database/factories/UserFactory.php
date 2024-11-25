@@ -29,22 +29,20 @@ class UserFactory extends Factory
         
         $lastname = strtolower($this->faker->lastName());
         $firstname = strtolower($this->faker->firstName());
-        $email = $firstname . "." . $lastname . "@intradef.gouv.fr";
+        $domain = match(config('skeletor.reseau_de_deploiement')){
+            'intradef' => 'intradef.gouv.fr',
+            'sic21' => 'adalfantln.marine.defensecdd.gouv.fr'
+        };
+
+        $email = $firstname . "." . $lastname . "@" . $domain;
         
         return [
-            'name'       => $lastname,
+            'nom'       => $lastname,
             'prenom'       => $firstname,
             'display_name' => $firstname. " " . $lastname,
             'email'      => $email,
             //'password'   => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'password'   => 'password',
-            'secteur_id' => Secteur::query()->inRandomOrder()->first()->id,
-            'specialite_id' => Specialite::query()->inRandomOrder()->first()->id,
-            'grade_id'    => Grade::query()->where('id', '>=', 8)->inRandomOrder()->first()->id,
-            'unite_id'   => 2,
-            'diplome_id'  => Diplome::query()->inRandomOrder()->first()->id,
-            'unite_destination_id' => null,
-            'date_embarq'   => $date_embarq->toDateString(),
         ];
     }
 }

@@ -12,8 +12,9 @@ use Illuminate\Support\Str;
 use Illuminate\Routing\Route;
 
 use Dedoc\Scramble\Scramble;
-use Dedoc\Scramble\Support\Generator\OpenApi;
-use Dedoc\Scramble\Support\Generator\SecurityScheme;
+use Filament\Support\Facades\FilamentView;
+use Illuminate\Support\Facades\Blade;
+
 
 use App\Scopes\ScopedMacro;
 
@@ -39,7 +40,16 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
 
         if (env('APP_ENV') != 'production') {
-            Mail::fake();
+            //logger('Setting non production global destination email adres.');
+            $email=config('skeletor.destinataire_email_non_production');
+            Mail::alwaysTo($email);
+        }
+
+        if (env('APP_ENV') != 'production') {
+            FilamentView::registerRenderHook(
+                'panels::body.start',
+                static fn (): string => Blade::render("<x-banner-non-production/>")
+            );
         }
 
         if (env('APP_SCHEME') == 'https')
@@ -51,12 +61,12 @@ class AppServiceProvider extends ServiceProvider
             return (new ScopedMacro($query))($scope, ...$parameters);
         });
 
-        Scramble::routes(function (Route $route) {
-            return Str::startsWith($route->uri, config('skeletor.prefixe_instance') . '/api/');
-        });
+        // Scramble::routes(function (Route $route) {
+        //     return Str::startsWith($route->uri, config('skeletor.prefixe_instance') . '/api/');
+        // });
 
-        Scramble::afterOpenApiGenerated(function (OpenApi $openApi) {
-            $openApi->secure(SecurityScheme::http('bearer', 'JWT'));
-        });
+        // Scramble::afterOpenApiGenerated(function (OpenApi $openApi) {
+        //     $openApi->secure(SecurityScheme::http('bearer', 'JWT'));
+        // });
     }
 }

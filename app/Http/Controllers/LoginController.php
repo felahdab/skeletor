@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
 use App\Service\PossibleUniteService;
+use App\Service\RandomPasswordGeneratorService;
 
 
 class LoginController extends Controller
@@ -32,7 +33,12 @@ class LoginController extends Controller
      */
     public function show()
     {
-        return view('auth.login');
+        [$logo, $sso_name] = match (config('skeletor.reseau_de_deploiement')){
+            "intradef" => [asset("assets/images/MDC_intradef.png"), "Mindef Connect"],
+            "sic21" => [asset("assets/images/Keycloak.png"), "POLARIS Online"]
+        };
+        
+        return view('auth.login', ["logo" => $logo, "sso_name" => $sso_name]);
     }
 
     /**
@@ -49,12 +55,68 @@ class LoginController extends Controller
 
         $MCuser = $driver->stateless()->user();
 
+        //ddd($MCuser);
+
         $user = User::where('email', $MCuser->email)->get()->first();
         if ($user != null) {
             $user->storeMindefConnectInformations($MCuser->user);
             Auth::login($user);
+
             return $this->authenticated($request, $user);
         }
+
+        //dd($MCuser);
+        // SocialiteProviders\Manager\OAuth2\User {#2604 ▼ // app/Http/Controllers/LoginController.php:59
+        //     +id: "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
+        //     +nickname: "f.el-ahdab"
+        //     +name: "Florian El-Ahdab"
+        //     +email: "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
+        //     +avatar: null
+        //     +user: array:7 [▼
+        //       "sub" => "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
+        //       "email_verified" => true
+        //       "name" => "Florian El-Ahdab"
+        //       "preferred_username" => "f.el-ahdab"
+        //       "given_name" => "Florian"
+        //       "family_name" => "El-Ahdab"
+        //       "email" => "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
+        //     ]
+        //     +attributes: array:4 [▼
+        //       "id" => "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
+        //       "nickname" => "f.el-ahdab"
+        //       "name" => "Florian El-Ahdab"
+        //       "email" => "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
+        //     ]
+        //     +token: "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MjkyNTg1OTgsImlhdCI6MTcyOTI1ODI5OCwi
+        //    ▶
+        //   "
+        //     +refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJmZjEwOThhZC1iYjg1LTQ1MzQtOWRlYi0xZDNiOGI4MGMxOTMifQ.eyJleHAiOjE3MjkyNjAwOTgsImlhdCI6MTcyOTI1ODI5OCwianRpIjoiY
+        //    ▶
+        //   "
+        //     +expiresIn: 300
+        //     +approvedScopes: array:3 [▼
+        //       0 => "openid"
+        //       1 => "profile"
+        //       2 => "email"
+        //     ]
+        //     +accessTokenResponseBody: array:9 [▼
+        //       "access_token" => "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MjkyNTg1OTgsImlhdCI6MTcyOTI1ODI5OCwi
+        //    ▶
+        //   "
+        //       "expires_in" => 300
+        //       "refresh_expires_in" => 1800
+        //       "refresh_token" => "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJmZjEwOThhZC1iYjg1LTQ1MzQtOWRlYi0xZDNiOGI4MGMxOTMifQ.eyJleHAiOjE3MjkyNjAwOTgsImlhdCI6MTcyOTI1ODI5OCwianRpIjoiY
+        //    ▶
+        //   "
+        //       "token_type" => "Bearer"
+        //       "id_token" => "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MjkyNTg1OTgsImlhdCI6MTcyOTI1ODI5OCwi
+        //    ▶
+        //   "
+        //       "not-before-policy" => 0
+        //       "session_state" => "c2d897e9-5ffb-4342-a216-d91362b1e82a"
+        //       "scope" => "openid profile email"
+        //     ]
+        //   }
 
         // si le user n'existe pas, test de la variable APP_VALID_MDC pour savoir si on l'enregistre dans la table MDC 
         if (! config('skeletor.validation_automatique_des_comptes_mindef_connect')){
@@ -65,8 +127,8 @@ class LoginController extends Controller
                 $MCuserexist->msg = true;
             } 
             else {
-                $MCuserexist = MindefConnectUser::create(
-                    [
+                $mapping = match (config('skeletor.reseau_de_deploiement')){
+                    "intradef" => [
                         'sub' => $MCuser->user['sub'],
                         'email' => $MCuser->email,
                         'name' => $MCuser->user['usual_name'],
@@ -76,33 +138,50 @@ class LoginController extends Controller
                         'rank' => $MCuser->user['rank'],
                         'short_rank' => $MCuser->user['short_rank'],
                         'display_name' => $MCuser->user['display_name'],
+                    ],
+                    "sic21" => [
+                        'sub' => $MCuser->user['sub'],
+                        'email' => $MCuser->email,
+                        'name' => $MCuser->user['family_name'],
+                        'prenom' => $MCuser->user['given_name'],
+                        'display_name' => $MCuser->user['name'],
                     ]
-                );
+                };
+                $MCuserexist = MindefConnectUser::create($mapping);
             }
             return view('auth.comebacklater', ['MCuserexist' => $MCuserexist]);
         }
         // variable false = on cree directement le user dans user
         else{
-            $gdeid=null;
-            if ($possibleGrade = Grade::where("grade_liblong", "like", strtoupper($MCuser->user['rank']))->get()->first())
-                $gdeid=$possibleGrade->id;
-            $possibleUnite= PossibleUniteService::possibleunite($MCuser->user['main_department_number']);
-            $Newuser=User::create(
-                [
-                    "password" =>substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(10/strlen($x)) )),1,10),
+            $mapping = match (config('skeletor.reseau_de_deploiement')){
+                "intradef" => [
+                    "password" => RandomPasswordGeneratorService::generateRandomString(),
                     'email' => $MCuser->email,
-                    'name' => $MCuser->user['usual_name'],
+                    'nom' => $MCuser->user['usual_name'],
                     'prenom' => $MCuser->user['usual_forename'],
-                    'grade_id' => $gdeid,
                     'display_name' => $MCuser->user['display_name'],
-                    "unite_id" => $possibleUnite?->id,
                     "date_embarq" => date('Y-m-d')
+                ],
+                "sic21" => [
+                    "password" => RandomPasswordGeneratorService::generateRandomString(),
+                    'email' => $MCuser->email,
+                    'nom' => $MCuser->user['family_name'],
+                    'prenom' => $MCuser->user['given_name'],
+                    'display_name' => $MCuser->user['name']
                 ]
-            );
+            };
+
+            $Newuser=User::create($mapping);
+
             $role= Role::where('name', config('skeletor.groupe_par_defaut_des_nouveaux_comptes'))->first();
-            $Newuser->roles()->attach($role->id);
+             if ($role){
+                $Newuser->roles()->attach($role->id);
+            }
+            
             $Newuser->storeMindefConnectInformations($MCuser->user);
+
             Auth::login($Newuser);
+            
             return $this->authenticated($request, $Newuser);
         }
     }
@@ -113,23 +192,26 @@ class LoginController extends Controller
         $MCuserexist->commentaire = $request->comment_mdconnect;
         $MCuserexist->save();
 
-        $response = Http::withoutVerifying()
-            ->withHeaders(["X-Auth-AccessKey" => env("TULEAP_TOKEN")])
-            ->post(
-                env("TULEAP_URL") . "api/artifacts",
-                [
-                    "tracker" =>  ["id" => env('TULEAP_TRACKER_MINDEFCONNECT')],
-                    "values_by_field" => [
-                        "affectation" =>  ["value"  => $MCuserexist->main_department_number],
-                        "user" => ["value" => $MCuserexist->display_name],
-                        "raison" => ["value" => $MCuserexist->commentaire],
-                        "instance" => ["value" => env("APP_PREFIX")]
-                    ]
-                ]
-            );
+        if (config('skeletor.reseau_de_deploiement') == "intradef") {
 
-            return redirect()->route(config('skeletor.page_par_defaut'));
-            // return view('home.index');
+            $response = Http::withoutVerifying()
+                ->withHeaders(["X-Auth-AccessKey" => env("TULEAP_TOKEN")])
+                ->post(
+                    env("TULEAP_URL") . "api/artifacts",
+                    [
+                        "tracker" =>  ["id" => env('TULEAP_TRACKER_MINDEFCONNECT')],
+                        "values_by_field" => [
+                            "affectation" =>  ["value"  => $MCuserexist->main_department_number],
+                            "user" => ["value" => $MCuserexist->display_name],
+                            "raison" => ["value" => $MCuserexist->commentaire],
+                            "instance" => ["value" => env("APP_PREFIX")]
+                        ]
+                    ]
+                );
+        }
+
+        return redirect()->route(config('skeletor.page_par_defaut'));
+        // return view('home.index');
     }
 
     public function locallogin(LoginRequest $request)

@@ -60,55 +60,66 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
          */
         Route::get('/logout', [LogoutController::class, 'perform'])->name('logout.perform');
 
-        Route::group(['prefix' => 'mindefconnect'], function () {
-            Route::get('/', [MindefConnectUserController::class, 'index'])->name('mindefconnect.index');
-            Route::get('/{user}', [MindefConnectUserController::class, 'edit'])->name('mindefconnect.edit');
-            Route::post('/{user}', [MindefConnectUserController::class, 'store'])->name('mindefconnect.store');
-            Route::delete('/{user}', [MindefConnectUserController::class, 'destroy'])->name('mindefconnect.destroy');
-            Route::get('/{mcuser}/conservcpte', [MindefConnectUserController::class, 'conservcpte'])->name('mindefconnect.conservcpte');
-            Route::get('/{mcuser}/effacecpte', [MindefConnectUserController::class, 'effacecpte'])->name('mindefconnect.effacecpte');
-        });
-        Route::group(['prefix' => 'annudef'], function () {
-            Route::get('/', [AnnudefController::class, 'index'])->name('annudef.index');
-        });
+        // Route::group(['prefix' => 'mindefconnect'], function () {
+        //     Route::get('/', [MindefConnectUserController::class, 'index'])->name('mindefconnect.index');
+        //     Route::get('/{user}', [MindefConnectUserController::class, 'edit'])->name('mindefconnect.edit');
+        //     Route::post('/{user}', [MindefConnectUserController::class, 'store'])->name('mindefconnect.store');
+        //     Route::delete('/{user}', [MindefConnectUserController::class, 'destroy'])->name('mindefconnect.destroy');
+        //     Route::get('/{mcuser}/conservcpte', [MindefConnectUserController::class, 'conservcpte'])->name('mindefconnect.conservcpte');
+        //     Route::get('/{mcuser}/effacecpte', [MindefConnectUserController::class, 'effacecpte'])->name('mindefconnect.effacecpte');
+        // });
+        // Route::group(['prefix' => 'annudef'], function () {
+        //     Route::get('/', [AnnudefController::class, 'index'])->name('annudef.index');
+        // });
         
         /**
          * User Routes
          */
-        Route::group(['middleware' => [RestrictVisibility::class]], function () {
-            Route::group(['prefix' => 'users'], function () {
-                Route::get('/', [UsersController::class, 'index'])->name('users.index');
-                Route::get('/create', [UsersController::class, 'create'])->name('users.create');
-                Route::post('/create', [UsersController::class, 'store'])->name('users.store');
-                Route::get('/{user}/show', [UsersController::class, 'show'])->name('users.show');
-                Route::get('/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
-                Route::patch('/{user}/update', [UsersController::class, 'update'])->name('users.update');
-                Route::delete('/{user}/delete', [UsersController::class, 'destroy'])->name('users.destroy');
-                Route::get('/currentrole', [ChangeUserCurrentRole::class, 'index'])->name('currentrole.show');
-                Route::post('/currentrole', [ChangeUserCurrentRole::class, 'store'])->name('currentrole.store');
-                Route::get('/{user}/changepasswd', [ChangeUserPassword::class,  'index'])->name('changepasswd.show');
-                Route::post('/{user}/changepasswd', [ChangeUserPassword::class,  'store'])->name('changepasswd.store');
-            });
-            Route::group(['prefix' => 'mails'], function () {
-                Route::get('/', [MailController::class, 'index'])->name('mails.index');
-                Route::get('/edit/{mail}', [MailController::class, 'edit'])->name('mails.edit');
-                Route::get('/create', [MailController::class, 'create'])->name('mails.create');
-            });
+        // Route::group(['middleware' => [RestrictVisibility::class]], function () {
+        //     Route::group(['prefix' => 'users'], function () {
+        //         Route::get('/', [UsersController::class, 'index'])->name('users.index');
+        //         Route::get('/create', [UsersController::class, 'create'])->name('users.create');
+        //         Route::post('/create', [UsersController::class, 'store'])->name('users.store');
+        //         Route::get('/{user}/show', [UsersController::class, 'show'])->name('users.show');
+        //         Route::get('/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
+        //         Route::patch('/{user}/update', [UsersController::class, 'update'])->name('users.update');
+        //         Route::delete('/{user}/delete', [UsersController::class, 'destroy'])->name('users.destroy');
+        //         Route::get('/currentrole', [ChangeUserCurrentRole::class, 'index'])->name('currentrole.show');
+        //         Route::post('/currentrole', [ChangeUserCurrentRole::class, 'store'])->name('currentrole.store');
+        //         Route::get('/{user}/changepasswd', [ChangeUserPassword::class,  'index'])->name('changepasswd.show');
+        //         Route::post('/{user}/changepasswd', [ChangeUserPassword::class,  'store'])->name('changepasswd.store');
+        //     });
+        //     Route::group(['prefix' => 'mails'], function () {
+        //         Route::get('/', [MailController::class, 'index'])->name('mails.index');
+        //         Route::get('/edit/{mail}', [MailController::class, 'edit'])->name('mails.edit');
+        //         Route::get('/create', [MailController::class, 'create'])->name('mails.create');
+        //     });
     
-        });
+        // });
 
 
         Route::post('bugreport', [BugReportController::class, 'store'])->name('bugreports.store');
 
-        Route::group(['prefix' => 'paramaccueils'], function () {
-            Route::get('/', [ParamaccueilsController::class, 'index'])->name('paramaccueils.index');
-            Route::patch('/', [ParamaccueilsController::class, 'update'])->name('paramaccueils.update');
-        });
+        // Route::group(['prefix' => 'paramaccueils'], function () {
+        //     Route::get('/', [ParamaccueilsController::class, 'index'])->name('paramaccueils.index');
+        //     Route::patch('/', [ParamaccueilsController::class, 'update'])->name('paramaccueils.update');
+        // });
  
-        Route::get('archives', [ArchivesController::class, 'index'])->name('archives.index');
-        Route::get('archives/{user}/restore', [ArchivesController::class, 'restore'])->name('archives.restore');
-        Route::get('archives/{user}/delete', [ArchivesController::class, 'destroy'])->name('archives.destroy');
+        // Route::get('archives', [ArchivesController::class, 'index'])->name('archives.index');
+        // Route::get('archives/{user}/restore', [ArchivesController::class, 'restore'])->name('archives.restore');
+        // Route::get('archives/{user}/delete', [ArchivesController::class, 'destroy'])->name('archives.destroy');
  
 
     });
 });
+
+use Filament\Actions\Exports\Http\Controllers\DownloadExport;
+use Filament\Actions\Imports\Http\Controllers\DownloadImportFailureCsv;
+
+Route::get('/filament/exports/{export}/download', DownloadExport::class)
+    ->name('filament.exports.download')
+    ->middleware('filament.actions');
+
+Route::get('/filament/imports/{import}/failed-rows/download', DownloadImportFailureCsv::class)
+    ->name('filament.imports.failed-rows.download')
+    ->middleware('filament.actions');

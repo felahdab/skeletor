@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Remotesystem;
-
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
 class GenericSkeletorPolicy
@@ -18,23 +18,27 @@ class GenericSkeletorPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User|Remotesystem $user): bool
+    public function viewAny(?Authenticatable $user): bool
     {
+        if ($user == null)
+            return false;
         return $user->can($this->slug . '.index');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User|Remotesystem $user, Model $model): bool
+    public function view(?Authenticatable $user, Model $model): bool
     {
+        if ($user == null)
+            return false;
         return $user->can($this->slug . '.index');
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User|Remotesystem $user): bool
+    public function create(Authenticatable $user): bool
     {
         return $user->hasAnyPermission([
             $this->slug . '.create',
@@ -45,7 +49,7 @@ class GenericSkeletorPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User|Remotesystem $user, Model $model): bool
+    public function update(Authenticatable $user, Model $model): bool
     {
         return $user->hasAnyPermission([
             $this->slug . '.update'
@@ -55,7 +59,7 @@ class GenericSkeletorPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User|Remotesystem $user, Model $model): bool
+    public function delete(Authenticatable $user, Model $model): bool
     {
         return $user->hasAnyPermission([
             $this->slug . '.delete'
@@ -65,7 +69,7 @@ class GenericSkeletorPolicy
     /**
      * Determine whether the user can delete any model.
      */
-    public function deleteAny(User|Remotesystem $user): bool
+    public function deleteAny(Authenticatable $user): bool
     {
         return $user->hasAnyPermission([
             $this->slug . '.deleteAny'
@@ -75,7 +79,7 @@ class GenericSkeletorPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User|Remotesystem $user, Model $model): bool
+    public function restore(Authenticatable $user, Model $model): bool
     {
         return $user->hasAnyPermission([
             $this->slug . '.restore'
@@ -85,7 +89,7 @@ class GenericSkeletorPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User|Remotesystem $user, Model $model): bool
+    public function forceDelete(Authenticatable $user, Model $model): bool
     {
         return $user->hasAnyPermission([
             $this->slug . '.forceDelete'
@@ -95,7 +99,7 @@ class GenericSkeletorPolicy
     /**
      * Determine whether the user can permanently delete any model.
      */
-    public function forceDeleteAny(User|Remotesystem $user): bool
+    public function forceDeleteAny(Authenticatable $user): bool
     {
         return $user->hasAnyPermission([
             $this->slug . '.forceDeleteAny'
@@ -105,7 +109,7 @@ class GenericSkeletorPolicy
     /**
      * Determine whether the user can reorder the model.
      */
-    public function reorder(User|Remotesystem $user): bool
+    public function reorder(Authenticatable $user): bool
     {
         return $user->hasAnyPermission([
             $this->slug . '.reorder'

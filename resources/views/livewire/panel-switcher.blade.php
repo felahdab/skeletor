@@ -1,4 +1,8 @@
 @php
+    use Illuminate\Support\Str;
+    use Illuminate\Support\Facades\Url;
+
+
     $currentPanel = filament()->getCurrentPanel();
     $panels = filament()->getPanels();
 
@@ -8,13 +12,41 @@
             ? str(collect($domains)->first())->prepend($getUrlScheme)->toString()
             : str($panel->getPath())->prepend('/')->toString();
 
-    $getHref = fn (\Filament\Panel $panel): ?string => $panel->getId() !== $currentPanel->getId()
-            ? \Filament\Pages\Dashboard::getUrl( panel: $panel->getId())
-            : null;
+    $getHref = function (\Filament\Panel $panel): ?string {
+        if ($panel->getId() == filament()->getCurrentPanel()->getId())
+        {
+            return null;
+        }
+        if (tenant()){
+            return Str::of(url($panel->getPath()))->replace("{tenant}", tenant()->id);
+        }
+        return url($panel->getPath());
+    };
+
+    $acceptsGuests = function (\Filament\Panel $panel)
+    {
+        return $panel->getAuthMiddleware() == [];
+    };
 
     $iconSize = 16 ;
 
+
 @endphp
+
+@guest
+@php
+    $newpanels = [];
+    foreach ($panels as $panel)
+    {
+        if ($acceptsGuests($panel))
+        {
+            $newpanels[] = $panel;
+        }
+    }
+    $panels = $newpanels;
+
+@endphp
+@endguest
 
 <div class="flex flex-wrap items-center justify-center gap-4 md:gap-6">
     @foreach ($panels as $panel)

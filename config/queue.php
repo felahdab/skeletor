@@ -34,10 +34,18 @@ return [
             'driver' => 'sync',
         ],
 
-        'database' => [
+        'mysql' => [
             'driver' => 'database',
             'table' => 'jobs',
             'queue' => 'mysql',
+            'retry_after' => 90,
+            'after_commit' => false,
+        ],
+
+        'pgsql' => [
+            'driver' => 'database',
+            'table' => 'jobs',
+            'queue' => 'pgsql',
             'retry_after' => 90,
             'after_commit' => false,
         ],

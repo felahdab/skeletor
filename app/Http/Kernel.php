@@ -9,6 +9,7 @@ use App\Http\Middleware\SetTenantDefaultForRoutesMiddleware;
 use App\Http\Middleware\InitializeTenancyByPath;
 use App\Http\Middleware\InitializeTenancyByCookieData;
 use App\Http\Middleware\ReconfigureSessionDatabaseWhenTenantNotInitialized;
+use App\Http\Middleware\SetTenantAwareKeycloakCallbackRedirect;
 
 class Kernel extends HttpKernel
 {
@@ -48,6 +49,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\RecordRequestHandlingTime::class,
             SetTenantDefaultForRoutesMiddleware::class,
+            SetTenantAwareKeycloakCallbackRedirect::class,
             SetTenantCookieMiddleware::class
         ],
 
@@ -63,6 +65,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\RecordRequestHandlingTime::class,
             SetTenantDefaultForRoutesMiddleware::class,
+            SetTenantAwareKeycloakCallbackRedirect::class,
             SetTenantCookieMiddleware::class
         ],
 

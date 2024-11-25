@@ -31,7 +31,9 @@ class SkeletorAdjustGoogleFontsUrlsCommand extends Command
         $sourceDomains = [
             'https:\/\/pprod-ffast.intradef.gouv.fr',
             'http:\/\/localfanlab.el-ahdab.fr',
-            'https:\/\/fanlab.el-ahdab.fr'
+            'https:\/\/fanlab.el-ahdab.fr',
+            'https:\/\/c2n.adalfantln.marine.defensecdd.gouv.fr',
+            'https:\/\/pprod.c2n.adalfantln.marine.defensecdd.gouv.fr'
         ];
 
         foreach ($sourceDomains as $domain) {

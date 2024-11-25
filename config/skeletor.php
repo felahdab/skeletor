@@ -4,6 +4,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Réseau de déploiement
+    |--------------------------------------------------------------------------
+    |
+    | Cette option permet de préciser sur quel réseau l'application est déployée. Les valeurs possibles sont:
+    |  - intradef
+    |  - sic21
+    |
+    */
+
+    'reseau_de_deploiement' => env('SKELETOR_RESEAU', "intradef"),
+
+    /*
+    |--------------------------------------------------------------------------
     | Politique de création des comptes pour les utilisateurs authentifies par Mindef Connect
     |--------------------------------------------------------------------------
     |
@@ -15,6 +28,21 @@ return [
     */
 
     'validation_automatique_des_comptes_mindef_connect' => env('APP_VALID_MDC', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Recherche d'équivalence avec les grades depuis le provider OpenID
+    |--------------------------------------------------------------------------
+    |
+    | Par défaut, cette option est à true: Skeletor essaiera de chercher le grade
+    | de l'utilisateur en fonction des données transmises par le provider OpenID
+    | Fonctionne bien sur Intradef avec MindefConnect
+    | Sur POLARIS Online, le provider ne renvoit pas de grade, donc doit être
+    | désactivé (false)
+    |
+    */
+
+    'matches_user_rank_if_possible' => false ,
 
     /*
     |--------------------------------------------------------------------------
@@ -37,6 +65,26 @@ return [
     */
     
     'page_par_defaut' => env('APP_PAGE_ACCUEIL', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Prefixe de l'instance
+    |--------------------------------------------------------------------------
+    | Ce paramètre détermine le préfixe à appliquer à toutes les urls déclarées
+    | dans l'application.
+    */
+
+    'instance_prefix' => env('APP_PREFIX', "instance"),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Titre général de l'application
+    |--------------------------------------------------------------------------
+    | Ce paramètre détermine le titre général de l'application, tel que renseigné
+    | dans le layout des vues (resources/views/layout/app-master.blade.php)
+    */
+
+    'instance_titre' => env('SKELETOR_TITLE', "Skeletor"),
 
     /*
     |--------------------------------------------------------------------------
@@ -66,5 +114,27 @@ return [
     */
 
     'multi_tenancy' => env('SKELETOR_MULTI_TENANCY', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Destinataire des mails lorsque l'application n'est pas en production
+    |--------------------------------------------------------------------------
+    |
+    | Lorque l'application n'est pas en production (variable d'environnement APP_ENV != "production"),
+    | tous les mails sont envoyés à l'adresse indiquée ci-dessous:
+    |
+    */
+    'destinataire_email_non_production'=> env('SKELETOR_EMAIL_NON_PRODUCTION', 'nomail'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Destinataire caché systématique des mails envoyés
+    |--------------------------------------------------------------------------
+    |
+    | Lorque cette valeur est définie, elle est utilisée comme destinataire caché de tous les mails
+    | produits depuis le composant MailEditComponent.
+    |
+    */
+    'destinataire_systematique_bcc'=> env('SKELETOR_BCC_RECIPIENT', []),
     
 ];

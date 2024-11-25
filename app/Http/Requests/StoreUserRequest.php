@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+use App\Rules\SIC21EmailValidation;
 use App\Rules\IntradefEmailValidation;
 
 class StoreUserRequest extends FormRequest
@@ -26,10 +27,15 @@ class StoreUserRequest extends FormRequest
      */
     public function rules()
     {
+        $mail_validation = match(config('skeletor.reseau_de_deploiement')){
+            "intradef" => new IntradefEmailValidation,
+            "sic21"   => new SIC21EmailValidation
+        };
+
         return [
             'name' => 'required',
             'prenom' => 'required',
-            'email' =>  ['required', 'email:rfc,dns', 'unique:users,email', new IntradefEmailValidation],
+            'email' =>  ['required', 'email:rfc', 'unique:users,email', $mail_validation],
             'matricule' => 'nullable',
             'date_embarq' => 'required|date',
             'date_debarq' => 'date|nullable',
