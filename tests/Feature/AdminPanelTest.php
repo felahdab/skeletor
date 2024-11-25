@@ -21,7 +21,7 @@ beforeEach(function () {
 });
 
 it('has a login page', function () {
-    $response = $this->get('/apps/login');
+    $response = $this->get(route('login'));
 
     $response->assertStatus(200);
 });
