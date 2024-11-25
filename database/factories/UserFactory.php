@@ -29,7 +29,12 @@ class UserFactory extends Factory
         
         $lastname = strtolower($this->faker->lastName());
         $firstname = strtolower($this->faker->firstName());
-        $email = $firstname . "." . $lastname . "@intradef.gouv.fr";
+        $domain = match(config('skeletor.reseau_de_deploiement')){
+            'intradef' => 'intradef.gouv.fr',
+            'sic21' => 'adalfantln.marine.defensecdd.gouv.fr'
+        };
+
+        $email = $firstname . "." . $lastname . "@" . $domain;
         
         return [
             'nom'       => $lastname,

@@ -20,11 +20,11 @@
                     <div class="card">
                         <div class="row g-0">
                           <div class="col-md-6 my-auto" >
-                            <img src='{!! asset("assets/images/Keycloak.png") !!}' alt="Logo MDconnect" style="width:100%">
+                            <img src='{!! $logo !!}' alt="Logo SSO" style="width:100%">
                           </div>
                           <div class="col-md-6 border-start d-flex align-items-center">
                                 <div class="card-body ">
-                                    Se connecter via POLARIS Online
+                                    Se connecter via {!! $sso_name !!}
                                 </div>
                           </div>
                         </div>

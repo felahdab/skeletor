@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 use App\Rules\SIC21EmailValidation;
+use App\Rules\IntradefEmailValidation;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -29,10 +30,15 @@ class UpdateUserRequest extends FormRequest
         // Let's get the route param by name to get the User object value
         $user = request()->route('user');
 
+        $mail_validation = match(config('skeletor.reseau_de_deploiement')){
+            "intradef" => new IntradefEmailValidation,
+            "sic21"   => new SIC21EmailValidation
+        };
+
         return [
             'name' => 'required',
             'prenom' => 'required',
-            'email' =>  [ 'required', 'email:rfc,dns', Rule::unique('users')->ignore($user->id), new SIC21EmailValidation],
+            'email' =>  [ 'required', 'email:rfc,dns', Rule::unique('users')->ignore($user->id), $mail_validation],
             'matricule' => 'nullable',
             'date_embarq' => 'required|date',
             'date_debarq' => 'date|nullable',
