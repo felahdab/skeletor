@@ -21,13 +21,13 @@ use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugi
 
 use Filament\FontProviders\SpatieGoogleFontProvider;
 use Filament\Navigation\NavigationItem;
-use App\Filament\AvatarProviders\AnnudefAvatarProvider;
+use App\Filament\AvatarProviders\SkeletorAvatarProvider;
 use App\Http\Middleware\FilamentAuthenticate as FilamentAuthenticate;
 
 use App\Http\Middleware\InitializeTenancyByPath;
 use App\Http\Middleware\SetTenantCookieMiddleware;
 use App\Http\Middleware\SetTenantDefaultForRoutesMiddleware;
-use App\Http\Middleware\ReconfigureSessionDatabaseWhenTenantInitialized;
+use App\Http\Middleware\ReconfigureSessionDatabaseWhenTenantNotInitialized;
 
 use App\Providers\Filament\Traits\UsesSkeletorPrefixAndMultitenancyTrait;
 
@@ -47,7 +47,7 @@ class AdminPanelProvider extends PanelProvider
             ->profile()
             ->favicon(asset('assets/images/favicon-32x32.png'))
             ->font('Inter', provider: SpatieGoogleFontProvider::class)
-            ->defaultAvatarProvider(AnnudefAvatarProvider::class)
+            ->defaultAvatarProvider(SkeletorAvatarProvider::class)
             ->brandName("Administration")
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -65,7 +65,7 @@ class AdminPanelProvider extends PanelProvider
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
                 InitializeTenancyByPath::class,
-                //ReconfigureSessionDatabaseWhenTenantInitialized::class,
+                ReconfigureSessionDatabaseWhenTenantNotInitialized::class,
                 SetTenantDefaultForRoutesMiddleware::class,
                 SetTenantCookieMiddleware::class,
                 AuthenticateSession::class,
