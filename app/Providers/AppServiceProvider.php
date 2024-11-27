@@ -13,10 +13,15 @@ use Illuminate\Routing\Route;
 
 use Dedoc\Scramble\Scramble;
 use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
+use Illuminate\Contracts\View\View;
+
 use Illuminate\Support\Facades\Blade;
 
-
 use App\Scopes\ScopedMacro;
+
+use Dedoc\Scramble\Support\Generator\OpenApi;
+use Dedoc\Scramble\Support\Generator\SecurityScheme;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -52,6 +57,11 @@ class AppServiceProvider extends ServiceProvider
             );
         }
 
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::SIDEBAR_FOOTER,
+            fn (): View => view('layouts.partials.api-documentation-link'),
+        );
+
         if (env('APP_SCHEME') == 'https')
             \Illuminate\Support\Facades\URL::forceScheme('https');
 
@@ -65,8 +75,8 @@ class AppServiceProvider extends ServiceProvider
         //     return Str::startsWith($route->uri, config('skeletor.prefixe_instance') . '/api/');
         // });
 
-        // Scramble::afterOpenApiGenerated(function (OpenApi $openApi) {
-        //     $openApi->secure(SecurityScheme::http('bearer', 'JWT'));
-        // });
+        Scramble::afterOpenApiGenerated(function (OpenApi $openApi) {
+            $openApi->secure(SecurityScheme::http('bearer', 'JWT'));
+        });
     }
 }

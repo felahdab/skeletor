@@ -157,7 +157,7 @@ class LoginController extends Controller
                 "intradef" => [
                     "password" => RandomPasswordGeneratorService::generateRandomString(),
                     'email' => $MCuser->email,
-                    'name' => $MCuser->user['usual_name'],
+                    'nom' => $MCuser->user['usual_name'],
                     'prenom' => $MCuser->user['usual_forename'],
                     'display_name' => $MCuser->user['display_name'],
                     "date_embarq" => date('Y-m-d')
