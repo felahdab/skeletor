@@ -1,3 +1,14 @@
+## 3.0.3 (November 28, 2024)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.2 –> 3.0.3
+- Correct the Adjust DisplayNames job to reflect changes in User model.
+- Correction configuration de backup pour le cas mysql.
+- Déclaration d'une base de données mysql de test.
+- Install parallax/filament-comments, publish and adjust configuration.
+- Ajout lien vers la doc des API en bas de la barre de navigation.
+- Modification pour conserver le plus long tag pour chaque endpoint.
+- Création de la commande de génération de la doc des api
+- Ajustements divers
+
 ## 3.0.2 (November 25, 2024)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.1 –> 3.0.2
 - Introduction des mécanismes de configuration de Skeletor liés au réseau de déploiement, afin de maintenir la plus grande homogénéité possible entre SIC21 et Intradef.
