@@ -182,7 +182,9 @@ return [
         FilamentServiceProvider::class,
 
         App\Providers\RouteServiceProvider::class,
-        App\Providers\PrefixedLivewireServiceProvider::class,
+        App\Providers\SkeletorRouteServiceProvider::class,
+
+        #App\Providers\PrefixedLivewireServiceProvider::class,
         App\Providers\LaravelBladeSortableServiceProvider::class,
         App\Providers\TenancyServiceProvider::class,
     ],
