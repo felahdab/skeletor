@@ -30,7 +30,7 @@ class AdjustDisplayNames implements ShouldQueue
     {
         foreach (User::all() as $user)
         {
-            $user->display_name = $user->displayString();
+            $user->display_name = $user->prenom . " " . $user->nom;
             $user->save();
         }
     }

@@ -110,6 +110,7 @@ return array(
     'Pest\\Faker\\' => array($vendorDir . '/pestphp/pest-plugin-faker/src'),
     'Pest\\Arch\\' => array($vendorDir . '/pestphp/pest-plugin-arch/src'),
     'Pest\\' => array($vendorDir . '/pestphp/pest/src'),
+    'Parallax\\FilamentComments\\' => array($vendorDir . '/parallax/filament-comments/src'),
     'ParagonIE\\ConstantTime\\' => array($vendorDir . '/paragonie/constant_time_encoding/src'),
     'ParaTest\\' => array($vendorDir . '/brianium/paratest/src'),
     'PHPUnit\\Architecture\\' => array($vendorDir . '/ta-tikoma/phpunit-architecture-test/src'),
