@@ -18,12 +18,14 @@ Contenu:
     - [Impersonate](#impersonate)
     - [L5 Swagger](#l5swagger)
     - [Livewire](#livewire)
+    - [Filament](#filament)
     - [Fichiers statiques](#fichiers_statiques)
 - [Gestion des droits](#gestion_des_droits)
-- [Mindef Connect](#mindef_connect)
-- [Rappasoft Datatables](#rappasoft)
+- [Keycloak](#keycloak)
 - [Sushi](#sushi)
 - [Exposer une API](#api)
+- [Multi tenancy](#multi-tenancy)
+
 
 <a name="generalites"></a>
 
@@ -35,7 +37,7 @@ Ce squelette a notamment pour objectif de placer le développeur dans un environ
 Ainsi, les tâches normalement réalisées au tout début d'un projet ont déjà été réalisées, et le développeur n'a pas à s'en préoccuper.
 Skeletor tire partie de l'expérience acquise sur le projet FFAST du GTR Toulon, et inclut donc des briques fonctionnelles requises ou utiles pour l'intégration dans Intradef (Mindef Connect en particulier, mais aussi envoi de mail Intradef et interrogation de l'Annudef), basées sur des technologies conformes au CCT afin de faciliter, le cas échéant, la validation du projet par la comitologie ministérielle.<br><br>
 
-Skeletor est basé sur le framework Laravel complété par Filament. Il inclut également d'autres briques techniques classiques (Bootstrap, Livewire, Alpine.js). Destiné à être mis en oeuvre sur la plateforme de développement du FANLab, ce squelette d'application doit aussi composer avec quelques contraintes techniques inhabituelles qui sont décrites ci-dessous et que le développeur devra respecter s'il veut que son application fonctionne.
+Skeletor est basé sur la stack TALL (Tailwind, Alpine JS, Laravel, Livewire) complétée par Filament. Il inclut égalementpar défaut Bootstrap pour faciliter le développement de pages HTML simple hors du cadre de Filament. Destiné à être mis en oeuvre sur la plateforme de développement du FANLab, ce squelette d'application doit aussi composer avec quelques contraintes techniques inhabituelles qui sont décrites ci-dessous et que le développeur devra respecter s'il veut que son application fonctionne.
 A l'usage, ces contraintes ne sont pas difficiles à intégrer et ne posent pas de grosse difficulté. Dans Skeletor, le plus gros du travail est déjà fait.
 
 > {info} Cette documentation ne reprend pas la documentation des briques techniques utilisées. Pour parfaitement la comprendre, il faut que le développeur se soit déjà intéressé
@@ -65,12 +67,12 @@ Le dévelopement modulaire présente quelques complications supplémentaires:
 <a name="modules-tables"></a>
 
 ### Préfixe des tables en base de données
-Afin d'éviter que 2 modules utilisent le même nom de table en base de données, il est utile de préfixer les noms de tables. Or, dans Laravel/Eloquent, le nom de la table est
+Afin d'éviter que 2 modules utilisent le même nom de table en base de données, il est indispensable de préfixer les noms de tables. Or, dans Laravel/Eloquent, le nom de la table est
 normalement dérivé du nom du Modèle. Il faut donc contrarier ce fonctionnement par défaut pour parvenir à préfixer les noms des tables.
 
 Pour faciliter la mise en place de ce préfixe, Skeletor inclue le Trait ```HasTablePrefix```.
 
-Au niveau de chaque module, ce Trait peut-être surclassé de la façon suivante:
+Au niveau de chaque module, ce Trait doit être surclassé de la façon suivante:
 ```php
 <?php
 
@@ -89,15 +91,17 @@ trait HasTablePrefix
 Chaque modèle du module peut alors simplement ```use HasTablePrefix``` pour rajouter le même préfixe à tous les modèles du module.<br><br>
 
 Evidemment, le préfixe doit être pris en compte dans les migrations et éventuellement les seeders du module.
+Une fois mis en place, les requêtes Eloquent sur les modèles préfixés se passent normalement.
+
+> {info} Dans Laravel, le nom des tables pivot utilisées dans les relations ManyToMany sont par défaut dérivées automatiquement depuis le nom des modèles Eloquent qui sont mis en relation. Evidemment, ce mécanisme ne prend pas en compte le besoin de préfixe que le développement modulaire impose.
+> Par conséquent, le développeur devra penser à présicer le nom des tables pivot que les relations ManyToMany doivent utiliser.<br><br>
+
 
 <a name="modules-routes"></a>
 
 ### Préfixe des routes du module
 
-> {info} Compte tenu des règles générales liant les routes aux permissions dans Skeletor, d'une façon générale, un module doit préfixer le nom des routes qu'il déclare avec 
-> ```nom_du_module::```. Ainsi, les permissions associées seront également préfixées de la même façon.
-> Skeletor dispose nativement d'une page permettant d'affecter les permissions aux rôles. La page concernée affiche les permissions préfixées de la façon indiquée 
-> dans des sections séparées dans la page de gestion des rôles. <br><br>
+> {info} Afin de bien séparer fonctionnellement les modules les uns des autres, les routes déclarées par chaque module doivent également être préfixées. Par défaut, le service provider qui déclare les routes du module est ajusté pour préfixer les routes de chaque module comme il convient. <br><br>
 
 <a name="modules-resources"></a>
 
@@ -106,59 +110,19 @@ Les vues, composants Blade et composants Livewire sont eux aussi préfixés avec
 
 > {info} Le package  ```mhmiton/laravel-modules-livewire``` introduit la commande artisan ```module:make-livewire``` qui facilite la création d'un composant livewire au sein d'un module.
 
-<a name="modules-layout"></a>
-
-### Utilisation du layout général de Skeletor
-
-DEPRECATED: attention, ce paragraphe n'est plus applicable: l'emploi du framework Filament remplace cette partie.
-
-Skeletor propose un layout général des pages que les modules peuvent utiliser en incluant la directive suivante dans leurs vues Blade:
-```php
-@extends('layouts.app-master')
-```
-
-> {info} Néanmoins, le développeur est également totalement libre de ne pas utiliser ce layout pour toutes ou certaines vues de son module. Lorsque le développeur utilise ce layout, il dispose de la librairie Bootstrap pour tout ce qui concerne les styles.
-
-<a name="modules-navbar"></a>
-
-
-### Intégration des menus du module dans la barre de menu générale
-
-DEPRECATED: attention, ce paragraphe n'est plus applicable: l'emploi du framework Filament remplace cette partie.
-
-Le layout général proposé par Skeletor inclue une barre de menu qui intègre automatiquement la vue ```nomdumodule::partials/navbar```.
-
-```php
-@foreach(Module::allEnabled() as $module)
-    @includeIf($module->getLowerName() . "::partials.navbar") 
-@endforeach
-```
-
-Ainsi, le développeur peut construire un ou plusieurs menus qui seront automatiquement affichés dans la barre de menu générale lorsque son module sera activé.
-
 <a name="modules-helplink"></a>
 
 ### Lien vers les pages de documentation
 
 DEPRECATED: attention, ce paragraphe n'est plus applicable: l'emploi du framework Filament rend cette partie inapplicable. Il n'y a pas, pour l'instant, de mécanisme permettant de rediriger l'utilisateur vers la documentation du module depuis les pages Filament de ce dernier.
 
-Skeletor offre 2 facilités supplémentaires:
-- le composant Blade ```<x-help-link>``` qui permet de générer un lien pointant vers une page de la documentation publiée sur Larecipe ;
-- un espace dans la barre de menu générale (section ```helplink``` destinée à recevoir un lien vers la documentation).
-
-Ainsi, dans une vue de l'application, le développeur peut inclure une section ```helplink``` semblable à l'exemple ci-dessous, qui introduira automatiquement dans le menu général un lien vers la page ```parcours``` de la documentation Larecipe.
-
-```php
-@section('helplink')
-    <x-help-link page="parcours"/>
-@endsection
-```
+A ce jour, Skeletor inclue simplement un lien vers la documentation, en bas à gauche de toutes les pages. Ce lien n'est pas spécifique à la page depuis lequel il est utilisé.
 
 <a name="contraintes-routage"></a>
 
 ## Contraintes liées au routage des requêtes
 
-Sur Intradef, il n'est pas possible d'obtenir rapidement une nouvelle entrée DNS afin de déclarer un nouveau domaine.
+Sur Intradef, il n'est pas possible d'obtenir simplement une nouvelle entrée DNS afin de déclarer un nouveau domaine.
 Il n'est pas non plus possible d'obtenir une délégation de gestion sur un sous-domaine (afin de pouvoir ensuite crééer à la demande des sous domaines).
 Par conséquent, afin de pouvoir offrir des instances de développement à la demande, le FANLab a retenu une solution consistant à attribuer à chaque instance de développement un préfixe, qui constitue le premier élément des URL de l'application.<br><br>
 
@@ -210,8 +174,7 @@ déclarées.<br><br>
 
 #### Laravel Sanctum
 Le package  ```laravel/sanctum ``` est un package utilisé pour permettre l'authentification des requêtes au moyen de tokens plutôt qu'au travers d'un couple login/mot de passe. Les tokens sont notamment utilisés pour les accès aux API. 
-Ce package déclare 1 route et prévoit un paramètre de configuration pour préciser un préfixe à utiliser pour cette route. Ce paramètre est donc configuré pour
-utiliser la valeur de  ```APP_PREFIX```:
+Ce package déclare 1 route et prévoit un paramètre de configuration pour préciser un préfixe à utiliser pour cette route. Ce paramètre est donc configuré pour utiliser la valeur de  ```APP_PREFIX```:
 
 ```php
    'prefix' => config('skeletor.prefixe_instance'),
@@ -261,37 +224,6 @@ Ce package déclare 5 routes et prévoit un paramètre de configuration pour raj
 ```
 <br><br>
 
-<a name="larecipe"></a>
-
-#### Larecipe
-
-DEPRECATED: Larecipe n'est plus utilisé dans Skeletor. La documentation est servie par une instance de Markserv configurée pour être appelée pour toutes les urls commencant par ```config('skeletor.prefixe_instance') . '/docs/'```<br><br>
-
-Le package ```binarytorch/larecipe``` est installé afin de faciliter la mise à disposition de la documentation.
-Ce package déclare 5 routes et prévoit un paramètre de configuration pour préciser la route de base. Ce paramètre est donc ajusté pour utiliser le  ```APP_PREFIX```:<br><br>
-
-```php
- /*
-    |--------------------------------------------------------------------------
-    | Documentation Routes
-    |--------------------------------------------------------------------------
-    |
-    | These options configure the behavior of the LaRecipe docs basic route
-    | where you can specify the url of your documentations, the location
-    | of your docs and the landing page when a user visits /docs route.
-    |
-    |
-    */
-
-    'docs'        => [
-        'route'   => '/' . config('skeletor.prefixe_instance') . '/docs',
-        'path'    => '/resources/docs',
-        'landing' => 'generalites',
-        'middleware' => ['web'],
-    ],
-```
-<br><br>
-
 <a name="impersonate"></a>
 
 #### Impersonate
@@ -303,10 +235,12 @@ Ce package ne déclare pas directement ses routes dans l'application, mais défi
 
 Etant donné que toutes les routes déclarées dans ```routes/web.php``` sont déjà préfixées avec ```APP_PREFIX```, les routes de Impersonate déclarées via ```Route::impersonate();``` sont également préfixées.<br><br>
 
+En outre, le package stechstudio/filament-impersonate est également installé. Ce package introduit les composants Filament facilitant l'utilisation de la fonction de personnification des utilisateurs de lab404 depuis les panneaux Filament.
+
 <a name="l5swagger"></a>
 
 #### L5 Swagger
-Le package ```darkaonline/l5-swagger``` est installé afin de faciliter définition et la documentation de points d'accès API.
+Le package ```darkaonline/l5-swagger``` est installé afin de faciliter la publication de la documentation des points d'accès API.
 Ce package déclare 4 routes et prévoit des paramètres de configuration pour préciser ces dernières. Ces paramètres sont donc ajustés pour utiliser le  ```APP_PREFIX```:<br><br>
 
 ```php
@@ -332,74 +266,99 @@ Ce package déclare 4 routes et prévoit des paramètres de configuration pour p
 ]
 
 ```
+
+> {info} Swagger n'est pas utilisé pour documenter les endpoints API exposés par Skeletor ou les modules. Le package scramble est utilisé pour cela.<br><br>
+
 <br><br>
 
 <a name="livewire"></a>
 
 #### Livewire
 Le package ```livewire/livewire``` permet de crééer des pages Web dynamiques sans avoir à se préoccuper de la partie Javascript (le développeur n'écrit que du PHP et du HTML).
-Ce package déclare 6 routes mais ne prévoit aucun mécanisme pour préfixer ces routes. <br><br>
+Ce package déclare 6 routes mais ne prévoit pas un mécanisme totalement générique pour préfixer ces routes. <br><br>
 
 Ce sujet a été discuté au sein de l'équipe de développement: <a href="https://github.com/livewire/livewire/pull/2662">Issue 2662</a> et ne fera pas l'objet de modification dans l'immédiat. <br><br>
 
-Afin de contourner cette difficulté, le package a été déclaré dans composer.json comme ne devant pas être auto-détecté et chargé par Laravel:
-```json
-"extra": {
-        "laravel": {
-            "dont-discover": [
-                "livewire/livewire"
-            ]
-        }
-    },
-```
-<br><br>
-
-puis un  ```ServiceProvider``` spécifique a été rajouté au squelette d'application afin d'outrepasser la déclaration des routes du package livewire afin de préfixer ces dernières:
+Afin de contourner cette difficulté, un  ```ServiceProvider``` spécifique a été rajouté au squelette d'application afin de modifier la la déclaration des routes du package livewire afin de préfixer ces dernières. Dans le même temps, on modifie les middleware appliqués à ces routes: voir le paragraphe multi-tenancy pour les explications.
 
 ```php
 <?php
 
+<?php
+
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Route as RouteFacade;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
-use Livewire\LivewireServiceProvider;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
-class PrefixedLivewireServiceProvider extends LivewireServiceProvider
+class PrefixedLivewireServiceProvider extends ServiceProvider
 {
-    protected function registerRoutes()
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
     {
-        $prefix = config('livewire.route_prefix');
         
-        RouteFacade::prefix($prefix)->group(function() {
-            parent::registerRoutes();
-        });
-
     }
+
+    public function map()
+    {
+        // Check Cached not necessary if extends RouteServiceProvider
+        if (! App::routesAreCached())
+        {
+            $this->setLivewirePrefixesRoutes();
+        }
+    }
+
+    protected function setLivewirePrefixesRoutes()
+{
+    // Define custom livewire routes
+
+    foreach (Route::getRoutes() as $route)
+    {
+        $prefix = config('skeletor.instance_prefix');
+        if (Str::is('livewire/livewire.js', $route->uri()))
+        {
+            $route->setUri($prefix . '/' . $route->uri());
+        }
+
+        if (Str::is('livewire/livewire.min.js.map', $route->uri()))
+        {
+            $route->setUri($prefix . '/' . $route->uri());
+        }
+
+        if (Str::is('livewire/preview-file/{filename}', $route->uri()))
+        {
+            $route->setUri($prefix . '/' . $route->uri());
+            Arr::set($route->action, "middleware", ["webexcepttenancybypath"]);
+        }
+
+        if (Str::is('livewire/update', $route->uri()))
+        {
+            $route->setUri($prefix . '/' . $route->uri());
+            Arr::set($route->action, "middleware", ["webexcepttenancybypath"]);
+        }
+
+        if (Str::is('livewire/upload-file', $route->uri()))
+        {
+            $route->setUri($prefix . '/' . $route->uri());
+            Arr::set($route->action, "middleware", ["webexcepttenancybypath"]);
+        }
+    }
+} 
+
+
 }
+
 ```
 <br><br>
 
-Ce ```ServiceProvider``` utilise le paramètre de configuration rajouté dans la configuration de livewire, qui lui-même utilise la valeur du  ```APP_PREFIX```:
-
-```php
- /*
-    |--------------------------------------------------------------------------
-    | Livewire Route Prefix
-    |--------------------------------------------------------------------------
-    |
-    | Les routes Livewire seront prefixees par ce prefixe.
-    |
-    | Examples: "prefixe/avec/lequel/prefixer/les/routes/livewire"
-    |
-    */
-
-    'route_prefix' => config('skeletor.prefixe_instance'),
-```
-
-
-
-et il est explicitement déclaré dans le fichier de configuration de l'application ```config/app.php``` pour être chargé au lancement de l'application.
+Ce ```ServiceProvider``` modifie les uri des routes déjà déclarées par le package Livewire pour leur rajouter le préfixe de l'instance et il est explicitement déclaré dans le fichier de configuration de l'application ```config/app.php``` pour être chargé au lancement de l'application, après le package livewire (qui est chargé automatiquement, donc avant les services providers déclarés dans app.php)
 
 ```php
 'providers' => [
@@ -409,6 +368,26 @@ et il est explicitement déclaré dans le fichier de configuration de l'applicat
 
     ],
 ```
+
+<a name="filament"></a>
+
+#### Filament
+Les panneaux Filament se chargent de déclarer leurs routes directement dans Laravel.
+Par conséquent, le préfixe de l'instance doit être bien pris en compte dans la déclaration du panneau.
+Pour faciliter cette tâche commune à tous les panneaux, le trait `UsesSkeletorPrefixAndMultitenancyTrait` est mis en place.
+Ce trait définit l'attribut `$prefix` dans le panneau, et cet attribut doit être utilisé pour déclarer le path du panneau:
+```php
+return $panel
+            ...
+            ->path($this->prefix . '/admin')
+            ...
+```
+
+<br><br>
+
+Filament expose lui aussi 2 routes qu'il n'est pas facile de modifier.
+Le même mécanisme que pour Livewire est utilisé pour en modifier les uri.
+Le Service Provider correspondant s'appelle ```PrefixFilamentImportsExportsProvider```.
 
 <a name="fichiers_statiques"></a>
 
@@ -436,52 +415,53 @@ L'URL générée par la fonction ```asset``` contiendra automatiquement le préf
 ```php
 https://domaine-qui-va-bien.intradef.gouv.fr/APP_PREFIX/assets/images/favicon-32x32.png
 ```
+<br><br>
+Par ailleurs, la configuration des systèmes de fichier est ajustée pour que les fichiers du répertoire storage/app/public soient bien disponibles sous l'url ```php
+https://domaine-qui-va-bien.intradef.gouv.fr/APP_PREFIX/public
+```
+
 
 <a name="gestion_des_droits"></a>
 
 ## Gestion des droits
-Par défaut, Skeletor est fourni avec le package ```spatie/laravel-permission``` installé.
+Par défaut, Skeletor est fourni avec le package ```spatie/laravel-permissions``` installé.
 Ce package est une des références en matière de gestion des rôles et des permissions des utilisateurs.<br><br>
 
-Dans Filament, les permissions sont utilisées au travers de Policy associées aux modèles. Le framework met en pratique les Policy pour déterminer l'accessibilité des pages des ressources.<br><br>
+Dans Filament, les permissions sont utilisées au travers de Policy (voir la doc Laravel) associées aux modèles. Le framework met en pratique les Policy pour déterminer l'accessibilité des pages des ressources.<br><br>
 
 Une politique standard ```GenericSkeletorPolicy``` existe et permet de faire le lien entre les permissions spatie et les méthodes de politique standard. Grâce à cette politique générale, chaque modèle est associé à un slug unique (Par exemple users pour le modèle User), et chaque permission de la politique est associée à une permission spatie.<br><br>
 
 La commande artisan ```skeletor:generate-permissions-for-filament-resources-command``` inspecte Filament, fait la liste des Resources et des modèles associés, récupère leurs politiques attribuées, et créé en base les permissions correspondantes automatiquement.<br><br>
 
-DEPRECATED: les explications ci-dessous étaient valables avant la transition vers Filament. Mais peuvent être encore pertinente dans le cas de pages isolées contruites en dehors du cadre de Filament.
+Le panneau filament de Skeletor (appelé Admin) fournit les outils permettant à l'administrateur d'une instance donné de gérer les roles (création, modification, suppression, attribution aux utilisateurs) en utilisant les permissions.
+Lors du déploiement d'un module dans une instance, il faut donc exécuter la commande ci-dessus pour inscrire en base les permissions qui seront utilisées par les modules.
 
-En pratique, la mise en oeuvre de ce package dans Skeletor se traduit par:
-  - Le fait que chaque route nommée correspond à une permission portant le même nom.
-  - Si la route en question est protégée par le middleware ```permission```, alors l'accès n'est autorisé que si l'utilisateur dispose de la permission associée.<br><br>
+<br><br>
+Pour le développeur d'un module, il suffit donc de choisir un slug pour chaque modèle, sans oublier de prefixer de slug avec ```nom-du_module::```, d'étendre la GenericSkeletorPolicy avec ce slug, et de faire l'association entre cette policy et le modèle à controler.
 
-Par défaut, toutes les routes de Skeletor nécessitant que l'utilisateur soit authentifié (middleware ```auth``` de Laravel) sont aussi protégées par le middleware ```permission``` qui vérifie que l'utilisateur a la bonne permission.<br><br>
+<br><br>
+Si le développeur souhaite rajouter en outre des permissions spécifiques pour certaines parties de son module, rien de l'en empêche, mais il devra:
+- préfixer le nom de cette permission avec ```nom-du_module::```
+- prévoir de seeder le modèle Permission avec cette permission supplémentaire (il aura besoin de le faire pour le développement et les tests donc cela doit normalement être transparent pour lui)
 
-```php
- Route::group(['middleware' => ['auth', 'permission']], function () {
-    bla bla bla
- }
- ```
-
-La commande ```artisan permission:create-permission-routes``` permet de crééer en base les permissions correspondant aux routes nommées, si elles n'existent pas encore.<br><br>
-
-Par ailleurs, le ```AuthServiceProvider``` par défaut de l'application est modifié pour donner toutes les autorisations aux utilisateurs appartenant au groupe ```admin```:
+Par ailleurs, le ```AuthServiceProvider``` par défaut de l'application est modifié pour donner toutes les autorisations aux utilisateurs dont l'attribut admin est true (le modèle User dispose aussi d'une méthode IsSuperAdmin qui renvoit la valeur de cet attribut):
 ```php
 Gate::before(function ($user, $ability) {
-    return $user->hasRole('admin') ? true : null;
+            return $user->IsSuperAdmin() ? true : null;
 });
 ```
 
-<a name="mindef_connect"></a>
+<a name="keycloak"></a>
 
-## Mindef Connect
+## Authentification vis à vis de Keycloak (Mindef Connect sur Intradef / Polaris Online sur SIC21 / Polaris Online NSWAN sur NSWAN)
 
-Skeletor inclue le nécessaire pour utiliser l'authentification Mindef Connect.<br><br>
+Skeletor inclue le nécessaire pour utiliser l'authentification Keycloak.<br><br>
 
-Mindef Connect est une solution d'authentification centralisée reposant sur l'infrastructure d'Annudef. Cette solution repose sur un serveur OpenID basé sur la solution Keycloak,
-disponible en opensource sur Internet.<br><br>
+Mindef Connect est une solution d'authentification centralisée reposant sur l'infrastructure d'Annudef. Cette solution repose sur un serveur OpenID basé sur la solution Keycloak, disponible en opensource sur Internet.<br><br>
 
-Afin de s'addosser à Mindef Connect, Skeletor inclue Laravel Socialite avec le provider complémentaire Keycloak.<br><br>
+Les plateformes POLARIS Online et POLARIS Online NSWAN reprennent la même brique technique pour le SSO <br><br>
+
+Afin de s'addosser à Keycloak, Skeletor inclue Laravel Socialite avec le provider complémentaire Keycloak.<br><br>
 
 Les paramètres du provider sont configurés dans le .env:
 ```php
@@ -521,27 +501,15 @@ public function login(Request $request)
 > des serveurs Mindef Connect sont évidemment valables, mais comme ils sont signés par l'IGC du Mindef, ils ne sont pas reconnus automatiquement par les chaines de confiance
 > inclues dans les OS standard. C'est pourquoi dans Skeletor, la vérification des certificats SSL est désactivée.
 
-<a name="rappasoft"></a>
+> {info} A noter: le champs utilisé pour associer le user renvoyé par le serveur Keycloak et le user en base locale est l'adresse email. Cela constitue une déviation vis à vis des recommendations Keycloak (Mindef Connect en tout cas) qui préconise d'utiliser l'attribut ```sub``` pour réaliser cette corrélation.
 
-## Rappasoft Datatables
-
-DEPRECATED: l'utilisation de Filament rend le package rappasoft/laravel-livewire-tables superflu. Il faut désormais utiliser les tables Filament.<br><br>
-
-
-Skeletor inclue et utilise le package ```rappasoft/laravel-livewire-tables```.<br><br>
-
-Ce package propose une généralisation du concept de table de données, reposant sur ```livewire```. 
-C'est une excellente façon de mettre en oeuvre rapidement, et avec relativement peu de code à écrire, des tables pour afficher/rechercher/trier les données d'un modèle donné.<br><br>
-
-Ce module est conçu pour manipuler des modèles Eloquent uniquement. Or, dans certaines situations (par exemple lors de la récupération de données via une API, ou en cas de construction d'une table de données à partir de plusieurs sources de données en base), il peut être utile de disposer d'une datatable sans pour autant avoir un modèle Eloquent sous-jacent. Pour cela, voir le package ```calebporzio/sushi``` qui est également inclus dans Skeletor.<br><br>
 
 <a name="sushi"></a>
 
 ## Sushi
 Skeletor inclut le package ```calebporzio/sushi``` qui permet de construire un modèle Eloquent à partir d'une source de données arbitraire.<br><br>
 
-Vient en complément de ```rappasoft/laravel-livewire-tables``` décrit précédemment.
-
+Peut être utilisé pour récupérer des objets via un appel d'API par exemple, et de les traiter comme s'ils venaient d'un modèle Eloquent local.
 
 <a name="api"></a>
 
@@ -560,3 +528,135 @@ Skeletor inclut par ailleurs le package ```darkaonline/l5-swagger``` qui facilit
 Par défaut, les API exposées et documentées sont directement visualisables depuis la page de documentation des API située par défaut à l'URL ```https://domain-qui-va-bien.intradef.gouv.fr/APP_PREFIX/api/documentation```<br><br>
 
 Skeletor offre également un middleware complémentaire permettant de forcer toutes les requêtes destinées aux API à préciser comme ```accept/type: application/json```. Ce middleware est utile pour faciliter le test des API depuis la page de documentation Swagger (qui par défaut ne précise pas d'accept/type...)
+
+<br><br>
+Les API étant naturellement destinées à être exploitées par d'autres application, Skeletor inclue par défaut le nécessaire pour pouvoir gérer les autorisations d'accès aux endpoint API, en utilisant le même modèle que les permissions et les rôles attribués aux utilisateurs physiques.
+<br><br>
+Pour cela, Skeletor définit une garde (au sens Laravel du terme) appelée api, dont les utilisateurs sont des ```Systèmes distants```. Ces systèmes distances (modèle ```RemoteSystem``` peuvent être déclarés depuis le panneau d'admin Filament de Skeletor).
+Et en outre, le panneau de gestion des systèmes distants permet de générer pour ces dernier des token Jwt permettant de réaliser l'authentification (mécanisme Bearer classique).
+<br><br>
+Si le développeur d'un module souhaite subordonner l'utilisation d'un endpoint API à la possession d'une autorisation vérifiée grâce à ce mécanisme, il doit donc:
+- choisir le nom de la permission qu'il souhaite associer à son endpoint (sans oublier de la préfixer avec ```nom_du_module::```)
+- s'assurer que cette permission est bien seedée, sans omettre que cette permission doit être associée à la garde ```api``` et pas ```web``` qui est la garde par défaut.
+- créér son endpoint API (Controlleur)
+- vérifier dans son code que le 'user' (```auth()->user()``` a bien l'autorisation en question ```auth()->user()->can("nom_de_la_permission")```)
+- déclarer son endpoint dans les routes de son module (fichier api.php) en veillant bien sûr à lui associer le middleware ```auth:sanctum```
+<br><br>
+
+<a name="multi-tenancy"></a>
+
+## Multi tenancy
+
+### Généralités
+Si vous pensez avoir bien tout compris au sujet du préfixe des routes, le présent chapitre va un peu compliquer la situation.
+<br><br>
+
+Lors des développements réalisés précédemment, il est rapidement devenu évident qu'il serait nécessaire de pouvoir offrir les mêmes services à plusieurs unités de façon totalement indépendante. Pour faire cela dans Skeletor tel qu'il est décrit jusqu'ici, il serait nécessaire de déployer une instance par unité.
+<br><br>
+
+Or, au sein de la FAN, on compte environ 100 unités. Par conséquent, une stratégie de simple multiplication des instances semblait ne pas passer à l'échelle.
+<br><br>
+
+Par conséquent, un mécanisme de 'multi-tenancy' (terme consacré) a été introduit dans Skeletor.
+Pour cela, le module ```stancl/tenancy``` est déployé dans Skeletor et pré-configuré.
+<br><br>
+
+Compte tenu des contraintes pesant sur l'attribution des noms de domaine, qui a déjà conduit à la mise en place des préfixes pour séparer les instances, la séparation entre les tenants d'une même instance est également réalisée au travers de l'espace des url.
+<br><br>
+
+Toutefois, certaines routes restent communes à tous les tenants: par exemple les endpoints de Livewire.
+Et en outre, la plus grande facilité pour le développeur a été recherchée.
+Tout est donc fait pour que le développeur puisse développer son module sans tenir compte du fait qu'il sera utilisé dans une instance simple ou dans une instance multi-tenant.
+<br><br>
+
+Ainsi, lorsque l'application est configurée en mode multi-tenant, toutes les urls d'une application qui doivent tenir compte du tenant auquel on veut accéder sont enrichies du paramètres `{tenant}`.
+<br><br>
+
+### Services providers
+
+Afin d'arriver à ce résultat:
+- Le ServiceProvider `RouteServiceProvider` de Skeletor modifie le préfixe général de Skeletor pour lui rajouter le paramètre tenant:
+```php
+ public function boot()
+    {
+        $this->configureRateLimiting();
+
+        if (config('skeletor.multi_tenancy'))
+        {
+            app()['config']->set('skeletor.prefixe_instance', config('skeletor.prefixe_instance') . '/{tenant}');
+        }
+    }
+```
+- Le ServiceProvider `TenancyServiceProvider` de Skeletor modifie la configuration des sessions pour utiliser la connection à la base de donnée appelée `tenant` (qui est elle-même définie à la volée par les mécanismes de multi-tenancy de stancl/tenancy)
+```php
+    public function register()
+    {
+        if (config("skeletor.multi_tenancy")){
+            app('config')->set('session.connection','tenant');
+        }
+    }
+```
+
+### Middlewares généraux
+
+et plusieurs middleware sont introduits dans la pile des middleware de l'application:
+```php
+        'web' => [
+            InitializeTenancyByPath::class,
+            \App\Http\Middleware\EncryptCookies::class,
+...
+            InitializeTenancyByCookieData::class,
+            ReconfigureSessionDatabaseWhenTenantNotInitialized::class,
+...
+            \Illuminate\Session\Middleware\StartSession::class,
+...
+            SetTenantDefaultForRoutesMiddleware::class,
+            SetTenantAwareKeycloakCallbackRedirect::class,
+            SetTenantCookieMiddleware::class
+        ],
+```
+Ces middleware sont responsables de:
+- `InitializeTenancyByPath`: vérifie si la route qui a été identifiée pour la requête en cours de traitement a un paramètre `tenant`, et le cas échéant, recherche un tenant et l'active.
+- `InitializeTenancyByCookieData`: si la requête contient un paramètre tenant dans les cookies, recherche ce tenant, et l'active. A noter dans ce cas: ce middleware doit être placé après le middleware `EncryptCookies` de Laravel car il a besoin des cookie déchiffrés. Ce mécanisme est en place pour permettre de rendre les appels Livewire tenant-aware. (voir ci-dessous pour la suite)
+- `ReconfigureSessionDatabaseWhenTenantNotInitialized` rétablit la configuration par défaut de la connection à utiliser pour les sessions (il annule en quelque sorte l'action du service provider `TenancyServiceProvider`).
+- `SetTenantDefaultForRoutesMiddleware`: définit la valeur par défaut du paramètre `tenant` pour la génération des url par les mécanismes standard de Laravel. Grâce à ce middleware, le développeur peur utiliser la fonction `route` sans avoir à se soucier du fait que l'application soit en mode simple ou en mode tenant aware.
+- `SetTenantAwareKeycloakCallbackRedirect` redéfinit à la volée la configuration du module Keycloak afin que la route de callback utilisée dans le reste de l'application, et notamment dans les liens fournis à l'utilisateur sur la page de login tiennent compte du tenant vers lequel renvoyer l'utilisateur après son authentification auprès du serveur Keyclock.
+- et enfin, `SetTenantCookieMiddleware` rajoute un cookie qui contient le nom du tenant activé (s'il y en a un) à la réponse envoyée au client. Ce dernier middleware est primordial pour que les requêtes Livewire soient bien traitées dans le contexte du tenant pour lequel la page (Filament ou standard) dans lequel le composant Livewire se trouve est chargé.
+
+<br><br>
+Petite précision sur Livewire.
+
+Lorsque la page contenant un composant Livewire est chargé: 
+- le middleware `SetTenantCookieMiddleware` définit le cookie tenant (qui par ailleur est chiffré par le middleware `EncryptCookie` ce qui assure un bon niveau de sécurité puisque l'utilisateur ne peut pas usurper un tenant pour lequel il n'a pas d'abord légitimement chargé la page)
+- les requêtes Livewire (qui sont des requêtes ajax standard) utilisent les cookie définis dans le navigateur, donc notamment le cookie `tenant`
+- en outre, Livewire applique le groupe de middleware `web` par défaut à ses routes déclarées. Le Service Provider `PrefixedLivewireServiceProvider` modifie ces middleware pour retirer le `InitializeTenancyByPath` (qui ne peut pas fonctionner puisque la route livewire n'a pas de parametre tenant). 
+- et donc les requêtes Livewire appliquent le middleware `InitializeTenancyByCookieData` ce qui active donc bien le tenant préalablement défini lors du chargement de la page contenant le composant Livewire.
+
+### Panneaux Filament
+
+#### Préfixe des routes en mode multi-tenant
+Les panneaux Filament déclarent eux mêmes leurs routes (voir ci-dessus).
+Le trait `UsesSkeletorPrefixAndMultitenancyTrait` tient compte de la configuration de l'instance, et rajoute le paramètre `tenant` aux routes du panneau auquel il est attribué.
+
+#### Middleware
+Les panneaux Filament déclarent également eux mêmes les Middleware à utiliser pour leurs routes.
+Il faut donc rajouter les middlewares indiqués ci-dessous pour faire fonctionner un panneau en mode multi-tenant et en mode normal:
+```php
+->middleware([
+                EncryptCookies::class,
+                AddQueuedCookiesToResponse::class,
+                StartSession::class,
+->                InitializeTenancyByPath::class,
+->                ReconfigureSessionDatabaseWhenTenantNotInitialized::class,
+->                SetTenantDefaultForRoutesMiddleware::class,
+->                SetTenantCookieMiddleware::class,
+                AuthenticateSession::class,
+                ShareErrorsFromSession::class,
+                VerifyCsrfToken::class,
+                SubstituteBindings::class,
+                DisableBladeIconComponents::class,
+                DispatchServingFilamentEvent::class,
+            ])
+```
+
+filament exploite les mécanismes normaux de Livewire qui est par ailleurs multi tenant dans ce contexte.
