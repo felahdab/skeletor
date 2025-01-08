@@ -7,6 +7,10 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
+
+use App\Http\Middleware\SetTenantDefaultForRoutesMiddleware;
+use App\Http\Middleware\InitializeTenancyByCookieData;
 
 class PrefixedLivewireServiceProvider extends ServiceProvider
 {
@@ -49,16 +53,19 @@ class PrefixedLivewireServiceProvider extends ServiceProvider
         if (Str::is('livewire/preview-file/{filename}', $route->uri()))
         {
             $route->setUri($prefix . '/' . $route->uri());
+            Arr::set($route->action, "middleware", ["webexcepttenancybypath"]);
         }
 
         if (Str::is('livewire/update', $route->uri()))
         {
             $route->setUri($prefix . '/' . $route->uri());
+            Arr::set($route->action, "middleware", ["webexcepttenancybypath"]);
         }
 
         if (Str::is('livewire/upload-file', $route->uri()))
         {
             $route->setUri($prefix . '/' . $route->uri());
+            Arr::set($route->action, "middleware", ["webexcepttenancybypath"]);
         }
     }
 } 
