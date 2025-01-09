@@ -42,5 +42,6 @@ class AuthServiceProvider extends ServiceProvider
         });
         Gate::before(function ($user, $ability) {
             return $user->IsSuperAdmin() ? true : null;
-        });    }
+        });    
+    }
 }

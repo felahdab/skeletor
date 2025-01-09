@@ -2,69 +2,73 @@
 
 namespace App\Providers;
 
-use Livewire\LivewireServiceProvider as BaseLivewireServiceProvider;
-use Livewire\ComponentHookRegistry;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
-class PrefixedLivewireServiceProvider extends BaseLivewireServiceProvider
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
+
+use App\Http\Middleware\SetTenantDefaultForRoutesMiddleware;
+use App\Http\Middleware\InitializeTenancyByCookieData;
+
+class PrefixedLivewireServiceProvider extends ServiceProvider
 {
-    protected function getMechanisms()
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
     {
-        return [
-            \Livewire\Mechanisms\PersistentMiddleware\PersistentMiddleware::class,
-            \Livewire\Mechanisms\HandleComponents\HandleComponents::class,
-            \App\Providers\LivewireMechanisms\HandleRequests::class,
-            \App\Providers\LivewireMechanisms\FrontendAssets::class,
-            \Livewire\Mechanisms\ExtendBlade\ExtendBlade::class,
-            \Livewire\Mechanisms\CompileLivewireTags\CompileLivewireTags::class,
-            \Livewire\Mechanisms\ComponentRegistry::class,
-            \Livewire\Mechanisms\RenderComponent::class,
-            \Livewire\Mechanisms\DataStore::class,
-        ];
+        
     }
 
-    protected function bootFeatures()
+    public function map()
     {
-        foreach([
-            \Livewire\Features\SupportWireModelingNestedComponents\SupportWireModelingNestedComponents::class,
-            \Livewire\Features\SupportMultipleRootElementDetection\SupportMultipleRootElementDetection::class,
-            \Livewire\Features\SupportDisablingBackButtonCache\SupportDisablingBackButtonCache::class,
-            \Livewire\Features\SupportNestedComponentListeners\SupportNestedComponentListeners::class,
-            \Livewire\Features\SupportMorphAwareIfStatement\SupportMorphAwareIfStatement::class,
-            \Livewire\Features\SupportAutoInjectedAssets\SupportAutoInjectedAssets::class,
-            \Livewire\Features\SupportComputed\SupportLegacyComputedPropertySyntax::class,
-            \Livewire\Features\SupportNestingComponents\SupportNestingComponents::class,
-            \Livewire\Features\SupportScriptsAndAssets\SupportScriptsAndAssets::class,
-            \Livewire\Features\SupportBladeAttributes\SupportBladeAttributes::class,
-            \Livewire\Features\SupportConsoleCommands\SupportConsoleCommands::class,
-            \Livewire\Features\SupportPageComponents\SupportPageComponents::class,
-            \Livewire\Features\SupportReactiveProps\SupportReactiveProps::class,
-            \Livewire\Features\SupportFileDownloads\SupportFileDownloads::class,
-            \Livewire\Features\SupportJsEvaluation\SupportJsEvaluation::class,
-            \Livewire\Features\SupportQueryString\SupportQueryString::class,
-            \App\Providers\LivewireFeatures\SupportFileUploads::class,
-            \Livewire\Features\SupportTeleporting\SupportTeleporting::class,
-            \Livewire\Features\SupportLazyLoading\SupportLazyLoading::class,
-            \Livewire\Features\SupportFormObjects\SupportFormObjects::class,
-            \Livewire\Features\SupportAttributes\SupportAttributes::class,
-            \Livewire\Features\SupportPagination\SupportPagination::class,
-            \Livewire\Features\SupportValidation\SupportValidation::class,
-            \Livewire\Features\SupportRedirects\SupportRedirects::class,
-            \Livewire\Features\SupportStreaming\SupportStreaming::class,
-            \Livewire\Features\SupportNavigate\SupportNavigate::class,
-            \Livewire\Features\SupportEntangle\SupportEntangle::class,
-            \Livewire\Features\SupportLocales\SupportLocales::class,
-            \Livewire\Features\SupportTesting\SupportTesting::class,
-            \Livewire\Features\SupportModels\SupportModels::class,
-            \Livewire\Features\SupportEvents\SupportEvents::class,
+        // Check Cached not necessary if extends RouteServiceProvider
+        if (! App::routesAreCached())
+        {
+            $this->setLivewirePrefixesRoutes();
+        }
+    }
 
-            // Some features we want to have priority over others...
-            \Livewire\Features\SupportLifecycleHooks\SupportLifecycleHooks::class,
-            \Livewire\Features\SupportLegacyModels\SupportLegacyModels::class,
-            \Livewire\Features\SupportWireables\SupportWireables::class,
-        ] as $feature) {
-            app('livewire')->componentHook($feature);
+    protected function setLivewirePrefixesRoutes()
+{
+    // Define custom livewire routes
+
+    foreach (Route::getRoutes() as $route)
+    {
+        $prefix = config('skeletor.instance_prefix');
+        if (Str::is('livewire/livewire.js', $route->uri()))
+        {
+            $route->setUri($prefix . '/' . $route->uri());
         }
 
-        ComponentHookRegistry::boot();
+        if (Str::is('livewire/livewire.min.js.map', $route->uri()))
+        {
+            $route->setUri($prefix . '/' . $route->uri());
+        }
+
+        if (Str::is('livewire/preview-file/{filename}', $route->uri()))
+        {
+            $route->setUri($prefix . '/' . $route->uri());
+            Arr::set($route->action, "middleware", ["webexcepttenancybypath"]);
+        }
+
+        if (Str::is('livewire/update', $route->uri()))
+        {
+            $route->setUri($prefix . '/' . $route->uri());
+            Arr::set($route->action, "middleware", ["webexcepttenancybypath"]);
+        }
+
+        if (Str::is('livewire/upload-file', $route->uri()))
+        {
+            $route->setUri($prefix . '/' . $route->uri());
+            Arr::set($route->action, "middleware", ["webexcepttenancybypath"]);
+        }
     }
+} 
+
+
 }

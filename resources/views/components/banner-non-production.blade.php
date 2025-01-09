@@ -126,4 +126,14 @@ $flipped = $default === 'dark' ? 'light' : 'dark';
     <div>
         <strong>Cette application n'est pas en production. Les données peuvent être altérées sans préavis !</strong>
     </div>
+
+    @if(app('impersonate')->isImpersonating())
+        @php
+        $display = $display ?? Filament\Facades\Filament::getUserName(Filament\Facades\Filament::auth()->user());
+        @endphp
+        <div>
+            {{ __('filament-impersonate::banner.impersonating') }} <strong>{{ $display }}</strong>
+        </div>
+        <a href="{{ route('filament-impersonate.leave') }}">{{ __('filament-impersonate::banner.leave') }}</a>
+    @endif
 </div>

@@ -180,6 +180,7 @@ return [
         App\Providers\Filament\AdminPanelProvider::class,
         LaravelModulesServiceProvider::class,
         FilamentServiceProvider::class,
+        App\Providers\PrefixFilamentImportsExportsProvider::class,
 
         App\Providers\RouteServiceProvider::class,
         App\Providers\SkeletorRouteServiceProvider::class,
