@@ -6,7 +6,6 @@ Contenu:
     - [Préfixe des tables en base de données](#modules-tables)
     - [Préfixe des routes et des permissions](#modules-routes)
     - [Préfixe des ressources](#modules-resources)
-    - [Utilisation du layou général de Skelerot](#modules-layout)
     - [Utilisation de la barre de menus de Skeletor](#modules-navbar)
     - [Renvoi vers la documentation et lien dans la barre de menus](#modules-helplink)
 - [Contraintes liées au routage des requêtes](#contraintes-routage)
@@ -416,9 +415,7 @@ L'URL générée par la fonction ```asset``` contiendra automatiquement le préf
 https://domaine-qui-va-bien.intradef.gouv.fr/APP_PREFIX/assets/images/favicon-32x32.png
 ```
 <br><br>
-Par ailleurs, la configuration des systèmes de fichier est ajustée pour que les fichiers du répertoire storage/app/public soient bien disponibles sous l'url ```php
-https://domaine-qui-va-bien.intradef.gouv.fr/APP_PREFIX/public
-```
+Par ailleurs, la configuration des systèmes de fichier est ajustée pour que les fichiers du répertoire storage/app/public soient bien disponibles sous l'url ```https://domaine-qui-va-bien.intradef.gouv.fr/APP_PREFIX/public```
 
 
 <a name="gestion_des_droits"></a>
