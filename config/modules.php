@@ -39,6 +39,9 @@ return [
             'assets/sass/app' => 'resources/assets/sass/app.scss',
             'vite' => 'vite.config.js',
             'package' => 'package.json',
+            'filament-provider' => 'app/Providers/Filament/FilamentPanelProvider.php',
+            'table-prefix-trait' => 'app/Traits/HasTablePrefix.php'
+
         ],
         'replacements' => [
             'routes/web' => ['LOWER_NAME', 'STUDLY_NAME', 'MODULE_NAMESPACE', 'CONTROLLER_NAMESPACE'],
@@ -57,6 +60,19 @@ return [
                 'MODULE_NAMESPACE',
                 'PROVIDER_NAMESPACE',
             ],
+            'filament-provider' => [
+                'LOWER_NAME',
+                'STUDLY_NAME',
+                'MODULE_NAMESPACE',
+            ],
+            'table-prefix-trait' => [
+                'MODULE',
+                'NAMESPACE',    
+                'LOWER_NAME',
+                'STUDLY_NAME',
+                'MODULE_NAMESPACE',
+                'PROVIDER_NAMESPACE',
+            ], 
         ],
         'gitkeep' => true,
     ],
@@ -92,7 +108,7 @@ return [
         |
         */
 
-        'migration' => base_path('Database/Migrations'),
+        'migration' => base_path('database/migrations'),
 
         /*
         |--------------------------------------------------------------------------
@@ -157,6 +173,9 @@ return [
             // tests/
             'test-unit' => ['path' => 'tests/Unit', 'generate' => true],
             'test-feature' => ['path' => 'tests/Feature', 'generate' => true],
+
+            'filament-provider' => ['path' => 'app/Providers/Filament', 'generate' => true],
+            'table-prefix-trait' => ['path' => 'app/Traits', 'generate' => true],
         ],
     ],
 

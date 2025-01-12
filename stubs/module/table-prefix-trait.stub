@@ -1,0 +1,12 @@
+<?php
+
+namespace $MODULE_NAMESPACE$\$STUDLY_NAME$\Traits;
+
+use App\Traits\HasTablePrefix as BasePrefixTrait;
+
+trait HasTablePrefix
+{
+    use BasePrefixTrait;
+
+    protected $prefix = '$LOWER_NAME$_';
+}
