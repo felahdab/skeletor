@@ -109,9 +109,8 @@ class User extends Authenticatable implements FilamentUser, HasName
      * Always encrypt password when it is updated.
      *
      * @param $value
-     * @return string
      */
-    public function setPasswordAttribute($value)
+    public function setPasswordAttribute($value): void
     {
         $this->attributes['password'] = bcrypt($value);
     }
