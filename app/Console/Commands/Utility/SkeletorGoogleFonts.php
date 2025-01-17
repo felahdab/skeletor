@@ -37,7 +37,7 @@ class SkeletorGoogleFonts extends GoogleFonts
 
                 $newFontUrl = Str::replace(
                     $start,
-                    env('APP_URL') . '/' . config('skeletor.prefixe_instance'),
+                    config('app.url') . '/' . config('skeletor.prefixe_instance'),
                     $fontUrl
                 );
 
