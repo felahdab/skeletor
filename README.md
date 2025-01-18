@@ -1,12 +1,11 @@
-###FFAST (Frégates Fortement Automatisé - Suivi de la Transformation)
+### Skeletor
 
-FFAST est une application conçue faciliter le suivi du parcours de transformation des marins destinés à être affectés à bord des frégates fortement automatisés.
+Skeletor est une application Laravel pré-configurée pour faciliter le développement collaboratif de modules métiers. Son objectif est de faciliter le démarrage de projets de développement pour des développeurs peu expérimentés, ou ne maitrisant pas les contraintes de déploiement de l'environnement cible. 
 
-Même si FFAST a été conçu initialement pour les besoins des GTR et des FREMM, sa structure générique lui permet de s'adapter à d'autre structures ayant besoin de suivre l'avancement des actions de formations au profit d'un groupe d'élèves.
+Ainsi, en développant un module dans Skeletor, le développeur n'a pas à se soucier de l'intégration système et bénéficie dès le premier instant de l'authentification centralisé (Open ID) et d'une base d'utilisateur locale, d'un système de gestion des persmissions et des roles, et de divers services communs.
 
-Le coeur de FFAST est constitué par le parcours de transformation.
-Ce parcours, stocké en base de données est totalement configurable.
-Chaque marin dont on souhaite suivre la progression se voit attribuer une ou plusieurs fonctions. Chacune de ces fonctions se compose de compagnonnages, eux mêmes composés de tâches, elles-mêmes composées d'objectifs, eux-mêmes décomposés en sous-objectifs.
-Cela peut paraitre compliqué, mais l'application n'impose rien de plus que de respecter cette structure.
-Par conséquent, une fonction peut être composée d'un seul compagnonnage, lui-même composé d'une seule tâche, elle-même composée d'un seul objectif comportant un seul sous-objectif. Dans un tel scénario, la réalisation du sous-objectif revient à valider la fonction.
+Skeletor permet la création d'un nouveau module disposant d'un panneau Filament en quelques minutes.
 
+Le développeur doit ensuite suivre les consignes renseignées dans le fichier resources/docs/Skeletor/developpement.md pour faciliter la reprise de son travail ultérieurement.
+
+Skeletor reste toutefois une application Laravel tout à fait normale. Ainsi, le développeur peut aussi avoir recours aux méthodes classiques de développement Laravel s'il le souhaite.
