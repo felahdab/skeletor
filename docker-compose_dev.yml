@@ -1,0 +1,115 @@
+version: '3'
+services:
+    web:
+        image: fanlab-web:0.1 
+        volumes:
+            - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+            - ../app/:/app
+            - ./certs:/etc/nginx/certs
+        networks:
+             - backend
+             - private
+       
+        restart: unless-stopped
+        depends_on:
+          - php
+          - db
+          - phpmyadmin
+          - code-editor
+        #  - metabase
+          - selenium
+          - redis
+    php:
+        image: fanlab-php-supervisor:0.7
+        volumes:
+            - ../app:/app
+            - backups:/backups
+        networks:
+             - private
+        restart: unless-stopped
+    node:
+        image: node:20.0.0
+        volumes:
+            - ../app:/app
+            - backups:/backups
+        networks:
+             - private
+        restart: unless-stopped
+        command: "bash -c 'sleep infinity'"
+        tty: true
+        user: 1111:1111
+    db:
+        image: mariadb:10.8.3
+        environment:
+          MYSQL_ROOT_PASSWORD: 'secretfanlab'
+          MYSQL_USER: 'fanlabuser'
+          MYSQL_PASSWORD: 'fanlabpassword'
+          MYSQL_DATABASE: 'fanlabdb'
+        volumes:
+            - mysqldata:/var/lib/mysql
+        networks:
+             - private
+        restart: unless-stopped
+    markserv:
+        image: fanlab/markserv:0.1
+        restart: unless-stopped
+        networks:
+           - private
+        volumes:
+           - ../app/resources/docs/:/usr/src/app/md/
+    redis:
+        image: docker.io/bitnami/redis:7.0
+        networks:
+             - private
+        restart: unless-stopped
+        environment:
+          REDIS_PASSWORD: 'redispassword'
+    phpmyadmin:
+        image: phpmyadmin
+        environment:
+           PMA_ABSOLUTE_URI: https://${DOMAIN}/${PREFIX}/pma/
+           PMA_HOST: db
+        networks:
+          - private
+        restart: unless-stopped
+    code-editor:
+        image: fanlab-codercom-code-server:0.5
+        networks:
+          - private
+        user: "1111:1111"
+        volumes:
+          - ../app/:/home/coder/project/
+          - ./code-editor-ssh/:/home/coder/.ssh/
+        restart: unless-stopped
+#    metabase:
+#        image: metabase/metabase
+#        networks:
+#          - private
+#        environment:
+#          MB_DB_FILE: '/metabase-data/metabase.db'
+#          MB_SITE_URL: https://${DOMAIN}/${PREFIX}/metabase/
+#          MUID: 1111
+#          MGID: 1111
+#        volumes:
+#          - ../app/metabase:/metabase-data
+#        restart: unless-stopped
+    selenium:
+        image: 'selenium/standalone-chrome'
+        volumes:
+            - '/dev/shm:/dev/shm'
+        shm_size: '2gb'
+        ports:
+           - 7900
+           - 5900
+        networks:
+            - private
+        restart: unless-stopped
+volumes:
+    mysqldata: {}
+    backups: {}
+networks:
+  private:
+    driver: bridge
+  backend:
+    external: true
+    name: backend
