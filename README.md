@@ -9,3 +9,9 @@ Skeletor permet la création d'un nouveau module disposant d'un panneau Filament
 Le développeur doit ensuite suivre les consignes renseignées dans le fichier resources/docs/Skeletor/developpement.md pour faciliter la reprise de son travail ultérieurement.
 
 Skeletor reste toutefois une application Laravel tout à fait normale. Ainsi, le développeur peut aussi avoir recours aux méthodes classiques de développement Laravel s'il le souhaite.
+
+### Ressources
+[Ressources](resources/docs/Skeletor/index.md)
+
+### Installation de Skeletor sur Machine Windows (hors réseau)
+[Installation sur machine Indépendante](resources/docs/Skeletor/installationhr.md)
