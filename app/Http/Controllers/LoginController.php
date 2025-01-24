@@ -131,7 +131,7 @@ class LoginController extends Controller
                     "intradef" => [
                         'sub' => $MCuser->user['sub'],
                         'email' => $MCuser->email,
-                        'name' => $MCuser->user['usual_name'],
+                        'nom' => $MCuser->user['usual_name'],
                         'prenom' => $MCuser->user['usual_forename'],
                         'main_department_number' => $MCuser->user['main_department_number'],
                         'personal_title' => $MCuser->user['personal_title'],
@@ -142,7 +142,7 @@ class LoginController extends Controller
                     "sic21" => [
                         'sub' => $MCuser->user['sub'],
                         'email' => $MCuser->email,
-                        'name' => $MCuser->user['family_name'],
+                        'nom' => $MCuser->user['family_name'],
                         'prenom' => $MCuser->user['given_name'],
                         'display_name' => $MCuser->user['name'],
                     ]
