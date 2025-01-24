@@ -33,7 +33,8 @@ class SkeletorAdjustGoogleFontsUrlsCommand extends Command
             'http:\/\/localfanlab.el-ahdab.fr',
             'https:\/\/fanlab.el-ahdab.fr',
             'https:\/\/c2n.adalfantln.marine.defensecdd.gouv.fr',
-            'https:\/\/pprod.c2n.adalfantln.marine.defensecdd.gouv.fr'
+            'https:\/\/pprod.c2n.adalfantln.marine.defensecdd.gouv.fr',
+            'https:\/\/polaris-online.c2n.adalfantln.marine.defensecdd.gouv.fr'
         ];
 
         foreach ($sourceDomains as $domain) {
