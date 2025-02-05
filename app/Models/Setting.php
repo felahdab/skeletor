@@ -25,7 +25,7 @@ class Setting extends Model
 
     public static function forKey($key)
     {
-        return static::where('key', $key)->first();
+        return static::firstOrCreate(["key" => $key]);
     }
 
     public function updateSetting($data)

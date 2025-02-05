@@ -14,8 +14,6 @@ class FilamentAuthenticate extends Authenticate
      */
     protected function redirectTo($request): ?string
     {
-        if (! $request->expectsJson()) {
-            return route('login');
-        }
+        return route('login');
     }
 }

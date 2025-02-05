@@ -20,6 +20,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Models\User::class => Policies\UserPolicy::class,
         Models\Remotesystem::class => Policies\RemotesystemPolicy::class,
+        Models\MindefConnectUser::class => Policies\MindefConnectUserPolicy::class,
         Permission::class => Policies\PermissionPolicy::class,
         Role::class => Policies\RolePolicy::class,
 

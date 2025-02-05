@@ -39,7 +39,7 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->id('admin')
+            ->id('Skeletor')
             ->path($this->prefix . '/admin')
             ->colors([
                 'primary' => Color::Amber,

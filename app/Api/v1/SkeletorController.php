@@ -58,7 +58,7 @@ class SkeletorController
         }
 
         $configuration = [
-            "VERSION" => env('APP_VERSION'),
+            "VERSION" => config('app.version'),
             "DATABASE" =>  $db_infos,
             "MODULES" => $modules_info,
         ];

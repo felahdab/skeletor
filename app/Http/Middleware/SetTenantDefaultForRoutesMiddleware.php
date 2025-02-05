@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-use Illuminate\Support\Facades\Url;
+use Illuminate\Support\Facades\URL;
 
 class SetTenantDefaultForRoutesMiddleware
 {
@@ -18,7 +18,7 @@ class SetTenantDefaultForRoutesMiddleware
         }
 
         if ($tenant){
-            Url::defaults([ 'tenant' => tenant()->id ]);
+            URL::defaults([ 'tenant' => tenant()->id ]);
         }
 
         $response = $next($request);

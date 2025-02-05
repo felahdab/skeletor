@@ -44,13 +44,13 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrap();
 
-        if (env('APP_ENV') != 'production') {
+        if (config('app.env') != 'production') {
             //logger('Setting non production global destination email adres.');
             $email=config('skeletor.destinataire_email_non_production');
             Mail::alwaysTo($email);
         }
 
-        if (env('APP_ENV') != 'production') {
+        if (config('app.env') != 'production') {
             FilamentView::registerRenderHook(
                 'panels::body.start',
                 static fn (): string => Blade::render("<x-banner-non-production/>")
@@ -62,7 +62,7 @@ class AppServiceProvider extends ServiceProvider
             fn (): View => view('layouts.partials.api-documentation-link'),
         );
 
-        if (env('APP_SCHEME') == 'https')
+        if (config('app.scheme') == 'https')
             \Illuminate\Support\Facades\URL::forceScheme('https');
 
         Builder::macro('scoped', function ($scope, ...$parameters) {

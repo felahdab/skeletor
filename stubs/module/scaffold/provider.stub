@@ -3,6 +3,7 @@
 namespace $NAMESPACE$;
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
 
@@ -34,6 +35,18 @@ class $CLASS$ extends ServiceProvider
     {
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+        $this->registerPolicies();
+    }
+
+    public function registerPolicies()
+    {
+        $policies = [
+            # Model::class => ModelPolicy::class
+        ];
+
+        foreach ($policies as $model => $policy) {
+            Gate::policy($model, $policy);
+        }
     }
 
     /**
