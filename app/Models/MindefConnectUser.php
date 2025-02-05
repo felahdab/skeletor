@@ -12,7 +12,7 @@ class MindefConnectUser extends Model
     protected $fillable = [
         'sub',
         'email',
-        'name',
+        'nom',
         'prenom',
         'main_department_number',
         'personal_title',

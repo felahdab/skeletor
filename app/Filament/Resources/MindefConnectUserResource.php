@@ -5,6 +5,9 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\MindefConnectUserResource\Pages;
 use App\Filament\Resources\MindefConnectUserResource\RelationManagers;
 use App\Models\MindefConnectUser;
+use App\Models\User;
+use App\Models\Role;
+use App\Service\RandomPasswordGeneratorService;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,6 +15,9 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail;
 
 class MindefConnectUserResource extends Resource
 {
@@ -105,19 +111,53 @@ class MindefConnectUserResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label("Refuser les demandes"),
                     Tables\Actions\BulkAction::make('valider')
                         ->label("Valider les demandes de compte")
+                        ->color('success')
+                        ->icon( 'heroicon-m-check')
                         ->requiresConfirmation()
                         ->form([
+                            Forms\Components\Select::make("roles")
+                                ->label("Roles à attribuer")
+                                ->multiple()
+                                ->options(Role::where('guard_name', 'web')->get()->pluck('name', 'id')),
                             Forms\Components\Toggle::make("make_them_admin")
                                 ->label("En faire des administrateurs ?")
                                 ->default(false),
                         ])
                         ->action(function ($records, $data)
-                    {
-                        ddd($data);
-                    }),
+                        {
+                            //ddd($data);
+                            foreach($records as $record){
+                                if (User::where('email', $record->email)->first() == null){
+                                    $attributes = [
+                                        "nom" => $record->nom,
+                                        "prenom" => $record->prenom,
+                                        "email" => $record->email,
+                                        "display_name" => $record->display_name,
+                                        "password" => RandomPasswordGeneratorService::generateRandomString(),
+                                        "admin" => $data['make_them_admin'] ? 1: 0,
+                                    ];
+                                    $newUser = User::create($attributes);
+
+                                    $roles = collect($data['roles'])->map(function ($item)
+                                    {
+                                        return Role::find($item);
+                                    });
+                                    
+                                    $newUser->refresh();
+                                    $newUser->syncRoles($roles);
+
+                                    $record->delete();
+
+                                    Mail::to($newUser->email)
+                                        ->queue(new WelcomeMail($newUser));
+
+                                }
+                            }
+                        }),
                 ]),
             ]);
     }
@@ -133,8 +173,8 @@ class MindefConnectUserResource extends Resource
     {
         return [
             'index' => Pages\ListMindefConnectUsers::route('/'),
-            'create' => Pages\CreateMindefConnectUser::route('/create'),
-            'edit' => Pages\EditMindefConnectUser::route('/{record}/edit'),
+            //'create' => Pages\CreateMindefConnectUser::route('/create'),
+            //'edit' => Pages\EditMindefConnectUser::route('/{record}/edit'),
         ];
     }
 }
