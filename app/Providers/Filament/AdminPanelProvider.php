@@ -78,12 +78,6 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 FilamentAuthenticate::class
             ])
-            ->sidebarCollapsibleOnDesktop()
-            ->navigationItems([
-                NavigationItem::make("Retour à l'interface classique")
-                ->icon('heroicon-o-home')
-                ->url(fn(): string => route('home.index'))
-                ->sort(-3)
-            ]);
+            ->sidebarCollapsibleOnDesktop();
     }
 }
