@@ -35,6 +35,10 @@ class SkeletorRouteServiceProvider extends ServiceProvider
             {
                 $route->setUri($prefix . '/' . $route->uri());
             }
+            if (Str::is('livewire/livewire.min.js', $route->uri()))
+            {
+                $route->setUri($prefix . '/' . $route->uri());
+            }
             if (Str::is('livewire/livewire.min.js.map', $route->uri()))
             {
                 $route->setUri($prefix . '/' . $route->uri());
