@@ -1,3 +1,25 @@
+## 3.0.4 (February 06, 2025)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.3 –> 3.0.4
+- Modifier stubs to generate a Skeletor/Filament capable module
+- Publication des stubs des modules. Ajustement pour Skeletor avec Filament. WIP
+- Correction de typo.
+- Mise à jour de la configuration de test de référence pour utiliser la base mysqltest.
+- Correction de typo. Ajout de l'information sur l'impersonification dans la barre supérieure et retrait de fichiers inutiles.
+- Ajout du lien vers la doc en bas de la sidebar.
+- Merge branch 'simplify-livewire-route-prefixing' into pol-online-dev
+- Modification du groupe de middleware appliqué aux routes Livewire.
+- mise à jour de la documentation
+- Reactivate the route caching test which was deactivated because of filament route prefixing being a dirty workaround.
+- Merge branch 'feature-command-to-migrate-data-between-db' into pol-online-dev
+- Create a database copying artisan command. Useful in the event of database migration operation to be conducted.
+- Introduce a permanent testdb definition into the configuration.
+- Simpify filament imports/exports route prefixing
+- Simplify livewire route prefixing.
+- Implémentation nouvelle méthode de recondiguration des uri des routes Filament et Livewire.
+- début de correction de la doc de développement
+- Ajustement scramble pour ne plus dépendre d'assets téléchargés sur Intrernet.
+- Modifications de Skeletor pour faire fonctionner la gestion des permissions et des roles pour les remote systems comme pour les utilisateurs.
+
 ## 3.0.3 (November 28, 2024)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.2 –> 3.0.3
 - Correct the Adjust DisplayNames job to reflect changes in User model.
