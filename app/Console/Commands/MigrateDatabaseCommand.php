@@ -11,6 +11,8 @@ class MigrateDatabaseCommand extends Command
 {
     protected $signature = 'skeletor:migrate-database {table}';
 
+    protected $description = 'Réalise la migration des données de la table passée en paramètres depuis la base "source" vers la base "destination".';
+
     public function handle()
     {
 
