@@ -1,3 +1,33 @@
+## 3.0.4 (March 13, 2025)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.3 –> 3.0.4
+- Implémentation d'une commande artisan d'envoi de mail pour les tests. 
+- Ajout de la définition d'une stack minimale pour le dev local. Inclusion d'un fichier .env adapté au développement local en docker.
+- Début d'implémentation action de masse pour valider les demandes MindefConnect.
+- Ajout de la policy pour le modèle MindefConnectUser
+- Création de la resource MindefConnectUser pour gérer les demandes de compte.
+- Modification Setting pour faciliter la vie du développeur: une clé est créée automatiquement lorsqu'elle n'a pas été seedée auparavant.
+- Modification du lien vers l'aide pour inclure le nom du panneau en vigueur dans l'url
+- Renommage du panneau admin en Skeletor
+- Retrait des secrets des fichier .env
+- Corrections diverses phpstan
+- Install phpstan and larastan
+- Rajout d'une méthode dans le provider pour déclarer des policy Eloquent manuellement.
+- Modifier stubs to generate a Skeletor/Filament capable module
+- Publication des stubs des modules. Ajustement pour Skeletor avec Filament. WIP
+- Correction de typo.
+- Mise à jour de la configuration de test de référence pour utiliser la base mysqltest.
+- Correction de typo. Ajout de l'information sur l'impersonification dans la barre supérieure et retrait de fichiers inutiles.
+- Ajout du lien vers la doc en bas de la sidebar.
+- Modification du groupe de middleware appliqué aux routes Livewire.
+- Mise à jour de la documentation
+- Reactivate the route caching test which was deactivated because of filament route prefixing being a dirty workaround.
+- Create a database copying artisan command. Useful in the event of database migration operation to be conducted.
+- Introduce a permanent testdb definition into the configuration.
+- Implémentation nouvelle méthode de recondiguration des uri des routes Filament et Livewire.
+- début de correction de la doc de développement
+- Ajustement scramble pour ne plus dépendre d'assets téléchargés sur Intrernet.
+- Modifications de Skeletor pour faire fonctionner la gestion des permissions et des roles pour les remote systems comme pour les utilisateurs.
+
 ## 3.0.3 (November 28, 2024)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.2 –> 3.0.3
 - Correct the Adjust DisplayNames job to reflect changes in User model.
