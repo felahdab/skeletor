@@ -1,14 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Service;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use SimpleXMLElement;
 
-use Illuminate\Http\Client\ConnectionException;
-
-class AnnudefController extends Controller
+class AnnudefLDAPRequestService
 {
     public static function searchUsersRequest(
         $tel = '',
@@ -78,7 +75,7 @@ class AnnudefController extends Controller
 
         $ANNUBASEURL = "https://" . $LDAPSERVER . "/" . $LDAPANNUURL;
 
-        $request = AnnudefController::searchUsersRequest(
+        $request = static::searchUsersRequest(
             $tel,
             $nom,
             $prenom,

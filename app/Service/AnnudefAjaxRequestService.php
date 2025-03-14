@@ -10,7 +10,7 @@ class AnnudefAjaxRequestService
     /**
      * Fonction qui permet de récupérer l'entrée Annudef de l'utilisateur par son email
      */
-    private static function getUserAnnudefEntryByEmail($email)
+    public static function getUserAnnudefEntryByEmail($email)
     {
         $request_params = [
             'nomsimple'     => '',
