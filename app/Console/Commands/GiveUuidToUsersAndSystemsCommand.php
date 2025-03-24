@@ -23,7 +23,7 @@ class GiveUuidToUsersAndSystemsCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'S\'assure que tous les User et tous les Remotesystem ont bien un uuid renseigné.';
 
     /**
      * Execute the console command.

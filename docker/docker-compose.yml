@@ -1,0 +1,78 @@
+services:
+    web:
+        image: nginxinc/nginx-unprivileged
+        volumes:
+            - ./nginx.conf:/etc/nginx/conf.d/default.conf
+            - ../:/app
+        restart: unless-stopped
+        ports:
+          - ${NGINX_PORT}:8080
+        depends_on:
+          - php
+          - db
+          - phpmyadmin
+          - code-editor
+          - markserv
+    php:
+        image: falahdab/php-supervisor:1.0
+        volumes:
+            - ../:/app
+            - backups:/backups
+        restart: unless-stopped
+        links:
+          - code-editor:xdebug.client.host
+    node:
+        image: node:20.0.0
+        volumes:
+            - ../:/app
+            - backups:/backups
+        restart: unless-stopped
+        tty: true
+        command: "bash -c 'sleep infinity'"
+        user: 1111:1111
+    db:
+        image: mariadb:10.8.3
+        environment:
+          MYSQL_ROOT_PASSWORD: 'changeme'
+          MYSQL_USER: 'skeletoruser'
+          MYSQL_PASSWORD: 'skeletorpassword'
+          MYSQL_DATABASE: 'skeletordb'
+        volumes:
+            - mysqldata:/var/lib/mysql
+        restart: unless-stopped
+    markserv:
+        image: falahdab/markserv:1.0
+        restart: unless-stopped
+        volumes:
+           - ../resources/docs/:/usr/src/app/md/
+    redis:
+        image: docker.io/bitnami/redis:7.0
+        restart: unless-stopped
+        environment:
+          REDIS_PASSWORD: 'redispassword'
+    phpmyadmin:
+        image:  docker.io/bitnami/phpmyadmin:5
+        environment:
+           PHPMYADMIN_ABSOLUTE_URI: http://localhost/apps/pma/
+           DATABASE_HOST: db
+        restart: unless-stopped
+    code-editor:
+        image: falahdab/codeserver:1.0
+        user: "1111:1111"
+        volumes:
+          - ./code-editor-ssh:/home/coder/.ssh
+          - ../:/app    
+          - backups:/backups
+        restart: unless-stopped
+    mailpit:
+        image: docker.io/axllent/mailpit
+        ports:
+          - ${MAILPIT_PORT}:8025
+        user: "1111:1111"
+        restart: unless-stopped
+        environment:
+           MP_SMTP_AUTH_ACCEPT_ANY: 1
+           MP_SMTP_AUTH_ALLOW_INSECURE: 1
+volumes:
+    mysqldata: {}
+    backups: {}

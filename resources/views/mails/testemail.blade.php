@@ -1,3 +1,3 @@
 <div>
-<h1> Ca fonctionne ! </h1>
+<h1> Test email </h1>
 </div>
