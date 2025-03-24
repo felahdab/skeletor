@@ -21,3 +21,4 @@ worker.log
 modules_statuses.json
 junit_dusk.xml
 junit.xml
+node_modules/
