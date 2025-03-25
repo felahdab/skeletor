@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4c7464a7aa159344459155f77c8e858f",
+    "content-hash": "53c3ab0a0ac5bebd3fa56495fd0f46d6",
     "packages": [
         {
             "name": "althinect/filament-spatie-roles-permissions",
@@ -2428,16 +2428,16 @@
         },
         {
             "name": "doode/filament-map-picker",
-            "version": "v1.1.1",
+            "version": "dev-fldb-module-fleetprogram",
             "source": {
                 "type": "git",
-                "url": "https://github.com/vitormicillo/filament-map-picker.git",
-                "reference": "d61754624bc1c3525aed95b439f45db367484e3b"
+                "url": "https://github.com/felahdab/filament-map-picker.git",
+                "reference": "cddd1a376ba6a11e9db473970ac70e008fbb4852"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vitormicillo/filament-map-picker/zipball/d61754624bc1c3525aed95b439f45db367484e3b",
-                "reference": "d61754624bc1c3525aed95b439f45db367484e3b",
+                "url": "https://api.github.com/repos/felahdab/filament-map-picker/zipball/cddd1a376ba6a11e9db473970ac70e008fbb4852",
+                "reference": "cddd1a376ba6a11e9db473970ac70e008fbb4852",
                 "shasum": ""
             },
             "require": {
@@ -2475,7 +2475,28 @@
                     "Doode\\MapPicker\\Database\\Factories\\": "database/factories/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Doode\\MapPicker\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "post-autoload-dump": [
+                    "@php ./vendor/bin/testbench package:discover --ansi"
+                ],
+                "analyse": [
+                    "vendor/bin/phpstan analyse"
+                ],
+                "test": [
+                    "vendor/bin/pest"
+                ],
+                "test-coverage": [
+                    "vendor/bin/pest --coverage"
+                ],
+                "format": [
+                    "vendor/bin/pint"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -2504,7 +2525,7 @@
                 "issues": "https://github.com/vitormicillo/filament-map-picker/issues",
                 "source": "https://github.com/vitormicillo/filament-map-picker"
             },
-            "time": "2024-09-23T13:58:35+00:00"
+            "time": "2025-03-25T21:11:44+00:00"
         },
         {
             "name": "dragonmantank/cron-expression",
@@ -16654,7 +16675,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": {
+        "doode/filament-map-picker": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

@@ -78,5 +78,9 @@ class AppServiceProvider extends ServiceProvider
         Scramble::afterOpenApiGenerated(function (OpenApi $openApi) {
             $openApi->secure(SecurityScheme::http('bearer', 'JWT'));
         });
+
+        $link_config = config("filesystems.links");
+        $link_config[base_path( 'public/' . config('skeletor.instance_prefix'))] = public_path();
+        app('config')->set('filesystems.links', $link_config);
     }
 }
