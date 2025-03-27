@@ -1,0 +1,63 @@
+<?php
+
+namespace App\Filament\Pages;
+
+use App\Filament\PageTemplates\RechercheAnnuairePageTemplate;
+
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\BulkAction;
+use Filament\Forms\Components\Select;
+
+use App\Events\UnUtilisateurLocalDoitEtreCreeEvent;
+use App\Models\Role;
+
+class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
+{
+    public function getRowActions()
+    {
+        return [
+            Action::make('create-local-user')
+                ->visible(function(){
+                    return auth()->check() && auth()->user()->can('users.store');
+                })
+                ->icon('heroicon-o-plus')
+                ->label("Créé l'utilisateur local")
+                ->requiresConfirmation()
+                ->form([
+                    Select::make('roles')
+                        ->label("Rôles à attribuer")
+                        ->options(Role::all()->pluck('name', 'id'))
+                        ->multiple()
+                        ->required()
+                ])
+                ->action(function ($record, $data){
+                    UnUtilisateurLocalDoitEtreCreeEvent::dispatch($record->toArray(), $data['roles']);
+                }),
+        ];
+    }
+
+    public function getBulkActions()
+    {
+        return [
+            BulkAction::make('create-local-user')
+                ->visible(function(){
+                    return auth()->check() && auth()->user()->can('users.store');
+                })
+                ->icon('heroicon-o-plus')
+                ->label("Créé l'utilisateur local")
+                ->requiresConfirmation()
+                ->form([
+                    Select::make('roles')
+                        ->label("Rôles à attribuer")
+                        ->options(Role::all()->pluck('name', 'id'))
+                        ->multiple()
+                        ->required()
+                ])
+                ->action(function ($records, $data){
+                    foreach($records as $record){
+                        UnUtilisateurLocalDoitEtreCreeEvent::dispatch($record->toArray(), $data['roles']);
+                    }
+                }),
+        ];
+    }
+}
