@@ -1,3 +1,40 @@
+## 3.0.5 (March 27, 2025)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.4 –> 3.0.5
+- Implémentation de la page type, et de la page standard de recherche dans l'annuaire.
+- Ajout du dossier node_modules au .gitignore
+- Changement de méthode dans le service de recherche AJAX Annudef. Déplacement du code de recherche dans le LDAP Annudef dans les Services.
+- Ajustement de commandes mal renseignées.
+- Restriction sur l'accès aux permissions.
+- Retrait du lien vers l'interface FFAST legacy
+- Retrait fichiers inutiles
+
+## 3.0.4 (March 13, 2025)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.3 –> 3.0.4
+- Implémentation d'une commande artisan d'envoi de mail pour les tests. Inclusion d'un fichier .env adapté au développement local en docker.
+- Ajout d'un fichier .env pour le developpement docker local.
+- Ajout de la définition d'une stack minimale pour le dev local.
+- Merge remote-tracking branch 'internet/pol-online-dev' into pol-online-dev
+- Ajout de livewire.min.js à la liste des routes préfixées. Suppression des 2 services providers précédents (Livewire et Filament prefixes). Nettoyage de app.php pour retirer les mentions à ces services providers.
+- Retrait du lien de navigation vers l'interface classique qui ne fonctionne plus
+- Fonctions de gestion des demandes MindefConnect.
+- Merge remote-tracking branch 'internet/skeletor' into pol-online-dev
+- Début d'implémentation action de masse pour valider les demandes MindefConnect.
+- Ajout de la policy pour le modèle MindefConnectUser
+- Création de la resource MindefConnectUser pour gérer les demandes de compte.
+- Modification Setting pour faciliter la vie du développeur: une clé est créée automatiquement lorsqu'elle n'a pas été seedée auparavant.
+- Modification du lien vers l'aide pour inclure le nom du panneau en vigueur dans l'url
+- Renommage du panneau admin en Skeletor
+- Fichier de déclaration des fontes google mise à jour pour intradef. Rappel: ce fichier est ajusté par la commande skeletor:adjust-google-fonts-urls-command
+- Ajout d'un domaine supplémentaire à la commande d'ajustement des fichiers de fontes google font pour tenir compte du contexte de déploiement sur SIC21.
+- Suppression de la référence à une icone bootstrap (package supprimé depuis).
+- Correction du mapping Keycloak dans le cas où la création de compte automatique est désactivée.
+- Merge branch 'feature-include-phpstan' into nettoyage-pour-publication
+- Retrait des secrets des fichier .env
+- correction
+- Corrections diverses phpstan
+- Install phpstan and larastan
+- Rajout d'une méthode dans le provider pour déclarer des policy Eloquent manuellement.
+
 ## 3.0.4 (February 06, 2025)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.3 –> 3.0.4
 - Modifier stubs to generate a Skeletor/Filament capable module
