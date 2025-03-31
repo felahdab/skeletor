@@ -320,6 +320,7 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
             'GrahamCampbell\\ResultType\\' => 26,
+            'GeometryLibrary\\' => 16,
         ),
         'F' => 
         array (
@@ -1143,6 +1144,10 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'GrahamCampbell\\ResultType\\' => 
         array (
             0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
+        ),
+        'GeometryLibrary\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/alexpechkarev/geometry-library',
         ),
         'Fruitcake\\Cors\\' => 
         array (
@@ -4558,6 +4563,9 @@ class ComposerStaticInit7b7beffbe4fb014153fc48ef6b5c37c1
         'Firebase\\JWT\\SignatureInvalidException' => __DIR__ . '/..' . '/firebase/php-jwt/src/SignatureInvalidException.php',
         'Fruitcake\\Cors\\CorsService' => __DIR__ . '/..' . '/fruitcake/php-cors/src/CorsService.php',
         'Fruitcake\\Cors\\Exceptions\\InvalidOptionException' => __DIR__ . '/..' . '/fruitcake/php-cors/src/Exceptions/InvalidOptionException.php',
+        'GeometryLibrary\\MathUtil' => __DIR__ . '/..' . '/alexpechkarev/geometry-library/MathUtil.php',
+        'GeometryLibrary\\PolyUtil' => __DIR__ . '/..' . '/alexpechkarev/geometry-library/PolyUtil.php',
+        'GeometryLibrary\\SphericalUtil' => __DIR__ . '/..' . '/alexpechkarev/geometry-library/SphericalUtil.php',
         'GrahamCampbell\\ResultType\\Error' => __DIR__ . '/..' . '/graham-campbell/result-type/src/Error.php',
         'GrahamCampbell\\ResultType\\Result' => __DIR__ . '/..' . '/graham-campbell/result-type/src/Result.php',
         'GrahamCampbell\\ResultType\\Success' => __DIR__ . '/..' . '/graham-campbell/result-type/src/Success.php',

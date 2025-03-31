@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
+        "alexpechkarev/geometry-library": "1.0.5",
         "althinect/filament-spatie-roles-permissions": "^2.2",
         "axonc/filament-copyable-placeholder": "^0.3.0",
         "barryvdh/laravel-debugbar": "^3.7",

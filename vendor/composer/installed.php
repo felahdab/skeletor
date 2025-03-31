@@ -3,13 +3,22 @@
         'name' => 'fanlab/skeletor',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'b0a1c3823dd6e7638936bc9285ccf4702235ce7e',
+        'reference' => '18e711a377226030e65956523dbad99e4587934b',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
+        'alexpechkarev/geometry-library' => array(
+            'pretty_version' => '1.0.5',
+            'version' => '1.0.5.0',
+            'reference' => '35839ed841805c8a0bc2fd8e4d5b5f600cb1416a',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../alexpechkarev/geometry-library',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'althinect/filament-spatie-roles-permissions' => array(
             'pretty_version' => 'v2.2.31',
             'version' => '2.2.31.0',
@@ -391,7 +400,7 @@
         'fanlab/skeletor' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'b0a1c3823dd6e7638936bc9285ccf4702235ce7e',
+            'reference' => '18e711a377226030e65956523dbad99e4587934b',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
