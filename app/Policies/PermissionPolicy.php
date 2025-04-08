@@ -16,7 +16,7 @@ class PermissionPolicy extends GenericSkeletorPolicy
     {
         if ($user == null)
             return false;
-        return $user->admin;
+        return true;
     }
 
     /**
@@ -26,7 +26,7 @@ class PermissionPolicy extends GenericSkeletorPolicy
     {        
       if ($user == null)
          return false;
-      return $user->admin;
+      return true;
     }
 
     /**
@@ -36,7 +36,7 @@ class PermissionPolicy extends GenericSkeletorPolicy
     {        
       if ($user == null)
          return false;
-      return $user->admin;
+      return false;
     }
     /**
      * Determine whether the user can update the model.
@@ -45,7 +45,7 @@ class PermissionPolicy extends GenericSkeletorPolicy
     {        
       if ($user == null)
          return false;
-      return $user->admin;
+      return false;
     }
 
     /**
@@ -55,7 +55,7 @@ class PermissionPolicy extends GenericSkeletorPolicy
     {        
       if ($user == null)
          return false;
-      return $user->admin;
+      return false;
     }
 
     /**
@@ -65,7 +65,7 @@ class PermissionPolicy extends GenericSkeletorPolicy
     {        
       if ($user == null)
          return false;
-      return $user->admin;
+      return false;
     }
 
     /**
@@ -75,7 +75,7 @@ class PermissionPolicy extends GenericSkeletorPolicy
     {        
       if ($user == null)
          return false;
-      return $user->admin;
+      return false;
     }
 
     /**
@@ -85,7 +85,7 @@ class PermissionPolicy extends GenericSkeletorPolicy
     {        
       if ($user == null)
          return false;
-      return $user->admin;
+      return false;
     }
 
     /**
@@ -95,7 +95,7 @@ class PermissionPolicy extends GenericSkeletorPolicy
     {        
       if ($user == null)
          return false;
-      return $user->admin;
+      return false;
     }
 
     /**
@@ -105,7 +105,7 @@ class PermissionPolicy extends GenericSkeletorPolicy
     {        
       if ($user == null)
          return false;
-      return $user->admin;
+      return false;
     }
 
 }
