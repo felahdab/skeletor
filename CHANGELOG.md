@@ -1,3 +1,8 @@
+## 3.0.6 (April 08, 2025)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.5 –> 3.0.6
+- Integration alexpechkare/geometry-library
+- Introduction du package doode/filament-map-picker spécialement modifié pour le module Fleetprogram.
+
 ## 3.0.5 (March 27, 2025)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.4 –> 3.0.5
 - Implémentation de la page type, et de la page standard de recherche dans l'annuaire.
