@@ -1,0 +1,84 @@
+{
+    "name": "doode/filament-map-picker",
+    "description": "Easily pick and retrieve geo-coordinates using a map-based interface with geoman extension map draw tools.",
+    "keywords": [
+        "doode",
+        "laravel",
+        "map-picker",
+        "filament",
+        "filamentphp",
+        "filament-map-picker",
+        "filament-v3",
+        "leaflet-map-picker",
+        "leaflet-geoman",
+        "geoman"
+    ],
+    "homepage": "https://github.com/vitormicillo/filament-map-picker",
+    "support": {
+        "issues": "https://github.com/vitormicillo/filament-map-picker/issues",
+        "source": "https://github.com/vitormicillo/filament-map-picker"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Doode",
+            "email": "doode@doode.com.br",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "filament/filament": "^3.2",
+        "spatie/laravel-package-tools": "^1.15.0",
+        "illuminate/contracts": "^10.0 || ^11.0"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.0",
+        "nunomaduro/collision": "^7.9",
+        "nunomaduro/larastan": "^2.0.1",
+        "orchestra/testbench": "^8.0",
+        "pestphp/pest": "^2.0",
+        "pestphp/pest-plugin-arch": "^2.0",
+        "pestphp/pest-plugin-laravel": "^2.0",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpstan/phpstan-phpunit": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Doode\\MapPicker\\": "src/",
+            "Doode\\MapPicker\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Doode\\MapPicker\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Doode\\MapPicker\\MapPickerServiceProvider"
+            ],
+            "aliases": {
+                "MapPicker": "Doode\\MapPicker\\Facades\\MapPicker"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": false
+}

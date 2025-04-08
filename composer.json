@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
+        "alexpechkarev/geometry-library": "1.0.5",
         "althinect/filament-spatie-roles-permissions": "^2.2",
         "axonc/filament-copyable-placeholder": "^0.3.0",
         "barryvdh/laravel-debugbar": "^3.7",
@@ -14,7 +15,7 @@
         "coolsam/modules": "^4",
         "darkaonline/l5-swagger": "^8.6",
         "dedoc/scramble": "^0.11",
-        "doode/filament-map-picker": "^1.1",
+        "doode/filament-map-picker": "dev-fldb-module-fleetprogram",
         "filament/filament": "^3.1",
         "filament/spatie-laravel-google-fonts-plugin": "^3.1",
         "guzzlehttp/guzzle": "^7.2",
@@ -113,5 +114,11 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/felahdab/filament-map-picker.git"
+        }
+    ]
 }
