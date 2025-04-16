@@ -10,14 +10,14 @@ class NewUserDescriptionData extends Data
         public string $nom,
         public string $prenom,
         public string $email,
-        public string $unite,
+        public ?string $unite,
    ) {}
 
    public static function make(    
                 string $nom,
                 string $prenom,
                 string $email,
-                string $unite)
+                ?string $unite = null)
    {
         return new static($nom, $prenom, $email, $unite);
    }

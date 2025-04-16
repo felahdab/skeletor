@@ -20,7 +20,7 @@ class UnUtilisateurLocalDoitEtreCreeEvent
      */
     public function __construct(array $data, public array $roles)
     {
-        $this->description = NewUserDescriptionData::make($data["nom"], $data["prenom"], $data["email"], $data["unite"]);
+        $this->description = NewUserDescriptionData::make($data["nom"], $data["prenom"], $data["email"]);
     }
 
     /**
