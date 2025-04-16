@@ -1,3 +1,10 @@
+## 3.0.7 (April 16, 2025)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.6 –> 3.0.7
+- Il n'y a pas de raison que l'unité de l'utilisateur soit trnasmise à l'évènement de Création d'un utilisateur local.
+- Ajout des fichiers autoload au .gitignore du dossier composer de vendor.
+- Suppression des fichiers autoload de composer.
+- Nettoyages de reliquats FFAST. Restriction des modifications sur les Permissions qui ne doivent être modifées que par un développeur.
+
 ## 3.0.6 (April 08, 2025)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.5 –> 3.0.6
 - Integration alexpechkare/geometry-library
