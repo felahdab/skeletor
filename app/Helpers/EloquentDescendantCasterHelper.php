@@ -12,6 +12,10 @@ if (! function_exists('cast_as_eloquent_descendant')){
      * Ceci évite de devoir refaire une requête en base de données pour recaster explicitement le modèle avec la bonne classe.
      */
     function cast_as_eloquent_descendant($model, $destination_class){
+        if ($model == null)
+        {
+            return null;
+        }
         $ret = new $destination_class;
         $ret->forceFill($model->toArray());
         return $ret;
