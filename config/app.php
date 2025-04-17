@@ -209,6 +209,7 @@ return [
 
         App\Providers\LaravelBladeSortableServiceProvider::class,
         App\Providers\TenancyServiceProvider::class,
+        App\Providers\HelperServiceProvider::class,
     ],
 
     /*
