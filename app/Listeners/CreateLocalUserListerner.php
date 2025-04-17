@@ -28,6 +28,15 @@ class CreateLocalUserListerner
     {
         $description = $event->description;
 
+        /**
+         * On vérifie ici si l'utilisateur existe déjà pour éviter une exception en cas d'entrée dupliquée.
+         */
+        $already_existing_user = User::where('email', $description->email)->first();
+        if ($already_existing_user)
+        {
+            return;
+        }
+
         $roles = $event->roles;
 
         $user = new User;
