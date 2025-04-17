@@ -66,7 +66,7 @@ class AnnuaireUser extends Model
             // pour créér un User local (nom, prenom et email).
             $users = Arr::map($users, function($value, $key)
             {
-                return NewUserDescriptionData::make($value["nom"], $value["prenomusuel"], $value["email"], $value['unites']);
+                return NewUserDescriptionData::make($value["nom"], $value["prenomusuel"], $value["email"], $value['unites'], $value["nid"]);
             });
 
            
