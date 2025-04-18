@@ -1,3 +1,12 @@
+## 3.0.8 (April 18, 2025)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.7 –> 3.0.8
+- Ajout du NID dans les données ressorties par la recherche dans l'annuaire pour faciliter la déconfliction dans le module RH et éviter les doublons.
+- Ajout des liens vers l'aide et la doc API dans le menu utilisateur du panneau d'administration.
+- Rajoute vérification de l'existence d'un user dans le listener CreateLocalUserListener pour éviter de recréér un utilisateur existant déjà.
+- Amélioration du caster Eloquent
+- Ajout d'un helper pour faciliter le cast d'un modèle Eloquent vers une classe descendante.
+- Ajout du groupe Skeletor aux tests pour faciliter l'exécution sélective des tests.
+
 ## 3.0.7 (April 16, 2025)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.6 –> 3.0.7
 - Il n'y a pas de raison que l'unité de l'utilisateur soit trnasmise à l'évènement de Création d'un utilisateur local.
