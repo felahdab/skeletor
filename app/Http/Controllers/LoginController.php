@@ -55,12 +55,33 @@ class LoginController extends Controller
 
         $MCuser = $driver->stateless()->user();
 
-        //ddd($MCuser);
+        ///ddd($MCuser);
+
+        $user = User::where('sub', $MCuser->user["sub"])->get()->first();
+        if ($user != null) {
+            $user->storeMindefConnectInformations($MCuser->user);
+            Auth::login($user);
+            logger()->info("Logged user based un sub attribute.");
+
+            // Let's update the email information from the SSO server.
+            $user->email = $MCuser->user["email"];
+            $user->save();
+
+            return $this->authenticated($request, $user);
+        }
 
         $user = User::where('email', $MCuser->email)->get()->first();
         if ($user != null) {
             $user->storeMindefConnectInformations($MCuser->user);
             Auth::login($user);
+            logger()->info("Logged user based un email attribute.");
+
+            // Let's save the sub of the user so that it is used next time the user logs in.
+            if ($user->sub == null)
+            {
+                $user->sub = $MCuser->user["sub"];
+                $user->save();
+            }
 
             return $this->authenticated($request, $user);
         }
