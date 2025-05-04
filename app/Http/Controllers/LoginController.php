@@ -16,6 +16,7 @@ use App\Models\Paramaccueil;
 use Illuminate\Support\Facades\Http;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
@@ -50,11 +51,20 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        $driver = Socialite::driver('keycloak');
-        $driver->setHttpClient(new Client(["verify" => false]));
-
-        $MCuser = $driver->stateless()->user();
-
+        $MCuser = null;
+        try
+        {
+            $driver = Socialite::driver('keycloak');
+            $driver->setHttpClient(new Client(["verify" => false]));
+    
+            $MCuser = $driver->stateless()->user();
+    
+        }
+        catch (ClientException $e) {
+            logger()->error("Error while trying to get user from SSO: " . $e->getMessage());
+            return redirect()->route('login')->withErrors(['error' => 'Erreur de connexion au serveur SSO. Veuillez réessayer plus tard ou utiliser votre login local.']);
+        }
+        
         ///ddd($MCuser);
 
         $user = User::where('sub', $MCuser->user["sub"])->first();
