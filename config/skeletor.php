@@ -154,6 +154,12 @@ return [
             'url' => env('LDAPANNUURL', 'LdapWS/Ws_srpcl_annusi_siclient.php'),
             'timeout' => env('LDAPTIMEOUT', 5),
         ],
+        'tuleap' => [
+            'url' => env('TULEAP_URL', 'https://tuleap.intradef.gouv.fr/'),
+            'token' => env('TULEAP_TOKEN', ''),
+            'tracker_bugreport' => env('TULEAP_TRACKER_BUGREPORT', 0),
+            'tracker_suggestion' => env('TULEAP_TRACKER_SUGGESTION', 0),
+        ],
     ],
     
 ];
