@@ -136,5 +136,24 @@ return [
     |
     */
     'destinataire_systematique_bcc'=> env('SKELETOR_BCC_RECIPIENT', []),
+
+    /**
+     * Configuration des services communs de Skeletor
+     */
+    'services' => [
+        'annudef' => [
+            'url' => env('ANNUDEF_URL', 'https://annudef.intradef.gouv.fr/'),
+            'login' => env('ANNUDEF_LOGIN', ''),
+            'password' => env('ANNUDEF_PASSWORD', ''),
+            'timeout' => env('ANNUDEF_TIMEOUT', 10),
+        ],
+        'ldap' => [
+            'server' => env('LDAPSERVER', 'ldap3-val.intradef.gouv.fr'),
+            'login' => env('LDAPLOGIN', 'ffast.auth.tec'),
+            'password' => env('LDAPPASSWORD', ''),
+            'url' => env('LDAPANNUURL', 'LdapWS/Ws_srpcl_annusi_siclient.php'),
+            'timeout' => env('LDAPTIMEOUT', 5),
+        ],
+    ],
     
 ];

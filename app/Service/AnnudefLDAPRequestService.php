@@ -68,10 +68,11 @@ class AnnudefLDAPRequestService
         $nid = ''
     ) {
 
-        $LDAPSERVER   = env("LDAPSERVER");
-        $LDAPLOGIN   = env("LDAPLOGIN");
-        $LDAPPASSWORD   = env("LDAPPASSWORD");
-        $LDAPANNUURL = env("LDAPANNUURL");
+        $LDAPSERVER   = config('skeletor.services.ldap.server');
+        $LDAPLOGIN   = config('skeletor.services.ldap.login');
+        $LDAPPASSWORD   = config('skeletor.services.ldap.password');
+        $LDAPANNUURL = config('skeletor.services.ldap.url');
+        $LDAPTIMEOUT = config('skeletor.services.ldap.timeout');
 
         $ANNUBASEURL = "https://" . $LDAPSERVER . "/" . $LDAPANNUURL;
 
@@ -91,7 +92,7 @@ class AnnudefLDAPRequestService
         );
 
         $response = Http::withoutVerifying()
-            ->timeout(intval(env("LDAPTIMEOUT")))
+            ->timeout(intval($LDAPTIMEOUT))
             ->withBody($request, 'application/soap+xml')
             ->post($ANNUBASEURL);
 
