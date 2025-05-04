@@ -1,3 +1,26 @@
+## 3.0.9 (May 04, 2025)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.8 –> 3.0.9
+- Utilisation de Model::make à la place de new static
+- Simplification du code du trait HasTablePrefix pour éviter un with() inutile.
+- Nettoyage MindefConnectUserController
+- Correction composant livewire AnnudefSearch pour utiliser le service de generation de mot de passe.
+- Suppression UsersController devenu inutile. Suppression des méthodes inutilisées du MindefConnectUserController
+- Suppression du controleur MindefConnectUser devenu inutile
+- Recours à la configuration des services plutot qu'à env()
+- Correction des requetes/collections superflues et du recours a la configuration pour le service TULEAP.
+- Correction des réfences à config('skeletor.instance_prefix')
+- Retrait du parametre instance_prefix en doublon de prefixe_instance
+- Adaptation BugReportController pour faire référence à la configuration skeletor et plus à env()
+- Report de la configuration Tuleap dans la configuration skeletor
+- Suppression du helper general subdirAsset inutilisé
+- Correction des 2 commandes utilisant le service AnnudefLDAPRequestService
+- Passage en class final du DataObject decrivant un nouvel utilisateur à creer.
+- Retrait des elements relevant du module RH
+- Déplacement possibleUniteService vers le module RH
+- Remontée des paramètres de configuration du service LDAP dans la configuration skeletor.
+- Retrait des anciens liens dans le fichier de la navbar. Provoquent des exceptions si jamais l'utilisateur est loggé et se retrouve sur la page de login.
+- Ajout du champ sub à la tables users. Modification du controlleur de login pour reconnaitre l'utilisateur sur la base du champs sub et pas de l'email. Mécanismes de transition entre les 2 modèles.
+
 ## 3.0.8 (April 18, 2025)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.7 –> 3.0.8
 - Ajout du NID dans les données ressorties par la recherche dans l'annuaire pour faciliter la déconfliction dans le module RH et éviter les doublons.
