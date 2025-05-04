@@ -6,16 +6,12 @@ use Livewire\Component;
 
 use Illuminate\Http\Client\ConnectionException;
 
-use App\Http\Controllers\AnnudefController;
+use App\Service\AnnudefLDAPRequestService;;
 use App\Http\Controllers\UsersController;
 use App\Models\User;
-use App\Models\Grade;
-use App\Models\Unite;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeMail;
-
-use App\Service\PossibleUniteService;
 
 use App\Events\UnUtilisateurDoitEtreRestaureEvent;
 
@@ -40,7 +36,7 @@ class AnnudefSearch extends Component
     {
         try
         {
-            $this->users = AnnudefController::searchUsers($this->tel ,
+            $this->users = AnnudefLDAPRequestService::searchUsers($this->tel ,
                                                         $this->nom,
                                                         $this->prenom,
                                                         $this->email,
@@ -76,18 +72,12 @@ class AnnudefSearch extends Component
                         $this->users[$key]['archive'] = true;
                     }
                     else{
-                        if ($localuser->name != $ldapuser['nom']){
+                        if ($localuser->nom != $ldapuser['nom']){
                             $this->users[$key]['nompasidentique'] = true;
                         }
                         if ($localuser->prenom != $ldapuser['prenomusuel']){
                             $this->users[$key]['prenompasidentique'] = true;
-                        }
-                        if ($localuser->nid != $ldapuser['nid']){
-                            $this->users[$key]['nidpasidentique'] = true;
-                        }
-                        if ($localuser->grade()->first()?->grade_libcourt != $ldapuser['gradecourt']){
-                            $this->users[$key]['gradepasidentique'] = true;
-                        }    
+                        } 
                     }
                 }
                 else 
@@ -116,27 +106,10 @@ class AnnudefSearch extends Component
     {
         $usertocreate = $this->users[$index];
         
-        $annudefGrade = $usertocreate["gradecourt"];
-        // ddd($annudefGrade);
-        $possibleGrade = Grade::where('grade_libcourt', $annudefGrade)->get()->first();
-        // ddd($possibleGrade);
-        if ($possibleGrade != null)
-        {
-            $grade_id = $possibleGrade->id;
-        }
-        else
-            $grade_id = null;
-
-        $possibleUnite= PossibleUniteService::possibleunite($usertocreate["unites"]);
-
         $newUser = User::create(["email"    => $usertocreate["email"],
-                      "name"     => $usertocreate["nom"],
+                      "nom"     => $usertocreate["nom"],
                       "prenom"   => $usertocreate["prenomusuel"],
-                      "nid"      => $usertocreate["nid"],
                       "password" => UsersController::generateRandomString(),
-                      "grade_id" => $grade_id,
-                      "unite_id" => $possibleUnite?->id,
-                      "date_embarq" => date('Y-m-d')
                       ]);
         $newUser->syncRoles(["user"]);
 
@@ -164,7 +137,7 @@ class AnnudefSearch extends Component
     {
         $usertocreate = $this->users[$index];
         $localuser = User::where('email', $usertocreate['email'])->first();
-        $localuser->name = $usertocreate['nom'];
+        $localuser->nom = $usertocreate['nom'];
         $localuser->save();
     }
     
@@ -174,26 +147,6 @@ class AnnudefSearch extends Component
         $localuser = User::where('email', $usertocreate['email'])->first();
         $localuser->prenom = $usertocreate['prenomusuel'];
         $localuser->save();
-    }
-    
-    public function aligneNid($index)
-    {
-        $usertocreate = $this->users[$index];
-        $localuser = User::where('email', $usertocreate['email'])->first();
-        $localuser->nid = $usertocreate['nid'];
-        $localuser->save();
-    }
-    public function aligneGrade($index)
-    {
-        $usertocreate = $this->users[$index];
-        $localuser = User::where('email', $usertocreate['email'])->first();
-        $possibleGrade = Grade::where('grade_libcourt', $usertocreate['gradecourt'])->get()->first();
-        // ddd($possibleGrade);
-        if ($possibleGrade != null)
-        {
-            $localuser->grade_id = $possibleGrade->id;
-            $localuser->save();
-        }
     }
     
     public function createAllLocalUser()
@@ -215,7 +168,7 @@ class AnnudefSearch extends Component
             $localuser = User::where('email', $ldapuser['email'])->first();
             if ($localuser != null)
             {
-                if ($localuser->name != $ldapuser['nom']){
+                if ($localuser->nom != $ldapuser['nom']){
                     $this->aligneNom($key);
                 }
             }
@@ -237,30 +190,4 @@ class AnnudefSearch extends Component
         }
     }
     
-    public function aligneAllNid()
-    {
-        foreach($this->users as $key=>$ldapuser)
-        {
-            $localuser = User::where('email', $ldapuser['email'])->first();
-            if ($localuser != null)
-            {
-                if ($localuser->nid != $ldapuser['nid']){
-                    $this->aligneNid($key);
-                }
-            }
-        }
-    }
-    public function aligneAllGrade()
-    {
-        foreach($this->users as $key=>$ldapuser)
-        {
-            $localuser = User::where('email', $ldapuser['email'])->first();
-            if ($localuser != null)
-            {
-                if ($localuser->grade()->first()?->grade_libcourt != $ldapuser['gradecourt']){
-                    $this->aligneGrade($key);
-                }
-            }
-        }
-    }
 }
