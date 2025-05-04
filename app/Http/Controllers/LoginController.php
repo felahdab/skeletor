@@ -57,7 +57,7 @@ class LoginController extends Controller
 
         ///ddd($MCuser);
 
-        $user = User::where('sub', $MCuser->user["sub"])->get()->first();
+        $user = User::where('sub', $MCuser->user["sub"])->first();
         if ($user != null) {
             $user->storeMindefConnectInformations($MCuser->user);
             Auth::login($user);
@@ -70,7 +70,7 @@ class LoginController extends Controller
             return $this->authenticated($request, $user);
         }
 
-        $user = User::where('email', $MCuser->email)->get()->first();
+        $user = User::where('email', $MCuser->email)->first();
         if ($user != null) {
             $user->storeMindefConnectInformations($MCuser->user);
             Auth::login($user);
@@ -142,7 +142,7 @@ class LoginController extends Controller
         // si le user n'existe pas, test de la variable APP_VALID_MDC pour savoir si on l'enregistre dans la table MDC 
         if (! config('skeletor.validation_automatique_des_comptes_mindef_connect')){
             // on cree un compte temporaire ds MDC
-            $MCuserexist = MindefConnectUser::where('email', $MCuser->email)->get()->first();
+            $MCuserexist = MindefConnectUser::where('email', $MCuser->email)->first();
             if ($MCuserexist) {
                 $MCuserexist->updated_at = date('Y-m-d G:i:s');
                 $MCuserexist->msg = true;
@@ -213,19 +213,24 @@ class LoginController extends Controller
         $MCuserexist->commentaire = $request->comment_mdconnect;
         $MCuserexist->save();
 
+        $TULEAP_TOKEN = config('skeletor.services.tuleap.token');
+        $TULEAP_URL = config('skeletor.services.tuleap.url');
+        $TULEAP_TRACKER_MINDEFCONNECT = config('skeletor.services.tuleap.tracker_mindef_connect');
+        
+
         if (config('skeletor.reseau_de_deploiement') == "intradef") {
 
             $response = Http::withoutVerifying()
-                ->withHeaders(["X-Auth-AccessKey" => env("TULEAP_TOKEN")])
+                ->withHeaders(["X-Auth-AccessKey" => $TULEAP_TOKEN])
                 ->post(
-                    env("TULEAP_URL") . "api/artifacts",
+                    $TULEAP_URL. "api/artifacts",
                     [
-                        "tracker" =>  ["id" => env('TULEAP_TRACKER_MINDEFCONNECT')],
+                        "tracker" =>  ["id" => $TULEAP_TRACKER_MINDEFCONNECT],
                         "values_by_field" => [
                             "affectation" =>  ["value"  => $MCuserexist->main_department_number],
                             "user" => ["value" => $MCuserexist->display_name],
                             "raison" => ["value" => $MCuserexist->commentaire],
-                            "instance" => ["value" => env("APP_PREFIX")]
+                            "instance" => ["value" => config('skeletor.prefixe_instance')],
                         ]
                     ]
                 );
