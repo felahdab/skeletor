@@ -55,6 +55,10 @@ class SkeletorRouteServiceProvider extends ServiceProvider
             {
                 $route->setUri($prefix . '/' . $route->uri());
             }
+            if (Str::is('tenancy/assets/{path?}', $route->uri()))
+            {
+                $route->setUri($prefix . '/' . $route->uri());
+            }
         }
     }
 }
