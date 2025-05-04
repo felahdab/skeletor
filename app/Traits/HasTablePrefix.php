@@ -59,6 +59,6 @@ trait HasTablePrefix
 
     public static function getTableName()
     {
-        return with(new static())->getTable();
+        return (new static())->getTable();
     }
 }
