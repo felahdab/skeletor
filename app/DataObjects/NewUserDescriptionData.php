@@ -4,7 +4,7 @@ namespace App\DataObjects;
 
 use Spatie\LaravelData\Data;
 
-class NewUserDescriptionData extends Data
+final class NewUserDescriptionData extends Data
 {
     public function __construct(
         public string $nom,
