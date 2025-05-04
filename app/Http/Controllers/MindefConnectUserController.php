@@ -8,17 +8,10 @@ use App\Models\MindefConnectUser;
 use Illuminate\Http\Request;
 
 use App\Models\User;
-use Spatie\Permission\Models\Role;
-use App\Models\Secteur;
-use App\Models\Specialite;
-use App\Models\Diplome;
-use App\Models\Grade;
-use App\Models\Unite;
+use App\Models\Role;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeMail;
-
-use App\Service\PossibleUniteService;
 
 use App\Events\UnUtilisateurDoitEtreRestaureEvent;
 
@@ -62,7 +55,7 @@ class MindefConnectUserController extends Controller
         
         if (is_null($request->get('role')) or ! in_array("user", $request->get('role')))
         {
-            $roletransfo = Role::where("name", "user")->get()->first();
+            $roletransfo = Role::where("name", "user")->first();
             $newUser->roles()->attach($roletransfo);
         }
         
@@ -83,22 +76,14 @@ class MindefConnectUserController extends Controller
     public function edit(MindefConnectUser $User)
     {
         $userGrade = strtoupper($User->rank);
-        $possibleGrade = Grade::where("grade_liblong", "like", $userGrade)->get()->first();
-        
-        $possibleUnite= PossibleUniteService::possibleunite($User->main_department_number);
 
-        $cpte_exist=false;
-        if (User::withTrashed()->where ("email", $User->email)->get()->first()) {$cpte_exist=true;}            
+        $cpte_exist = false;
+        if (User::withTrashed()->where ("email", $User->email)->first()) {
+            $cpte_exist = true;
+        }            
         
         return view('mindefconnect.edit', ['mcuser' => $User,
                                     'roles' => Role::latest()->get(),
-                                    'grades' => Grade::orderBy('ordre_classmt', 'asc')->get(),
-                                    'specialites' => Specialite::orderBy('specialite_libcourt', 'asc')->get(),
-                                    'diplomes' => Diplome::latest()->get(),
-                                    'secteurs' => Secteur::orderBy('secteur_libcourt', 'asc')->get(),
-                                    'unites' => Unite::orderBy('unite_libcourt', 'asc')->get(),
-                                    'possibleGrade' => $possibleGrade,
-                                    'possibleUnite' => $possibleUnite,
                                     'cpte_exist' => $cpte_exist
                                 ]);
     }
@@ -106,18 +91,6 @@ class MindefConnectUserController extends Controller
     public function comebacklater()
     {
         return view('auth.comebacklater');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateMindefConnectUserRequest  $request
-     * @param  \App\Models\MindefConnectUser  $mindefConnectUser
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateMindefConnectUserRequest $request, MindefConnectUser $mindefConnectUser)
-    {
-        //
     }
 
     /**
