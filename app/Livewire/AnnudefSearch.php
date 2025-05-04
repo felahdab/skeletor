@@ -7,7 +7,7 @@ use Livewire\Component;
 use Illuminate\Http\Client\ConnectionException;
 
 use App\Service\AnnudefLDAPRequestService;;
-use App\Http\Controllers\UsersController;
+use App\Service\RandomPasswordGeneratorService;
 use App\Models\User;
 
 use Illuminate\Support\Facades\Mail;
@@ -109,7 +109,7 @@ class AnnudefSearch extends Component
         $newUser = User::create(["email"    => $usertocreate["email"],
                       "nom"     => $usertocreate["nom"],
                       "prenom"   => $usertocreate["prenomusuel"],
-                      "password" => UsersController::generateRandomString(),
+                      "password" => RandomPasswordGeneratorService::generateRandomString(),
                       ]);
         $newUser->syncRoles(["user"]);
 
