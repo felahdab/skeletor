@@ -19,7 +19,7 @@ class SkeletorRouteServiceProvider extends ServiceProvider
 
     public function setSkeletorRoutes()
     {
-        $prefix = config('skeletor.instance_prefix');
+        $prefix = config('skeletor.prefixe_instance');
 
         foreach (Route::getRoutes() as $route)
         {

@@ -86,7 +86,7 @@ class AdminPanelProvider extends PanelProvider
                 'help' => MenuItem::make()
                     ->label('Aide')
                     ->icon('heroicon-m-question-mark-circle')
-                    ->url(fn () => url(config('skeletor.instance_prefix') . '/docs/' . Filament::getCurrentPanel()->getId()) . '/', shouldOpenInNewTab:true),
+                    ->url(fn () => url(config('skeletor.prefixe_instance') . '/docs/' . Filament::getCurrentPanel()->getId()) . '/', shouldOpenInNewTab:true),
                 'apidoc' => MenuItem::make()
                     ->label('API')
                     ->icon('heroicon-m-cloud')

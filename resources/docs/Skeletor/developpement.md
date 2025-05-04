@@ -320,7 +320,7 @@ class PrefixedLivewireServiceProvider extends ServiceProvider
 
     foreach (Route::getRoutes() as $route)
     {
-        $prefix = config('skeletor.instance_prefix');
+        $prefix = config('skeletor.preixe_instance');
         if (Str::is('livewire/livewire.js', $route->uri()))
         {
             $route->setUri($prefix . '/' . $route->uri());

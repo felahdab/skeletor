@@ -80,7 +80,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $link_config = config("filesystems.links");
-        $link_config[base_path( 'public/' . config('skeletor.instance_prefix'))] = public_path();
+        $link_config[base_path( 'public/' . config('skeletor.prefixe_instance'))] = public_path();
         app('config')->set('filesystems.links', $link_config);
     }
 }
