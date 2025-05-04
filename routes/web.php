@@ -9,20 +9,11 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\BugReportController;
 use App\Http\Controllers\UserPreferencesController;
 
-use App\Livewire\TestComponent;
-
-Route::get('/test', TestComponent::class);
-
 Route::impersonate();
 
 Route::get('/auth/redirect', function () {
     return Socialite::driver('keycloak')->stateless()->redirect();
 })->name('keycloak.login.redirect');
-
-
-Route::group(['middleware' => ['auth', 'permission']], function () {
-    Route::get('/mespreferences', [UserPreferencesController::class, 'mespreferences'])->name('mespreferences');
-});
 
 /**
  * Reset password
