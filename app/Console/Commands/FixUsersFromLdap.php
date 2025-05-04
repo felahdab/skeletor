@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 
-use App\Http\Controllers\AnnudefController;
+use App\Service\AnnudefLDAPRequestService;
 
 use App\Models\User;
 
@@ -33,22 +33,18 @@ class FixUsersFromLdap extends Command
         $users = User::all();
         foreach($users as $localuser)
         {
-            $ldapusers = collect(AnnudefController::searchUsers($tel ='', $nom='' , $prenom='' ,
+            $ldapusers = collect(AnnudefLDAPRequestService::searchUsers($tel ='', $nom='' , $prenom='' ,
                                                         $mail=$localuser->email , $bdd='' , $zone='' ,
                                                         $localite ='' , $entite='' ,$fonction='' , $nid=''));
             if (count($ldapusers) == 1){
                 $ldapuser = $ldapusers[0];
-                if ($localuser->name != $ldapuser['nom']){
-                    $this->warn('Adjusting name from ' . $localuser->name . " to " . $ldapuser['nom']);
-                    $localuser->name = $ldapuser['nom'];
+                if ($localuser->nom != $ldapuser['nom']){
+                    $this->warn('Adjusting name from ' . $localuser->nom . " to " . $ldapuser['nom']);
+                    $localuser->nom = $ldapuser['nom'];
                 }
                 if ($localuser->prenom != $ldapuser['prenomusuel']){
                     $this->warn('Adjusting prenom from ' . $localuser->prenom . " to " . $ldapuser['prenomusuel']);
                     $localuser->prenom = $ldapuser['prenomusuel'];
-                }
-                if ($localuser->nid != $ldapuser['nid']){
-                    $this->warn('Adjusting nid from ' . $localuser->nid . " to " . $ldapuser['nid']);
-                    $localuser->nid = $ldapuser['nid'];
                 }
                 $localuser->save();
 

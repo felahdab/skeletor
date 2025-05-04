@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 
-use App\Http\Controllers\AnnudefController;
+use App\Service\AnnudefLDAPRequestService;
 
 use App\Models\User;
 
@@ -31,7 +31,7 @@ class TestLdapConnexion extends Command
     public function handle()
     {
         
-        $results = collect(AnnudefController::searchUsers($tel ='', $nom='' , $prenom='' ,
+        $results = collect(AnnudefLDAPRequestService::searchUsers($tel ='', $nom='' , $prenom='' ,
                                                         $mail='' , $bdd='' , $zone='' ,
                                                         $localite ='' ,
                 $entite='MARINE/ALFAN/GTR FREMM TOULON' ,$fonction='' , $nid=''));
