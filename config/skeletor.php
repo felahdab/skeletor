@@ -68,16 +68,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Prefixe de l'instance
-    |--------------------------------------------------------------------------
-    | Ce paramètre détermine le préfixe à appliquer à toutes les urls déclarées
-    | dans l'application.
-    */
-
-    'instance_prefix' => env('APP_PREFIX', "instance"),
-
-    /*
-    |--------------------------------------------------------------------------
     | Titre général de l'application
     |--------------------------------------------------------------------------
     | Ce paramètre détermine le titre général de l'application, tel que renseigné
@@ -157,8 +147,9 @@ return [
         'tuleap' => [
             'url' => env('TULEAP_URL', 'https://tuleap.intradef.gouv.fr/'),
             'token' => env('TULEAP_TOKEN', ''),
-            'tracker_bugreport' => env('TULEAP_TRACKER_BUGREPORT', 0),
-            'tracker_suggestion' => env('TULEAP_TRACKER_SUGGESTION', 0),
+            'tracker_bugreport' => env('TULEAP_TRACKER_BUGREPORT', ''),
+            'tracker_suggestion' => env('TULEAP_TRACKER_SUGGESTION', ''),
+            'tracker_mindef_connect' => env('TULEAP_TRACKER_MINDEFCONNECT', ''),
         ],
     ],
     
