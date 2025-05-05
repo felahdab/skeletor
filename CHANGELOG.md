@@ -1,3 +1,10 @@
+## 3.0.10 (May 05, 2025)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.9 –> 3.0.10
+- On retire certaines routes inutiles
+- On rajoute la route des assets tenancy à la liste des routes qui sont préfixées par Skeletor.
+- On catche les exceptions pouvant se produire dans le communication entre l'application et le serveur SSO pour éviter des erreurs 500 et renvoyer l'utilisateur vers la page de login.
+- Ajout des modules aux chemins de phpstan
+
 ## 3.0.9 (May 04, 2025)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.8 –> 3.0.9
 - Utilisation de Model::make à la place de new static
