@@ -5,12 +5,14 @@ namespace Spatie\LaravelData\Resolvers;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Spatie\LaravelData\Attributes\MergeValidationRules;
 use Spatie\LaravelData\Attributes\Validation\ArrayType;
 use Spatie\LaravelData\Attributes\Validation\Present;
 use Spatie\LaravelData\Support\DataClass;
 use Spatie\LaravelData\Support\DataConfig;
 use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Validation\DataRules;
+use Spatie\LaravelData\Support\Validation\EnsurePropertyMorphable;
 use Spatie\LaravelData\Support\Validation\PropertyRules;
 use Spatie\LaravelData\Support\Validation\RuleDenormalizer;
 use Spatie\LaravelData\Support\Validation\RuleNormalizer;
@@ -22,7 +24,8 @@ class DataValidationRulesResolver
     public function __construct(
         protected DataConfig $dataConfig,
         protected RuleNormalizer $ruleAttributesResolver,
-        protected RuleDenormalizer $ruleDenormalizer
+        protected RuleDenormalizer $ruleDenormalizer,
+        protected DataMorphClassResolver $dataMorphClassResolver,
     ) {
     }
 
@@ -33,6 +36,21 @@ class DataValidationRulesResolver
         DataRules $dataRules
     ): array {
         $dataClass = $this->dataConfig->getDataClass($class);
+
+        if ($dataClass->isAbstract && $dataClass->propertyMorphable) {
+            $payload = $path->isRoot()
+                ? $fullPayload
+                : Arr::get($fullPayload, $path->get(), []);
+
+            $morphedClass = $this->dataMorphClassResolver->execute(
+                $dataClass,
+                [$payload],
+            );
+
+            $dataClass = $morphedClass
+                ? $this->dataConfig->getDataClass($morphedClass)
+                : $dataClass;
+        }
 
         $withoutValidationProperties = [];
 
@@ -63,6 +81,10 @@ class DataValidationRulesResolver
                 $fullPayload,
                 $path,
             );
+
+            if ($dataProperty->morphable) {
+                $rules[] = new EnsurePropertyMorphable($dataClass);
+            }
 
             $dataRules->add($propertyPath, $rules);
         }
@@ -241,19 +263,21 @@ class DataValidationRulesResolver
         );
 
         $overwrittenRules = app()->call([$class->name, 'rules'], ['context' => $validationContext]);
+        $shouldMergeRules = $class->attributes->has(MergeValidationRules::class);
 
         foreach ($overwrittenRules as $key => $rules) {
             if (in_array($key, $withoutValidationProperties)) {
                 continue;
             }
 
-            $dataRules->add(
-                $path->property($key),
-                collect(Arr::wrap($rules))
-                    ->map(fn (mixed $rule) => $this->ruleDenormalizer->execute($rule, $path))
-                    ->flatten()
-                    ->all()
-            );
+            $rules = collect(Arr::wrap($rules))
+                ->map(fn (mixed $rule) => $this->ruleDenormalizer->execute($rule, $path))
+                ->flatten()
+                ->all();
+
+            $shouldMergeRules
+                ? $dataRules->merge($path->property($key), $rules)
+                : $dataRules->add($path->property($key), $rules);
         }
     }
 

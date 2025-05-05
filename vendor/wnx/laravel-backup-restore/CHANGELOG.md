@@ -5,7 +5,43 @@ All notable changes to `laravel-backup-restore` will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.4.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.6.0...HEAD)
+
+## [v1.6.0](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.5.2...v1.6.0) - 2025-02-07
+
+### Added
+
+- Include zipped file size in selection choices ([#92](https://github.com/stefanzweifel/laravel-backup-restore/pull/92))
+
+## [v1.5.2](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.5.1...v1.5.2) - 2025-01-20
+
+### Changed
+
+- changed postgres restore command to use a connection uri  ([#88](https://github.com/stefanzweifel/laravel-backup-restore/pull/88))
+
+## [v1.5.1](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.5.0...v1.5.1) - 2025-01-13
+
+### Fixed
+
+- Add Support for laravel/prompts v0.2 and v0.3 ([#87](https://github.com/stefanzweifel/laravel-backup-restore/pull/87))
+
+## [v1.5.0](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.4.2...v1.5.0) - 2024-11-13
+
+### Added
+
+- Add Support for PHP 8.4 ([#82](https://github.com/stefanzweifel/laravel-backup-restore/pull/82))
+
+## [v1.4.2](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.4.1...v1.4.2) - 2024-10-20
+
+### Fixed
+
+- Use local.root value in getAbsolutePathToLocalDecompressedBackup ([#80](https://github.com/stefanzweifel/laravel-backup-restore/pull/80))
+
+## [v1.4.1](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.4.0...v1.4.1) - 2024-08-20
+
+### Fixed
+
+- Remove single quotes from restore command when restoring MySQL dump ([#79](https://github.com/stefanzweifel/laravel-backup-restore/pull/79))
 
 ## [v1.4.0](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.3.2...v1.4.0) - 2024-08-07
 

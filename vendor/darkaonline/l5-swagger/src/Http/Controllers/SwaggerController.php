@@ -2,6 +2,7 @@
 
 namespace L5Swagger\Http\Controllers;
 
+use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
@@ -9,60 +10,48 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request as RequestFacade;
-use Illuminate\Support\Facades\Response as ResponseFacade;
+use L5Swagger\ConfigFactory;
 use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\GeneratorFactory;
 
 class SwaggerController extends BaseController
 {
-    /**
-     * @var GeneratorFactory
-     */
-    protected $generatorFactory;
-
-    public function __construct(GeneratorFactory $generatorFactory)
-    {
-        $this->generatorFactory = $generatorFactory;
+    public function __construct(
+        private readonly GeneratorFactory $generatorFactory,
+        private readonly ConfigFactory $configFactory
+    ) {
     }
 
     /**
-     * Dump api-docs content endpoint. Supports dumping a json, or yaml file.
+     * Handles requests for API documentation and returns the corresponding file content.
      *
-     * @param  Request  $request
-     * @param  ?string  $file
-     * @return Response
+     * @param  Request  $request  The HTTP request containing parameters such as documentation and configuration.
+     * @return Response The HTTP response containing the documentation file content with appropriate headers.
      *
-     * @throws L5SwaggerException
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException If the documentation file does not exist.
+     * @throws Exception If the documentation generation process fails.
      */
-    public function docs(Request $request)
+    public function docs(Request $request): Response
     {
         $fileSystem = new Filesystem();
         $documentation = $request->offsetGet('documentation');
         $config = $request->offsetGet('config');
-        $file = $request->offsetGet('jsonFile');
 
-        $targetFile = $config['paths']['docs_json'] ?? 'api-docs.json';
-        $yaml = false;
+        $formatToUseForDocs = $config['paths']['format_to_use_for_docs'] ?? 'json';
+        $yamlFormat = ($formatToUseForDocs === 'yaml');
 
-        if ($file !== null) {
-            $targetFile = $file;
-            $parts = explode('.', $file);
-
-            if (! empty($parts)) {
-                $extension = array_pop($parts);
-                $yaml = strtolower($extension) === 'yaml';
-            }
-        }
-
-        $filePath = $config['paths']['docs'].'/'.$targetFile;
+        $filePath = sprintf(
+            '%s/%s',
+            $config['paths']['docs'],
+            $yamlFormat ? $config['paths']['docs_yaml'] : $config['paths']['docs_json']
+        );
 
         if ($config['generate_always']) {
             $generator = $this->generatorFactory->make($documentation);
 
             try {
                 $generator->generateDocs();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Log::error($e);
 
                 abort(
@@ -82,30 +71,31 @@ class SwaggerController extends BaseController
 
         $content = $fileSystem->get($filePath);
 
-        if ($yaml) {
-            return ResponseFacade::make($content, 200, [
+        if ($yamlFormat) {
+            return response($content, 200, [
                 'Content-Type' => 'application/yaml',
                 'Content-Disposition' => 'inline',
             ]);
         }
 
-        return ResponseFacade::make($content, 200, [
+        return response($content, 200, [
             'Content-Type' => 'application/json',
         ]);
     }
 
     /**
-     * Display Swagger API page.
+     * Handles the API request and renders the Swagger documentation view.
      *
-     * @param  Request  $request
-     * @return Response
+     * @param  Request  $request  The HTTP request containing necessary parameters such as documentation and configuration details.
+     * @return Response The HTTP response rendering the Swagger documentation view.
      */
-    public function api(Request $request)
+    public function api(Request $request): Response
     {
         $documentation = $request->offsetGet('documentation');
         $config = $request->offsetGet('config');
+        $proxy = $config['proxy'];
 
-        if ($proxy = $config['proxy']) {
+        if ($proxy) {
             if (! is_array($proxy)) {
                 $proxy = [$proxy];
             }
@@ -120,14 +110,17 @@ class SwaggerController extends BaseController
         }
 
         $urlToDocs = $this->generateDocumentationFileURL($documentation, $config);
+        $urlsToDocs = $this->getAllDocumentationUrls();
         $useAbsolutePath = config('l5-swagger.documentations.'.$documentation.'.paths.use_absolute_path', true);
 
         // Need the / at the end to avoid CORS errors on Homestead systems.
-        return ResponseFacade::make(
+        return response(
             view('l5-swagger::index', [
                 'documentation' => $documentation,
+                'documentationTitle' => $config['api']['title'] ?? $documentation,
                 'secure' => RequestFacade::secure(),
-                'urlToDocs' => $urlToDocs,
+                'urlToDocs' => $urlToDocs, // Is not used in the view, but still passed for backwards compatibility
+                'urlsToDocs' => $urlsToDocs,
                 'operationsSorter' => $config['operations_sort'],
                 'configUrl' => $config['additional_config_url'],
                 'validatorUrl' => $config['validator_url'],
@@ -138,15 +131,15 @@ class SwaggerController extends BaseController
     }
 
     /**
-     * Display Oauth2 callback pages.
+     * Handles the OAuth2 callback and retrieves the required file for the redirect.
      *
-     * @param  Request  $request
-     * @return string
+     * @param  Request  $request  The HTTP request containing necessary parameters.
+     * @return string The content of the OAuth2 redirect file.
      *
-     * @throws L5SwaggerException
      * @throws FileNotFoundException
+     * @throws L5SwaggerException
      */
-    public function oauth2Callback(Request $request)
+    public function oauth2Callback(Request $request): string
     {
         $fileSystem = new Filesystem();
         $documentation = $request->offsetGet('documentation');
@@ -155,13 +148,13 @@ class SwaggerController extends BaseController
     }
 
     /**
-     * Generate URL for documentation file.
+     * Generate the URL for accessing the documentation file based on the provided configuration.
      *
-     * @param  string  $documentation
-     * @param  array  $config
-     * @return string
+     * @param  string  $documentation  The name of the documentation instance.
+     * @param  array<string,mixed>  $config  The configuration settings for generating the documentation URL.
+     * @return string The generated URL for the documentation file.
      */
-    protected function generateDocumentationFileURL(string $documentation, array $config)
+    protected function generateDocumentationFileURL(string $documentation, array $config): string
     {
         $fileUsedForDocs = $config['paths']['docs_json'] ?? 'api-docs.json';
 
@@ -179,5 +172,30 @@ class SwaggerController extends BaseController
             $fileUsedForDocs,
             $useAbsolutePath
         );
+    }
+
+    /**
+     * Retrieves all available documentation URLs with their corresponding titles.
+     *
+     * @return array<string,string> An associative array where the keys are documentation titles
+     *                              and the values are the corresponding URLs.
+     *
+     * @throws L5SwaggerException
+     */
+    protected function getAllDocumentationUrls(): array
+    {
+        /** @var array<string> $documentations */
+        $documentations = array_keys(config('l5-swagger.documentations', []));
+
+        $urlsToDocs = [];
+
+        foreach ($documentations as $documentationName) {
+            $config = $this->configFactory->documentationConfig($documentationName);
+            $title = $config['api']['title'] ?? $documentationName;
+
+            $urlsToDocs[$title] = $this->generateDocumentationFileURL($documentationName, $config);
+        }
+
+        return $urlsToDocs;
     }
 }

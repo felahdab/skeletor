@@ -27,7 +27,7 @@ class JobPipeline implements ShouldQueue
     /** @var bool */
     public $shouldBeQueued;
 
-    public function __construct($jobs, callable $send = null, bool $shouldBeQueued = null)
+    public function __construct($jobs, ?callable $send = null, ?bool $shouldBeQueued = null)
     {
         $this->jobs = $jobs;
         $this->send = $send ?? function ($event) {
@@ -67,7 +67,7 @@ class JobPipeline implements ShouldQueue
             try {
                 $result = app()->call($job);
             } catch (Throwable $exception) {
-                if (method_exists(get_class($job[0]), 'failed')) {
+                if (is_array($job) && method_exists(get_class($job[0]), 'failed')) {
                     call_user_func_array([$job[0], 'failed'], [$exception]);
                 } else {
                     throw $exception;

@@ -244,7 +244,8 @@ final class Blueprint
     private function getUsagePathAndLines(Layer $layer, string $objectName, string $target): ?Violation
     {
         $dependOnObjects = array_filter(
-            $layer->getIterator()->getArrayCopy(), //@phpstan-ignore-line
+            $layer->getIterator()->getArrayCopy(), // @phpstan-ignore-line
+            // @phpstan-ignore-next-line
             fn (ObjectDescription $objectDescription): bool => $objectDescription->name === $objectName
         );
 
@@ -253,6 +254,11 @@ final class Blueprint
 
         /** @var class-string<\PhpParser\Node> $class */
         $class = PhpCoreExpressions::getClass($target) ?? Name::class;
+
+        // @phpstan-ignore-next-line
+        if ($dependOnObject === null) {
+            return null;
+        }
 
         $nodes = ServiceContainer::$nodeFinder->findInstanceOf(
             $dependOnObject->stmts,

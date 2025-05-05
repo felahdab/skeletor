@@ -5,7 +5,7 @@ namespace Filament\Actions\Imports\Http\Controllers;
 use Filament\Actions\Imports\Models\FailedImportRow;
 use Filament\Actions\Imports\Models\Import;
 use Illuminate\Support\Facades\Gate;
-use League\Csv\ByteSequence;
+use League\Csv\Bom;
 use League\Csv\Writer;
 use SplTempFileObject;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -23,9 +23,11 @@ class DownloadImportFailureCsv
         }
 
         $csv = Writer::createFromFileObject(new SplTempFileObject);
-        $csv->setOutputBOM(ByteSequence::BOM_UTF8);
+        $csv->setOutputBOM(Bom::Utf8);
 
-        $columnHeaders = array_keys($import->failedRows()->first()->data);
+        $firstFailedRow = $import->failedRows()->first();
+
+        $columnHeaders = $firstFailedRow ? array_keys($firstFailedRow->data) : [];
         $columnHeaders[] = __('filament-actions::import.failure_csv.error_header');
 
         $csv->insertOne($columnHeaders);

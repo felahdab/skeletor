@@ -2,6 +2,44 @@
 
 All notable changes to `laravel-markdown` will be documented in this file.
 
+## 2.7.0 - 2024-12-10
+
+### What's Changed
+
+* Fixed a typo by @makkinga in https://github.com/spatie/laravel-markdown/pull/87
+* Upgrade commonmark by @timvandijck in https://github.com/spatie/laravel-markdown/pull/88
+
+### New Contributors
+
+* @makkinga made their first contribution in https://github.com/spatie/laravel-markdown/pull/87
+* @timvandijck made their first contribution in https://github.com/spatie/laravel-markdown/pull/88
+
+**Full Changelog**: https://github.com/spatie/laravel-markdown/compare/2.6.0...2.7.0
+
+## 2.6.0 - 2024-11-12
+
+### What's Changed
+
+* feat: support (at least) dual themes by @Barbapapazes in https://github.com/spatie/laravel-markdown/pull/86
+
+### New Contributors
+
+* @Barbapapazes made their first contribution in https://github.com/spatie/laravel-markdown/pull/86
+
+**Full Changelog**: https://github.com/spatie/laravel-markdown/compare/2.5.2...2.6.0
+
+## 2.5.2 - 2024-04-22
+
+### What's Changed
+
+* Fix breaking change cache duration by @chillbram in https://github.com/spatie/laravel-markdown/pull/77
+
+### New Contributors
+
+* @chillbram made their first contribution in https://github.com/spatie/laravel-markdown/pull/77
+
+**Full Changelog**: https://github.com/spatie/laravel-markdown/compare/2.5.1...2.5.2
+
 ## 2.5.1 - 2024-04-12
 
 ### What's Changed

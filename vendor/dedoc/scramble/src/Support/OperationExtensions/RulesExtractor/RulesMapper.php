@@ -11,6 +11,8 @@ use Dedoc\Scramble\Support\Generator\Types\Type;
 use Dedoc\Scramble\Support\Generator\Types\UnknownType;
 use Dedoc\Scramble\Support\Generator\TypeTransformer;
 use Dedoc\Scramble\Support\Type\ObjectType;
+use Dedoc\Scramble\Support\Type\TypeHelper;
+use Dedoc\Scramble\Support\Type\Union;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
 use Illuminate\Validation\Rules\Enum;
@@ -40,6 +42,11 @@ class RulesMapper
     }
 
     public function numeric(Type $prevType)
+    {
+        return (new NumberType)->addProperties($prevType);
+    }
+
+    public function decimal(Type $prevType)
     {
         return (new NumberType)->addProperties($prevType);
     }
@@ -139,6 +146,13 @@ class RulesMapper
         return $type;
     }
 
+    public function size(Type $type, $params)
+    {
+        $type = $this->min($type, $params);
+
+        return $this->max($type, $params);
+    }
+
     public function in(Type $type, $params)
     {
         return $type->enum(
@@ -161,9 +175,26 @@ class RulesMapper
 
         $enumName = $getProtectedValue($rule, 'type');
 
-        return $this->openApiTransformer->transform(
-            new ObjectType($enumName)
-        );
+        $objectType = new ObjectType($enumName);
+
+        $except = method_exists(Enum::class, 'except') ? $getProtectedValue($rule, 'except') : [];
+        $only = method_exists(Enum::class, 'only') ? $getProtectedValue($rule, 'only') : [];
+
+        if ($except || $only) {
+            $cases = collect($enumName::cases())
+                ->reject(fn ($case) => in_array($case, $except))
+                ->filter(fn ($case) => ! $only || in_array($case, $only));
+
+            if (! isset($cases->first()?->value)) {
+                return new UnknownType("$enumName enum doesnt have values (only/except context)");
+            }
+
+            return $this->openApiTransformer->transform(Union::wrap(
+                $cases->map(fn ($c) => TypeHelper::createTypeFromValue($c->value))->all()
+            ));
+        }
+
+        return $this->openApiTransformer->transform($objectType);
     }
 
     public function image(Type $type)
@@ -177,7 +208,7 @@ class RulesMapper
             $type = $this->string($type);
         }
 
-        return $type->format('binary');
+        return $type->contentMediaType('application/octet-stream')->format('binary');
     }
 
     public function url(Type $type)
@@ -187,5 +218,23 @@ class RulesMapper
         }
 
         return $type->format('uri');
+    }
+
+    public function date(Type $type, $params)
+    {
+        if ($type instanceof UnknownType) {
+            $type = $this->string($type);
+        }
+
+        if ($params[0] ?? '' === 'Y-m-d') {
+            return $type->format('date');
+        }
+
+        return $type->format('date-time');
+    }
+
+    public function date_format(Type $type, $params)
+    {
+        return $this->date($type, $params);
     }
 }

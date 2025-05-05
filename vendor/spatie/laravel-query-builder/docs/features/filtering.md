@@ -86,6 +86,40 @@ $users = QueryBuilder::for(User::class)
 // $users will contain all admin users with id 1, 2, 3, 4 or 5
 ```
 
+## Operator filters
+
+Operator filters allow you to filter results based on different operators such as EQUAL, NOT_EQUAL, GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUAL, LESS_THAN_OR_EQUAL, and DYNAMIC. You can use the `AllowedFilter::operator` method to create operator filters.
+
+```php
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\Enums\FilterOperator;
+
+// GET /users?filter[salary]=3000
+$users = QueryBuilder::for(User::class)
+    ->allowedFilters([
+        AllowedFilter::operator('salary', FilterOperator::GREATER_THAN),
+    ])
+    ->get();
+
+// $users will contain all users with a salary greater than 3000
+```
+
+You can also use dynamic operator filters, which allow you to specify the operator in the filter value:
+
+```php
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\Enums\FilterOperator;
+
+// GET /users?filter[salary]=>3000
+$users = QueryBuilder::for(User::class)
+    ->allowedFilters([
+        AllowedFilter::operator('salary', FilterOperator::DYNAMIC),
+    ])
+    ->get();
+
+// $users will contain all users with a salary greater than 3000
+```
+
 ## Exact or partial filters for related properties
 
 You can also add filters for a relationship property using the dot-notation: `AllowedFilter::exact('posts.title')`. This works for exact and partial filters. Under the hood we'll add a `whereHas` statement for the `posts` that filters for the given `title` property as well.
@@ -98,6 +132,55 @@ $addRelationConstraint = false;
 QueryBuilder::for(User::class)
     ->join('posts', 'posts.user_id', 'users.id')
     ->allowedFilters(AllowedFilter::exact('posts.title', null, $addRelationConstraint));
+```
+
+## BelongsTo filters
+
+In Model:
+```php
+class Comment extends Model
+{
+    public function post(): BelongsTo
+    {
+        return $this->belongsTo(Post::class);
+    }
+}
+```
+
+```php
+QueryBuilder::for(Comment::class)
+    ->allowedFilters([
+        AllowedFilter::belongsTo('post'),
+    ])
+    ->get();
+```
+
+Alias
+```php
+QueryBuilder::for(Comment::class)
+    ->allowedFilters([
+        AllowedFilter::belongsTo('post_id', 'post'),
+    ])
+    ->get();
+```
+
+Nested
+```php
+class Post extends Model
+{
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+}
+```
+
+```php
+QueryBuilder::for(Comment::class)
+    ->allowedFilters([
+        AllowedFilter::belongsTo('author_post_id', 'post.author'),
+    ])
+    ->get();
 ```
 
 ## Scope filters
@@ -137,6 +220,14 @@ You can even pass multiple parameters to the scope by passing a comma separated 
 GET /events?filter[schedule.starts_between]=2018-01-01,2018-12-31
 ```
 
+When passing an array as a parameter you can access it, as an array, in the scope by using the spread operator.
+```php
+public function scopeInvitedUsers(Builder $query,  ...$users): Builder
+{
+    return $query->whereIn('id', $users);
+}
+```
+
 When using scopes that require model instances in the parameters, we'll automatically try to inject the model instances into your scope. This works the same way as route model binding does for injecting Eloquent models into controllers. For example:
 
 ```php
@@ -146,6 +237,12 @@ public function scopeEvent(Builder $query, \App\Models\Event $event): Builder
 }
 
 // GET /events?filter[event]=1 - the event with ID 1 will automatically be resolved and passed to the scoped filter
+```
+
+If you use any other column aside `id` column for route model binding (ULID,UUID). Remeber to specify the value of the column used in route model binding
+
+```php
+// GET /events?filter[event]=01j0rcpkx5517v0aqyez5vnwn - supposing we use a ULID column for route model binding.
 ```
 
 Scopes are usually not named with query filters in mind. Use [filter aliases](#filter-aliases) to alias them to something more appropriate:

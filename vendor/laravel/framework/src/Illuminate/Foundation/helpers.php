@@ -14,15 +14,16 @@ use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Foundation\Bus\PendingClosureDispatch;
 use Illuminate\Foundation\Bus\PendingDispatch;
-use Illuminate\Foundation\Defer\DeferredCallback;
-use Illuminate\Foundation\Defer\DeferredCallbackCollection;
 use Illuminate\Foundation\Mix;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Log\Context\Repository as ContextRepository;
 use Illuminate\Queue\CallQueuedClosure;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Uri;
+use League\Uri\Contracts\UriInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 if (! function_exists('abort')) {
@@ -111,7 +112,7 @@ if (! function_exists('app')) {
     /**
      * Get the available container instance.
      *
-     * @template TClass
+     * @template TClass of object
      *
      * @param  string|class-string<TClass>|null  $abstract
      * @param  array  $parameters
@@ -408,18 +409,11 @@ if (! function_exists('defer')) {
      * @param  callable|null  $callback
      * @param  string|null  $name
      * @param  bool  $always
-     * @return \Illuminate\Foundation\Defer\DeferredCallback
+     * @return \Illuminate\Support\Defer\DeferredCallback
      */
     function defer(?callable $callback = null, ?string $name = null, bool $always = false)
     {
-        if ($callback === null) {
-            return app(DeferredCallbackCollection::class);
-        }
-
-        return tap(
-            new DeferredCallback($callback, $name, $always),
-            fn ($deferred) => app(DeferredCallbackCollection::class)[] = $deferred
-        );
+        return \Illuminate\Support\defer($callback, $name, $always);
     }
 }
 
@@ -433,8 +427,8 @@ if (! function_exists('dispatch')) {
     function dispatch($job)
     {
         return $job instanceof Closure
-                ? new PendingClosureDispatch(CallQueuedClosure::create($job))
-                : new PendingDispatch($job);
+            ? new PendingClosureDispatch(CallQueuedClosure::create($job))
+            : new PendingDispatch($job);
     }
 }
 
@@ -613,8 +607,8 @@ if (! function_exists('old')) {
      * Retrieve an old input item.
      *
      * @param  string|null  $key
-     * @param  mixed  $default
-     * @return mixed
+     * @param  \Illuminate\Database\Eloquent\Model|string|array|null  $default
+     * @return string|array|null
      */
     function old($key = null, $default = null)
     {
@@ -802,7 +796,7 @@ if (! function_exists('resolve')) {
     /**
      * Resolve a service from the container.
      *
-     * @template TClass
+     * @template TClass of object
      *
      * @param  string|class-string<TClass>  $name
      * @param  array  $parameters
@@ -1010,9 +1004,23 @@ if (! function_exists('__')) {
     }
 }
 
+if (! function_exists('uri')) {
+    /**
+     * Generate a URI for the application.
+     */
+    function uri(UriInterface|Stringable|array|string $uri, mixed $parameters = [], bool $absolute = true): Uri
+    {
+        return match (true) {
+            is_array($uri) || str_contains($uri, '\\') => Uri::action($uri, $parameters, $absolute),
+            str_contains($uri, '.') && Route::has($uri) => Uri::route($uri, $parameters, $absolute),
+            default => Uri::of($uri),
+        };
+    }
+}
+
 if (! function_exists('url')) {
     /**
-     * Generate a url for the application.
+     * Generate a URL for the application.
      *
      * @param  string|null  $path
      * @param  mixed  $parameters

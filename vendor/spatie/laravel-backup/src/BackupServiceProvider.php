@@ -18,6 +18,7 @@ use Spatie\Backup\Notifications\EventHandler;
 use Spatie\Backup\Tasks\Cleanup\CleanupStrategy;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Spatie\TemporaryDirectory\TemporaryDirectory;
 
 class BackupServiceProvider extends PackageServiceProvider
 {
@@ -49,6 +50,7 @@ class BackupServiceProvider extends PackageServiceProvider
         $this->app->singleton(ConsoleOutput::class);
 
         $this->app->bind(CleanupStrategy::class, config('backup.cleanup.strategy'));
+        $this->app->bind('backup-temporary-project', fn () => new TemporaryDirectory(config('backup.backup.temporary_directory') ?? storage_path('app/backup-temp')));
 
         $this->registerDiscordChannel();
 
@@ -61,7 +63,7 @@ class BackupServiceProvider extends PackageServiceProvider
     {
         Notification::resolved(function (ChannelManager $service) {
             $service->extend('discord', function ($app): DiscordChannel {
-                return new DiscordChannel();
+                return new DiscordChannel;
             });
         });
     }

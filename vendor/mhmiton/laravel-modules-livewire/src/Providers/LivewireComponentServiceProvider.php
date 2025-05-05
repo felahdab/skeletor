@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\Livewire;
 use Mhmiton\LaravelModulesLivewire\Support\Decomposer;
+use Mhmiton\LaravelModulesLivewire\Support\ModuleVoltComponentRegistry;
+use Mhmiton\LaravelModulesLivewire\View\ModuleVoltViewFactory;
 use ReflectionClass;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -23,6 +25,8 @@ class LivewireComponentServiceProvider extends ServiceProvider
         $this->registerModuleComponents();
 
         $this->registerCustomModuleComponents();
+
+        $this->registerModuleVoltViewFactory();
     }
 
     /**
@@ -57,6 +61,14 @@ class LivewireComponentServiceProvider extends ServiceProvider
             $namespace = $moduleNamespace.'\\'.$module->getName().'\\'.$modulesLivewireNamespace;
 
             $this->registerComponentDirectory($directory, $namespace, $module->getLowerName().'::');
+
+            (new ModuleVoltComponentRegistry())
+                ->registerComponents([
+                    'path' => $module->getPath(),
+                    'aliasPrefix' => $module->getLowerName().'::',
+                    'namespace' => $namespace,
+                    'view_namespaces' => config('modules-livewire.volt_view_namespaces', ['livewire', 'pages']),
+                ]);
         });
     }
 
@@ -80,6 +92,14 @@ class LivewireComponentServiceProvider extends ServiceProvider
             $lowerName = $module['name_lower'] ?? strtolower($moduleName);
 
             $this->registerComponentDirectory($directory, $namespace, $lowerName.'::');
+
+            (new ModuleVoltComponentRegistry())
+                ->registerComponents([
+                    'path' => $module['path'] ?? null,
+                    'aliasPrefix' => $lowerName.'::',
+                    'namespace' => $namespace,
+                    'view_namespaces' => $module['volt_view_namespaces'] ?? ['livewire', 'pages'],
+                ]);
         });
     }
 
@@ -114,5 +134,40 @@ class LivewireComponentServiceProvider extends ServiceProvider
 
                 Livewire::component($alias, $class);
             });
+    }
+
+    public function registerModuleVoltViewFactory()
+    {
+        if (Decomposer::checkDependencies(['livewire/volt'])->type == 'error') {
+            return false;
+        }
+
+        $this->app->extend('view', function ($view, $app) {
+            $factory = new ModuleVoltViewFactory(
+                $app['view.engine.resolver'],
+                $app['view.finder'],
+                $app['events']
+            );
+
+            // Copy existing view paths
+            foreach ($view->getFinder()->getPaths() as $path) {
+                $factory->getFinder()->addLocation($path);
+            }
+
+            // Copy existing hint paths (this fixes the missing hint path issue)
+            foreach ($view->getFinder()->getHints() as $namespace => $paths) {
+                foreach ((array) $paths as $path) {
+                    $factory->addNamespace($namespace, $path);
+                }
+            }
+
+            $factory->setContainer($app);
+
+            $factory->share('app', $app);
+
+            return $factory;
+        });
+
+        \View::clearResolvedInstance('view');
     }
 }

@@ -3,8 +3,10 @@
 namespace Dedoc\Scramble\Infer\Definition;
 
 use Dedoc\Scramble\Infer\Analyzer\MethodAnalyzer;
+use Dedoc\Scramble\Infer\Contracts\ClassDefinition as ClassDefinitionContract;
 use Dedoc\Scramble\Infer\Reflector\ClassReflector;
 use Dedoc\Scramble\Infer\Scope\GlobalScope;
+use Dedoc\Scramble\Infer\Scope\Index;
 use Dedoc\Scramble\Infer\Scope\NodeTypesResolver;
 use Dedoc\Scramble\Infer\Scope\Scope;
 use Dedoc\Scramble\Infer\Scope\ScopeContext;
@@ -19,7 +21,7 @@ use Dedoc\Scramble\Support\Type\UnknownType;
 use PhpParser\ErrorHandler\Throwing;
 use PhpParser\NameContext;
 
-class ClassDefinition
+class ClassDefinition implements ClassDefinitionContract
 {
     public function __construct(
         // FQ name
@@ -48,7 +50,36 @@ class ClassDefinition
         return array_key_exists($name, $this->methods);
     }
 
-    public function getMethodDefinition(string $name, Scope $scope = new GlobalScope, array $indexBuilders = [])
+    public function getMethodDefinitionWithoutAnalysis(string $name)
+    {
+        if (! array_key_exists($name, $this->methods)) {
+            return null;
+        }
+
+        return $this->methods[$name];
+    }
+
+    public function getMethodDefiningClassName(string $name, Index $index)
+    {
+        $lastLookedUpClassName = $this->name;
+        while ($lastLookedUpClassDefinition = $index->getClassDefinition($lastLookedUpClassName)) {
+            if ($methodDefinition = $lastLookedUpClassDefinition->getMethodDefinitionWithoutAnalysis($name)) {
+                return $methodDefinition->definingClassName;
+            }
+
+            if ($lastLookedUpClassDefinition->parentFqn) {
+                $lastLookedUpClassName = $lastLookedUpClassDefinition->parentFqn;
+
+                continue;
+            }
+
+            break;
+        }
+
+        return $lastLookedUpClassName;
+    }
+
+    public function getMethodDefinition(string $name, Scope $scope = new GlobalScope, array $indexBuilders = [], bool $withSideEffects = false)
     {
         if (! array_key_exists($name, $this->methods)) {
             return null;
@@ -60,7 +91,7 @@ class ClassDefinition
             $this->methods[$name] = (new MethodAnalyzer(
                 $scope->index,
                 $this
-            ))->analyze($methodDefinition, $indexBuilders);
+            ))->analyze($methodDefinition, $indexBuilders, $withSideEffects);
         }
 
         $methodScope = new Scope(
@@ -127,5 +158,15 @@ class ClassDefinition
         }
 
         return $type;
+    }
+
+    public function getMethod(string $name): ?FunctionLikeDefinition
+    {
+        return $this->getMethodDefinition($name);
+    }
+
+    public function getData(): ClassDefinition
+    {
+        return $this;
     }
 }

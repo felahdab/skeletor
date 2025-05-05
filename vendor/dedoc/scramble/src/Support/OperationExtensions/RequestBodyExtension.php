@@ -3,20 +3,24 @@
 namespace Dedoc\Scramble\Support\OperationExtensions;
 
 use Dedoc\Scramble\Extensions\OperationExtension;
+use Dedoc\Scramble\Scramble;
+use Dedoc\Scramble\Support\ContainerUtils;
+use Dedoc\Scramble\Support\Generator\Combined\AllOf;
 use Dedoc\Scramble\Support\Generator\Operation;
 use Dedoc\Scramble\Support\Generator\Parameter;
 use Dedoc\Scramble\Support\Generator\Reference;
 use Dedoc\Scramble\Support\Generator\RequestBodyObject;
 use Dedoc\Scramble\Support\Generator\Schema;
 use Dedoc\Scramble\Support\Generator\Types\ObjectType;
-use Dedoc\Scramble\Support\OperationExtensions\RulesExtractor\FormRequestRulesExtractor;
-use Dedoc\Scramble\Support\OperationExtensions\RulesExtractor\RulesToParameters;
-use Dedoc\Scramble\Support\OperationExtensions\RulesExtractor\ValidateCallExtractor;
+use Dedoc\Scramble\Support\Generator\Types\Type;
+use Dedoc\Scramble\Support\Generator\TypeTransformer;
+use Dedoc\Scramble\Support\OperationExtensions\ParameterExtractor\ParameterExtractor;
+use Dedoc\Scramble\Support\OperationExtensions\RulesExtractor\DeepParametersMerger;
+use Dedoc\Scramble\Support\OperationExtensions\RulesExtractor\ParametersExtractionResult;
 use Dedoc\Scramble\Support\RouteInfo;
-use Illuminate\Routing\Route;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use PhpParser\Node\Stmt\ClassMethod;
 use Throwable;
 
 class RequestBodyExtension extends OperationExtension
@@ -30,89 +34,139 @@ class RequestBodyExtension extends OperationExtension
         /*
          * Making sure to analyze the route.
          * @todo rename the method
+         * @todo if this methods returns null, make sure to notify users about this.
          */
         $routeInfo->getMethodType();
 
-        [$bodyParams, $schemaName, $schemaDescription] = [[], null, null];
+        $rulesResults = collect();
+
         try {
-            [$bodyParams, $schemaName, $schemaDescription] = $this->extractParamsFromRequestValidationRules($routeInfo->route, $routeInfo->methodNode());
+            $rulesResults = collect($this->extractParameters($operation, $routeInfo));
         } catch (Throwable $exception) {
-            if (app()->environment('testing')) {
+            if (Scramble::shouldThrowOnError()) {
                 throw $exception;
             }
-            $description = $description->append('⚠️Cannot generate request documentation: '.$exception->getMessage());
+            $description = $description->append('⚠️ Cannot generate request documentation: '.$exception->getMessage());
         }
 
         $operation
             ->summary(Str::of($routeInfo->phpDoc()->getAttribute('summary'))->rtrim('.'))
             ->description($description);
 
-        $bodyParamsNames = array_map(fn ($p) => $p->name, $bodyParams);
-
-        $allParams = [
-            ...$bodyParams,
-            ...array_filter(
-                array_values($routeInfo->requestParametersFromCalls->data),
-                fn ($p) => ! in_array($p->name, $bodyParamsNames),
-            ),
-        ];
-        [$queryParams, $bodyParams] = collect($allParams)
-            ->partition(function (Parameter $parameter) {
-                return $parameter->getAttribute('isInQuery');
-            });
-        $queryParams = $queryParams->toArray();
-        $bodyParams = $bodyParams->toArray();
+        $allParams = $rulesResults->flatMap->parameters->unique(fn ($p) => "$p->name.$p->in")->values()->all();
 
         $mediaType = $this->getMediaType($operation, $routeInfo, $allParams);
 
         if (empty($allParams)) {
-            if (! in_array($operation->method, static::HTTP_METHODS_WITHOUT_REQUEST_BODY)) {
-                $operation
-                    ->addRequestBodyObject(
-                        RequestBodyObject::make()->setContent($mediaType, Schema::fromType(new ObjectType))
-                    );
-            }
-
             return;
         }
 
-        $operation->addParameters($queryParams);
         if (in_array($operation->method, static::HTTP_METHODS_WITHOUT_REQUEST_BODY)) {
-            $operation->addParameters($bodyParams);
+            $operation->addParameters(
+                $this->convertDotNamedParamsToComplexStructures($allParams)
+            );
 
             return;
         }
 
-        $this->addRequestBody(
-            $operation,
-            $mediaType,
-            Schema::createFromParameters($bodyParams),
-            $schemaName,
-            $schemaDescription,
-        );
-    }
+        [$nonBodyParams, $bodyParams] = collect($allParams)
+            ->partition(fn (Parameter $p) => $p->in !== 'body' || $p->getAttribute('isInQuery') || $p->getAttribute('nonBody'))
+            ->map->toArray();
 
-    protected function addRequestBody(Operation $operation, string $mediaType, Schema $requestBodySchema, ?string $schemaName, ?string $schemaDescription)
-    {
-        if (! $schemaName) {
-            $operation->addRequestBodyObject(RequestBodyObject::make()->setContent($mediaType, $requestBodySchema));
+        $operation->addParameters($this->convertDotNamedParamsToComplexStructures($nonBodyParams));
 
+        if (! $bodyParams) {
             return;
         }
 
-        $components = $this->openApiTransformer->getComponents();
-        if (! $components->hasSchema($schemaName)) {
-            $requestBodySchema->type->setDescription($schemaDescription ?: '');
+        [$schemaResults, $schemalessResults] = $rulesResults->partition('schemaName');
+        $schemalessResults = collect([$this->mergeSchemalessRulesResults($schemalessResults->values())]);
 
-            $components->addSchema($schemaName, $requestBodySchema);
+        $schemas = $schemaResults->merge($schemalessResults)
+            ->map(function (ParametersExtractionResult $r) use ($nonBodyParams) {
+                $qpNames = collect($nonBodyParams)->keyBy(fn ($p) => "$p->name.$p->in");
+
+                $r->parameters = collect($r->parameters)->filter(fn ($p) => ! $qpNames->has("$p->name.$p->in"))->values()->all();
+
+                return $r;
+            })
+            ->filter(fn (ParametersExtractionResult $r) => count($r->parameters) || $r->schemaName)
+            ->map($this->makeSchemaFromResults(...));
+
+        if ($schemas->isEmpty()) {
+            return;
+        }
+
+        $schema = $this->makeComposedRequestBodySchema($schemas);
+        if (! $schema instanceof Reference) {
+            $schema = Schema::fromType($schema);
         }
 
         $operation->addRequestBodyObject(
-            RequestBodyObject::make()->setContent(
-                $mediaType,
-                new Reference('schemas', $schemaName, $components),
-            )
+            RequestBodyObject::make()
+                ->setContent($mediaType, $schema)
+                ->required($this->isSchemaRequired($schema))
         );
+    }
+
+    protected function isSchemaRequired(Reference|Schema $schema): bool
+    {
+        $schema = $schema instanceof Reference
+            ? $schema->resolve()
+            : $schema;
+
+        $type = $schema instanceof Schema ? $schema->type : $schema;
+
+        if ($type instanceof ObjectType) {
+            return count($type->required) > 0;
+        }
+
+        return false;
+    }
+
+    protected function makeSchemaFromResults(ParametersExtractionResult $result): Type
+    {
+        $requestBodySchema = Schema::createFromParameters(
+            $parameters = $this->convertDotNamedParamsToComplexStructures($result->parameters)
+        );
+
+        if (count($parameters) === 1 && $parameters[0]?->name === '*') {
+            $requestBodySchema->type = $parameters[0]->schema->type;
+        }
+
+        if (! $result->schemaName) {
+            return $requestBodySchema->type;
+        }
+
+        $components = $this->openApiTransformer->getComponents();
+        if (! $components->hasSchema($result->schemaName)) {
+            $requestBodySchema->type->setDescription($result->description ?: '');
+
+            $components->addSchema($result->schemaName, $requestBodySchema);
+        }
+
+        return new Reference('schemas', $result->schemaName, $components);
+    }
+
+    protected function makeComposedRequestBodySchema(Collection $schemas)
+    {
+        if ($schemas->count() === 1) {
+            return $schemas->first();
+        }
+
+        return (new AllOf)->setItems($schemas->all());
+    }
+
+    protected function mergeSchemalessRulesResults(Collection $schemalessResults): ParametersExtractionResult
+    {
+        return new ParametersExtractionResult(
+            parameters: $this->convertDotNamedParamsToComplexStructures($schemalessResults->values()->flatMap->parameters->unique(fn ($p) => "$p->name.$p->in")->values()->all()),
+        );
+    }
+
+    protected function convertDotNamedParamsToComplexStructures($params)
+    {
+        return (new DeepParametersMerger(collect($params)))->handle();
     }
 
     protected function getMediaType(Operation $operation, RouteInfo $routeInfo, array $bodyParams): string
@@ -139,41 +193,23 @@ class RequestBodyExtension extends OperationExtension
             // @todo: Use OpenApi document tree walker when ready
             $parameterString = json_encode($parameter->toArray());
 
-            return Str::contains($parameterString, '"format":"binary"');
+            return Str::contains($parameterString, '"contentMediaType":"application\/octet-stream"');
         });
     }
 
-    protected function extractParamsFromRequestValidationRules(Route $route, ?ClassMethod $methodNode)
+    private function extractParameters(Operation $operation, RouteInfo $routeInfo)
     {
-        [$rules, $nodesResults] = $this->extractRouteRequestValidationRules($route, $methodNode);
+        $result = [];
+        foreach ($this->config->parametersExtractors->all() as $extractorClass) {
+            /** @var ParameterExtractor $extractor */
+            $extractor = ContainerUtils::makeContextable($extractorClass, [
+                TypeTransformer::class => $this->openApiTransformer,
+                Operation::class => $operation,
+            ]);
 
-        return [
-            (new RulesToParameters($rules, $nodesResults, $this->openApiTransformer))->handle(),
-            $nodesResults[0]->schemaName ?? null,
-            $nodesResults[0]->description ?? null,
-        ];
-    }
-
-    protected function extractRouteRequestValidationRules(Route $route, $methodNode)
-    {
-        $rules = [];
-        $nodesResults = [];
-
-        // Custom form request's class `validate` method
-        if (($formRequestRulesExtractor = new FormRequestRulesExtractor($methodNode))->shouldHandle()) {
-            if (count($formRequestRules = $formRequestRulesExtractor->extract($route))) {
-                $rules = array_merge($rules, $formRequestRules);
-                $nodesResults[] = $formRequestRulesExtractor->node();
-            }
+            $result = $extractor->handle($routeInfo, $result);
         }
 
-        if (($validateCallExtractor = new ValidateCallExtractor($methodNode))->shouldHandle()) {
-            if ($validateCallRules = $validateCallExtractor->extract()) {
-                $rules = array_merge($rules, $validateCallRules);
-                $nodesResults[] = $validateCallExtractor->node();
-            }
-        }
-
-        return [$rules, array_filter($nodesResults)];
+        return $result;
     }
 }

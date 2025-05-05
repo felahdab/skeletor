@@ -44,6 +44,8 @@ class Averages extends AggregateBase
                 return ExcelError::VALUE();
             }
             if (self::isAcceptedCountable($arg, $k)) {
+                /** @var float|int|numeric-string $arg */
+                /** @var float|int|numeric-string $aMean */
                 $returnValue += abs($arg - $aMean);
                 ++$aCount;
             }
@@ -83,6 +85,7 @@ class Averages extends AggregateBase
                 return ExcelError::VALUE();
             }
             if (self::isAcceptedCountable($arg, $k)) {
+                /** @var float|int|numeric-string $arg */
                 $returnValue += $arg;
                 ++$aCount;
             }
@@ -161,7 +164,7 @@ class Averages extends AggregateBase
             if ($valueCount == floor($valueCount)) {
                 $returnValue = ($aArgs[$valueCount--] + $aArgs[$valueCount]) / 2;
             } else {
-                $valueCount = floor($valueCount);
+                $valueCount = (int) floor($valueCount);
                 $returnValue = $aArgs[$valueCount];
             }
         }

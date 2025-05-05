@@ -26,44 +26,42 @@ abstract class Module
     /**
      * The module name.
      */
-    protected $name;
+    protected string $name;
 
     /**
      * The module path.
-     *
-     * @var string
      */
-    protected $path;
+    protected string $path;
 
     /**
-     * @var array of cached Json objects, keyed by filename
+     * Array of cached Json objects, keyed by filename
      */
-    protected $moduleJson = [];
+    protected array $moduleJson = [];
 
     /**
-     * @var CacheManager
+     * Cache Manager
      */
-    private $cache;
+    private CacheManager $cache;
 
     /**
-     * @var Filesystem
+     * Filesystem
      */
-    private $files;
+    private Filesystem $files;
 
     /**
-     * @var Translator
+     * Translator
      */
-    private $translator;
+    private Translator $translator;
 
     /**
-     * @var ActivatorInterface
+     * ActivatorInterface
      */
-    private $activator;
+    private ActivatorInterface $activator;
 
     /**
      * The constructor.
      */
-    public function __construct(Container $app, string $name, $path)
+    public function __construct(Container $app, string $name, string $path)
     {
         $this->name = $name;
         $this->path = $path;
@@ -126,6 +124,14 @@ abstract class Module
     }
 
     /**
+     * Get name in studly case.
+     */
+    public function getKebabName(): string
+    {
+        return Str::kebab($this->name);
+    }
+
+    /**
      * Get name in snake case.
      */
     public function getSnakeName(): string
@@ -169,11 +175,8 @@ abstract class Module
 
     /**
      * Set path.
-     *
-     * @param  string  $path
-     * @return $this
      */
-    public function setPath($path): Module
+    public function setPath(string $path): self
     {
         $this->path = $path;
 
@@ -212,10 +215,8 @@ abstract class Module
 
     /**
      * Get json contents from the cache, setting as needed.
-     *
-     * @param  string  $file
      */
-    public function json($file = null): Json
+    public function json(?string $file = null): Json
     {
         if ($file === null) {
             $file = 'module.json';
@@ -228,9 +229,6 @@ abstract class Module
 
     /**
      * Get a specific data from json file by given the key.
-     *
-     * @param  null  $default
-     * @return mixed
      */
     public function get(string $key, $default = null)
     {
@@ -239,11 +237,8 @@ abstract class Module
 
     /**
      * Get a specific data from composer.json file by given the key.
-     *
-     * @param  null  $default
-     * @return mixed
      */
-    public function getComposerAttr($key, $default = null)
+    public function getComposerAttr(string $key, $default = null)
     {
         return $this->json('composer.json')->get($key, $default);
     }
@@ -299,10 +294,8 @@ abstract class Module
 
     /**
      * Handle call __toString.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getStudlyName();
     }
@@ -347,7 +340,6 @@ abstract class Module
         $this->fireEvent(ModuleEvent::DISABLING);
 
         $this->activator->disable($this);
-        $this->flushCache();
 
         $this->fireEvent(ModuleEvent::DISABLED);
     }
@@ -360,7 +352,6 @@ abstract class Module
         $this->fireEvent(ModuleEvent::ENABLING);
 
         $this->activator->enable($this);
-        $this->flushCache();
 
         $this->fireEvent(ModuleEvent::ENABLED);
     }
@@ -384,26 +375,19 @@ abstract class Module
     /**
      * Get extra path.
      */
-    public function getExtraPath(string $path): string
+    public function getExtraPath(?string $path): string
     {
-        return $this->getPath().'/'.$path;
+        return $this->getPath().($path ? '/'.$path : '');
     }
 
     /**
-     * Check if can load files of module on boot method.
+     * Check can load files of module on boot method.
      */
     protected function isLoadFilesOnBoot(): bool
     {
         return config('modules.register.files', 'register') === 'boot' &&
             // force register method if option == boot && app is AsgardCms
             ! class_exists('\Modules\Core\Foundation\AsgardCms');
-    }
-
-    private function flushCache(): void
-    {
-        if (config('modules.cache.enabled')) {
-            $this->cache->store(config('modules.cache.driver'))->flush();
-        }
     }
 
     /**

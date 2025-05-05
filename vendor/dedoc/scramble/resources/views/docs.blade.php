@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="color-scheme" content="{{ $config->get('ui.theme', 'light') }}">
     <title>{{ $config->get('ui.title', config('app.name') . ' - API Docs') }}</title>
 
     <script src="https://unpkg.com/@stoplight/elements@8.3.4/web-components.min.js"></script>
@@ -37,7 +38,7 @@
             const csrfToken = getCookieValue(CSRF_TOKEN_COOKIE_KEY);
             if (csrfToken) {
                 const { headers = new Headers() } = options || {};
-                updateFetchHeaders(headers, CSRF_TOKEN_HEADER_KEY, decodeURI(csrfToken));
+                updateFetchHeaders(headers, CSRF_TOKEN_HEADER_KEY, decodeURIComponent(csrfToken));
                 return originalFetch(url, {
                     ...options,
                     headers,
@@ -54,7 +55,9 @@
     tryItCredentialsPolicy="{{ $config->get('ui.try_it_credentials_policy', 'include') }}"
     router="hash"
     @if($config->get('ui.hide_try_it')) hideTryIt="true" @endif
+    @if($config->get('ui.hide_schemas')) hideSchemas="true" @endif
     logo="{{ $config->get('ui.logo') }}"
+    @if($config->get('ui.layout')) layout="{{ $config->get('ui.layout') }}" @endif
 />
 <script>
     (async () => {

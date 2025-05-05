@@ -31,7 +31,7 @@ class VendorPublishCommand extends Command
     /**
      * The provider to publish.
      *
-     * @var string
+     * @var string|null
      */
     protected $provider = null;
 
@@ -79,7 +79,6 @@ class VendorPublishCommand extends Command
      * Create a new command instance.
      *
      * @param  \Illuminate\Filesystem\Filesystem  $files
-     * @return void
      */
     public function __construct(Filesystem $files)
     {

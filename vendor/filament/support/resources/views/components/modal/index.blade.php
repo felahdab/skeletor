@@ -35,8 +35,10 @@
 
 @php
     $hasDescription = filled($description);
+    $hasFooter = (! \Filament\Support\is_slot_empty($footer)) || (is_array($footerActions) && count($footerActions)) || (! is_array($footerActions) && (! \Filament\Support\is_slot_empty($footerActions)));
     $hasHeading = filled($heading);
     $hasIcon = filled($icon);
+    $hasSlot = ! \Filament\Support\is_slot_empty($slot);
 
     if (! $alignment instanceof Alignment) {
         $alignment = filled($alignment) ? (Alignment::tryFrom($alignment) ?? $alignment) : null;
@@ -91,6 +93,7 @@
     @if ($id)
         x-on:{{ $closeEventName }}.window="if ($event.detail.id === '{{ $id }}') close()"
         x-on:{{ $openEventName }}.window="if ($event.detail.id === '{{ $id }}') open()"
+        data-fi-modal-id="{{ $id }}"
     @endif
     x-trap.noscroll{{ $autofocus ? '' : '.noautofocus' }}="isOpen"
     x-bind:class="{
@@ -104,7 +107,9 @@
 >
     @if ($trigger)
         <div
-            x-on:click="open"
+            @if (! $trigger->attributes->get('disabled'))
+                x-on:click="open"
+            @endif
             {{ $trigger->attributes->class(['fi-modal-trigger flex cursor-pointer']) }}
         >
             {{ $trigger }}
@@ -212,6 +217,7 @@
                         <div
                             @class([
                                 'fi-modal-header flex px-6 pt-6',
+                                'pb-6' => (! $hasSlot) && (! $hasFooter),
                                 'fi-sticky sticky top-0 z-10 border-b border-gray-200 bg-white pb-6 dark:border-white/10 dark:bg-gray-900' => $stickyHeader,
                                 'rounded-t-xl' => $stickyHeader && ! ($slideOver || ($width === MaxWidth::Screen)),
                                 match ($alignment) {
@@ -294,7 +300,12 @@
                                         'text-center' => $alignment === Alignment::Center,
                                     ])
                                 >
-                                    <x-filament::modal.heading>
+                                    <x-filament::modal.heading
+                                        @class([
+                                            'me-6' => $closeButton && ((! $hasIcon) || in_array($alignment, [Alignment::Start, Alignment::Left])),
+                                            'ms-6' => $closeButton && (! $hasIcon) && ($alignment === Alignment::Center),
+                                        ])
+                                    >
                                         {{ $heading }}
                                     </x-filament::modal.heading>
 
@@ -310,7 +321,7 @@
                         </div>
                     @endif
 
-                    @if (! \Filament\Support\is_slot_empty($slot))
+                    @if ($hasSlot)
                         <div
                             @class([
                                 'fi-modal-content flex flex-col gap-y-4 py-6',
@@ -323,7 +334,7 @@
                         </div>
                     @endif
 
-                    @if ((! \Filament\Support\is_slot_empty($footer)) || (is_array($footerActions) && count($footerActions)) || (! is_array($footerActions) && (! \Filament\Support\is_slot_empty($footerActions))))
+                    @if ($hasFooter)
                         <div
                             @class([
                                 'fi-modal-footer w-full',
@@ -332,7 +343,7 @@
                                 'fi-sticky sticky bottom-0 border-t border-gray-200 bg-white py-5 dark:border-white/10 dark:bg-gray-900' => $stickyFooter,
                                 'rounded-b-xl' => $stickyFooter && ! ($slideOver || ($width === MaxWidth::Screen)),
                                 'pb-6' => ! $stickyFooter,
-                                'mt-6' => (! $stickyFooter) && \Filament\Support\is_slot_empty($slot),
+                                'mt-6' => (! $stickyFooter) && (! $hasSlot),
                                 'mt-auto' => $slideOver,
                             ])
                         >

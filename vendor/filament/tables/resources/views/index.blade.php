@@ -10,6 +10,7 @@
     use Illuminate\Support\Str;
 
     $actions = $getActions();
+    $flatActionsCount = count($getFlatActions());
     $actionsAlignment = $getActionsAlignment();
     $actionsPosition = $getActionsPosition();
     $actionsColumnLabel = $getActionsColumnLabel();
@@ -112,13 +113,12 @@
     @if (! $isLoaded)
         wire:init="loadTable"
     @endif
-    x-ignore
     @if (FilamentView::hasSpaMode())
-        ax-load="visible"
+        x-load="visible"
     @else
-        ax-load
+        x-load
     @endif
-    ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('table', 'filament/tables') }}"
+    x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('table', 'filament/tables') }}"
     x-data="table"
     @class([
         'fi-ta',
@@ -793,7 +793,10 @@
                                         {{ $actionsColumnLabel }}
                                     </x-filament-tables::header-cell>
                                 @else
-                                    <th class="w-1"></th>
+                                    <th
+                                        aria-label="{{ trans_choice('filament-tables::table.columns.actions.label', $flatActionsCount) }}"
+                                        class="fi-ta-actions-header-cell w-1"
+                                    ></th>
                                 @endif
                             @endif
 
@@ -828,7 +831,10 @@
                                         {{ $actionsColumnLabel }}
                                     </x-filament-tables::header-cell>
                                 @else
-                                    <th class="w-1"></th>
+                                    <th
+                                        aria-label="{{ trans_choice('filament-tables::table.columns.actions.label', $flatActionsCount) }}"
+                                        class="fi-ta-actions-header-cell w-1"
+                                    ></th>
                                 @endif
                             @endif
                         @endif
@@ -850,7 +856,6 @@
                                         ->class([
                                             'fi-table-header-cell-' . str($column->getName())->camel()->kebab(),
                                             'w-full' => blank($columnWidth) && $column->canGrow(default: false),
-                                            '[&:not(:first-of-type)]:border-s [&:not(:last-of-type)]:border-e border-gray-200 dark:border-white/5' => $column->getGroup(),
                                             $getHiddenClasses($column),
                                         ])
                                         ->style([
@@ -871,7 +876,10 @@
                                         {{ $actionsColumnLabel }}
                                     </x-filament-tables::header-cell>
                                 @else
-                                    <th class="w-1"></th>
+                                    <th
+                                        aria-label="{{ trans_choice('filament-tables::table.columns.actions.label', $flatActionsCount) }}"
+                                        class="fi-ta-actions-header-cell w-1"
+                                    ></th>
                                 @endif
                             @endif
 
@@ -908,7 +916,10 @@
                                         {{ $actionsColumnLabel }}
                                     </x-filament-tables::header-cell>
                                 @else
-                                    <th class="w-1"></th>
+                                    <th
+                                        aria-label="{{ trans_choice('filament-tables::table.columns.actions.label', $flatActionsCount) }}"
+                                        class="fi-ta-actions-header-cell w-1"
+                                    ></th>
                                 @endif
                             @endif
                         @endif
@@ -932,10 +943,10 @@
                                 <x-filament-tables::cell
                                     @class([
                                         'fi-table-individual-search-cell-' . str($column->getName())->camel()->kebab(),
-                                        'px-3 py-2',
+                                        'min-w-48 px-3 py-2' => $isIndividuallySearchable = $column->isIndividuallySearchable(),
                                     ])
                                 >
-                                    @if ($column->isIndividuallySearchable())
+                                    @if ($isIndividuallySearchable)
                                         <x-filament-tables::search-field
                                             :debounce="$searchDebounce"
                                             :on-blur="$isSearchOnBlur"

@@ -2,71 +2,57 @@
 
 namespace Clickbar\Magellan\Database\MagellanExpressions;
 
-use Clickbar\Magellan\Database\Builder\BindingExpression;
-use Clickbar\Magellan\Database\Builder\BuilderUtils;
-use Clickbar\Magellan\Enums\GeometryType;
-use Illuminate\Database\Query\Expression;
-use Illuminate\Support\Str;
+use Clickbar\Magellan\Database\Builder\StringifiesQueryParameters;
+use Clickbar\Magellan\Database\Builder\ValueParameter;
+use Clickbar\Magellan\Database\Expressions\Aliased;
+use Clickbar\Magellan\IO\Generator\BaseGenerator;
+use Clickbar\Magellan\IO\Generator\WKT\WKTGenerator;
+use Illuminate\Contracts\Database\Query\Expression;
+use Illuminate\Database\Grammar;
+use Illuminate\Support\Facades\Config;
 
-abstract class MagellanBaseExpression
+abstract class MagellanBaseExpression implements Expression
 {
+    use StringifiesQueryParameters;
+
     public function __construct(
-        protected readonly string $postgisFunction,
-        protected readonly array $params,
-        protected readonly ?GeometryType $geometryType = GeometryType::Geometry,
-    ) {
+        public readonly string $postgisFunction,
+        public readonly array $params,
+    ) {}
+
+    public static function numeric(string $postgisFunction, array $params): MagellanNumericExpression
+    {
+        return new MagellanNumericExpression($postgisFunction, $params);
     }
 
-    public static function numeric(string $postgisFunction, array $params, ?GeometryType $geometryType = GeometryType::Geometry): MagellanNumericExpression
+    public static function boolean(string $postgisFunction, array $params): MagellanBooleanExpression
     {
-        return new MagellanNumericExpression($postgisFunction, $params, $geometryType);
+        return new MagellanBooleanExpression($postgisFunction, $params);
     }
 
-    public static function boolean(string $postgisFunction, array $params, ?GeometryType $geometryType = GeometryType::Geometry): MagellanBooleanExpression
+    public static function set(string $postgisFunction, array $params): MagellanSetExpression
     {
-        return new MagellanBooleanExpression($postgisFunction, $params, $geometryType);
+        return new MagellanSetExpression($postgisFunction, $params);
     }
 
-    public static function set(string $postgisFunction, array $params, ?GeometryType $geometryType = GeometryType::Geometry): MagellanSetExpression
+    public static function geometry(string $postgisFunction, array $params): MagellanGeometryExpression
     {
-        return new MagellanSetExpression($postgisFunction, $params, $geometryType);
+        return new MagellanGeometryExpression($postgisFunction, $params);
     }
 
-    public static function geometry(string $postgisFunction, array $params, ?GeometryType $geometryType = GeometryType::Geometry): MagellanGeometryExpression
+    public static function geometryOrBox(string $postgisFunction, array $params): MagellanGeometryOrBboxExpression
     {
-        return new MagellanGeometryExpression($postgisFunction, $params, $geometryType);
+        return new MagellanGeometryOrBboxExpression($postgisFunction, $params);
     }
 
-    public static function geometryOrBox(string $postgisFunction, array $params, ?GeometryType $geometryType = GeometryType::Geometry): MagellanGeometryOrBboxExpression
+    public static function string(string $postgisFunction, array $params): MagellanStringExpression
     {
-        return new MagellanGeometryOrBboxExpression($postgisFunction, $params, $geometryType);
+        return new MagellanStringExpression($postgisFunction, $params);
     }
 
-    public static function string(string $postgisFunction, array $params, ?GeometryType $geometryType = GeometryType::Geometry): MagellanStringExpression
+    public static function bbox(string $postgisFunction, array $params): MagellanBBoxExpression
     {
-        return new MagellanStringExpression($postgisFunction, $params, $geometryType);
-    }
-
-    public static function bbox(string $postgisFunction, array $params, ?GeometryType $geometryType = GeometryType::Geometry): MagellanBBoxExpression
-    {
-        return new MagellanBBoxExpression($postgisFunction, $params, $geometryType);
-    }
-
-    public function invoke($builder, string $bindingType, ?string $as = null): Expression
-    {
-        // Remove null values from params and map to the BindingValue if it is no GeoParam or Expression
-        $params = collect($this->params)
-            ->filter(function ($param) {
-                return ! ($param === null || ($param instanceof GeoParam && $param->getValue() === null));
-            })->map(function ($param) {
-                if ($param instanceof GeoParam || $param instanceof Expression || $param instanceof \Closure) {
-                    return $param;
-                }
-
-                return new BindingExpression($param);
-            });
-
-        return BuilderUtils::buildPostgisFunction($builder, $bindingType, $this->geometryType?->value, $this->postgisFunction, $as, ...$params);
+        return new MagellanBBoxExpression($postgisFunction, $params);
     }
 
     public function returnsGeometry(): bool
@@ -79,28 +65,47 @@ abstract class MagellanBaseExpression
         return $this instanceof MagellanBBoxExpression;
     }
 
-    public function returnsSet(): bool
+    public function as(string $name): Expression
     {
-        return $this instanceof MagellanSetExpression;
+        return new Aliased($this, $name);
     }
 
-    public function canBeOrdered(): bool
+    // ######################## Database Expression Building ########################
+
+    public function getValue(Grammar $grammar): float|int|string
     {
-        return $this instanceof MagellanNumericExpression;
+        $params = collect($this->params)
+            ->filter(fn ($param) => $param !== null)
+            ->map(function ($param) {
+
+                if ($param instanceof Expression || $param instanceof \Closure || $param instanceof ColumnParameter || is_array($param)) {
+                    return $param;
+                }
+
+                return new ValueParameter($param);
+            })->toArray();
+
+        $generatorClass = config('magellan.sql_generator', WKTGenerator::class);
+        $generator = new $generatorClass;
+
+        $preparedParameters = self::prepareParams($grammar, $generator, $params);
+        $paramString = implode(', ', $preparedParameters);
+
+        return Config::get('magellan.schema').'.'."$this->postgisFunction($paramString)";
     }
 
-    public function canBeGrouped(): bool
+    private function prepareParams(Grammar $grammar, BaseGenerator $generator, array $params): array
     {
-        return ! $this instanceof MagellanGeometryExpression;
-    }
+        return collect($params)->map(function ($param) use ($generator, $grammar) {
 
-    public function getDefaultAs(): string
-    {
-        return Str::of($this->postgisFunction)->remove('ST_')->camel();
-    }
+            if (is_array($param)) {
+                $prepared = $this->prepareParams($grammar, $generator, $param);
+                $imploded = implode(', ', $prepared);
 
-    public function getPostgisFunction(): string
-    {
-        return $this->postgisFunction;
+                return "ARRAY[$imploded]";
+            }
+
+            return $this->stringifyQueryParameter($grammar, $param);
+        })->toArray();
     }
 }

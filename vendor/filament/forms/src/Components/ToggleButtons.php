@@ -14,6 +14,7 @@ class ToggleButtons extends Field implements Contracts\CanDisableOptions
     use Concerns\HasExtraInputAttributes;
     use Concerns\HasGridDirection;
     use Concerns\HasIcons;
+    use Concerns\HasNestedRecursiveValidationRules;
     use Concerns\HasOptions;
 
     public const GROUPED_VIEW = 'filament-forms::components.toggle-buttons.grouped';
@@ -26,6 +27,8 @@ class ToggleButtons extends Field implements Contracts\CanDisableOptions
     protected string $view = 'filament-forms::components.toggle-buttons.index';
 
     protected bool | Closure $isInline = false;
+
+    protected bool | Closure $areButtonLabelsHidden = false;
 
     protected function setUp(): void
     {
@@ -81,6 +84,18 @@ class ToggleButtons extends Field implements Contracts\CanDisableOptions
     public function isInline(): bool
     {
         return (bool) $this->evaluate($this->isInline);
+    }
+
+    public function hiddenButtonLabels(bool | Closure $condition = true): static
+    {
+        $this->areButtonLabelsHidden = $condition;
+
+        return $this;
+    }
+
+    public function areButtonLabelsHidden(): bool
+    {
+        return (bool) $this->evaluate($this->areButtonLabelsHidden);
     }
 
     public function multiple(bool | Closure $condition = true): static

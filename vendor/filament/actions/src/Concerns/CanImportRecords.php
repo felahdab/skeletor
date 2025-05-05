@@ -32,7 +32,7 @@ use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\ValidationException;
-use League\Csv\ByteSequence;
+use League\Csv\Bom;
 use League\Csv\CharsetConverter;
 use League\Csv\Info;
 use League\Csv\Reader as CsvReader;
@@ -195,7 +195,7 @@ trait CanImportRecords
             }
 
             $csvReader->setHeaderOffset($action->getHeaderOffset() ?? 0);
-            $csvResults = Statement::create()->process($csvReader);
+            $csvResults = (new Statement)->process($csvReader);
 
             $totalRows = $csvResults->count();
             $maxRows = $action->getMaxRows() ?? $totalRows;
@@ -269,7 +269,7 @@ trait CanImportRecords
                     filled($jobBatchName = $importer->getJobBatchName()),
                     fn (PendingBatch $batch) => $batch->name($jobBatchName),
                 )
-                ->finally(function () use ($import, $columnMap, $options) {
+                ->finally(function () use ($columnMap, $import, $jobConnection, $options) {
                     $import->touch('completed_at');
 
                     event(new ImportCompleted($import, $columnMap, $options));
@@ -307,17 +307,29 @@ trait CanImportRecords
                                     ->markAsRead(),
                             ]),
                         )
-                        ->sendToDatabase($import->user, isEventDispatched: true);
+                        ->when(
+                            ($jobConnection === 'sync') ||
+                                (blank($jobConnection) && (config('queue.default') === 'sync')),
+                            fn (Notification $notification) => $notification
+                                ->persistent()
+                                ->send(),
+                            fn (Notification $notification) => $notification->sendToDatabase($import->user, isEventDispatched: true),
+                        );
                 })
                 ->dispatch();
 
-            Notification::make()
-                ->title($action->getSuccessNotificationTitle())
-                ->body(trans_choice('filament-actions::import.notifications.started.body', $import->total_rows, [
-                    'count' => Number::format($import->total_rows),
-                ]))
-                ->success()
-                ->send();
+            if (
+                (filled($jobConnection) && ($jobConnection !== 'sync')) ||
+                (blank($jobConnection) && (config('queue.default') !== 'sync'))
+            ) {
+                Notification::make()
+                    ->title($action->getSuccessNotificationTitle())
+                    ->body(trans_choice('filament-actions::import.notifications.started.body', $import->total_rows, [
+                        'count' => Number::format($import->total_rows),
+                    ]))
+                    ->success()
+                    ->send();
+            }
         });
 
         $this->registerModalActions([
@@ -331,7 +343,7 @@ trait CanImportRecords
                     $columns = $this->getImporter()::getColumns();
 
                     $csv = Writer::createFromFileObject(new SplTempFileObject);
-                    $csv->setOutputBOM(ByteSequence::BOM_UTF8);
+                    $csv->setOutputBOM(Bom::Utf8);
 
                     if (filled($csvDelimiter = $this->getCsvDelimiter())) {
                         $csv->setDelimiter($csvDelimiter);
@@ -371,7 +383,7 @@ trait CanImportRecords
                 }),
         ]);
 
-        $this->color('gray');
+        $this->defaultColor('gray');
 
         $this->modalWidth('xl');
 
@@ -391,13 +403,13 @@ trait CanImportRecords
         $filePath = $file->getRealPath();
 
         if (config("filesystems.disks.{$fileDisk}.driver") !== 's3') {
-            $resource = fopen($filePath, mode: 'r');
+            $resource = $file->readStream();
         } else {
             /** @var AwsS3V3Adapter $s3Adapter */
             $s3Adapter = Storage::disk($fileDisk)->getAdapter();
 
             invade($s3Adapter)->client->registerStreamWrapper(); /** @phpstan-ignore-line */
-            $fileS3Path = 's3://' . config("filesystems.disks.{$fileDisk}.bucket") . '/' . $filePath;
+            $fileS3Path = (string) str('s3://' . config("filesystems.disks.{$fileDisk}.bucket") . '/' . $filePath)->replace('\\', '/');
 
             $resource = fopen($fileS3Path, mode: 'r', context: stream_context_create([
                 's3' => [
@@ -427,7 +439,21 @@ trait CanImportRecords
 
     protected function detectCsvEncoding(mixed $resource): ?string
     {
-        $fileHeader = fgets($resource);
+        rewind($resource);
+
+        $lineCount = 0;
+        $contentSample = '';
+
+        while ((! feof($resource)) && ($lineCount < 20)) {
+            $line = fgets($resource);
+
+            if ($line === false) {
+                break;
+            }
+
+            $contentSample .= $line;
+            $lineCount++;
+        }
 
         // The encoding of a subset should be declared before the encoding of its superset.
         $encodings = [
@@ -442,7 +468,7 @@ trait CanImportRecords
         ];
 
         foreach ($encodings as $encoding) {
-            if (! mb_check_encoding($fileHeader, $encoding)) {
+            if (! mb_check_encoding($contentSample, $encoding)) {
                 continue;
             }
 

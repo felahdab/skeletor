@@ -11,7 +11,7 @@ class SqlServerGrammar extends Base implements JsonGrammar
     /**
      * Compile a "JSON array" statement into SQL.
      *
-     * @param string|\Illuminate\Database\Query\Expression $column
+     * @param string|\Illuminate\Database\Query\Expression<*> $column
      * @return string
      */
     public function compileJsonArray($column)
@@ -39,6 +39,8 @@ class SqlServerGrammar extends Base implements JsonGrammar
      */
     public function compileJsonValueSelect(string $column): string
     {
+        /** @var string $field */
+        /** @var string $path */
         [$field, $path] = $this->wrapJsonFieldAndPath($column);
 
         return "json_query($field$path)";

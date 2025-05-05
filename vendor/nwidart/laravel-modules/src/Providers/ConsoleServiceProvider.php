@@ -85,7 +85,7 @@ class ConsoleServiceProvider extends ServiceProvider
             Commands\Make\TestMakeCommand::class,
             Commands\Make\ViewMakeCommand::class,
 
-            //Publish Commands
+            // Publish Commands
             Commands\Publish\PublishCommand::class,
             Commands\Publish\PublishConfigurationCommand::class,
             Commands\Publish\PublishMigrationCommand::class,
@@ -94,9 +94,8 @@ class ConsoleServiceProvider extends ServiceProvider
             // Other Commands
             Commands\ComposerUpdateCommand::class,
             Commands\LaravelModulesV6Migrator::class,
-            Commands\ModuleDiscoverCommand::class,
-            Commands\ModuleClearCompiledCommand::class,
             Commands\SetupCommand::class,
+            Commands\UpdatePhpunitCoverage::class,
 
             Commands\Database\MigrateFreshCommand::class,
         ]);

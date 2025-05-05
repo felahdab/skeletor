@@ -40,6 +40,16 @@ export default function chart({ cachedData, options, type }) {
         },
 
         initChart: function (data = null) {
+            if (
+                !this.$refs.canvas ||
+                !this.$refs.backgroundColorElement ||
+                !this.$refs.borderColorElement ||
+                !this.$refs.textColorElement ||
+                !this.$refs.gridColorElement
+            ) {
+                return
+            }
+
             Chart.defaults.animation.duration = 0
 
             Chart.defaults.backgroundColor = getComputedStyle(
@@ -73,12 +83,12 @@ export default function chart({ cachedData, options, type }) {
             options.scales ??= {}
             options.scales.x ??= {}
             options.scales.x.grid ??= {}
-            options.scales.x.grid.color = gridColor
+            options.scales.x.grid.color ??= gridColor
             options.scales.x.grid.display ??= false
             options.scales.x.grid.drawBorder ??= false
             options.scales.y ??= {}
             options.scales.y.grid ??= {}
-            options.scales.y.grid.color = gridColor
+            options.scales.y.grid.color ??= gridColor
             options.scales.y.grid.drawBorder ??= false
 
             return new Chart(this.$refs.canvas, {
@@ -90,6 +100,10 @@ export default function chart({ cachedData, options, type }) {
         },
 
         getChart: function () {
+            if (!this.$refs.canvas) {
+                return null
+            }
+
             return Chart.getChart(this.$refs.canvas)
         },
     }

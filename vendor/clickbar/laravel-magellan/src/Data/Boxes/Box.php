@@ -2,11 +2,28 @@
 
 namespace Clickbar\Magellan\Data\Boxes;
 
-use Illuminate\Database\Query\Expression;
+use Clickbar\Magellan\Cast\BBoxCast;
+use Illuminate\Contracts\Database\Eloquent\Castable;
+use Illuminate\Contracts\Database\Query\Expression as ExpressionContract;
+use JsonSerializable;
+use Stringable;
 
-abstract class Box
+abstract class Box implements Castable, ExpressionContract, JsonSerializable, Stringable
 {
-    abstract public function toString(): string;
+    abstract public static function fromString(string $box): self;
 
-    abstract public function toExpression(): Expression;
+    /**
+     * @return BBoxCast<Box>
+     */
+    public static function castUsing(array $arguments): BBoxCast
+    {
+        return new BBoxCast(static::class);
+    }
+
+    abstract public function toRawSql(): string;
+
+    public function __toString(): string
+    {
+        return $this->toRawSql();
+    }
 }

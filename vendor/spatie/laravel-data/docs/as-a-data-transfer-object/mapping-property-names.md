@@ -1,6 +1,6 @@
 ---
 title: Mapping property names
-weight: 6
+weight: 7
 ---
 
 Sometimes the property names in the array from which you're creating a data object might be different. You can define another name for a property when it is created from an array using attributes:
@@ -51,6 +51,15 @@ class ContractData extends Data
 }
 ```
 
+It is possible to set a default name mapping strategy for all data objects in the `data.php` config file:
+
+```php
+'name_mapping_strategy' => [
+    'input' => SnakeCaseMapper::class,
+    'output' => null,
+],
+```
+
 
 ## Mapping Nested Properties
 
@@ -82,3 +91,4 @@ SongData::from([
 ]);
 ```
 
+The package has a set of default mappers available, you can find them [here](/docs/laravel-data/v4/advanced-usage/available-property-mappers).

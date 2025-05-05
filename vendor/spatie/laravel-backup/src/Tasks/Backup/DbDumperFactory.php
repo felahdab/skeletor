@@ -7,6 +7,7 @@ use Illuminate\Database\ConfigurationUrlParser;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Spatie\Backup\Exceptions\CannotCreateDbDumper;
+use Spatie\DbDumper\Databases\MariaDb;
 use Spatie\DbDumper\Databases\MongoDb;
 use Spatie\DbDumper\Databases\MySql;
 use Spatie\DbDumper\Databases\PostgreSql;
@@ -20,7 +21,7 @@ class DbDumperFactory
 
     public static function createFromConnection(string $dbConnectionName): DbDumper
     {
-        $parser = new ConfigurationUrlParser();
+        $parser = new ConfigurationUrlParser;
 
         if (config("database.connections.{$dbConnectionName}") === null) {
             throw CannotCreateDbDumper::unsupportedDriver($dbConnectionName);
@@ -47,6 +48,7 @@ class DbDumperFactory
 
         if ($dbDumper instanceof MySql) {
             $dbDumper
+                ->setSkipSsl($dbConfig['dump']['skip_ssl'] ?? false)
                 ->setDefaultCharacterSet($dbConfig['charset'] ?? '')
                 ->setGtidPurged($dbConfig['dump']['mysql_gtid_purged'] ?? 'AUTO');
         }
@@ -56,7 +58,14 @@ class DbDumperFactory
         }
 
         if (isset($dbConfig['port'])) {
-            $dbDumper = $dbDumper->setPort($dbConfig['port']);
+            if (filter_var($dbConfig['port'], FILTER_VALIDATE_INT, [
+                'options' => [
+                    'min_range' => 1,
+                    'max_range' => 65535,
+                ],
+            ]) !== false) {
+                $dbDumper = $dbDumper->setPort((int) $dbConfig['port']);
+            }
         }
 
         if (isset($dbConfig['dump'])) {
@@ -84,10 +93,11 @@ class DbDumperFactory
         }
 
         return match ($driver) {
-            'mysql', 'mariadb' => new MySql(),
-            'pgsql' => new PostgreSql(),
-            'sqlite' => new Sqlite(),
-            'mongodb' => new MongoDb(),
+            'mysql' => new MySql,
+            'mariadb' => new MariaDb,
+            'pgsql' => new PostgreSql,
+            'sqlite' => new Sqlite,
+            'mongodb' => new MongoDb,
             default => throw CannotCreateDbDumper::unsupportedDriver($driver),
         };
     }

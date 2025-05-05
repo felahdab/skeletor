@@ -3,7 +3,6 @@
 namespace Illuminate\Database\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Database\Connection;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Arr;
 
@@ -47,21 +46,5 @@ abstract class DatabaseInspectionCommand extends Command
         $database ??= config('database.default');
 
         return Arr::except(config('database.connections.'.$database), ['password']);
-    }
-
-    /**
-     * Remove the table prefix from a table name, if it exists.
-     *
-     * @param  \Illuminate\Database\ConnectionInterface  $connection
-     * @param  string  $table
-     * @return string
-     */
-    protected function withoutTablePrefix(ConnectionInterface $connection, string $table)
-    {
-        $prefix = $connection->getTablePrefix();
-
-        return str_starts_with($table, $prefix)
-            ? substr($table, strlen($prefix))
-            : $table;
     }
 }

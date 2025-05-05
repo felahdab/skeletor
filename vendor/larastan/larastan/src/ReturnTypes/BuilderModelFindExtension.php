@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Str;
-use Larastan\Larastan\Methods\ModelTypeHelper;
 use Larastan\Larastan\Support\CollectionHelper;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
@@ -82,8 +81,6 @@ final class BuilderModelFindExtension implements DynamicMethodReturnTypeExtensio
 
         foreach ($modelClassType->getObjectClassReflections() as $objectClassReflection) {
             $modelName = $objectClassReflection->getName();
-
-            $returnType = ModelTypeHelper::replaceStaticTypeWithModel($returnType, $modelName);
 
             if ($argType->isIterable()->yes()) {
                 if (in_array(Collection::class, $returnType->getReferencedClasses(), true)) {

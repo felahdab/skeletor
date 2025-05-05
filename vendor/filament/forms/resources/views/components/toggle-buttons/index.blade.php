@@ -6,6 +6,7 @@
     $isInline = $isInline();
     $isMultiple = $isMultiple();
     $statePath = $getStatePath();
+    $areButtonLabelsHidden = $areButtonLabelsHidden();
 @endphp
 
 <x-dynamic-component
@@ -35,7 +36,7 @@
             \Filament\Support\prepare_inherited_attributes($attributes)
                 ->merge($getExtraAttributes(), escape: false)
                 ->class([
-                    'fi-fo-radio gap-3',
+                    'fi-fo-toggle-buttons gap-3',
                     '-mt-3' => (! $isInline) && ($gridDirection === 'column'),
                     'flex flex-wrap' => $isInline,
                 ])
@@ -70,6 +71,7 @@
                     :disabled="$shouldOptionBeDisabled"
                     :for="$inputId"
                     :icon="$getIcon($value)"
+                    :label-sr-only="$areButtonLabelsHidden"
                     tag="label"
                 >
                     {{ $label }}

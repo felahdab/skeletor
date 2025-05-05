@@ -10,30 +10,29 @@ use OpenApi\Analysis;
 use OpenApi\Annotations as OA;
 use OpenApi\Context;
 use OpenApi\Generator;
+use OpenApi\GeneratorAwareTrait;
 use OpenApi\OpenApiException;
 
 /**
  * OpenApi analyser using reflection.
  *
- * Can read either PHP `DocBlock`s or `Attribute`s.
+ * Can read either PHP <code>DocBlock</code>s or <code>Attribute</code>s.
  *
  * Due to the nature of reflection this requires all related classes
  * to be auto-loadable.
  */
 class ReflectionAnalyser implements AnalyserInterface
 {
-    /** @var AnnotationFactoryInterface[] */
-    protected $annotationFactories;
+    use GeneratorAwareTrait;
 
-    /** @var Generator|null */
-    protected $generator;
+    /** @var AnnotationFactoryInterface[] */
+    protected array $annotationFactories = [];
 
     /**
      * @param array<AnnotationFactoryInterface> $annotationFactories
      */
     public function __construct(array $annotationFactories = [])
     {
-        $this->annotationFactories = [];
         foreach ($annotationFactories as $annotationFactory) {
             if ($annotationFactory->isSupported()) {
                 $this->annotationFactories[] = $annotationFactory;
@@ -113,13 +112,11 @@ class ReflectionAnalyser implements AnalyserInterface
             'methods' => [],
             'context' => $context,
         ];
-        $normaliseClass = function (string $name): string {
-            return '\\' . ltrim($name, '\\');
-        };
+        $normaliseClass = fn (string $name): string => '\\' . ltrim($name, '\\');
         if ($parentClass = $rc->getParentClass()) {
             $definition['extends'] = $normaliseClass($parentClass->getName());
         }
-        $definition[$contextType == 'class' ? 'implements' : 'extends'] = array_map($normaliseClass, $details['interfaces']);
+        $definition[$contextType === 'class' ? 'implements' : 'extends'] = array_map($normaliseClass, $details['interfaces']);
         $definition['traits'] = array_map($normaliseClass, $details['traits']);
 
         foreach ($this->annotationFactories as $annotationFactory) {
@@ -151,7 +148,7 @@ class ReflectionAnalyser implements AnalyserInterface
                 if ($property->isStatic()) {
                     $ctx->static = true;
                 }
-                if (\PHP_VERSION_ID >= 70400 && ($type = $property->getType())) {
+                if ($type = $property->getType()) {
                     $ctx->nullable = $type->allowsNull();
                     if ($type instanceof \ReflectionNamedType) {
                         $ctx->type = $type->getName();

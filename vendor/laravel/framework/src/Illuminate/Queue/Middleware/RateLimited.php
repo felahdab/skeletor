@@ -5,7 +5,9 @@ namespace Illuminate\Queue\Middleware;
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Cache\RateLimiting\Unlimited;
 use Illuminate\Container\Container;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+
+use function Illuminate\Support\enum_value;
 
 class RateLimited
 {
@@ -33,14 +35,13 @@ class RateLimited
     /**
      * Create a new middleware instance.
      *
-     * @param  string  $limiterName
-     * @return void
+     * @param  \BackedEnum|\UnitEnum|string  $limiterName
      */
     public function __construct($limiterName)
     {
         $this->limiter = Container::getInstance()->make(RateLimiter::class);
 
-        $this->limiterName = $limiterName;
+        $this->limiterName = (string) enum_value($limiterName);
     }
 
     /**
@@ -65,7 +66,7 @@ class RateLimited
         return $this->handleJob(
             $job,
             $next,
-            collect(Arr::wrap($limiterResponse))->map(function ($limit) {
+            Collection::wrap($limiterResponse)->map(function ($limit) {
                 return (object) [
                     'key' => md5($this->limiterName.$limit->key),
                     'maxAttempts' => $limit->maxAttempts,
@@ -88,8 +89,8 @@ class RateLimited
         foreach ($limits as $limit) {
             if ($this->limiter->tooManyAttempts($limit->key, $limit->maxAttempts)) {
                 return $this->shouldRelease
-                        ? $job->release($this->getTimeUntilNextRetry($limit->key))
-                        : false;
+                    ? $job->release($this->getTimeUntilNextRetry($limit->key))
+                    : false;
             }
 
             $this->limiter->hit($limit->key, $limit->decaySeconds);

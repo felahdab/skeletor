@@ -11,6 +11,7 @@ use Pest\Support\Str;
 use PHPUnit\Event\Code\Test;
 use PHPUnit\Event\Code\TestMethod;
 use PHPUnit\Event\Code\Throwable;
+use PHPUnit\Event\Test\AfterLastTestMethodErrored;
 use PHPUnit\Event\Test\BeforeFirstTestMethodErrored;
 use PHPUnit\Event\Test\ConsideredRisky;
 use PHPUnit\Event\Test\Errored;
@@ -254,8 +255,9 @@ final readonly class Converter
         $numberOfNotPassedTests = count(
             array_unique(
                 array_map(
-                    function (BeforeFirstTestMethodErrored|Errored|Failed|Skipped|ConsideredRisky|MarkedIncomplete $event): string {
-                        if ($event instanceof BeforeFirstTestMethodErrored) {
+                    function (AfterLastTestMethodErrored|BeforeFirstTestMethodErrored|Errored|Failed|Skipped|ConsideredRisky|MarkedIncomplete $event): string {
+                        if ($event instanceof BeforeFirstTestMethodErrored
+                            || $event instanceof AfterLastTestMethodErrored) {
                             return $event->testClassName();
                         }
 

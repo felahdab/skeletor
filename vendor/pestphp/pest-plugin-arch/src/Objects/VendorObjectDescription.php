@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Pest\Arch\Objects;
 
 use Error;
+use PHPUnit\Architecture\Asserts\Dependencies\Elements\ObjectUses;
 use PHPUnit\Architecture\Elements\ObjectDescription;
 
 /**
  * @internal
  */
-final class VendorObjectDescription extends ObjectDescription // @phpstan-ignore-line
+final class VendorObjectDescription extends ObjectDescription
 {
     /**
      * {@inheritDoc}
      */
-    public static function make(string $path): ?self // @phpstan-ignore-line
+    public static function make(string $path): ?self
     {
         $object = new self;
 
@@ -30,6 +31,7 @@ final class VendorObjectDescription extends ObjectDescription // @phpstan-ignore
         }
 
         $object->name = $vendorObject->name;
+        $object->uses = new ObjectUses([]);
 
         return $object;
     }

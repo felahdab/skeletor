@@ -15,10 +15,10 @@ use Dedoc\Scramble\Support\Type\Literal\LiteralBooleanType;
 use Dedoc\Scramble\Support\Type\Literal\LiteralFloatType;
 use Dedoc\Scramble\Support\Type\Literal\LiteralIntegerType;
 use Dedoc\Scramble\Support\Type\Literal\LiteralStringType;
-use Dedoc\Scramble\Support\Type\MixedType;
 use Dedoc\Scramble\Support\Type\ObjectType;
 use Dedoc\Scramble\Support\Type\StringType;
 use Dedoc\Scramble\Support\Type\TypeHelper;
+use Dedoc\Scramble\Support\Type\UnknownType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use PhpParser\Comment;
@@ -28,7 +28,10 @@ use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocNode;
 
 class RequestParametersBuilder implements IndexBuilder
 {
-    public function __construct(public readonly Bag $bag) {}
+    public function __construct(
+        public readonly Bag $bag,
+        private readonly TypeTransformer $typeTransformer
+    ) {}
 
     public function afterAnalyzedNode(Scope $scope, Node $node): void
     {
@@ -77,7 +80,8 @@ class RequestParametersBuilder implements IndexBuilder
             'boolean' => $this->makeBooleanParameter($scope, $methodCallNode),
             'enum' => $this->makeEnumParameter($scope, $methodCallNode),
             'query' => $this->makeQueryParameter($scope, $methodCallNode, $parameter),
-            'string', 'str', 'get', 'input', 'post' => $this->makeStringParameter($scope, $methodCallNode),
+            'string', 'str', 'input' => $this->makeStringParameter($scope, $methodCallNode),
+            'get', 'post' => $this->makeFlatParameter($scope, $methodCallNode),
             default => [null, null],
         };
 
@@ -94,10 +98,14 @@ class RequestParametersBuilder implements IndexBuilder
         $parameter
             ->description($this->makeDescriptionFromComments($commentHolderNode))
             ->setSchema(Schema::fromType(
-                app(TypeTransformer::class)
+                $this->typeTransformer
                     ->transform($parameterType)
                     ->default($parameterDefault ?? new MissingExample)
             ));
+
+        if ($parameterType->getAttribute('isFlat')) {
+            $parameter->setAttribute('isFlat', true);
+        }
 
         $this->bag->set($parameterName, $parameter);
     }
@@ -148,6 +156,18 @@ class RequestParametersBuilder implements IndexBuilder
         ];
     }
 
+    private function makeFlatParameter(Scope $scope, Node $node)
+    {
+        $type = new StringType;
+
+        $type->setAttribute('isFlat', true);
+
+        return [
+            $type,
+            TypeHelper::getArgType($scope, $node->args, ['default', 1])->value ?? null,
+        ];
+    }
+
     private function makeEnumParameter(Scope $scope, Node $node)
     {
         if (! $className = TypeHelper::getArgType($scope, $node->args, ['default', 1])->value ?? null) {
@@ -165,7 +185,7 @@ class RequestParametersBuilder implements IndexBuilder
         $parameter->setAttribute('isInQuery', true);
 
         return [
-            new MixedType,
+            new UnknownType,
             TypeHelper::getArgType($scope, $node->args, ['default', 1])->value ?? null,
         ];
     }

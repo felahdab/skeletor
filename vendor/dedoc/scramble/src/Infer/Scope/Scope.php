@@ -3,6 +3,8 @@
 namespace Dedoc\Scramble\Infer\Scope;
 
 use Dedoc\Scramble\Infer\Definition\ClassDefinition;
+use Dedoc\Scramble\Infer\Extensions\Event\MethodCallEvent;
+use Dedoc\Scramble\Infer\Extensions\ExtensionsBroker;
 use Dedoc\Scramble\Infer\Services\FileNameResolver;
 use Dedoc\Scramble\Infer\SimpleTypeGetters\BooleanNotTypeGetter;
 use Dedoc\Scramble\Infer\SimpleTypeGetters\CastTypeGetter;
@@ -30,9 +32,18 @@ use PhpParser\Node;
 class Scope
 {
     /**
+     * @internal
+     *
      * @var array<string, array{line: int, type: Type}[]>
      */
     public array $variables = [];
+
+    /**
+     * @internal
+     *
+     * @var Node\Expr\CallLike[]
+     */
+    public array $calls = [];
 
     public function __construct(
         public Index $index,
@@ -64,11 +75,7 @@ class Scope
         }
 
         if ($node instanceof Node\Expr\Match_) {
-            return Union::wrap(
-                collect($node->arms)
-                    ->map(fn (Node\MatchArm $arm) => $this->getType($arm->body))
-                    ->toArray()
-            );
+            return Union::wrap(array_map(fn (Node\MatchArm $arm) => $this->getType($arm->body), $node->arms));
         }
 
         if ($node instanceof Node\Expr\ClassConstFetch) {
@@ -99,7 +106,10 @@ class Scope
 
         if ($node instanceof Node\Expr\New_) {
             if (! $node->class instanceof Node\Name) {
-                return $type;
+                return $this->setType(
+                    $node,
+                    new NewCallReferenceType($this->getType($node->class), $this->getArgsTypes($node->args)),
+                );
             }
 
             return $this->setType(
@@ -115,7 +125,17 @@ class Scope
             }
 
             $calleeType = $this->getType($node->var);
-            if ($calleeType instanceof TemplateType) {
+
+            $event = $calleeType instanceof ObjectType
+                ? new MethodCallEvent($calleeType, $node->name->name, $this, $this->getArgsTypes($node->args), $calleeType->name)
+                : null;
+
+            $exceptions = $event ? app(ExtensionsBroker::class)->getMethodCallExceptions($event) : [];
+
+            if (
+                $calleeType instanceof TemplateType
+                && ! $exceptions
+            ) {
                 // @todo
                 // if ($calleeType->is instanceof ObjectType) {
                 //     $calleeType = $calleeType->is;
@@ -129,10 +149,15 @@ class Scope
              * When inside a constructor, we want to add a side effect to the constructor definition, so we can track
              * how the properties are being set.
              */
-            if (
-                $this->functionDefinition()?->type->name === '__construct'
-            ) {
+            if ($this->functionDefinition()?->type->name === '__construct') {
                 $this->functionDefinition()->sideEffects[] = $referenceType;
+            }
+
+            if ($this->functionDefinition()) {
+                $this->functionDefinition()->type->exceptions = array_merge(
+                    $this->functionDefinition()->type->exceptions,
+                    $exceptions,
+                );
             }
 
             return $this->setType($node, $referenceType);
@@ -144,9 +169,11 @@ class Scope
                 return $type;
             }
 
-            // Only string class names support.
             if (! $node->class instanceof Node\Name) {
-                return $type;
+                return $this->setType(
+                    $node,
+                    new StaticMethodCallReferenceType($this->getType($node->class), $node->name->name, $this->getArgsTypes($node->args)),
+                );
             }
 
             if (
@@ -321,5 +348,13 @@ class Scope
         }
 
         return $type;
+    }
+
+    /**
+     * @internal
+     */
+    public function getMethodCalls(): array
+    {
+        return $this->calls;
     }
 }

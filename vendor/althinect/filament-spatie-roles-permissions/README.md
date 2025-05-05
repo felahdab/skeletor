@@ -96,6 +96,12 @@ This will not delete any existing permissions. However, if you want to delete al
 php artisan permissions:sync -C|--clean
 ```
 
+There may be an occassion where you wish to hard reset and truncate your existing permissions. To delete all permissions and reset the primary key, run
+
+```bash
+php artisan permissions:sync -H|--hard
+```
+
 #### Example: 
 If you have a **Post** model, it will generate the following permissions
 ```
@@ -125,9 +131,20 @@ php artisan permissions:sync -O|--oep
 ```
 
 ### Role and Permission Policies
+
 Create a RolePolicy and PermissionPolicy if you wish to control the visibility of the resources on the navigation menu.
-Make sure to add them to the AuthServiceProvider. 
-> **ℹ️ Info:** *Laravel 11 removed `AuthServiceProvider`, so in this case we need to use `AppServiceProvider` instead.*
+Make sure to add them to the AuthServiceProvider.
+> **ℹ️ Info:** *Laravel 11 removed `AuthServiceProvider`, so, in this case, we need to use `AppServiceProvider` instead.*
+
+```bash
+use App\Policies\RolePolicy;
+use App\Policies\PermissionPolicy;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+
+Gate::policy(Role::class, RolePolicy::class);
+Gate::policy(Permission::class, PermissionPolicy::class);
+```
 
 ### Ignoring prompts
 You can ignore any prompts by add the flag ``-Y`` or ``--yes-to-all`` 

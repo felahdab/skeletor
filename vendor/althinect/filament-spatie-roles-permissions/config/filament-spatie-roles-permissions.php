@@ -16,6 +16,11 @@ return [
     'team_model' => \App\Models\Team::class,
 
     'scope_to_tenant' => true,
+    
+    'scope_roles_to_tenant' => true,
+    'scope_premissions_to_tenant' => false,
+
+    'super_admin_role_name' => 'Super Admin',
 
     /*
      * Set as false to remove from navigation.
@@ -26,7 +31,7 @@ return [
     ],
 
     'should_show_permissions_for_roles' => true,
-    
+
     /*
      * Set as true to use simple modal resource.
      */
@@ -55,6 +60,15 @@ return [
             'after_create' => false,
             'after_edit' => false
         ],
+    ],
+
+    /**
+     * Set to true to display relation managers in the resources
+     */
+    'should_display_relation_managers' => [
+        'permissions' => true,
+        'users' => true,
+        'roles' => true,
     ],
 
     /*
@@ -88,6 +102,23 @@ return [
     'model_filter_key' => 'return \'%\'.$value;', // Eg: 'return \'%\'.$key.'\%\';'
 
     'user_name_column' => 'name',
+
+    /*
+     * If user_name_column is an accessor from a model, then list columns to search.
+     * Default: null, will search by user_name_column
+     *
+     * Example:
+     *
+     * 'user_name_searchable_columns' => ['first_name', 'last_name']
+     *
+     * and in your model:
+     *
+     * public function getFullNameAttribute() {
+     *    return $this->first_name . ' ' . $this->last_name;
+     * }
+     *
+     */
+    'user_name_searchable_columns' => ['name'],
 
     /*
      * Icons to use for navigation
@@ -124,14 +155,13 @@ return [
             'createPermission' => 'create',
             'updatePermission' => 'update',
             'deletePermission' => 'delete',
+            'deleteAnyPermission' => 'delete-any',
+            'replicatePermission' => 'replicate',
             'restorePermission' => 'restore',
+            'restoreAnyPermission' => 'restore-any',
+            'reorderPermission' => 'reorder',
             'forceDeletePermission' => 'force-delete',
-
-            /*
-             * Additional Resource Permissions
-             */
-            'replicate',
-            'reorder',
+            'forceDeleteAnyPermission' => 'force-delete-any',
         ],
 
         /*
@@ -185,6 +215,8 @@ return [
         ],
 
         'user_model' => \App\Models\User::class,
+
+        'user_model_class' => 'User',
 
         'policies_namespace' => 'App\Policies',
     ],

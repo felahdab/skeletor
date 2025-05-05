@@ -40,7 +40,7 @@ class Builder
     /**
      * Add a "where" clause comparing two columns to the query.
      *
-     * @param  string|array<array-key, mixed>  $first
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string|array<array-key, mixed>  $first
      * @param  string|null  $operator
      * @param  string|null  $second
      * @param  string|null  $boolean
@@ -141,25 +141,6 @@ class Builder
     public function havingBetween($column, array $values, $boolean = 'and', $not = false);
 
     /**
-     * Add a union statement to the query.
-     *
-     * @template TModel of \Illuminate\Database\Eloquent\Model
-     * @param  \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder<TModel>|\Closure  $query
-     * @param  bool  $all
-     * @return $this
-     */
-    public function union($query, $all = false);
-
-    /**
-     * Add a union all statement to the query.
-     *
-     * @template TModel of \Illuminate\Database\Eloquent\Model
-     * @param  \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder<TModel>|\Closure  $query
-     * @return $this
-     */
-    public function unionAll($query);
-
-    /**
      * Execute a query for a single record by ID.
      *
      * @param  int|string  $id
@@ -178,7 +159,7 @@ class Builder
     /**
      * Execute the query as a "select" statement.
      *
-     * @param  string[]|string  $columns
+     * @param  array<string|\Illuminate\Contracts\Database\Query\Expression>|string  $columns
      * @return \Illuminate\Support\Collection<int, \stdClass>
      */
     public function get($columns = ['*']);

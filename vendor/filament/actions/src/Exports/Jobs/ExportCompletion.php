@@ -2,7 +2,7 @@
 
 namespace Filament\Actions\Exports\Jobs;
 
-use Filament\Actions\Exports\Enums\ExportFormat;
+use Filament\Actions\Exports\Enums\Contracts\ExportFormat;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
 use Filament\Notifications\Actions\Action as NotificationAction;
@@ -74,6 +74,13 @@ class ExportCompletion implements ShouldQueue
                     $this->formats,
                 )),
             )
-            ->sendToDatabase($this->export->user, isEventDispatched: true);
+            ->when(
+                ($this->connection === 'sync') ||
+                    (blank($this->connection) && (config('queue.default') === 'sync')),
+                fn (Notification $notification) => $notification
+                    ->persistent()
+                    ->send(),
+                fn (Notification $notification) => $notification->sendToDatabase($this->export->user, isEventDispatched: true),
+            );
     }
 }

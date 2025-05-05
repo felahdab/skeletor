@@ -2,9 +2,13 @@
 
 namespace Dedoc\Scramble;
 
+use Dedoc\Scramble\Attributes\ExcludeAllRoutesFromDocs;
+use Dedoc\Scramble\Attributes\ExcludeRouteFromDocs;
+use Dedoc\Scramble\Contracts\DocumentTransformer;
 use Dedoc\Scramble\Exceptions\RouteAware;
-use Dedoc\Scramble\Infer\Services\FileParser;
 use Dedoc\Scramble\OpenApiVisitor\SchemaEnforceVisitor;
+use Dedoc\Scramble\Support\ContainerUtils;
+use Dedoc\Scramble\Support\Generator\Components;
 use Dedoc\Scramble\Support\Generator\InfoObject;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\Operation;
@@ -20,6 +24,9 @@ use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route as RouteFacade;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
+use ReflectionException;
+use ReflectionMethod;
 use Throwable;
 
 class Generator
@@ -29,10 +36,7 @@ class Generator
     protected bool $throwExceptions = true;
 
     public function __construct(
-        private TypeTransformer $transformer,
         private OperationBuilder $operationBuilder,
-        private ServerFactory $serverFactory,
-        private FileParser $fileParser,
         private Infer $infer
     ) {}
 
@@ -45,16 +49,19 @@ class Generator
 
     public function __invoke(?GeneratorConfig $config = null)
     {
-        $config ??= (new GeneratorConfig(config('scramble')))
-            ->routes(Scramble::$routeResolver)
-            ->afterOpenApiGenerated(Scramble::$openApiExtender);
+        $config ??= Scramble::getGeneratorConfig(Scramble::DEFAULT_API);
 
         $openApi = $this->makeOpenApi($config);
+        $context = new OpenApiContext($openApi, $config);
+        $typeTransformer = $this->buildTypeTransformer($context);
 
         $this->getRoutes($config)
-            ->map(function (Route $route) use ($openApi, $config) {
+            ->map(function (Route $route, int $index) use ($openApi, $config, $typeTransformer) {
                 try {
-                    return $this->routeToOperation($openApi, $route, $config);
+                    $operation = $this->routeToOperation($openApi, $route, $config, $typeTransformer);
+                    $operation->setAttribute('index', $index);
+
+                    return $operation;
                 } catch (Throwable $e) {
                     if ($e instanceof RouteAware) {
                         $e->setRoute($route);
@@ -72,7 +79,7 @@ class Generator
                 }
             })
             ->filter() // Closure based routes are filtered out for now, right here
-            ->sortBy(fn (Operation $o) => $o->tags[0] ?? $o->description)
+            ->sortBy($this->createOperationsSorter())
             ->each(fn (Operation $operation) => $openApi->addPath(
                 Path::make(
                     (string) Str::of($operation->path)
@@ -86,17 +93,47 @@ class Generator
 
         $this->moveSameAlternativeServersToPath($openApi);
 
-        if ($afterOpenApiGenerated = $config->afterOpenApiGenerated()) {
-            $afterOpenApiGenerated($openApi);
+        foreach ($config->documentTransformers->all() as $openApiTransformer) {
+            $openApiTransformer = is_callable($openApiTransformer)
+                ? $openApiTransformer
+                : ContainerUtils::makeContextable($openApiTransformer, [
+                    TypeTransformer::class => $typeTransformer,
+                ]);
+
+            if (is_callable($openApiTransformer)) {
+                $openApiTransformer($openApi, $context);
+
+                continue;
+            }
+
+            if ($openApiTransformer instanceof DocumentTransformer) {
+                $openApiTransformer->handle($openApi, $context);
+
+                continue;
+            }
+
+            throw new InvalidArgumentException('(callable(OpenApi, OpenApiContext): void)|DocumentTransformer type for document transformer expected, received '.$openApiTransformer::class);
         }
 
         return $openApi->toArray();
     }
 
+    private function createOperationsSorter(): array
+    {
+        $defaultSortValue = fn (Operation $o) => $o->tags[0];
+
+        return [
+            fn (Operation $a, Operation $b) => $a->getAttribute('groupWeight', INF) <=> $b->getAttribute('groupWeight', INF),
+            fn (Operation $a, Operation $b) => $a->getAttribute('weight', INF) <=> $b->getAttribute('weight', INF), // @todo manual endpoint sorting
+            fn (Operation $a, Operation $b) => $defaultSortValue($a) <=> $defaultSortValue($b),
+            fn (Operation $a, Operation $b) => $a->getAttribute('index', INF) <=> $b->getAttribute('index', INF),
+        ];
+    }
+
     private function makeOpenApi(GeneratorConfig $config)
     {
         $openApi = OpenApi::make('3.1.0')
-            ->setComponents($this->transformer->getComponents())
+            ->setComponents(new Components)
             ->setInfo(
                 InfoObject::make($config->get('ui.title', $default = config('app.name')) ?: $default)
                     ->setVersion($config->get('info.version', '0.0.1'))
@@ -111,7 +148,7 @@ class Generator
         ];
         foreach ($servers as $description => $url) {
             $openApi->addServer(
-                $this->serverFactory->make(url($url ?: '/'), $description)
+                (new ServerFactory($config->serverVariables->all()))->make(url($url ?: '/'), $description)
             );
         }
 
@@ -123,12 +160,16 @@ class Generator
         return collect(RouteFacade::getRoutes())
             ->pipe(function (Collection $c) {
                 $onlyRoute = $c->first(function (Route $route) {
+                    if (! is_string($route->getAction('controller'))) {
+                        return false;
+                    }
+
                     if (! is_string($route->getAction('uses'))) {
                         return false;
                     }
 
                     try {
-                        $reflection = new \ReflectionMethod(...explode('@', $route->getAction('uses')));
+                        $reflection = new ReflectionMethod(...explode('@', $route->getAction('uses')));
 
                         if (str_contains($reflection->getDocComment() ?: '', '@only-docs')) {
                             return true;
@@ -146,18 +187,50 @@ class Generator
             })
             ->filter($config->routes())
             ->filter(fn (Route $r) => $r->getAction('controller'))
+            ->filter(function (Route $route) {
+                if (! is_string($route->getAction('uses'))) {
+                    return true;
+                }
+
+                try {
+                    $reflection = new ReflectionMethod(...explode('@', $route->getAction('uses')));
+                } catch (ReflectionException) {
+                    /*
+                     * If route is registered but route method doesn't exist, it will not be included
+                     * in the resulting documentation.
+                     */
+                    return false;
+                }
+
+                if (count($reflection->getAttributes(ExcludeRouteFromDocs::class))) {
+                    return false;
+                }
+
+                if (count($reflection->getDeclaringClass()->getAttributes(ExcludeAllRoutesFromDocs::class))) {
+                    return false;
+                }
+
+                return true;
+            })
             ->values();
     }
 
-    private function routeToOperation(OpenApi $openApi, Route $route, GeneratorConfig $config)
+    private function buildTypeTransformer(OpenApiContext $context): TypeTransformer
     {
-        $routeInfo = new RouteInfo($route, $this->fileParser, $this->infer);
+        return app()->make(TypeTransformer::class, [
+            'context' => $context,
+        ]);
+    }
+
+    private function routeToOperation(OpenApi $openApi, Route $route, GeneratorConfig $config, TypeTransformer $typeTransformer)
+    {
+        $routeInfo = new RouteInfo($route, $this->infer, $typeTransformer);
 
         if (! $routeInfo->isClassBased()) {
             return null;
         }
 
-        $operation = $this->operationBuilder->build($routeInfo, $openApi, $config);
+        $operation = $this->operationBuilder->build($routeInfo, $openApi, $config, $typeTransformer);
 
         $this->ensureSchemaTypes($route, $operation);
 

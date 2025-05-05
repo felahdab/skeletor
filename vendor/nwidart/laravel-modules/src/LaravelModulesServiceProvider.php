@@ -3,16 +3,16 @@
 namespace Nwidart\Modules;
 
 use Composer\InstalledVersions;
+use Illuminate\Contracts\Translation\Translator as TranslatorContract;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\AboutCommand;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Event;
-use Nwidart\Modules\Constants\ModuleEvent;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Translation\Translator;
+use Nwidart\Modules\Contracts\ActivatorInterface;
 use Nwidart\Modules\Contracts\RepositoryInterface;
 use Nwidart\Modules\Exceptions\InvalidActivatorClass;
 use Nwidart\Modules\Support\Stub;
-use Symfony\Component\Console\Output\NullOutput;
 
 class LaravelModulesServiceProvider extends ModulesServiceProvider
 {
@@ -26,19 +26,23 @@ class LaravelModulesServiceProvider extends ModulesServiceProvider
         $this->app->singleton(
             ModuleManifest::class,
             fn () => new ModuleManifest(
-                new Filesystem(),
+                new Filesystem,
                 app(Contracts\RepositoryInterface::class)->getScanPaths(),
-                $this->getCachedModulePath()
+                $this->getCachedModulePath(),
+                app(ActivatorInterface::class)
             )
         );
 
         $this->registerModules();
 
-        $this->registerEvents();
-
         AboutCommand::add('Laravel-Modules', [
             'Version' => fn () => InstalledVersions::getPrettyVersion('nwidart/laravel-modules'),
         ]);
+
+        // Create @module() blade directive.
+        Blade::if('module', function (string $name) {
+            return module($name);
+        });
     }
 
     /**
@@ -51,6 +55,7 @@ class LaravelModulesServiceProvider extends ModulesServiceProvider
         $this->registerProviders();
 
         $this->registerMigrations();
+        $this->registerTranslations();
 
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'modules');
     }
@@ -102,30 +107,30 @@ class LaravelModulesServiceProvider extends ModulesServiceProvider
         }
 
         $this->app->resolving(Migrator::class, function (Migrator $migrator) {
-            $path = implode(DIRECTORY_SEPARATOR, [
-                $this->app['config']->get('modules.paths.modules'),
-                '*',
-                '[Dd]atabase',
-                'migrations',
-            ]);
-
-            collect(glob($path, GLOB_ONLYDIR))
-                ->each(function (string $path) use ($migrator) {
-                    $migrator->path($path);
+            $migration_path = $this->app['config']->get('modules.paths.generator.migration.path');
+            collect(\Nwidart\Modules\Facades\Module::allEnabled())
+                ->each(function (\Nwidart\Modules\Laravel\Module $module) use ($migration_path, $migrator) {
+                    $migrator->path($module->getExtraPath($migration_path));
                 });
         });
     }
 
-    private function registerEvents(): void
+    protected function registerTranslations(): void
     {
-        Event::listen(
-            [
-                'modules.*.'.ModuleEvent::DELETED,
-                'modules.*.'.ModuleEvent::CREATED,
-                'modules.*.'.ModuleEvent::DISABLED,
-                'modules.*.'.ModuleEvent::ENABLED,
-            ],
-            fn () => Artisan::call('module:clear-compiled', outputBuffer: new NullOutput)
-        );
+        if (! $this->app['config']->get('modules.auto-discover.translations', true)) {
+            return;
+        }
+        $this->callAfterResolving('translator', function (TranslatorContract $translator) {
+            if (! $translator instanceof Translator) {
+                return;
+            }
+
+            collect(\Nwidart\Modules\Facades\Module::allEnabled())
+                ->each(function (\Nwidart\Modules\Laravel\Module $module) use ($translator) {
+                    $path = $module->getExtraPath($this->app['config']->get('modules.paths.generator.lang.path'));
+                    $translator->addNamespace($module->getLowerName(), $path);
+                    $translator->addJsonPath($path);
+                });
+        });
     }
 }

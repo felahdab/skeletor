@@ -53,7 +53,6 @@ class ModuleGenerator extends Generator
     /**
      * The module instance.
      */
-    /*?Module*/
     protected mixed $module = null;
 
     /**
@@ -298,11 +297,13 @@ class ModuleGenerator extends Generator
 
         if ($this->type !== 'plain') {
             $this->generateFiles();
+            $this->module->resetModules();
             $this->generateResources();
         }
 
         if ($this->type === 'plain') {
             $this->cleanModuleJsonFile();
+            $this->module->resetModules();
         }
 
         $this->activator->setActiveByName($name, $this->isActive);
@@ -467,8 +468,15 @@ class ModuleGenerator extends Generator
     {
         $replacements = $this->module->config('stubs.replacements');
 
+        // Temporarily check if the replacements are defined; remove in the next major version.
         if (! isset($replacements['composer']['APP_FOLDER_NAME'])) {
             $replacements['composer'][] = 'APP_FOLDER_NAME';
+        }
+        if (! isset($replacements['routes/web']['PLURAL_LOWER_NAME'])) {
+            $replacements['routes/web'][] = 'PLURAL_LOWER_NAME';
+        }
+        if (! isset($replacements['routes/api']['PLURAL_LOWER_NAME'])) {
+            $replacements['routes/api'][] = 'PLURAL_LOWER_NAME';
         }
 
         if (! isset($replacements[$stub])) {
@@ -484,11 +492,20 @@ class ModuleGenerator extends Generator
                 $keys[] = 'PROVIDER_NAMESPACE';
             }
         }
-        foreach ($keys as $key) {
-            if (method_exists($this, $method = 'get'.ucfirst(Str::studly(strtolower($key))).'Replacement')) {
-                $replaces[$key] = $this->$method();
+
+        foreach ($keys as $key => $value) {
+            if ($value instanceof \Closure) {
+                $replaces[strtoupper($key)] = $value($this);
+            } elseif (method_exists($this, $method = 'get'.ucfirst(Str::studly(strtolower($value))).'Replacement')) {
+                $replace = $this->$method();
+
+                if ($stub === 'routes/web' || $stub === 'routes/api') {
+                    $replace = str_replace('\\\\', '\\', $replace);
+                }
+
+                $replaces[$value] = $replace;
             } else {
-                $replaces[$key] = null;
+                $replaces[$value] = null;
             }
         }
 
@@ -539,11 +556,32 @@ class ModuleGenerator extends Generator
     }
 
     /**
+     * Get the module name in lowercase plural form.
+     */
+    protected function getPluralLowerNameReplacement(): string
+    {
+        return Str::of($this->getName())->lower()->plural();
+    }
+
+    protected function getKebabNameReplacement(): string
+    {
+        return Str::kebab($this->getName());
+    }
+
+    /**
      * Get the module name in studly case.
      */
     protected function getStudlyNameReplacement(): string
     {
         return $this->getName();
+    }
+
+    /**
+     * Get the module name in plural studly case.
+     */
+    protected function getPluralStudlyNameReplacement(): string
+    {
+        return Str::of($this->getName())->pluralStudly();
     }
 
     /**

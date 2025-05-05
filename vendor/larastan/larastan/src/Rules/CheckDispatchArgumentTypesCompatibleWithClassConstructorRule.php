@@ -119,7 +119,7 @@ class CheckDispatchArgumentTypesCompatibleWithClassConstructorRule implements Ru
             $constructorReflection->getDeclaringClass()->isBuiltin(),
             $node,
             'staticMethod',
-            TrinaryLogic::createNo(),
+            TrinaryLogic::createYes(),
             ucfirst($jobOrEvent) . ' class ' . $classDisplayName . ' constructor invoked with %d parameter in ' . $classDisplayName . '::' . $methodName . '(), %d required.',
             ucfirst($jobOrEvent) . ' class ' . $classDisplayName . ' constructor invoked with %d parameters in ' . $classDisplayName . '::' . $methodName . '(), %d required.',
             ucfirst($jobOrEvent) . ' class ' . $classDisplayName . ' constructor invoked with %d parameter in ' . $classDisplayName . '::' . $methodName . '(), at least %d required.',
@@ -134,7 +134,7 @@ class CheckDispatchArgumentTypesCompatibleWithClassConstructorRule implements Ru
             'Unknown parameter $%s in call to ' . $classDisplayName . ' constructor.',
             'Return type of call to ' . $classDisplayName . ' constructor contains unresolvable type.',
             '',
-            '',
+            '', // no named arguments
         );
     }
 

@@ -14,7 +14,7 @@ use OpenApi\Util;
 /**
  * This is the root document object for the API specification.
  *
- * @see [OAI OpenApi Object](https://github.com/OAI/OpenAPI-Specification/blob/OpenAPI.next/versions/3.0.md#openapi-object)
+ * @see [OpenApi Object](https://spec.openapis.org/oas/v3.1.1.html#openapi-object)
  *
  * @Annotation
  */
@@ -30,11 +30,11 @@ class OpenApi extends AbstractAnnotation
      *
      * The openapi field should be used by tooling specifications and clients to interpret the OpenAPI document.
      *
-     * A version specified via `Generator::setVersion()` will overwrite this value.
+     * A version specified via <code>Generator::setVersion()</code> will overwrite this value.
      *
      * This is not related to the API info::version string.
      *
-     * @var string
+     * @var '3.0.0'|'3.1.0'
      */
     public $openapi = self::DEFAULT_VERSION;
 
@@ -74,7 +74,7 @@ class OpenApi extends AbstractAnnotation
      * The list of values includes alternative security requirement objects that can be used.
      * Only one of the security requirement objects need to be satisfied to authorize a request.
      * Individual operations can override this definition.
-     * To make security optional, an empty security requirement `({})` can be included in the array.
+     * To make security optional, an empty security requirement (<code>{}</code>) can be included in the array.
      *
      * @var array
      */
@@ -179,11 +179,7 @@ class OpenApi extends AbstractAnnotation
             $format = strtolower(substr($filename, -5)) === '.json' ? 'json' : 'yaml';
         }
 
-        if (strtolower($format) === 'json') {
-            $content = $this->toJson();
-        } else {
-            $content = $this->toYaml();
-        }
+        $content = strtolower($format) === 'json' ? $this->toJson() : $this->toYaml();
 
         if (file_put_contents($filename, $content) === false) {
             throw new OpenApiException('Failed to saveAs("' . $filename . '", "' . $format . '")');
@@ -230,11 +226,9 @@ class OpenApi extends AbstractAnnotation
                 return $container->{$property};
             }
             $mapping = [];
-            if ($container instanceof AbstractAnnotation) {
-                foreach ($container::$_nested as $nestedClass => $nested) {
-                    if (is_string($nested) === false && count($nested) === 2 && $nested[0] === $property) {
-                        $mapping[$nestedClass] = $nested[1];
-                    }
+            foreach ($container::$_nested as $nestedClass => $nested) {
+                if (is_string($nested) === false && count($nested) === 2 && $nested[0] === $property) {
+                    $mapping[$nestedClass] = $nested[1];
                 }
             }
 

@@ -44,7 +44,7 @@
         <x-filament-tables::cell
             class="text-sm font-medium text-gray-950 dark:text-white"
         >
-            <span class="px-3 py-4">
+            <span class="fi-ta-summary-row-heading px-3 py-4">
                 {{ $heading }}
             </span>
         </x-filament-tables::cell>
@@ -92,13 +92,19 @@
             >
                 @if ($loop->first && (! $extraHeadingColumn) && (! $groupsOnly))
                     <span
-                        class="flex px-3 py-4 text-sm font-medium text-gray-950 dark:text-white"
+                        class="fi-ta-summary-row-heading flex px-3 py-4 text-sm font-medium text-gray-950 dark:text-white"
                     >
                         {{ $heading }}
                     </span>
                 @elseif ((! $placeholderColumns) || $column->hasSummary())
                     @foreach ($column->getSummarizers() as $summarizer)
-                        {{ $summarizer->query($query)->selectedState($selectedState) }}
+                        @php
+                            $summarizer->query($query)->selectedState($selectedState);
+                        @endphp
+
+                        @if ($summarizer->isVisible())
+                            {{ $summarizer }}
+                        @endif
                     @endforeach
                 @endif
             </x-filament-tables::cell>

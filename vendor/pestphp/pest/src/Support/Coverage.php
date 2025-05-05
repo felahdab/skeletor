@@ -74,7 +74,7 @@ final class Coverage
      * Reports the code coverage report to the
      * console and returns the result in float.
      */
-    public static function report(OutputInterface $output): float
+    public static function report(OutputInterface $output, bool $compact = false): float
     {
         if (! file_exists($reportPath = self::getPath())) {
             if (self::usingXdebug()) {
@@ -112,6 +112,10 @@ final class Coverage
             $percentage = $file->numberOfExecutableLines() === 0
                 ? '100.0'
                 : number_format($file->percentageOfExecutedLines()->asFloat(), 1, '.', '');
+
+            if ($percentage === '100.0' && $compact) {
+                continue;
+            }
 
             $uncoveredLines = '';
 

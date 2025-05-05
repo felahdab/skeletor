@@ -52,6 +52,11 @@ return [
         'hide_try_it' => false,
 
         /*
+         * Hide the schemas in the Table of Contents. Enabled by default.
+         */
+        'hide_schemas' => false,
+
+        /*
          * URL to an image that displays as a small square logo next to the title, above the table of contents.
          */
         'logo' => '',
@@ -60,6 +65,14 @@ return [
          * Use to fetch the credential policy for the Try It feature. Options are: omit, include (default), and same-origin
          */
         'try_it_credentials_policy' => 'include',
+
+        /*
+         * There are three layouts for Elements:
+         * - sidebar - (Elements default) Three-column design with a sidebar that can be resized.
+         * - responsive - Like sidebar, except at small screen sizes it collapses the sidebar into a drawer that can be toggled open.
+         * - stacked - Everything in a single column, making integrations with existing websites that have their own sidebar or other columns already.
+         */
+        'layout' => 'responsive',
     ],
 
     /*
@@ -77,6 +90,17 @@ return [
      * ```
      */
     'servers' => null,
+
+    /**
+     * Determines how Scramble stores the descriptions of enum cases.
+     * Available options:
+     * - 'description' – Case descriptions are stored as the enum schema's description using table formatting.
+     * - 'extension' – Case descriptions are stored in the `x-enumDescriptions` enum schema extension.
+     *
+     *    @see https://redocly.com/docs-legacy/api-reference-docs/specification-extensions/x-enum-descriptions
+     * - false - Case descriptions are ignored.
+     */
+    'enum_cases_description_strategy' => 'description',
 
     'middleware' => [
         'web',

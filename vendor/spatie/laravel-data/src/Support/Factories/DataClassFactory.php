@@ -3,14 +3,15 @@
 namespace Spatie\LaravelData\Support\Factories;
 
 use Illuminate\Support\Collection;
-use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
 use ReflectionProperty;
+use Spatie\LaravelData\Attributes\AutoLazy;
 use Spatie\LaravelData\Contracts\AppendableData;
 use Spatie\LaravelData\Contracts\EmptyData;
 use Spatie\LaravelData\Contracts\IncludeableData;
+use Spatie\LaravelData\Contracts\PropertyMorphableData;
 use Spatie\LaravelData\Contracts\ResponsableData;
 use Spatie\LaravelData\Contracts\TransformableData;
 use Spatie\LaravelData\Contracts\ValidateableData;
@@ -33,13 +34,12 @@ class DataClassFactory
     ) {
     }
 
-
     public function build(ReflectionClass $reflectionClass): DataClass
     {
         /** @var class-string<Data> $name */
         $name = $reflectionClass->name;
 
-        $attributes = $this->resolveAttributes($reflectionClass);
+        $attributes = DataAttributesCollectionFactory::buildFromReflectionClass($reflectionClass);
 
         $methods = collect($reflectionClass->getMethods());
 
@@ -54,11 +54,14 @@ class DataClassFactory
             );
         }
 
+        $autoLazy = $attributes->first(AutoLazy::class);
+
         $properties = $this->resolveProperties(
             $reflectionClass,
             $constructorReflectionMethod,
             NameMappersResolver::create(ignoredMappers: [ProvidedNameMapper::class])->execute($attributes),
             $dataIterablePropertyAnnotations,
+            $autoLazy
         );
 
         $responsable = $reflectionClass->implementsInterface(ResponsableData::class);
@@ -82,6 +85,7 @@ class DataClassFactory
             constructorMethod: $constructor,
             isReadonly: method_exists($reflectionClass, 'isReadOnly') && $reflectionClass->isReadOnly(),
             isAbstract: $reflectionClass->isAbstract(),
+            propertyMorphable: $reflectionClass->implementsInterface(PropertyMorphableData::class),
             appendable: $reflectionClass->implementsInterface(AppendableData::class),
             includeable: $reflectionClass->implementsInterface(IncludeableData::class),
             responsable: $responsable,
@@ -96,24 +100,8 @@ class DataClassFactory
             allowedRequestOnly: new LazyDataStructureProperty(fn (): ?array => $responsable ? $name::allowedRequestOnly() : null),
             allowedRequestExcept: new LazyDataStructureProperty(fn (): ?array => $responsable ? $name::allowedRequestExcept() : null),
             outputMappedProperties: $outputMappedProperties,
-            transformationFields: static::resolveTransformationFields($properties),
+            transformationFields: static::resolveTransformationFields($properties)
         );
-    }
-
-    protected function resolveAttributes(
-        ReflectionClass $reflectionClass
-    ): Collection {
-        $attributes = collect($reflectionClass->getAttributes())
-            ->filter(fn (ReflectionAttribute $reflectionAttribute) => class_exists($reflectionAttribute->getName()))
-            ->map(fn (ReflectionAttribute $reflectionAttribute) => $reflectionAttribute->newInstance());
-
-        $parent = $reflectionClass->getParentClass();
-
-        if ($parent !== false) {
-            $attributes = $attributes->merge(static::resolveAttributes($parent));
-        }
-
-        return $attributes;
     }
 
     protected function resolveMethods(
@@ -136,6 +124,7 @@ class DataClassFactory
         ?ReflectionMethod $constructorReflectionMethod,
         array $mappers,
         array $dataIterablePropertyAnnotations,
+        ?AutoLazy $autoLazy
     ): Collection {
         $defaultValues = $this->resolveDefaultValues($reflectionClass, $constructorReflectionMethod);
 
@@ -151,6 +140,7 @@ class DataClassFactory
                     $mappers['inputNameMapper'],
                     $mappers['outputNameMapper'],
                     $dataIterablePropertyAnnotations[$property->getName()] ?? null,
+                    classAutoLazy: $autoLazy
                 ),
             ]);
     }

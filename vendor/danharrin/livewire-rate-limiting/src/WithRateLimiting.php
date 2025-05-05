@@ -9,7 +9,7 @@ trait WithRateLimiting
 {
     protected function clearRateLimiter($method = null, $component = null)
     {
-        $method ??= debug_backtrace(limit: 2)[1]['function'];
+        $method ??= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, limit: 2)[1]['function'];
 
         $component ??= static::class;
 
@@ -20,16 +20,16 @@ trait WithRateLimiting
 
     protected function getRateLimitKey($method, $component = null)
     {
-        $method ??= debug_backtrace(limit: 2)[1]['function'];
+        $method ??= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, limit: 2)[1]['function'];
 
         $component ??= static::class;
 
-        return sha1($component.'|'.$method.'|'.request()->ip());
+        return 'livewire-rate-limiter:'.sha1($component.'|'.$method.'|'.request()->ip());
     }
 
     protected function hitRateLimiter($method = null, $decaySeconds = 60, $component = null)
     {
-        $method ??= debug_backtrace(limit: 2)[1]['function'];
+        $method ??= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, limit: 2)[1]['function'];
 
         $component ??= static::class;
 
@@ -40,7 +40,7 @@ trait WithRateLimiting
 
     protected function rateLimit($maxAttempts, $decaySeconds = 60, $method = null, $component = null)
     {
-        $method ??= debug_backtrace(limit: 2)[1]['function'];
+        $method ??= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, limit: 2)[1]['function'];
 
         $component ??= static::class;
 

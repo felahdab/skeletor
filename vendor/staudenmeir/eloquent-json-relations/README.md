@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/staudenmeir/eloquent-json-relations/actions/workflows/ci.yml/badge.svg)](https://github.com/staudenmeir/eloquent-json-relations/actions/workflows/ci.yml?query=branch%3Amain)
 [![Code Coverage](https://codecov.io/gh/staudenmeir/eloquent-json-relations/graph/badge.svg?token=T41IX53I5U)](https://codecov.io/gh/staudenmeir/eloquent-json-relations)
-[![PHPStan](https://img.shields.io/badge/PHPStan-level%209-brightgreen.svg?style=flat)](https://github.com/staudenmeir/eloquent-json-relations/actions/workflows/static-analysis.yml?query=branch%3Amain)
+[![PHPStan](https://img.shields.io/badge/PHPStan-level%2010-brightgreen.svg?style=flat)](https://github.com/staudenmeir/eloquent-json-relations/actions/workflows/static-analysis.yml?query=branch%3Amain)
 [![Latest Stable Version](https://poser.pugx.org/staudenmeir/eloquent-json-relations/v/stable)](https://packagist.org/packages/staudenmeir/eloquent-json-relations)
 [![Total Downloads](https://poser.pugx.org/staudenmeir/eloquent-json-relations/downloads)](https://packagist.org/packages/staudenmeir/eloquent-json-relations/stats)
 [![License](https://poser.pugx.org/staudenmeir/eloquent-json-relations/license)](https://github.com/staudenmeir/eloquent-json-relations/blob/main/LICENSE)
@@ -33,6 +33,7 @@ Use this command if you are in PowerShell on Windows (e.g. in VS Code):
 
 | Laravel | Package |
 |:--------|:--------|
+| 12.x    | 1.14    |
 | 11.x    | 1.11    |
 | 10.x    | 1.8     |
 | 9.x     | 1.7     |

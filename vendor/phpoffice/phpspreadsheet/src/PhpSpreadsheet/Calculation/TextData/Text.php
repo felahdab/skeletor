@@ -2,11 +2,13 @@
 
 namespace PhpOffice\PhpSpreadsheet\Calculation\TextData;
 
+use Composer\Pcre\Preg;
 use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
 use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
 use PhpOffice\PhpSpreadsheet\Calculation\Exception as CalcExp;
 use PhpOffice\PhpSpreadsheet\Calculation\Functions;
 use PhpOffice\PhpSpreadsheet\Calculation\Information\ErrorValue;
+use PhpOffice\PhpSpreadsheet\Shared\StringHelper;
 
 class Text
 {
@@ -112,7 +114,7 @@ class Text
     {
         $text = Functions::flattenSingleValue($text);
         if (ErrorValue::isError($text, true)) {
-            return $text;
+            return StringHelper::convertToString($text);
         }
 
         $flags = self::matchFlags($matchMode);
@@ -121,12 +123,11 @@ class Text
             $delimiter = self::buildDelimiter($rowDelimiter);
             $rows = ($delimiter === '()')
                 ? [$text]
-                : preg_split("/{$delimiter}/{$flags}", $text);
+                : Preg::split("/{$delimiter}/{$flags}", StringHelper::convertToString($text));
         } else {
             $rows = [$text];
         }
 
-        /** @var array $rows */
         if ($ignoreEmpty === true) {
             $rows = array_values(array_filter(
                 $rows,
@@ -141,8 +142,7 @@ class Text
                 function (&$row) use ($delimiter, $flags, $ignoreEmpty): void {
                     $row = ($delimiter === '()')
                         ? [$row]
-                        : preg_split("/{$delimiter}/{$flags}", $row);
-                    /** @var array $row */
+                        : Preg::split("/{$delimiter}/{$flags}", StringHelper::convertToString($row));
                     if ($ignoreEmpty === true) {
                         $row = array_values(array_filter(
                             $row,
@@ -171,11 +171,9 @@ class Text
         );
 
         return array_map(
-            function (array $row) use ($columnCount, $padding): array {
-                return (count($row) < $columnCount)
+            fn (array $row): array => (count($row) < $columnCount)
                     ? array_merge($row, array_fill(0, $columnCount - count($row), $padding))
-                    : $row;
-            },
+                    : $row,
             $rows
         );
     }
@@ -198,7 +196,7 @@ class Text
             return '(' . $delimiters . ')';
         }
 
-        return '(' . preg_quote(Functions::flattenSingleValue($delimiter), '/') . ')';
+        return '(' . preg_quote(StringHelper::convertToString(Functions::flattenSingleValue($delimiter)), '/') . ')';
     }
 
     private static function matchFlags(bool $matchMode): string
@@ -229,7 +227,7 @@ class Text
             return Calculation::getLocaleBoolean($cellValue ? 'TRUE' : 'FALSE');
         }
 
-        return (string) $cellValue;
+        return StringHelper::convertToString($cellValue);
     }
 
     private static function formatValueMode1(mixed $cellValue): string
@@ -240,6 +238,6 @@ class Text
             return Calculation::getLocaleBoolean($cellValue ? 'TRUE' : 'FALSE');
         }
 
-        return (string) $cellValue;
+        return StringHelper::convertToString($cellValue);
     }
 }

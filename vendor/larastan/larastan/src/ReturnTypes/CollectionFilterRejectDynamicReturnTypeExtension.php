@@ -15,6 +15,7 @@ use PHPStan\Reflection\MethodReflection;
 use PHPStan\ShouldNotHappenException;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\Generic\GenericObjectType;
+use PHPStan\Type\Generic\TemplateType;
 use PHPStan\Type\Type;
 use PHPStan\Type\TypeCombinator;
 
@@ -51,6 +52,14 @@ class CollectionFilterRejectDynamicReturnTypeExtension implements DynamicMethodR
 
         if ($keyType === null || $valueType === null) {
             return null;
+        }
+
+        if ($keyType instanceof TemplateType) {
+            $keyType = $keyType->getBound();
+        }
+
+        if ($valueType instanceof TemplateType) {
+            $valueType = $valueType->getBound();
         }
 
         $methodName = $methodReflection->getName();

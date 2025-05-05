@@ -67,8 +67,7 @@ class StyleManager implements StyleManagerInterface
     private array $numFmtIdToIsDateFormatCache = [];
 
     /**
-     * @param string  $filePath          Path of the XLSX file being read
-     * @param ?string $stylesXMLFilePath
+     * @param string $filePath Path of the XLSX file being read
      */
     public function __construct(string $filePath, ?string $stylesXMLFilePath)
     {
@@ -103,6 +102,11 @@ class StyleManager implements StyleManagerInterface
         }
 
         $stylesAttributes = $this->getStylesAttributes();
+
+        if (!isset($stylesAttributes[$styleId])) {
+            return '';
+        }
+
         $styleAttributes = $stylesAttributes[$styleId];
         $numFmtId = $styleAttributes[self::XML_ATTRIBUTE_NUM_FMT_ID];
         \assert(\is_int($numFmtId));

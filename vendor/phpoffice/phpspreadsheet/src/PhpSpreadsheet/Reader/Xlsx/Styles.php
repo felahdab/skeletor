@@ -12,6 +12,7 @@ use PhpOffice\PhpSpreadsheet\Style\Font;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Style\Protection;
 use PhpOffice\PhpSpreadsheet\Style\Style;
+use PhpOffice\PhpSpreadsheet\Worksheet\Table\TableDxfsStyle;
 use SimpleXMLElement;
 use stdClass;
 
@@ -149,14 +150,22 @@ class Styles extends BaseParserClass
             $fillStyle->getStartColor()->setARGB($this->readColor(self::getArrayItem($gradientFill->xpath('sml:stop[@position=0]'))->color)); //* @phpstan-ignore-line
             $fillStyle->getEndColor()->setARGB($this->readColor(self::getArrayItem($gradientFill->xpath('sml:stop[@position=1]'))->color)); //* @phpstan-ignore-line
         } elseif ($fillStyleXml->patternFill) {
-            $defaultFillStyle = Fill::FILL_NONE;
+            $defaultFillStyle = ($fillStyle->getFillType() !== null) ? Fill::FILL_NONE : '';
+            $fgFound = false;
+            $bgFound = false;
             if ($fillStyleXml->patternFill->fgColor) {
                 $fillStyle->getStartColor()->setARGB($this->readColor($fillStyleXml->patternFill->fgColor, true));
-                $defaultFillStyle = Fill::FILL_SOLID;
+                if ($fillStyle->getFillType() !== null) {
+                    $defaultFillStyle = Fill::FILL_SOLID;
+                }
+                $fgFound = true;
             }
             if ($fillStyleXml->patternFill->bgColor) {
                 $fillStyle->getEndColor()->setARGB($this->readColor($fillStyleXml->patternFill->bgColor, true));
-                $defaultFillStyle = Fill::FILL_SOLID;
+                if ($fillStyle->getFillType() !== null) {
+                    $defaultFillStyle = Fill::FILL_SOLID;
+                }
+                $bgFound = true;
             }
 
             $type = '';
@@ -169,6 +178,22 @@ class Styles extends BaseParserClass
             $patternType = ($type === '') ? $defaultFillStyle : $type;
 
             $fillStyle->setFillType($patternType);
+            if (
+                !$fgFound // no foreground color specified
+                && !in_array($patternType, [Fill::FILL_NONE, Fill::FILL_SOLID], true) // these patterns aren't relevant
+                && $fillStyle->getStartColor()->getARGB() // not conditional
+            ) {
+                $fillStyle->getStartColor()
+                    ->setARGB('', true);
+            }
+            if (
+                !$bgFound // no background color specified
+                && !in_array($patternType, [Fill::FILL_NONE, Fill::FILL_SOLID], true) // these patterns aren't relevant
+                && $fillStyle->getEndColor()->getARGB() // not conditional
+            ) {
+                $fillStyle->getEndColor()
+                    ->setARGB('', true);
+            }
         }
     }
 
@@ -240,6 +265,12 @@ class Styles extends BaseParserClass
         $horizontal = (string) $this->getAttribute($alignmentXml, 'horizontal');
         if ($horizontal !== '') {
             $alignment->setHorizontal($horizontal);
+        }
+        $justifyLastLine = (string) $this->getAttribute($alignmentXml, 'justifyLastLine');
+        if ($justifyLastLine !== '') {
+            $alignment->setJustifyLastLine(
+                self::boolean($justifyLastLine)
+            );
         }
         $vertical = (string) $this->getAttribute($alignmentXml, 'vertical');
         if ($vertical !== '') {
@@ -417,6 +448,46 @@ class Styles extends BaseParserClass
         return $dxfs;
     }
 
+    // get TableStyles
+    public function tableStyles(bool $readDataOnly = false): array
+    {
+        $tableStyles = [];
+        if (!$readDataOnly && $this->styleXml) {
+            //    Conditional Styles
+            if ($this->styleXml->tableStyles) {
+                foreach ($this->styleXml->tableStyles->tableStyle as $s) {
+                    $attrs = Xlsx::getAttributes($s);
+                    if (isset($attrs['name'][0])) {
+                        $style = new TableDxfsStyle((string) ($attrs['name'][0]));
+                        foreach ($s->tableStyleElement as $e) {
+                            $a = Xlsx::getAttributes($e);
+                            if (isset($a['dxfId'][0], $a['type'][0])) {
+                                switch ($a['type'][0]) {
+                                    case 'headerRow':
+                                        $style->setHeaderRow((int) ($a['dxfId'][0]));
+
+                                        break;
+                                    case 'firstRowStripe':
+                                        $style->setFirstRowStripe((int) ($a['dxfId'][0]));
+
+                                        break;
+                                    case 'secondRowStripe':
+                                        $style->setSecondRowStripe((int) ($a['dxfId'][0]));
+
+                                        break;
+                                    default:
+                                }
+                            }
+                        }
+                        $tableStyles[] = $style;
+                    }
+                }
+            }
+        }
+
+        return $tableStyles;
+    }
+
     public function styles(): array
     {
         return $this->styles;
@@ -429,6 +500,6 @@ class Styles extends BaseParserClass
      */
     private static function getArrayItem(mixed $array): ?SimpleXMLElement
     {
-        return is_array($array) ? ($array[0] ?? null) : null;
+        return is_array($array) ? ($array[0] ?? null) : null; // @phpstan-ignore-line
     }
 }

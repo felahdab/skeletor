@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Exception;
 use Generator;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Collection;
 use Spatie\Backup\BackupDestination\BackupDestination;
 use Spatie\Backup\Config\Config;
@@ -42,6 +43,9 @@ class BackupJob
 
     protected bool $signals = true;
 
+    /**
+     * @throws BindingResolutionException
+     */
     public function __construct(protected Config $config)
     {
         $this
@@ -49,7 +53,8 @@ class BackupJob
             ->dontBackupDatabases()
             ->setDefaultFilename();
 
-        $this->backupDestinations = new Collection();
+        $this->backupDestinations = new Collection;
+        $this->temporaryDirectory = app()->make('backup-temporary-project');
     }
 
     public function dontBackupFilesystem(): self
@@ -71,7 +76,7 @@ class BackupJob
 
     public function dontBackupDatabases(): self
     {
-        $this->dbDumpers = new Collection();
+        $this->dbDumpers = new Collection;
 
         return $this;
     }
@@ -146,9 +151,7 @@ class BackupJob
     /** @throws Exception */
     public function run(): void
     {
-        $temporaryDirectoryPath = $this->config->backup->temporaryDirectory ?? storage_path('app/backup-temp');
-
-        $this->temporaryDirectory = (new TemporaryDirectory($temporaryDirectoryPath))
+        $this->temporaryDirectory
             ->name('temp')
             ->force()
             ->create()
@@ -277,12 +280,12 @@ class BackupJob
 
                 // @todo is this still relevant or undocumented?
                 if (config('backup.backup.gzip_database_dump')) {
-                    $dbDumper->useCompressor(new GzipCompressor());
+                    $dbDumper->useCompressor(new GzipCompressor);
                     $fileName .= '.'.$dbDumper->getCompressorExtension();
                 }
 
                 if ($compressor = $this->config->backup->databaseDumpCompressor) {
-                    $dbDumper->useCompressor(new $compressor());
+                    $dbDumper->useCompressor(new $compressor);
                     $fileName .= '.'.$dbDumper->getCompressorExtension();
                 }
 

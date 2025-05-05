@@ -4,9 +4,11 @@ namespace Illuminate\Concurrency;
 
 use Closure;
 use Illuminate\Contracts\Concurrency\Driver;
-use Illuminate\Foundation\Defer\DeferredCallback;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Defer\DeferredCallback;
 use Spatie\Fork\Fork;
+
+use function Illuminate\Support\defer;
 
 class ForkDriver implements Driver
 {
@@ -15,8 +17,17 @@ class ForkDriver implements Driver
      */
     public function run(Closure|array $tasks): array
     {
+        $tasks = Arr::wrap($tasks);
+
+        $keys = array_keys($tasks);
+        $values = array_values($tasks);
+
         /** @phpstan-ignore class.notFound */
-        return Fork::new()->run(...Arr::wrap($tasks));
+        $results = Fork::new()->run(...$values);
+
+        ksort($results);
+
+        return array_combine($keys, $results);
     }
 
     /**

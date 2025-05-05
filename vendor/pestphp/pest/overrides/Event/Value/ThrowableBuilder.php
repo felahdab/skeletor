@@ -68,7 +68,7 @@ final readonly class ThrowableBuilder
             $previous = self::from($previous);
         }
 
-        $trace = Filter::getFilteredStacktrace($t);
+        $trace = Filter::stackTraceFromThrowableAsString($t);
 
         if ($t instanceof RenderableOnCollisionEditor && $frame = $t->toCollisionEditor()) {
             $file = $frame->getFile();

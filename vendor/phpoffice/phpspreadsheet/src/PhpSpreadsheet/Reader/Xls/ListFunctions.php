@@ -5,6 +5,7 @@ namespace PhpOffice\PhpSpreadsheet\Reader\Xls;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use PhpOffice\PhpSpreadsheet\Shared\File;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class ListFunctions extends Xls
 {
@@ -44,12 +45,10 @@ class ListFunctions extends Xls
         }
 
         foreach ($xls->sheets as $sheet) {
-            if ($sheet['sheetType'] != 0x00) {
+            if ($sheet['sheetType'] === 0x00) {
                 // 0x00: Worksheet, 0x02: Chart, 0x06: Visual Basic module
-                continue;
+                $worksheetNames[] = $sheet['name'];
             }
-
-            $worksheetNames[] = $sheet['name'];
         }
 
         return $worksheetNames;
@@ -93,7 +92,7 @@ class ListFunctions extends Xls
 
         // Parse the individual sheets
         foreach ($xls->sheets as $sheet) {
-            if ($sheet['sheetType'] != 0x00) {
+            if ($sheet['sheetType'] !== 0x00) {
                 // 0x00: Worksheet
                 // 0x02: Chart
                 // 0x06: Visual Basic module
@@ -106,6 +105,7 @@ class ListFunctions extends Xls
             $tmpInfo['lastColumnIndex'] = 0;
             $tmpInfo['totalRows'] = 0;
             $tmpInfo['totalColumns'] = 0;
+            $tmpInfo['sheetState'] = $sheet['sheetState'];
 
             $xls->pos = $sheet['offset'];
 

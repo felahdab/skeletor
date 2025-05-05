@@ -18,14 +18,6 @@ class Pipeline
         $this->pipes = $pipes;
     }
 
-    /**
-     * @deprecated This will be removed in 5.0
-     */
-    public function pipes(): array
-    {
-        return $this->pipes;
-    }
-
     public function add(callable $pipe): Pipeline
     {
         $this->pipes[] = $pipe;
@@ -74,8 +66,8 @@ class Pipeline
 
     /**
      * @param callable|class-string $matcher used to determine the position to insert
-     *                                       either an `int` from a callable or, in the case of `$matcher` being
-     *                                       a `class-string`, the position before the first pipe of that class
+     *                                       either an <code>int</code> from a callable or, in the case of <code>$matcher</code> being
+     *                                       a <code>class-string</code>, the position before the first pipe of that class
      */
     public function insert(callable $pipe, $matcher): Pipeline
     {

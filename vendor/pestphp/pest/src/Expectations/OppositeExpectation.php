@@ -74,7 +74,10 @@ final readonly class OppositeExpectation
      */
     public function toUse(array|string $targets): ArchExpectation
     {
-        return GroupArchExpectation::fromExpectations($this->original, array_map(fn (string $target): SingleArchExpectation => ToUse::make($this->original, $target)->opposite(
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
+        return GroupArchExpectation::fromExpectations($original, array_map(fn (string $target): SingleArchExpectation => ToUse::make($original, $target)->opposite(
             fn () => $this->throwExpectationFailedException('toUse', $target),
         ), is_string($targets) ? [$targets] : $targets));
     }
@@ -84,8 +87,11 @@ final readonly class OppositeExpectation
      */
     public function toHaveFileSystemPermissions(string $permissions): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
+            $original,
             fn (ObjectDescription $object): bool => substr(sprintf('%o', fileperms($object->path)), -4) !== $permissions,
             sprintf('permissions not to be [%s]', $permissions),
             FileLineFinder::where(fn (string $line): bool => str_contains($line, '<?php')),
@@ -105,8 +111,11 @@ final readonly class OppositeExpectation
      */
     public function toHaveMethodsDocumented(): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
+            $original,
             fn (ObjectDescription $object): bool => isset($object->reflectionClass) === false
                 || array_filter(
                     Reflection::getMethodsFromReflectionClass($object->reflectionClass),
@@ -124,8 +133,11 @@ final readonly class OppositeExpectation
      */
     public function toHavePropertiesDocumented(): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
+            $original,
             fn (ObjectDescription $object): bool => isset($object->reflectionClass) === false
                 || array_filter(
                     Reflection::getPropertiesFromReflectionClass($object->reflectionClass),
@@ -144,8 +156,11 @@ final readonly class OppositeExpectation
      */
     public function toUseStrictTypes(): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
+            $original,
             fn (ObjectDescription $object): bool => ! (bool) preg_match('/^<\?php\s+declare\(.*?strict_types\s?=\s?1.*?\);/', (string) file_get_contents($object->path)),
             'not to use strict types',
             FileLineFinder::where(fn (string $line): bool => str_contains($line, '<?php')),
@@ -157,8 +172,11 @@ final readonly class OppositeExpectation
      */
     public function toUseStrictEquality(): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
+            $original,
             fn (ObjectDescription $object): bool => ! str_contains((string) file_get_contents($object->path), ' === ') && ! str_contains((string) file_get_contents($object->path), ' !== '),
             'to use strict equality',
             FileLineFinder::where(fn (string $line): bool => str_contains($line, ' === ') || str_contains($line, ' !== ')),
@@ -170,9 +188,12 @@ final readonly class OppositeExpectation
      */
     public function toBeFinal(): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
-            fn (ObjectDescription $object): bool => ! enum_exists($object->name) && ! $object->reflectionClass->isFinal(),
+            $original,
+            fn (ObjectDescription $object): bool => ! enum_exists($object->name) && (isset($object->reflectionClass) === false || ! $object->reflectionClass->isFinal()),
             'not to be final',
             FileLineFinder::where(fn (string $line): bool => str_contains($line, 'class')),
         );
@@ -183,9 +204,12 @@ final readonly class OppositeExpectation
      */
     public function toBeReadonly(): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
-            fn (ObjectDescription $object): bool => ! enum_exists($object->name) && ! $object->reflectionClass->isReadOnly() && assert(true), // @phpstan-ignore-line
+            $original,
+            fn (ObjectDescription $object): bool => ! enum_exists($object->name) && (isset($object->reflectionClass) === false || ! $object->reflectionClass->isReadOnly()) && assert(true), // @phpstan-ignore-line
             'not to be readonly',
             FileLineFinder::where(fn (string $line): bool => str_contains($line, 'class')),
         );
@@ -196,9 +220,12 @@ final readonly class OppositeExpectation
      */
     public function toBeTrait(): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
-            fn (ObjectDescription $object): bool => ! $object->reflectionClass->isTrait(),
+            $original,
+            fn (ObjectDescription $object): bool => isset($object->reflectionClass) === false || ! $object->reflectionClass->isTrait(),
             'not to be trait',
             FileLineFinder::where(fn (string $line): bool => str_contains($line, 'class')),
         );
@@ -217,9 +244,12 @@ final readonly class OppositeExpectation
      */
     public function toBeAbstract(): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
-            fn (ObjectDescription $object): bool => ! $object->reflectionClass->isAbstract(),
+            $original,
+            fn (ObjectDescription $object): bool => isset($object->reflectionClass) === false || ! $object->reflectionClass->isAbstract(),
             'not to be abstract',
             FileLineFinder::where(fn (string $line): bool => str_contains($line, 'class')),
         );
@@ -234,11 +264,14 @@ final readonly class OppositeExpectation
     {
         $methods = is_array($method) ? $method : [$method];
 
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
+            $original,
             fn (ObjectDescription $object): bool => array_filter(
                 $methods,
-                fn (string $method): bool => $object->reflectionClass->hasMethod($method),
+                fn (string $method): bool => isset($object->reflectionClass) === false || $object->reflectionClass->hasMethod($method),
             ) === [],
             'to not have methods: '.implode(', ', $methods),
             FileLineFinder::where(fn (string $line): bool => str_contains($line, 'class')),
@@ -266,8 +299,11 @@ final readonly class OppositeExpectation
 
         $state = new stdClass;
 
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
+            $original,
             function (ObjectDescription $object) use ($methods, &$state): bool {
                 $reflectionMethods = isset($object->reflectionClass)
                     ? Reflection::getMethodsFromReflectionClass($object->reflectionClass, ReflectionMethod::IS_PUBLIC)
@@ -286,7 +322,7 @@ final readonly class OppositeExpectation
             $methods === []
                 ? 'not to have public methods'
                 : sprintf("not to have public methods besides '%s'", implode("', '", $methods)),
-            FileLineFinder::where(fn (string $line): bool => str_contains($line, $state->contains)),
+            FileLineFinder::where(fn (string $line): bool => str_contains($line, (string) $state->contains)),
         );
     }
 
@@ -309,8 +345,11 @@ final readonly class OppositeExpectation
 
         $state = new stdClass;
 
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
+            $original,
             function (ObjectDescription $object) use ($methods, &$state): bool {
                 $reflectionMethods = isset($object->reflectionClass)
                     ? Reflection::getMethodsFromReflectionClass($object->reflectionClass, ReflectionMethod::IS_PROTECTED)
@@ -329,7 +368,7 @@ final readonly class OppositeExpectation
             $methods === []
                 ? 'not to have protected methods'
                 : sprintf("not to have protected methods besides '%s'", implode("', '", $methods)),
-            FileLineFinder::where(fn (string $line): bool => str_contains($line, $state->contains)),
+            FileLineFinder::where(fn (string $line): bool => str_contains($line, (string) $state->contains)),
         );
     }
 
@@ -352,8 +391,11 @@ final readonly class OppositeExpectation
 
         $state = new stdClass;
 
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
+            $original,
             function (ObjectDescription $object) use ($methods, &$state): bool {
                 $reflectionMethods = isset($object->reflectionClass)
                     ? Reflection::getMethodsFromReflectionClass($object->reflectionClass, ReflectionMethod::IS_PRIVATE)
@@ -372,7 +414,7 @@ final readonly class OppositeExpectation
             $methods === []
                 ? 'not to have private methods'
                 : sprintf("not to have private methods besides '%s'", implode("', '", $methods)),
-            FileLineFinder::where(fn (string $line): bool => str_contains($line, $state->contains)),
+            FileLineFinder::where(fn (string $line): bool => str_contains($line, (string) $state->contains)),
         );
     }
 
@@ -389,9 +431,12 @@ final readonly class OppositeExpectation
      */
     public function toBeEnum(): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
-            fn (ObjectDescription $object): bool => ! $object->reflectionClass->isEnum(),
+            $original,
+            fn (ObjectDescription $object): bool => isset($object->reflectionClass) === false || ! $object->reflectionClass->isEnum(),
             'not to be enum',
             FileLineFinder::where(fn (string $line): bool => str_contains($line, 'class')),
         );
@@ -410,8 +455,11 @@ final readonly class OppositeExpectation
      */
     public function toBeClass(): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
+            $original,
             fn (ObjectDescription $object): bool => ! class_exists($object->name),
             'not to be class',
             FileLineFinder::where(fn (string $line): bool => true),
@@ -431,9 +479,12 @@ final readonly class OppositeExpectation
      */
     public function toBeInterface(): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
-            fn (ObjectDescription $object): bool => ! $object->reflectionClass->isInterface(),
+            $original,
+            fn (ObjectDescription $object): bool => isset($object->reflectionClass) === false || ! $object->reflectionClass->isInterface(),
             'not to be interface',
             FileLineFinder::where(fn (string $line): bool => str_contains($line, 'class')),
         );
@@ -452,9 +503,12 @@ final readonly class OppositeExpectation
      */
     public function toExtend(string $class): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
-            fn (ObjectDescription $object): bool => ! $object->reflectionClass->isSubclassOf($class),
+            $original,
+            fn (ObjectDescription $object): bool => isset($object->reflectionClass) === false || ! $object->reflectionClass->isSubclassOf($class),
             sprintf("not to extend '%s'", $class),
             FileLineFinder::where(fn (string $line): bool => str_contains($line, 'class')),
         );
@@ -465,9 +519,12 @@ final readonly class OppositeExpectation
      */
     public function toExtendNothing(): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
-            fn (ObjectDescription $object): bool => $object->reflectionClass->getParentClass() !== false,
+            $original,
+            fn (ObjectDescription $object): bool => isset($object->reflectionClass) === false || $object->reflectionClass->getParentClass() !== false,
             'to extend a class',
             FileLineFinder::where(fn (string $line): bool => str_contains($line, 'class')),
         );
@@ -490,11 +547,14 @@ final readonly class OppositeExpectation
     {
         $traits = is_array($traits) ? $traits : [$traits];
 
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
+            $original,
             function (ObjectDescription $object) use ($traits): bool {
                 foreach ($traits as $trait) {
-                    if (in_array($trait, $object->reflectionClass->getTraitNames(), true)) {
+                    if (isset($object->reflectionClass) && in_array($trait, $object->reflectionClass->getTraitNames(), true)) {
                         return false;
                     }
                 }
@@ -515,11 +575,14 @@ final readonly class OppositeExpectation
     {
         $interfaces = is_array($interfaces) ? $interfaces : [$interfaces];
 
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
+            $original,
             function (ObjectDescription $object) use ($interfaces): bool {
                 foreach ($interfaces as $interface) {
-                    if ($object->reflectionClass->implementsInterface($interface)) {
+                    if (isset($object->reflectionClass) && $object->reflectionClass->implementsInterface($interface)) {
                         return false;
                     }
                 }
@@ -536,9 +599,12 @@ final readonly class OppositeExpectation
      */
     public function toImplementNothing(): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
-            fn (ObjectDescription $object): bool => $object->reflectionClass->getInterfaceNames() !== [],
+            $original,
+            fn (ObjectDescription $object): bool => isset($object->reflectionClass) === false || $object->reflectionClass->getInterfaceNames() !== [],
             'to implement an interface',
             FileLineFinder::where(fn (string $line): bool => str_contains($line, 'class')),
         );
@@ -557,9 +623,12 @@ final readonly class OppositeExpectation
      */
     public function toHavePrefix(string $prefix): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
-            fn (ObjectDescription $object): bool => ! str_starts_with($object->reflectionClass->getShortName(), $prefix),
+            $original,
+            fn (ObjectDescription $object): bool => isset($object->reflectionClass) === false || ! str_starts_with($object->reflectionClass->getShortName(), $prefix),
             "not to have prefix '{$prefix}'",
             FileLineFinder::where(fn (string $line): bool => str_contains($line, 'class')),
         );
@@ -570,9 +639,12 @@ final readonly class OppositeExpectation
      */
     public function toHaveSuffix(string $suffix): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
-            fn (ObjectDescription $object): bool => ! str_ends_with($object->reflectionClass->getName(), $suffix),
+            $original,
+            fn (ObjectDescription $object): bool => isset($object->reflectionClass) === false || ! str_ends_with($object->reflectionClass->getName(), $suffix),
             "not to have suffix '{$suffix}'",
             FileLineFinder::where(fn (string $line): bool => str_contains($line, 'class')),
         );
@@ -599,7 +671,10 @@ final readonly class OppositeExpectation
      */
     public function toBeUsed(): ArchExpectation
     {
-        return ToBeUsedInNothing::make($this->original);
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
+        return ToBeUsedInNothing::make($original);
     }
 
     /**
@@ -609,7 +684,10 @@ final readonly class OppositeExpectation
      */
     public function toBeUsedIn(array|string $targets): ArchExpectation
     {
-        return GroupArchExpectation::fromExpectations($this->original, array_map(fn (string $target): GroupArchExpectation => ToBeUsedIn::make($this->original, $target)->opposite(
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
+        return GroupArchExpectation::fromExpectations($original, array_map(fn (string $target): GroupArchExpectation => ToBeUsedIn::make($original, $target)->opposite(
             fn () => $this->throwExpectationFailedException('toBeUsedIn', $target),
         ), is_string($targets) ? [$targets] : $targets));
     }
@@ -632,9 +710,12 @@ final readonly class OppositeExpectation
      */
     public function toBeInvokable(): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
-            fn (ObjectDescription $object): bool => ! $object->reflectionClass->hasMethod('__invoke'),
+            $original,
+            fn (ObjectDescription $object): bool => isset($object->reflectionClass) === false || ! $object->reflectionClass->hasMethod('__invoke'),
             'to not be invokable',
             FileLineFinder::where(fn (string $line): bool => str_contains($line, 'class'))
         );
@@ -645,9 +726,12 @@ final readonly class OppositeExpectation
      */
     public function toHaveAttribute(string $attribute): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
-            fn (ObjectDescription $object): bool => $object->reflectionClass->getAttributes($attribute) === [],
+            $original,
+            fn (ObjectDescription $object): bool => isset($object->reflectionClass) === false || $object->reflectionClass->getAttributes($attribute) === [],
             "to not have attribute '{$attribute}'",
             FileLineFinder::where(fn (string $line): bool => str_contains($line, 'class'))
         );
@@ -737,9 +821,13 @@ final readonly class OppositeExpectation
      */
     private function toBeBackedEnum(string $backingType): ArchExpectation
     {
+        /** @var Expectation<array<int, string>|string> $original */
+        $original = $this->original;
+
         return Targeted::make(
-            $this->original,
-            fn (ObjectDescription $object): bool => ! $object->reflectionClass->isEnum()
+            $original,
+            fn (ObjectDescription $object): bool => isset($object->reflectionClass) === false
+                || ! $object->reflectionClass->isEnum()
                 || ! (new \ReflectionEnum($object->name))->isBacked() // @phpstan-ignore-line
                 || (string) (new \ReflectionEnum($object->name))->getBackingType() !== $backingType, // @phpstan-ignore-line
             'not to be '.$backingType.' backed enum',

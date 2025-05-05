@@ -10,7 +10,7 @@ trait CompilesMySqlJsonQueries
     /**
      * Compile a "JSON array" statement into SQL.
      *
-     * @param string|\Illuminate\Database\Query\Expression $column
+     * @param string|\Illuminate\Database\Query\Expression<*> $column
      * @return string
      */
     public function compileJsonArray($column)
@@ -71,6 +71,8 @@ trait CompilesMySqlJsonQueries
     {
         $columnWithKey = $objectKey ? $column . (str_contains($column, '->') ? '[*]' : '') . "->$objectKey" : $column;
 
+        /** @var string $field */
+        /** @var string $path */
         [$field, $path] = $this->wrapJsonFieldAndPath($columnWithKey);
 
         if ($objectKey && !str_contains($column, '->')) {

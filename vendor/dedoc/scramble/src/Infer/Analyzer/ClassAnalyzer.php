@@ -52,6 +52,9 @@ class ClassAnalyzer
             $parentDefinition = new ClassDefinition($parentName = $classReflection->getParentClass()->name);
 
             Context::getInstance()->extensionsBroker->afterClassDefinitionCreated(new ClassDefinitionCreatedEvent($parentDefinition->name, $parentDefinition));
+
+            // In case parent definition is added in an extension.
+            $parentDefinition = $this->index->getClassDefinition($parentName) ?: $parentDefinition;
         }
 
         /*
@@ -84,7 +87,10 @@ class ClassAnalyzer
                 );
             } else {
                 $classDefinition->properties[$reflectionProperty->name] = new ClassPropertyDefinition(
-                    type: $t = new TemplateType('T'.Str::studly($reflectionProperty->name)),
+                    type: $t = new TemplateType(
+                        'T'.Str::studly($reflectionProperty->name),
+                        is: $reflectionProperty->hasType() ? TypeHelper::createTypeFromReflectionType($reflectionProperty->getType()) : new UnknownType,
+                    ),
                     defaultType: $reflectionProperty->hasDefaultValue()
                         ? TypeHelper::createTypeFromValue($reflectionProperty->getDefaultValue())
                         : null,
@@ -105,6 +111,7 @@ class ClassAnalyzer
                     returnType: new UnknownType,
                 ),
                 definingClassName: $name,
+                isStatic: $reflectionMethod->isStatic(),
             );
         }
 

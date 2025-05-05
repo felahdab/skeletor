@@ -28,14 +28,29 @@ final class Coverage implements AddsOutput, HandlesArguments
     private const MIN_OPTION = 'min';
 
     /**
+     * @var string
+     */
+    private const EXACTLY_OPTION = 'exactly';
+
+    /**
      * Whether it should show the coverage or not.
      */
     public bool $coverage = false;
 
     /**
+     * Whether it should show the coverage or not.
+     */
+    public bool $compact = false;
+
+    /**
      * The minimum coverage.
      */
     public float $coverageMin = 0.0;
+
+    /**
+     * The exactly coverage.
+     */
+    public ?float $coverageExactly = null;
 
     /**
      * Creates a new Plugin instance.
@@ -51,7 +66,7 @@ final class Coverage implements AddsOutput, HandlesArguments
     public function handleArguments(array $originals): array
     {
         $arguments = [...[''], ...array_values(array_filter($originals, function (string $original): bool {
-            foreach ([self::COVERAGE_OPTION, self::MIN_OPTION] as $option) {
+            foreach ([self::COVERAGE_OPTION, self::MIN_OPTION, self::EXACTLY_OPTION] as $option) {
                 if ($original === sprintf('--%s', $option)) {
                     return true;
                 }
@@ -73,6 +88,7 @@ final class Coverage implements AddsOutput, HandlesArguments
         $inputs = [];
         $inputs[] = new InputOption(self::COVERAGE_OPTION, null, InputOption::VALUE_NONE);
         $inputs[] = new InputOption(self::MIN_OPTION, null, InputOption::VALUE_REQUIRED);
+        $inputs[] = new InputOption(self::EXACTLY_OPTION, null, InputOption::VALUE_REQUIRED);
 
         $input = new ArgvInput($arguments, new InputDefinition($inputs));
         if ((bool) $input->getOption(self::COVERAGE_OPTION)) {
@@ -106,6 +122,17 @@ final class Coverage implements AddsOutput, HandlesArguments
             $this->coverageMin = (float) $minOption;
         }
 
+        if ($input->getOption(self::EXACTLY_OPTION) !== null) {
+            /** @var int|float $exactlyOption */
+            $exactlyOption = $input->getOption(self::EXACTLY_OPTION);
+
+            $this->coverageExactly = (float) $exactlyOption;
+        }
+
+        if ($_SERVER['COLLISION_PRINTER_COMPACT'] ?? false) {
+            $this->compact = true;
+        }
+
         return $originals;
     }
 
@@ -126,11 +153,23 @@ final class Coverage implements AddsOutput, HandlesArguments
                 exit(1);
             }
 
-            $coverage = \Pest\Support\Coverage::report($this->output);
-
+            $coverage = \Pest\Support\Coverage::report($this->output, $this->compact);
             $exitCode = (int) ($coverage < $this->coverageMin);
 
-            if ($exitCode === 1) {
+            if ($exitCode === 0 && $this->coverageExactly !== null) {
+                $comparableCoverage = $this->computeComparableCoverage($coverage);
+                $comparableCoverageExactly = $this->computeComparableCoverage($this->coverageExactly);
+
+                $exitCode = $comparableCoverage === $comparableCoverageExactly ? 0 : 1;
+
+                if ($exitCode === 1) {
+                    $this->output->writeln(sprintf(
+                        "\n  <fg=white;bg=red;options=bold> FAIL </> Code coverage not exactly <fg=white;options=bold> %s %%</>, currently <fg=red;options=bold> %s %%</>.",
+                        number_format($this->coverageExactly, 1),
+                        number_format(floor($coverage * 10) / 10, 1),
+                    ));
+                }
+            } elseif ($exitCode === 1) {
                 $this->output->writeln(sprintf(
                     "\n  <fg=white;bg=red;options=bold> FAIL </> Code coverage below expected <fg=white;options=bold> %s %%</>, currently <fg=red;options=bold> %s %%</>.",
                     number_format($this->coverageMin, 1),
@@ -142,5 +181,13 @@ final class Coverage implements AddsOutput, HandlesArguments
         }
 
         return $exitCode;
+    }
+
+    /**
+     * Computes the comparable coverage to a percentage with one decimal.
+     */
+    private function computeComparableCoverage(float $coverage): float
+    {
+        return floor($coverage * 10) / 10;
     }
 }

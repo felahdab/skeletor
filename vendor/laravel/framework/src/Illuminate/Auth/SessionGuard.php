@@ -126,15 +126,15 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
      * @param  \Symfony\Component\HttpFoundation\Request|null  $request
      * @param  \Illuminate\Support\Timebox|null  $timebox
      * @param  bool  $rehashOnLogin
-     * @return void
      */
-    public function __construct($name,
-                                UserProvider $provider,
-                                Session $session,
-                                ?Request $request = null,
-                                ?Timebox $timebox = null,
-                                bool $rehashOnLogin = true)
-    {
+    public function __construct(
+        $name,
+        UserProvider $provider,
+        Session $session,
+        ?Request $request = null,
+        ?Timebox $timebox = null,
+        bool $rehashOnLogin = true,
+    ) {
         $this->name = $name;
         $this->session = $session;
         $this->request = $request;
@@ -238,8 +238,8 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
         }
 
         return $this->user()
-                    ? $this->user()->getAuthIdentifier()
-                    : $this->session->get($this->getName());
+            ? $this->user()->getAuthIdentifier()
+            : $this->session->get($this->getName());
     }
 
     /**
@@ -259,6 +259,8 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
 
             return true;
         }
+
+        $this->fireFailedEvent($this->lastAttempted, $credentials);
 
         return false;
     }

@@ -66,6 +66,7 @@ final readonly class Exporter
 
             $result[] = $context->contains($data[$key]) !== false
                 ? '*RECURSION*'
+                // @phpstan-ignore-next-line
                 : sprintf('[%s]', $this->shortenedRecursiveExport($data[$key], $context));
         }
 

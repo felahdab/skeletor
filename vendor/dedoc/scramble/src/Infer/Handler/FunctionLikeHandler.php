@@ -49,6 +49,8 @@ class FunctionLikeHandler implements CreatesScope
         $scope->context->setFunctionDefinition($fnDefinition = new FunctionLikeDefinition(
             type: $fnType = new FunctionType($node->name->name ?? 'anonymous'),
             sideEffects: [],
+            definingClassName: $scope->context->classDefinition?->name,
+            isStatic: $node instanceof Node\Stmt\ClassMethod ? $node->isStatic() : false,
         ));
         $fnDefinition->isFullyAnalyzed = true;
 
@@ -81,12 +83,10 @@ class FunctionLikeHandler implements CreatesScope
                     ? TypeHelper::createTypeFromTypeNode($param->type)
                     : null;
 
-                $type = ($annotatedType instanceof BooleanType || $annotatedType instanceof IntegerType || $annotatedType instanceof FloatType)
-                    ? $annotatedType
-                    : new TemplateType(
-                        $scope->makeConflictFreeTemplateName('T'.Str::studly($param->var->name)),
-                        $annotatedType,
-                    );
+                $type = new TemplateType(
+                    $scope->makeConflictFreeTemplateName('T'.Str::studly($param->var->name)),
+                    $annotatedType,
+                );
 
                 if ($type instanceof TemplateType) {
                     $localTemplates[] = $type;

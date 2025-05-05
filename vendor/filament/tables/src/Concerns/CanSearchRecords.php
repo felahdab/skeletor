@@ -110,7 +110,7 @@ trait CanSearchRecords
     protected function extractTableSearchWords(string $search): array
     {
         return array_filter(
-            str_getcsv(preg_replace('/\s+/', ' ', $search), ' '),
+            str_getcsv(preg_replace('/\s+/', ' ', $search), separator: ' ', escape: '\\'),
             fn ($word): bool => filled($word),
         );
     }
@@ -273,14 +273,14 @@ trait CanSearchRecords
 
     public function getTableSearchSessionKey(): string
     {
-        $table = class_basename($this::class);
+        $table = md5($this::class);
 
         return "tables.{$table}_search";
     }
 
     public function getTableColumnSearchesSessionKey(): string
     {
-        $table = class_basename($this::class);
+        $table = md5($this::class);
 
         return "tables.{$table}_column_search";
     }

@@ -3,7 +3,6 @@
 namespace Illuminate\Filesystem;
 
 use Closure;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Traits\Conditionable;
 use RuntimeException;
 
@@ -88,7 +87,7 @@ class LocalFilesystemAdapter extends FilesystemAdapter
     }
 
     /**
-     * Indiate that signed URLs should serve the corresponding files.
+     * Indicate that signed URLs should serve the corresponding files.
      *
      * @param  bool  $serve
      * @param  \Closure|null  $urlGeneratorResolver

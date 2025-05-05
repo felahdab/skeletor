@@ -3,6 +3,7 @@
 namespace Dedoc\Scramble\Support\TypeToSchemaExtensions;
 
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Dedoc\Scramble\Support\Type\ArrayItemType_;
 use Dedoc\Scramble\Support\Type\Generic;
 use Dedoc\Scramble\Support\Type\KeyedArrayType;
@@ -12,6 +13,7 @@ use Dedoc\Scramble\Support\Type\Type;
 use Dedoc\Scramble\Support\Type\TypeWalker;
 use Dedoc\Scramble\Support\Type\Union;
 use Dedoc\Scramble\Support\Type\UnknownType;
+use Dedoc\Scramble\Support\Type\VoidType;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MergeValue;
@@ -32,10 +34,10 @@ trait FlattensMergeValues
 
                 if (
                     $item->value instanceof Union
-                    && (new TypeWalker)->first($item->value, fn (Type $t) => $t->isInstanceOf(Carbon::class))
+                    && (new TypeWalker)->first($item->value, fn (Type $t) => $t->isInstanceOf(Carbon::class) || $t->isInstanceOf(CarbonImmutable::class))
                 ) {
                     (new TypeWalker)->replace($item->value, function (Type $t) {
-                        return $t->isInstanceOf(Carbon::class)
+                        return ($t->isInstanceOf(Carbon::class) || $t->isInstanceOf(CarbonImmutable::class))
                             ? tap(new StringType, fn ($t) => $t->setAttribute('format', 'date-time'))
                             : null;
                     });
@@ -60,27 +62,30 @@ trait FlattensMergeValues
                     }
                 }
 
+                $isUnionWithMissingValue = fn ($type) => $type instanceof Union
+                    && (bool) array_filter($type->types, fn (Type $t) => $t->isInstanceOf(MissingValue::class));
+
                 if (
                     $item->value instanceof Union
-                    && (new TypeWalker)->first($item->value, fn (Type $t) => $t->isInstanceOf(MissingValue::class))
+                    && (new TypeWalker)->first($item->value, $isUnionWithMissingValue)
                 ) {
-                    $newType = array_values(
-                        array_filter($item->value->types, fn (Type $t) => ! $t->isInstanceOf(MissingValue::class))
-                    );
+                    $newType = (new TypeWalker)->replace($item->value, function (Type $t) use ($isUnionWithMissingValue) {
+                        if (! $isUnionWithMissingValue($t)) {
+                            return null;
+                        }
 
-                    if (! count($newType)) {
+                        return Union::wrap(array_values(
+                            array_filter($t->types, fn (Type $t) => ! $t->isInstanceOf(MissingValue::class))
+                        ));
+                    });
+
+                    if ($newType instanceof VoidType) {
                         return [];
                     }
 
                     $item->isOptional = true;
 
-                    if (count($newType) === 1) {
-                        $item->value = $newType[0];
-
-                        return $this->flattenMergeValues([$item]);
-                    }
-
-                    $item->value = new Union($newType);
+                    $item->value = $newType;
 
                     return $this->flattenMergeValues([$item]);
                 }

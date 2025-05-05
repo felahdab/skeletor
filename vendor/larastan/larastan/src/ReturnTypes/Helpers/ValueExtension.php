@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Larastan\Larastan\ReturnTypes\Helpers;
 
-use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\Expr\FuncCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\FunctionReflection;
-use PHPStan\Reflection\ParametersAcceptorSelector;
 use PHPStan\Type\DynamicFunctionReturnTypeExtension;
 use PHPStan\Type\NeverType;
 use PHPStan\Type\Type;
+use PHPStan\Type\TypeTraverser;
 
 use function count;
 
@@ -32,17 +31,15 @@ final class ValueExtension implements DynamicFunctionReturnTypeExtension
             return new NeverType();
         }
 
-        $arg = $functionCall->getArgs()[0]->value;
-        if ($arg instanceof Closure) {
-            $callbackType = $scope->getType($arg);
+        $arg     = $functionCall->getArgs()[0]->value;
+        $argType = $scope->getType($arg);
 
-            return ParametersAcceptorSelector::selectFromArgs(
-                $scope,
-                $functionCall->getArgs(),
-                $callbackType->getCallableParametersAcceptors($scope),
-            )->getReturnType();
-        }
+        return TypeTraverser::map($argType, static function (Type $type, callable $traverse) use ($scope): Type {
+            if ($type->isCallable()->yes()) {
+                return $type->getCallableParametersAcceptors($scope)[0]->getReturnType();
+            }
 
-        return $scope->getType($arg);
+            return $traverse($type);
+        });
     }
 }

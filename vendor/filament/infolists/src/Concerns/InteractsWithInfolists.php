@@ -4,7 +4,6 @@ namespace Filament\Infolists\Concerns;
 
 use Exception;
 use Filament\Actions\Contracts\HasActions;
-use Filament\Forms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Actions\Action;
@@ -125,8 +124,6 @@ trait InteractsWithInfolists
             ]);
 
             $result = $action->callAfter() ?? $result;
-
-            $action->commitDatabaseTransaction();
         } catch (Halt $exception) {
             $exception->shouldRollbackDatabaseTransaction() ?
                 $action->rollBackDatabaseTransaction() :
@@ -153,6 +150,8 @@ trait InteractsWithInfolists
 
             throw $exception;
         }
+
+        $action->commitDatabaseTransaction();
 
         if (store($this)->has('redirect')) {
             return $result;
@@ -350,7 +349,7 @@ trait InteractsWithInfolists
     }
 
     /**
-     * @return array<string, Forms\Form>
+     * @return array<string, Form>
      */
     protected function getInteractsWithInfolistsForms(): array
     {

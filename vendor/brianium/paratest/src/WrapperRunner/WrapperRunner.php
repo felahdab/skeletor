@@ -9,8 +9,8 @@ use ParaTest\JUnit\LogMerger;
 use ParaTest\JUnit\Writer;
 use ParaTest\Options;
 use ParaTest\RunnerInterface;
-use PHPUnit\Event\Facade as EventFacade;
 use PHPUnit\Runner\CodeCoverage;
+use PHPUnit\Runner\ResultCache\DefaultResultCache;
 use PHPUnit\TestRunner\TestResult\Facade as TestResultFacade;
 use PHPUnit\TestRunner\TestResult\TestResult;
 use PHPUnit\TextUI\Configuration\CodeCoverageFilterRegistry;
@@ -56,7 +56,9 @@ final class WrapperRunner implements RunnerInterface
     /** @var list<SplFileInfo> */
     private array $unexpectedOutputFiles = [];
     /** @var list<SplFileInfo> */
-    private array $testresultFiles = [];
+    private array $resultCacheFiles = [];
+    /** @var list<SplFileInfo> */
+    private array $testResultFiles = [];
     /** @var list<SplFileInfo> */
     private array $coverageFiles = [];
     /** @var list<SplFileInfo> */
@@ -100,8 +102,6 @@ final class WrapperRunner implements RunnerInterface
         $directory = dirname(__DIR__);
         assert($directory !== '');
         ExcludeList::addDirectory($directory);
-        TestResultFacade::init();
-        EventFacade::instance()->seal();
         $suiteLoader = new SuiteLoader(
             $this->options,
             $this->output,
@@ -214,7 +214,11 @@ final class WrapperRunner implements RunnerInterface
         $this->statusFiles[]           = $worker->statusFile;
         $this->progressFiles[]         = $worker->progressFile;
         $this->unexpectedOutputFiles[] = $worker->unexpectedOutputFile;
-        $this->testresultFiles[]       = $worker->testresultFile;
+        $this->testResultFiles[]       = $worker->testResultFile;
+
+        if (isset($worker->resultCacheFile)) {
+            $this->resultCacheFiles[] = $worker->resultCacheFile;
+        }
 
         if (isset($worker->junitFile)) {
             $this->junitFiles[] = $worker->junitFile;
@@ -248,7 +252,7 @@ final class WrapperRunner implements RunnerInterface
 
     private function complete(TestResult $testResultSum): int
     {
-        foreach ($this->testresultFiles as $testresultFile) {
+        foreach ($this->testResultFiles as $testresultFile) {
             if (! $testresultFile->isFile()) {
                 continue;
             }
@@ -284,6 +288,18 @@ final class WrapperRunner implements RunnerInterface
             );
         }
 
+        if ($this->options->configuration->cacheResult()) {
+            $resultCacheSum = new DefaultResultCache($this->options->configuration->testResultCacheFile());
+            foreach ($this->resultCacheFiles as $resultCacheFile) {
+                $resultCache = new DefaultResultCache($resultCacheFile->getPathname());
+                $resultCache->load();
+
+                $resultCacheSum->mergeWith($resultCache);
+            }
+
+            $resultCacheSum->persist();
+        }
+
         $this->printer->printResults(
             $testResultSum,
             $this->teamcityFiles,
@@ -307,7 +323,8 @@ final class WrapperRunner implements RunnerInterface
         $this->clearFiles($this->statusFiles);
         $this->clearFiles($this->progressFiles);
         $this->clearFiles($this->unexpectedOutputFiles);
-        $this->clearFiles($this->testresultFiles);
+        $this->clearFiles($this->testResultFiles);
+        $this->clearFiles($this->resultCacheFiles);
         $this->clearFiles($this->coverageFiles);
         $this->clearFiles($this->junitFiles);
         $this->clearFiles($this->teamcityFiles);

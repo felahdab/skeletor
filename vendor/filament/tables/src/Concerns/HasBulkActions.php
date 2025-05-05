@@ -84,8 +84,6 @@ trait HasBulkActions
             ]);
 
             $result = $action->callAfter() ?? $result;
-
-            $action->commitDatabaseTransaction();
         } catch (Halt $exception) {
             $exception->shouldRollbackDatabaseTransaction() ?
                 $action->rollBackDatabaseTransaction() :
@@ -112,6 +110,8 @@ trait HasBulkActions
 
             throw $exception;
         }
+
+        $action->commitDatabaseTransaction();
 
         if (store($this)->has('redirect')) {
             return $result;
@@ -350,7 +350,7 @@ trait HasBulkActions
         $table = $this->getTable();
 
         if (
-            $shouldFetchSelectedRecords ||
+            (! $shouldFetchSelectedRecords) ||
             (! ($table->getRelationship() instanceof BelongsToMany && $table->allowsDuplicates()))
         ) {
             $query = $table->getQuery()->whereKey($this->selectedTableRecords);
