@@ -186,6 +186,7 @@ class LoginController extends Controller
         else{
             $mapping = match (config('skeletor.reseau_de_deploiement')){
                 "intradef" => [
+                    'sub' => $MCuser->user['sub'],
                     "password" => RandomPasswordGeneratorService::generateRandomString(),
                     'email' => $MCuser->email,
                     'nom' => $MCuser->user['usual_name'],
@@ -194,6 +195,7 @@ class LoginController extends Controller
                     "date_embarq" => date('Y-m-d')
                 ],
                 "sic21" => [
+                    'sub' => $MCuser->user['sub'],
                     "password" => RandomPasswordGeneratorService::generateRandomString(),
                     'email' => $MCuser->email,
                     'nom' => $MCuser->user['family_name'],
