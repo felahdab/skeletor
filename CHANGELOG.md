@@ -1,3 +1,9 @@
+## 3.1.0 (May 07, 2025)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.10 –> 3.1.0
+- Ajustement des fichiers .env de référence pour rajouter le REDIS_USERNAME
+- Upgrade all packages. All tests ok.
+- Prise en compte de l'attribut sub dans la création automatique des utilisateurs en provenance du serveur de SSO.
+
 ## 3.0.10 (May 05, 2025)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.9 –> 3.0.10
 - On retire certaines routes inutiles
