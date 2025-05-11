@@ -23,6 +23,8 @@ use App\Scopes\ScopedMacro;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
 
+use App\Filament\PanelRegistry\ModuleDefinedMenusRegistry;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -33,6 +35,10 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         Scramble::ignoreDefaultRoutes();
+        $this->app->singleton(ModuleDefinedMenusRegistry::class, function () 
+        {
+            return new ModuleDefinedMenusRegistry();
+        });
     }
 
     /**
@@ -62,6 +68,12 @@ class AppServiceProvider extends ServiceProvider
             fn (): View => view('layouts.partials.api-documentation-link'),
         );
 
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
+            fn (): View => view('layouts.partials.additionnal-menus', ["menus" => app(ModuleDefinedMenusRegistry::class)->getDirectMenuItems()]),
+        );
+
+
         if (config('app.scheme') == 'https')
             \Illuminate\Support\Facades\URL::forceScheme('https');
 
@@ -82,5 +94,8 @@ class AppServiceProvider extends ServiceProvider
         $link_config = config("filesystems.links");
         $link_config[base_path( 'public/' . config('skeletor.prefixe_instance'))] = public_path();
         app('config')->set('filesystems.links', $link_config);
+
+
+
     }
 }
