@@ -1,3 +1,7 @@
+## 3.1.1 (May 14, 2025)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.1.0 –> 3.1.1
+- Implémentation système de déclaration de pages à accès rapide.
+
 ## 3.1.0 (May 07, 2025)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.0.10 –> 3.1.0
 - Ajustement des fichiers .env de référence pour rajouter le REDIS_USERNAME
