@@ -9,7 +9,7 @@ class DirectMenuItem
     private string $name ='';
     private bool | Closure $visible = true;
     private string | Closure $url ='';
-    private array $children = [];
+    private array | Closure $children = [];
 
     public function __construct()
     {
@@ -44,7 +44,7 @@ class DirectMenuItem
         return $this;
     }
 
-    public function children(array $children): static
+    public function children(array | Closure $children): static
     {
         $this->children = $children;
         return $this;
@@ -52,7 +52,7 @@ class DirectMenuItem
 
     public function getChildren(): array
     {
-        return $this->children;
+        return value($this->children);
     }
 
     public function hasChildren(): bool
