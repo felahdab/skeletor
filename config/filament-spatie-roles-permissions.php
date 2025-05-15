@@ -88,6 +88,7 @@ return [
     'model_filter_key' => 'return \'%\'.$value;', // Eg: 'return \'%\'.$key.'\%\';'
 
     'user_name_column' => 'nom',
+    'user_name_searchable_columns' => ['nom'],
 
     /*
      * Icons to use for navigation
