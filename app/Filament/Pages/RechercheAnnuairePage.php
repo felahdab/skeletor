@@ -13,6 +13,11 @@ use App\Models\Role;
 
 class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
 {
+    public static function canAccess(): bool
+    {
+        return auth()->check() && auth()->user()->can('skeletor.recherche-annuaire');
+    }
+
     public function getRowActions()
     {
         return [
