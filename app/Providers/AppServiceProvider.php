@@ -76,6 +76,18 @@ class AppServiceProvider extends ServiceProvider
             fn (): View => view('layouts.partials.additionnal-menus', ["menus" => app(ModuleDefinedMenusRegistry::class)->getDirectMenuItems()]),
         );
 
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::BODY_START,
+            fn (): string => Blade::render('@livewire(\'report-bug-or-suggestion\', ["url" => url()->current()])'),
+        );
+
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
+            fn (): View => view('layouts.partials.trigger-report-bug-or-suggestion'),
+        );
+
+        
+
 
         if (config('app.scheme') == 'https')
             \Illuminate\Support\Facades\URL::forceScheme('https');

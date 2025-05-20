@@ -1,7 +1,7 @@
 <x-filament::dropdown>
     <x-slot name="trigger">
         <x-filament::button>
-            Accès direct aux autres modules
+            Accès rapide
         </x-filament::button>
     </x-slot>
     
