@@ -16,7 +16,7 @@ class PermissionPolicy extends GenericSkeletorPolicy
     {
         if ($user == null)
             return false;
-        return true;
+        return $user->can('permissions.index');
     }
 
     /**
@@ -26,7 +26,7 @@ class PermissionPolicy extends GenericSkeletorPolicy
     {        
       if ($user == null)
          return false;
-      return true;
+      return $user->can('permissions.index');
     }
 
     /**
