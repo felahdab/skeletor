@@ -19,11 +19,14 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Blade;
 
 use App\Scopes\ScopedMacro;
+use Filament\Pages\Dashboard;
 
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
 
 use App\Filament\PanelRegistry\ModuleDefinedMenusRegistry;
+use App\Filament\PanelRegistry\DirectMenuItem;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -95,7 +98,18 @@ class AppServiceProvider extends ServiceProvider
         $link_config[base_path( 'public/' . config('skeletor.prefixe_instance'))] = public_path();
         app('config')->set('filesystems.links', $link_config);
 
-
+        app(ModuleDefinedMenusRegistry::class)->registerDirectMenuItems([
+            DirectMenuItem::make()
+                ->name('Administration')
+                ->visible(fn() => auth()->check() )
+                ->children([
+                    DirectMenuItem::make()
+                        ->name('Panneau d\'administration')
+                        ->url(fn() => Dashboard::getUrl(panel: "admin"))
+                        ->visible(fn() => auth()->check() && Dashboard::canAccess()),
+                    
+                ]),
+            ]);
 
     }
 }
