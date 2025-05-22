@@ -1,3 +1,13 @@
+## 3.1.2 (May 22, 2025)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.1.1 –> 3.1.2
+- Réimplémentation de la fonctionnalité de signalement de bug ou de suggestion en tête de l'application
+- Ajout d'un lien direct vers le panneau d'administration.
+- Restriction de la vue des permissions aux utilisateurs ayant la permission users.index.
+- Création d'une permission pour accéder à la page de recherche dans l'annuaire du panneau d'administration.
+- Correction lien d'arrêt de l'impersonation
+- Possibilité d'utiliser des closures pour définir les descendants d'un objet DirectMenuItem
+- Précision du nom de la colonne à utiliser pour rechercher un utilisateur dans la page de ressources des roles.
+
 ## 3.1.1 (May 14, 2025)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.1.0 –> 3.1.1
 - Implémentation système de déclaration de pages à accès rapide.
