@@ -41,35 +41,50 @@ abstract class Type
         $this->default = new MissingExample;
     }
 
-    public function nullable(bool $nullable)
+    /**
+     * @return $this
+     */
+    public function nullable(bool $nullable): self
     {
         $this->nullable = $nullable;
 
         return $this;
     }
 
-    public function format(string $format)
+    /**
+     * @return $this
+     */
+    public function format(string $format): self
     {
         $this->format = $format;
 
         return $this;
     }
 
-    public function contentMediaType(string $mediaType)
+    /**
+     * @return $this
+     */
+    public function contentMediaType(string $mediaType): self
     {
         $this->contentMediaType = $mediaType;
 
         return $this;
     }
 
-    public function contentEncoding(string $encoding)
+    /**
+     * @return $this
+     */
+    public function contentEncoding(string $encoding): self
     {
         $this->contentEncoding = $encoding;
 
         return $this;
     }
 
-    public function addProperties(Type $fromType)
+    /**
+     * @return $this
+     */
+    public function addProperties(Type $fromType): self
     {
         $this->attributes = $fromType->attributes;
 
@@ -105,14 +120,20 @@ abstract class Type
         );
     }
 
-    public function setDescription(string $description): Type
+    /**
+     * @return $this
+     */
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
         return $this;
     }
 
-    public function enum(array $enum): Type
+    /**
+     * @return $this
+     */
+    public function enum(array $enum): self
     {
         $this->enum = $enum;
 
@@ -121,8 +142,9 @@ abstract class Type
 
     /**
      * @param  array|scalar|null|MissingExample  $example
+     * @return $this
      */
-    public function example($example)
+    public function example($example): self
     {
         $this->example = $example;
 
@@ -131,8 +153,9 @@ abstract class Type
 
     /**
      * @param  array|scalar|null|MissingExample  $default
+     * @return $this
      */
-    public function default($default)
+    public function default($default): self
     {
         $this->default = $default;
 
@@ -141,8 +164,9 @@ abstract class Type
 
     /**
      * @param  array<array|scalar|null|MissingExample>  $examples
+     * @return $this
      */
-    public function examples(array $examples)
+    public function examples(array $examples): self
     {
         $this->examples = $examples;
 

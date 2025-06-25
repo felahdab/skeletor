@@ -2,6 +2,49 @@
 
 All notable changes to `laravel-data` will be documented in this file.
 
+## 4.16.1 - 2025-06-24
+
+### What's Changed
+
+* Fix issue where toArray() is called on null by @mdietger in https://github.com/spatie/laravel-data/pull/1046
+
+**Full Changelog**: https://github.com/spatie/laravel-data/compare/4.16.0...4.16.1
+
+## 4.16.0 - 2025-06-20
+
+### What's Changed
+
+* Add return type annotations to TransformableData trait by @cyppe in https://github.com/spatie/laravel-data/pull/1000
+* Add the possibibilty to except key for empty data generation by @thoresuenert in https://github.com/spatie/laravel-data/pull/1035
+* Enhance CannotCastEnum exception message to include property name by @rajmundtoth0 in https://github.com/spatie/laravel-data/pull/1039
+* Fix issue in pr 1007 by @rubenvanassche in https://github.com/spatie/laravel-data/pull/1041
+* Implement the compare method on the eloquent casts to improve the isDirty check  by @SanderSander in https://github.com/spatie/laravel-data/pull/1033
+* Add support for default values on properties for morph by @bentleyo in https://github.com/spatie/laravel-data/pull/1017
+* Fix problem with dynamic properties
+
+**Full Changelog**: https://github.com/spatie/laravel-data/compare/4.15.3...4.16.0
+
+## 4.15.3 - 2025-06-19
+
+- Add support for only and except in enum rule
+
+**Full Changelog**: https://github.com/spatie/laravel-data/compare/4.15.2...4.15.3
+
+## 4.15.2 - 2025-06-12
+
+- Fix: CannotCreateData exception when AutoWhenLoadedLazy relationship is not loaded  (#1009)
+- Fix: Inertia deferred properties not being that flexible
+
+**Full Changelog**: https://github.com/spatie/laravel-data/compare/4.15.1...4.15.2
+
+## 4.15.1 - 2025-04-10
+
+### What's Changed
+
+* Fix #997 by @bentleyo in https://github.com/spatie/laravel-data/pull/998
+
+**Full Changelog**: https://github.com/spatie/laravel-data/compare/4.15.0...4.15.1
+
 ## 4.15.0 - 2025-04-09
 
 ### What's Changed
@@ -93,6 +136,11 @@ SongData::factory()
 
 
 
+
+
+
+
+
 ```
 #### Injecting property values
 
@@ -103,6 +151,11 @@ class SongData extends Data {
     #[FromAuthenticatedUser]
     public UserData $user;
 }
+
+
+
+
+
 
 
 
@@ -134,6 +187,11 @@ class SongData extends Data
         ];
     }
 }
+
+
+
+
+
 
 
 

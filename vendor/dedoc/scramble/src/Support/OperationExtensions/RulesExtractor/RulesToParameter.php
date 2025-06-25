@@ -32,14 +32,23 @@ class RulesToParameter
         $this->rules = Arr::wrap(is_string($rules) ? explode('|', $rules) : $rules);
     }
 
-    public function generate()
+    public function generate(): ?Parameter
     {
         if (count($this->docNode?->getTagsByName('@ignoreParam') ?? [])) {
             return null;
         }
 
         $rules = collect($this->rules)
-            ->map(fn ($v) => method_exists($v, '__toString') ? $v->__toString() : $v)
+            ->map(function ($v) {
+                if (! method_exists($v, '__toString')) {
+                    return $v;
+                }
+                try {
+                    return $v->__toString();
+                } catch (\Throwable) {
+                    return $v;
+                }
+            })
             ->sortByDesc($this->rulesSorter());
 
         /** @var OpenApiType $type */
@@ -53,12 +62,19 @@ class RulesToParameter
                 : $this->getTypeFromObjectRule($type, $rule);
         }, new UnknownType);
 
+        if (
+            $rules->containsStrict('sometimes')
+            && $type->getAttribute('required')
+        ) {
+            $type->setAttribute('required', false);
+        }
+
         $description = $type->description;
         $type->setDescription('');
 
         $parameter = Parameter::make($this->name, $this->in)
             ->setSchema(Schema::fromType($type))
-            ->required($rules->contains('required') && $rules->doesntContain('sometimes'))
+            ->required($rules->containsStrict('required') && ! $rules->containsStrict('sometimes'))
             ->description($description);
 
         return $this->applyDocsInfo($parameter);

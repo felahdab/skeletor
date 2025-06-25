@@ -4,9 +4,14 @@ namespace Illuminate\Support;
 
 use ArgumentCountError;
 use ArrayAccess;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
+use JsonSerializable;
 use Random\Randomizer;
+use Traversable;
+use WeakMap;
 
 class Arr
 {
@@ -21,6 +26,21 @@ class Arr
     public static function accessible($value)
     {
         return is_array($value) || $value instanceof ArrayAccess;
+    }
+
+    /**
+     * Determine whether the given value is arrayable.
+     *
+     * @param  mixed  $value
+     * @return bool
+     */
+    public static function arrayable($value)
+    {
+        return is_array($value)
+            || $value instanceof Arrayable
+            || $value instanceof Traversable
+            || $value instanceof Jsonable
+            || $value instanceof JsonSerializable;
     }
 
     /**
@@ -379,6 +399,32 @@ class Arr
     }
 
     /**
+     * Get the underlying array of items from the given argument.
+     *
+     * @template TKey of array-key = array-key
+     * @template TValue = mixed
+     *
+     * @param  array<TKey, TValue>|Enumerable<TKey, TValue>|Arrayable<TKey, TValue>|WeakMap<object, TValue>|Traversable<TKey, TValue>|Jsonable|JsonSerializable|object  $items
+     * @return ($items is WeakMap ? list<TValue> : array<TKey, TValue>)
+     *
+     * @throws \InvalidArgumentException
+     */
+    public static function from($items)
+    {
+        return match (true) {
+            is_array($items) => $items,
+            $items instanceof Enumerable => $items->all(),
+            $items instanceof Arrayable => $items->toArray(),
+            $items instanceof WeakMap => iterator_to_array($items, false),
+            $items instanceof Traversable => iterator_to_array($items),
+            $items instanceof Jsonable => json_decode($items->toJson(), true),
+            $items instanceof JsonSerializable => (array) $items->jsonSerialize(),
+            is_object($items) => (array) $items,
+            default => throw new InvalidArgumentException('Items cannot be represented by a scalar value.'),
+        };
+    }
+
+    /**
      * Get an item from an array using "dot" notation.
      *
      * @param  \ArrayAccess|array  $array
@@ -450,6 +496,30 @@ class Arr
     }
 
     /**
+     * Determine if all keys exist in an array using "dot" notation.
+     *
+     * @param  \ArrayAccess|array  $array
+     * @param  string|array  $keys
+     * @return bool
+     */
+    public static function hasAll($array, $keys)
+    {
+        $keys = (array) $keys;
+
+        if (! $array || $keys === []) {
+            return false;
+        }
+
+        foreach ($keys as $key) {
+            if (! static::has($array, $key)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Determine if any of the keys exist in an array using "dot" notation.
      *
      * @param  \ArrayAccess|array  $array
@@ -488,7 +558,7 @@ class Arr
     {
         $value = Arr::get($array, $key, $default);
 
-        if (! is_integer($value)) {
+        if (! is_int($value)) {
             throw new InvalidArgumentException(
                 sprintf('Array value for key [%s] must be an integer, %s found.', $key, gettype($value))
             );

@@ -6,6 +6,7 @@ use Dedoc\Scramble\Attributes\Group;
 use Dedoc\Scramble\Extensions\OperationExtension;
 use Dedoc\Scramble\GeneratorConfig;
 use Dedoc\Scramble\Infer;
+use Dedoc\Scramble\OpenApiContext;
 use Dedoc\Scramble\Reflection\ReflectionRoute;
 use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
@@ -20,6 +21,7 @@ use Illuminate\Routing\Route;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocNode;
+use ReflectionAttribute;
 
 class RequestEssentialsExtension extends OperationExtension
 {
@@ -28,6 +30,7 @@ class RequestEssentialsExtension extends OperationExtension
         TypeTransformer $openApiTransformer,
         GeneratorConfig $config,
         private OpenApi $openApi,
+        private OpenApiContext $openApiContext,
     ) {
         parent::__construct($infer, $openApiTransformer, $config);
     }
@@ -36,9 +39,8 @@ class RequestEssentialsExtension extends OperationExtension
     {
         $defaultName = Str::of(class_basename($routeInfo->className()))->replace('Controller', '');
 
-        if ($groupAttrs = $routeInfo->reflectionMethod()?->getDeclaringClass()->getAttributes(Group::class)) {
-            /** @var Group $attributeInstance */
-            $attributeInstance = $groupAttrs[0]->newInstance();
+        if ($groupAttrsInstances = $this->getTagsAnnotatedByGroups($routeInfo)) {
+            $attributeInstance = $groupAttrsInstances[0]->newInstance();
 
             $operation->setAttribute('groupWeight', $attributeInstance->weight);
 
@@ -55,6 +57,8 @@ class RequestEssentialsExtension extends OperationExtension
 
     public function handle(Operation $operation, RouteInfo $routeInfo)
     {
+        $this->attachTagsToOpenApi($routeInfo);
+
         $pathAliases = ReflectionRoute::createFromRoute($routeInfo->route)->getSignatureParametersMap();
 
         $tagResolver = Scramble::$tagResolver ?? fn () => $this->getDefaultTags($operation, $routeInfo);
@@ -177,5 +181,33 @@ class RequestEssentialsExtension extends OperationExtension
                 ->values()
                 ->toArray(),
         );
+    }
+
+    /**
+     * @return ReflectionAttribute<Group>[]
+     */
+    private function getTagsAnnotatedByGroups(RouteInfo $routeInfo): array
+    {
+        return [
+            ...($routeInfo->reflectionMethod()?->getAttributes(Group::class) ?? []),
+            ...($routeInfo->reflectionMethod()?->getDeclaringClass()->getAttributes(Group::class) ?? []),
+        ];
+    }
+
+    private function attachTagsToOpenApi(RouteInfo $routeInfo): void
+    {
+        if (! $groups = $this->getTagsAnnotatedByGroups($routeInfo)) {
+            return;
+        }
+
+        foreach ($groups as $group) {
+            $groupInstance = $group->newInstance();
+
+            if (! $groupInstance->name) {
+                continue;
+            }
+
+            $this->openApiContext->groups->push($group);
+        }
     }
 }

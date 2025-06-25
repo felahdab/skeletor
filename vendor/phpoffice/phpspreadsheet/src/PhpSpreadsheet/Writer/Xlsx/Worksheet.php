@@ -17,6 +17,7 @@ use PhpOffice\PhpSpreadsheet\Style\Conditional;
 use PhpOffice\PhpSpreadsheet\Style\ConditionalFormatting\ConditionalColorScale;
 use PhpOffice\PhpSpreadsheet\Style\ConditionalFormatting\ConditionalDataBar;
 use PhpOffice\PhpSpreadsheet\Style\ConditionalFormatting\ConditionalFormattingRuleExtension;
+use PhpOffice\PhpSpreadsheet\Style\Font;
 use PhpOffice\PhpSpreadsheet\Worksheet\RowDimension;
 use PhpOffice\PhpSpreadsheet\Worksheet\SheetView;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet as PhpspreadsheetWorksheet;
@@ -688,6 +689,7 @@ class Worksheet extends WriterPart
         $objWriter->startElementNs($prefix, 'dataBar', null);
         $dataBar = $ruleExtension->getDataBarExt();
         foreach ($dataBar->getXmlAttributes() as $attrKey => $val) {
+            /** @var string $val */
             $objWriter->writeAttribute($attrKey, $val);
         }
         $minCfvo = $dataBar->getMinimumConditionalFormatValueObject();
@@ -713,6 +715,7 @@ class Worksheet extends WriterPart
         }
 
         foreach ($dataBar->getXmlElements() as $elmKey => $elmAttr) {
+            /** @var string[] $elmAttr */
             $objWriter->startElementNs($prefix, $elmKey, null);
             foreach ($elmAttr as $attrKey => $attrVal) {
                 $objWriter->writeAttribute($attrKey, $attrVal);
@@ -1202,6 +1205,7 @@ class Worksheet extends WriterPart
         }
         $objWriter->writeAttribute('pageOrder', $worksheet->getPageSetup()->getPageOrder());
 
+        /** @var string[][][] */
         $getUnparsedLoadedData = $worksheet->getParentOrThrow()->getUnparsedLoadedData();
         if (isset($getUnparsedLoadedData['sheets'][$worksheet->getCodeName()]['pageSetupRelId'])) {
             $objWriter->writeAttribute('r:id', $getUnparsedLoadedData['sheets'][$worksheet->getCodeName()]['pageSetupRelId']);
@@ -1273,6 +1277,9 @@ class Worksheet extends WriterPart
                 $rowBreakMax = $break->getMaxColOrRow();
                 if ($rowBreakMax >= 0) {
                     $objWriter->writeAttribute('max', "$rowBreakMax");
+                } elseif ($worksheet->getPageSetup()->getPrintArea() !== '') {
+                    $maxCol = Coordinate::columnIndexFromString($worksheet->getHighestColumn());
+                    $objWriter->writeAttribute('max', "$maxCol");
                 }
                 $objWriter->endElement();
             }
@@ -1292,6 +1299,13 @@ class Worksheet extends WriterPart
                 $objWriter->startElement('brk');
                 $objWriter->writeAttribute('id', (string) ((int) $coords[0] - 1));
                 $objWriter->writeAttribute('man', '1');
+                $colBreakMax = $break->getMaxColOrRow();
+                if ($colBreakMax >= 0) {
+                    $objWriter->writeAttribute('max', "$colBreakMax");
+                } elseif ($worksheet->getPageSetup()->getPrintArea() !== '') {
+                    $maxRow = $worksheet->getHighestRow();
+                    $objWriter->writeAttribute('max', "$maxRow");
+                }
                 $objWriter->endElement();
             }
 
@@ -1418,19 +1432,26 @@ class Worksheet extends WriterPart
         $objWriter->endElement();
     }
 
-    private function writeCellInlineStr(XMLWriter $objWriter, string $mappedType, RichText|string $cellValue): void
+    private function writeCellInlineStr(XMLWriter $objWriter, string $mappedType, RichText|string $cellValue, ?Font $font): void
     {
         $objWriter->writeAttribute('t', $mappedType);
         if (!$cellValue instanceof RichText) {
             $objWriter->startElement('is');
             $objWriter->writeElement(
                 't',
-                StringHelper::controlCharacterPHP2OOXML(htmlspecialchars($cellValue, Settings::htmlEntityFlags()))
+                StringHelper::controlCharacterPHP2OOXML(
+                    htmlspecialchars(
+                        $cellValue,
+                        Settings::htmlEntityFlags()
+                    )
+                )
             );
             $objWriter->endElement();
         } else {
             $objWriter->startElement('is');
-            $this->getParentWriter()->getWriterPartstringtable()->writeRichText($objWriter, $cellValue);
+            $this->getParentWriter()
+                ->getWriterPartstringtable()
+                ->writeRichText($objWriter, $cellValue, null, $font);
             $objWriter->endElement();
         }
     }
@@ -1450,15 +1471,11 @@ class Worksheet extends WriterPart
 
     private function writeCellNumeric(XMLWriter $objWriter, float|int $cellValue): void
     {
-        //force a decimal to be written if the type is float
-        if (is_float($cellValue)) {
-            // force point as decimal separator in case current locale uses comma
-            $cellValue = str_replace(',', '.', (string) $cellValue);
-            if (!str_contains($cellValue, '.')) {
-                $cellValue = $cellValue . '.0';
-            }
+        $result = StringHelper::convertToString($cellValue);
+        if (is_float($cellValue) && !str_contains($result, '.')) {
+            $result .= '.0';
         }
-        $objWriter->writeElement('v', "$cellValue");
+        $objWriter->writeElement('v', $result);
     }
 
     private function writeCellBoolean(XMLWriter $objWriter, string $mappedType, bool $cellValue): void
@@ -1599,6 +1616,13 @@ class Worksheet extends WriterPart
         if (empty($xfi) && !$writeValue) {
             return;
         }
+        $styleArray = $this->getParentWriter()
+            ->getSpreadsheet()
+            ->getCellXfCollection();
+        $font = $styleArray[$xfi] ?? null;
+        if ($font !== null) {
+            $font = $font->getFont();
+        }
         $objWriter->startElement('c');
         $objWriter->writeAttribute('r', $cellAddress);
         $mappedType = $pCell->getDataType();
@@ -1629,7 +1653,7 @@ class Worksheet extends WriterPart
                 case 'inlinestr':    // Inline string
                     /** @var RichText|string */
                     $richText = $cellValue;
-                    $this->writeCellInlineStr($objWriter, $mappedType, $richText);
+                    $this->writeCellInlineStr($objWriter, $mappedType, $richText, $font);
 
                     break;
                 case 's':            // String
@@ -1664,6 +1688,7 @@ class Worksheet extends WriterPart
      */
     private function writeDrawings(XMLWriter $objWriter, PhpspreadsheetWorksheet $worksheet, bool $includeCharts = false): void
     {
+        /** @var mixed[][][][] */
         $unparsedLoadedData = $worksheet->getParentOrThrow()->getUnparsedLoadedData();
         $hasUnparsedDrawing = isset($unparsedLoadedData['sheets'][$worksheet->getCodeName()]['drawingOriginalIds']);
         $chartCount = ($includeCharts) ? $worksheet->getChartCollection()->count() : 0;
@@ -1682,6 +1707,7 @@ class Worksheet extends WriterPart
             $rId = reset($drawingOriginalIds);
         }
 
+        /** @var string $rId */
         $objWriter->writeAttribute('r:id', $rId);
         $objWriter->endElement();
     }
@@ -1692,6 +1718,7 @@ class Worksheet extends WriterPart
     private function writeLegacyDrawing(XMLWriter $objWriter, PhpspreadsheetWorksheet $worksheet): void
     {
         // If sheet contains comments, add the relationships
+        /** @var mixed[][][][] */
         $unparsedLoadedData = $worksheet->getParentOrThrow()->getUnparsedLoadedData();
         if (count($worksheet->getComments()) > 0 || isset($unparsedLoadedData['sheets'][$worksheet->getCodeName()]['legacyDrawing'])) {
             $objWriter->startElement('legacyDrawing');
@@ -1715,11 +1742,12 @@ class Worksheet extends WriterPart
 
     private function writeAlternateContent(XMLWriter $objWriter, PhpspreadsheetWorksheet $worksheet): void
     {
-        if (empty($worksheet->getParentOrThrow()->getUnparsedLoadedData()['sheets'][$worksheet->getCodeName()]['AlternateContents'])) {
-            return;
-        }
+        /** @var string[][][] */
+        $unparsedSheet = $worksheet->getParentOrThrow()->getUnparsedLoadedData()['sheets'] ?? [];
+        $unparsedSheet = $unparsedSheet[$worksheet->getCodeName()] ?? [];
+        $unparsedSheet = $unparsedSheet['AlternateContents'] ?? [];
 
-        foreach ($worksheet->getParentOrThrow()->getUnparsedLoadedData()['sheets'][$worksheet->getCodeName()]['AlternateContents'] as $alternateContent) {
+        foreach ($unparsedSheet as $alternateContent) {
             $objWriter->writeRaw($alternateContent);
         }
     }

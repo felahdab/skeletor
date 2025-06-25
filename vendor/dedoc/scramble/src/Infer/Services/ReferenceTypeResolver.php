@@ -7,6 +7,7 @@ use Dedoc\Scramble\Infer\Context;
 use Dedoc\Scramble\Infer\Definition\ClassDefinition;
 use Dedoc\Scramble\Infer\Definition\ClassPropertyDefinition;
 use Dedoc\Scramble\Infer\Definition\FunctionLikeDefinition;
+use Dedoc\Scramble\Infer\Extensions\Event\AnyMethodCallEvent;
 use Dedoc\Scramble\Infer\Extensions\Event\ClassDefinitionCreatedEvent;
 use Dedoc\Scramble\Infer\Extensions\Event\FunctionCallEvent;
 use Dedoc\Scramble\Infer\Extensions\Event\MethodCallEvent;
@@ -23,10 +24,6 @@ use Dedoc\Scramble\Support\Type\ObjectType;
 use Dedoc\Scramble\Support\Type\Reference\AbstractReferenceType;
 use Dedoc\Scramble\Support\Type\Reference\CallableCallReferenceType;
 use Dedoc\Scramble\Support\Type\Reference\ConstFetchReferenceType;
-use Dedoc\Scramble\Support\Type\Reference\Dependency\ClassDependency;
-use Dedoc\Scramble\Support\Type\Reference\Dependency\FunctionDependency;
-use Dedoc\Scramble\Support\Type\Reference\Dependency\MethodDependency;
-use Dedoc\Scramble\Support\Type\Reference\Dependency\PropertyDependency;
 use Dedoc\Scramble\Support\Type\Reference\MethodCallReferenceType;
 use Dedoc\Scramble\Support\Type\Reference\NewCallReferenceType;
 use Dedoc\Scramble\Support\Type\Reference\PropertyFetchReferenceType;
@@ -117,13 +114,6 @@ class ReferenceTypeResolver
             return $resolvedType;
         }
 
-        if (
-            $type instanceof AbstractReferenceType
-            && ! $this->checkDependencies($type)
-        ) {
-            //      ????      return new UnknownType();
-        }
-
         $resultingType = RecursionGuard::run(
             $type,// ->toString(),
             fn () => (new TypeWalker)->replace(
@@ -147,40 +137,6 @@ class ReferenceTypeResolver
         $type->setAttribute('resolvedType', $resolvedType);
 
         return $resolvedType;
-    }
-
-    private function checkDependencies(AbstractReferenceType $type)
-    {
-        if (! $dependencies = $type->dependencies()) {
-            return true;
-        }
-
-        foreach ($dependencies as $dependency) {
-            if ($dependency instanceof FunctionDependency) {
-                return (bool) $this->index->getFunctionDefinition($dependency->name);
-            }
-
-            if ($dependency instanceof PropertyDependency || $dependency instanceof MethodDependency || $dependency instanceof ClassDependency) {
-                if (! $classDefinition = $this->index->getClassDefinition($dependency->class)) {
-                    // Maybe here the resolution can happen
-                    return false;
-                }
-
-                if ($dependency instanceof PropertyDependency) {
-                    return array_key_exists($dependency->name, $classDefinition->properties);
-                }
-
-                if ($dependency instanceof MethodDependency) {
-                    return array_key_exists($dependency->name, $classDefinition->methods);
-                }
-
-                if ($dependency instanceof ClassDependency) {
-                    return true;
-                }
-            }
-        }
-
-        throw new \LogicException('There are unhandled dependencies. This should not happen.');
     }
 
     private function doResolve(Type $t, Type $type, Scope $scope)
@@ -274,6 +230,27 @@ class ReferenceTypeResolver
             $this->resolveUnknownClass($calleeType->name);
         }
 
+        $normalizedCalleeType = $calleeType instanceof TemplateType
+            ? $calleeType->is
+            : $calleeType;
+
+        $classDefinition = null;
+        if ($normalizedCalleeType instanceof ObjectType) {
+            $classDefinition = $this->index->getClassDefinition($normalizedCalleeType->name);
+        }
+
+        if ($normalizedCalleeType && $returnType = Context::getInstance()->extensionsBroker->getAnyMethodReturnType(new AnyMethodCallEvent(
+            instance: $normalizedCalleeType,
+            name: $type->methodName,
+            scope: $scope,
+            arguments: $type->arguments,
+            methodDefiningClassName: $classDefinition
+                ? $classDefinition->getMethodDefiningClassName($type->methodName, $scope->index)
+                : ($normalizedCalleeType instanceof ObjectType ? $normalizedCalleeType->name : null),
+        ))) {
+            return $returnType;
+        }
+
         $event = null;
 
         // Attempting extensions broker before potentially giving up on type inference
@@ -303,7 +280,6 @@ class ReferenceTypeResolver
 
                 $this->resolveUnknownClass($calleeType->name);
             }
-
         }
 
         // (#TName).listTableDetails()
@@ -327,7 +303,16 @@ class ReferenceTypeResolver
             return new UnknownType("Cannot get a method type [$type->methodName] on type [$name]");
         }
 
-        return $this->getFunctionCallResult($methodDefinition, $type->arguments, $calleeType, $event);
+        $resultingType = $this->getFunctionCallResult($methodDefinition, $type->arguments, $calleeType, $event);
+
+        if ($calleeType instanceof SelfType) {
+            return $resultingType;
+        }
+
+        // @todo resolve template type?
+        return $resultingType instanceof TemplateType
+            ? ($resultingType->is ?: new UnknownType)
+            : $resultingType;
     }
 
     private function resolveStaticMethodCallReferenceType(Scope $scope, StaticMethodCallReferenceType $type)
@@ -572,7 +557,11 @@ class ReferenceTypeResolver
 
     private function resolvePropertyFetchReferenceType(Scope $scope, PropertyFetchReferenceType $type)
     {
-        $objectType = $this->resolve($scope, $type->object);
+        $objectType = $type->object;
+        if ($objectType instanceof TemplateType && $objectType->is) {
+            $objectType = $objectType->is;
+        }
+        $objectType = $this->resolve($scope, $objectType);
 
         if (
             $objectType instanceof AbstractReferenceType
@@ -603,9 +592,7 @@ class ReferenceTypeResolver
 
         $classDefinition = $objectType instanceof SelfType && $scope->isInClass()
             ? $scope->classDefinition()
-            : ($objectType instanceof ObjectType
-                ? $this->index->getClassDefinition($objectType->name)
-                : null);
+            : $this->index->getClassDefinition($objectType->name);
 
         if (! $classDefinition) {
             $name = $objectType instanceof SelfType ? 'self' : $objectType->name;
@@ -613,7 +600,16 @@ class ReferenceTypeResolver
             return new UnknownType("Cannot get property [$type->propertyName] type on [$name]");
         }
 
-        return $objectType->getPropertyType($type->propertyName, $scope);
+        $propertyType = $objectType->getPropertyType($type->propertyName, $scope);
+
+        if ($objectType instanceof SelfType) {
+            return $propertyType;
+        }
+
+        // @todo resolve template type?
+        return $propertyType instanceof TemplateType
+            ? ($propertyType->is ?: new UnknownType)
+            : $propertyType;
     }
 
     private function getFunctionCallResult(
@@ -824,8 +820,8 @@ class ReferenceTypeResolver
 
             $mappo->offsetSet($se, $resultingType);
 
-            $methodDefinition = ($methodDependency = collect($se->dependencies())->first(fn ($d) => $d instanceof MethodDependency))
-                ? $this->index->getClassDefinition($methodDependency->class)?->getMethodDefinition($methodDependency->name)
+            $methodDefinition = $se->callee instanceof ObjectType
+                ? $this->index->getClassDefinition($se->callee->name)?->getMethodDefinition($se->methodName)
                 : null;
 
             if (! $methodDefinition) {

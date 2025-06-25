@@ -16,6 +16,7 @@ use PHPStan\Rules\RuleErrorBuilder;
 
 use function config_path;
 use function count;
+use function glob;
 use function is_dir;
 use function str_starts_with;
 
@@ -28,10 +29,17 @@ class NoEnvCallsOutsideOfConfigRule implements Rule
 {
     use HasContainer;
 
+    /** @var list<string> */
+    private array $configDirectories = [];
+
     /** @param  list<non-empty-string> $configDirectories */
-    public function __construct(private array $configDirectories, private FileHelper $fileHelper)
+    public function __construct(array $configDirectories, private FileHelper $fileHelper)
     {
         if (count($configDirectories) !== 0) {
+            foreach ($configDirectories as $directory) {
+                $this->configDirectories[] = $this->fileHelper->normalizePath($directory);
+            }
+
             return;
         }
 
@@ -71,15 +79,17 @@ class NoEnvCallsOutsideOfConfigRule implements Rule
 
     protected function isCalledOutsideOfConfig(FuncCall $call, Scope $scope): bool
     {
-        foreach ($this->configDirectories as $configDirectory) {
-            $absolutePath = $this->fileHelper->absolutizePath($configDirectory);
+        foreach ($this->configDirectories as $configDirectoryGlob) {
+            foreach ((glob($configDirectoryGlob) ?: []) as $configDirectory) {
+                $absolutePath = $this->fileHelper->absolutizePath($configDirectory);
 
-            if (! is_dir($absolutePath)) {
-                continue;
-            }
+                if (! is_dir($absolutePath)) {
+                    continue;
+                }
 
-            if (str_starts_with($scope->getFile(), $absolutePath)) {
-                return false;
+                if (str_starts_with($scope->getFile(), $absolutePath)) {
+                    return false;
+                }
             }
         }
 

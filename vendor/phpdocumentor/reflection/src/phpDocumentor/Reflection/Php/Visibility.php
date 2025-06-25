@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace phpDocumentor\Reflection\Php;
 
 use InvalidArgumentException;
+use Override;
 use Stringable;
 
 use function sprintf;
@@ -21,8 +22,10 @@ use function strtolower;
 
 /**
  * Value object for visibility values of classes, properties, ect.
+ *
+ * @api
  */
-final class Visibility implements Stringable
+class Visibility implements Stringable
 {
     /**
      * constant for protected visibility
@@ -63,6 +66,7 @@ final class Visibility implements Stringable
     /**
      * Will return a string representation of visibility.
      */
+    #[Override]
     public function __toString(): string
     {
         return $this->visibility;

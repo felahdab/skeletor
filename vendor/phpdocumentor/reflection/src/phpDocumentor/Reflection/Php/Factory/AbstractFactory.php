@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace phpDocumentor\Reflection\Php\Factory;
 
 use InvalidArgumentException;
+use Override;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use phpDocumentor\Reflection\Php\Factory\Reducer\Reducer;
@@ -30,7 +31,7 @@ abstract class AbstractFactory implements ProjectFactoryStrategy
 {
     /** @param iterable<Reducer> $reducers */
     public function __construct(
-        private readonly DocBlockFactoryInterface $docBlockFactory,
+        protected readonly DocBlockFactoryInterface $docBlockFactory,
         protected readonly iterable $reducers = [],
     ) {
     }
@@ -40,8 +41,10 @@ abstract class AbstractFactory implements ProjectFactoryStrategy
      *
      * @param object $object object to check.
      */
+    #[Override]
     abstract public function matches(ContextStack $context, object $object): bool;
 
+    #[Override]
     public function create(ContextStack $context, object $object, StrategyContainer $strategies): void
     {
         if (!$this->matches($context, $object)) {

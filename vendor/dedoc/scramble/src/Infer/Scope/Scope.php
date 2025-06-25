@@ -13,6 +13,7 @@ use Dedoc\Scramble\Infer\SimpleTypeGetters\ConstFetchTypeGetter;
 use Dedoc\Scramble\Infer\SimpleTypeGetters\ScalarTypeGetter;
 use Dedoc\Scramble\Support\Type\ArrayItemType_;
 use Dedoc\Scramble\Support\Type\ArrayType;
+use Dedoc\Scramble\Support\Type\BooleanType;
 use Dedoc\Scramble\Support\Type\CallableStringType;
 use Dedoc\Scramble\Support\Type\KeyedArrayType;
 use Dedoc\Scramble\Support\Type\ObjectType;
@@ -23,7 +24,6 @@ use Dedoc\Scramble\Support\Type\Reference\PropertyFetchReferenceType;
 use Dedoc\Scramble\Support\Type\Reference\StaticMethodCallReferenceType;
 use Dedoc\Scramble\Support\Type\SelfType;
 use Dedoc\Scramble\Support\Type\SideEffects\ParentConstructCall;
-use Dedoc\Scramble\Support\Type\TemplateType;
 use Dedoc\Scramble\Support\Type\Type;
 use Dedoc\Scramble\Support\Type\Union;
 use Dedoc\Scramble\Support\Type\UnknownType;
@@ -82,6 +82,19 @@ class Scope
             return (new ClassConstFetchTypeGetter)($node, $this);
         }
 
+        if (
+            $node instanceof Node\Expr\BinaryOp\Equal
+            || $node instanceof Node\Expr\BinaryOp\Identical
+            || $node instanceof Node\Expr\BinaryOp\NotEqual
+            || $node instanceof Node\Expr\BinaryOp\NotIdentical
+            || $node instanceof Node\Expr\BinaryOp\Greater
+            || $node instanceof Node\Expr\BinaryOp\GreaterOrEqual
+            || $node instanceof Node\Expr\BinaryOp\Smaller
+            || $node instanceof Node\Expr\BinaryOp\SmallerOrEqual
+        ) {
+            return new BooleanType;
+        }
+
         if ($node instanceof Node\Expr\BooleanNot) {
             return (new BooleanNotTypeGetter)($node);
         }
@@ -131,17 +144,6 @@ class Scope
                 : null;
 
             $exceptions = $event ? app(ExtensionsBroker::class)->getMethodCallExceptions($event) : [];
-
-            if (
-                $calleeType instanceof TemplateType
-                && ! $exceptions
-            ) {
-                // @todo
-                // if ($calleeType->is instanceof ObjectType) {
-                //     $calleeType = $calleeType->is;
-                // }
-                return $this->setType($node, new UnknownType("Cannot infer type of method [{$node->name->name}] call on template type: not supported yet."));
-            }
 
             $referenceType = new MethodCallReferenceType($calleeType, $node->name->name, $this->getArgsTypes($node->args));
 
@@ -194,15 +196,6 @@ class Scope
             // Only string prop names support.
             if (! $name = ($node->name->name ?? null)) {
                 return new UnknownType('Cannot infer type of property fetch: not supported yet.');
-            }
-
-            $calleeType = $this->getType($node->var);
-            if ($calleeType instanceof TemplateType) {
-                // @todo
-                // if ($calleeType->is instanceof ObjectType) {
-                //     $calleeType = $calleeType->is;
-                // }
-                return $this->setType($node, new UnknownType("Cannot infer type of property [{$name}] fetch on template type: not supported yet."));
             }
 
             return $this->setType(

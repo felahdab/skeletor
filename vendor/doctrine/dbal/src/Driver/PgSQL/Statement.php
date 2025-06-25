@@ -39,6 +39,7 @@ final class Statement implements StatementInterface
 
     public function __destruct()
     {
+        // @phpstan-ignore isset.initializedProperty
         if (! isset($this->connection)) {
             return;
         }
@@ -56,8 +57,13 @@ final class Statement implements StatementInterface
             throw UnknownParameter::new((string) $param);
         }
 
-        $this->parameters[$this->parameterMap[$param]]     = $value;
-        $this->parameterTypes[$this->parameterMap[$param]] = $type;
+        if ($type === ParameterType::BOOLEAN) {
+            $this->parameters[$this->parameterMap[$param]]     = (bool) $value === false ? 'f' : 't';
+            $this->parameterTypes[$this->parameterMap[$param]] = ParameterType::STRING;
+        } else {
+            $this->parameters[$this->parameterMap[$param]]     = $value;
+            $this->parameterTypes[$this->parameterMap[$param]] = $type;
+        }
     }
 
     /** {@inheritDoc} */

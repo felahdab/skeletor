@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace phpDocumentor\Reflection\Php;
 
+use Override;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\Element;
 use phpDocumentor\Reflection\Fqsen;
@@ -22,6 +23,8 @@ use phpDocumentor\Reflection\Type;
 
 /**
  * Descriptor representing a property.
+ *
+ * @api
  */
 final class Property implements Element, MetaDataContainerInterface, AttributeContainer
 {
@@ -37,7 +40,10 @@ final class Property implements Element, MetaDataContainerInterface, AttributeCo
 
     private readonly Location $endLocation;
 
-    /** @param Visibility|null $visibility when null is provided a default 'public' is set. */
+    /**
+     * @param Visibility|null $visibility when null is provided a default 'public' is set.
+     * @param PropertyHook[] $hooks
+     */
     public function __construct(
         private readonly Fqsen $fqsen,
         Visibility|null $visibility = null,
@@ -48,6 +54,8 @@ final class Property implements Element, MetaDataContainerInterface, AttributeCo
         Location|null $endLocation = null,
         private readonly Type|null $type = null,
         private readonly bool $readOnly = false,
+        private readonly array $hooks = [],
+        private readonly bool $virtual = false,
     ) {
         $this->visibility = $visibility ?: new Visibility('public');
         $this->location = $location ?: new Location(-1);
@@ -99,6 +107,7 @@ final class Property implements Element, MetaDataContainerInterface, AttributeCo
     /**
      * Returns the Fqsen of the element.
      */
+    #[Override]
     public function getFqsen(): Fqsen
     {
         return $this->fqsen;
@@ -107,6 +116,7 @@ final class Property implements Element, MetaDataContainerInterface, AttributeCo
     /**
      * Returns the name of the element.
      */
+    #[Override]
     public function getName(): string
     {
         return $this->fqsen->getName();
@@ -138,5 +148,21 @@ final class Property implements Element, MetaDataContainerInterface, AttributeCo
     public function isReadOnly(): bool
     {
         return $this->readOnly;
+    }
+
+    /** @return PropertyHook[] */
+    public function getHooks(): array
+    {
+        return $this->hooks;
+    }
+
+    /**
+     * Returns true when this property is virtual (not explicitly backed).
+     *
+     * A virtual property is one where no defined hook references the property itself.
+     */
+    public function isVirtual(): bool
+    {
+        return $this->virtual;
     }
 }

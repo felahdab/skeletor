@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace phpDocumentor\Reflection\Php\Factory;
 
+use Override;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use phpDocumentor\Reflection\Location;
 use phpDocumentor\Reflection\Php\Class_;
@@ -20,7 +21,6 @@ use phpDocumentor\Reflection\Php\Factory\Reducer\Reducer;
 use phpDocumentor\Reflection\Php\Property as PropertyDescriptor;
 use phpDocumentor\Reflection\Php\StrategyContainer;
 use phpDocumentor\Reflection\Php\Trait_;
-use phpDocumentor\Reflection\Php\Visibility;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use PhpParser\PrettyPrinter\Standard as PrettyPrinter;
 use Webmozart\Assert\Assert;
@@ -42,6 +42,7 @@ final class Property extends AbstractFactory
         parent::__construct($docBlockFactory, $reducers);
     }
 
+    #[Override]
     public function matches(ContextStack $context, object $object): bool
     {
         return $object instanceof PropertyNode;
@@ -56,6 +57,7 @@ final class Property extends AbstractFactory
      * @param ContextStack $context used to convert nested objects.
      * @param PropertyNode $object
      */
+    #[Override]
     protected function doCreate(
         ContextStack $context,
         object $object,
@@ -72,22 +74,23 @@ final class Property extends AbstractFactory
 
         $iterator = new PropertyIterator($object);
         foreach ($iterator as $stmt) {
-            $default = $iterator->getDefault();
-            if ($default !== null) {
-                $default = $this->valueConverter->prettyPrintExpr($default);
-            }
-
-            $property = new PropertyDescriptor(
-                $stmt->getFqsen(),
-                $this->buildVisibility($stmt),
-                $this->createDocBlock($stmt->getDocComment(), $context->getTypeContext()),
-                $default,
-                $stmt->isStatic(),
-                new Location($stmt->getLine()),
-                new Location($stmt->getEndLine()),
-                (new Type())->fromPhpParser($stmt->getType()),
-                $stmt->isReadonly(),
-            );
+            $property = PropertyBuilder::create(
+                $this->valueConverter,
+                $this->docBlockFactory,
+                $strategies,
+                $this->reducers,
+            )
+                ->fqsen($stmt->getFqsen())
+                ->visibility($stmt)
+                ->type($stmt->getType())
+                ->docblock($stmt->getDocComment())
+                ->default($iterator->getDefault())
+                ->static($stmt->isStatic())
+                ->startLocation(new Location($stmt->getLine()))
+                ->endLocation(new Location($stmt->getEndLine()))
+                ->readOnly($stmt->isReadonly())
+                ->hooks($stmt->getHooks())
+                ->build($context);
 
             foreach ($this->reducers as $reducer) {
                 $property = $reducer->reduce($context, $object, $strategies, $property);
@@ -101,21 +104,5 @@ final class Property extends AbstractFactory
         }
 
         return null;
-    }
-
-    /**
-     * Converts the visibility of the property to a valid Visibility object.
-     */
-    private function buildVisibility(PropertyIterator $node): Visibility
-    {
-        if ($node->isPrivate()) {
-            return new Visibility(Visibility::PRIVATE_);
-        }
-
-        if ($node->isProtected()) {
-            return new Visibility(Visibility::PROTECTED_);
-        }
-
-        return new Visibility(Visibility::PUBLIC_);
     }
 }
