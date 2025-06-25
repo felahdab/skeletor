@@ -21,6 +21,7 @@
         "doode/filament-map-picker": "dev-fldb-module-fleetprogram",
         "filament/filament": "^3.3.28",
         "filament/spatie-laravel-google-fonts-plugin": "^3.3.28",
+        "guava/calendar": "^1.14",
         "guzzlehttp/guzzle": "^7.2",
         "joshbrw/laravel-module-installer": "^2.0",
         "lab404/laravel-impersonate": "^1.0",
