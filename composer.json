@@ -100,7 +100,8 @@
             "dont-discover": [
                 "nwidart/laravel-modules",
                 "filament/filament",
-                "valentin-morice/filament-json-column"
+                "valentin-morice/filament-json-column",
+                "guava/calendar"
             ]
         },
         "merge-plugin": {

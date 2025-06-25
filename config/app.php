@@ -212,6 +212,7 @@ return [
         App\Providers\HelperServiceProvider::class,
 
         App\Providers\FilamentJsonColumnServiceProvider::class,
+        App\Providers\CalendarServiceProvider::class,
     ],
 
     /*
