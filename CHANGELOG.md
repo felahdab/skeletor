@@ -1,3 +1,11 @@
+## 3.1.3 (June 25, 2025)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.1.2 –> 3.1.3
+- Nouveau service provider pour forcer le chargement local des assets js et css de guava/calendar.
+- Nouveau service provider pour forcer le chargement local des assets js et css de valentin-morice/filament-json-column
+- Ajout de guava/calendar
+- Ajout de spatie/eloquent-sortable
+- Upgrade de tous les packages. Correction composant livewire de report de bug.
+
 ## 3.1.2 (May 22, 2025)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.1.1 –> 3.1.2
 - Réimplémentation de la fonctionnalité de signalement de bug ou de suggestion en tête de l'application
