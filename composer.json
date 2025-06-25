@@ -99,7 +99,8 @@
         "laravel": {
             "dont-discover": [
                 "nwidart/laravel-modules",
-                "filament/filament"
+                "filament/filament",
+                "valentin-morice/filament-json-column"
             ]
         },
         "merge-plugin": {
