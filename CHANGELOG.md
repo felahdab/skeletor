@@ -1,3 +1,7 @@
+## 3.1.4 (June 26, 2025)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.1.3 –> 3.1.4
+- Ajout de barryvdh/laravel-dompdf
+
 ## 3.1.3 (June 25, 2025)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.1.2 –> 3.1.3
 - Nouveau service provider pour forcer le chargement local des assets js et css de guava/calendar.
