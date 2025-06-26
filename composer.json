@@ -13,6 +13,7 @@
         "althinect/filament-spatie-roles-permissions": "^2.2",
         "axonc/filament-copyable-placeholder": "^0.3.0",
         "barryvdh/laravel-debugbar": "^3.7",
+        "barryvdh/laravel-dompdf": "^3.1",
         "calebporzio/sushi": "^2.4",
         "clickbar/laravel-magellan": "^2.0.0",
         "coolsam/modules": "^4",
