@@ -1,4 +1,4 @@
-name: Skeletor basic tests
+name: Skeletor basic tests in docker compose
  
 on: [push, workflow_dispatch]
  
@@ -23,5 +23,8 @@ jobs:
           composer dump-autoload
           php artisan key:generate
  
+      - name: Start docker compose stack
+        run: docker compose --file ./docker/docker-compose.yml up -d
+
       - name: Run tests
-        run: docker compose version
+        run: docker compose --file ./docker/docker-compose.yml exec -it php php artisan test
