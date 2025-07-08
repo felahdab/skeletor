@@ -1,7 +1,8 @@
-name: Skeletor basic tests
+name: Tests des modules FCM
  
 on: [push, workflow_dispatch]
  
+
 jobs:
   tests:
     name: Run tests
@@ -21,6 +22,8 @@ jobs:
         image: docker.io/bitnami/redis:7.0
         env:
           REDIS_PASSWORD: 'redispassword'
+        ports:
+          - 6379:6379
 
     steps:
       - uses: actions/checkout@v4
@@ -31,12 +34,43 @@ jobs:
           php-version: '8.4'
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
           coverage: none
+
+      - name: Checkout RH module
+        uses: actions/checkout@v4
+        with:
+          repository: 'felahdab/module_rh'
+          path: 'Modules/RH'
+          ref: 'master'
+
+      - name: Checkout FCM Commun
+        uses: actions/checkout@v4
+        with:
+          repository: 'felahdab/module_fcmcommun'
+          path: 'Modules/FcmCommun'
+          ref: 'master'
+
+      - name: Checkout FCM Central
+        uses: actions/checkout@v4
+        with:
+          repository: 'felahdab/module_fcmcentral'
+          path: 'Modules/FcmCentral'
+          ref: 'master'
+
+      - name: Checkout FCM Unité
+        uses: actions/checkout@v4
+        with:
+          repository: 'felahdab/module_fcmunite'
+          path: 'Modules/FcmUnite'
+          ref: 'master'
  
       - name: Prepare Laravel Application
         run: |
           cp .env.testing.slug .env
           composer dump-autoload
           php artisan key:generate
+          php artisan module:enable --all
+          composer dump-autoload
+          php artisan migrate
  
       - name: Run tests
         run: php artisan test
