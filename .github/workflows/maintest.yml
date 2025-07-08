@@ -6,6 +6,22 @@ jobs:
   tests:
     name: Run tests
     runs-on: ubuntu-latest
+    services:
+      db:
+        image: mariadb:10.8.3
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: testdb
+          MYSQL_USER: testuser
+          MYSQL_PASSWORD: testuserpassword
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+      redis:
+        image: docker.io/bitnami/redis:7.0
+        env:
+          REDIS_PASSWORD: 'redispassword'
+
     steps:
       - uses: actions/checkout@v3
  
@@ -18,7 +34,8 @@ jobs:
  
       - name: Prepare Laravel Application
         run: |
-          cp .env.testing.slug .env.testing
+          cp .env.testing.slug .env
+          composer dump-autoload
           php artisan key:generate
  
       - name: Run tests
