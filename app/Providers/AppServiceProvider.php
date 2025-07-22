@@ -25,6 +25,7 @@ use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
 
 use App\Filament\PanelRegistry\ModuleDefinedMenusRegistry;
+use App\Filament\PanelRegistry\ModuleDefinedPreferedPagesRegistry;
 use App\Filament\PanelRegistry\DirectMenuItem;
 
 
@@ -42,6 +43,11 @@ class AppServiceProvider extends ServiceProvider
         {
             return new ModuleDefinedMenusRegistry();
         });
+        $this->app->singleton(ModuleDefinedPreferedPagesRegistry::class, function () 
+        {
+            return new ModuleDefinedPreferedPagesRegistry();
+        });
+        
     }
 
     /**

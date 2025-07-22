@@ -34,6 +34,8 @@ use App\Http\Middleware\ReconfigureSessionDatabaseWhenTenantNotInitialized;
 
 use App\Providers\Filament\Traits\UsesSkeletorPrefixAndMultitenancyTrait;
 
+use App\Filament\Pages\UserPreferences;
+
 class AdminPanelProvider extends PanelProvider
 {
     use UsesSkeletorPrefixAndMultitenancyTrait;
@@ -47,7 +49,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->profile()
+            ->profile(UserPreferences::class)
             ->favicon(asset('assets/images/favicon-32x32.png'))
             ->font('Inter', provider: SpatieGoogleFontProvider::class)
             ->defaultAvatarProvider(SkeletorAvatarProvider::class)
