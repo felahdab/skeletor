@@ -109,6 +109,42 @@ Les vues, composants Blade et composants Livewire sont eux aussi préfixés avec
 
 > {info} Le package  ```mhmiton/laravel-modules-livewire``` introduit la commande artisan ```module:make-livewire``` qui facilite la création d'un composant livewire au sein d'un module.
 
+<a name="modules-navbar"></a>
+
+### Utilisation de la barre de menus de Skeletor
+
+Afin d'offrir une expérience de navigation agréable aux utilisateurs, les modules peuvent déclarer à Skeletor des pages
+à faire apparaitre dans le menu "Accès rapide" des panneaux Filament.
+Cette fonctionnalité ne nécessite pas pour cela que le module lui-même inclue un panneau Filament.
+Si le module expose lui-même un panneau Filament, ce panneau verra la fonctionnalité "Accès rapide" automatiquement intégrée, avec les pages déclarées par tous les modules faisant usage de cette fonctionnalité.
+
+Cette fonctionnalité repose sur les "render hook" de Filament. Voir dans AppServiceProvider.php.
+
+Pour déclarer ses pages à accès rapide, le module doit utiliser les fonctions de ```ModuleDefinedMenusRegistry```. Ce registre permet aux modules de déclarer des liens d'accès rapides qui peuvent contenir des sous liens.
+
+Voici l'exemple du liens d'accès rapide déclaré par Skeletor lui-même pour que les utilisateurs puissent revenir vers le panneau Filament d'administration depuis les autres panneaux Filament déclarés dans les modules.
+
+```
+app(ModuleDefinedMenusRegistry::class)->registerDirectMenuItems([
+            DirectMenuItem::make()
+                ->name('Administration')
+                ->visible(fn() => auth()->check() )
+                ->children([
+                    DirectMenuItem::make()
+                        ->name('Panneau d\'administration')
+                        ->url(fn() => Dashboard::getUrl(panel: "admin"))
+                        ->visible(fn() => auth()->check() && Dashboard::canAccess()),
+                    
+                ]),
+            ]);
+```
+
+Les ```DirectMenuItem``` permettent de définir les liens d'accès direct caractérisés par leur nom (name), une url et une visibilité. Les url et visibilité peuvent être définis par des valeur simples ou par des Closure qui seront évaluées au moment d'afficher le lien d'accès direct dans les panneaux Filament.
+
+Le paramètre visible détermine évidemment si le lien d'accès direct en question est visible. Il permet notamment de cacher les liens vers lesquels l'utilisateur n'a pas le droit d'aller (en utilisant une Closure pour faire cette évaluation à la volée).
+
+Dans l'exemple ci-dessus, le lien vers le panneau d'administration ne sera visible dans le menu que si l'utilisateur est connecté. Un utilisateur anonyme ne verra pas le lien.
+
 <a name="modules-helplink"></a>
 
 ### Lien vers les pages de documentation

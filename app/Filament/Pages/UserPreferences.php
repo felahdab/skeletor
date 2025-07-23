@@ -48,6 +48,6 @@ class UserPreferences extends BaseEditProfile
 
     public static function getLabel(): string
     {
-        return "Mes préféfences";
+        return "Mes préférences";
     }
 }
