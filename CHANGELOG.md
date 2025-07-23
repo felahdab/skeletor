@@ -1,3 +1,10 @@
+## 3.1.5 (July 23, 2025)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.1.4 –> 3.1.5
+- Documentation sur le mécanisme de page préférée exposées par les modules.
+- Mise à jour de la documentation de développement.
+- Rajout de tests sur la page de préférences utilisateur. 
+- Implémentation du système de gestion de la page préférée de l'utilisateur. Chaque module peut publier une liste de pages pouvant être choisies par l'utilisateur. La page de profil Skeletor a été adaptée pour que l'utilisateur puisse choisir sa page préférée dans la liste des pages exposées. Et le contrôleur HomeControlleur qui est appelé après le login renvoit l'utilisateur vers sa page préférée si elle est définie, ou vers la page par défaut de l'instance sinon (définie dans le .env).
+
 ## 3.1.4 (June 26, 2025)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.1.3 –> 3.1.4
 - Ajout de barryvdh/laravel-dompdf
