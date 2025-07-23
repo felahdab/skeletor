@@ -7,6 +7,7 @@ Contenu:
     - [Préfixe des routes et des permissions](#modules-routes)
     - [Préfixe des ressources](#modules-resources)
     - [Utilisation de la barre de menus de Skeletor](#modules-navbar)
+    - [Déclaration des pages préférées de l'utilisateur](#modules-pages-preferees)
     - [Renvoi vers la documentation et lien dans la barre de menus](#modules-helplink)
 - [Contraintes liées au routage des requêtes](#contraintes-routage)
     - [Préfixe de l'instance](#prefixe_instance)
@@ -145,13 +146,45 @@ Le paramètre visible détermine évidemment si le lien d'accès direct en quest
 
 Dans l'exemple ci-dessus, le lien vers le panneau d'administration ne sera visible dans le menu que si l'utilisateur est connecté. Un utilisateur anonyme ne verra pas le lien.
 
+<a name="modules-pages-preferees"></a>
+
+### Déclaration des pages préférées de l'utilisateur
+
+Skeletor permet à l'utilisateur de préciser vers quelle page il souhaite être redirigé par défaut lorsqu'il ouvre sa session.
+Les modules peuvent déclarer des pages que l'utilisateur peut choisir comme page préférée.
+Une fois les pages déclarées, l'utilisateur peut les voir apparaitre dans la liste des pages préférées qu'il peut trouver sur la page "Mes préférences" à laquelle il accède depuis son menu personnel (en haut à droit, sous son avatar le cas échéant).
+
+Pour déclarer des pages à proposer à l'utilisateur dans ce menu, il faut utiliser les fonctionnalités de ```ModuleDefinedPreferedPagesRegistry```.
+
+Voici un exemple de déclaration de page préférées possibles:
+```
+app(ModuleDefinedPreferedPagesRegistry::class)->registerPreferedPagesItems(
+            [
+            PreferedPageItem::make()
+                ->name('FCM central: liste des marins')
+                ->routeName(fn() => ListMarins::getRouteName(panel: 'FCM Central')),
+            PreferedPageItem::make()
+                ->name('FCM central: liste des parcours')
+                ->routeName(fn() => ListParcours::getRouteName(panel: 'FCM Central')),
+            PreferedPageItem::make()
+                ->name('FCM central: recherche dans l\' annuaire')
+                ->routeName(fn() => RechercheAnnuairePage::getRouteName(panel: 'FCM Central'))
+            ]
+        );
+```
+
+Les ```PreferedPageItem``` sont caractérisées par un nom et par une route.
+
+Attention: il n'est pas possible de spécifier une url directement dans ces entrées: il faut spécifier le nom d'une route.
+
+Pour respecter les principes généraux du développement modulaire dans Skeletor, le nom des pages préférées doit être préfixé par une référence au module qui les définit (par exemple Fcm central ci-dessus).
+
 <a name="modules-helplink"></a>
 
 ### Lien vers les pages de documentation
 
-DEPRECATED: attention, ce paragraphe n'est plus applicable: l'emploi du framework Filament rend cette partie inapplicable. Il n'y a pas, pour l'instant, de mécanisme permettant de rediriger l'utilisateur vers la documentation du module depuis les pages Filament de ce dernier.
-
-A ce jour, Skeletor inclue simplement un lien vers la documentation, en bas à gauche de toutes les pages. Ce lien n'est pas spécifique à la page depuis lequel il est utilisé.
+Skeletor inclue un lien vers la documentation dans le menu de l'utilisateur (en haut à gauche) ainsi qu'en bas à gauche de la barre de navigation lorsque celle-ci est en mode vertical. 
+Ce lien redirige automatiquement vers la section de documentation relative au panneau depuis lequel elle est appelée.
 
 <a name="contraintes-routage"></a>
 
