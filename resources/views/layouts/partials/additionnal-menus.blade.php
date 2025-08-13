@@ -32,7 +32,7 @@
                             </div>
                         @endif
                     @endforeach
-                </div
+                </div>
                 @endif
 
             </x-filament::dropdown.list.item>
