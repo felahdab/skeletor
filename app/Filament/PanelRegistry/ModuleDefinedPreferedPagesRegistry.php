@@ -35,6 +35,10 @@ class ModuleDefinedPreferedPagesRegistry
     public function getPreferedPagesItemsForSelect()
     {
         return collect($this->preferedpages)
+            ->filter(function ($item)
+            {
+                return $item->isVisible();
+            })
             ->map(function ($item)
             {
                 return (object) [
