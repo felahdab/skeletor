@@ -1,3 +1,10 @@
+## 3.1.6 (September 03, 2025)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.1.5 –> 3.1.6
+- Dans la page de préférence des utilisateurs, la liste des pages proposées à l'utilisateur est filtrée en fonction de la visibilité de ces pages.
+Chaque page peut définir sa visibilité dans cette liste, soit sous la forme d'une valeur statique, soit sous la forme d'une Closure qui est évaluée
+lors du chargement de la page.
+- Correction fermeture de div incomplète dans additionnal-menus.blade.php
+
 ## 3.1.5 (July 23, 2025)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.1.4 –> 3.1.5
 - Documentation sur le mécanisme de page préférée exposées par les modules.
