@@ -46,12 +46,12 @@ services:
         volumes:
            - ../resources/docs/:/usr/src/app/md/
     redis:
-        image: docker.io/bitnami/redis:7.0
+        image: docker.io/library/redis:7.0
         restart: unless-stopped
         environment:
           REDIS_PASSWORD: 'redispassword'
     phpmyadmin:
-        image:  docker.io/bitnami/phpmyadmin:5
+        image:  docker.io/library/phpmyadmin:5
         environment:
            PHPMYADMIN_ABSOLUTE_URI: http://localhost/apps/pma/
            DATABASE_HOST: db
