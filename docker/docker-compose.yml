@@ -53,7 +53,7 @@ services:
     phpmyadmin:
         image:  docker.io/library/phpmyadmin:5
         environment:
-           PHPMYADMIN_ABSOLUTE_URI: http://localhost/apps/pma/
+           PMA_ABSOLUTE_URI: http://localhost/apps/pma/
            DATABASE_HOST: db
         restart: unless-stopped
     code-editor:
@@ -61,7 +61,7 @@ services:
         user: "1111:1111"
         volumes:
           - ./code-editor-ssh:/home/coder/.ssh
-          - ../:/app    
+          - ../:/home/coder/app
           - backups:/backups
         restart: unless-stopped
     mailpit:
