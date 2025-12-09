@@ -21,15 +21,15 @@ services:
         restart: unless-stopped
         links:
           - code-editor:xdebug.client.host
-    node:
-        image: node:20.0.0
-        volumes:
-            - ../:/app
-            - backups:/backups
-        restart: unless-stopped
-        tty: true
-        command: "bash -c 'sleep infinity'"
-        user: 1111:1111
+    # node:
+    #     image: node:20.0.0
+    #     volumes:
+    #         - ../:/app
+    #         - backups:/backups
+    #     restart: unless-stopped
+    #     tty: true
+    #     command: "bash -c 'sleep infinity'"
+    #     user: 1111:1111
     db:
         image: mariadb:10.8.3
         environment:
@@ -46,14 +46,14 @@ services:
         volumes:
            - ../resources/docs/:/usr/src/app/md/
     redis:
-        image: docker.io/bitnami/redis:7.0
+        image: docker.io/library/redis:7.0
         restart: unless-stopped
         environment:
           REDIS_PASSWORD: 'redispassword'
     phpmyadmin:
-        image:  docker.io/bitnami/phpmyadmin:5
+        image:  docker.io/library/phpmyadmin:5
         environment:
-           PHPMYADMIN_ABSOLUTE_URI: http://localhost/apps/pma/
+           PMA_ABSOLUTE_URI: http://localhost/apps/pma/
            DATABASE_HOST: db
         restart: unless-stopped
     code-editor:
@@ -61,18 +61,18 @@ services:
         user: "1111:1111"
         volumes:
           - ./code-editor-ssh:/home/coder/.ssh
-          - ../:/app    
+          - ../:/home/coder/app
           - backups:/backups
         restart: unless-stopped
-    mailpit:
-        image: docker.io/axllent/mailpit
-        ports:
-          - ${MAILPIT_PORT}:8025
-        user: "1111:1111"
-        restart: unless-stopped
-        environment:
-           MP_SMTP_AUTH_ACCEPT_ANY: 1
-           MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    # mailpit:
+    #     image: docker.io/axllent/mailpit
+    #     ports:
+    #       - ${MAILPIT_PORT}:8025
+    #     user: "1111:1111"
+    #     restart: unless-stopped
+    #     environment:
+    #        MP_SMTP_AUTH_ACCEPT_ANY: 1
+    #        MP_SMTP_AUTH_ALLOW_INSECURE: 1
 volumes:
     mysqldata: {}
     backups: {}
