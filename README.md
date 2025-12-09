@@ -58,7 +58,7 @@ composer dump-autoload
 
 ```bash
 # A l'intérieur du conteneur php, pour s'y connecter :
-docker compose exec php bash
+docker compose exec -it php bash
 
 # Créer le module
 ./artisan module:make mon_module
@@ -69,6 +69,16 @@ docker compose exec php bash
 
 6. Pour coder votre module, rendez-vous à l'adresse
 `http://localhost/apps/code-editor`
+
+Vous aurez besoin du mot de passe de code editor pour vous connecter. Ce mot de passe se trouve dans le conteneur code-editor, 
+dans le fichier /home/coder/.config/code-server/config.yaml
+
+**Pour récupérer le mot de passe code-editor :**
+
+```bash
+docker compose exec -it code-editor cat /home/coder/.config/code-server/config.yaml
+```
+
 
 **Pour se connecter au conteneur code-editor :**
 
