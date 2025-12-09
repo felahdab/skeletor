@@ -30,32 +30,50 @@ docker compose up -d
 3. Connectez-vous au conteneur PHP et exécutez les commandes suivantes :
 
 ```bash
+# Se connecter au conteneur en tant que root
+docker compose exec -it -u 0 php bash
+
+# changer les permissions du projet
+chown -R 1111:1111 .
+exit
+
 # Se connecter au conteneur
-docker compose exec php bash
+docker compose exec -it php bash
 
-# Commandes
-composer install --ignore-platform-req=ext-gd
-chmod -R 777 storage bootstrap/cache
-./artisan key:generate
-./artisan migrate --seed
-./artisan storage:link
-
-# Ces commandes ont respectivement pour rôle :
-# d'installer les dépendances manquantes (fichiers autoload)
 # changer les permissions du fichier de stockage (pour écriture de logs)
+chmod -R 777 storage bootstrap/cache
+# d'ajouter les fichiers manquantes (fichiers autoload)
+composer dump-autoload
 # générer la clé artisan
+./artisan key:generate
 # exécuter les migrations de la base de données
+./artisan migrate --seed
 # lier le dossier public et storage pour donner accès aux assets à nginx
+./artisan storage:link
 ```
 
-4. Rendez-vous à l'adresse `http://localhost/apps`
+4. Rendez-vous à l'adresse `http://localhost/apps`, vous devriez voir la page login de Skeletor
 
 5. Pour créer un module, exécutez la commande :
 
 ```bash
-# A l'intérieur du conteneur, pour s'y connecter :
+# A l'intérieur du conteneur php, pour s'y connecter :
 docker compose exec php bash
 
+# Créer le module
 ./artisan module:make mon_module
-# Ensuite spécifier le nom, etc
+
+# Pour continuer votre développement classique, veuillez vous référer aux commande `module` existantes, listez les avec :
+./artisan list | grep 'module'
 ```
+
+6. Pour coder votre module, rendez-vous à l'adresse
+`http://localhost/apps/code-editor`
+
+**Pour se connecter au conteneur code-editor :**
+
+```bash
+docker compose exec -it code-editor bash
+```
+
+7. Ouvrez le dossier du projet (File > Open Folder > `/home/coder/app`), vous y trouverez Skeletor embarquant votre module
