@@ -14,5 +14,7 @@ parameters:
 #    ignoreErrors:
 #        - '#PHPDoc tag @var#'
 #
-#    excludePaths:
-#        - ./*/*/FileToBeExcluded.php
+    excludePaths:
+        - ./tests/*
+        - ./Modules/*/tests/*
+#       - ./*/*/FileToBeExcluded.php
