@@ -300,6 +300,12 @@ class LoginController extends Controller
      */
     public function forgotpwd(Request $request)
     {
+
+        [$logo, $sso_name] = match (config('skeletor.reseau_de_deploiement')){
+            "intradef" => [asset("assets/images/MDC_intradef.png"), "Mindef Connect"],
+            "sic21" => [asset("assets/images/Keycloak.png"), "POLARIS Online"]
+        };
+
         $request->validate(['email' => "required|email"]);
         //$user = User::getEmailSingle($request->email);
         $user = Auth::guard()->getProvider()->retrieveByCredentials(['email' => $request->email]);
@@ -309,7 +315,7 @@ class LoginController extends Controller
             );
 
             return $status === Password::RESET_LINK_SENT
-                ? view('auth.login')->with(['success' => 'email envoyé'])
+                ? view('auth.login', ["logo" => $logo, "sso_name" => $sso_name])->with(['success' => 'email envoyé'])
                 : back()->withErrors(['email' => __($status)]);
         } else {
             return back()->withErrors('l\'email n\'est pas dans la base de donnée');
@@ -347,8 +353,13 @@ class LoginController extends Controller
             }
         );
 
+        [$logo, $sso_name] = match (config('skeletor.reseau_de_deploiement')){
+            "intradef" => [asset("assets/images/MDC_intradef.png"), "Mindef Connect"],
+            "sic21" => [asset("assets/images/Keycloak.png"), "POLARIS Online"]
+        };
+
         return $status === Password::PASSWORD_RESET
-            ? view('auth.login')->with(['success' => 'mot de passe modifié'])
+            ? view('auth.login', ["logo" => $logo, "sso_name" => $sso_name])->with(['success' => 'mot de passe modifié'])
             : redirect(route('password.reset', ['token' => $request->input('token'), 'email' => $request->input('email')]))
             ->withErrors(['email' => [__($status)]]);
     }
