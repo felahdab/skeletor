@@ -12,6 +12,7 @@ final class NewUserDescriptionData extends Data
         public string $email,
         public ?string $unite,
         public ?string $nid,
+        public ?string $gradelong
    ) {}
 
    public static function make(    
@@ -19,8 +20,9 @@ final class NewUserDescriptionData extends Data
                 string $prenom,
                 string $email,
                 ?string $unite = null,
-                ?string $nid = null)
+                ?string $nid = null,
+                ?string $gradelong = null)
    {
-        return new static($nom, $prenom, $email, $unite, $nid);
+        return new static($nom, $prenom, $email, $unite, $nid, $gradelong);
    }
 }
