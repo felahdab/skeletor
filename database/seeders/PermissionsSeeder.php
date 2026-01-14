@@ -22,6 +22,7 @@ class PermissionsSeeder extends Seeder
         Artisan::call('permission:create-permission-routes');
 
         Permission::firstOrCreate(["name" => "skeletor.recherche-annuaire", "guard_name" => "web"]);
+        Permission::firstOrCreate(["name" => "skeletor.se_faire_passer_pour", "guard_name" => "web"]);
         
     }
 }

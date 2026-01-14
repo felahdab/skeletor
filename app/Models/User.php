@@ -139,6 +139,6 @@ class User extends Authenticatable implements FilamentUser, HasName
 
     public function canImpersonate()
     {
-        return $this->admin;
+        return $this->admin || $this->can("skeletor.se_faire_passer_pour");
     }
 }
