@@ -1,3 +1,10 @@
+## 3.1.7 (January 14, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.1.6 –> 3.1.7
+- Implements artifact #673226: rajout du grade aux informations extraites d'Annudef.
+- Ajout de 2 tests unitaires pour assurer la non regression de la fonction de reinitialisation de mot de passe.
+- Implements artifact #672791: restaure la fonctionnalité de réinitialisation du mot de passe de secours des utilisateurs de Skeletor.
+- Ajustement configuration PHPStan pour éviter les erreurs liées aux tests.
+
 ## 3.1.6 (September 03, 2025)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.1.5 –> 3.1.6
 - Dans la page de préférence des utilisateurs, la liste des pages proposées à l'utilisateur est filtrée en fonction de la visibilité de ces pages.
