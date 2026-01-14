@@ -35,12 +35,6 @@ class EventServiceProvider extends ServiceProvider
         \Illuminate\Foundation\Http\Events\RequestHandled::class => [
             'App\Listeners\RecordUsageDataListener@handle',
         ],
-        RestoreUserEvent::class => [
-            RestoreUserListener::class
-        ],
-        DeleteUserEvent::class => [
-            DeleteUserListener::class
-        ],
 
     ];
 
