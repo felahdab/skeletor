@@ -46,7 +46,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Compte par defaut pour la creation automatique du compte
+    | Rôle par defaut pour la creation automatique du compte
     |--------------------------------------------------------------------------
     */
 
