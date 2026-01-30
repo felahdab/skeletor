@@ -56,6 +56,8 @@ class ReportBugOrSuggestion extends Component implements HasForms
             ->success()
             ->send();
 
+        $this->dispatch('close-modal', id: 'report-bug-or-suggestion');
+
     }
 
     public function render(): View
