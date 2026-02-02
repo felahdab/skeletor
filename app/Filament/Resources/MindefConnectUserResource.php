@@ -23,6 +23,8 @@ class MindefConnectUserResource extends Resource
 {
     protected static ?string $model = MindefConnectUser::class;
 
+    protected static ?string $navigationLabel = "Demandes Mindef Connect";
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
