@@ -1,3 +1,14 @@
+## 3.1.8 (February 06, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 3.1.7 –> 3.1.8
+- Implements artifact #674177: permet de visualiser les roles et les permissions d'un utilisateur donné depuis la fiche de celui-ci. Introduit plusieurs tests des pages du panneau d'admin.
+- Ajoute une action spécifique pour redéfinir le mot de passe local d'un utilisateur et rajoute de la permission skeletor.changer_le_mot_de_passe_des_utilisateurs dans le seeder des permissions
+- Fait en sorte que le modal de remontée d'information se ferme automatiquement après la validation par l'utilisateur.
+- Implements artifact #673621: permet au bouton d'ouverture du modal de signalement de bug ou de suggestion de fonctionner également lorsque le panneau filament actif a été configuré pour utiliser la topNavigation.
+- Ajustement de la configuration par défaut pour restorer l'instanciation automatique.
+- Implements artfifact #673415 Retire les déclarations manuelles des listeners DeleteUserListener et RestoreUserListener. Les Event et Listeners associés ne sont pas retirés du projets car susceptibles d'être remis en fonction. Mais il ne sont pas utilisés à ce stade.
+- Implements artifact #673424 Crée une nouvelle permission permettant de donner l'autorisation de se faire passer pour quelqu'un d'autre. L'utilisateur doit pouvoir accéder à la liste des utilisateurs de l'instance (donc avoir users.index par ailleurs) pour pouvoir voir le bouton d'impersonification.
+- Implements artifact #673659: corrige le lien du bouton pour cesser l'impersonation dans l'environnement de production.
+
 ## 3.1.7 (January 14, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.1.6 –> 3.1.7
 - Implements artifact #673226: rajout du grade aux informations extraites d'Annudef.
