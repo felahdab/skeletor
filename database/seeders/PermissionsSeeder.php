@@ -23,6 +23,8 @@ class PermissionsSeeder extends Seeder
 
         Permission::firstOrCreate(["name" => "skeletor.recherche-annuaire", "guard_name" => "web"]);
         Permission::firstOrCreate(["name" => "skeletor.se_faire_passer_pour", "guard_name" => "web"]);
+        Permission::firstOrCreate(["name" => "skeletor.changer_le_mot_de_passe_des_utilisateurs", "guard_name" => "web"]);
+
         
     }
 }
