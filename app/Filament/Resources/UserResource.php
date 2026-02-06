@@ -19,6 +19,10 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
+    protected static ?string $breadcrumb = 'Utilisateurs';
+
+    protected static ?string $navigationLabel = "Utilisateurs";
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
@@ -36,18 +40,13 @@ class UserResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\DateTimePicker::make('email_verified_at'),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required()
-                    ->maxLength(255),
                 Forms\Components\TextInput::make('display_name')
                     ->required()
                     ->maxLength(200)
                     ->default(''),
                 Forms\Components\Toggle::make('admin')
-                    ->required(),
-                Forms\Components\Textarea::make('data')
-                    ->columnSpanFull(),
+                    ->required()
+                    ->visible(fn($record) => auth()->user()?->IsSuperAdmin()),
             ]);
     }
 
@@ -100,7 +99,8 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\RolesRelationManager::class,
+            RelationManagers\PermissionsRelationManager::class,
         ];
     }
 
