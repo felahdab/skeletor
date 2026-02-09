@@ -61,7 +61,7 @@ class LoginController extends Controller
     
         }
         catch (ClientException $e) {
-            logger()->error("Error while trying to get user from SSO: " . $e->getMessage());
+            logger()->error("Error while trying to get user from SSO", ["exception" => $e->getMessage()]);
             return redirect()->route('login')->withErrors(['error' => 'Erreur de connexion au serveur SSO. Veuillez réessayer plus tard ou utiliser votre login local.']);
         }
         
@@ -71,7 +71,7 @@ class LoginController extends Controller
         if ($user != null) {
             $user->storeMindefConnectInformations($MCuser->user);
             Auth::login($user);
-            logger()->info("Logged user based un sub attribute.");
+            logger()->info("Logged user based on sub attribute.", ["user" => $user]);
 
             // Let's update the email information from the SSO server.
             $user->email = $MCuser->user["email"];
@@ -84,14 +84,15 @@ class LoginController extends Controller
         if ($user != null) {
             $user->storeMindefConnectInformations($MCuser->user);
             Auth::login($user);
-            logger()->info("Logged user based un email attribute.");
-
+            
             // Let's save the sub of the user so that it is used next time the user logs in.
             if ($user->sub == null)
             {
                 $user->sub = $MCuser->user["sub"];
                 $user->save();
             }
+
+            logger()->info("Logged user based on sub attribute.", ["user" => $user]);
 
             return $this->authenticated($request, $user);
         }
@@ -264,11 +265,8 @@ class LoginController extends Controller
         $user = Auth::getProvider()->retrieveByCredentials($credentials);
 
         Auth::login($user);
-        if ($user->roles->count() != 0) {;
-            $userRole = $user->roles[0];
-            $request->session()->put('current_role', $userRole->id);
-            $request->session()->save();
-        }
+
+        logger()->info("Logged user based on local credentials.", ["user" => $user]);
         return $this->authenticated($request, $user);
     }
 
