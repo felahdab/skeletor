@@ -15,7 +15,9 @@ class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
 {
     public static function canAccess(): bool
     {
-        return auth()->check() && auth()->user()->can('skeletor.recherche-annuaire');
+        return auth()->check() && 
+                auth()->user()->can('skeletor.recherche-annuaire') &&
+                config('skeletor.reseau_de_deploiement') == 'intradef';
     }
 
     public function getRowActions()
