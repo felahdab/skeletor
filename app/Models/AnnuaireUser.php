@@ -13,23 +13,6 @@ class AnnuaireUser extends Model
 {
     use \Sushi\Sushi;
 
-    // "titre" => "M.",
-    // "nom" => "EL-AHDAB",
-    // "prenom" => "Florian,Rémy",
-    // "gradelong" => "Capitaine de vaisseau",
-    // "gradecourt" => "CV",
-    // "nid" => "0012030028",
-    // "nomcomplet" => "EL-AHDAB Florian",
-    // "nomaffiche" => "EL-AHDAB Florian CV",
-    // "uid" => "florian.el-ahdab",
-    // "email" => "florian.el-ahdab@intradef.gouv.fr",
-    // "unites" => "MARINE/FRSTRIKEFOR/C2N - CENTRE COMBAT NAVAL/DIRECTEUR",
-    // "status" => "EL-AHDAB",
-    // "prenomusuel" => "Florian",
-    // "categorystatus" => "Officiers de marine",
-    // "categoryrank" => "Officier",
-    // "familyname" => "EL-AHDAB",
-
     protected $schema = [
         "titre" => "string",
         "nom" => "string",

@@ -533,7 +533,7 @@ Les paramètres du provider sont configurés dans le .env:
 ```php
 KEYCLOAK_CLIENT_ID=
 KEYCLOAK_CLIENT_SECRET=
-KEYCLOAK_REDIRECT_URI="https://pprod-ffast.intradef.gouv.fr/${APP_PREFIX}/auth/callback"
+KEYCLOAK_REDIRECT_URI="https://pprod-app.url.tld/${APP_PREFIX}/auth/callback"
 KEYCLOAK_BASE_URL="https://pprod-mindef-connect-ng-auth.intradef.gouv.fr/auth/"
 KEYCLOAK_REALM='Intradef'
  ```

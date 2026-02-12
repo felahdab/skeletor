@@ -23,7 +23,7 @@ class BugReportFactory extends Factory
         return [
             "message"=> "test message",
             "user_id"=> $user->id,
-            "url" => "https://pprod.intradef.gouv.fr/"
+            "url" => "https://app.url.tld/"
         ];
     }
 }

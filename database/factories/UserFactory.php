@@ -13,6 +13,8 @@ use App\Models\Specialite;
 
 use Illuminate\Support\Carbon;
 
+use App\Service\RandomPasswordGeneratorService;
+
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
@@ -30,19 +32,20 @@ class UserFactory extends Factory
         $lastname = strtolower($this->faker->lastName());
         $firstname = strtolower($this->faker->firstName());
         $domain = match(config('skeletor.reseau_de_deploiement')){
-            'intradef' => 'intradef.gouv.fr',
-            'sic21' => 'adalfantln.marine.defensecdd.gouv.fr'
+            'intradef' => config('services.intradef.mail_tld'),
+            'sic21' => config('services.sic21.mail_tld')
         };
 
         $email = $firstname . "." . $lastname . "@" . $domain;
+
+        $password = (new RandomPasswordGeneratorService)->generateRandomString(10);
         
         return [
             'nom'       => $lastname,
             'prenom'       => $firstname,
             'display_name' => $firstname. " " . $lastname,
             'email'      => $email,
-            //'password'   => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'password'   => 'password',
+            'password'   => $password,
         ];
     }
 }

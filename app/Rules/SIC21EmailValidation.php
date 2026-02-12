@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 
 class SIC21EmailValidation implements Rule
 {
+    public string $validDomain;
     /**
      * Create a new rule instance.
      *
@@ -16,7 +17,7 @@ class SIC21EmailValidation implements Rule
      */
     public function __construct()
     {
-        //
+        $this->validDomain = config('services.sic21.mail_tld');
     }
 
     /**
@@ -29,12 +30,13 @@ class SIC21EmailValidation implements Rule
     public function passes($attribute, $value)
     {
         $domainPart = explode('@', $value)[1] ?? null;
+        
 
           if (!$domainPart) {
             return false;
           }
 
-          if (! Str::contains($domainPart , 'marine.defensecdd.gouv.fr'))
+          if (! Str::contains($domainPart , $this->validDomain))
           {
               return false;
           }
@@ -50,6 +52,7 @@ class SIC21EmailValidation implements Rule
      */
     public function message()
     {
-        return 'Seul des emails intradef.gouv.fr sont acceptés.';
+        $validDomain = $this->validDomain;
+        return "Seul des emails {$validDomain} sont acceptés.";
     }
 }
