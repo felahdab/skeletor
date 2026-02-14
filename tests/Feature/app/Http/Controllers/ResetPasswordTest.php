@@ -17,7 +17,7 @@ it('accepte une demande de reinitialisation de mot de passe pour un utilisateur 
     $response = $this->post(route('login.forgotpwd'), ["email" => $user->email ]);
     $response->assertStatus(200);
 
-})->skip("Ce test ne passe pas: HTTP status 419...");
+});
 
 it('refuse une demande de reinitialisation de mot de passe pour un utilisateur n existant pas', function () {
     Mail::fake();
@@ -28,4 +28,4 @@ it('refuse une demande de reinitialisation de mot de passe pour un utilisateur n
     $response = $this->post(route('login.forgotpwd'), ["email" => "toto@exmaple.com" ]);
     $response->assertStatus(302);
 
-})->skip("Ce test ne passe pas: HTTP status 419...");
+});

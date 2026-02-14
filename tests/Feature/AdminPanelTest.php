@@ -93,7 +93,7 @@ it('sauvegarde la page preferee de l utilisateur', function() {
     //logger()->info($user->data);
 
     $this->assertTrue(Arr::get($user->data, "settings.prefered_page") == 'dummy_page_route_name');
-})->skip("Ce test ne passe pas alors que la page fonctionne en réalité...");
+});
 
 it('affiche la liste des utilisateurs si l utilisateur a la permission users.index', function() {
     $user=User::factory()->create();
