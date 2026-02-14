@@ -40,7 +40,6 @@ class UserPreferences extends BaseEditProfile
         $data = $user->data;
 
         $state = $this->form->getState();
-        logger()->info($state);
 
         Arr::set($data, 'settings.prefered_page', $state["prefered_page"]);
         $user->data = $data;
