@@ -114,7 +114,7 @@ return [
     | tous les mails sont envoyés à l'adresse indiquée ci-dessous:
     |
     */
-    'destinataire_email_non_production'=> env('SKELETOR_EMAIL_NON_PRODUCTION', 'nomail'),
+    'destinataire_email_non_production'=> env('SKELETOR_EMAIL_NON_PRODUCTION', 'nomail@nowhere.mail.tld'),
 
     /*
     |--------------------------------------------------------------------------

@@ -18,8 +18,9 @@ class UserPreferences extends BaseEditProfile
     public function form(Form $form): Form
     {
         $record = [
-            'prefered_page' =>Arr::get(auth()->user()->data, 'settings.prefered_page', null),
+            'prefered_page' => Arr::get(auth()->user()->data, 'settings.prefered_page', null),
         ];
+
         return $form
             ->schema([
                 Select::make('prefered_page')
@@ -39,6 +40,7 @@ class UserPreferences extends BaseEditProfile
         $data = $user->data;
 
         $state = $this->form->getState();
+        logger()->info($state);
 
         Arr::set($data, 'settings.prefered_page', $state["prefered_page"]);
         $user->data = $data;

@@ -86,7 +86,7 @@ class Version extends Eloquent
      * @param Version|null $againstVersion
      * @return array
      */
-    public function diff(Version $againstVersion = null)
+    public function diff(?Version $againstVersion = null)
     {
         $model = $this->getModel();
         $diff  = $againstVersion ? $againstVersion->getModel() : $this->versionable()->withTrashed()->first()->currentVersion()->getModel();
@@ -113,7 +113,7 @@ class Version extends Eloquent
      * @param Version|null $againstVersion
      * @return array
      */
-    public function diffRaw(Version $againstVersion = null)
+    public function diffRaw(?Version $againstVersion = null)
     {
         $model = $this->getModel();
 
