@@ -3,17 +3,17 @@
 namespace Dedoc\Scramble\Support\IndexBuilders;
 
 use Dedoc\Scramble\Infer\Scope\Scope;
-use Dedoc\Scramble\Support\Generator\MissingExample;
+use Dedoc\Scramble\Support\Generator\MissingValue;
 use Dedoc\Scramble\Support\Helpers\ExamplesExtractor;
 use Dedoc\Scramble\Support\OperationExtensions\ParameterExtractor\InferredParameter;
 use Dedoc\Scramble\Support\Type\BooleanType;
 use Dedoc\Scramble\Support\Type\FloatType;
+use Dedoc\Scramble\Support\Type\GenericClassStringType;
 use Dedoc\Scramble\Support\Type\IntegerType;
 use Dedoc\Scramble\Support\Type\Literal\LiteralBooleanType;
 use Dedoc\Scramble\Support\Type\Literal\LiteralFloatType;
 use Dedoc\Scramble\Support\Type\Literal\LiteralIntegerType;
 use Dedoc\Scramble\Support\Type\Literal\LiteralStringType;
-use Dedoc\Scramble\Support\Type\ObjectType;
 use Dedoc\Scramble\Support\Type\StringType;
 use Dedoc\Scramble\Support\Type\Type as InferType;
 use Dedoc\Scramble\Support\Type\TypeHelper;
@@ -103,7 +103,7 @@ class RequestParametersBuilder implements IndexBuilder
                 name: $parameterName,
                 description: $this->makeDescriptionFromComments($commentHolderNode),
                 type: $parameterType,
-                default: $parameterDefault ?? new MissingExample,
+                default: $parameterDefault ?? new MissingValue,
             )
         );
     }
@@ -168,12 +168,14 @@ class RequestParametersBuilder implements IndexBuilder
 
     private function makeEnumParameter(Scope $scope, Node $node)
     {
-        if (! $className = TypeHelper::getArgType($scope, $node->args, ['default', 1])->value ?? null) {
+        $enumClassType = TypeHelper::getArgType($scope, $node->args, ['default', 1]);
+
+        if (! $enumClassType instanceof GenericClassStringType) {
             return [null, null];
         }
 
         return [
-            new ObjectType($className),
+            $enumClassType->type,
             null,
         ];
     }

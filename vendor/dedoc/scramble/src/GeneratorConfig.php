@@ -6,7 +6,10 @@ use Closure;
 use Dedoc\Scramble\Configuration\DocumentTransformers;
 use Dedoc\Scramble\Configuration\OperationTransformers;
 use Dedoc\Scramble\Configuration\ParametersExtractors;
+use Dedoc\Scramble\Configuration\RuleTransformers;
 use Dedoc\Scramble\Configuration\ServerVariables;
+use Dedoc\Scramble\Contracts\AllRulesSchemasTransformer;
+use Dedoc\Scramble\Contracts\RuleTransformer;
 use Dedoc\Scramble\Support\Generator\ServerVariable;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
@@ -27,14 +30,23 @@ class GeneratorConfig
      */
     public Closure|string|null $documentRoute = null;
 
+    /**
+     * @var Closure(Route): (string|string[])
+     */
+    public Closure $operationMethodsResolver;
+
     public function __construct(
         private array $config = [],
         private ?Closure $routeResolver = null,
         public readonly ParametersExtractors $parametersExtractors = new ParametersExtractors,
         public readonly OperationTransformers $operationTransformers = new OperationTransformers,
         public readonly DocumentTransformers $documentTransformers = new DocumentTransformers,
+        public readonly RuleTransformers $ruleTransformers = new RuleTransformers,
         public readonly ServerVariables $serverVariables = new ServerVariables,
-    ) {}
+        ?Closure $operationMethodsResolver = null,
+    ) {
+        $this->operationMethodsResolver = $operationMethodsResolver ?: fn (Route $r) => $r->methods()[0];
+    }
 
     public function config(array $config)
     {
@@ -79,7 +91,9 @@ class GeneratorConfig
     {
         $expectedDomain = $this->get('api_domain');
 
-        return Str::startsWith($route->uri, $this->get('api_path', 'api'))
+        $isBaseMatching = ! ($prefix = $this->get('api_path', 'api')) || Str::startsWith($route->uri, $prefix);
+
+        return $isBaseMatching
             && (! $expectedDomain || $route->getDomain() === $expectedDomain);
     }
 
@@ -119,6 +133,22 @@ class GeneratorConfig
         }
 
         $this->operationTransformers->append($cb);
+
+        return $this;
+    }
+
+    /**
+     * @param  list<class-string<RuleTransformer|AllRulesSchemasTransformer>>|class-string<RuleTransformer|AllRulesSchemasTransformer>|(callable(RuleTransformers): void)  $cb
+     */
+    public function withRuleTransformers(array|string|callable $cb): self
+    {
+        if (is_callable($cb)) {
+            $cb($this->ruleTransformers);
+
+            return $this;
+        }
+
+        $this->ruleTransformers->append($cb);
 
         return $this;
     }
@@ -174,6 +204,28 @@ class GeneratorConfig
         }
 
         $this->serverVariables->use($variables);
+
+        return $this;
+    }
+
+    /**
+     * Force Scramble to use `PATCH` for `PUT|PATCH` routes.
+     */
+    public function preferPatchMethod(): static
+    {
+        return $this->resolveOperationMethodsUsing(function (Route $route): string {
+            $methods = array_map('strtolower', $route->methods());
+
+            return in_array('patch', $methods) && in_array('put', $methods) ? 'patch' : $methods[0];
+        });
+    }
+
+    /**
+     * @param  Closure(Route): (string|string[])  $resolver
+     */
+    public function resolveOperationMethodsUsing(Closure $resolver): static
+    {
+        $this->operationMethodsResolver = $resolver;
 
         return $this;
     }

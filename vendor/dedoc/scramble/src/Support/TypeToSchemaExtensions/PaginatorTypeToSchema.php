@@ -8,20 +8,17 @@ use Dedoc\Scramble\OpenApiContext;
 use Dedoc\Scramble\Support\Generator\Components;
 use Dedoc\Scramble\Support\Generator\Response;
 use Dedoc\Scramble\Support\Generator\Schema;
-use Dedoc\Scramble\Support\Generator\Types\ArrayType;
-use Dedoc\Scramble\Support\Generator\Types\IntegerType;
-use Dedoc\Scramble\Support\Generator\Types\ObjectType as OpenApiObjectType;
-use Dedoc\Scramble\Support\Generator\Types\StringType;
 use Dedoc\Scramble\Support\Generator\TypeTransformer;
+use Dedoc\Scramble\Support\Type\ArrayType;
 use Dedoc\Scramble\Support\Type\Generic;
-use Dedoc\Scramble\Support\Type\ObjectType;
 use Dedoc\Scramble\Support\Type\Type;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Dedoc\Scramble\Support\TypeManagers\PaginatorTypeManager;
 use Illuminate\Pagination\Paginator;
 
 class PaginatorTypeToSchema extends TypeToSchemaExtension
 {
+    use WithCollectedPaginatedItems;
+
     public function __construct(
         Infer $infer,
         TypeTransformer $openApiTransformer,
@@ -35,8 +32,7 @@ class PaginatorTypeToSchema extends TypeToSchemaExtension
     {
         return $type instanceof Generic
             && $type->name === Paginator::class
-            && count($type->templateTypes) === 1
-            && $type->templateTypes[0] instanceof ObjectType;
+            && $this->getCollectedType($type);
     }
 
     /**
@@ -44,25 +40,13 @@ class PaginatorTypeToSchema extends TypeToSchemaExtension
      */
     public function toSchema(Type $type)
     {
-        $collectingClassType = $type->templateTypes[0];
-
-        if (! $collectingClassType->isInstanceOf(JsonResource::class) && ! $collectingClassType->isInstanceOf(Model::class)) {
+        if (! $collectedType = $this->getCollectedType($type)) {
             return null;
         }
 
-        $collectingType = $this->openApiTransformer->transform($collectingClassType);
+        $paginatorArray = (new PaginatorTypeManager)->getToArrayType(new ArrayType($collectedType));
 
-        return (new OpenApiObjectType)
-            ->addProperty('current_page', new IntegerType)
-            ->addProperty('data', (new ArrayType)->setItems($collectingType))
-            ->addProperty('first_page_url', (new StringType)->nullable(true))
-            ->addProperty('from', (new IntegerType)->nullable(true))
-            ->addProperty('next_page_url', (new StringType)->nullable(true))
-            ->addProperty('path', (new StringType)->nullable(true)->setDescription('Base path for paginator generated URLs.'))
-            ->addProperty('per_page', (new IntegerType)->setDescription('Number of items shown per page.'))
-            ->addProperty('prev_page_url', (new StringType)->nullable(true))
-            ->addProperty('to', (new IntegerType)->nullable(true)->setDescription('Number of the last item in the slice.'))
-            ->setRequired(['current_page', 'data', 'first_page_url', 'from', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to']);
+        return $this->openApiTransformer->transform($paginatorArray);
     }
 
     /**
@@ -70,14 +54,12 @@ class PaginatorTypeToSchema extends TypeToSchemaExtension
      */
     public function toResponse(Type $type)
     {
-        $collectingClassType = $type->templateTypes[0];
-
-        if (! $collectingClassType->isInstanceOf(JsonResource::class) && ! $collectingClassType->isInstanceOf(Model::class)) {
+        if (! $collectedType = $this->getCollectedType($type)) {
             return null;
         }
 
         return Response::make(200)
-            ->description('Paginated set of `'.$this->openApiContext->references->schemas->uniqueName($collectingClassType->name).'`')
+            ->setDescription('Paginated set of `'.$this->openApiContext->references->schemas->uniqueName($collectedType->name).'`')
             ->setContent('application/json', Schema::fromType($this->openApiTransformer->transform($type)));
     }
 }

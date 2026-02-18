@@ -1,6 +1,8 @@
 <?php
 
-namespace Barryvdh\Debugbar\Support;
+declare(strict_types=1);
+
+namespace Fruitcake\LaravelDebugbar\Support;
 
 use Exception;
 use Illuminate\Database\ConnectionInterface;
@@ -85,19 +87,20 @@ class Explain
         return match ($connection->getDriverName()) {
             'mysql' => $this->generateVisualExplainMysql($connection, $sql, $bindings),
             'pgsql' => $this->generateVisualExplainPgsql($connection, $sql, $bindings),
+            default => throw new Exception("Visual explain not available for driver '{$connection->getDriverName()}'."),
         };
     }
 
     private function generateVisualExplainMysql(ConnectionInterface $connection, string $query, array $bindings): string
     {
         return Http::withHeaders([
-            'User-Agent' => 'barryvdh/laravel-debugbar',
+            'User-Agent' => 'fruitcake/laravel-debugbar',
         ])->post('https://api.mysqlexplain.com/v2/explains', [
             'query' => $query,
             'bindings' => $bindings,
             'version' => $connection->selectOne("SELECT VERSION()")->{'VERSION()'},
             'explain_json' => $connection->selectOne("EXPLAIN FORMAT=JSON {$query}", $bindings)->EXPLAIN,
-            'explain_tree' => rescue(fn () => $connection->selectOne("EXPLAIN FORMAT=TREE {$query}", $bindings)->EXPLAIN, report: false),
+            'explain_tree' => rescue(fn() => $connection->selectOne("EXPLAIN FORMAT=TREE {$query}", $bindings)->EXPLAIN, report: false),
         ])->throw()->json('url');
     }
 

@@ -2,18 +2,34 @@
 
 namespace App\Filament\Resources;
 
+use BackedEnum;
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Toggle;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\UserResource\RelationManagers\RolesRelationManager;
+use App\Filament\Resources\UserResource\RelationManagers\PermissionsRelationManager;
+use App\Filament\Resources\UserResource\Pages\ListUsers;
+use App\Filament\Resources\UserResource\Pages\CreateUser;
+use App\Filament\Resources\UserResource\Pages\EditUser;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Contracts\Support\Htmlable;
 
-use STS\FilamentImpersonate\Tables\Actions\Impersonate;
+//use STS\FilamentImpersonate\Tables\Actions\Impersonate;
+use STS\FilamentImpersonate\Actions\Impersonate;
 
 class UserResource extends Resource
 {
@@ -23,28 +39,31 @@ class UserResource extends Resource
 
     protected static ?string $navigationLabel = "Utilisateurs";
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    public static function form(Form $form): Form
+    public static function getNavigationIcon(): string | Htmlable | null
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('nom')
+        return 'heroicon-o-rectangle-stack';
+    }
+
+    public static function form(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                TextInput::make('nom')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('prenom')
+                TextInput::make('prenom')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('email')
+                TextInput::make('email')
                     ->email()
                     ->required()
                     ->maxLength(255),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
-                Forms\Components\TextInput::make('display_name')
+                DateTimePicker::make('email_verified_at'),
+                TextInput::make('display_name')
                     ->required()
                     ->maxLength(200)
                     ->default(''),
-                Forms\Components\Toggle::make('admin')
+                Toggle::make('admin')
                     ->required()
                     ->visible(fn($record) => auth()->user()?->IsSuperAdmin()),
             ]);
@@ -54,28 +73,28 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nom')
+                TextColumn::make('nom')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('prenom')
+                TextColumn::make('prenom')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
+                TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('display_name')
+                TextColumn::make('display_name')
                     ->searchable(),
-                Tables\Columns\IconColumn::make('admin')
+                IconColumn::make('admin')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -83,15 +102,15 @@ class UserResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
                 Impersonate::make()
                     ->redirectTo(route('home.index')),
                 
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -99,17 +118,17 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\RolesRelationManager::class,
-            RelationManagers\PermissionsRelationManager::class,
+            RolesRelationManager::class,
+            PermissionsRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => ListUsers::route('/'),
+            'create' => CreateUser::route('/create'),
+            'edit' => EditUser::route('/{record}/edit'),
         ];
     }
 }

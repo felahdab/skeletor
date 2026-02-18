@@ -10,7 +10,9 @@ export default (Alpine) => {
 
         transitionEasing: null,
 
-        init: function () {
+        unsubscribeLivewireHook: null,
+
+        init() {
             this.computedStyle = window.getComputedStyle(this.$el)
 
             this.transitionDuration =
@@ -39,7 +41,7 @@ export default (Alpine) => {
             this.isShown = true
         },
 
-        configureTransitions: function () {
+        configureTransitions() {
             const display = this.computedStyle.display
 
             const show = () => {
@@ -73,10 +75,10 @@ export default (Alpine) => {
             Alpine.effect(() => toggle(this.isShown))
         },
 
-        configureAnimations: function () {
+        configureAnimations() {
             let animation
 
-            Livewire.hook(
+            this.unsubscribeLivewireHook = Livewire.hook(
                 'commit',
                 ({ component, commit, succeed, fail, respond }) => {
                     if (
@@ -128,7 +130,7 @@ export default (Alpine) => {
             )
         },
 
-        close: function () {
+        close() {
             this.isShown = false
 
             setTimeout(
@@ -144,7 +146,7 @@ export default (Alpine) => {
             )
         },
 
-        markAsRead: function () {
+        markAsRead() {
             window.dispatchEvent(
                 new CustomEvent('markedNotificationAsRead', {
                     detail: {
@@ -154,7 +156,7 @@ export default (Alpine) => {
             )
         },
 
-        markAsUnread: function () {
+        markAsUnread() {
             window.dispatchEvent(
                 new CustomEvent('markedNotificationAsUnread', {
                     detail: {
@@ -162,6 +164,10 @@ export default (Alpine) => {
                     },
                 }),
             )
+        },
+
+        destroy() {
+            this.unsubscribeLivewireHook?.()
         },
     }))
 }

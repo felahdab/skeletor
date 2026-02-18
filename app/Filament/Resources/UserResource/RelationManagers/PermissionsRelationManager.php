@@ -2,8 +2,14 @@
 
 namespace App\Filament\Resources\UserResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DetachBulkAction;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -17,11 +23,11 @@ class PermissionsRelationManager extends RelationManager
     protected static ?string $title = "Permissions isolées";
 
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -32,20 +38,20 @@ class PermissionsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
+                TextColumn::make('name'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()
+                AttachAction::make()
             ])
-            ->actions([
-                Tables\Actions\DetachAction::make(),
+            ->recordActions([
+                DetachAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DetachBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DetachBulkAction::make(),
                 ]),
             ]);
     }

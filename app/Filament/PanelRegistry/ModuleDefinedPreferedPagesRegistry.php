@@ -2,6 +2,7 @@
 
 namespace App\Filament\PanelRegistry;
 
+use InvalidArgumentException;
 use Illuminate\Support\Arr;
 
 class ModuleDefinedPreferedPagesRegistry
@@ -21,7 +22,7 @@ class ModuleDefinedPreferedPagesRegistry
         foreach($preferedPageItem as $item) {
             //dump($item);
             if (!($item instanceof PreferedPageItem)) {
-                throw new \InvalidArgumentException('Prefered page item must be an instance of PreferedPageItem');
+                throw new InvalidArgumentException('Prefered page item must be an instance of PreferedPageItem');
             }
             $this->preferedpages[] = $item;
         }

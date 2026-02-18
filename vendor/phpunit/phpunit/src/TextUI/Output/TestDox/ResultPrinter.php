@@ -11,7 +11,6 @@ namespace PHPUnit\TextUI\Output\TestDox;
 
 use const PHP_EOL;
 use function array_map;
-use function assert;
 use function explode;
 use function implode;
 use function preg_match;
@@ -177,7 +176,7 @@ final readonly class ResultPrinter
         }
 
         $this->printTestResultBodyStart($test);
-        $this->printThrowable($test);
+        $this->printThrowable($test->status(), $test->throwable());
         $this->printTestResultBodyEnd($test);
     }
 
@@ -207,27 +206,23 @@ final readonly class ResultPrinter
         $this->printer->print(PHP_EOL);
     }
 
-    private function printThrowable(TestDoxTestResult $test): void
+    private function printThrowable(TestStatus $status, Throwable $throwable): void
     {
-        $throwable = $test->throwable();
-
-        assert($throwable instanceof Throwable);
-
         $message    = trim($throwable->description());
         $stackTrace = $this->formatStackTrace($throwable->stackTrace());
         $diff       = '';
 
-        if (!empty($message) && $this->colors) {
+        if ($message !== '' && $this->colors) {
             ['message' => $message, 'diff' => $diff] = $this->colorizeMessageAndDiff(
                 $message,
-                $this->messageColorFor($test->status()),
+                $this->messageColorFor($status),
             );
         }
 
-        if (!empty($message)) {
+        if ($message !== '') {
             $this->printer->print(
                 $this->prefixLines(
-                    $this->prefixFor('message', $test->status()),
+                    $this->prefixFor('message', $status),
                     $message,
                 ),
             );
@@ -235,10 +230,10 @@ final readonly class ResultPrinter
             $this->printer->print(PHP_EOL);
         }
 
-        if (!empty($diff)) {
+        if ($diff !== '') {
             $this->printer->print(
                 $this->prefixLines(
-                    $this->prefixFor('diff', $test->status()),
+                    $this->prefixFor('diff', $status),
                     $diff,
                 ),
             );
@@ -246,16 +241,40 @@ final readonly class ResultPrinter
             $this->printer->print(PHP_EOL);
         }
 
-        if (!empty($stackTrace)) {
-            if (!empty($message) || !empty($diff)) {
-                $prefix = $this->prefixFor('default', $test->status());
+        if ($stackTrace !== '') {
+            if ($message !== '' || $diff !== '') {
+                $tracePrefix = $this->prefixFor('default', $status);
             } else {
-                $prefix = $this->prefixFor('trace', $test->status());
+                $tracePrefix = $this->prefixFor('trace', $status);
             }
 
             $this->printer->print(
-                $this->prefixLines($prefix, PHP_EOL . $stackTrace),
+                $this->prefixLines($tracePrefix, PHP_EOL . $stackTrace),
             );
+        }
+
+        if ($throwable->hasPrevious()) {
+            $this->printer->print(PHP_EOL);
+
+            $this->printer->print(
+                $this->prefixLines(
+                    $this->prefixFor('default', $status),
+                    ' ',
+                ),
+            );
+
+            $this->printer->print(PHP_EOL);
+
+            $this->printer->print(
+                $this->prefixLines(
+                    $this->prefixFor('default', $status),
+                    'Caused by:',
+                ),
+            );
+
+            $this->printer->print(PHP_EOL);
+
+            $this->printThrowable($status, $throwable->previous());
         }
     }
 
@@ -264,7 +283,12 @@ final readonly class ResultPrinter
      */
     private function colorizeMessageAndDiff(string $buffer, string $style): array
     {
-        $lines      = $buffer ? array_map('\rtrim', explode(PHP_EOL, $buffer)) : [];
+        $lines = [];
+
+        if ($buffer !== '') {
+            $lines = array_map('\rtrim', explode(PHP_EOL, $buffer));
+        }
+
         $message    = [];
         $diff       = [];
         $insideDiff = false;
@@ -292,7 +316,7 @@ final readonly class ResultPrinter
         $message = implode(PHP_EOL, $message);
         $diff    = implode(PHP_EOL, $diff);
 
-        if (!empty($message)) {
+        if ($message !== '') {
             // Testdox output has a left-margin of 5; keep right-margin to prevent terminal scrolling
             $message = Color::colorizeTextBox($style, $message, $this->columns - 7);
         }
@@ -313,7 +337,7 @@ final readonly class ResultPrinter
         $previousPath = '';
 
         foreach (explode(PHP_EOL, $stackTrace) as $line) {
-            if (preg_match('/^(.*):(\d+)$/', $line, $matches)) {
+            if (preg_match('/^(.*):(\d+)$/', $line, $matches) > 0) {
                 $lines[]      = Color::colorizePath($matches[1], $previousPath) . Color::dim(':') . Color::colorize('fg-blue', $matches[2]) . "\n";
                 $previousPath = $matches[1];
 
@@ -329,11 +353,17 @@ final readonly class ResultPrinter
 
     private function prefixLines(string $prefix, string $message): string
     {
+        $lines = preg_split('/\r\n|\r|\n/', $message);
+
+        if ($lines === false) {
+            $lines = [];
+        }
+
         return implode(
             PHP_EOL,
             array_map(
-                static fn (string $line) => '   ' . $prefix . ($line ? ' ' . $line : ''),
-                preg_split('/\r\n|\r|\n/', $message),
+                static fn (string $line) => '   ' . $prefix . ($line !== '' ? ' ' . $line : ''),
+                $lines,
             ),
         );
     }
@@ -441,7 +471,7 @@ final readonly class ResultPrinter
      */
     private function printBeforeClassOrAfterClassErrors(string $type, array $errors): void
     {
-        if (empty($errors)) {
+        if ($errors === []) {
             return;
         }
 

@@ -115,16 +115,17 @@ class PruneCommand extends Command
      */
     protected function models()
     {
-        if (! empty($models = $this->option('model'))) {
-            return (new Collection($models))->filter(function ($model) {
-                return class_exists($model);
-            })->values();
-        }
-
+        $models = $this->option('model');
         $except = $this->option('except');
 
-        if (! empty($models) && ! empty($except)) {
+        if ($models && $except) {
             throw new InvalidArgumentException('The --models and --except options cannot be combined.');
+        }
+
+        if ($models) {
+            return (new Collection($models))
+                ->filter(static fn (string $model) => class_exists($model))
+                ->values();
         }
 
         return (new Collection(Finder::create()->in($this->getPath())->files()->name('*.php')))
@@ -186,7 +187,7 @@ class PruneCommand extends Command
      * @param  string  $model
      * @return bool
      */
-    private function isPrunable(string $model)
+    protected function isPrunable(string $model)
     {
         return class_exists($model)
             && is_a($model, Model::class, true)

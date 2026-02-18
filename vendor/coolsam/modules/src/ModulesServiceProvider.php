@@ -10,6 +10,9 @@ use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Filesystem\Filesystem;
 use Livewire\Features\SupportTesting\Testable;
 use Nwidart\Modules\Module;
+
+use Nwidart\Modules\Facades\Module as ModuleFacade;
+
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -59,12 +62,24 @@ class ModulesServiceProvider extends PackageServiceProvider
     public function packageRegistered(): void
     {
         $this->registerModuleMacros();
+        $this->autoDiscoverPanels();
     }
 
     public function attemptToRegisterModuleProviders(): void
     {
         // It is necessary to register them here to avoid late registration (after Panels have already been booted)
-        $providers = glob(config('modules.paths.modules') . '/*' . DIRECTORY_SEPARATOR . '*' . DIRECTORY_SEPARATOR . 'Providers' . DIRECTORY_SEPARATOR . '*ServiceProvider.php');
+        $pattern1 = config(
+            'modules.paths.modules',
+            'Modules'
+        ) . '/*' . DIRECTORY_SEPARATOR . '*' . DIRECTORY_SEPARATOR . 'Providers' . DIRECTORY_SEPARATOR . '*Provider.php';
+        $pattern2 = config(
+            'modules.paths.modules',
+            'Modules'
+        ) . '/*' . DIRECTORY_SEPARATOR . '*' . DIRECTORY_SEPARATOR . 'Providers' . DIRECTORY_SEPARATOR . 'Filament' . DIRECTORY_SEPARATOR . '*Provider.php';
+        $serviceProviders = glob($pattern1);
+        $panelProviders = glob($pattern2);
+        $providers = array_merge($serviceProviders, $panelProviders);
+
         foreach ($providers as $provider) {
             $namespace = FilamentModules::convertPathToNamespace($provider);
             $module = str($namespace)->before('\Providers\\')->afterLast('\\')->toString();
@@ -74,6 +89,28 @@ class ModulesServiceProvider extends PackageServiceProvider
                 $this->app->register($namespace);
             }
         }
+    }
+
+    public function autoDiscoverPanels(): void
+    {
+        $this->app->beforeResolving('filament', function () {
+            $modules = ModuleFacade::allEnabled();
+            $cacheKey = 'filament-modules-panel-providers';
+            $ttl = 10;  // 24 hours
+            $modules = ModuleFacade::allEnabled();
+            $panels = collect($modules)->flatMap(function (Module $module) {
+                $panelProviders = glob($module->getExtraPath('app/Providers/Filament') . '/*.php');
+
+                return collect($panelProviders)->map(function ($path) {
+                    return $this->app[Modules::class]->convertPathToNamespace($path);
+                })->toArray();
+            })->toArray();
+            foreach ($panels as $panel) {
+                if (class_exists($panel)) {
+                    $this->app->register($panel);
+                }
+            }
+        });
     }
 
     public function packageBooted(): void
@@ -132,6 +169,7 @@ class ModulesServiceProvider extends PackageServiceProvider
             Commands\ModuleMakeFilamentPageCommand::class,
             Commands\ModuleMakeFilamentWidgetCommand::class,
             Commands\ModuleMakeFilamentThemeCommand::class,
+            Commands\ModuleMakeFilamentPanelCommand::class,
         ];
     }
 
@@ -171,12 +209,13 @@ class ModulesServiceProvider extends PackageServiceProvider
 
     protected function registerModuleMacros(): void
     {
-        Module::macro('namespace', function (string $relativeNamespace = '') {
+        Module::macro('namespace', function (?string $relativeNamespace = '') {
+            $relativeNamespace = $relativeNamespace ?? '';
             $base = trim($this->app['config']->get('modules.namespace', 'Modules'), '\\');
             $relativeNamespace = trim($relativeNamespace, '\\');
             $studlyName = $this->getStudlyName();
 
-            return trim("{$base}\\{$studlyName}\\{$relativeNamespace}", '\\');
+            return str($base)->append('\\')->append($studlyName)->append('\\')->append($relativeNamespace)->replace('\\\\', '\\')->toString();
         });
 
         Module::macro('getTitle', function () {
@@ -184,48 +223,51 @@ class ModulesServiceProvider extends PackageServiceProvider
         });
 
         Module::macro('appNamespace', function (string $relativeNamespace = '') {
+            $prefix = str(config('modules.paths.app_folder', 'app'))->ltrim(DIRECTORY_SEPARATOR, '\\')->studly()->toString();
             $relativeNamespace = trim($relativeNamespace, '\\');
-            $relativeNamespace = str_replace('App\\', '', $relativeNamespace);
-            $relativeNamespace = str_replace('App', '', $relativeNamespace);
-            $relativeNamespace = trim($relativeNamespace, '\\');
-            $relativeNamespace = '\\' . $relativeNamespace;
+            if (filled($prefix)) {
+                $relativeNamespace = str_replace($prefix . '\\', '', $relativeNamespace);
+                $relativeNamespace = str_replace($prefix, '', $relativeNamespace);
+            }
 
             return $this->namespace($relativeNamespace);
         });
         Module::macro('appPath', function (string $relativePath = '') {
-            $appPath = $this->getExtraPath('app');
+            $appPath = $this->getExtraPath(config('modules.paths.app_folder', 'app'));
 
-            return $appPath . ($relativePath ? DIRECTORY_SEPARATOR . $relativePath : '');
+            return str($appPath . ($relativePath ? DIRECTORY_SEPARATOR . $relativePath : ''))->replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR)->toString();
         });
 
         Module::macro('databasePath', function (string $relativePath = '') {
             $appPath = $this->getExtraPath('database');
 
-            return $appPath . ($relativePath ? DIRECTORY_SEPARATOR . $relativePath : '');
+            return str($appPath . ($relativePath ? DIRECTORY_SEPARATOR . $relativePath : ''))->replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR)->toString();
         });
 
         Module::macro('resourcesPath', function (string $relativePath = '') {
             $appPath = $this->getExtraPath('resources');
 
-            return $appPath . ($relativePath ? DIRECTORY_SEPARATOR . $relativePath : '');
+            return str($appPath . ($relativePath ? DIRECTORY_SEPARATOR . $relativePath : ''))
+                ->replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR)->toString();
         });
 
         Module::macro('migrationsPath', function (string $relativePath = '') {
             $appPath = $this->databasePath('migrations');
 
-            return $appPath . ($relativePath ? DIRECTORY_SEPARATOR . $relativePath : '');
+            return str($appPath . ($relativePath ? DIRECTORY_SEPARATOR . $relativePath : ''))
+                ->replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR)->toString();
         });
 
         Module::macro('seedersPath', function (string $relativePath = '') {
             $appPath = $this->databasePath('seeders');
 
-            return $appPath . ($relativePath ? DIRECTORY_SEPARATOR . $relativePath : '');
+            return str($appPath . ($relativePath ? DIRECTORY_SEPARATOR . $relativePath : ''))->replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR)->toString();
         });
 
         Module::macro('factoriesPath', function (string $relativePath = '') {
             $appPath = $this->databasePath('factories');
 
-            return $appPath . ($relativePath ? DIRECTORY_SEPARATOR . $relativePath : '');
+            return str($appPath . ($relativePath ? DIRECTORY_SEPARATOR . $relativePath : ''))->replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR)->toString();
         });
     }
 }

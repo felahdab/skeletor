@@ -2,6 +2,7 @@
 
 namespace Mhmiton\LaravelModulesLivewire\Traits;
 
+use Exception;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Mhmiton\LaravelModulesLivewire\Support\Decomposer;
@@ -212,5 +213,20 @@ trait LivewireComponentParser
     protected function getBasePath($path = null)
     {
         return strtr(base_path($path), ['\\' => '/']);
+    }
+
+    /**
+     * Get the value of a command option.
+     *
+     * @param  string|null  $key
+     * @return string|array|bool|null
+     */
+    public function option($key = null)
+    {
+        try {
+            return parent::option($key);
+        } catch (Exception $e) {
+            return null;
+        }
     }
 }

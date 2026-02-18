@@ -26,10 +26,12 @@ use PHPStan\Type\VerbosityLevel;
 use function array_key_exists;
 use function array_shift;
 use function count;
+use function defined;
 use function in_array;
 use function preg_split;
 use function substr;
 use function ucfirst;
+use function version_compare;
 
 use const PREG_SPLIT_DELIM_CAPTURE;
 
@@ -74,6 +76,13 @@ class BuilderHelper
         private bool $checkProperties,
         private MacroMethodsClassReflectionExtension $macroMethodsClassReflectionExtension,
     ) {
+        // @phpstan-ignore-next-line
+        if (! defined('LARAVEL_VERSION') || version_compare(LARAVEL_VERSION, '12.15.0', '<')) {
+            return;
+        }
+
+        // @phpstan-ignore-next-line
+        $this->passthru[] = 'getCountForPagination';
     }
 
     public function dynamicWhere(
@@ -103,7 +112,7 @@ class BuilderHelper
                             continue;
                         }
 
-                        $trinaryLogic = $trinaryLogic->and($modelType->hasProperty(Str::snake($segment)));
+                        $trinaryLogic = $trinaryLogic->and($modelType->hasInstanceProperty(Str::snake($segment)));
                     }
 
                     if (! $trinaryLogic->yes()) {

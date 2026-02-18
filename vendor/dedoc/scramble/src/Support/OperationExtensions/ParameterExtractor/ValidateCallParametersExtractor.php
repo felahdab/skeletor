@@ -27,7 +27,7 @@ class ValidateCallParametersExtractor implements ParameterExtractor
 
     public function handle(RouteInfo $routeInfo, array $parameterExtractionResults): array
     {
-        if (! $astNode = $routeInfo->methodNode()) {
+        if (! $astNode = $routeInfo->actionNode()) {
             return $parameterExtractionResults;
         }
 
@@ -43,13 +43,13 @@ class ValidateCallParametersExtractor implements ParameterExtractor
 
         $parameterExtractionResults[] = new ParametersExtractionResult(
             parameters: $this->makeParameters(
-                node: RulesNodes::makeFromStatements(
-                    statements: $validationRulesNode instanceof Node\Expr\Array_ ? $validationRulesNode->items : [],
-                    className: $routeInfo->className(),
-                ),
-                rules: (new NodeRulesEvaluator($this->printer, $astNode, $validationRulesNode, $routeInfo->className()))->handle(),
+                rules: (new NodeRulesEvaluator($this->printer, $astNode, $validationRulesNode, $routeInfo->method, $routeInfo->className()))->handle(),
                 typeTransformer: $this->openApiTransformer,
-                in: in_array(mb_strtolower($routeInfo->route->methods()[0]), RequestBodyExtension::HTTP_METHODS_WITHOUT_REQUEST_BODY)
+                rulesDocsRetriever: new TypeBasedRulesDocumentationRetriever(
+                    $routeInfo->getScope(),
+                    $routeInfo->getScope()->getType($validationRulesNode),
+                ),
+                in: in_array(mb_strtolower($routeInfo->method), RequestBodyExtension::HTTP_METHODS_WITHOUT_REQUEST_BODY)
                     ? 'query'
                     : 'body',
             ),

@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\Model;
@@ -25,7 +26,7 @@ class Version extends Eloquent
 
     /**
      * Sets up the relation
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     * @return MorphTo
      */
     public function versionable()
     {

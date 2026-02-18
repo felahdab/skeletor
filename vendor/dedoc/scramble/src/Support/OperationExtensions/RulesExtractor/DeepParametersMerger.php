@@ -14,12 +14,12 @@ use Illuminate\Support\Str;
 class DeepParametersMerger
 {
     /**
-     * @param  Collection<string, Parameter>  $parameters
+     * @param  Collection<int, Parameter>  $parameters
      */
     public function __construct(private Collection $parameters) {}
 
     /**
-     * @return array<string, Parameter>
+     * @return Parameter[]
      */
     public function handle(): array
     {
@@ -82,7 +82,12 @@ class DeepParametersMerger
                     );
                 }
 
-                return $baseParam;
+                $objectIsRequiredDueToNestedRequiredProperties = $baseParam->schema?->type instanceof ObjectType
+                    && $params->some(fn (Parameter $p) => $p->required);
+
+                return $baseParam->required(
+                    $baseParam->required || $objectIsRequiredDueToNestedRequiredProperties
+                );
             });
 
         return $parameters
@@ -90,13 +95,13 @@ class DeepParametersMerger
             ->merge($nested);
     }
 
-    private function setDeepType(Type &$base, string $key, Parameter $parameter)
+    private function setDeepType(Type &$base, string $key, Parameter $parameter): void
     {
         $typeToSet = $this->extractTypeFromParameter($parameter);
 
         $containingType = $this->getOrCreateDeepTypeContainer(
             $base,
-            (explode('.', $key)[0] ?? '') === '*'
+            explode('.', $key)[0] === '*'
                 ? explode('.', $key)
                 : collect(explode('.', $key))
                     ->splice(1)
@@ -104,11 +109,13 @@ class DeepParametersMerger
                     ->all(),
         );
 
-        if (! $containingType) {
+        $settingKey = collect(explode('.', $key))->last();
+
+        if (! is_string($settingKey)) {
             return;
         }
 
-        $isSettingArrayItems = ($settingKey = collect(explode('.', $key))->last()) === '*';
+        $isSettingArrayItems = $settingKey === '*';
 
         if ($containingType === $base && $base instanceof UnknownType) {
             $containingType = ($isSettingArrayItems ? new ArrayType : new ObjectType)
@@ -132,9 +139,18 @@ class DeepParametersMerger
                 ->addProperty($settingKey, $typeToSet)
                 ->addRequired($parameter->required ? [$settingKey] : []);
         }
+
+        if ($isSettingArrayItems && $containingType instanceof ObjectType) {
+            $containingType->properties = collect($containingType->properties)
+                ->map(fn ($prop) => $prop instanceof UnknownType ? $typeToSet : $prop)
+                ->all();
+        }
     }
 
-    private function getOrCreateDeepTypeContainer(Type &$base, array $path)
+    /**
+     * @param  string[]  $path
+     */
+    private function getOrCreateDeepTypeContainer(Type &$base, array $path): Type
     {
         $key = $path[0];
 
@@ -200,9 +216,12 @@ class DeepParametersMerger
         }
     }
 
-    private function extractTypeFromParameter($parameter)
+    private function extractTypeFromParameter(Parameter $parameter): Type
     {
-        $paramType = $parameter->schema->type;
+        $paramType = $parameter->schema?->type;
+        if (! $paramType instanceof Type) {
+            throw new \Exception('Parameter type is required.');
+        }
 
         $paramType->setDescription($parameter->description);
         $paramType->example($parameter->example);

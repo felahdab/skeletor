@@ -4,8 +4,14 @@ BASEDIRECTORY=$(realpath $SCRIPTDIRECTORY)
 APPDIRECTORY=$BASEDIRECTORY/..
 cd $APPDIRECTORY || exit 1
 
-chown -R 1111:1111 *
-chown -R 1111:1111 .*
+USERID=1111
+GROUPID=1111
+
+USERID=33
+GROUPID=33
+
+chown -R $USERID:$GROUPID *
+chown -R $USERID:$GROUPID .*
 chmod -R g+rwx .
 # chmod -R o+rx .
 # chmod -R o+rwx database/migrations

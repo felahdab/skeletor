@@ -5,10 +5,8 @@ namespace Dedoc\Scramble\Infer\Analyzer;
 use Dedoc\Scramble\Infer\Context;
 use Dedoc\Scramble\Infer\Definition\ClassDefinition;
 use Dedoc\Scramble\Infer\Definition\ClassPropertyDefinition;
-use Dedoc\Scramble\Infer\Definition\FunctionLikeDefinition;
 use Dedoc\Scramble\Infer\Extensions\Event\ClassDefinitionCreatedEvent;
 use Dedoc\Scramble\Infer\Scope\Index;
-use Dedoc\Scramble\Support\Type\FunctionType;
 use Dedoc\Scramble\Support\Type\TemplateType;
 use Dedoc\Scramble\Support\Type\TypeHelper;
 use Dedoc\Scramble\Support\Type\UnknownType;
@@ -19,54 +17,23 @@ class ClassAnalyzer
 {
     public function __construct(private Index $index) {}
 
-    private function shouldAnalyzeParentClass(ReflectionClass $parentClassReflection): bool
-    {
-        if ($this->index->getClassDefinition($parentClassReflection->name)) {
-            return true;
-        }
-
-        /*
-         * Classes from `vendor` aren't analyzed at the moment. Instead, it is up to developers to provide
-         * definitions for them using the dictionaries.
-         */
-        return ! str_contains($parentClassReflection->getFileName(), DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR);
-    }
-
     /**
      * @throws \ReflectionException
      */
     public function analyze(string $name): ClassDefinition
     {
-        if ($definition = $this->index->getClassDefinition($name)) {
-            return $definition;
-        }
+        $classReflection = new ReflectionClass($name); // @phpstan-ignore argument.type
 
-        $classReflection = new ReflectionClass($name);
+        $parentName = ($classReflection->getParentClass() ?: null)?->name;
 
-        $parentDefinition = null;
+        $parentDefinition = $parentName ? $this->index->getClass($parentName) : null;
 
-        if ($classReflection->getParentClass() && $this->shouldAnalyzeParentClass($classReflection->getParentClass())) {
-            $parentDefinition = $this->analyze($parentName = $classReflection->getParentClass()->name);
-        } elseif ($classReflection->getParentClass() && ! $this->shouldAnalyzeParentClass($classReflection->getParentClass())) {
-            // @todo: Here we still want to fire the event, so we can add some details to the definition.
-            $parentDefinition = new ClassDefinition($parentName = $classReflection->getParentClass()->name);
-
-            Context::getInstance()->extensionsBroker->afterClassDefinitionCreated(new ClassDefinitionCreatedEvent($parentDefinition->name, $parentDefinition));
-
-            // In case parent definition is added in an extension.
-            $parentDefinition = $this->index->getClassDefinition($parentName) ?: $parentDefinition;
-        }
-
-        /*
-         * @todo consider more advanced cloning implementation.
-         * Currently just cloning property definition feels alright as only its `defaultType` may change.
-         */
         $classDefinition = new ClassDefinition(
             name: $name,
             templateTypes: $parentDefinition?->templateTypes ?: [],
             properties: array_map(fn ($pd) => clone $pd, $parentDefinition?->properties ?: []),
-            methods: $parentDefinition?->methods ?: [],
-            parentFqn: $parentName ?? null,
+            methods: array_map(fn ($md) => $md->copyFromParent(), $parentDefinition?->methods ?: []),
+            parentFqn: $parentName,
         );
 
         /*
@@ -79,6 +46,14 @@ class ClassAnalyzer
                 continue;
             }
 
+            if (array_key_exists($reflectionProperty->name, $classDefinition->properties)) {
+                $classDefinition->properties[$reflectionProperty->name]->defaultType = $reflectionProperty->hasDefaultValue()
+                    ? PropertyAnalyzer::from($reflectionProperty)->getDefaultType()
+                    : null;
+
+                continue;
+            }
+
             if ($reflectionProperty->isStatic()) {
                 $classDefinition->properties[$reflectionProperty->name] = new ClassPropertyDefinition(
                     type: $reflectionProperty->hasDefaultValue()
@@ -86,34 +61,30 @@ class ClassAnalyzer
                         : new UnknownType,
                 );
             } else {
+                $expectedTemplateTypeName = 'T'.Str::studly($reflectionProperty->name);
+
+                $existingPropertyTemplateType = collect($classDefinition->templateTypes)
+                    ->first(fn (TemplateType $t) => $t->name === $expectedTemplateTypeName);
+
+                $propertyTemplateType = $existingPropertyTemplateType ?: new TemplateType(
+                    $expectedTemplateTypeName,
+                    is: ($reflectionPropertyType = $reflectionProperty->getType()) ? TypeHelper::createTypeFromReflectionType($reflectionPropertyType) : new UnknownType,
+                );
+
                 $classDefinition->properties[$reflectionProperty->name] = new ClassPropertyDefinition(
-                    type: $t = new TemplateType(
-                        'T'.Str::studly($reflectionProperty->name),
-                        is: $reflectionProperty->hasType() ? TypeHelper::createTypeFromReflectionType($reflectionProperty->getType()) : new UnknownType,
-                    ),
+                    type: $propertyTemplateType,
                     defaultType: $reflectionProperty->hasDefaultValue()
                         ? PropertyAnalyzer::from($reflectionProperty)->getDefaultType()
                         : null,
                 );
-                $classDefinition->templateTypes[] = $t;
+
+                if (! $existingPropertyTemplateType) {
+                    $classDefinition->templateTypes[] = $propertyTemplateType;
+                }
             }
         }
 
-        foreach ($classReflection->getMethods() as $reflectionMethod) {
-            if ($reflectionMethod->class !== $name) {
-                continue;
-            }
-
-            $classDefinition->methods[$reflectionMethod->name] = new FunctionLikeDefinition(
-                new FunctionType(
-                    $reflectionMethod->name,
-                    arguments: [],
-                    returnType: new UnknownType,
-                ),
-                definingClassName: $name,
-                isStatic: $reflectionMethod->isStatic(),
-            );
-        }
+        $classDefinition->setIndex($this->index);
 
         $this->index->registerClassDefinition($classDefinition);
 

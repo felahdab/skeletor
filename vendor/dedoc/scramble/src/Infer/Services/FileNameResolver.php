@@ -55,6 +55,13 @@ class FileNameResolver
     {
         $name = $this->nameContext->getResolvedName(new Name([$shortName]), 1)->toString();
 
-        return class_exists($name) || interface_exists($name) ? $name : $shortName;
+        $classLikeExists = class_exists($name)
+            || interface_exists($name)
+            || trait_exists($name)
+            || enum_exists($name);
+
+        // By definition, the returned class name here is FQN, so like *::class or get_class(*)
+        // invoking name resolver returns the class name without leading slash.
+        return ltrim($classLikeExists ? $name : $shortName, '\\');
     }
 }

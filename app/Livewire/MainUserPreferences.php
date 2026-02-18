@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use Throwable;
 use Livewire\Component;
 
 use Nwidart\Modules\Facades\Module;
@@ -39,7 +40,7 @@ class MainUserPreferences extends Component
                 $livewire_registry->getClass($candidat_composant);
          
                 $composants_des_modules[]  = $candidat_composant;
-            } catch(\Throwable $th) {
+            } catch(Throwable $th) {
                 
             }
         }

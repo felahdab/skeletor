@@ -3,12 +3,11 @@
 namespace Dedoc\Scramble\Support\Helpers;
 
 use Dedoc\Scramble\Infer\Definition\ClassDefinition;
-use Dedoc\Scramble\Infer\Scope\Scope;
+use Dedoc\Scramble\Infer\Reflector\ClassReflector;
 use Dedoc\Scramble\Infer\Services\FileNameResolver;
 use Dedoc\Scramble\Support\Type\ObjectType;
 use Dedoc\Scramble\Support\Type\Type;
 use Dedoc\Scramble\Support\Type\UnknownType;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class JsonResourceHelper
@@ -18,7 +17,7 @@ class JsonResourceHelper
     /**
      * @internal
      */
-    public static function modelType(ClassDefinition $jsonClass, Scope $scope): ?Type
+    public static function modelType(ClassDefinition $jsonClass): ?Type
     {
         if ($cachedModelType = static::$jsonResourcesModelTypesCache[$jsonClass->name] ?? null) {
             return $cachedModelType;
@@ -27,11 +26,11 @@ class JsonResourceHelper
         $modelClass = static::getModelName(
             $jsonClass->name,
             new \ReflectionClass($jsonClass->name),
-            $scope->nameResolver,
+            new FileNameResolver(ClassReflector::make($jsonClass->name)->getNameContext()),
         );
 
         $modelType = new UnknownType("Cannot resolve [$modelClass] model type.");
-        if ($modelClass && is_a($modelClass, Model::class, true)) {
+        if ($modelClass) {
             $modelType = new ObjectType($modelClass);
         }
 

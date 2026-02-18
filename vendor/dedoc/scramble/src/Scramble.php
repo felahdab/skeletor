@@ -172,9 +172,14 @@ class Scramble
             ->middleware($config->get('middleware', [RestrictedDocsAccess::class]));
     }
 
-    public static function getGeneratorConfig(string $api)
+    public static function getGeneratorConfig(string $api): GeneratorConfig
     {
         return static::getConfigurationsInstance()->get($api);
+    }
+
+    public static function infer(): Infer
+    {
+        return app(Infer::class);
     }
 
     /** @internal */

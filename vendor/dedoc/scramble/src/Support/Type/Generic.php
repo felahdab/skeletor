@@ -4,6 +4,7 @@ namespace Dedoc\Scramble\Support\Type;
 
 use Dedoc\Scramble\Infer\Scope\GlobalScope;
 use Dedoc\Scramble\Infer\Scope\Scope;
+use Traversable;
 
 class Generic extends ObjectType
 {
@@ -30,11 +31,22 @@ class Generic extends ObjectType
         return ['templateTypes'];
     }
 
+    public function accepts(Type $otherType): bool
+    {
+        if ($this->name === 'iterable') {
+            return $otherType instanceof ArrayType
+                || $otherType instanceof KeyedArrayType
+                || $otherType->isInstanceOf(Traversable::class);
+        }
+
+        return parent::accepts($otherType);
+    }
+
     public function getPropertyType(string $propertyName, Scope $scope = new GlobalScope): Type
     {
         $propertyType = parent::getPropertyType($propertyName, $scope);
 
-        $templateNameToIndexMap = ($classDefinition = $scope->index->getClassDefinition($this->name))
+        $templateNameToIndexMap = ($classDefinition = $scope->index->getClass($this->name))
             ? array_flip(array_map(fn ($t) => $t->name, $classDefinition->templateTypes))
             : [];
 

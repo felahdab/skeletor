@@ -6,6 +6,7 @@ namespace Pest\PendingCalls;
 
 use Closure;
 use Pest\Support\Backtrace;
+use Pest\Support\Description;
 use Pest\TestSuite;
 
 /**
@@ -16,7 +17,7 @@ final class DescribeCall
     /**
      * The current describe call.
      *
-     * @var array<int, string>
+     * @var array<int, Description>
      */
     private static array $describing = [];
 
@@ -31,7 +32,7 @@ final class DescribeCall
     public function __construct(
         public readonly TestSuite $testSuite,
         public readonly string $filename,
-        public readonly string $description,
+        public readonly Description $description,
         public readonly Closure $tests
     ) {
         //
@@ -40,7 +41,7 @@ final class DescribeCall
     /**
      * What is the current describing.
      *
-     * @return array<int, string>
+     * @return array<int, Description>
      */
     public static function describing(): array
     {

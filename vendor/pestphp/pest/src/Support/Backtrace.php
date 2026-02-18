@@ -11,12 +11,9 @@ use Pest\Exceptions\ShouldNotHappen;
  */
 final class Backtrace
 {
-    /**
-     * @var string
-     */
-    private const FILE = 'file';
+    private const string FILE = 'file';
 
-    private const BACKTRACE_OPTIONS = DEBUG_BACKTRACE_IGNORE_ARGS;
+    private const int BACKTRACE_OPTIONS = DEBUG_BACKTRACE_IGNORE_ARGS;
 
     /**
      * Returns the current test file.

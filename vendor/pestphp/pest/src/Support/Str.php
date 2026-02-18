@@ -13,12 +13,9 @@ final class Str
      * Pool of alpha-numeric characters for generating (unsafe) random strings
      * from.
      */
-    private const POOL = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    private const string POOL = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-    /**
-     * @var string
-     */
-    private const PREFIX = '__pest_evaluable_';
+    private const string PREFIX = '__pest_evaluable_';
 
     /**
      * Create a (unsecure & non-cryptographically safe) random alpha-numeric
@@ -82,7 +79,7 @@ final class Str
             return $subject;
         }
 
-        return substr($subject, 0, $pos);
+        return mb_substr($subject, 0, $pos);
     }
 
     /**
@@ -104,7 +101,7 @@ final class Str
     /**
      * Creates a describe block as `$describeDescription` → `$testDescription` format.
      *
-     * @param  array<int, string>  $describeDescriptions
+     * @param  array<int, Description>  $describeDescriptions
      */
     public static function describe(array $describeDescriptions, string $testDescription): string
     {
@@ -119,5 +116,15 @@ final class Str
     public static function isUrl(string $value): bool
     {
         return (bool) filter_var($value, FILTER_VALIDATE_URL);
+    }
+
+    /**
+     * Converts the given `$target` to a URL-friendly "slug".
+     */
+    public static function slugify(string $target): string
+    {
+        $target = preg_replace('/[^a-zA-Z0-9]+/', '-', $target);
+
+        return strtolower(trim((string) $target, '-'));
     }
 }

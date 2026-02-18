@@ -2,6 +2,9 @@
 
 namespace Dedoc\Scramble\Support\Type;
 
+use Dedoc\Scramble\Support\Type\Contracts\LiteralType;
+use Dedoc\Scramble\Support\Type\Literal\LiteralStringType;
+
 /**
  * Represents an array with known keys. This may represent a list as well.
  */
@@ -37,6 +40,57 @@ class KeyedArrayType extends AbstractType
     public function isSame(Type $type)
     {
         return false;
+    }
+
+    public function getItemValueTypeByKey(string|int $key, Type $default = new UnknownType): Type
+    {
+        foreach ($this->items as $item) {
+            if ($item->key === $key) {
+                return $item->value;
+            }
+        }
+
+        return $default;
+    }
+
+    public function getKeyType(): Type
+    {
+        $items = collect($this->items);
+
+        if ($items->isNotEmpty() && $items->every(fn (ArrayItemType_ $t) => $t->key === null || is_int($t->key))) {
+            return new IntegerType;
+        }
+
+        if ($items->isNotEmpty() && $items->every(fn (ArrayItemType_ $t) => is_string($t->key))) {
+            return new Union(
+                $items->map(fn (ArrayItemType_ $t) => new LiteralStringType((string) $t->key))->all(),
+            );
+        }
+
+        return new Union([new IntegerType, new StringType]);
+    }
+
+    public function getOffsetValueType(Type $offset): Type
+    {
+        $default = parent::getOffsetValueType($offset);
+
+        if (! $offset instanceof LiteralType) {
+            return $default;
+        }
+
+        $offsetValue = $offset->getValue();
+
+        if (! is_string($offsetValue) && ! is_int($offsetValue)) {
+            return $default;
+        }
+
+        foreach ($this->items as $item) {
+            if ($item->key === $offsetValue) {
+                return $item->value->mergeAttributes($item->attributes());
+            }
+        }
+
+        return $default;
     }
 
     public function toString(): string

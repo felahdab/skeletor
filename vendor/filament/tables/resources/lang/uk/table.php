@@ -2,9 +2,20 @@
 
 return [
 
-    'column_toggle' => [
+    'column_manager' => [
 
         'heading' => 'Стовпці',
+
+        'actions' => [
+
+            'apply' => [
+                'label' => 'Застосувати стовпці',
+            ],
+
+            'reset' => [
+                'label' => 'Скинути',
+            ],
+        ],
 
     ],
 
@@ -12,6 +23,20 @@ return [
 
         'actions' => [
             'label' => 'Дія|Дії',
+        ],
+
+        'select' => [
+
+            'loading_message' => 'Завантаження...',
+
+            'no_search_results_message' => 'Немає варіантів, що відповідають вашому пошуку.',
+
+            'placeholder' => 'Виберіть варіант',
+
+            'searching_message' => 'Пошук...',
+
+            'search_prompt' => 'Почніть вводити текст для пошуку...',
+
         ],
 
         'text' => [
@@ -99,7 +124,7 @@ return [
             'label' => 'Відкрити дії',
         ],
 
-        'toggle_columns' => [
+        'column_manager' => [
             'label' => 'Переключити стовпці',
         ],
 
@@ -110,6 +135,7 @@ return [
         'heading' => 'Не знайдено :model',
 
         'description' => 'Створити :model для початку.',
+
     ],
 
     'filters' => [
@@ -144,7 +170,13 @@ return [
         ],
 
         'select' => [
+
             'placeholder' => 'Всі',
+
+            'relationship' => [
+                'empty_option_label' => 'Немає',
+            ],
+
         ],
 
         'trashed' => [
@@ -167,7 +199,6 @@ return [
 
             'group' => [
                 'label' => 'Групувати за',
-                'placeholder' => 'Групувати за',
             ],
 
             'direction' => [
@@ -227,5 +258,7 @@ return [
         ],
 
     ],
+
+    'default_model_label' => 'запис',
 
 ];

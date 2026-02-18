@@ -9,6 +9,8 @@ namespace OpenApi\Processors;
 use OpenApi\Analysis;
 use OpenApi\Annotations as OA;
 use OpenApi\Generator;
+use OpenApi\GeneratorAwareInterface;
+use OpenApi\GeneratorAwareTrait;
 use OpenApi\OpenApiException;
 
 /**
@@ -16,9 +18,9 @@ use OpenApi\OpenApiException;
  *
  * Determines <code>schema</code>, <code>enum</code> and <code>type</code>.
  */
-class ExpandEnums
+class ExpandEnums implements GeneratorAwareInterface
 {
-    use Concerns\TypesTrait;
+    use GeneratorAwareTrait;
 
     protected ?string $enumNames;
 
@@ -49,7 +51,7 @@ class ExpandEnums
         $this->enumNames = $enumNames;
     }
 
-    public function __invoke(Analysis $analysis)
+    public function __invoke(Analysis $analysis): void
     {
         if (!class_exists('\\ReflectionEnum')) {
             return;
@@ -61,49 +63,40 @@ class ExpandEnums
 
     protected function expandContextEnum(Analysis $analysis): void
     {
-        /** @var OA\Schema[] $schemas */
         $schemas = $analysis->getAnnotationsOfType(OA\Schema::class, true);
 
         foreach ($schemas as $schema) {
             if ($schema->_context->is('enum')) {
-                $re = new \ReflectionEnum($schema->_context->fullyQualifiedName($schema->_context->enum));
+                $re = new \ReflectionEnum($schema->_context->fullyQualifiedName($schema->_context->enum) ?? '');
                 $schema->schema = Generator::isDefault($schema->schema) ? $re->getShortName() : $schema->schema;
 
                 $schemaType = $schema->type;
                 $enumType = null;
                 if ($re->isBacked()) {
-                    $backingType = $re->getBackingType();
-                    if ($backingType instanceof \ReflectionNamedType) {
-                        $enumType = $backingType->getName();
-                    }
+                    $enumType = $re->getBackingType()->getName();
                 }
 
                 // no (or invalid) schema type means name
-                $useName = Generator::isDefault($schemaType) || ($enumType && $this->native2spec($enumType) != $schemaType);
+                $useName = Generator::isDefault($schemaType) || ($enumType && $this->generator->getTypeResolver()->native2spec($enumType) != $schemaType);
 
-                $schema->enum = array_map(function ($case) use ($useName) {
-                    return ($useName || !($case instanceof \ReflectionEnumBackedCase)) ? $case->name : $case->getBackingValue();
-                }, $re->getCases());
+                $schema->enum = array_map(static fn (\ReflectionEnumUnitCase $case): int|string => ($useName || !($case instanceof \ReflectionEnumBackedCase)) ? $case->name : $case->getBackingValue(), $re->getCases());
 
                 if ($this->enumNames !== null && !$useName) {
                     $schemaX = Generator::isDefault($schema->x) ? [] : $schema->x;
-                    $schemaX[$this->enumNames] = array_map(function ($case) {
-                        return $case->name;
-                    }, $re->getCases());
+                    $schemaX[$this->enumNames] = array_map(static fn (\ReflectionEnumUnitCase $case): string => $case->name, $re->getCases());
 
                     $schema->x = $schemaX;
                 }
 
                 $schema->type = $useName ? 'string' : $enumType;
 
-                $this->mapNativeType($schema, $schemaType);
+                $this->generator->getTypeResolver()->mapNativeType($schema, $schemaType);
             }
         }
     }
 
     protected function expandSchemaEnum(Analysis $analysis): void
     {
-        /** @var OA\Schema[] $schemas */
         $schemas = $analysis->getAnnotationsOfType([OA\Schema::class, OA\ServerVariable::class]);
 
         foreach ($schemas as $schema) {

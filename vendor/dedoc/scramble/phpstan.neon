@@ -6,7 +6,12 @@ parameters:
     paths:
         - src
         - config
+    stubFiles:
+        - stubs/DeepCopy.stub
     tmpDir: build/phpstan
     checkOctaneCompatibility: true
     checkModelProperties: true
-    # reportUnmatchedIgnoredErrors: false
+    typeAliases:
+        Rule: 'string|\Illuminate\Contracts\Validation\ValidationRule'
+        RuleSet: 'Rule|Rule[]'
+    #reportUnmatchedIgnoredErrors: false

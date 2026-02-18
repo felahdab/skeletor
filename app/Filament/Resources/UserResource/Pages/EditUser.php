@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\UserResource\Pages;
 
+use App\Filament\Resources\UserResource\Actions\ChangePasswordAction;
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\UserResource;
 use Filament\Actions;
 use Filament\Forms\Components;
@@ -17,8 +19,8 @@ class EditUser extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            UserResource\Actions\ChangePasswordAction::make('change-password'),
-            Actions\DeleteAction::make(),
+            ChangePasswordAction::make('change-password'),
+            DeleteAction::make(),
         ];
     }
 }

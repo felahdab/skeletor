@@ -21,6 +21,7 @@ use Dedoc\Scramble\Support\Generator\Types\StringType;
 use Dedoc\Scramble\Support\Generator\Types\Type as OpenApiType;
 use Dedoc\Scramble\Support\Generator\Types\UnknownType;
 use Dedoc\Scramble\Support\Helpers\ExamplesExtractor;
+use Dedoc\Scramble\Support\PhpDoc;
 use Dedoc\Scramble\Support\Type\ArrayItemType_;
 use Dedoc\Scramble\Support\Type\Literal\LiteralFloatType;
 use Dedoc\Scramble\Support\Type\Literal\LiteralIntegerType;
@@ -28,9 +29,11 @@ use Dedoc\Scramble\Support\Type\Literal\LiteralStringType;
 use Dedoc\Scramble\Support\Type\TemplateType;
 use Dedoc\Scramble\Support\Type\Type;
 use Dedoc\Scramble\Support\Type\Union;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use PHPStan\PhpDocParser\Ast\PhpDoc\DeprecatedTagValueNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocNode;
+
+use function DeepCopy\deep_copy;
 
 /**
  * Transforms PHP type to OpenAPI schema type.
@@ -43,6 +46,10 @@ class TypeTransformer
     /** @var ExceptionToResponseExtension[] */
     private array $exceptionToResponseExtensions;
 
+    /**
+     * @param  class-string<TypeToSchemaExtension>[]  $typeToSchemaExtensionsClasses
+     * @param  class-string<ExceptionToResponseExtension>[]  $exceptionToResponseExtensionsClasses
+     */
     public function __construct(
         private Infer $infer,
         public readonly OpenApiContext $context,
@@ -125,15 +132,28 @@ class TypeTransformer
         } elseif ($type instanceof ArrayItemType_) {
             $openApiType = $this->transform($type->value);
 
-            if ($docNode = $type->getAttribute('docNode')) {
-                /** @var PhpDocNode $docNode */
-                $varNode = $docNode->getVarTagValues()[0] ?? null;
+            // @todo use PhpDocSchemaTransformer
 
-                $openApiType = $varNode && $varNode->type
+            /** @var PhpDocNode|null $valueDocNode */
+            $valueDocNode = $type->value->getAttribute('docNode');
+            /** @var PhpDocNode|null $arrayItemDocNode */
+            $arrayItemDocNode = $type->getAttribute('docNode');
+
+            if ($valueDocNode || $arrayItemDocNode) {
+                $docNode = new PhpDocNode([
+                    ...($arrayItemDocNode?->children ?: []),
+                    ...($valueDocNode?->children ?: []),
+                ]);
+                PhpDoc::addSummaryAttributes($docNode);
+
+                /** @var PhpDocNode $docNode */
+                $varNode = array_values($docNode->getVarTagValues())[0] ?? null;
+
+                $openApiType = $varNode
                     ? $this->transform(PhpDocTypeHelper::toType($varNode->type))
                     : $openApiType;
 
-                $commentDescription = trim($docNode->getAttribute('summary').' '.$docNode->getAttribute('description'));
+                $commentDescription = trim($docNode->getAttribute('summary').' '.$docNode->getAttribute('description')); // @phpstan-ignore binaryOp.invalid, binaryOp.invalid
                 $varNodeDescription = $varNode && $varNode->description ? trim($varNode->description) : '';
                 if ($commentDescription || $varNodeDescription) {
                     $openApiType->setDescription(implode('. ', array_filter([$varNodeDescription, $commentDescription])));
@@ -145,6 +165,18 @@ class TypeTransformer
 
                 if ($default = ExamplesExtractor::make($docNode, '@default')->extract(preferString: $openApiType instanceof StringType)) {
                     $openApiType->default($default[0]);
+                }
+
+                $deprecated = array_values($docNode->getTagsByName('@deprecated'))[0]->value ?? null;
+                if ($deprecated instanceof DeprecatedTagValueNode) {
+                    $openApiType->deprecated(true);
+
+                    if ($deprecated->description) {
+                        $openApiType->setDescription(implode(' ', array_filter([
+                            $openApiType->description,
+                            $deprecated->description,
+                        ])));
+                    }
                 }
 
                 if ($format = array_values($docNode->getTagsByName('@format'))[0]->value->value ?? null) {
@@ -161,23 +193,32 @@ class TypeTransformer
                 }
             } else {
                 [$literals, $otherTypes] = collect($type->types)
-                    ->partition(fn ($t) => $t instanceof LiteralStringType || $t instanceof LiteralIntegerType);
+                    ->partition(fn ($t) => $t instanceof LiteralStringType || $t instanceof LiteralIntegerType)
+                    ->all();
 
                 [$stringLiterals, $integerLiterals] = collect($literals)
-                    ->partition(fn ($t) => $t instanceof LiteralStringType);
+                    ->partition(fn ($t) => $t instanceof LiteralStringType)
+                    ->all();
 
-                $items = array_map($this->transform(...), $otherTypes->values()->toArray());
+                $items = array_map($this->transform(...), $otherTypes->values()->toArray()); // @phpstan-ignore argument.type
+                $literalSchemas = [];
 
                 if ($stringLiterals->count()) {
-                    $items[] = (new StringType)->enum(
-                        $stringLiterals->map->value->unique()->values()->toArray()
+                    $items[] = $literalSchemas[] = (new StringType)->enum(
+                        $stringLiterals->map->value->unique()->values()->toArray() // @phpstan-ignore property.notFound
                     );
                 }
 
                 if ($integerLiterals->count()) {
-                    $items[] = (new IntegerType)->enum(
-                        $integerLiterals->map->value->unique()->values()->toArray()
+                    $items[] = $literalSchemas[] = (new IntegerType)->enum(
+                        $integerLiterals->map->value->unique()->values()->toArray() // @phpstan-ignore property.notFound
                     );
+                }
+
+                // In case $otherTypes consist just of null and there is string or integer literals, make type nullable
+                $otherTypesIsNullable = count($otherTypes) === 1 && collect($otherTypes)->contains(fn ($t) => $t instanceof \Dedoc\Scramble\Support\Type\NullType);
+                if ($otherTypesIsNullable && ($stringLiterals->count() || $integerLiterals->count())) {
+                    $items = array_map(fn ($s) => $s->nullable(true), $literalSchemas);
                 }
 
                 // Removing duplicated schemas before making a resulting AnyOf type.
@@ -185,15 +226,25 @@ class TypeTransformer
                 $openApiType = count($uniqueItems) === 1 ? $uniqueItems[0] : (new AnyOf)->setItems($uniqueItems);
             }
         } elseif ($type instanceof LiteralStringType) {
-            $openApiType = (new StringType)->enum([$type->value]);
+            $openApiType = (new StringType)->const($type->value);
         } elseif ($type instanceof LiteralIntegerType) {
-            $openApiType = (new IntegerType)->enum([$type->value]);
+            $openApiType = (new IntegerType)->const($type->value);
         } elseif ($type instanceof LiteralFloatType) {
-            $openApiType = (new NumberType)->enum([$type->value]);
+            $openApiType = (new NumberType)->const($type->value);
         } elseif ($type instanceof \Dedoc\Scramble\Support\Type\StringType) {
             $openApiType = new StringType;
         } elseif ($type instanceof \Dedoc\Scramble\Support\Type\FloatType) {
             $openApiType = new NumberType;
+        } elseif ($type instanceof \Dedoc\Scramble\Support\Type\IntegerRangeType) {
+            $openApiType = new IntegerType;
+
+            if ($type->min !== null) {
+                $openApiType->setMin($type->min);
+            }
+
+            if ($type->max !== null) {
+                $openApiType->setMax($type->max);
+            }
         } elseif ($type instanceof \Dedoc\Scramble\Support\Type\IntegerType) {
             $openApiType = new IntegerType;
         } elseif ($type instanceof \Dedoc\Scramble\Support\Type\BooleanType) {
@@ -234,18 +285,20 @@ class TypeTransformer
         return $openApiType;
     }
 
-    private function handleUsingExtensions(Type $type)
+    private function handleUsingExtensions(Type $type): OpenApiType|Reference|null
     {
-        /** @var Collection $extensions */
-        $extensions = collect($this->typeToSchemaExtensions)
-            ->filter->shouldHandle($type)
-            ->values();
+        $extension = collect($this->typeToSchemaExtensions)
+            ->filter(fn ($ext) => method_exists($ext, 'shouldHandle') && $ext->shouldHandle($type))
+            ->values()
+            ->last();
 
-        $referenceExtension = $extensions->last();
+        if (! $extension) {
+            return null;
+        }
 
         /** @var Reference|null $reference */
-        $reference = $referenceExtension && method_exists($referenceExtension, 'reference')
-            ? $referenceExtension->reference($type)
+        $reference = method_exists($extension, 'reference')
+            ? $extension->reference($type)
             : null;
 
         if ($reference && $this->context->references->schemas->has($reference->fullName)) {
@@ -255,13 +308,10 @@ class TypeTransformer
         if ($reference) {
             $reference = $this->context->references->schemas->add($reference->fullName, $reference);
 
-            $this->getComponents()->addSchema($reference->fullName, Schema::fromType(new UnknownType('Reference is being analyzed.')));
+            $this->getComponents()->addSchema($reference->fullName, Schema::fromType(new UnknownType));
         }
 
-        $handledType = $extensions
-            ->reduce(function ($acc, $extension) use ($type) {
-                return $extension->toSchema($type, $acc) ?: $acc;
-            });
+        $handledType = $extension->toSchema($type);
 
         if ($handledType && $reference) {
             $this->getComponents()->addSchema($reference->fullName, Schema::fromType($handledType));
@@ -277,7 +327,7 @@ class TypeTransformer
         return $reference ?: $handledType;
     }
 
-    public function toResponse(Type $type)
+    public function toResponse(Type $type): Response|Reference|null
     {
         // In case of union type being returned and all of its types resulting in the same response, we want to make
         // sure to take only unique types to avoid having the same types in the response.
@@ -294,14 +344,14 @@ class TypeTransformer
             $response = Response::make(200)
                 ->setContent(
                     'application/json',
-                    Schema::fromType($this->transform($type))
+                    Schema::fromType($this->transform($type)),
                 );
         }
 
-        /** @var PhpDocNode $docNode */
         if ($docNode = $type->getAttribute('docNode')) {
-            $description = (string) Str::of($docNode->getAttribute('summary') ?: '')
-                ->append("\n\n".($docNode->getAttribute('description') ?: ''))
+            /** @var PhpDocNode $docNode */
+            $description = (string) Str::of($docNode->getAttribute('summary') ?: '') // @phpstan-ignore argument.type
+                ->append("\n\n".($docNode->getAttribute('description') ?: '')) // @phpstan-ignore binaryOp.invalid
                 ->append("\n\n".$response->description)
                 ->trim();
             $response->description($description);
@@ -314,61 +364,64 @@ class TypeTransformer
 
                 $typeResponse = $this->toResponse($type);
 
-                $response->setContent('application/json', $typeResponse->getContent('application/json'));
+                if ($typeResponse instanceof Reference) {
+                    $typeResponse = deep_copy($typeResponse->resolve());
+                }
+
+                if ($typeResponse instanceof Response) {
+                    $response->setContent('application/json', $typeResponse->getContent('application/json'));
+                }
             }
         }
 
         return $response;
     }
 
-    private function handleResponseUsingExtensions(Type $type)
+    private function handleResponseUsingExtensions(Type $type): Response|Reference|null
     {
         if (! $type->isInstanceOf(\Throwable::class)) {
-            return array_reduce(
-                $this->typeToSchemaExtensions,
-                function ($acc, $extension) use ($type) {
-                    if (! $extension->shouldHandle($type)) {
-                        return $acc;
-                    }
-
-                    if ($response = $extension->toResponse($type, $acc)) {
-                        return $response;
-                    }
-
-                    return $acc;
+            foreach (array_reverse($this->typeToSchemaExtensions) as $extension) {
+                if (! method_exists($extension, 'shouldHandle')) {
+                    continue;
                 }
-            );
+
+                if (! $extension->shouldHandle($type)) {
+                    continue;
+                }
+
+                if ($response = $extension->toResponse($type)) {
+                    return $response;
+                }
+            }
         }
 
         // We want latter registered extensions to have a higher priority to allow custom extensions to override default ones.
-        $priorityExtensions = array_reverse($this->exceptionToResponseExtensions);
+        $extension = collect($this->exceptionToResponseExtensions)
+            ->filter(fn (ExceptionToResponseExtension $ext) => method_exists($ext, 'shouldHandle') && $ext->shouldHandle($type))
+            ->reverse()
+            ->first();
 
-        return array_reduce(
-            $priorityExtensions,
-            function ($acc, $extension) use ($type) {
-                if (! $extension->shouldHandle($type)) {
-                    return $acc;
-                }
+        if (! $extension) {
+            return null;
+        }
 
-                /** @var Reference|null $reference */
-                $reference = method_exists($extension, 'reference')
-                    ? $extension->reference($type)
-                    : null;
+        /** @var Reference|null $reference */
+        $reference = method_exists($extension, 'reference')
+            ? $extension->reference($type)
+            : null;
 
-                if ($reference && $this->getComponents()->has($reference)) {
-                    return $reference;
-                }
+        if ($reference && $this->getComponents()->has($reference)) {
+            return $reference;
+        }
 
-                if ($response = $extension->toResponse($type, $acc)) {
-                    if ($reference) {
-                        return $this->getComponents()->add($reference, $response);
-                    }
-
-                    return $response;
-                }
-
-                return $acc;
+        if ($response = $extension->toResponse($type)) {
+            if ($reference) {
+                return $this->getComponents()->add($reference, $response);
             }
-        );
+
+            return $response;
+        }
+
+        return null;
     }
 }

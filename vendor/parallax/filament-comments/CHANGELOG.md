@@ -2,6 +2,9 @@
 
 All notable changes to `filament-comments` will be documented in this file.
 
+# 2.0.0 - August 29, 2025
+- Adds Filament 4 support (Credit [@matalaweb](https://github.com/matalaweb))
+
 # 1.5.1 - March 27, 2025
 
 - Fixes comment count in action

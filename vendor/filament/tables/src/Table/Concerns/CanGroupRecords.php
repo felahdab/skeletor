@@ -3,14 +3,16 @@
 namespace Filament\Tables\Table\Concerns;
 
 use Closure;
-use Filament\Support\Enums\ActionSize;
+use Filament\Actions\Action;
+use Filament\Support\Enums\Size;
 use Filament\Support\Facades\FilamentIcon;
-use Filament\Tables\Actions\Action;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Grouping\Group;
+use Filament\Tables\View\TablesIconAlias;
 
 trait CanGroupRecords
 {
-    protected string | Group | null $defaultGroup = null;
+    protected string | Group | Closure | null $defaultGroup = null;
 
     /**
      * @var array<string, Group>
@@ -29,6 +31,8 @@ trait CanGroupRecords
     protected bool | Closure $areGroupingSettingsHidden = false;
 
     protected bool | Closure $isGroupingDirectionSettingHidden = false;
+
+    protected bool | Closure $areGroupsCollapsedByDefault = false;
 
     protected ?Closure $modifyGroupRecordsTriggerActionUsing = null;
 
@@ -70,7 +74,14 @@ trait CanGroupRecords
         return $this;
     }
 
-    public function defaultGroup(string | Group | null $group): static
+    public function collapsedGroupsByDefault(bool | Closure $condition = true): static
+    {
+        $this->areGroupsCollapsedByDefault = $condition;
+
+        return $this;
+    }
+
+    public function defaultGroup(string | Group | Closure | null $group): static
     {
         $this->defaultGroup = $group;
 
@@ -99,10 +110,11 @@ trait CanGroupRecords
         $action = Action::make('groupRecords')
             ->label(__('filament-tables::table.actions.group.label'))
             ->iconButton()
-            ->icon(FilamentIcon::resolve('tables::actions.group') ?? 'heroicon-m-rectangle-stack')
+            ->icon(FilamentIcon::resolve(TablesIconAlias::ACTIONS_GROUP) ?? Heroicon::RectangleStack)
             ->color('gray')
             ->livewireClickHandlerEnabled(false)
-            ->table($this);
+            ->table($this)
+            ->authorize(true);
 
         if ($this->modifyGroupRecordsTriggerActionUsing) {
             $action = $this->evaluate($this->modifyGroupRecordsTriggerActionUsing, [
@@ -110,8 +122,10 @@ trait CanGroupRecords
             ]) ?? $action;
         }
 
+        $action->extraAttributes(['class' => 'fi-force-enabled'], merge: true);
+
         if ($action->getView() === Action::BUTTON_VIEW) {
-            $action->defaultSize(ActionSize::Small);
+            $action->defaultSize(Size::Small);
         }
 
         return $action;
@@ -143,23 +157,30 @@ trait CanGroupRecords
         return (bool) $this->evaluate($this->isGroupingDirectionSettingHidden);
     }
 
+    public function areGroupsCollapsedByDefault(): bool
+    {
+        return (bool) $this->evaluate($this->areGroupsCollapsedByDefault);
+    }
+
     public function getDefaultGroup(): ?Group
     {
-        if ($this->defaultGroup === null) {
+        $defaultGroup = $this->evaluate($this->defaultGroup);
+
+        if ($defaultGroup === null) {
             return null;
         }
 
-        if ($this->defaultGroup instanceof Group) {
-            return $this->defaultGroup->table($this);
+        if ($defaultGroup instanceof Group) {
+            return $defaultGroup->table($this);
         }
 
-        $group = $this->getGroup($this->defaultGroup);
+        $group = $this->getGroup($defaultGroup);
 
         if ($group) {
             return $group;
         }
 
-        return Group::make($this->defaultGroup)
+        return Group::make($defaultGroup)
             ->table($this);
     }
 

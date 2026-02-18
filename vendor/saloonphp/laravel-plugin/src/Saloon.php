@@ -18,6 +18,13 @@ class Saloon
     public static bool $registeredDefaults = false;
 
     /**
+     * Define sender IDs that have been used before
+     *
+     * @var array<int, array<string, bool>>
+     */
+    public static array $registeredSenders = [];
+
+    /**
      * Determines if requests should be recorded.
      */
     protected bool $record = false;
@@ -28,6 +35,13 @@ class Saloon
      * @var array<\Saloon\Http\Response>
      */
     protected array $recordedResponses = [];
+
+    /**
+     * Track start time for Telescope duration calculation
+     *
+     * @var array<int, float>
+     */
+    public static array $telescopeStartTimes = [];
 
     /**
      * Start mocking!

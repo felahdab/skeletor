@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -96,7 +97,7 @@ class AppServiceProvider extends ServiceProvider
 
 
         if (config('app.scheme') == 'https')
-            \Illuminate\Support\Facades\URL::forceScheme('https');
+            URL::forceScheme('https');
 
         Builder::macro('scoped', function ($scope, ...$parameters) {
             $query = $this;
@@ -123,7 +124,7 @@ class AppServiceProvider extends ServiceProvider
                 ->children([
                     DirectMenuItem::make()
                         ->name('Panneau d\'administration')
-                        ->url(fn() => Dashboard::getUrl(panel: "admin"))
+                        ->url(fn() => Dashboard::getUrl(panel: "Skeletor"))
                         ->visible(fn() => auth()->check() && Dashboard::canAccess()),
                     
                 ]),

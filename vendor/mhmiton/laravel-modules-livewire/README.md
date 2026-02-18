@@ -136,6 +136,7 @@ CLASS: Modules/Core/app/Livewire/Pages/AboutPage.php
 VIEW:  Modules/Core/resources/views/livewire/pages/about.blade.php
 TAG: <livewire:core::pages.about-page />
 ```
+
 ### Rendering Components:
 
 `<livewire:{module-lower-name}::component-class-kebab-case />`
@@ -145,6 +146,41 @@ TAG: <livewire:core::pages.about-page />
 ```
 <livewire:core::pages.about-page />
 ```
+
+### Making Form Components:
+
+**Command Signature:**
+
+`php artisan module:make-livewire-form {component} {module} {--force} {--stub=}`
+
+**Example:**
+
+```
+php artisan module:make-livewire-form Forms/PostForm Core
+```
+
+```
+php artisan module:make-livewire-form Forms\\PostForm Core
+```
+
+```
+php artisan module:make-livewire-form forms.post-form Core
+```
+
+**Force create component if the class already exists:**
+
+```
+php artisan module:make-livewire-form Forms/PostForm Core --force
+```
+
+**Output:**
+
+```
+COMPONENT CREATED  🤙
+
+CLASS: Modules/Core/app/Livewire/Forms/PostForm.php
+```
+
 
 ### Volt:
 
@@ -259,6 +295,7 @@ Remove comment for these lines & add your custom modules.
     // 'Chat' => [
     //     'name_lower' => 'chat',
     //     'path' => base_path('libraries/Chat'),
+    //     'app_path' => 'src',
     //     'module_namespace' => 'Libraries\\Chat',
     //     'namespace' => 'Livewire',
     //     'view' => 'resources/views/livewire',

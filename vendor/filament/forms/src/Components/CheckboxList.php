@@ -3,8 +3,12 @@
 namespace Filament\Forms\Components;
 
 use Closure;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Support\Enums\ActionSize;
+use Filament\Actions\Action;
+use Filament\Schemas\Components\StateCasts\Contracts\StateCast;
+use Filament\Schemas\Components\StateCasts\EnumArrayStateCast;
+use Filament\Schemas\Components\StateCasts\OptionsArrayStateCast;
+use Filament\Support\Concerns\HasExtraAlpineAttributes;
+use Filament\Support\Enums\Size;
 use Filament\Support\Services\RelationshipJoiner;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Collection;
@@ -12,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Str;
+use LogicException;
 
 class CheckboxList extends Field implements Contracts\CanDisableOptions, Contracts\HasNestedRecursiveValidationRules
 {
@@ -27,6 +32,7 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
     use Concerns\HasNestedRecursiveValidationRules;
     use Concerns\HasOptions;
     use Concerns\HasPivotData;
+    use HasExtraAlpineAttributes;
 
     /**
      * @var view-string
@@ -36,6 +42,8 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
     protected string | Closure | null $relationshipTitleAttribute = null;
 
     protected ?Closure $getOptionLabelFromRecordUsing = null;
+
+    protected ?Closure $getOptionDescriptionFromRecordUsing = null;
 
     protected string | Closure | null $relationship = null;
 
@@ -48,16 +56,6 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->default([]);
-
-        $this->afterStateHydrated(static function (CheckboxList $component, $state) {
-            if (is_array($state)) {
-                return;
-            }
-
-            $component->state([]);
-        });
 
         $this->searchDebounce(0);
 
@@ -73,7 +71,7 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
             ->label(__('filament-forms::components.checkbox_list.actions.select_all.label'))
             ->livewireClickHandlerEnabled(false)
             ->link()
-            ->size(ActionSize::Small);
+            ->size(Size::Small);
 
         if ($this->modifySelectAllActionUsing) {
             $action = $this->evaluate($this->modifySelectAllActionUsing, [
@@ -102,7 +100,7 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
             ->label(__('filament-forms::components.checkbox_list.actions.deselect_all.label'))
             ->livewireClickHandlerEnabled(false)
             ->link()
-            ->size(ActionSize::Small);
+            ->size(Size::Small);
 
         if ($this->modifyDeselectAllActionUsing) {
             $action = $this->evaluate($this->modifyDeselectAllActionUsing, [
@@ -130,8 +128,59 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
         $this->relationship = $name ?? $this->getName();
         $this->relationshipTitleAttribute = $titleAttribute;
 
-        $this->options(static function (CheckboxList $component) use ($modifyQueryUsing): array {
+        $cachedRecords = null;
+        $cachedOptions = null;
+
+        $this->options(static function (CheckboxList $component) use ($modifyQueryUsing, &$cachedRecords, &$cachedOptions): array {
             $relationship = Relation::noConstraints(fn () => $component->getRelationship());
+
+            if ($component->hasOptionLabelFromRecordUsingCallback() || $component->hasOptionDescriptionFromRecordUsingCallback()) {
+                if (
+                    (! $modifyQueryUsing) &&
+                    ($cachedRecords !== null)
+                ) {
+                    $records = $cachedRecords;
+                } else {
+                    $relationshipQuery = app(RelationshipJoiner::class)->prepareQueryForNoConstraints($relationship);
+
+                    if ($modifyQueryUsing) {
+                        $relationshipQuery = $component->evaluate($modifyQueryUsing, [
+                            'query' => $relationshipQuery,
+                        ]) ?? $relationshipQuery;
+                    }
+
+                    $records = $relationshipQuery->get();
+
+                    if (! $modifyQueryUsing) {
+                        $cachedRecords = $records;
+                    }
+                }
+
+                if ($component->hasOptionDescriptionFromRecordUsingCallback()) {
+                    $descriptions = $records
+                        ->mapWithKeys(static fn (Model $record) => [
+                            $record->{Str::afterLast($relationship->getQualifiedRelatedKeyName(), '.')} => $component->getOptionDescriptionFromRecord($record),
+                        ])
+                        ->toArray();
+
+                    $component->descriptions($descriptions);
+                }
+
+                if ($component->hasOptionLabelFromRecordUsingCallback()) {
+                    return $records
+                        ->mapWithKeys(static fn (Model $record) => [
+                            $record->{Str::afterLast($relationship->getQualifiedRelatedKeyName(), '.')} => $component->getOptionLabelFromRecord($record),
+                        ])
+                        ->toArray();
+                }
+            }
+
+            if (
+                (! $modifyQueryUsing) &&
+                ($cachedOptions !== null)
+            ) {
+                return $cachedOptions;
+            }
 
             $relationshipQuery = app(RelationshipJoiner::class)->prepareQueryForNoConstraints($relationship);
 
@@ -141,19 +190,16 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
                 ]) ?? $relationshipQuery;
             }
 
-            if ($component->hasOptionLabelFromRecordUsingCallback()) {
-                return $relationshipQuery
-                    ->get()
-                    ->mapWithKeys(static fn (Model $record) => [
-                        $record->{Str::afterLast($relationship->getQualifiedRelatedKeyName(), '.')} => $component->getOptionLabelFromRecord($record),
-                    ])
-                    ->toArray();
-            }
-
             $relationshipTitleAttribute = $component->getRelationshipTitleAttribute();
 
             if (empty($relationshipQuery->getQuery()->orders)) {
-                $relationshipQuery->orderBy($relationshipQuery->qualifyColumn($relationshipTitleAttribute));
+                $relationshipOrderByAttribute = $relationshipTitleAttribute;
+
+                if (str_contains($relationshipOrderByAttribute, ' as ')) {
+                    $relationshipOrderByAttribute = (string) str($relationshipOrderByAttribute)->before(' as ');
+                }
+
+                $relationshipQuery->orderBy($relationshipQuery->qualifyColumn($relationshipOrderByAttribute));
             }
 
             if (str_contains($relationshipTitleAttribute, '->')) {
@@ -164,13 +210,38 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
                 $relationshipTitleAttribute = $relationshipQuery->qualifyColumn($relationshipTitleAttribute);
             }
 
-            return $relationshipQuery
+            $options = $relationshipQuery
                 ->pluck($relationshipTitleAttribute, $relationship->getQualifiedRelatedKeyName())
                 ->toArray();
+
+            if (! $modifyQueryUsing) {
+                $cachedOptions = $options;
+            }
+
+            return $options;
         });
 
         $this->loadStateFromRelationshipsUsing(static function (CheckboxList $component, ?array $state) use ($modifyQueryUsing): void {
             $relationship = $component->getRelationship();
+            $relationshipName = $component->getRelationshipName();
+
+            if (
+                (! $modifyQueryUsing) &&
+                ($record = $component->getRecord()) instanceof Model &&
+                $record->relationLoaded($relationshipName)
+            ) {
+                /** @var Collection $relatedRecords */
+                $relatedRecords = $record->getRelationValue($relationshipName);
+
+                $component->state(
+                    $relatedRecords
+                        ->pluck($relationship->getRelatedKeyName())
+                        ->map(static fn ($key): string => strval($key))
+                        ->all(),
+                );
+
+                return;
+            }
 
             if ($modifyQueryUsing) {
                 $component->evaluate($modifyQueryUsing, [
@@ -193,7 +264,7 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
             );
         });
 
-        $this->saveRelationshipsUsing(static function (CheckboxList $component, ?array $state) use ($modifyQueryUsing) {
+        $this->saveRelationshipsUsing(static function (CheckboxList $component, ?array $state) use ($modifyQueryUsing): void {
             $relationship = $component->getRelationship();
 
             if ($modifyQueryUsing) {
@@ -266,6 +337,32 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
         );
     }
 
+    public function getOptionDescriptionFromRecordUsing(?Closure $callback): static
+    {
+        $this->getOptionDescriptionFromRecordUsing = $callback;
+
+        return $this;
+    }
+
+    public function hasOptionDescriptionFromRecordUsingCallback(): bool
+    {
+        return $this->getOptionDescriptionFromRecordUsing !== null;
+    }
+
+    public function getOptionDescriptionFromRecord(Model $record): string | Htmlable | null
+    {
+        return $this->evaluate(
+            $this->getOptionDescriptionFromRecordUsing,
+            namedInjections: [
+                'record' => $record,
+            ],
+            typedInjections: [
+                Model::class => $record,
+                $record::class => $record,
+            ],
+        );
+    }
+
     public function getRelationshipTitleAttribute(): ?string
     {
         return $this->evaluate($this->relationshipTitleAttribute);
@@ -294,7 +391,13 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
             return null;
         }
 
-        return $this->getModelInstance()->{$name}();
+        $record = $this->getModelInstance();
+
+        if ($record->hasAttribute($name) || (! $record->isRelation($name))) {
+            throw new LogicException("The relationship [{$name}] does not exist on the model [{$this->getModel()}].");
+        }
+
+        return $record->{$name}();
     }
 
     public function getRelationshipName(): ?string
@@ -305,5 +408,50 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
     public function isBulkToggleable(): bool
     {
         return (bool) $this->evaluate($this->isBulkToggleable);
+    }
+
+    public function getEnumDefaultStateCast(): ?StateCast
+    {
+        $enum = $this->getEnum();
+
+        if (blank($enum)) {
+            return null;
+        }
+
+        return app(
+            EnumArrayStateCast::class,
+            ['enum' => $enum],
+        );
+    }
+
+    /**
+     * @return array<StateCast>
+     */
+    public function getDefaultStateCasts(): array
+    {
+        if ($this->hasCustomStateCasts() || filled($this->getEnum())) {
+            return parent::getDefaultStateCasts();
+        }
+
+        return [app(OptionsArrayStateCast::class)];
+    }
+
+    /**
+     * @return ?array<string>
+     */
+    public function getInValidationRuleValues(): ?array
+    {
+        $values = parent::getInValidationRuleValues();
+
+        if ($values !== null) {
+            return $values;
+        }
+
+        return array_keys($this->getEnabledOptions());
+    }
+
+    public function hasInValidationOnMultipleValues(): bool
+    {
+        return true;
     }
 }

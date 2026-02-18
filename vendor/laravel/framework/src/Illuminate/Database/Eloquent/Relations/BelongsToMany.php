@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\Concerns\InteractsWithDictionary;
 use Illuminate\Database\Eloquent\Relations\Concerns\InteractsWithPivotTable;
 use Illuminate\Database\Query\Grammars\MySqlGrammar;
 use Illuminate\Database\UniqueConstraintViolationException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
@@ -298,7 +299,7 @@ class BelongsToMany extends Relation
      * Build model dictionary keyed by the relation's foreign key.
      *
      * @param  \Illuminate\Database\Eloquent\Collection<int, TRelatedModel>  $results
-     * @return array<array<string, TRelatedModel>>
+     * @return array<array<array-key, TRelatedModel>>
      */
     protected function buildDictionary(EloquentCollection $results)
     {
@@ -307,10 +308,16 @@ class BelongsToMany extends Relation
         // parents without having a possibly slow inner loop for every model.
         $dictionary = [];
 
-        foreach ($results as $result) {
+        $isAssociative = Arr::isAssoc($results->all());
+
+        foreach ($results as $key => $result) {
             $value = $this->getDictionaryKey($result->{$this->accessor}->{$this->foreignPivotKey});
 
-            $dictionary[$value][] = $result;
+            if ($isAssociative) {
+                $dictionary[$value][$key] = $result;
+            } else {
+                $dictionary[$value][] = $result;
+            }
         }
 
         return $dictionary;
@@ -586,6 +593,17 @@ class BelongsToMany extends Relation
     }
 
     /**
+     * Add an "order by desc" clause for a pivot table column.
+     *
+     * @param  string|\Illuminate\Contracts\Database\Query\Expression  $column
+     * @return $this
+     */
+    public function orderByPivotDesc($column)
+    {
+        return $this->orderBy($this->qualifyPivotColumn($column), 'desc');
+    }
+
+    /**
      * Find a related model by its primary key or return a new instance of the related model.
      *
      * @param  mixed  $id
@@ -625,12 +643,12 @@ class BelongsToMany extends Relation
      * Get the first record matching the attributes. If the record is not found, create it.
      *
      * @param  array  $attributes
-     * @param  array  $values
+     * @param  (\Closure(): array)|array  $values
      * @param  array  $joining
      * @param  bool  $touch
      * @return TRelatedModel&object{pivot: TPivotModel}
      */
-    public function firstOrCreate(array $attributes = [], array $values = [], array $joining = [], $touch = true)
+    public function firstOrCreate(array $attributes = [], Closure|array $values = [], array $joining = [], $touch = true)
     {
         if (is_null($instance = (clone $this)->where($attributes)->first())) {
             if (is_null($instance = $this->related->where($attributes)->first())) {
@@ -651,15 +669,15 @@ class BelongsToMany extends Relation
      * Attempt to create the record. If a unique constraint violation occurs, attempt to find the matching record.
      *
      * @param  array  $attributes
-     * @param  array  $values
+     * @param  (\Closure(): array)|array  $values
      * @param  array  $joining
      * @param  bool  $touch
      * @return TRelatedModel&object{pivot: TPivotModel}
      */
-    public function createOrFirst(array $attributes = [], array $values = [], array $joining = [], $touch = true)
+    public function createOrFirst(array $attributes = [], Closure|array $values = [], array $joining = [], $touch = true)
     {
         try {
-            return $this->getQuery()->withSavePointIfNeeded(fn () => $this->create(array_merge($attributes, $values), $joining, $touch));
+            return $this->getQuery()->withSavepointIfNeeded(fn () => $this->create(array_merge($attributes, value($values)), $joining, $touch));
         } catch (UniqueConstraintViolationException $e) {
             // ...
         }
@@ -841,7 +859,7 @@ class BelongsToMany extends Relation
      */
     public function first($columns = ['*'])
     {
-        $results = $this->take(1)->get($columns);
+        $results = $this->limit(1)->get($columns);
 
         return count($results) > 0 ? $results->first() : null;
     }
@@ -1445,7 +1463,7 @@ class BelongsToMany extends Relation
      *
      * @param  \Illuminate\Database\Eloquent\Builder<TRelatedModel>  $query
      * @param  \Illuminate\Database\Eloquent\Builder<TDeclaringModel>  $parentQuery
-     * @param  array|mixed  $columns
+     * @param  mixed  $columns
      * @return \Illuminate\Database\Eloquent\Builder<TRelatedModel>
      */
     public function getRelationExistenceQueryForSelfJoin(Builder $query, Builder $parentQuery, $columns = ['*'])
@@ -1510,18 +1528,23 @@ class BelongsToMany extends Relation
     /**
      * Specify that the pivot table has creation and update timestamps.
      *
-     * @param  mixed  $createdAt
-     * @param  mixed  $updatedAt
+     * @param  string|null|false  $createdAt
+     * @param  string|null|false  $updatedAt
      * @return $this
      */
     public function withTimestamps($createdAt = null, $updatedAt = null)
     {
-        $this->withTimestamps = true;
+        $this->pivotCreatedAt = $createdAt !== false ? $createdAt : null;
+        $this->pivotUpdatedAt = $updatedAt !== false ? $updatedAt : null;
 
-        $this->pivotCreatedAt = $createdAt;
-        $this->pivotUpdatedAt = $updatedAt;
+        $pivots = array_filter([
+            $createdAt !== false ? $this->createdAt() : null,
+            $updatedAt !== false ? $this->updatedAt() : null,
+        ]);
 
-        return $this->withPivot($this->createdAt(), $this->updatedAt());
+        $this->withTimestamps = ! empty($pivots);
+
+        return $this->withTimestamps ? $this->withPivot($pivots) : $this;
     }
 
     /**

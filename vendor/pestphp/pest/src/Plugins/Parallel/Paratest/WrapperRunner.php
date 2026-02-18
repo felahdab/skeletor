@@ -17,6 +17,7 @@ use ParaTest\WrapperRunner\WrapperWorker;
 use Pest\Result;
 use Pest\TestSuite;
 use PHPUnit\Event\Facade as EventFacade;
+use PHPUnit\Event\Test\AfterLastTestMethodFailed;
 use PHPUnit\Event\TestRunner\WarningTriggered;
 use PHPUnit\Runner\CodeCoverage;
 use PHPUnit\Runner\ResultCache\DefaultResultCache;
@@ -50,7 +51,7 @@ final class WrapperRunner implements RunnerInterface
     /**
      * The time to sleep between cycles.
      */
-    private const CYCLE_SLEEP = 10000;
+    private const int CYCLE_SLEEP = 10000;
 
     /**
      * The result printer.
@@ -313,27 +314,42 @@ final class WrapperRunner implements RunnerInterface
             $testResult = unserialize($contents);
             assert($testResult instanceof TestResult);
 
+            /** @var list<AfterLastTestMethodFailed> $failedEvents */
+            $failedEvents = array_merge_recursive($testResultSum->testFailedEvents(), $testResult->testFailedEvents());
+
             $testResultSum = new TestResult(
                 (int) $testResultSum->hasTests() + (int) $testResult->hasTests(),
                 $testResultSum->numberOfTestsRun() + $testResult->numberOfTestsRun(),
                 $testResultSum->numberOfAssertions() + $testResult->numberOfAssertions(),
                 array_merge_recursive($testResultSum->testErroredEvents(), $testResult->testErroredEvents()),
-                array_merge_recursive($testResultSum->testFailedEvents(), $testResult->testFailedEvents()),
+                $failedEvents,
                 array_merge_recursive($testResultSum->testConsideredRiskyEvents(), $testResult->testConsideredRiskyEvents()),
                 array_merge_recursive($testResultSum->testSuiteSkippedEvents(), $testResult->testSuiteSkippedEvents()),
                 array_merge_recursive($testResultSum->testSkippedEvents(), $testResult->testSkippedEvents()),
                 array_merge_recursive($testResultSum->testMarkedIncompleteEvents(), $testResult->testMarkedIncompleteEvents()),
                 array_merge_recursive($testResultSum->testTriggeredPhpunitDeprecationEvents(), $testResult->testTriggeredPhpunitDeprecationEvents()),
                 array_merge_recursive($testResultSum->testTriggeredPhpunitErrorEvents(), $testResult->testTriggeredPhpunitErrorEvents()),
+                array_merge_recursive($testResultSum->testTriggeredPhpunitNoticeEvents(), $testResult->testTriggeredPhpunitNoticeEvents()),
                 array_merge_recursive($testResultSum->testTriggeredPhpunitWarningEvents(), $testResult->testTriggeredPhpunitWarningEvents()),
+                // @phpstan-ignore-next-line
                 array_merge_recursive($testResultSum->testRunnerTriggeredDeprecationEvents(), $testResult->testRunnerTriggeredDeprecationEvents()),
+                // @phpstan-ignore-next-line
+                array_merge_recursive($testResultSum->testRunnerTriggeredNoticeEvents(), $testResult->testRunnerTriggeredNoticeEvents()),
+                // @phpstan-ignore-next-line
                 array_merge_recursive($testResultSum->testRunnerTriggeredWarningEvents(), $testResult->testRunnerTriggeredWarningEvents()),
+                // @phpstan-ignore-next-line
                 array_merge_recursive($testResultSum->errors(), $testResult->errors()),
+                // @phpstan-ignore-next-line
                 array_merge_recursive($testResultSum->deprecations(), $testResult->deprecations()),
+                // @phpstan-ignore-next-line
                 array_merge_recursive($testResultSum->notices(), $testResult->notices()),
+                // @phpstan-ignore-next-line
                 array_merge_recursive($testResultSum->warnings(), $testResult->warnings()),
+                // @phpstan-ignore-next-line
                 array_merge_recursive($testResultSum->phpDeprecations(), $testResult->phpDeprecations()),
+                // @phpstan-ignore-next-line
                 array_merge_recursive($testResultSum->phpNotices(), $testResult->phpNotices()),
+                // @phpstan-ignore-next-line
                 array_merge_recursive($testResultSum->phpWarnings(), $testResult->phpWarnings()),
                 $testResultSum->numberOfIssuesIgnoredByBaseline() + $testResult->numberOfIssuesIgnoredByBaseline(),
             );
@@ -351,8 +367,10 @@ final class WrapperRunner implements RunnerInterface
             $testResultSum->testMarkedIncompleteEvents(),
             $testResultSum->testTriggeredPhpunitDeprecationEvents(),
             $testResultSum->testTriggeredPhpunitErrorEvents(),
+            $testResultSum->testTriggeredPhpunitNoticeEvents(),
             $testResultSum->testTriggeredPhpunitWarningEvents(),
             $testResultSum->testRunnerTriggeredDeprecationEvents(),
+            $testResultSum->testRunnerTriggeredNoticeEvents(),
             array_values(array_filter(
                 $testResultSum->testRunnerTriggeredWarningEvents(),
                 fn (WarningTriggered $event): bool => ! str_contains($event->message(), 'No tests found')

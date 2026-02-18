@@ -11,6 +11,8 @@ class Cluster extends Page
 {
     protected static ?string $clusterBreadcrumb = null;
 
+    protected static bool $shouldRegisterSubNavigation = true;
+
     /**
      * @return array<class-string>
      */
@@ -32,7 +34,7 @@ class Cluster extends Page
 
     public static function shouldRegisterNavigation(): bool
     {
-        return static::canAccessClusteredComponents();
+        return parent::shouldRegisterNavigation() && static::canAccessClusteredComponents();
     }
 
     public function mount(): void
@@ -49,6 +51,11 @@ class Cluster extends Page
     public function getSubNavigation(): array
     {
         return $this->generateNavigationItems(static::getClusteredComponents());
+    }
+
+    public static function shouldRegisterSubNavigation(): bool
+    {
+        return static::$shouldRegisterSubNavigation;
     }
 
     /**
@@ -75,7 +82,7 @@ class Cluster extends Page
             ->beforeLast('Cluster')
             ->kebab()
             ->replace('-', ' ')
-            ->title();
+            ->ucwords();
     }
 
     public static function getClusterBreadcrumb(): ?string
@@ -84,22 +91,22 @@ class Cluster extends Page
             ->beforeLast('Cluster')
             ->kebab()
             ->replace('-', ' ')
-            ->title();
+            ->ucwords();
     }
 
-    public static function prependClusterSlug(string $slug): string
+    public static function prependClusterSlug(Panel $panel, string $slug): string
     {
-        return static::getSlug() . "/{$slug}";
+        return static::getSlug($panel) . "/{$slug}";
     }
 
-    public static function prependClusterRouteBaseName(string $name): string
+    public static function prependClusterRouteBaseName(Panel $panel, string $name): string
     {
-        return (string) str(static::getSlug())
+        return (string) str(static::getSlug($panel))
             ->replace('/', '.')
             ->append(".{$name}");
     }
 
-    public static function getSlug(): string
+    public static function getSlug(?Panel $panel = null): string
     {
         if (filled(static::$slug)) {
             return static::$slug;
@@ -111,11 +118,11 @@ class Cluster extends Page
             ->slug();
     }
 
-    public static function getRouteName(?string $panel = null): string
+    public static function getRouteName(?Panel $panel = null): string
     {
-        $panel = $panel ? Filament::getPanel($panel) : Filament::getCurrentPanel();
+        $panel ??= Filament::getCurrentOrDefaultPanel();
 
-        return $panel->generateRouteName(static::getRelativeRouteName());
+        return $panel->generateRouteName(static::getRelativeRouteName($panel));
     }
 
     public static function getNavigationItemActiveRoutePattern(): string

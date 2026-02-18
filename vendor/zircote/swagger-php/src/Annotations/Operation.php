@@ -190,11 +190,7 @@ abstract class Operation extends AbstractAnnotation
         Attachable::class => ['attachables'],
     ];
 
-    /**
-     * @inheritdoc
-     */
-    #[\ReturnTypeWillChange]
-    public function jsonSerialize()
+    public function jsonSerialize(): \stdClass
     {
         $data = parent::jsonSerialize();
 
@@ -214,7 +210,7 @@ abstract class Operation extends AbstractAnnotation
     /**
      * @inheritdoc
      */
-    public function validate(array $stack = [], array $skip = [], string $ref = '', $context = null): bool
+    public function validate(array $stack = [], array $skip = [], string $ref = '', ?object $context = null): bool
     {
         if (in_array($this, $skip, true)) {
             return true;

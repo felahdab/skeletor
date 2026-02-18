@@ -246,6 +246,7 @@ class PendingProcess
         $this->command = $command ?: $this->command;
 
         $process = $this->toSymfonyProcess($command);
+
         try {
             if ($fake = $this->fakeFor($command = $process->getCommandline())) {
                 return tap($this->resolveSynchronousFake($command, $fake), function ($result) {
@@ -399,7 +400,7 @@ class PendingProcess
      * @param  \Closure  $fake
      * @return \Illuminate\Process\FakeInvokedProcess
      *
-     * @throw \LogicException
+     * @throws \LogicException
      */
     protected function resolveAsynchronousFake(string $command, ?callable $output, Closure $fake)
     {

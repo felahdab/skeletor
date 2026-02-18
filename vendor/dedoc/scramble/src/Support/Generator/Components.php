@@ -2,6 +2,7 @@
 
 namespace Dedoc\Scramble\Support\Generator;
 
+use Dedoc\Scramble\Exceptions\OpenApiReferenceTargetNotFoundException;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
@@ -41,6 +42,11 @@ class Components
     public function removeSchema(string $schemaName): void
     {
         unset($this->schemas[$schemaName]);
+    }
+
+    public function removeResponse(string $responseName): void
+    {
+        unset($this->responses[$responseName]);
     }
 
     public function toArray()
@@ -136,7 +142,17 @@ class Components
     {
         $this->ensureValidReference($reference);
 
-        return $this->{$reference->referenceType}[$reference->fullName];
+        $references = $this->{$reference->referenceType};
+
+        if (! array_key_exists($reference->fullName, $references)) {
+            throw new OpenApiReferenceTargetNotFoundException(sprintf(
+                '[%s] reference target doesn\'t exist in the [%s] list',
+                $reference->fullName,
+                $reference->referenceType,
+            ));
+        }
+
+        return $references[$reference->fullName];
     }
 
     private function ensureValidReference(Reference $reference, $object = null)

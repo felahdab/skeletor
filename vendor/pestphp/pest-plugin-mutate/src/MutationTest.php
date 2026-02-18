@@ -52,10 +52,10 @@ class MutationTest
         foreach (range($this->mutation->startLine, $this->mutation->endLine) as $lineNumber) {
             foreach ($coveredLines[$this->mutation->file->getRealPath()][$lineNumber] ?? [] as $test) {
                 preg_match('/\\\\([a-zA-Z0-9]*)::(__pest_evaluable_)?([^#]*)"?/', $test, $matches);
-                if ($matches[2] === '__pest_evaluable_') { // @phpstan-ignore-line
-                    $filters[] = $matches[1].'::(.*)'.str_replace(['__', '_'], ['.{1,2}', '.'], $matches[3]); // @phpstan-ignore-line
+                if ($matches[2] === '__pest_evaluable_') {
+                    $filters[] = $matches[1].'::(.*)'.str_replace(['__', '_'], ['.{1,2}', '.'], $matches[3]);
                 } else {
-                    $filters[] = $matches[1].'::(.*)'.$matches[3]; // @phpstan-ignore-line
+                    $filters[] = $matches[1].'::(.*)'.$matches[3];
                 }
             }
         }
@@ -81,10 +81,13 @@ class MutationTest
             $envs['LARAVEL_PARALLEL_TESTING'] = 1;
         }
 
+        // remove coverage arguments from the original arguments
+        $filteredArguments = array_filter($originalArguments, fn (string $argument): bool => ! str_starts_with($argument, '--coverage'));
+
         // TODO: filter arguments to remove unnecessary stuff (Teamcity, Coverage, etc.)
         $process = new Process(
             command: [
-                ...$originalArguments,
+                ...$filteredArguments,
                 '--bail',
                 '--filter="'.implode('|', $filters).'"',
             ],

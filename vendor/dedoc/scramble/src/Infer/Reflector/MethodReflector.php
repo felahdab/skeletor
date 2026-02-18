@@ -2,9 +2,13 @@
 
 namespace Dedoc\Scramble\Infer\Reflector;
 
+use Dedoc\Scramble\Infer;
+use Dedoc\Scramble\Infer\Definition\FunctionLikeDefinition;
 use Dedoc\Scramble\Infer\Services\FileNameResolver;
 use Dedoc\Scramble\Infer\Services\FileParser;
 use Dedoc\Scramble\Infer\Visitors\PhpDocResolver;
+use Dedoc\Scramble\Support\IndexBuilders\IndexBuilder;
+use LogicException;
 use PhpParser\NameContext;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassMethod;
@@ -19,8 +23,7 @@ class MethodReflector
 
     private ?ClassMethod $methodNode = null;
 
-    private function __construct(
-        private FileParser $parser, public string $className, public string $name) {}
+    private function __construct(private FileParser $parser, public string $className, public string $name) {}
 
     public static function make(string $className, string $name)
     {
@@ -29,6 +32,11 @@ class MethodReflector
             $className,
             $name,
         );
+    }
+
+    public function getNameContext(): NameContext
+    {
+        return $this->getClassReflector()->getNameContext();
     }
 
     public function getMethodCode(): string
@@ -109,5 +117,25 @@ class MethodReflector
     public function getClassReflector(): ClassReflector
     {
         return ClassReflector::make($this->getReflection()->class);
+    }
+
+    /**
+     * @param  IndexBuilder<array<string, mixed>>[]  $indexBuilders
+     */
+    public function getFunctionLikeDefinition(array $indexBuilders = [], bool $withSideEffects = false): FunctionLikeDefinition
+    {
+        $def = app(Infer::class)->analyzeClass($this->getReflection()->class);
+
+        $methodDefinition = $def->getMethodDefinition(
+            $this->getReflection()->name,
+            indexBuilders: $indexBuilders,
+            withSideEffects: $withSideEffects,
+        );
+
+        if (! $methodDefinition) {
+            throw new LogicException("Method [$this->name] is not found on class [$this->className]");
+        }
+
+        return $methodDefinition;
     }
 }

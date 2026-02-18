@@ -16,7 +16,7 @@ use Spatie\Backup\Events\BackupZipWasCreated;
 use Spatie\Backup\Events\DumpingDatabase;
 use Spatie\Backup\Exceptions\BackupFailed;
 use Spatie\Backup\Exceptions\InvalidBackupJob;
-use Spatie\DbDumper\Compressors\GzipCompressor;
+use Spatie\Backup\Listeners\EncryptBackupArchive;
 use Spatie\DbDumper\Databases\MongoDb;
 use Spatie\DbDumper\Databases\Sqlite;
 use Spatie\DbDumper\DbDumper;
@@ -133,7 +133,7 @@ class BackupJob
             fn (BackupDestination $backupDestination) => $backupDestination->diskName() === $diskName
         );
 
-        if (! count($this->backupDestinations)) {
+        if ($this->backupDestinations->isEmpty()) {
             throw InvalidBackupJob::destinationDoesNotExist($diskName);
         }
 
@@ -166,7 +166,7 @@ class BackupJob
         }
 
         try {
-            if (! count($this->backupDestinations)) {
+            if ($this->backupDestinations->isEmpty()) {
                 throw InvalidBackupJob::noDestinationsSpecified();
             }
 
@@ -239,11 +239,11 @@ class BackupJob
 
         consoleOutput()->info("Created zip containing {$zip->count()} files and directories. Size is {$zip->humanReadableSize()}");
 
-        if ($this->sendNotifications) {
-            $this->sendNotification(new BackupZipWasCreated($pathToZip));
-        } else {
-            app()->call('\Spatie\Backup\Listeners\EncryptBackupArchive@handle', ['event' => new BackupZipWasCreated($pathToZip)]);
-        }
+        $backupZipWasCreated = new BackupZipWasCreated($pathToZip);
+
+        app(EncryptBackupArchive::class)->handle($backupZipWasCreated);
+
+        $this->sendNotification($backupZipWasCreated);
 
         return $pathToZip;
     }
@@ -277,12 +277,6 @@ class BackupJob
                 }
 
                 $fileName = "{$dbType}-{$dbName}{$timeStamp}.{$this->getExtension($dbDumper)}";
-
-                // @todo is this still relevant or undocumented?
-                if (config('backup.backup.gzip_database_dump')) {
-                    $dbDumper->useCompressor(new GzipCompressor);
-                    $fileName .= '.'.$dbDumper->getCompressorExtension();
-                }
 
                 if ($compressor = $this->config->backup->databaseDumpCompressor) {
                     $dbDumper->useCompressor(new $compressor);

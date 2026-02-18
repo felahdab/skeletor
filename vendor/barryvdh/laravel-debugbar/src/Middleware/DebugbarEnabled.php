@@ -1,26 +1,20 @@
 <?php
 
-namespace Barryvdh\Debugbar\Middleware;
+declare(strict_types=1);
+
+namespace Fruitcake\LaravelDebugbar\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Barryvdh\Debugbar\LaravelDebugbar;
+use Fruitcake\LaravelDebugbar\LaravelDebugbar;
 
 class DebugbarEnabled
 {
     /**
-     * The DebugBar instance
-     *
-     * @var LaravelDebugbar
-     */
-    protected $debugbar;
-
-    /**
      * Create a new middleware instance.
      *
-     * @param  LaravelDebugbar $debugbar
      */
-    public function __construct(LaravelDebugbar $debugbar)
+    public function __construct(protected LaravelDebugbar $debugbar)
     {
         $this->debugbar = $debugbar;
     }
@@ -28,11 +22,9 @@ class DebugbarEnabled
     /**
      * Handle an incoming request.
      *
-     * @param  Request  $request
-     * @param  Closure  $next
-     * @return mixed
+     * @param Request $request
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next): mixed
     {
         if (!$this->debugbar->isEnabled()) {
             abort(404);

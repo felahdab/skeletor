@@ -167,9 +167,9 @@ class PostgresGrammar extends Grammar
             $language = 'english';
         }
 
-        $columns = (new Collection($where['columns']))->map(function ($column) use ($language) {
-            return "to_tsvector('{$language}', {$this->wrap($column)})";
-        })->implode(' || ');
+        $columns = (new Collection($where['columns']))
+            ->map(fn ($column) => "to_tsvector('{$language}', {$this->wrap($column)})")
+            ->implode(' || ');
 
         $mode = 'plainto_tsquery';
 
@@ -179,6 +179,10 @@ class PostgresGrammar extends Grammar
 
         if (($where['options']['mode'] ?? []) === 'websearch') {
             $mode = 'websearch_to_tsquery';
+        }
+
+        if (($where['options']['mode'] ?? []) === 'raw') {
+            $mode = 'to_tsquery';
         }
 
         return "({$columns}) @@ {$mode}('{$language}', {$this->parameter($where['value'])})";
@@ -618,6 +622,7 @@ class PostgresGrammar extends Grammar
      * @param  array  $values
      * @return array
      */
+    #[\Override]
     public function prepareBindingsForUpdate(array $bindings, array $values)
     {
         $values = (new Collection($values))->map(function ($value, $column) {
@@ -627,6 +632,8 @@ class PostgresGrammar extends Grammar
         })->all();
 
         $cleanBindings = Arr::except($bindings, 'select');
+
+        $values = Arr::flatten(array_map(fn ($value) => value($value), $values));
 
         return array_values(
             array_merge($values, Arr::flatten($cleanBindings))

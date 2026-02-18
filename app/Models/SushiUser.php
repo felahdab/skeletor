@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Sushi\Sushi;
 use Illuminate\Database\Eloquent\Model;
 
 class SushiUser extends Model
 {
-    use \Sushi\Sushi;
+    use Sushi;
     
     public static $users=[];
     public static function setUsers($users)

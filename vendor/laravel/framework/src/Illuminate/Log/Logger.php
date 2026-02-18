@@ -180,6 +180,10 @@ class Logger implements LoggerInterface
      */
     protected function writeLog($level, $message, $context): void
     {
+        if (method_exists($this->logger, 'isHandling') && ! $this->logger->isHandling($level)) {
+            return;
+        }
+
         $this->logger->{$level}(
             $message = $this->formatMessage($message),
             $context = array_merge($this->context, $context)
@@ -245,6 +249,12 @@ class Logger implements LoggerInterface
      */
     protected function fireLogEvent($level, $message, array $context = [])
     {
+        // Avoid dispatching the event multiple times if our logger instance is the LogManager...
+        if ($this->logger instanceof LogManager &&
+            $this->logger->getEventDispatcher() !== null) {
+            return;
+        }
+
         // If the event dispatcher is set, we will pass along the parameters to the
         // log listeners. These are useful for building profilers or other tools
         // that aggregate all of the log messages for a given "request" cycle.
@@ -283,7 +293,7 @@ class Logger implements LoggerInterface
     /**
      * Get the event dispatcher instance.
      *
-     * @return \Illuminate\Contracts\Events\Dispatcher
+     * @return \Illuminate\Contracts\Events\Dispatcher|null
      */
     public function getEventDispatcher()
     {

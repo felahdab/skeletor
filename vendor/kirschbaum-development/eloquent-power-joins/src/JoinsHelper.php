@@ -41,6 +41,8 @@ class JoinsHelper
 
     public static function make($model): static
     {
+        static::$instances ??= new WeakMap();
+
         return static::$instances[$model] ??= new self();
     }
 
@@ -75,8 +77,16 @@ class JoinsHelper
             // If the model is already associated with another query, we need to clone the model.
             // This can happen if a certain query, *before having interacted with the library
             // `joinRelationship()` method*, was cloned by previous code.
+
+            // Preserve the from clause (including any alias) before setModel overwrites it
+            $originalFrom = $query->getQuery()->from;
+
             $query->setModel($model = new ($query->getModel()));
             $model->mergeCasts($originalModel->getCasts());
+
+            if ($originalFrom) {
+                $query->getQuery()->from = $originalFrom;
+            }
 
             // Link the Spl Object ID of the query to the new model...
             static::$modelQueryDictionary[$model] = $querySplObjectId;
@@ -97,9 +107,17 @@ class JoinsHelper
             $originalModel = $query->getModel();
             $originalJoinsHelper = JoinsHelper::make($originalModel);
 
+            // Preserve the from clause (including any alias) before setModel overwrites it
+            $originalFrom = $query->getQuery()->from;
+
             // Ensure the model of the cloned query is unique to the query.
             $query->setModel($model = new $originalModel());
             $model->mergeCasts($originalModel->getCasts());
+
+            // Restore the original from clause if it was set
+            if ($originalFrom) {
+                $query->getQuery()->from = $originalFrom;
+            }
 
             // Update any `beforeQueryCallbacks` to link to the new `$this` as Eloquent Query,
             // otherwise the reference to the current Eloquent query goes wrong. These query
@@ -152,12 +170,12 @@ class JoinsHelper
     {
         if ($relation instanceof BelongsToMany || $relation instanceof HasManyThrough) {
             return [
-                md5($relationName.'table1'.time()),
-                md5($relationName.'table2'.time()),
+                md5($relationName.'table1'.uniqid('', true)),
+                md5($relationName.'table2'.uniqid('', true)),
             ];
         }
 
-        return md5($relationName.time());
+        return md5($relationName.uniqid('', true));
     }
 
     /**

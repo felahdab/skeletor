@@ -49,7 +49,7 @@ use const DIRECTORY_SEPARATOR;
 use const LOCK_EX;
 
 use PHPUnit\Framework\TestStatus\TestStatus;
-use PHPUnit\Runner\DirectoryCannotBeCreatedException;
+use PHPUnit\Runner\DirectoryDoesNotExistException;
 use PHPUnit\Runner\Exception;
 use PHPUnit\Util\Filesystem;
 
@@ -72,10 +72,7 @@ use function Pest\version;
  */
 final class DefaultResultCache implements ResultCache
 {
-    /**
-     * @var string
-     */
-    private const DEFAULT_RESULT_CACHE_FILENAME = '.phpunit.result.cache';
+    private const string DEFAULT_RESULT_CACHE_FILENAME = '.phpunit.result.cache';
 
     private readonly string $cacheFilename;
 
@@ -98,28 +95,28 @@ final class DefaultResultCache implements ResultCache
         $this->cacheFilename = $filepath ?? $_ENV['PHPUNIT_RESULT_CACHE'] ?? self::DEFAULT_RESULT_CACHE_FILENAME;
     }
 
-    public function setStatus(string $id, TestStatus $status): void
+    public function setStatus(ResultCacheId $id, TestStatus $status): void
     {
         if ($status->isSuccess()) {
             return;
         }
 
-        $this->defects[$id] = $status;
+        $this->defects[$id->asString()] = $status;
     }
 
-    public function status(string $id): TestStatus
+    public function status(ResultCacheId $id): TestStatus
     {
-        return $this->defects[$id] ?? TestStatus::unknown();
+        return $this->defects[$id->asString()] ?? TestStatus::unknown();
     }
 
-    public function setTime(string $id, float $time): void
+    public function setTime(ResultCacheId $id, float $time): void
     {
-        $this->times[$id] = $time;
+        $this->times[$id->asString()] = $time;
     }
 
-    public function time(string $id): float
+    public function time(ResultCacheId $id): float
     {
-        return $this->times[$id] ?? 0.0;
+        return $this->times[$id->asString()] ?? 0.0;
     }
 
     public function mergeWith(self $other): void
@@ -179,7 +176,7 @@ final class DefaultResultCache implements ResultCache
     public function persist(): void
     {
         if (! Filesystem::createDirectory(dirname($this->cacheFilename))) {
-            throw new DirectoryCannotBeCreatedException($this->cacheFilename);
+            throw new DirectoryDoesNotExistException(dirname($this->cacheFilename));
         }
 
         $data = [

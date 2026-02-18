@@ -17,7 +17,7 @@ final class BootExcludeList implements Bootstrapper
      *
      * @var array<int, non-empty-string>
      */
-    private const EXCLUDE_LIST = [
+    private const array EXCLUDE_LIST = [
         'bin',
         'overrides',
         'resources',

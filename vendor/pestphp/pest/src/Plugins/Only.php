@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Pest\Plugins;
 
 use Pest\Contracts\Plugins\Terminable;
+use Pest\Factories\Attribute;
+use Pest\Factories\TestCaseMethodFactory;
 use Pest\PendingCalls\TestCall;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * @internal
@@ -15,7 +18,7 @@ final class Only implements Terminable
     /**
      * The temporary folder.
      */
-    private const TEMPORARY_FOLDER = __DIR__
+    private const string TEMPORARY_FOLDER = __DIR__
         .DIRECTORY_SEPARATOR
         .'..'
         .DIRECTORY_SEPARATOR
@@ -24,27 +27,18 @@ final class Only implements Terminable
         .'.temp';
 
     /**
-     * {@inheritDoc}
-     */
-    public function terminate(): void
-    {
-        if (Parallel::isWorker()) {
-            return;
-        }
-
-        $lockFile = self::TEMPORARY_FOLDER.DIRECTORY_SEPARATOR.'only.lock';
-
-        if (file_exists($lockFile)) {
-            unlink($lockFile);
-        }
-    }
-
-    /**
      * Creates the lock file.
      */
-    public static function enable(TestCall $testCall, string $group = '__pest_only'): void
+    public static function enable(TestCall|TestCaseMethodFactory $testCall, string $group = '__pest_only'): void
     {
-        $testCall->group($group);
+        if ($testCall instanceof TestCall) {
+            $testCall->group($group);
+        } else {
+            $testCall->attributes[] = new Attribute(
+                Group::class,
+                [$group],
+            );
+        }
 
         if (Environment::name() === Environment::CI || Parallel::isWorker()) {
             return;
@@ -87,5 +81,21 @@ final class Only implements Terminable
         }
 
         return file_get_contents($lockFile) ?: '__pest_only'; // @phpstan-ignore-line
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function terminate(): void
+    {
+        if (Parallel::isWorker()) {
+            return;
+        }
+
+        $lockFile = self::TEMPORARY_FOLDER.DIRECTORY_SEPARATOR.'only.lock';
+
+        if (file_exists($lockFile)) {
+            unlink($lockFile);
+        }
     }
 }

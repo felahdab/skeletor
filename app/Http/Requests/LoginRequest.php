@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 
@@ -34,7 +35,7 @@ class LoginRequest extends FormRequest
      * Get the needed authorization credentials from the request.
      *
      * @return array
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     public function getCredentials()
     {
@@ -47,7 +48,7 @@ class LoginRequest extends FormRequest
      *
      * @param $param
      * @return bool
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     private function isEmail($param)
     {

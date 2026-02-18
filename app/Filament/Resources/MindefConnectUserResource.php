@@ -2,6 +2,16 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\BulkAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
+use App\Filament\Resources\MindefConnectUserResource\Pages\ListMindefConnectUsers;
 use App\Filament\Resources\MindefConnectUserResource\Pages;
 use App\Filament\Resources\MindefConnectUserResource\RelationManagers;
 use App\Models\MindefConnectUser;
@@ -9,7 +19,6 @@ use App\Models\User;
 use App\Models\Role;
 use App\Service\RandomPasswordGeneratorService;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -25,48 +34,48 @@ class MindefConnectUserResource extends Resource
 
     protected static ?string $navigationLabel = "Demandes Mindef Connect";
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('email')
+        return $schema
+            ->components([
+                TextInput::make('email')
                     ->email()
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('nom')
+                TextInput::make('nom')
                     ->required()
                     ->maxLength(255)
                     ->default(''),
-                Forms\Components\TextInput::make('prenom')
+                TextInput::make('prenom')
                     ->required()
                     ->maxLength(255)
                     ->default(''),
-                Forms\Components\TextInput::make('main_department_number')
+                TextInput::make('main_department_number')
                     ->required()
                     ->maxLength(255)
                     ->default(''),
-                Forms\Components\TextInput::make('personal_title')
+                TextInput::make('personal_title')
                     ->required()
                     ->maxLength(255)
                     ->default(''),
-                Forms\Components\TextInput::make('rank')
+                TextInput::make('rank')
                     ->required()
                     ->maxLength(255)
                     ->default(''),
-                Forms\Components\TextInput::make('short_rank')
+                TextInput::make('short_rank')
                     ->required()
                     ->maxLength(255)
                     ->default(''),
-                Forms\Components\TextInput::make('display_name')
+                TextInput::make('display_name')
                     ->required()
                     ->maxLength(255)
                     ->default(''),
-                Forms\Components\TextInput::make('commentaire')
+                TextInput::make('commentaire')
                     ->maxLength(255)
                     ->default(null),
-                Forms\Components\TextInput::make('sub')
+                TextInput::make('sub')
                     ->maxLength(255)
                     ->default(null),
             ]);
@@ -76,56 +85,56 @@ class MindefConnectUserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('nom')
+                TextColumn::make('nom')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('prenom')
+                TextColumn::make('prenom')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('main_department_number')
+                TextColumn::make('main_department_number')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('personal_title')
+                TextColumn::make('personal_title')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('rank')
+                TextColumn::make('rank')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('short_rank')
+                TextColumn::make('short_rank')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('display_name')
+                TextColumn::make('display_name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('commentaire')
+                TextColumn::make('commentaire')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('sub')
+                TextColumn::make('sub')
                     ->searchable(),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make()
                         ->label("Refuser les demandes"),
-                    Tables\Actions\BulkAction::make('valider')
+                    BulkAction::make('valider')
                         ->label("Valider les demandes de compte")
                         ->color('success')
                         ->icon( 'heroicon-m-check')
                         ->requiresConfirmation()
                         ->form([
-                            Forms\Components\Select::make("roles")
+                            Select::make("roles")
                                 ->label("Roles à attribuer")
                                 ->multiple()
                                 ->options(Role::where('guard_name', 'web')->get()->pluck('name', 'id')),
-                            Forms\Components\Toggle::make("make_them_admin")
+                            Toggle::make("make_them_admin")
                                 ->label("En faire des administrateurs ?")
                                 ->default(false),
                         ])
@@ -174,7 +183,7 @@ class MindefConnectUserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListMindefConnectUsers::route('/'),
+            'index' => ListMindefConnectUsers::route('/'),
             //'create' => Pages\CreateMindefConnectUser::route('/create'),
             //'edit' => Pages\EditMindefConnectUser::route('/{record}/edit'),
         ];

@@ -15,19 +15,23 @@ use Guava\Calendar\CalendarServiceProvider as BaseProvider;
 
 class CalendarServiceProvider extends BaseProvider
 {
-    public function packageBooted()
+    public function packageBooted(): void
     {
-        Livewire::component('calendar-widget', CalendarWidget::class);
+        //Livewire::component('calendar-widget', CalendarWidget::class);
 
         FilamentAsset::register(
             assets: [
                 AlpineComponent::make(
-                    'calendar-widget',
-                    base_path('vendor/guava/calendar/dist/js/calendar-widget.js'),
+                    'calendar',
+                     base_path('vendor/guava/calendar/dist/js/calendar.js'),
                 ),
                 AlpineComponent::make(
                     'calendar-context-menu',
                     base_path('vendor/guava/calendar/dist/js/calendar-context-menu.js'),
+                ),
+                AlpineComponent::make(
+                    'calendar-event',
+                    base_path('vendor/guava/calendar/dist/js/calendar-event.js'),
                 ),
                 Css::make('calendar-styles', app_path('Providers/resources/guava/event-calendar.min.css')),
                 Js::make('calendar-script', app_path('Providers/resources/guava/event-calendar.min.js')),

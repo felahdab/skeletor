@@ -250,6 +250,42 @@ class Repository
     }
 
     /**
+     * Add a context value if it does not exist yet, and return the value.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return mixed
+     */
+    public function remember($key, $value)
+    {
+        if ($this->has($key)) {
+            return $this->get($key);
+        }
+
+        return tap(value($value), function ($value) use ($key) {
+            $this->add($key, $value);
+        });
+    }
+
+    /**
+     * Add a hidden context value if it does not exist yet, and return the value.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return mixed
+     */
+    public function rememberHidden($key, #[\SensitiveParameter] $value)
+    {
+        if ($this->hasHidden($key)) {
+            return $this->getHidden($key);
+        }
+
+        return tap(value($value), function ($value) use ($key) {
+            $this->addHidden($key, $value);
+        });
+    }
+
+    /**
      * Forget the given context key.
      *
      * @param  string|array<int, string>  $key
@@ -499,12 +535,16 @@ class Repository
     }
 
     /**
+     * @template TReturn of mixed
+     *
      * Run the callback function with the given context values and restore the original context state when complete.
      *
-     * @param  callable  $callback
+     * @param  (callable(): TReturn)  $callback
      * @param  array<string, mixed>  $data
      * @param  array<string, mixed>  $hidden
-     * @return mixed
+     * @return TReturn
+     *
+     * @throws \Throwable
      */
     public function scope(callable $callback, array $data = [], array $hidden = [])
     {
@@ -540,7 +580,7 @@ class Repository
     /**
      * Execute the given callback when context is about to be dehydrated.
      *
-     * @param  callable  $callback
+     * @param  (callable(static): void)  $callback
      * @return $this
      */
     public function dehydrating($callback)
@@ -553,7 +593,7 @@ class Repository
     /**
      * Execute the given callback when context has been hydrated.
      *
-     * @param  callable  $callback
+     * @param  (callable(static): void)  $callback
      * @return $this
      */
     public function hydrated($callback)

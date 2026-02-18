@@ -2,6 +2,8 @@
 
 namespace Dedoc\Scramble\Support\InferExtensions;
 
+use Dedoc\Scramble\Infer\AutoResolvingArgumentTypeBag;
+use Dedoc\Scramble\Infer\Contracts\ArgumentTypeBag;
 use Dedoc\Scramble\Infer\Definition\ClassDefinition;
 use Dedoc\Scramble\Infer\Extensions\Event\MethodCallEvent;
 use Dedoc\Scramble\Infer\Extensions\Event\PropertyFetchEvent;
@@ -26,15 +28,13 @@ use Dedoc\Scramble\Support\Type\Literal\LiteralStringType;
 use Dedoc\Scramble\Support\Type\NullType;
 use Dedoc\Scramble\Support\Type\ObjectType;
 use Dedoc\Scramble\Support\Type\Reference\MethodCallReferenceType;
+use Dedoc\Scramble\Support\Type\Reference\NewCallReferenceType;
 use Dedoc\Scramble\Support\Type\Reference\PropertyFetchReferenceType;
 use Dedoc\Scramble\Support\Type\StringType;
 use Dedoc\Scramble\Support\Type\Type;
 use Dedoc\Scramble\Support\Type\Union;
 use Dedoc\Scramble\Support\Type\UnknownType;
-use Illuminate\Contracts\Pagination\CursorPaginator;
-use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceResponse;
 use Illuminate\Http\Resources\MergeValue;
@@ -122,7 +122,7 @@ class JsonResourceExtension implements MethodReturnTypeExtension, PropertyTypeEx
 
             'whenAggregated' => count($event->arguments) <= 3
                 ? Union::wrap([
-                    match ($event->getArg('aggregate', 2)?->value ?? '') {
+                    match ($event->getArg('aggregate', 2)?->value ?? '') { // @phpstan-ignore property.notFound
                         'count' => new IntegerType,
                         'avg', 'sum' => new FloatType,
                         default => new StringType,
@@ -157,14 +157,6 @@ class JsonResourceExtension implements MethodReturnTypeExtension, PropertyTypeEx
 
             'attributes' => $this->getAttributesMethodReturnType($event),
 
-            'additional' => $event->getInstance() instanceof Generic
-                ? tap($event->getInstance(), function (Generic $type) use ($event) {
-                    $type->templateTypes = array_merge($type->templateTypes, [
-                        /* TAdditional */ 1 => $event->getArg('data', 0),
-                    ]);
-                })
-                : null,
-
             default => ! $event->getDefinition() || $event->getDefinition()->hasMethodDefinition($event->name)
                 ? null
                 : $this->proxyMethodCallToModel($event),
@@ -174,8 +166,11 @@ class JsonResourceExtension implements MethodReturnTypeExtension, PropertyTypeEx
     public function getStaticMethodReturnType(StaticMethodCallEvent $event): ?Type
     {
         return match ($event->getName()) {
-            'collection' => $this->buildAnonymousResourceCollectionType($event),
-            'make' => new Generic($event->getCallee(), [$event->getArg('resource', 0)]),
+            'make' => ReferenceTypeResolver::getInstance()
+                ->resolve(
+                    $event->scope,
+                    new NewCallReferenceType($event->getCallee(), $event->arguments instanceof AutoResolvingArgumentTypeBag ? $event->arguments->allUnresolved() : $event->arguments->all()),
+                ),
             default => null,
         };
     }
@@ -183,7 +178,7 @@ class JsonResourceExtension implements MethodReturnTypeExtension, PropertyTypeEx
     public function getPropertyType(PropertyFetchEvent $event): ?Type
     {
         return match ($event->name) {
-            'resource' => JsonResourceHelper::modelType($event->getDefinition(), $event->scope),
+            'resource' => JsonResourceHelper::modelType($event->getDefinition()),
             default => ! $event->getDefinition() || $event->getDefinition()->hasPropertyDefinition($event->name)
                 ? null
                 : $this->getModelPropertyType($event->getDefinition(), $event->name, $event->scope),
@@ -195,7 +190,7 @@ class JsonResourceExtension implements MethodReturnTypeExtension, PropertyTypeEx
         return ReferenceTypeResolver::getInstance()->resolve(
             $scope,
             new PropertyFetchReferenceType(
-                JsonResourceHelper::modelType($jsonResourceDefinition, $scope),
+                JsonResourceHelper::modelType($jsonResourceDefinition),
                 $name,
             ),
         );
@@ -206,13 +201,17 @@ class JsonResourceExtension implements MethodReturnTypeExtension, PropertyTypeEx
         return $this->getModelMethodReturn($event->getInstance()->name, $event->name, $event->arguments, $event->scope);
     }
 
-    private function getModelMethodReturn(string $resourceClassName, string $methodName, array $arguments, Scope $scope): Type
+    private function getModelMethodReturn(string $resourceClassName, string $methodName, ArgumentTypeBag $arguments, Scope $scope): Type
     {
-        $modelType = JsonResourceHelper::modelType($scope->index->getClassDefinition($resourceClassName), $scope);
+        $modelType = JsonResourceHelper::modelType($scope->index->getClass($resourceClassName));
+
+        $argumentsList = $arguments instanceof AutoResolvingArgumentTypeBag
+            ? $arguments->allUnresolved()
+            : $arguments->all();
 
         return ReferenceTypeResolver::getInstance()->resolve(
             $scope,
-            new MethodCallReferenceType($modelType, $methodName, arguments: $arguments),
+            new MethodCallReferenceType($modelType, $methodName, arguments: $argumentsList),
         );
     }
 
@@ -260,24 +259,5 @@ class JsonResourceExtension implements MethodReturnTypeExtension, PropertyTypeEx
                     ->all()
             ),
         ]);
-    }
-
-    private function buildAnonymousResourceCollectionType(StaticMethodCallEvent $event): Generic
-    {
-        $argument = $event->getArg('resource', 0);
-
-        $isInferredPaginator = $argument instanceof Generic
-            && ($argument->isInstanceOf(Paginator::class) || $argument->isInstanceOf(CursorPaginator::class))
-            && count($argument->templateTypes) === 2;
-
-        if ($isInferredPaginator) {
-            $argument = clone $argument;
-            $argument->templateTypes = [new ObjectType($event->getCallee())];
-        }
-
-        return new Generic(
-            AnonymousResourceCollection::class,
-            [$isInferredPaginator ? $argument : new Generic($event->getCallee(), [$event->getArg('resource', 0)])],
-        );
     }
 }

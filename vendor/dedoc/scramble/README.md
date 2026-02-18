@@ -8,9 +8,6 @@
 
 Scramble generates API documentation for Laravel project. Without requiring you to manually write PHPDoc annotations. Docs are generated in OpenAPI 3.1.0 format.
 
-> **Warning**
-> Package is in early stage. It means there may be bugs and API is very likely to change. Create an issue if you spot a bug. Ideas are welcome.
-
 ## Documentation
 
 You can find full documentation at [scramble.dedoc.co](https://scramble.dedoc.co).
@@ -33,7 +30,7 @@ After install you will have 2 routes added to your application:
 - `/docs/api` - UI viewer for your documentation
 - `/docs/api.json` - Open API document in JSON format describing your API.
 
-By default, these routes are available only in `local` environment. You can change this behavior by defining `viewApiDocs` gate.
+By default, these routes are available only in `local` environment. You can change this behavior [by defining `viewApiDocs` gate](https://scramble.dedoc.co/usage/getting-started#docs-authorization).
 
 ---
 

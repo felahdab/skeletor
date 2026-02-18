@@ -14,12 +14,12 @@ final class Environment implements HandlesArguments
     /**
      * The continuous integration environment.
      */
-    public const CI = 'ci';
+    public const string CI = 'ci';
 
     /**
      * The local environment.
      */
-    public const LOCAL = 'local';
+    public const string LOCAL = 'local';
 
     /**
      * The current environment.

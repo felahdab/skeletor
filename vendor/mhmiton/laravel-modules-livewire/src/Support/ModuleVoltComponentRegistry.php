@@ -25,8 +25,8 @@ class ModuleVoltComponentRegistry
 
         $registerableComponents = $this->getRegisterableComponents($path, $viewNamespaces, $aliasPrefix);
 
-        collect($registerableComponents)
-            ->each(function ($registerableComponent) use ($namespace) {
+        $registeredComponents = collect($registerableComponents)
+            ->map(function ($registerableComponent) use ($namespace) {
                 $alias = data_get($registerableComponent, 'alias');
 
                 $path = data_get($registerableComponent, 'path');
@@ -35,7 +35,7 @@ class ModuleVoltComponentRegistry
 
                 // Alias To Class
                 $componentClassNameWithoutNamespace = Str::of($alias)
-                    ->after("counter::")
+                    ->after('::')
                     ->explode('.')
                     ->map([Str::class, 'studly'])
                     ->implode('\\');
@@ -47,7 +47,17 @@ class ModuleVoltComponentRegistry
                 }
 
                 $this->component($alias, $path);
-            });
+
+                return $registerableComponent;
+            })
+                ->filter()
+                ->values()
+                ->all();
+
+        return [
+            'registerableComponents' => $registerableComponents,
+            'registeredComponents' => $registeredComponents
+        ];
     }
 
     public function getRegisterableComponents($path, $viewNamespaces = [], $aliasPrefix = null)

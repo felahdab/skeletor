@@ -2,8 +2,8 @@
 
 namespace Spatie\Backup\Tasks\Backup;
 
-use Illuminate\Support\Str;
 use Spatie\Backup\Config\Config;
+use Spatie\Backup\Exceptions\BackupFailed;
 use Spatie\Backup\Helpers\Format;
 use ZipArchive;
 
@@ -33,8 +33,6 @@ class Zip
 
         $zip = new static($pathToZip);
 
-        $zip->open();
-
         foreach ($manifest->files() as $file) {
             $zip->add($file, self::determineNameOfFileInZip($file, $pathToZip, $relativePath));
         }
@@ -50,11 +48,11 @@ class Zip
 
         $zipDirectory = pathinfo($pathToZip, PATHINFO_DIRNAME).DIRECTORY_SEPARATOR;
 
-        if (Str::startsWith($fileDirectory, $zipDirectory)) {
+        if (str_starts_with($fileDirectory, $zipDirectory)) {
             return substr($pathToFile, strlen($zipDirectory));
         }
 
-        if ($relativePath && $relativePath != DIRECTORY_SEPARATOR && Str::startsWith($fileDirectory, $relativePath)) {
+        if ($relativePath && $relativePath !== DIRECTORY_SEPARATOR && str_starts_with($fileDirectory, $relativePath)) {
             return substr($pathToFile, strlen($relativePath));
         }
 
@@ -82,7 +80,11 @@ class Zip
 
     public function open(): void
     {
-        $this->zipFile->open($this->pathToZip, ZipArchive::CREATE);
+        $result = $this->zipFile->open($this->pathToZip, ZipArchive::CREATE);
+
+        if ($result !== true) {
+            throw BackupFailed::from(new \Exception("Failed to open zip file at '{$this->pathToZip}'. ZipArchive error code: {$result}"));
+        }
     }
 
     public function close(): void
