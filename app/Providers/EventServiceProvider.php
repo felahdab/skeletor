@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use SocialiteProviders\Manager\SocialiteWasCalled;
+use Illuminate\Foundation\Http\Events\RequestHandled;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -29,10 +31,10 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
-        \SocialiteProviders\Manager\SocialiteWasCalled::class => [
+        SocialiteWasCalled::class => [
             'SocialiteProviders\Keycloak\KeycloakExtendSocialite@handle',
         ],
-        \Illuminate\Foundation\Http\Events\RequestHandled::class => [
+        RequestHandled::class => [
             'App\Listeners\RecordUsageDataListener@handle',
         ],
 

@@ -41,7 +41,7 @@ class Items extends Schema
     /**
      * @inheritdoc
      */
-    public function validate(array $stack = [], array $skip = [], string $ref = '', $context = null): bool
+    public function validate(array $stack = [], array $skip = [], string $ref = '', ?object $context = null): bool
     {
         if (in_array($this, $skip, true)) {
             return true;
@@ -50,8 +50,7 @@ class Items extends Schema
         $valid = parent::validate($stack, $skip, $ref, $context);
 
         $parent = end($stack);
-        // type might be array in 3.1.0
-        if ($parent instanceof Schema && ($parent->type !== 'array' && !(is_array($parent->type) && in_array('array', $parent->type)))) {
+        if ($parent instanceof Schema && $parent->type !== 'array') {
             $this->_context->logger->warning('@OA\\Items() parent type must be "array" in ' . $this->_context);
             $valid = false;
         }

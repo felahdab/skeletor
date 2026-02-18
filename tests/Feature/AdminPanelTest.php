@@ -5,6 +5,7 @@ use Illuminate\Support\Arr;
 
 use Filament\Facades\Filament;
 use Filament\Pages\Dashboard;
+use Filament\Actions\Testing\TestAction;
 
 use function Pest\Laravel\{actingAs};
 use function Pest\Livewire\livewire;
@@ -17,7 +18,10 @@ use App\Models\Permission;
 use App\DataObjects\NewUserDescriptionData;
 
 use App\Filament\Resources\UserResource;
-use App\Filament\Pages\UserPreferences;
+use App\Filament\Pages;
+
+use App\Filament\PanelRegistry\PreferedPageItem;
+use App\Filament\PanelRegistry\ModuleDefinedPreferedPagesRegistry;
  
 uses(RefreshDatabase::class);
 
@@ -56,24 +60,40 @@ it('displays the profile page for logged in users', function() {
     $user=User::factory()->create();
 
     Livewire::actingAs($user)
-        ->test(UserPreferences::class)
+        ->test(Pages\UserPreferences::class)
         ->assertSee('Mes préférences');
 });
 
-it('saves the prefered page of the user', function() {
+it('sauvegarde la page preferee de l utilisateur', function() {
     $user=User::factory()->create();
-    $prefered_page_dummy_data = "prefered_page_dummy_data";
+
+    //logger()->info(User::all());
+
+    app(ModuleDefinedPreferedPagesRegistry::class)->registerPreferedPagesItems(
+            [
+            PreferedPageItem::make()
+                ->name('Dummy page')
+                ->routeName(fn() => 'dummy_page_route_name'),
+            ]
+        );
+
+    //logger()->info(app(ModuleDefinedPreferedPagesRegistry::class)->getPreferedPagesItemsForSelect());
+
     $this->assertTrue(Arr::get($user->data, "settings.prefered_page") == null);
 
     Livewire::actingAs($user)
-        ->test(UserPreferences::class)
+        ->test(Pages\UserPreferences::class)
         ->assertSee('Mes préférences')
         ->fillForm([
-            'prefered_page' => $prefered_page_dummy_data,
+            'prefered_page' => 'dummy_page_route_name',
         ])
-        ->call('save');
+        ->assertSee('Dummy page')
+        ->call('save')
+        ->assertStatus(200);
+    $user->refresh();
+    //logger()->info($user->data);
 
-    $this->assertTrue(Arr::get($user->data, "settings.prefered_page") == $prefered_page_dummy_data);
+    $this->assertTrue(Arr::get($user->data, "settings.prefered_page") == 'dummy_page_route_name');
 });
 
 it('affiche la liste des utilisateurs si l utilisateur a la permission users.index', function() {
@@ -217,9 +237,9 @@ it('affiche la recherche Annudef si l utilisateur a skeletor.recherche-annuaire'
     $user->givePermissionTo($permission1);
     
     Livewire::actingAs($user)
-        ->test(\App\Filament\Pages\RechercheAnnuairePage::class)
+        ->test(Pages\RechercheAnnuairePage::class)
         ->assertSuccessful()
-        ->assertActionVisible('submitAction');
+        ->assertActionVisible(TestAction::make('submitAction')->table());
 
 });
 
@@ -235,11 +255,11 @@ it('affiche le résultat de la recherche Annudef si l utilisateur a skeletor.rec
     $resultat = AnnuaireUser::first();
     
     Livewire::actingAs($user)
-        ->test(\App\Filament\Pages\RechercheAnnuairePage::class)
+        ->test(Pages\RechercheAnnuairePage::class)
         ->assertSuccessful()
-        ->assertActionVisible('submitAction')
+        ->assertActionVisible(TestAction::make('submitAction')->table())
         ->assertCanSeeTableRecords([$resultat])
-        ->assertTableActionHidden('create-local-user', $resultat);
+        ->assertActionHidden(TestAction::make('create-local-user')->table($resultat));
 
 });
 
@@ -257,10 +277,10 @@ it('affiche le résultat de la recherche Annudef et le bouton de creation d un c
     $resultat = AnnuaireUser::first();
     
     Livewire::actingAs($user)
-        ->test(\App\Filament\Pages\RechercheAnnuairePage::class)
+        ->test(Pages\RechercheAnnuairePage::class)
         ->assertSuccessful()
-        ->assertActionVisible('submitAction')
+        ->assertActionVisible(TestAction::make('submitAction')->table())
         ->assertCanSeeTableRecords([$resultat])
-        ->assertTableActionVisible('create-local-user', $resultat);
+        ->assertActionVisible(TestAction::make('create-local-user')->table($resultat));
 
 });

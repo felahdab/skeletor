@@ -114,7 +114,7 @@ return [
     | tous les mails sont envoyés à l'adresse indiquée ci-dessous:
     |
     */
-    'destinataire_email_non_production'=> env('SKELETOR_EMAIL_NON_PRODUCTION', 'nomail'),
+    'destinataire_email_non_production'=> env('SKELETOR_EMAIL_NON_PRODUCTION', 'nomail@nowhere.mail.tld'),
 
     /*
     |--------------------------------------------------------------------------
@@ -132,20 +132,20 @@ return [
      */
     'services' => [
         'annudef' => [
-            'url' => env('ANNUDEF_URL', 'https://annudef.intradef.gouv.fr/'),
+            'url' => env('ANNUDEF_URL', ''),
             'login' => env('ANNUDEF_LOGIN', ''),
             'password' => env('ANNUDEF_PASSWORD', ''),
             'timeout' => env('ANNUDEF_TIMEOUT', 10),
         ],
         'ldap' => [
-            'server' => env('LDAPSERVER', 'ldap3-val.intradef.gouv.fr'),
-            'login' => env('LDAPLOGIN', 'ffast.auth.tec'),
+            'server' => env('LDAPSERVER', ''),
+            'login' => env('LDAPLOGIN', ''),
             'password' => env('LDAPPASSWORD', ''),
-            'url' => env('LDAPANNUURL', 'LdapWS/Ws_srpcl_annusi_siclient.php'),
+            'url' => env('LDAPANNUURL', ''),
             'timeout' => env('LDAPTIMEOUT', 5),
         ],
         'tuleap' => [
-            'url' => env('TULEAP_URL', 'https://tuleap.intradef.gouv.fr/'),
+            'url' => env('TULEAP_URL', ''),
             'token' => env('TULEAP_TOKEN', ''),
             'tracker_bugreport' => env('TULEAP_TRACKER_BUGREPORT', ''),
             'tracker_suggestion' => env('TULEAP_TRACKER_SUGGESTION', ''),

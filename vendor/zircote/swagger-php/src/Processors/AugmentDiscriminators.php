@@ -15,15 +15,14 @@ use OpenApi\Generator;
  */
 class AugmentDiscriminators
 {
-    public function __invoke(Analysis $analysis)
+    public function __invoke(Analysis $analysis): void
     {
-        /** @var OA\Discriminator[] $discriminators */
         $discriminators = $analysis->getAnnotationsOfType(OA\Discriminator::class);
 
         foreach ($discriminators as $discriminator) {
             if (!Generator::isDefault($discriminator->mapping)) {
                 foreach ($discriminator->mapping as $value => $type) {
-                    if (is_string($type) && $typeSchema = $analysis->getSchemaForSource($type)) {
+                    if (is_string($type) && $typeSchema = $analysis->getAnnotationForSource($type)) {
                         $discriminator->mapping[$value] = OA\Components::ref($typeSchema);
                     }
                 }

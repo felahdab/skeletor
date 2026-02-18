@@ -11,6 +11,8 @@ use OpenApi\Generator;
 /**
  * Each Media Type object provides schema and examples for the media type identified by its key.
  *
+ * Parameter encodings can be set either here, or on nested `Property` annotations directly.
+ *
  * @see [Media Type Object](https://spec.openapis.org/oas/v3.1.1.html#media-type-object)
  *
  * @Annotation
@@ -61,7 +63,7 @@ class MediaType extends AbstractAnnotation
      * The encoding object shall only apply to requestBody objects when the media type is multipart or
      * application/x-www-form-urlencoded.
      *
-     * @var array<string,mixed>
+     * @var Encoding[]
      */
     public $encoding = Generator::UNDEFINED;
 
@@ -71,6 +73,7 @@ class MediaType extends AbstractAnnotation
     public static $_nested = [
         Schema::class => 'schema',
         Examples::class => ['examples', 'example'],
+        Encoding::class => ['encoding', 'property'],
         Attachable::class => ['attachables'],
     ];
 
@@ -81,4 +84,18 @@ class MediaType extends AbstractAnnotation
         Response::class,
         RequestBody::class,
     ];
+
+    protected function encodingCompat($encoding, callable $factory)
+    {
+        if (!is_array($encoding)) {
+            return $encoding;
+        }
+
+        $compat = [];
+        foreach ($encoding as $name => $value) {
+            $compat[] = is_array($value) ? $factory([...$value, 'property' => $name]) : $value;
+        }
+
+        return $compat;
+    }
 }

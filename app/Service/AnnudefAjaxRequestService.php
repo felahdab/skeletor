@@ -12,6 +12,8 @@ class AnnudefAjaxRequestService
      */
     public static function getUserAnnudefEntryByEmail($email)
     {
+        $base_url = config('services.recherche_annuaire.base_url');
+
         $request_params = [
             'nomsimple'     => '',
             'nomavancee'    => '',
@@ -33,7 +35,7 @@ class AnnudefAjaxRequestService
                 ->timeout(1)
                 ->connectTimeout(1)
                 ->asForm()
-                ->post("http://annudef-consultation.intradef.gouv.fr/index.php?c=AJAXpagesjaunesbl&a=Recherche", $request_params);
+                ->post("{$base_url}/index.php?c=AJAXpagesjaunesbl&a=Recherche", $request_params);
         } catch (ConnectionException $e) {
             return null;
         }
@@ -74,12 +76,14 @@ class AnnudefAjaxRequestService
 
     public static function searchPictureForUid($uid)
     {
+        $base_url = config('services.recherche_annuaire.base_url');
+
         try {
             $response = Http::acceptJson()
                 ->timeout(1)
                 ->connectTimeout(1)
                 ->asForm()
-                ->post("http://annudef-consultation.intradef.gouv.fr/index.php?c=AJAXparcourir&a=RemplirFicheIndividuelle&type=user&uid=" . $uid, null);
+                ->post("{$base_url}/index.php?c=AJAXparcourir&a=RemplirFicheIndividuelle&type=user&uid=" . $uid, null);
         } catch (ConnectionException $e) {
             return null;
         }

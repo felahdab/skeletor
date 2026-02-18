@@ -2,77 +2,65 @@
 
 namespace Dedoc\Scramble\Support\InferExtensions;
 
-use Dedoc\Scramble\Infer\Definition\ClassDefinition;
-use Dedoc\Scramble\Infer\Extensions\ExpressionTypeInferExtension;
-use Dedoc\Scramble\Infer\Scope\Scope;
+use Dedoc\Scramble\Infer\Extensions\Event\MethodCallEvent;
+use Dedoc\Scramble\Infer\Extensions\MethodReturnTypeExtension;
+use Dedoc\Scramble\Infer\Scope\Index;
 use Dedoc\Scramble\Support\Type\ArrayType;
-use Dedoc\Scramble\Support\Type\Literal\LiteralStringType;
+use Dedoc\Scramble\Support\Type\Generic;
 use Dedoc\Scramble\Support\Type\ObjectType;
 use Dedoc\Scramble\Support\Type\Type;
 use Dedoc\Scramble\Support\Type\UnknownType;
+use Dedoc\Scramble\Support\TypeManagers\ResourceCollectionTypeManager;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Support\Str;
-use PhpParser\Node;
-use PhpParser\Node\Expr;
 
-class ResourceCollectionTypeInfer implements ExpressionTypeInferExtension
+class ResourceCollectionTypeInfer implements MethodReturnTypeExtension
 {
-    public function getType(Expr $node, Scope $scope): ?Type
+    public function shouldHandle(ObjectType $type): bool
     {
-        if (! $scope->classDefinition()?->isInstanceOf(ResourceCollection::class)) {
-            return null;
-        }
-
-        /** parent::toArray() in `toArray` */
-        if (
-            ($scope->isInFunction() && $scope->functionDefinition()->type->name === 'toArray')
-            && $node instanceof Node\Expr\StaticCall
-            && ($node->class instanceof Node\Name && $node->class->toString() === 'parent')
-            && ($node->name->name ?? null) === 'toArray'
-        ) {
-            return $this->getBasicCollectionType($scope->classDefinition());
-        }
-
-        /** $this->collection */
-        if (
-            $node instanceof Node\Expr\PropertyFetch
-            && ($node->var->name ?? null) === 'this' && ($node->name->name ?? null) === 'collection'
-        ) {
-            return $this->getBasicCollectionType($scope->classDefinition());
-        }
-
-        return null;
+        return $type->isInstanceOf(ResourceCollection::class);
     }
 
-    public function getBasicCollectionType(ClassDefinition $classDefinition)
+    public function getMethodReturnType(MethodCallEvent $event): ?Type
     {
-        $collectingClassType = $this->getCollectingClassType($classDefinition);
-
-        if (! $collectingClassType) {
-            return new UnknownType('Cannot find a type of the collecting class.');
-        }
-
-        return new ArrayType(value: new ObjectType($collectingClassType->value));
+        return match ($event->name) {
+            'toArray' => $this->getToArrayReturnType($event),
+            default => null,
+        };
     }
 
-    private function getCollectingClassType(ClassDefinition $classDefinition): ?LiteralStringType
+    private function getToArrayReturnType(MethodCallEvent $event): ?Type
     {
-        $collectingClassDefinition = $classDefinition->getPropertyDefinition('collects');
+        if ($event->methodDefiningClassName === ResourceCollection::class) {
+            $isManualAnnotation = $event->getInstance() instanceof Generic
+                && count($event->getInstance()->templateTypes) === 1;
 
-        $collectingClassType = $collectingClassDefinition?->defaultType;
-
-        if (! $collectingClassType instanceof LiteralStringType) {
-            if (
-                str_ends_with($classDefinition->name, 'Collection') &&
-                (class_exists($class = Str::replaceLast('Collection', '', $classDefinition->name)) ||
-                    class_exists($class = Str::replaceLast('Collection', 'Resource', $classDefinition->name)))
-            ) {
-                $collectingClassType = new LiteralStringType($class);
-            } else {
-                return null;
+            if ($isManualAnnotation) {
+                return $this->getCollectionType($event->getInstance(), $event->scope->index);
             }
+
+            return null; // default behavior
         }
 
-        return $collectingClassType;
+        $parentType = $this->getCollectionType($event->getInstance(), $event->scope->index);
+
+        $realType = $event->getDefinition()->getMethodDefinition('toArray')?->getReturnType();
+        if ($realType instanceof UnknownType) {
+            /**
+             * When inferred return type of `toArray` method cannot be inferred, we'd like to fall back to
+             * the default behavior of ResourceCollection, so there is still SOME information.
+             */
+            return $parentType;
+        }
+
+        return null; // default behavior
+    }
+
+    private function getCollectionType(ObjectType $type, Index $index): ArrayType
+    {
+        $normalizedType = (! $type instanceof Generic) ? new Generic($type->name) : $type;
+
+        return new ArrayType(
+            (new ResourceCollectionTypeManager($normalizedType, $index))->getCollectedType(),
+        );
     }
 }

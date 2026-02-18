@@ -225,7 +225,7 @@ abstract class DbDumper
             if (isset($componentMap[$component])) {
                 $setterMethod = $componentMap[$component];
 
-                if (! $value || in_array($value, ['', 'null'])) {
+                if (empty($value) || $value === 'null') {
                     continue;
                 }
 
@@ -267,6 +267,6 @@ abstract class DbDumper
 
     protected function isWindows(): bool
     {
-        return str_starts_with(strtoupper(PHP_OS), 'WIN');
+        return PHP_OS_FAMILY === 'Windows';
     }
 }

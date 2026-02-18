@@ -194,10 +194,16 @@ class ResponseFactory implements FactoryContract
     public function stream($callback, $status = 200, array $headers = [])
     {
         if (! is_null($callback) && (new ReflectionFunction($callback))->isGenerator()) {
+            if (isset($_SERVER['LARAVEL_OCTANE'])) {
+                return (new StreamedResponse(
+                    null, $status, array_merge($headers, ['X-Accel-Buffering' => 'no'])
+                ))->setCallback($callback);
+            }
+
             return new StreamedResponse(function () use ($callback) {
                 foreach ($callback() as $chunk) {
                     echo $chunk;
-                    ob_flush();
+                    when(ob_get_level() > 0, fn () => ob_flush());
                     flush();
                 }
             }, $status, array_merge($headers, ['X-Accel-Buffering' => 'no']));

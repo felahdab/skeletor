@@ -2,28 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Requests\LoginRequest;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Socialite\Facades\Socialite;
-
-use App\Models\User;
-use App\Models\Grade;
-use Spatie\Permission\Models\Role;
-use App\Models\MindefConnectUser;
-use App\Models\Paramaccueil;
-
-use Illuminate\Support\Facades\Http;
-
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Str;
-use App\Service\PossibleUniteService;
-use App\Service\RandomPasswordGeneratorService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Http;
+use Spatie\Permission\Models\Role;
 
+use App\Models\User;
+use App\Models\MindefConnectUser;
+use App\Http\Requests\LoginRequest;
+use App\Service\RandomPasswordGeneratorService;
 
 class LoginController extends Controller
 {
@@ -96,59 +89,6 @@ class LoginController extends Controller
 
             return $this->authenticated($request, $user);
         }
-
-        //dd($MCuser);
-        // SocialiteProviders\Manager\OAuth2\User {#2604 ▼ // app/Http/Controllers/LoginController.php:59
-        //     +id: "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
-        //     +nickname: "f.el-ahdab"
-        //     +name: "Florian El-Ahdab"
-        //     +email: "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
-        //     +avatar: null
-        //     +user: array:7 [▼
-        //       "sub" => "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
-        //       "email_verified" => true
-        //       "name" => "Florian El-Ahdab"
-        //       "preferred_username" => "f.el-ahdab"
-        //       "given_name" => "Florian"
-        //       "family_name" => "El-Ahdab"
-        //       "email" => "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
-        //     ]
-        //     +attributes: array:4 [▼
-        //       "id" => "fae19bae-fc72-4c93-9dbf-d7d5fc135455"
-        //       "nickname" => "f.el-ahdab"
-        //       "name" => "Florian El-Ahdab"
-        //       "email" => "florian.el-ahdab@adalfantln.marine.defensecdd.gouv.fr"
-        //     ]
-        //     +token: "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MjkyNTg1OTgsImlhdCI6MTcyOTI1ODI5OCwi
-        //    ▶
-        //   "
-        //     +refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJmZjEwOThhZC1iYjg1LTQ1MzQtOWRlYi0xZDNiOGI4MGMxOTMifQ.eyJleHAiOjE3MjkyNjAwOTgsImlhdCI6MTcyOTI1ODI5OCwianRpIjoiY
-        //    ▶
-        //   "
-        //     +expiresIn: 300
-        //     +approvedScopes: array:3 [▼
-        //       0 => "openid"
-        //       1 => "profile"
-        //       2 => "email"
-        //     ]
-        //     +accessTokenResponseBody: array:9 [▼
-        //       "access_token" => "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MjkyNTg1OTgsImlhdCI6MTcyOTI1ODI5OCwi
-        //    ▶
-        //   "
-        //       "expires_in" => 300
-        //       "refresh_expires_in" => 1800
-        //       "refresh_token" => "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJmZjEwOThhZC1iYjg1LTQ1MzQtOWRlYi0xZDNiOGI4MGMxOTMifQ.eyJleHAiOjE3MjkyNjAwOTgsImlhdCI6MTcyOTI1ODI5OCwianRpIjoiY
-        //    ▶
-        //   "
-        //       "token_type" => "Bearer"
-        //       "id_token" => "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUeHQyc21xcEdKS2hwS3lDZnpYNVFMRVJEd1d1VnpMZ0NBbUVPLU9KMjdvIn0.eyJleHAiOjE3MjkyNTg1OTgsImlhdCI6MTcyOTI1ODI5OCwi
-        //    ▶
-        //   "
-        //       "not-before-policy" => 0
-        //       "session_state" => "c2d897e9-5ffb-4342-a216-d91362b1e82a"
-        //       "scope" => "openid profile email"
-        //     ]
-        //   }
 
         // si le user n'existe pas, test de la variable APP_VALID_MDC pour savoir si on l'enregistre dans la table MDC 
         if (! config('skeletor.validation_automatique_des_comptes_mindef_connect')){

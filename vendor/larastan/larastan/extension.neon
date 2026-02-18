@@ -15,17 +15,24 @@ parameters:
     noUnnecessaryCollectionCall: true
     noUnnecessaryCollectionCallOnly: []
     noUnnecessaryCollectionCallExcept: []
+    noUnnecessaryEnumerableToArrayCalls: false
     squashedMigrationsPath: []
     databaseMigrationsPath: []
     disableMigrationScan: false
     disableSchemaScan: false
     configDirectories: []
     viewDirectories: []
+    translationDirectories: []
     checkModelProperties: false
     checkUnusedViews: false
+    checkMissingTranslations: false
     checkModelAppends: true
+    checkModelMethodVisibility: false
     generalizeEnvReturnType: false
     checkConfigTypes: false
+    checkAuthCallsWhenInRequestScope: false
+    parseModelCastsMethod: false
+    enableMigrationCache: false
 
 parametersSchema:
     checkOctaneCompatibility: bool()
@@ -34,17 +41,24 @@ parametersSchema:
     noUnnecessaryCollectionCall: bool()
     noUnnecessaryCollectionCallOnly: listOf(string())
     noUnnecessaryCollectionCallExcept: listOf(string())
+    noUnnecessaryEnumerableToArrayCalls: bool()
     databaseMigrationsPath: listOf(string())
     disableMigrationScan: bool()
     configDirectories: listOf(string())
     viewDirectories: listOf(string())
+    translationDirectories: listOf(string())
     squashedMigrationsPath: listOf(string())
     disableSchemaScan: bool()
     checkModelProperties: bool()
     checkUnusedViews: bool()
+    checkMissingTranslations: bool()
     checkModelAppends: bool()
+    checkModelMethodVisibility: bool()
     generalizeEnvReturnType: bool()
     checkConfigTypes: bool()
+    checkAuthCallsWhenInRequestScope: bool()
+    parseModelCastsMethod: bool()
+    enableMigrationCache: bool()
 
 conditionalTags:
     Larastan\Larastan\Rules\NoEnvCallsOutsideOfConfigRule:
@@ -53,18 +67,32 @@ conditionalTags:
         phpstan.rules.rule: %noModelMake%
     Larastan\Larastan\Rules\NoUnnecessaryCollectionCallRule:
         phpstan.rules.rule: %noUnnecessaryCollectionCall%
+    Larastan\Larastan\Rules\NoUnnecessaryEnumerableToArrayCallsRule:
+        phpstan.rules.rule: %noUnnecessaryEnumerableToArrayCalls%
     Larastan\Larastan\Rules\OctaneCompatibilityRule:
         phpstan.rules.rule: %checkOctaneCompatibility%
     Larastan\Larastan\Rules\UnusedViewsRule:
         phpstan.rules.rule: %checkUnusedViews%
+    Larastan\Larastan\Rules\NoMissingTranslationsRule:
+        phpstan.rules.rule: %checkMissingTranslations%
     Larastan\Larastan\Rules\ModelAppendsRule:
         phpstan.rules.rule: %checkModelAppends%
+    Larastan\Larastan\Rules\NoPublicModelScopeAndAccessorRule:
+        phpstan.rules.rule: %checkModelMethodVisibility%
+    Larastan\Larastan\Rules\NoAuthFacadeInRequestScopeRule:
+        phpstan.rules.rule: %checkAuthCallsWhenInRequestScope%
+    Larastan\Larastan\Rules\NoAuthHelperInRequestScopeRule:
+        phpstan.rules.rule: %checkAuthCallsWhenInRequestScope%
     Larastan\Larastan\ReturnTypes\Helpers\EnvFunctionDynamicFunctionReturnTypeExtension:
         phpstan.broker.dynamicFunctionReturnTypeExtension: %generalizeEnvReturnType%
     Larastan\Larastan\ReturnTypes\Helpers\ConfigFunctionDynamicFunctionReturnTypeExtension:
         phpstan.broker.dynamicFunctionReturnTypeExtension: %checkConfigTypes%
-    Larastan\Larastan\ReturnTypes\ConfigGetDynamicMethodReturnTypeExtension:
+    Larastan\Larastan\ReturnTypes\ConfigRepositoryDynamicMethodReturnTypeExtension:
         phpstan.broker.dynamicMethodReturnTypeExtension: %checkConfigTypes%
+    Larastan\Larastan\ReturnTypes\ConfigFacadeCollectionDynamicStaticMethodReturnTypeExtension:
+        phpstan.broker.dynamicStaticMethodReturnTypeExtension: %checkConfigTypes%
+    Larastan\Larastan\Rules\ConfigCollectionRule:
+        phpstan.rules.rule: %checkConfigTypes%
 
 services:
     -
@@ -237,16 +265,6 @@ services:
             - phpstan.broker.dynamicMethodReturnTypeExtension
 
     -
-        class: Larastan\Larastan\ReturnTypes\ModelFindExtension
-        tags:
-            - phpstan.broker.dynamicStaticMethodReturnTypeExtension
-
-    -
-        class: Larastan\Larastan\ReturnTypes\BuilderModelFindExtension
-        tags:
-            - phpstan.broker.dynamicMethodReturnTypeExtension
-
-    -
         class: Larastan\Larastan\ReturnTypes\TestCaseExtension
         tags:
             - phpstan.broker.dynamicMethodReturnTypeExtension
@@ -389,7 +407,13 @@ services:
             excludeMethods: %noUnnecessaryCollectionCallExcept%
 
     -
+        class: Larastan\Larastan\Rules\NoUnnecessaryEnumerableToArrayCallsRule
+
+    -
         class: Larastan\Larastan\Rules\ModelAppendsRule
+
+    -
+        class: Larastan\Larastan\Rules\NoPublicModelScopeAndAccessorRule
 
     -
         class: Larastan\Larastan\Types\GenericEloquentBuilderTypeNodeResolverExtension
@@ -423,12 +447,30 @@ services:
             active: %checkModelProperties%
 
     -
+        class: Larastan\Larastan\Types\CollectionOf\CollectionOfTypeNodeResolverExtension
+        tags:
+            - phpstan.phpDoc.typeNodeResolverExtension
+
+    -
         class: Larastan\Larastan\Properties\MigrationHelper
         arguments:
             databaseMigrationPath: %databaseMigrationsPath%
             disableMigrationScan: %disableMigrationScan%
-            parser: @currentPhpVersionSimpleDirectParser
+            parser: @migrationsParser
             reflectionProvider: @reflectionProvider
+
+    iamcalSqlParser:
+        class: Larastan\Larastan\SQL\IamcalSqlParser
+        autowired: false
+
+    sqlParserFactory:
+        class: Larastan\Larastan\SQL\SqlParserFactory
+        arguments:
+            iamcalSqlParser: @iamcalSqlParser
+
+    sqlParser:
+        type: Larastan\Larastan\SQL\SqlParser
+        factory: [@sqlParserFactory, create]
 
     -
         class: Larastan\Larastan\Properties\SquashedMigrationHelper
@@ -438,6 +480,15 @@ services:
 
     -
         class: Larastan\Larastan\Properties\ModelCastHelper
+        arguments:
+            parser: @currentPhpVersionSimpleDirectParser
+            parseModelCastsMethod: %parseModelCastsMethod%
+
+    -
+        class: Larastan\Larastan\Properties\MigrationCache
+        arguments:
+            cacheDirectory: %tmpDir%
+            enabled: %enableMigrationCache%
 
     -
         class: Larastan\Larastan\Properties\ModelPropertyHelper
@@ -505,12 +556,39 @@ services:
             - phpstan.collector
     -
         class: Larastan\Larastan\Collectors\UsedViewInAnotherViewCollector
-        arguments:
-            parser: @currentPhpVersionSimpleDirectParser
+
     -
         class: Larastan\Larastan\Support\ViewFileHelper
         arguments:
             viewDirectories: %viewDirectories%
+
+    -
+        class: Larastan\Larastan\Support\ViewParser
+        arguments:
+            parser: @currentPhpVersionSimpleDirectParser
+
+    -
+        class: Larastan\Larastan\Rules\NoMissingTranslationsRule
+        arguments:
+            translationDirectories: %translationDirectories%
+
+    -
+        class: Larastan\Larastan\Collectors\UsedTranslationFunctionCollector
+        tags:
+            - phpstan.collector
+
+    -
+        class: Larastan\Larastan\Collectors\UsedTranslationTranslatorCollector
+        tags:
+            - phpstan.collector
+
+    -
+        class: Larastan\Larastan\Collectors\UsedTranslationFacadeCollector
+        tags:
+            - phpstan.collector
+
+    -
+        class: Larastan\Larastan\Collectors\UsedTranslationViewCollector
 
     -
         class: Larastan\Larastan\ReturnTypes\ApplicationMakeDynamicReturnTypeExtension
@@ -578,7 +656,10 @@ services:
         class: Larastan\Larastan\ReturnTypes\Helpers\ConfigFunctionDynamicFunctionReturnTypeExtension
 
     -
-        class: Larastan\Larastan\ReturnTypes\ConfigGetDynamicMethodReturnTypeExtension
+        class: Larastan\Larastan\ReturnTypes\ConfigRepositoryDynamicMethodReturnTypeExtension
+
+    -
+        class: Larastan\Larastan\ReturnTypes\ConfigFacadeCollectionDynamicStaticMethodReturnTypeExtension
 
     -
         class: Larastan\Larastan\Support\ConfigParser
@@ -587,12 +668,35 @@ services:
             configPaths: %configDirectories%
 
     -
+        class: Larastan\Larastan\Internal\ConfigHelper
+
+    -
         class: Larastan\Larastan\ReturnTypes\Helpers\EnvFunctionDynamicFunctionReturnTypeExtension
 
     -
         class: Larastan\Larastan\ReturnTypes\FormRequestSafeDynamicMethodReturnTypeExtension
         tags:
             - phpstan.broker.dynamicMethodReturnTypeExtension
+
+    -
+        class: Larastan\Larastan\Rules\NoAuthFacadeInRequestScopeRule
+
+    -
+        class: Larastan\Larastan\Rules\NoAuthHelperInRequestScopeRule
+
+    -
+        class: Larastan\Larastan\Rules\ConfigCollectionRule
+
+    -
+        class: Illuminate\Filesystem\Filesystem
+        autowired: self
+
+    migrationsParser:
+        class: PHPStan\Parser\CachedParser
+        arguments:
+            originalParser: @currentPhpVersionSimpleDirectParser
+            cachedNodesByStringCountMax: %cache.nodesByStringCountMax%
+        autowired: false
 
 rules:
     - Larastan\Larastan\Rules\UselessConstructs\NoUselessWithFunctionCallsRule

@@ -2,6 +2,129 @@
 
 All notable changes to `modules` will be documented in this file.
 
+## v5.0.9 - 2025-12-16
+
+### What's Changed
+
+* Refactor ModuleMakeFilamentThemeCommand to inject Filesystem dependen… by @nicolawebdev in https://github.com/savannabits/filament-modules/pull/159
+
+### New Contributors
+
+* @nicolawebdev made their first contribution in https://github.com/savannabits/filament-modules/pull/159
+
+**Full Changelog**: https://github.com/savannabits/filament-modules/compare/v5.0.8...v5.0.9
+
+## v5.0.8 - 2025-09-10
+
+### What's Changed
+
+* Initial Work: Filament Widget Generation by @coolsam726 in https://github.com/savannabits/filament-modules/pull/153
+
+**Full Changelog**: https://github.com/savannabits/filament-modules/compare/v5.0.7...v5.0.8
+
+## v5.0.7 - 2025-09-08
+
+[Bug Fix: Wrong Path appFilament when generating resources with the default config](https://github.com/savannabits/filament-modules/commit/eabc1e6c2c1679191756a5d0ec26d19c13011a29)
+**Full Changelog**: https://github.com/savannabits/filament-modules/compare/v5.0.6...v5.0.7
+
+## v5.0.6 - 2025-09-03
+
+### What's Changed
+
+* Bug Fix: rtrim was erroneously removing s in Models by @coolsam726 in https://github.com/savannabits/filament-modules/pull/148
+
+**Full Changelog**: https://github.com/savannabits/filament-modules/compare/v5.0.5...v5.0.6
+
+## v5.0.5 - 2025-09-03
+
+### What's Changed
+
+* Fix: read app_folder variable from laravel-modules by @piotrczech in https://github.com/savannabits/filament-modules/pull/146
+* Feature: Support Generation of Filament classes for custom Module classes by @coolsam726 in https://github.com/savannabits/filament-modules/pull/147
+
+### New Contributors
+
+* @piotrczech made their first contribution in https://github.com/savannabits/filament-modules/pull/146
+
+**Full Changelog**: https://github.com/savannabits/filament-modules/compare/v5.0.4...v5.0.5
+
+## v5.0.4 - 2025-09-03
+
+### What's Changed
+
+* Hotfix dynamic app folder by @coolsam726 in https://github.com/savannabits/filament-modules/pull/144
+
+**Full Changelog**: https://github.com/savannabits/filament-modules/compare/v5.0.3...v5.0.4
+
+## v4.2.2 - 2025-09-03
+
+### What's Changed
+
+* Hotfix dynamic app folder by @coolsam726 in https://github.com/savannabits/filament-modules/pull/144
+
+**Full Changelog**: https://github.com/savannabits/filament-modules/compare/v5.0.3...v4.2.2
+
+## v5.0.3 - 2025-09-03
+
+### What's Changed
+
+* Hotfix dynamic app folder by @coolsam726 in https://github.com/savannabits/filament-modules/pull/142
+
+**Full Changelog**: https://github.com/savannabits/filament-modules/compare/v5.0.2...v5.0.3
+
+## v4.2.1 - 2025-09-03
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.3.0 to 2.4.0 by @dependabot[bot] in https://github.com/savannabits/filament-modules/pull/128
+* Bump aglipanci/laravel-pint-action from 2.5 to 2.6 by @dependabot[bot] in https://github.com/savannabits/filament-modules/pull/132
+* Hotfix dynamic app folder by @coolsam726 in https://github.com/savannabits/filament-modules/pull/143
+
+**Full Changelog**: https://github.com/savannabits/filament-modules/compare/v4.2.0...v4.2.1
+
+## v5.0.2 - 2025-08-31
+
+### What's Changed
+
+* Fix: Support nwidart/laravel-modules v11 by @coolsam726 in https://github.com/savannabits/filament-modules/pull/141
+
+**Full Changelog**: https://github.com/savannabits/filament-modules/compare/v5.0.1...v5.0.2
+
+## v5.0.1 - 2025-08-22
+
+### What's Changed
+
+* Bump actions/checkout from 4 to 5 by @dependabot[bot] in https://github.com/savannabits/filament-modules/pull/133
+* Bump stefanzweifel/git-auto-commit-action from 5 to 6 by @dependabot[bot] in https://github.com/savannabits/filament-modules/pull/130
+* Panel Generation and Registration Improvements: by @coolsam726 in https://github.com/savannabits/filament-modules/pull/139
+
+**Full Changelog**: https://github.com/savannabits/filament-modules/compare/v5.0.0...v5.0.1
+
+## v5.0.0 - Support for Filament v4 - 2025-08-21
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.3.0 to 2.4.0 by @dependabot[bot] in https://github.com/savannabits/filament-modules/pull/128
+* Bump aglipanci/laravel-pint-action from 2.5 to 2.6 by @dependabot[bot] in https://github.com/savannabits/filament-modules/pull/132
+* 5.x Updates by @coolsam726 in https://github.com/savannabits/filament-modules/pull/135
+* 5.x - Docs and Tests Fixes by @coolsam726 in https://github.com/savannabits/filament-modules/pull/136
+
+**Full Changelog**: https://github.com/savannabits/filament-modules/compare/v4.2.0...v5.0.0
+
+## v4.2.0 - 2025-03-19
+
+### What's Changed
+
+* Update composer.json by @cjango in https://github.com/savannabits/filament-modules/pull/123
+* Add new widget classes and update README for widgets protection by @aisuvro in https://github.com/savannabits/filament-modules/pull/122
+* Added Laravel Modules 12 support  by @coolsam726 in https://github.com/savannabits/filament-modules/pull/125
+
+### New Contributors
+
+* @cjango made their first contribution in https://github.com/savannabits/filament-modules/pull/123
+
+**Full Changelog**: https://github.com/savannabits/filament-modules/compare/v4.1.0...v4.2.0
+
 ## v4.1.2 - 2025-03-19
 
 ### What's Changed

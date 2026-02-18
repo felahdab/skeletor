@@ -89,36 +89,55 @@ final class SchemaAggregator
                 continue;
             }
 
-            switch ($statement->name->name) {
-                case 'create':
-                    $this->alterTable($statement, true);
-                    break;
-
-                case 'table':
-                    $this->alterTable($statement, false);
-                    break;
-
-                case 'drop':
-                case 'dropIfExists':
-                    $this->dropTable($statement);
-                    break;
-
-                case 'rename':
-                    $this->renameTableThroughStaticCall($statement);
-            }
+            match ($statement->name->name) {
+                'create' => $this->alterTable($statement, true),
+                'table' => $this->alterTable($statement, false),
+                'drop', 'dropIfExists' => $this->dropTable($statement),
+                'rename' => $this->renameTableThroughStaticCall($statement),
+                default => null,
+            };
         }
     }
 
     private function alterTable(PhpParser\Node\Expr\StaticCall|PhpParser\Node\Expr\MethodCall $call, bool $creating): void
     {
-        if (
-            ! isset($call->args[0])
-            || ! $call->getArgs()[0]->value instanceof PhpParser\Node\Scalar\String_
-        ) {
+        if (! isset($call->args[0])) {
             return;
         }
 
-        $tableName = $call->getArgs()[0]->value->value;
+        $value = $call->getArgs()[0]->value;
+
+        $tableName = null;
+
+        if ($value instanceof PhpParser\Node\Scalar\String_) {
+            $tableName = $value->value;
+        }
+
+        if ($value instanceof PhpParser\Node\Expr\ClassConstFetch) {
+            if (! $value->class instanceof PhpParser\Node\Name\FullyQualified) {
+                return;
+            }
+
+            if (! $value->name instanceof PhpParser\Node\Identifier) {
+                return;
+            }
+
+            if (! $this->reflectionProvider->hasClass($value->class->name)) {
+                return;
+            }
+
+            $class = $this->reflectionProvider->getClass($value->class->name);
+
+            $constantValueType = $class->getConstant($value->name->toString())->getValueType();
+
+            if ($constantValueType->getConstantStrings() !== []) {
+                $tableName = $constantValueType->getConstantStrings()[0]->getValue();
+            }
+        }
+
+        if ($tableName === null) {
+            return;
+        }
 
         if ($creating) {
             $this->tables[$tableName] = new SchemaTable($tableName);
@@ -176,14 +195,18 @@ final class SchemaAggregator
             $firstMethodCall = $rootVar;
 
             $nullable = false;
+            $unsigned = false;
 
             while ($rootVar instanceof PhpParser\Node\Expr\MethodCall) {
-                if (
-                    $rootVar->name instanceof PhpParser\Node\Identifier
-                    && $rootVar->name->name === 'nullable'
-                    && $this->getNullableArgumentValue($rootVar) === true
-                ) {
-                    $nullable = true;
+                if ($rootVar->name instanceof PhpParser\Node\Identifier) {
+                    if (
+                        $rootVar->name->name === 'nullable'
+                        && $this->getNullableArgumentValue($rootVar) === true
+                    ) {
+                        $nullable = true;
+                    } elseif ($rootVar->name->name === 'unsigned') {
+                        $unsigned = true;
+                    }
                 }
 
                 $firstMethodCall = $rootVar;
@@ -219,6 +242,10 @@ final class SchemaAggregator
                 }
 
                 $type = $this->getModelReferenceType($modelClass);
+                if ($unsigned && ($type === null || $type === 'int')) {
+                    $type = 'non-negative-int';
+                }
+
                 $table->setColumn(new SchemaColumn($columnName, $type ?? 'int', $nullable));
 
                 continue;
@@ -309,6 +336,7 @@ final class SchemaAggregator
                 $table,
                 $columnName,
                 $nullable,
+                $unsigned,
                 $secondArg,
                 $argName,
                 $tableName,
@@ -455,7 +483,7 @@ final class SchemaAggregator
     }
 
     /**
-     * @param array<int, mixed> $secondArgArray
+     * @param array<int, mixed>|null $secondArgArray
      *
      * @throws Exception
      */
@@ -465,6 +493,7 @@ final class SchemaAggregator
         SchemaTable $table,
         string $columnName,
         bool $nullable,
+        bool $unsigned,
         mixed $secondArg,
         PhpParser\Node\Expr|string $argName,
         string $tableName,
@@ -479,6 +508,7 @@ final class SchemaAggregator
                     $table,
                     $firstMethodCall->args[1]->value->value ?? '',
                     $nullable,
+                    $unsigned,
                     $secondArg,
                     $argName,
                     $tableName,
@@ -488,25 +518,30 @@ final class SchemaAggregator
 
                 return;
 
+            case 'integer':
+            case 'tinyinteger':
+            case 'smallinteger':
+            case 'mediuminteger':
             case 'biginteger':
+                $columnType = $unsigned ? 'non-negative-int' : 'int';
+                $table->setColumn(new SchemaColumn($columnName, $columnType, $nullable));
+
+                return;
+
             case 'increments':
             case 'id':
-            case 'integer':
-            case 'integerincrements':
-            case 'mediumincrements':
-            case 'mediuminteger':
-            case 'smallincrements':
-            case 'smallinteger':
-            case 'tinyincrements':
-            case 'tinyinteger':
             case 'unsignedbiginteger':
             case 'unsignedinteger':
             case 'unsignedmediuminteger':
             case 'unsignedsmallinteger':
             case 'unsignedtinyinteger':
+            case 'integerincrements':
+            case 'mediumincrements':
+            case 'smallincrements':
+            case 'tinyincrements':
             case 'bigincrements':
             case 'foreignid':
-                $table->setColumn(new SchemaColumn($columnName, 'int', $nullable));
+                $table->setColumn(new SchemaColumn($columnName, 'non-negative-int', $nullable));
 
                 return;
 
@@ -514,6 +549,8 @@ final class SchemaAggregator
             case 'datetimetz':
             case 'date':
             case 'datetime':
+            case 'foreignulid':
+            case 'foreignuuid':
             case 'ipaddress':
             case 'json':
             case 'jsonb':

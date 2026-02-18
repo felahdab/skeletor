@@ -7,6 +7,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 class IntradefEmailValidation implements Rule
 {
+    public string $validDomain;
     /**
      * Create a new rule instance.
      *
@@ -14,7 +15,7 @@ class IntradefEmailValidation implements Rule
      */
     public function __construct()
     {
-        //
+        $this->validDomain = config('services.intradef.mail_tld');
     }
 
     /**
@@ -32,7 +33,7 @@ class IntradefEmailValidation implements Rule
             return false;
           }
 
-          if ($domainPart != 'intradef.gouv.fr')
+          if ($domainPart != $this->validDomain)
           {
               return false;
           }
@@ -48,6 +49,7 @@ class IntradefEmailValidation implements Rule
      */
     public function message()
     {
-        return 'Seul des emails intradef.gouv.fr sont acceptés.';
+        $validDomain = $this->validDomain;
+        return "Seul des emails {$validDomain} sont acceptés.";
     }
 }

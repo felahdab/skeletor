@@ -2,10 +2,12 @@
 
 namespace Parallax\FilamentComments\Livewire;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
@@ -25,20 +27,20 @@ class CommentsComponent extends Component implements HasForms
         $this->form->fill();
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
         if (!auth()->user()->can('create', config('filament-comments.comment_model'))) {
-            return $form;
+            return $schema;
         }
 
         if (config('filament-comments.editor') === 'markdown') {
-            $editor = Forms\Components\MarkdownEditor::make('comment')
+            $editor = MarkdownEditor::make('comment')
                 ->hiddenLabel()
                 ->required()
                 ->placeholder(__('filament-comments::filament-comments.comments.placeholder'))
                 ->toolbarButtons(config('filament-comments.toolbar_buttons'));
         } else {
-            $editor = Forms\Components\RichEditor::make('comment')
+            $editor = RichEditor::make('comment')
                 ->hiddenLabel()
                 ->required()
                 ->placeholder(__('filament-comments::filament-comments.comments.placeholder'))
@@ -46,8 +48,8 @@ class CommentsComponent extends Component implements HasForms
                 ->toolbarButtons(config('filament-comments.toolbar_buttons'));
         }
 
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 $editor,
             ])
             ->statePath('data');

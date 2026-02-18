@@ -7,6 +7,7 @@ use Dedoc\Scramble\Configuration\OperationTransformers;
 use Dedoc\Scramble\Console\Commands\AnalyzeDocumentation;
 use Dedoc\Scramble\Console\Commands\ExportDocumentation;
 use Dedoc\Scramble\DocumentTransformers\AddDocumentTags;
+use Dedoc\Scramble\DocumentTransformers\CleanupUnusedResponseReferencesTransformer;
 use Dedoc\Scramble\Extensions\ExceptionToResponseExtension;
 use Dedoc\Scramble\Extensions\OperationExtension;
 use Dedoc\Scramble\Extensions\TypeToSchemaExtension;
@@ -27,32 +28,41 @@ use Dedoc\Scramble\Support\Generator\TypeTransformer;
 use Dedoc\Scramble\Support\IndexBuilders\IndexBuilder;
 use Dedoc\Scramble\Support\IndexBuilders\PaginatorsCandidatesBuilder;
 use Dedoc\Scramble\Support\InferExtensions\AbortHelpersExceptionInfer;
+use Dedoc\Scramble\Support\InferExtensions\AfterAnonymousResourceCollectionDefinitionCreatedExtension;
+use Dedoc\Scramble\Support\InferExtensions\AfterJsonResourceDefinitionCreatedExtension;
+use Dedoc\Scramble\Support\InferExtensions\AfterResourceCollectionDefinitionCreatedExtension;
 use Dedoc\Scramble\Support\InferExtensions\ArrayMergeReturnTypeExtension;
-use Dedoc\Scramble\Support\InferExtensions\JsonResourceCreationInfer;
+use Dedoc\Scramble\Support\InferExtensions\EloquentBuilderExtension;
 use Dedoc\Scramble\Support\InferExtensions\JsonResourceExtension;
 use Dedoc\Scramble\Support\InferExtensions\JsonResponseMethodReturnTypeExtension;
 use Dedoc\Scramble\Support\InferExtensions\ModelExtension;
 use Dedoc\Scramble\Support\InferExtensions\PaginateMethodsReturnTypeExtension;
 use Dedoc\Scramble\Support\InferExtensions\PossibleExceptionInfer;
+use Dedoc\Scramble\Support\InferExtensions\RequestExtension;
 use Dedoc\Scramble\Support\InferExtensions\ResourceCollectionTypeInfer;
 use Dedoc\Scramble\Support\InferExtensions\ResourceResponseMethodReturnTypeExtension;
 use Dedoc\Scramble\Support\InferExtensions\ResponseFactoryTypeInfer;
 use Dedoc\Scramble\Support\InferExtensions\ResponseMethodReturnTypeExtension;
+use Dedoc\Scramble\Support\InferExtensions\ShallowFunctionDefinition;
 use Dedoc\Scramble\Support\InferExtensions\TypeTraceInfer;
 use Dedoc\Scramble\Support\InferExtensions\ValidatorTypeInfer;
 use Dedoc\Scramble\Support\Type\FunctionType;
+use Dedoc\Scramble\Support\Type\TemplateType;
 use Dedoc\Scramble\Support\Type\VoidType;
-use Dedoc\Scramble\Support\TypeToSchemaExtensions\AnonymousResourceCollectionTypeToSchema;
+use Dedoc\Scramble\Support\TypeToSchemaExtensions\ArrayableToSchema;
+use Dedoc\Scramble\Support\TypeToSchemaExtensions\BinaryFileResponseToSchema;
 use Dedoc\Scramble\Support\TypeToSchemaExtensions\CollectionToSchema;
 use Dedoc\Scramble\Support\TypeToSchemaExtensions\CursorPaginatorTypeToSchema;
 use Dedoc\Scramble\Support\TypeToSchemaExtensions\EloquentCollectionToSchema;
 use Dedoc\Scramble\Support\TypeToSchemaExtensions\EnumToSchema;
 use Dedoc\Scramble\Support\TypeToSchemaExtensions\JsonResourceTypeToSchema;
 use Dedoc\Scramble\Support\TypeToSchemaExtensions\LengthAwarePaginatorTypeToSchema;
-use Dedoc\Scramble\Support\TypeToSchemaExtensions\ModelToSchema;
+use Dedoc\Scramble\Support\TypeToSchemaExtensions\PaginatedResourceResponseTypeToSchema;
 use Dedoc\Scramble\Support\TypeToSchemaExtensions\PaginatorTypeToSchema;
+use Dedoc\Scramble\Support\TypeToSchemaExtensions\ResourceCollectionTypeToSchema;
 use Dedoc\Scramble\Support\TypeToSchemaExtensions\ResourceResponseTypeToSchema;
 use Dedoc\Scramble\Support\TypeToSchemaExtensions\ResponseTypeToSchema;
+use Dedoc\Scramble\Support\TypeToSchemaExtensions\StreamedResponseToSchema;
 use Dedoc\Scramble\Support\TypeToSchemaExtensions\VoidTypeToSchema;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Routing\Router;
@@ -103,6 +113,19 @@ class ScrambleServiceProvider extends PackageServiceProvider
                 $index->classesDefinitions[$className] = unserialize($serializedClassDefinition);
             }
 
+            $templates = [$tValue = new TemplateType('TValue')];
+            $index->functionsDefinitions['tap'] = new ShallowFunctionDefinition(
+                type: tap(new FunctionType(
+                    name: 'tap',
+                    arguments: [
+                        'value' => $tValue,
+                    ],
+                    returnType: $tValue,
+                ), function (FunctionType $type) use ($templates) {
+                    $type->templates = $templates;
+                })
+            );
+
             return $index;
         });
 
@@ -118,13 +141,18 @@ class ScrambleServiceProvider extends PackageServiceProvider
                     fn ($e) => is_a($e, InferExtension::class, true),
                 ));
 
-                $inferExtensionsClasses = array_merge([
+                $inferExtensionsClasses = array_merge($inferExtensionsClasses, [
                     ResponseMethodReturnTypeExtension::class,
                     JsonResourceExtension::class,
                     ResourceResponseMethodReturnTypeExtension::class,
                     JsonResponseMethodReturnTypeExtension::class,
                     ModelExtension::class,
-                ], $inferExtensionsClasses);
+                    EloquentBuilderExtension::class,
+                    RequestExtension::class,
+                    AfterJsonResourceDefinitionCreatedExtension::class,
+                    AfterResourceCollectionDefinitionCreatedExtension::class,
+                    AfterAnonymousResourceCollectionDefinitionCreatedExtension::class,
+                ]);
 
                 return array_merge(
                     [
@@ -133,7 +161,6 @@ class ScrambleServiceProvider extends PackageServiceProvider
 
                         new PaginateMethodsReturnTypeExtension,
 
-                        new JsonResourceCreationInfer,
                         new ValidatorTypeInfer,
                         new ResourceCollectionTypeInfer,
                         new ResponseFactoryTypeInfer,
@@ -181,25 +208,28 @@ class ScrambleServiceProvider extends PackageServiceProvider
                 $parameters['infer'] ?? $application->make(Infer::class),
                 $parameters['context'],
                 typeToSchemaExtensionsClasses: $parameters['typeToSchemaExtensions'] ?? array_merge([
+                    ArrayableToSchema::class,
                     EnumToSchema::class,
                     JsonResourceTypeToSchema::class,
-                    ModelToSchema::class,
                     CollectionToSchema::class,
                     EloquentCollectionToSchema::class,
-                    AnonymousResourceCollectionTypeToSchema::class,
+                    ResourceCollectionTypeToSchema::class,
                     CursorPaginatorTypeToSchema::class,
                     PaginatorTypeToSchema::class,
                     LengthAwarePaginatorTypeToSchema::class,
                     ResponseTypeToSchema::class,
+                    BinaryFileResponseToSchema::class,
+                    StreamedResponseToSchema::class,
                     ResourceResponseTypeToSchema::class,
+                    PaginatedResourceResponseTypeToSchema::class,
                     VoidTypeToSchema::class,
                 ], $typesToSchemaExtensions),
                 exceptionToResponseExtensionsClasses: $parameters['exceptionToResponseExtensions'] ?? array_merge([
                     ValidationExceptionToResponseExtension::class,
                     AuthorizationExceptionToResponseExtension::class,
                     AuthenticationExceptionToResponseExtension::class,
-                    NotFoundExceptionToResponseExtension::class,
                     HttpExceptionToResponseExtension::class,
+                    NotFoundExceptionToResponseExtension::class,
                 ], $exceptionToResponseExtensions),
             );
         });
@@ -221,6 +251,7 @@ class ScrambleServiceProvider extends PackageServiceProvider
             })
             ->withDocumentTransformers([
                 AddDocumentTags::class,
+                CleanupUnusedResponseReferencesTransformer::class,
             ]);
 
         if (Scramble::$defaultRoutesIgnored) {

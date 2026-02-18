@@ -13,9 +13,9 @@ use OpenApi\Generator;
 trait DocblockTrait
 {
     /**
-     * An annotation is a root if it is the top-level / outermost annotation in a PHP docblock.
+     * An annotation is a docblock root if it is the top-level / outermost annotation in a PHP docblock.
      */
-    public function isRoot(OA\AbstractAnnotation $annotation): bool
+    public function isDocblockRoot(OA\AbstractAnnotation $annotation): bool
     {
         if (!$annotation->_context) {
             return true;
@@ -37,11 +37,11 @@ trait DocblockTrait
             OA\Schema::class => true,
             OAT\Schema::class => true,
         ];
-        // try to find best root match
+        // try to find the best root match
         foreach ($matchPriorityMap as $className => $strict) {
             foreach ($annotation->_context->annotations as $contextAnnotation) {
                 if ($strict) {
-                    if ($className === get_class($contextAnnotation)) {
+                    if ($className === $contextAnnotation::class) {
                         return $annotation === $contextAnnotation;
                     }
                 } else {
@@ -85,9 +85,9 @@ trait DocblockTrait
     }
 
     /**
-     * The text contents of the phpdoc comment (excl. tags).
+     * Parse a docblock and return the full content/text.
      */
-    public function extractContent(?string $docblock, ?array &$tags = null): string
+    public function parseDocblock(?string $docblock, ?array &$tags = null): string
     {
         if (Generator::isDefault($docblock)) {
             return Generator::UNDEFINED;
@@ -96,13 +96,13 @@ trait DocblockTrait
         $comment = preg_split('/(\n|\r\n)/', (string) $docblock);
         $comment[0] = preg_replace('/[ \t]*\\/\*\*/', '', $comment[0]); // strip '/**'
         $ii = count($comment) - 1;
-        $comment[$ii] = preg_replace('/\*\/[ \t]*$/', '', $comment[$ii]); // strip '*/'
+        $comment[$ii] = preg_replace('/\*\/[ \t]*$/', '', (string) $comment[$ii]); // strip '*/'
         $lines = [];
         $append = false;
         $skip = false;
         foreach ($comment as $line) {
-            $line = preg_replace('/^\s+\* ?/', '', $line);
-            if (substr($tagline = trim($line), 0, 1) === '@') {
+            $line = preg_replace('/^\s+\* ?/', '', (string) $line);
+            if (str_starts_with($tagline = trim((string) $line), '@')) {
                 $this->handleTag($tagline, $tags);
                 $skip = true;
             }
@@ -111,33 +111,36 @@ trait DocblockTrait
             }
             if ($append) {
                 $ii = count($lines) - 1;
-                $lines[$ii] = substr($lines[$ii], 0, -1) . $line;
+                $lines[$ii] = substr((string) $lines[$ii], 0, -1) . $line;
             } else {
                 $lines[] = $line;
             }
-            $append = (substr($line, -1) === '\\');
-        }
-        $description = trim(implode("\n", $lines));
-        if ($description === '') {
-            return Generator::UNDEFINED;
+            $append = (str_ends_with((string) $line, '\\'));
         }
 
-        return $description;
+        $description = trim(implode("\n", $lines));
+
+        return $description === ''
+            ? Generator::UNDEFINED
+            : $description;
     }
 
     /**
      * A short piece of text, usually one line, providing the basic function of the associated element.
+     *
+     * @param string $content The full docblock content
      */
-    public function extractSummary(?string $docblock): string
+    public function extractCommentSummary(string $content): string
     {
-        if (!$content = $this->extractContent($docblock)) {
+        if (Generator::isDefault($content)) {
             return Generator::UNDEFINED;
         }
+
         $lines = preg_split('/(\n|\r\n)/', $content);
         $summary = '';
         foreach ($lines as $line) {
             $summary .= $line . "\n";
-            if ($line === '' || substr($line, -1) === '.') {
+            if ($line === '' || str_ends_with($line, '.')) {
                 return trim($summary);
             }
         }
@@ -152,17 +155,21 @@ trait DocblockTrait
     /**
      * An optional longer piece of text providing more details on the associated element’s function.
      *
-     * This is very useful when working with a complex element.
+     * @param string $content The full docblock content
      */
-    public function extractDescription(?string $docblock): string
+    public function extractCommentDescription(string $content): string
     {
-        $summary = $this->extractSummary($docblock);
-        if (!$summary) {
+        if (Generator::isDefault($content)) {
+            return Generator::UNDEFINED;
+        }
+
+        $summary = $this->extractCommentSummary($content);
+        if (Generator::isDefault($summary)) {
             return Generator::UNDEFINED;
         }
 
         $description = '';
-        if (false !== ($substr = substr($this->extractContent($docblock), strlen($summary)))) {
+        if (false !== ($substr = substr($content, strlen((string) $summary)))) {
             $description = trim($substr);
         }
 
@@ -172,28 +179,35 @@ trait DocblockTrait
     /**
      * Extract property type and description from a <code>@var</code> dockblock line.
      *
-     * @return array<string, ?string> extracted <code>type</code> and <code>description</code>; values default to <code>null</code>
+     * @return array{type: ?string, description: ?string}
      */
-    public function extractVarTypeAndDescription(?string $docblock): array
+    public function parseVarLine(?string $docblock): array
     {
         $comment = str_replace("\r\n", "\n", (string) $docblock);
         $comment = preg_replace('/\*\/[ \t]*$/', '', $comment); // strip '*/'
-        preg_match('/@var\s+(?<type>[^\s]+)([ \t])?(?<description>.+)?$/im', $comment, $matches);
 
-        return array_merge(
+        preg_match('/@var\s+(?<type>[^\s]+)([ \t])?(?<description>.+)?+$/im', (string) $comment, $matches);
+
+        $result = array_merge(
             ['type' => null, 'description' => null],
-            array_filter($matches, fn ($key) => in_array($key, ['type', 'description']), ARRAY_FILTER_USE_KEY)
+            array_filter($matches, static fn ($key): bool => in_array($key, ['type', 'description']), ARRAY_FILTER_USE_KEY)
         );
+
+        return array_map(static fn (?string $value): ?string => null !== $value ? trim($value) : null, $result);
     }
 
     /**
      * Extract example text from a <code>@example</code> dockblock line.
      */
-    public function extractExampleDescription(?string $docblock): ?string
+    public function extractExampleDescription(string $docblock): ?string
     {
+        if (!$docblock || Generator::isDefault($docblock)) {
+            return null;
+        }
+
         preg_match('/@example\s+([ \t])?(?<example>.+)?$/im', $docblock, $matches);
 
-        return isset($matches['example']) ? $matches['example'] : null;
+        return $matches['example'] ?? null;
     }
 
     /**
@@ -201,6 +215,10 @@ trait DocblockTrait
      */
     public function isDeprecated(?string $docblock): bool
     {
-        return 1 === preg_match('/@deprecated\s+([ \t])?(?<deprecated>.+)?$/im', (string) $docblock);
+        if (!$docblock || Generator::isDefault($docblock)) {
+            return false;
+        }
+
+        return 1 === preg_match('/@deprecated\s+([ \t])?(?<deprecated>.+)?$/im', $docblock);
     }
 }

@@ -2,26 +2,27 @@
 
 namespace App\Filament\Pages;
 
+use Filament\Auth\Pages\EditProfile;
+use Filament\Support\Enums\Width;
+use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Form;
-use Filament\Pages\Auth\EditProfile as BaseEditProfile;
 use Illuminate\Support\Arr;
 
 use App\Filament\PanelRegistry\ModuleDefinedPreferedPagesRegistry;
-use Filament\Support\Enums\MaxWidth;
 
-class UserPreferences extends BaseEditProfile
+class UserPreferences extends EditProfile
 {
-    protected ?string $maxWidth = MaxWidth::FourExtraLarge->value;
+    protected Width | string | null $maxWidth = Width::FourExtraLarge->value;
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
         $record = [
-            'prefered_page' =>Arr::get(auth()->user()->data, 'settings.prefered_page', null),
+            'prefered_page' => Arr::get(auth()->user()->data, 'settings.prefered_page', null),
         ];
-        return $form
-            ->schema([
+
+        return $schema
+            ->components([
                 Select::make('prefered_page')
                     ->label("Page préférée")
                     ->helperText("L'application vous emmenera automatiquement à cette page lorsque vous vous connecterez")

@@ -2,11 +2,19 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\RemotesystemResource\Pages\ListRemotesystems;
+use App\Filament\Resources\RemotesystemResource\Pages\CreateRemotesystem;
+use App\Filament\Resources\RemotesystemResource\Pages\EditRemotesystem;
 use App\Filament\Resources\RemotesystemResource\Pages;
 use App\Filament\Resources\RemotesystemResource\RelationManagers;
 use App\Models\Remotesystem;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -19,16 +27,16 @@ class RemotesystemResource extends Resource
 {
     protected static ?string $model = Remotesystem::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $modelLabel = 'Système distant';
     protected static ?string $pluralModelLabel = 'Systèmes distants';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('nom')
+        return $schema
+            ->components([
+                TextInput::make('nom')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -38,17 +46,17 @@ class RemotesystemResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('uuid')
+                TextColumn::make('uuid')
                     ->label('UUID')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('nom')
+                TextColumn::make('nom')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -56,12 +64,12 @@ class RemotesystemResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -76,9 +84,9 @@ class RemotesystemResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRemotesystems::route('/'),
-            'create' => Pages\CreateRemotesystem::route('/create'),
-            'edit' => Pages\EditRemotesystem::route('/{record}/edit'),
+            'index' => ListRemotesystems::route('/'),
+            'create' => CreateRemotesystem::route('/create'),
+            'edit' => EditRemotesystem::route('/{record}/edit'),
         ];
     }
 }

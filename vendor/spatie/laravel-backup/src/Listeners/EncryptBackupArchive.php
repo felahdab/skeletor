@@ -3,6 +3,7 @@
 namespace Spatie\Backup\Listeners;
 
 use Spatie\Backup\Events\BackupZipWasCreated;
+use Spatie\Backup\Exceptions\BackupFailed;
 use ZipArchive;
 
 class EncryptBackupArchive
@@ -15,7 +16,11 @@ class EncryptBackupArchive
 
         $zip = new ZipArchive;
 
-        $zip->open($event->pathToZip);
+        $result = $zip->open($event->pathToZip);
+
+        if ($result !== true) {
+            throw BackupFailed::from(new \Exception("Failed to open zip file for encryption at '{$event->pathToZip}'. ZipArchive error code: {$result}"));
+        }
 
         $this->encrypt($zip);
 
@@ -33,18 +38,11 @@ class EncryptBackupArchive
 
     public static function shouldEncrypt(): bool
     {
-        $password = static::getPassword();
-        $algorithm = static::getAlgorithm();
-
-        if ($password === null) {
+        if (static::getPassword() === null) {
             return false;
         }
 
-        if (! is_int($algorithm)) {
-            return false;
-        }
-
-        return true;
+        return is_int(static::getAlgorithm());
     }
 
     protected static function getPassword(): ?string
@@ -56,8 +54,12 @@ class EncryptBackupArchive
     {
         $encryption = config('backup.backup.encryption');
 
+        if ($encryption === null || $encryption === false) {
+            return null;
+        }
+
         if ($encryption === 'default') {
-            $encryption = defined(\ZipArchive::class.'::EM_AES_256')
+            return defined(\ZipArchive::class.'::EM_AES_256')
                 ? ZipArchive::EM_AES_256
                 : null;
         }

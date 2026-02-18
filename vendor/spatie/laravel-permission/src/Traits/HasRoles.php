@@ -193,13 +193,14 @@ trait HasRoles
     /**
      * Revoke the given role from the model.
      *
-     * @param  string|int|Role|\BackedEnum  $role
+     * @param  string|int|array|Role|Collection|\BackedEnum  ...$role
+     * @return $this
      */
-    public function removeRole($role)
+    public function removeRole(...$role)
     {
-        $storedRole = $this->getStoredRole($role);
+        $roles = $this->collectRoles($role);
 
-        $this->roles()->detach($storedRole);
+        $this->roles()->detach($roles);
 
         $this->unsetRelation('roles');
 
@@ -208,7 +209,7 @@ trait HasRoles
         }
 
         if (config('permission.events_enabled')) {
-            event(new RoleDetached($this->getModel(), $storedRole));
+            event(new RoleDetached($this->getModel(), $roles));
         }
 
         return $this;
@@ -224,8 +225,15 @@ trait HasRoles
     {
         if ($this->getModel()->exists) {
             $this->collectRoles($roles);
-            $this->roles()->detach();
-            $this->setRelation('roles', collect());
+            if (config('permission.events_enabled')) {
+                $currentRoles = $this->roles()->get();
+                if ($currentRoles->isNotEmpty()) {
+                    $this->removeRole($currentRoles);
+                }
+            } else {
+                $this->roles()->detach();
+                $this->setRelation('roles', collect());
+            }
         }
 
         return $this->assignRole($roles);

@@ -3,29 +3,14 @@
 namespace Dedoc\Scramble\Infer\Scope;
 
 use Dedoc\Scramble\Infer\Definition\ClassDefinition;
-use Dedoc\Scramble\Infer\Extensions\Event\MethodCallEvent;
-use Dedoc\Scramble\Infer\Extensions\ExtensionsBroker;
+use Dedoc\Scramble\Infer\Definition\FunctionLikeDefinition;
+use Dedoc\Scramble\Infer\Flow\ExpressionTypeInferrer;
 use Dedoc\Scramble\Infer\Services\FileNameResolver;
-use Dedoc\Scramble\Infer\SimpleTypeGetters\BooleanNotTypeGetter;
-use Dedoc\Scramble\Infer\SimpleTypeGetters\CastTypeGetter;
-use Dedoc\Scramble\Infer\SimpleTypeGetters\ClassConstFetchTypeGetter;
-use Dedoc\Scramble\Infer\SimpleTypeGetters\ConstFetchTypeGetter;
-use Dedoc\Scramble\Infer\SimpleTypeGetters\ScalarTypeGetter;
 use Dedoc\Scramble\Support\Type\ArrayItemType_;
 use Dedoc\Scramble\Support\Type\ArrayType;
-use Dedoc\Scramble\Support\Type\BooleanType;
-use Dedoc\Scramble\Support\Type\CallableStringType;
 use Dedoc\Scramble\Support\Type\KeyedArrayType;
-use Dedoc\Scramble\Support\Type\ObjectType;
-use Dedoc\Scramble\Support\Type\Reference\CallableCallReferenceType;
-use Dedoc\Scramble\Support\Type\Reference\MethodCallReferenceType;
-use Dedoc\Scramble\Support\Type\Reference\NewCallReferenceType;
-use Dedoc\Scramble\Support\Type\Reference\PropertyFetchReferenceType;
-use Dedoc\Scramble\Support\Type\Reference\StaticMethodCallReferenceType;
-use Dedoc\Scramble\Support\Type\SelfType;
-use Dedoc\Scramble\Support\Type\SideEffects\ParentConstructCall;
+use Dedoc\Scramble\Support\Type\TemplateType;
 use Dedoc\Scramble\Support\Type\Type;
-use Dedoc\Scramble\Support\Type\Union;
 use Dedoc\Scramble\Support\Type\UnknownType;
 use PhpParser\Node;
 
@@ -55,173 +40,17 @@ class Scope
 
     public function getType(Node $node): Type
     {
-        if ($node instanceof Node\Scalar) {
-            return (new ScalarTypeGetter)($node);
-        }
-
-        if ($node instanceof Node\Expr\Cast) {
-            return (new CastTypeGetter)($node);
-        }
-
-        if ($node instanceof Node\Expr\ConstFetch) {
-            return (new ConstFetchTypeGetter)($node);
-        }
-
-        if ($node instanceof Node\Expr\Ternary) {
-            return Union::wrap([
-                $this->getType($node->if ?? $node->cond),
-                $this->getType($node->else),
-            ]);
-        }
-
-        if ($node instanceof Node\Expr\Match_) {
-            return Union::wrap(array_map(fn (Node\MatchArm $arm) => $this->getType($arm->body), $node->arms));
-        }
-
-        if ($node instanceof Node\Expr\ClassConstFetch) {
-            return (new ClassConstFetchTypeGetter)($node, $this);
-        }
-
-        if (
-            $node instanceof Node\Expr\BinaryOp\Equal
-            || $node instanceof Node\Expr\BinaryOp\Identical
-            || $node instanceof Node\Expr\BinaryOp\NotEqual
-            || $node instanceof Node\Expr\BinaryOp\NotIdentical
-            || $node instanceof Node\Expr\BinaryOp\Greater
-            || $node instanceof Node\Expr\BinaryOp\GreaterOrEqual
-            || $node instanceof Node\Expr\BinaryOp\Smaller
-            || $node instanceof Node\Expr\BinaryOp\SmallerOrEqual
-        ) {
-            return new BooleanType;
-        }
-
-        if ($node instanceof Node\Expr\BooleanNot) {
-            return (new BooleanNotTypeGetter)($node);
-        }
-
-        if ($node instanceof Node\Expr\Variable && $node->name === 'this') {
-            return new SelfType($this->classDefinition()?->name ?: 'unknown');
-        }
-
-        if ($node instanceof Node\Expr\Variable) {
-            return $this->getVariableType($node) ?: new UnknownType;
-        }
-
-        $type = $this->nodeTypesResolver->getType($node);
-
-        if (! $type instanceof UnknownType) {
-            return $type;
-        }
-
-        if ($this->nodeTypesResolver->hasType($node)) { // For case when the unknown type was in node type resolver.
-            return $type;
-        }
-
-        if ($node instanceof Node\Expr\New_) {
-            if (! $node->class instanceof Node\Name) {
-                return $this->setType(
-                    $node,
-                    new NewCallReferenceType($this->getType($node->class), $this->getArgsTypes($node->args)),
-                );
-            }
-
-            return $this->setType(
-                $node,
-                new NewCallReferenceType($node->class->toString(), $this->getArgsTypes($node->args)),
-            );
-        }
-
-        if ($node instanceof Node\Expr\MethodCall) {
-            // Only string method names support.
-            if (! $node->name instanceof Node\Identifier) {
-                return $type;
-            }
-
-            $calleeType = $this->getType($node->var);
-
-            $event = $calleeType instanceof ObjectType
-                ? new MethodCallEvent($calleeType, $node->name->name, $this, $this->getArgsTypes($node->args), $calleeType->name)
-                : null;
-
-            $exceptions = $event ? app(ExtensionsBroker::class)->getMethodCallExceptions($event) : [];
-
-            $referenceType = new MethodCallReferenceType($calleeType, $node->name->name, $this->getArgsTypes($node->args));
-
-            /*
-             * When inside a constructor, we want to add a side effect to the constructor definition, so we can track
-             * how the properties are being set.
-             */
-            if ($this->functionDefinition()?->type->name === '__construct') {
-                $this->functionDefinition()->sideEffects[] = $referenceType;
-            }
-
-            if ($this->functionDefinition()) {
-                $this->functionDefinition()->type->exceptions = array_merge(
-                    $this->functionDefinition()->type->exceptions,
-                    $exceptions,
-                );
-            }
-
-            return $this->setType($node, $referenceType);
-        }
-
-        if ($node instanceof Node\Expr\StaticCall) {
-            // Only string method names support.
-            if (! $node->name instanceof Node\Identifier) {
-                return $type;
-            }
-
-            if (! $node->class instanceof Node\Name) {
-                return $this->setType(
-                    $node,
-                    new StaticMethodCallReferenceType($this->getType($node->class), $node->name->name, $this->getArgsTypes($node->args)),
-                );
-            }
-
-            if (
-                $this->functionDefinition()?->type->name === '__construct'
-                && $node->class->toString() === 'parent'
-                && $node->name->toString() === '__construct'
-            ) {
-                $this->functionDefinition()->sideEffects[] = new ParentConstructCall($this->getArgsTypes($node->args));
-            }
-
-            return $this->setType(
-                $node,
-                new StaticMethodCallReferenceType($node->class->toString(), $node->name->name, $this->getArgsTypes($node->args)),
-            );
-        }
-
-        if ($node instanceof Node\Expr\PropertyFetch) {
-            // Only string prop names support.
-            if (! $name = ($node->name->name ?? null)) {
-                return new UnknownType('Cannot infer type of property fetch: not supported yet.');
-            }
-
-            return $this->setType(
-                $node,
-                new PropertyFetchReferenceType($this->getType($node->var), $name),
-            );
-        }
-
-        if ($node instanceof Node\Expr\FuncCall) {
-            if ($node->name instanceof Node\Name) {
-                return $this->setType(
-                    $node,
-                    new CallableCallReferenceType(new CallableStringType($node->name->toString()), $this->getArgsTypes($node->args)),
-                );
-            }
-
-            return $this->setType(
-                $node,
-                new CallableCallReferenceType($this->getType($node->name), $this->getArgsTypes($node->args)),
-            );
-        }
-
-        return $type;
+        return (new ExpressionTypeInferrer($this, $this->nodeTypesResolver))->infer(
+            expr: $node,
+            variableTypeGetter: fn ($expr) => $this->getVariableType($expr),
+        );
     }
 
     // @todo: Move to some helper, Scope should be passed as a dependency.
+    /**
+     * @param  array<Node\Arg|Node\VariadicPlaceholder>  $args
+     * @return array<string, Type>
+     */
     public function getArgsTypes(array $args)
     {
         return collect($args)
@@ -254,17 +83,17 @@ class Scope
                     ])
                     ->all();
             })
-            ->toArray();
+            ->all();
     }
 
-    public function setType(Node $node, Type $type)
+    public function setType(Node $node, Type $type): Type
     {
         $this->nodeTypesResolver->setType($node, $type);
 
         return $type;
     }
 
-    public function createChildScope(?ScopeContext $context = null)
+    public function createChildScope(?ScopeContext $context = null): Scope
     {
         return new Scope(
             $this->index,
@@ -275,7 +104,8 @@ class Scope
         );
     }
 
-    public function getContextTemplates()
+    /** @return TemplateType[] */
+    public function getContextTemplates(): array
     {
         return [
             ...($this->classDefinition()?->templateTypes ?: []),
@@ -290,13 +120,14 @@ class Scope
             ->pluck('name')
             ->unique()
             ->values()
-            ->filter(fn ($n) => preg_match('/^'.$name.'(\d*)?$/m', $n) === 1)
+            ->filter(fn ($n) => preg_match('/^'.$name.'(\d*)?$/m', $n) === 1) // @phpstan-ignore argument.type
             ->all();
 
         return $name.($scopeDuplicateTemplates ? count($scopeDuplicateTemplates) : '');
     }
 
-    public function isInClass()
+    /** @phpstan-assert-if-true !null $this->classDefinition() */
+    public function isInClass(): bool
     {
         return (bool) $this->context->classDefinition;
     }
@@ -306,17 +137,18 @@ class Scope
         return $this->context->classDefinition;
     }
 
-    public function functionDefinition()
+    public function functionDefinition(): ?FunctionLikeDefinition
     {
         return $this->context->functionDefinition;
     }
 
-    public function isInFunction()
+    /** @phpstan-assert-if-true !null $this->functionDefinition() */
+    public function isInFunction(): bool
     {
         return (bool) $this->context->functionDefinition;
     }
 
-    public function addVariableType(int $line, string $name, Type $type)
+    public function addVariableType(int $line, string $name, Type $type): void
     {
         if (! isset($this->variables[$name])) {
             $this->variables[$name] = [];
@@ -325,12 +157,15 @@ class Scope
         $this->variables[$name][] = compact('line', 'type');
     }
 
-    private function getVariableType(Node\Expr\Variable $node)
+    private function getVariableType(Node\Expr\Variable $node): Type
     {
-        $name = (string) $node->name;
+        if (! is_string($node->name)) {
+            return new UnknownType('Cannot infer type of variable: non-string variable name not supported yet.');
+        }
+
         $line = $node->getAttribute('startLine', 0);
 
-        $definitions = $this->variables[$name] ?? [];
+        $definitions = $this->variables[$node->name] ?? [];
 
         $type = new UnknownType;
         foreach ($definitions as $definition) {
@@ -345,6 +180,8 @@ class Scope
 
     /**
      * @internal
+     *
+     * @return Node\Expr\CallLike[]
      */
     public function getMethodCalls(): array
     {

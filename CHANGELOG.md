@@ -404,13 +404,13 @@ lors du chargement de la page.
 - Merge branch 'release-2.1.6a'
 - Merge commit '2cfbdd9f35f82c1db36e8bf3189a6b813aebe655'
 - fix art #195184: si l'utilisatuer en cours n'est pas affecte a une unite, la restriction de visibilite ne s'applique pas, et ne genere pas d'erreur.
-- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast
+- Merge branch 'master' of ssh://forge.url/ffast/app_ffast
 - Si l'unité d'affectation de l'utilisateur n'est pas definie, on ne peut pas appliquer le scope de mise pour emploi.
 - Réintroduction filtres Fonction et Unite dans le Dashboard.
 - Mise en place du mode='parcomp' dans EtatCompUsers, notamment pour éviter les erreur javascript dans la divvalid.
 - Définition section styles dans le layout principal. Utilisation des directives blades @section en lieu et place des sections xml dans la vue du composant EtatCompUsers
-- Revert "Merge branch 'enregistrement_excel_fonctions_et_tableau_transf_comp' of ssh://forge.intradef.gouv.fr/ffast/app_ffast"
-- Merge branch 'enregistrement_excel_fonctions_et_tableau_transf_comp' of ssh://forge.intradef.gouv.fr/ffast/app_ffast
+- Revert "Merge branch 'enregistrement_excel_fonctions_et_tableau_transf_comp' of ssh://forge.url/ffast/app_ffast"
+- Merge branch 'enregistrement_excel_fonctions_et_tableau_transf_comp' of ssh://forge.url/ffast/app_ffast
 - fonctionnel
 - wip
 - modif mineur
@@ -505,7 +505,7 @@ lors du chargement de la page.
 
 ## 2.1.5 (October 10, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.4 –> 2.1.5
-- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast
+- Merge branch 'master' of ssh://forge.url/ffast/app_ffast
 - changement menu tansfo en deux parties : gestion et suivi
 - Implements art #177832 ajouts filtres dans statparservice.
 - changement libelles MPE-> Partage de dossier
@@ -525,7 +525,7 @@ lors du chargement de la page.
 - Ajustement des use et de l'url de gestion des groupements
 - Merge remote-tracking branch 'internet/release-2.1.4' into sandrine_courant
 - Ajustement du builder de la table des mises en visibilite pour ne pas voir apparaitre les utilisateurs soft deletes.
-- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast
+- Merge branch 'master' of ssh://forge.url/ffast/app_ffast
 - Modifications de Skeletor isolées
 - Merge remote-tracking branch 'origin/sandrine_courant' into sandrine_courant
 - Premiere implémentation du planning des mises pour emploi.
@@ -544,12 +544,12 @@ lors du chargement de la page.
 - Merge branch 'tuleap-162500-mpe-changement-d-unite' into sandrine_courant
 - suite des mises en visibilité create store edit update destroy
 - 1ere partie visu des mises en visibilité
-- Merge branch 'tuleap-162500-mpe-changement-d-unite' of ssh://forge.intradef.gouv.fr/ffast/app_ffast into tuleap-162500-mpe-changement-d-unite
+- Merge branch 'tuleap-162500-mpe-changement-d-unite' of ssh://forge.url/ffast/app_ffast into tuleap-162500-mpe-changement-d-unite
 - modification pour qu'un enreg soit créé dans table paramaccueil si elle est vide
 - WIP
 - WIP
 - Merge branch 'tuleap-162500-mpe-changement-d-unite' into sandrine_courant
-- Merge branch 'tuleap-162500-mpe-changement-d-unite' of ssh://forge.intradef.gouv.fr/ffast/app_ffast into tuleap-162500-mpe-changement-d-unite
+- Merge branch 'tuleap-162500-mpe-changement-d-unite' of ssh://forge.url/ffast/app_ffast into tuleap-162500-mpe-changement-d-unite
 - WIP
 - Premiere implementation: Création d'un middleware destine a limiter la visibilite des objets de type User. Inscription de ce middleware aux middleware persistents de Livewire. Rajout de ce middleware aux routes du module Transformation.
 - ajout d'indicateurs supplémentaires sur le dashboard et le dashboard archive
@@ -636,7 +636,7 @@ lors du chargement de la page.
 ## 2.1.1 (July 10, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 2.1.0 –> 2.1.1
 - Implements art # 117946 evolution affichage suivi par compagnonnage
-- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast into sandrine_courant
+- Merge branch 'master' of ssh://forge.url/ffast/app_ffast into sandrine_courant
 - Modifie la commande de backup quotidienne pour inclure les fichiers configures.
 - Restreint le backup aux livrets archivés.
 - Modifie la regle de nommage des backups pour inclure le prefixe et l'environnement de l'instance.
@@ -711,7 +711,7 @@ lors du chargement de la page.
 - Merge branch 'tuleap-62052'
 - ajout onglet liste des fonctions avec leurs comps et stages
 - Merge branch 'master' into tuleap-62052
-- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast
+- Merge branch 'master' of ssh://forge.url/ffast/app_ffast
 - inutile mais besoin pour pouvoir pulller master
 - modif seeders pour éviter les dates à null dans created et updated
 - retouche des affichages
@@ -729,7 +729,7 @@ lors du chargement de la page.
 - debug : le bouton ajouter et attribuer fonction dans le create user ne fonctionnait pas
 - Merge remote-tracking branch 'internet/master'
 - resolution du conflit de merge master
-- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast
+- Merge branch 'master' of ssh://forge.url/ffast/app_ffast
 - Modification des références aux routes pour utiliser le controlleur de la Transformation.
 - Création des methode et vue pour le suivi par compagnonnage dans la transformation.
 - Creation d'un test Dusk elementaire pour les pages de suivi de la transfo.
@@ -809,7 +809,7 @@ lors du chargement de la page.
 - suite ajout suivi transfo par compagnonnage
 - je refais
 - obligé pour tenter le merge master
-- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast
+- Merge branch 'master' of ssh://forge.url/ffast/app_ffast
 - ne me parait pas necessaire
 - ajout d'un tableau permettant d'afficher l'etat transfo pour tous les marins d'un compagonnage
 - changement affichage pour enlever fond gris
@@ -877,7 +877,7 @@ lors du chargement de la page.
 - Modification du bouton Signaler un problème pour activer le model de bugreport.
 - Convertion de la div de bugreport en model bootstrap standard.
 - 2eme essai : la proposition de validation d'une tache avec un ssobj deja valide remplissait la date proposition.
-- Merge branch 'tuleap-62052' of ssh://forge.intradef.gouv.fr/ffast/app_ffast into tuleap-62052
+- Merge branch 'tuleap-62052' of ssh://forge.url/ffast/app_ffast into tuleap-62052
 - correction bug : la proposition de validation d'une tache avec un ssobj deja valide remplissait la date proposition.
 - Ajustement de l'utilisateur créé pour être dans les conditions de succes du test.
 - Ajout filtre par secteur et colonne taux de transformation à la table des utilisateurs pour le parcours des fiches bilan.
@@ -899,7 +899,7 @@ lors du chargement de la page.
 - Implemente une aide Annudef dans la creation d'utilisateur.
 - Rajout des boutons vers les éléments individuels de suivi de la transfo au parcours des fiches bilan.
 - Rajoute d'un filtre par fonction à StattuteurTable
-- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast into tuleap-62052
+- Merge branch 'master' of ssh://forge.url/ffast/app_ffast into tuleap-62052
 - nouvelle table archive qui va remplacer la table statistique, modid des pgms pour prise en compte.
 - BUGFIX: la table des utilisateurs ne tenait pas compte des modification sur les fonctions à quai.
 - Passe la selection des destinataires en mode usertable dashboard.
@@ -913,9 +913,9 @@ lors du chargement de la page.
 ## 1.2.3 (avril 14, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.2.2 –> 1.2.3
 - Report le calcul des utilisateurs pertinents dans la methode mount de la SushiUserTable pour diminuer le nombre de requete lors des changements de filtre et d'ordre.
-- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast into tuleap-68233-convertir-les-tableaux-de-bilan-par-fonction-avec-sushi-pour-permettre-les-tris-et-autres-fonctions
-- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast into tuleap-62052
-- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast into tuleap-68233-convertir-les-tableaux-de-bilan-par-fonction-avec-sushi-pour-permettre-les-tris-et-autres-fonctions
+- Merge branch 'master' of ssh://forge.url/ffast/app_ffast into tuleap-68233-convertir-les-tableaux-de-bilan-par-fonction-avec-sushi-pour-permettre-les-tris-et-autres-fonctions
+- Merge branch 'master' of ssh://forge.url/ffast/app_ffast into tuleap-62052
+- Merge branch 'master' of ssh://forge.url/ffast/app_ffast into tuleap-68233-convertir-les-tableaux-de-bilan-par-fonction-avec-sushi-pour-permettre-les-tris-et-autres-fonctions
 - Cree le PrefixedLivewireServiceProvider. Retire livewire/livewire des package autoloades. Inscrit le nouveau ServiceProvider aux providers a charger par Laravel. Rajouter la prefixe de route au fichier de configuration de Livewire.
 - Simplification du SushiUser.
 - Modification pour gerer les cas de marins dont les informations ne sont pas toutes renseignees.
@@ -1050,7 +1050,7 @@ lors du chargement de la page.
 - Add link to dashboard page in the navbar.
 - Include asantibanez livewire-charts module. Create first dashboard setup.
 - Merge branch 'master' into tuleap-61329-gerer-la-suppression-archivage-des-users
-- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/app_ffast
+- Merge branch 'master' of ssh://forge.url/ffast/app_ffast
 - modification page accueil du profil bord
 - prise en compte des noms avec apostrophe dans stat etat major+ correction pour afficher les taux de transfo par fonction
 - verification de la longueur du champ libelle court et libelle long
@@ -1185,8 +1185,8 @@ lors du chargement de la page.
 - Adds APP_VERSION to slug files, and adjust bump_app_prefix script to update the value in generated env files.
 - ajout bouton ? pour lien vers la doc
 - maj doc admin/archivage ajout bouton telecharg livret
-- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/ffast into tuleap-40560-suppression-d-un-user
-- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/ffast into tuleap-53243-revoir-toutes-les-stats
+- Merge branch 'master' of ssh://forge.url/ffast/ffast into tuleap-40560-suppression-d-un-user
+- Merge branch 'master' of ssh://forge.url/ffast/ffast into tuleap-53243-revoir-toutes-les-stats
 - Redefinit les routes de redirection du module lab404/impersonate afin que l'utilisateur ne soit pas renvoye hors de l'instance lorsqu'il utilise ces fonctions.
 - correction ortho
 - Merge branch 'master' into tuleap-53243-revoir-toutes-les-stats
@@ -1202,7 +1202,7 @@ lors du chargement de la page.
 ## 1.0.7 (janvier 23, 2023)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 1.0.6 –> 1.0.7
 - Retrait de la commande RecalculTxTransfo superflue car en doublon de la commande RecalculerTransformation.
-- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/ffast into tuleap-53243-revoir-toutes-les-stats
+- Merge branch 'master' of ssh://forge.url/ffast/ffast into tuleap-53243-revoir-toutes-les-stats
 - Modification de la commande de recalcul des taux de transformation et des durees de validation pour ne pas recalculer les elements des utilisateurs archives. Sinon, on risque de fausser les statistiques en cas de modification, dans l'intervalle, du parcour de transformation.
 - Creation du champs nb_jours_pour_validation dans la table user_fonction. Ajout du calcul du nb de jours jusqu'au lache dans la table user_fonction.
 - correction suite demande 55326 : le nb marin à valider etait faux
@@ -1222,7 +1222,7 @@ lors du chargement de la page.
 - Correct bump_app_prefix script: must generate usable .env files and not update .slugs
 - Move the prefix issue up by moving .env files to slugs for each environment. Theses slugs are personalized when the instance is created.
 - Merge branch 'master' into tuleap-53243-revoir-toutes-les-stats
-- Add metabase container to the stack. Add /metabase location to nginx.conf. Metabase user data-analyst@ffast.intradef.gouv.fr / ffast83
+- Add metabase container to the stack. Add /metabase location to nginx.conf. Metabase user data-analyst@app.url.tld / ffast83
 - corrections orthographiques
 - Create new command to suppress duplicate entries in user_sous_objectif table.
 - remplacement de substr par round pour les tx de transfo
@@ -1243,7 +1243,7 @@ lors du chargement de la page.
 - Correct dusk tests to create an admin user for the duration of the tests.
 - Correct bump_app_prefix script: must generate usable .env files and not update .slugs
 - Move the prefix issue up by moving .env files to slugs for each environment. Theses slugs are personalized when the instance is created.
-- Add metabase container to the stack. Add /metabase location to nginx.conf. Metabase user data-analyst@ffast.intradef.gouv.fr / ffast83
+- Add metabase container to the stack. Add /metabase location to nginx.conf. Metabase user data-analyst@app.url.tld / ffast83
 - Create new command to suppress duplicate entries in user_sous_objectif table.
 - Update compose autoload
 - Merge branch 'master' into tuleap-53243-revoir-toutes-les-stats
@@ -1273,7 +1273,7 @@ lors du chargement de la page.
 - The WebRoutesTest is modified to un cache the routes after the route caching test because it appears that route caching does not take the APP_PREFIX into account as it should, resulting in broken routes.
 - Adjust image path in generalite doc page to reflect file structure
 - Moved doc imaged for generalites in the appropriate folder.
-- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/ffast into tuleap-53184-declaration-de-routes-en-double
+- Merge branch 'master' of ssh://forge.url/ffast/ffast into tuleap-53184-declaration-de-routes-en-double
 - Add assertion to WebRoutesTest
 - update composer autoload
 - Implement tests, factory, correct bugs in LienController
@@ -1305,7 +1305,7 @@ lors du chargement de la page.
 - Make sure tests/Unit directory exists.
 - Correct .env files
 - Corrected details for testing integration
-- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/ffast into create_first_tests
+- Merge branch 'master' of ssh://forge.url/ffast/ffast into create_first_tests
 - Continue test implementation.
 - Adjust testing configuration for Dusk.
 - Correct APP_URL (remove final slash)
@@ -1326,7 +1326,7 @@ lors du chargement de la page.
 - Started creating documentation page. Created a DOC_VERSION env variable so that we point to the appropriate version of the doc.
 - Correct larecipe template to use instance urls
 - Introduce blade component to redirect user towards the documentation. Make the pages layout so that the documentation reference is defined in each blade view.
-- Merge branch 'master' of ssh://forge.intradef.gouv.fr/ffast/ffast into tuleap-52400-integrer-un-systeme-de-documentation
+- Merge branch 'master' of ssh://forge.url/ffast/ffast into tuleap-52400-integrer-un-systeme-de-documentation
 - Added question mark to navbar
 - composer dump-autoload
 - Fixed.

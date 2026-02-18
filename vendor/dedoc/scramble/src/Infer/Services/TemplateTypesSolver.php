@@ -2,17 +2,25 @@
 
 namespace Dedoc\Scramble\Infer\Services;
 
+use Dedoc\Scramble\Infer\Contracts\ArgumentTypeBag;
 use Dedoc\Scramble\Infer\Definition\ClassDefinition;
+use Dedoc\Scramble\Infer\Definition\ClassPropertyDefinition;
 use Dedoc\Scramble\Infer\Definition\FunctionLikeDefinition;
+use Dedoc\Scramble\Support\Type\ArrayType;
+use Dedoc\Scramble\Support\Type\FunctionType;
 use Dedoc\Scramble\Support\Type\Generic;
+use Dedoc\Scramble\Support\Type\MissingType;
 use Dedoc\Scramble\Support\Type\ObjectType;
+use Dedoc\Scramble\Support\Type\RecursiveTemplateSolver;
 use Dedoc\Scramble\Support\Type\TemplateType;
 use Dedoc\Scramble\Support\Type\Type;
+use Dedoc\Scramble\Support\Type\TypeWalker;
 use Dedoc\Scramble\Support\Type\UnknownType;
 
 class TemplateTypesSolver
 {
-    public function getClassContextTemplates(ObjectType $type, ClassDefinition $classDefinition)
+    /** @return array<string, Type> */
+    public function getClassContextTemplates(ObjectType $type, ClassDefinition $classDefinition): array
     {
         if (! $type instanceof Generic) {
             return [];
@@ -20,86 +28,159 @@ class TemplateTypesSolver
 
         return collect($classDefinition->templateTypes)->mapWithKeys(fn ($t, $index) => [
             $t->name => $type->templateTypes[$index] ?? new UnknownType,
-        ])->toArray();
+        ])->all();
     }
 
-    public function getFunctionContextTemplates(FunctionLikeDefinition $functionLikeDefinition, array $arguments)
+    public function getFunctionContextTemplates(FunctionLikeDefinition $functionLikeDefinition, ArgumentTypeBag $arguments): TemplatesMap
     {
-        return collect($this->resolveTypesTemplatesFromArguments(
-            $functionLikeDefinition->type->templates,
-            $functionLikeDefinition->type->arguments,
-            $this->prepareArguments($functionLikeDefinition, $arguments),
-        ))->mapWithKeys(fn ($searchReplace) => [$searchReplace[0]->name => $searchReplace[1]])->toArray();
+        return new TemplatesMap(
+            templates: $functionLikeDefinition->type->templates,
+            parameters: $functionLikeDefinition->type->arguments,
+            arguments: $arguments,
+            defaults: $functionLikeDefinition->argumentsDefaults,
+        );
+    }
+
+    public function getClassConstructorContextTemplates(ClassDefinition $classDefinition, ?FunctionLikeDefinition $functionLikeDefinition, ArgumentTypeBag $arguments): TemplatesMap
+    {
+        return new TemplatesMap(
+            templates: ($functionLikeDefinition->type->templates ?? []) + $classDefinition->templateTypes,
+            parameters: $functionLikeDefinition->type->arguments ?? [],
+            arguments: $arguments,
+            defaults: $functionLikeDefinition->argumentsDefaults ?? [],
+        );
     }
 
     /**
-     * Prepares the actual arguments list with which a function is going to be executed, taking into consideration
-     * arguments defaults.
-     *
-     * @param  array  $realArguments  The list of arguments a function has been called with.
-     * @return array The actual list of arguments where not passed arguments replaced with default values.
+     * @param  TemplateType[]  $templateTypes
+     * @return Type[]
      */
-    private function prepareArguments(?FunctionLikeDefinition $callee, array $realArguments)
+    public function getGenericCreationTemplatesWithDefaults(array $templateTypes, TemplatesMap $templatesMap): array
     {
-        if (! $callee) {
-            return $realArguments;
+        $mappedTypes = collect($templateTypes)
+            ->map(function (TemplateType $t) use ($templatesMap) {
+                $type = $templatesMap->get($t->name, new MissingType);
+
+                if ($type instanceof MissingType) {
+                    return $t->default ? $type : new UnknownType;
+                }
+
+                return $type;
+            })
+            ->all();
+
+        $nonMissingTypeSeen = false;
+        foreach (array_reverse($mappedTypes, preserve_keys: true) as $key => $type) {
+            if (! $type instanceof MissingType) {
+                $nonMissingTypeSeen = true;
+            }
+
+            if ($nonMissingTypeSeen && $type instanceof MissingType) {
+                $mappedTypes[$key] = ($templateTypes[$key]->default ?? new UnknownType('Should have template default here but doesnt have for some reason'));
+
+                continue;
+            }
+
+            if ($type instanceof MissingType) {
+                unset($mappedTypes[$key]);
+            }
         }
 
-        return collect($callee->type->arguments)
-            ->keys()
-            ->map(function (string $name, int $index) use ($callee, $realArguments) {
-                return $realArguments[$name] ?? $realArguments[$index] ?? $callee->argumentsDefaults[$name] ?? null;
-            })
-            ->filter()
-            ->values()
-            ->toArray();
+        return $mappedTypes;
     }
 
-    private function resolveTypesTemplatesFromArguments($templates, $templatedArguments, $realArguments)
+    /**
+     * @param  TemplateType[]  $classTemplateTypes
+     * @param  ClassPropertyDefinition[]  $properties
+     * @return array<string, Type> The key is template name and the value is the inferred type.
+     */
+    public function inferTemplatesFromPropertyDefaults(array $classTemplateTypes, array $properties): array
     {
-        return array_values(array_filter(array_map(function (TemplateType $template) use ($templatedArguments, $realArguments) {
-            $argumentIndexName = null;
-            $index = 0;
-            foreach ($templatedArguments as $name => $type) {
-                if ($type === $template) {
-                    $argumentIndexName = [$index, $name];
+        $inferredTemplates = [];
+
+        foreach ($classTemplateTypes as $template) {
+            foreach ($properties as $property) {
+                if (! $property->defaultType) {
+                    continue;
+                }
+
+                if ($inferredType = $this->inferTemplate($template, $property->type, $property->defaultType)) {
+                    $inferredTemplates[$template->name] = $inferredType;
+
                     break;
                 }
-                $index++;
-            }
-            if (! $argumentIndexName) {
-                return null;
             }
 
-            $foundCorrespondingTemplateType = $realArguments[$argumentIndexName[1]]
-                ?? $realArguments[$argumentIndexName[0]]
-                ?? null;
+        }
 
-            if (! $foundCorrespondingTemplateType) {
-                $foundCorrespondingTemplateType = new UnknownType;
-                // throw new \LogicException("Cannot infer type of template $template->name from arguments.");
-            }
+        return $inferredTemplates;
+    }
 
-            return [
-                $template,
-                $foundCorrespondingTemplateType,
-            ];
-        }, $templates)));
+    private function inferTemplate(TemplateType $template, Type $typeWithTemplate, Type $type): ?Type
+    {
+        return (new RecursiveTemplateSolver)->solve($typeWithTemplate, $type, $template);
     }
 
     /**
-     * For a given generic type, defined a template type by the template type name.
+     * @param  array<string, Type>  $templates
      */
-    public function defineTemplateTypes(?ClassDefinition $classDefinition, Generic $type, string $definedTemplate, Type $definedType)
-    {
-        $templateNameToIndexMap = array_flip(array_map(fn ($t) => $t->name, $classDefinition->templateTypes ?? []));
-
-        if (! isset($templateNameToIndexMap[$definedTemplate])) {
-            throw new \LogicException('Should not happen');
+    public function addContextTypesToTypelessParametersOfCallableArgument(
+        Type $argument,
+        string|int $nameOrPosition,
+        FunctionLikeDefinition $definition,
+        array $templates,
+    ): Type {
+        if (! $argument instanceof FunctionType) {
+            return $argument;
         }
 
-        $templateIndex = $templateNameToIndexMap[$definedTemplate];
+        $correspondingParameterType = is_string($nameOrPosition)
+            ? ($definition->type->arguments[$nameOrPosition] ?? null)
+            : (array_values($definition->type->arguments)[$nameOrPosition] ?? null);
 
-        $type->templateTypes[$templateIndex] = $definedType;
+        // @todo: this will not work when parameter annotated as union
+        if (! $correspondingParameterType instanceof FunctionType) {
+            return $argument;
+        }
+
+        $argument = $argument->clone();
+        $replacedTemplates = [];
+
+        $i = -1;
+        foreach ($argument->arguments as $name => $arg) {
+            $i++;
+
+            if (! $arg instanceof TemplateType || $arg->is instanceof ObjectType) {
+                continue;
+            }
+
+            $argShouldBeReplaced = ! $arg->is || $arg->is instanceof ArrayType;
+
+            $param = $argShouldBeReplaced
+                ? $correspondingParameterType->arguments[$i] ?? null
+                : $arg->is;
+
+            if (! $param) {
+                continue;
+            }
+
+            $replacedTemplates[$arg->name] = $param;
+            $argument->arguments[$name] = $param;
+        }
+
+        $argument->templates = array_filter(
+            $argument->templates,
+            fn (TemplateType $tt) => ! array_key_exists($tt->name, $replacedTemplates),
+        );
+
+        $argument = (new TypeWalker)->map(
+            $argument,
+            fn ($t) => $t instanceof TemplateType ? $replacedTemplates[$t->name] ?? $t : $t,
+        );
+
+        return (new TypeWalker)->map(
+            $argument,
+            fn ($t) => $t instanceof TemplateType ? $templates[$t->name] ?? $t : $t,
+        );
     }
 }

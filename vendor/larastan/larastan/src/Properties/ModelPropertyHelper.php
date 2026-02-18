@@ -36,6 +36,7 @@ class ModelPropertyHelper
         private MigrationHelper $migrationHelper,
         private SquashedMigrationHelper $squashedMigrationHelper,
         private ModelCastHelper $modelCastHelper,
+        private MigrationCache $migrationCache,
     ) {
     }
 
@@ -192,18 +193,22 @@ class ModelPropertyHelper
 
     public function getAccessor(ClassReflection $classReflection, string $propertyName): ModelProperty
     {
-        $studlyName = Str::studly($propertyName);
+        $camelCase = Str::camel($propertyName);
 
-        if ($classReflection->hasNativeMethod($studlyName)) {
-            $methodReflection = $classReflection->getNativeMethod($studlyName);
+        if ($classReflection->hasNativeMethod($camelCase)) {
+            $methodReflection = $classReflection->getNativeMethod($camelCase);
 
-            $returnType = $methodReflection->getVariants()[0]->getReturnType();
+            if (! $methodReflection->isPublic() && ! $methodReflection->isPrivate()) {
+                $returnType = $methodReflection->getVariants()[0]->getReturnType();
 
-            return new ModelProperty(
-                $classReflection,
-                $returnType->getTemplateType(Attribute::class, 'TGet'),
-                $returnType->getTemplateType(Attribute::class, 'TSet'),
-            );
+                if ((new ObjectType(Attribute::class))->isSuperTypeOf($returnType)->yes()) {
+                    return new ModelProperty(
+                        $classReflection,
+                        $returnType->getTemplateType(Attribute::class, 'TGet'),
+                        $returnType->getTemplateType(Attribute::class, 'TSet'),
+                    );
+                }
+            }
         }
 
         $method = $classReflection->getNativeMethod('get' . Str::studly($propertyName) . 'Attribute');
@@ -222,11 +227,20 @@ class ModelPropertyHelper
 
     private function loadMigrations(): void
     {
-        // First try to create tables from squashed migrations, if there are any
-        // Then scan the normal migration files for further changes to tables.
-        $tables = $this->squashedMigrationHelper->initializeTables();
+        $migrationFiles = $this->migrationHelper->getMigrationFiles();
+        $schemaFiles    = $this->squashedMigrationHelper->getSchemaFiles();
 
-        $this->tables = $this->migrationHelper->initializeTables($tables);
+        $this->tables = $this->migrationCache->remember(
+            $migrationFiles,
+            $schemaFiles,
+            function () {
+                // First try to create tables from squashed migrations, if there are any
+                // Then scan the normal migration files for further changes to tables.
+                $tables = $this->squashedMigrationHelper->initializeTables();
+
+                return $this->migrationHelper->initializeTables($tables);
+            },
+        );
     }
 
     private function hasDate(Model $modelInstance, string $propertyName): bool

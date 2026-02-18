@@ -2,6 +2,7 @@
 
 namespace App\Filament\PanelRegistry;
 
+use InvalidArgumentException;
 use Illuminate\Support\Arr;
 
 class ModuleDefinedMenusRegistry
@@ -18,7 +19,7 @@ class ModuleDefinedMenusRegistry
         $menuItem = Arr::wrap($menuItem);
         foreach($menuItem as $item) {
             if (!($item instanceof DirectMenuItem)) {
-                throw new \InvalidArgumentException('Direct menu item must be an instance of DirectMenuItem');
+                throw new InvalidArgumentException('Direct menu item must be an instance of DirectMenuItem');
             }
             $this->directmenuitems[] = $item;
         }

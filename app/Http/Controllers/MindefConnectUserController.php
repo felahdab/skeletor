@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Response;
 use App\Http\Requests\StoreMindefConnectUserRequest;
 use App\Http\Requests\UpdateMindefConnectUserRequest;
 use App\Models\MindefConnectUser;
@@ -21,7 +22,7 @@ class MindefConnectUserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -34,10 +35,9 @@ class MindefConnectUserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreMindefConnectUserRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreMindefConnectUserRequest $request
+     * @return Response
      */
-     
     function generateRandomString($length = 10) {
        return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
     }
@@ -70,8 +70,8 @@ class MindefConnectUserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\MindefConnectUser  $mindefConnectUser
-     * @return \Illuminate\Http\Response
+     * @param MindefConnectUser $mindefConnectUser
+     * @return Response
      */
     public function edit(MindefConnectUser $User)
     {
@@ -96,8 +96,8 @@ class MindefConnectUserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\MindefConnectUser  $mindefConnectUser
-     * @return \Illuminate\Http\Response
+     * @param MindefConnectUser $mindefConnectUser
+     * @return Response
      */
     public function destroy(MindefConnectUser $user)
     {

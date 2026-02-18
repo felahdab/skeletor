@@ -25,7 +25,7 @@ interface Type
      */
     public function mergeAttributes(array $attributes): static;
 
-    public function isInstanceOf(string $className);
+    public function isInstanceOf(string $className): bool;
 
     public function accepts(Type $otherType): bool;
 
@@ -38,7 +38,16 @@ interface Type
 
     public function getPropertyType(string $propertyName, Scope $scope): Type;
 
+    public function getOffsetValueType(Type $offset): Type;
+
     public function getMethodDefinition(string $methodName, Scope $scope = new GlobalScope): ?FunctionLikeDefinition;
+
+    /** @return $this */
+    public function setOriginal(?Type $original): self;
+
+    public function getOriginal(): ?Type;
+
+    public function widen(): Type;
 
     /**
      * @return bool
@@ -46,4 +55,6 @@ interface Type
     public function isSame(self $type);
 
     public function toString(): string;
+
+    public function clone(): static;
 }

@@ -12,6 +12,7 @@ use PhpParser\NodeFinder;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use ReflectionProperty;
+use RuntimeException;
 
 class PropertyReflector
 {
@@ -58,13 +59,21 @@ class PropertyReflector
 
     private function getPropertyNodeDeclarationSource(): string
     {
-        $code = "<?php\n".$this->getClassReflector()->getSource();
+        try {
+            $classSource = $this->getClassReflector()->getSource();
+        } catch (RuntimeException) {
+            return '';
+        }
+
+        $code = "<?php\n".$classSource;
 
         $tokens = token_get_all($code);
         $inClass = false;
         $braceLevel = 0;
         $collect = false;
         $inFunctionDecl = false;
+        $inAttribute = false;
+        $attributeBracketDepth = 0;
         $inParamList = false;
         $paramParenDepth = 0;
         $result = '';
@@ -80,6 +89,24 @@ class PropertyReflector
             // track entering the class declaration
             if ($id === T_CLASS) {
                 $inClass = true;
+            }
+
+            // detect start of attribute
+            if ($id === T_ATTRIBUTE) {
+                $inAttribute = true;
+                $attributeBracketDepth = 0;
+            }
+
+            // track attribute [...] brackets
+            if ($inAttribute) {
+                if ($text === '#[' || $text === '[') {
+                    $attributeBracketDepth++;
+                } elseif ($text === ']') {
+                    $attributeBracketDepth--;
+                    if ($attributeBracketDepth === 0) {
+                        $inAttribute = false;
+                    }
+                }
             }
 
             // track braces to know when we enter/leave class or method bodies
@@ -103,9 +130,9 @@ class PropertyReflector
             if ($inFunctionDecl && $text === '(') {
                 $inParamList = true;
                 $paramParenDepth = 1;
-            } elseif ($inParamList && $text === '(') {
+            } elseif ($inParamList && ! $inAttribute && $text === '(') {
                 $paramParenDepth++;
-            } elseif ($inParamList && $text === ')') {
+            } elseif ($inParamList && ! $inAttribute && $text === ')') {
                 $paramParenDepth--;
                 if ($paramParenDepth === 0) {
                     // end of parameter list

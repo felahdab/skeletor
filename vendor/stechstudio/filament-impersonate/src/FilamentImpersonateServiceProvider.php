@@ -2,16 +2,19 @@
 
 namespace STS\FilamentImpersonate;
 
+use BladeUI\Icons\Factory;
 use Filament\Facades\Filament;
+use Filament\Support\Facades\FilamentView;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
-use Lab404\Impersonate\Events\LeaveImpersonation;
-use Lab404\Impersonate\Events\TakeImpersonation;
 use Spatie\LaravelPackageTools\Package;
-use Filament\Support\Facades\FilamentView;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use STS\FilamentImpersonate\Tables\Actions\Impersonate;
-use BladeUI\Icons\Factory;
+use STS\FilamentImpersonate\Facades\Impersonation;
+use STS\FilamentImpersonate\Events\EnterImpersonation;
+use STS\FilamentImpersonate\Events\LeaveImpersonation;
+use STS\FilamentImpersonate\ImpersonateManager;
 
 class FilamentImpersonateServiceProvider extends PackageServiceProvider
 {
@@ -29,8 +32,13 @@ class FilamentImpersonateServiceProvider extends PackageServiceProvider
 
     public function registeringPackage(): void
     {
-        Event::listen(TakeImpersonation::class, fn () => $this->clearAuthHashes());
+        $this->app->scoped(ImpersonateManager::class);
+        $this->app->alias(ImpersonateManager::class, 'impersonate');
+
+        Event::listen(EnterImpersonation::class, fn () => $this->clearAuthHashes());
         Event::listen(LeaveImpersonation::class, fn () => $this->clearAuthHashes());
+        Event::listen(Login::class, fn () => Impersonation::clear());
+        Event::listen(Logout::class, fn () => Impersonation::clear());
 
         $this->registerIcon();
     }
@@ -39,29 +47,29 @@ class FilamentImpersonateServiceProvider extends PackageServiceProvider
     {
         FilamentView::registerRenderHook(
             config('filament-impersonate.banner.render_hook', 'panels::body.start'),
-            static fn (): string => Blade::render("<x-filament-impersonate::banner/>")
+            static fn (): string => Blade::render('<x-filament-impersonate::banner/>')
         );
 
-        // For backwards compatibility we're going to load our views into the namespace we used to use as well.
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'impersonate');
-
-        // Alias our table action for backwards compatibility.
-        // STS\FilamentImpersonate\Impersonate is where that class used to exist, and I don't
-        // want a breaking release yet.
-        if (!class_exists(\STS\FilamentImpersonate\Impersonate::class)) {
-            class_alias(Impersonate::class, \STS\FilamentImpersonate\Impersonate::class);
-        }
     }
 
     protected function clearAuthHashes(): void
     {
-        session()->forget(array_unique([
-            'password_hash_' . session('impersonate.guard'),
-            'password_hash_' . Filament::getCurrentPanel()->getAuthGuard(),
-            'password_hash_' . Filament::getPanel(session()->get('impersonate.back_to_panel'))->getAuthGuard(),
-            'password_hash_' . auth()->getDefaultDriver(),
-            'password_hash_sanctum'
-        ]));
+        $guards = collect([
+            'sanctum',
+            auth()->getDefaultDriver(),
+            session('impersonate.guard'),
+        ]);
+
+        try {
+            $guards->push(Filament::getCurrentOrDefaultPanel()?->getAuthGuard());
+        } catch (\Throwable) {
+            //
+        }
+
+        session()->forget(
+            $guards->filter()->unique()->map(fn (string $guard) => "password_hash_{$guard}")->all()
+        );
     }
 
     protected function registerIcon(): void

@@ -1,9 +1,24 @@
 @props(['style', 'display', 'fixed', 'position'])
 
-@if(app('impersonate')->isImpersonating())
+@php
+use STS\FilamentImpersonate\Facades\Impersonation;
+
+$impersonatorGuard = Impersonation::getImpersonatorGuardUsingName();
+$currentPanelGuard = Filament\Facades\Filament::getAuthGuard();
+$shouldShowBanner = Impersonation::isImpersonating()
+    && $currentPanelGuard
+    && $impersonatorGuard === $currentPanelGuard;
+@endphp
+
+@if($shouldShowBanner)
 
 @php
-$display = $display ?? Filament\Facades\Filament::getUserName(Filament\Facades\Filament::auth()->user());
+$user = Filament\Facades\Filament::auth()->user();
+if (blank($user)) {
+    $display = "(No user found)";
+}
+
+$display = $display ?? Filament\Facades\Filament::getUserName($user);
 $fixed = $fixed ?? config('filament-impersonate.banner.fixed');
 $position = $position ?? config('filament-impersonate.banner.position');
 $borderPosition = $position === 'top' ? 'bottom' : 'top';
@@ -11,7 +26,6 @@ $borderPosition = $position === 'top' ? 'bottom' : 'top';
 $style = $style ?? config('filament-impersonate.banner.style');
 $styles = config('filament-impersonate.banner.styles');
 $default = $style === 'auto' ? 'light' : $style;
-$flipped = $default === 'dark' ? 'light' : 'dark';
 @endphp
 
 <style>
@@ -34,7 +48,6 @@ $flipped = $default === 'dark' ? 'light' : 'dark';
         margin-{{ $position }}: var(--impersonate-banner-height);
     }
 
-
     #impersonate-banner {
         position: {{ $fixed ? 'fixed' : 'absolute' }};
         height: var(--impersonate-banner-height);
@@ -51,11 +64,11 @@ $flipped = $default === 'dark' ? 'light' : 'dark';
     }
 
     @if($style === 'auto')
-    .dark #impersonate-banner {
-        background-color: var(--impersonate-dark-bg-color);
-        color: var(--impersonate-dark-text-color);
-        border-{{ $borderPosition }}: 1px solid var(--impersonate-dark-border-color);
-    }
+        .dark #impersonate-banner {
+            background-color: var(--impersonate-dark-bg-color);
+            color: var(--impersonate-dark-text-color);
+            border-{{ $borderPosition }}: 1px solid var(--impersonate-dark-border-color);
+        }
     @endif
 
     #impersonate-banner a {
@@ -67,10 +80,10 @@ $flipped = $default === 'dark' ? 'light' : 'dark';
     }
 
     @if($style === 'auto')
-    .dark #impersonate-banner a {
-        background-color: rgba(var(--impersonate-dark-button-bg-color), 0.7);
-        color: var(--impersonate-dark-button-text-color);
-    }
+        .dark #impersonate-banner a {
+            background-color: rgba(var(--impersonate-dark-button-bg-color), 0.7);
+            color: var(--impersonate-dark-button-text-color);
+        }
     @endif
 
     #impersonate-banner a:hover {
@@ -78,29 +91,32 @@ $flipped = $default === 'dark' ? 'light' : 'dark';
     }
 
     @if($style === 'auto')
-    .dark #impersonate-banner a:hover {
-        background-color: rgb(var(--impersonate-dark-button-bg-color));
-    }
+        .dark #impersonate-banner a:hover {
+            background-color: rgb(var(--impersonate-dark-button-bg-color));
+        }
     @endif
 
     @if($fixed)
-    div.fi-layout > aside.fi-sidebar {
-        height: calc(100vh - var(--impersonate-banner-height));
-    }
+        div.fi-layout > aside.fi-sidebar {
+            height: calc(100vh - var(--impersonate-banner-height));
+        }
 
-    @if($position === 'top')
-    .fi-topbar {
-        top: var(--impersonate-banner-height);
-    }
-    div.fi-layout > aside.fi-sidebar {
-        top: var(--impersonate-banner-height);
-    }
-    @endif
+        @if($position === 'top')
+            .fi-topbar-ctn {
+                top: var(--impersonate-banner-height);
+            }
+            .fi-modal.fi-modal-slide-over > .fi-modal-window-ctn > .fi-modal-window {
+                padding-top: var(--impersonate-banner-height);
+            }
+        @else
+            .fi-page-main {
+                padding-bottom: var(--impersonate-banner-height);
+            }
+            .fi-modal.fi-modal-slide-over > .fi-modal-window-ctn > .fi-modal-window {
+                padding-bottom: var(--impersonate-banner-height);
+            }
+        @endif
 
-    @else
-    div.fi-layout > aside.fi-sidebar {
-        padding-bottom: var(--impersonate-banner-height);
-    }
     @endif
 
     @media print{
@@ -121,4 +137,4 @@ $flipped = $default === 'dark' ? 'light' : 'dark';
 
     <a href="{{ route('filament-impersonate.leave') }}">{{ __('filament-impersonate::banner.leave') }}</a>
 </div>
-@endIf
+@endif

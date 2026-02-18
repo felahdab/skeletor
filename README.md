@@ -50,6 +50,9 @@ composer dump-autoload
 ./artisan migrate --seed
 # lier le dossier public et storage pour donner accès aux assets à nginx
 ./artisan storage:link
+# Et enfin, redémarrer la stack
+exit
+docker compose restart
 ```
 
 4. Rendez-vous à l'adresse `http://localhost/apps`, vous devriez voir la page login de Skeletor

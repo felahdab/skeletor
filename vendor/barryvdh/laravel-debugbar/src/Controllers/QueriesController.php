@@ -1,8 +1,10 @@
 <?php
 
-namespace Barryvdh\Debugbar\Controllers;
+declare(strict_types=1);
 
-use Barryvdh\Debugbar\Support\Explain;
+namespace Fruitcake\LaravelDebugbar\Controllers;
+
+use Fruitcake\LaravelDebugbar\Support\Explain;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -11,7 +13,7 @@ class QueriesController extends BaseController
     /**
      * Generate explain data for query.
      */
-    public function explain(Request $request)
+    public function explain(Request $request): \Illuminate\Http\JsonResponse
     {
         if (!config('debugbar.options.db.explain.enabled', false)) {
             return response()->json([

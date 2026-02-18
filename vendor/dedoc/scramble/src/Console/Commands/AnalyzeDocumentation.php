@@ -75,7 +75,7 @@ class AnalyzeDocumentation extends Command
             return '';
         }
 
-        $method = $route->methods()[0];
+        $method = implode('|', $route->methods());
         $action = $route->getAction('uses');
 
         return "$method.$action";
@@ -89,7 +89,7 @@ class AnalyzeDocumentation extends Command
         $firstException = $exceptions->first();
         $route = $firstException->getRoute();
 
-        $method = $route->methods()[0];
+        $method = implode('|', $route->methods());
         $errorsMessage = ($count = $exceptions->count()).' '.Str::plural('error', $count);
 
         $tocComponent = new TermsOfContentItem(
@@ -128,9 +128,9 @@ class AnalyzeDocumentation extends Command
         return "<fg=gray>{$eloquentClassName}@{$method}</>";
     }
 
-    private function renderException($exception, int $i): void
+    private function renderException(Throwable $exception, int $i): void
     {
-        $message = Str::replace('Dedoc\Scramble\Support\Generator\Types\\', '', property_exists($exception, 'originalMessage') ? $exception->originalMessage : $exception->getMessage());
+        $message = Str::replace('Dedoc\Scramble\Support\Generator\Types\\', '', property_exists($exception, 'originalMessage') ? $exception->originalMessage : $exception->getMessage()); // @phpstan-ignore argument.templateType
 
         $this->output->writeln("<options=bold>$i. {$message}</>");
 

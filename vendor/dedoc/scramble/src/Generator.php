@@ -2,6 +2,7 @@
 
 namespace Dedoc\Scramble;
 
+use Closure;
 use Dedoc\Scramble\Attributes\ExcludeAllRoutesFromDocs;
 use Dedoc\Scramble\Attributes\ExcludeRouteFromDocs;
 use Dedoc\Scramble\Contracts\DocumentTransformer;
@@ -16,11 +17,13 @@ use Dedoc\Scramble\Support\Generator\Path;
 use Dedoc\Scramble\Support\Generator\Reference;
 use Dedoc\Scramble\Support\Generator\Server;
 use Dedoc\Scramble\Support\Generator\TypeTransformer;
+use Dedoc\Scramble\Support\Generator\UniqueNameOptions;
 use Dedoc\Scramble\Support\Generator\UniqueNamesOptionsCollection;
 use Dedoc\Scramble\Support\OperationBuilder;
 use Dedoc\Scramble\Support\RouteInfo;
 use Dedoc\Scramble\Support\ServerFactory;
 use Illuminate\Routing\Route;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route as RouteFacade;
 use Illuminate\Support\Str;
@@ -37,7 +40,6 @@ class Generator
 
     public function __construct(
         private OperationBuilder $operationBuilder,
-        private Infer $infer
     ) {}
 
     public function setThrowExceptions(bool $throwExceptions): static
@@ -56,20 +58,30 @@ class Generator
         $typeTransformer = $this->buildTypeTransformer($context);
 
         $this->getRoutes($config)
-            ->map(function (Route $route, int $index) use ($openApi, $config, $typeTransformer) {
+            ->flatMap(function (Route $route, int $index) use ($openApi, $config, $typeTransformer) {
                 try {
-                    $operation = $this->routeToOperation($openApi, $route, $config, $typeTransformer);
-                    $operation->setAttribute('index', $index);
+                    $operations = $this->routeToOperations($openApi, $route, $config, $typeTransformer);
 
-                    return $operation;
+                    foreach ($operations as $i => $operation) {
+                        if ($route->getAction('uses') instanceof Closure) {
+                            $operation->setAttribute('isClosure', true);
+                        }
+
+                        $operation->setAttribute('index', $index + $i);
+                    }
+
+                    return $operations;
                 } catch (Throwable $e) {
                     if ($e instanceof RouteAware) {
                         $e->setRoute($route);
                     }
 
                     if (config('app.debug', false)) {
-                        $method = $route->methods()[0];
+                        $method = implode('|', $route->methods());
                         $action = $route->getAction('uses');
+                        if ($action instanceof Closure) {
+                            $action = '{closure}';
+                        }
 
                         dump("Error when analyzing route '$method $route->uri' ($action): {$e->getMessage()} – ".($e->getFile().' on line '.$e->getLine()));
                         logger()->error("Error when analyzing route '$method $route->uri' ($action): {$e->getMessage()} – ".($e->getFile().' on line '.$e->getLine()));
@@ -78,12 +90,12 @@ class Generator
                     throw $e;
                 }
             })
-            ->filter() // Closure based routes are filtered out for now, right here
+            ->filter()
             ->sortBy($this->createOperationsSorter())
             ->each(fn (Operation $operation) => $openApi->addPath(
                 Path::make(
                     (string) Str::of($operation->path)
-                        ->replaceFirst($config->get('api_path', 'api'), '')
+                        ->replaceStart($config->get('api_path', 'api'), '')
                         ->trim('/')
                 )->addOperation($operation)
             ))
@@ -112,6 +124,7 @@ class Generator
                 continue;
             }
 
+            // @phpstan-ignore deadCode.unreachable
             throw new InvalidArgumentException('(callable(OpenApi, OpenApiContext): void)|DocumentTransformer type for document transformer expected, received '.$openApiTransformer::class);
         }
 
@@ -120,7 +133,7 @@ class Generator
 
     private function createOperationsSorter(): array
     {
-        $defaultSortValue = fn (Operation $o) => $o->tags[0];
+        $defaultSortValue = fn (Operation $o) => $o->tags[0] ?? null;
 
         return [
             fn (Operation $a, Operation $b) => $a->getAttribute('groupWeight', INF) <=> $b->getAttribute('groupWeight', INF),
@@ -155,11 +168,15 @@ class Generator
         return $openApi;
     }
 
+    /**
+     * @return Collection<int, Route>
+     */
     private function getRoutes(GeneratorConfig $config): Collection
     {
         return collect(RouteFacade::getRoutes())
             ->pipe(function (Collection $c) {
-                $onlyRoute = $c->first(function (Route $route) {
+                $onlyRoutes = $c->filter(function (Route $route) {
+
                     if (! is_string($route->getAction('controller'))) {
                         return false;
                     }
@@ -180,13 +197,12 @@ class Generator
                     return false;
                 });
 
-                return $onlyRoute ? collect([$onlyRoute]) : $c;
+                return $onlyRoutes->count() ? $onlyRoutes : $c;
             })
             ->filter(function (Route $route) {
                 return ! ($name = $route->getAction('as')) || ! Str::startsWith($name, 'scramble');
             })
             ->filter($config->routes())
-            ->filter(fn (Route $r) => $r->getAction('controller'))
             ->filter(function (Route $route) {
                 if (! is_string($route->getAction('uses'))) {
                     return true;
@@ -222,19 +238,23 @@ class Generator
         ]);
     }
 
-    private function routeToOperation(OpenApi $openApi, Route $route, GeneratorConfig $config, TypeTransformer $typeTransformer)
+    /** @return Operation[] */
+    private function routeToOperations(OpenApi $openApi, Route $route, GeneratorConfig $config, TypeTransformer $typeTransformer): array
     {
-        $routeInfo = new RouteInfo($route, $this->infer);
+        $methods = array_map('strtolower', Arr::wrap(($config->operationMethodsResolver)($route)));
 
-        if (! $routeInfo->isClassBased()) {
-            return null;
+        $operations = [];
+        foreach ($methods as $method) {
+            $routeInfo = new RouteInfo($route, $method);
+
+            $operation = $this->operationBuilder->build($routeInfo, $openApi, $config, $typeTransformer);
+
+            $this->ensureSchemaTypes($route, $operation);
+
+            $operations[] = $operation;
         }
 
-        $operation = $this->operationBuilder->build($routeInfo, $openApi, $config, $typeTransformer);
-
-        $this->ensureSchemaTypes($route, $operation);
-
-        return $operation;
+        return $operations;
     }
 
     private function ensureSchemaTypes(Route $route, Operation $operation): void
@@ -308,8 +328,15 @@ class Generator
             }
 
             $name = $operation->getAttribute('operationId');
+            if (! $name instanceof UniqueNameOptions) {
+                return;
+            }
 
-            $operation->setOperationId($names->getUniqueName($name, function (string $fallback) use ($index) { // @phpstan-ignore argument.type
+            if (! $name->eloquent && $operation->getAttribute('isClosure')) {
+                return;
+            }
+
+            $operation->setOperationId($names->getUniqueName($name, function (string $fallback) use ($index) {
                 return "{$fallback}_{$index}";
             }));
         });

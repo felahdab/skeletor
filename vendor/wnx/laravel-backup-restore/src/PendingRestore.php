@@ -12,13 +12,13 @@ use SensitiveParameter;
 class PendingRestore
 {
     public function __construct(
-        readonly public string $disk,
-        readonly public string $backup,
-        readonly public string $connection,
-        readonly public string $restoreId,
-        readonly public string $restoreName,
-        #[SensitiveParameter] readonly public ?string $backupPassword = null,
-        readonly public string $restoreDisk = 'local',
+        public readonly string $disk,
+        public readonly string $backup,
+        public readonly string $connection,
+        public readonly string $restoreId,
+        public readonly string $restoreName,
+        #[SensitiveParameter] public readonly ?string $backupPassword = null,
+        public readonly string $restoreDisk = 'local',
     ) {
         //
     }
@@ -79,7 +79,10 @@ class PendingRestore
 
     public function getAvailableDbDumps(): Collection
     {
+        $backupDatabaseDumpFileExtension = config('backup.backup.database_dump_file_extension', 'sql');
+        $backupDatabaseDumpFileExtensionWithLeadingDot = ".{$backupDatabaseDumpFileExtension}";
+
         return $this->getAvailableFilesInDbDumpsDirectory()
-            ->filter(fn ($file) => Str::endsWith($file, ['.sql', '.sql.gz', '.sql.bz2']));
+            ->filter(fn ($file) => Str::endsWith($file, ['.sql', '.sql.gz', '.sql.bz2', $backupDatabaseDumpFileExtensionWithLeadingDot]));
     }
 }

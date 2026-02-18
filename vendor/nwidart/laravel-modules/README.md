@@ -26,8 +26,20 @@ This package is a re-published, re-organised and maintained version of [pingpong
 
 With one big bonus that the original package didn't have: **tests**.
 
+## Sponsors
+
+For those who are interested in becoming a sponsor, please visit Laravel Modules Sponsor page at **[laravelmodules.com/become-a-sponsor](https://laravelmodules.com/become-a-sponsor)**.
+
+See the website traffic at https://app.usefathom.com/share/sdinlflk/laravel+modules
+
+### Sponsors
+
+<a href="https://nativephp.com/mobile"><img src="https://laravelmodules.com/images/sponsors/NativePHP-mobile-light.svg" alt="NativePHP for Mobile" title="NativePHP for Mobile" width="200"/></a>
+
+<a href="https://dcblog.dev"><img src="https://laravelmodules.com/images/sponsors/dcblog.png" alt="David Carr" title="David Carr" width="200"/></a>
+
 ## upgrade
-To upgrade to version V11 follow [Upgrade Guide](https://laravelmodules.com/docs/v11/upgrade) on official document.
+To upgrade to version V12 follow [Upgrade Guide](https://laravelmodules.com/docs/12/getting-started/upgrade) on official document.
 
 ## Install
 

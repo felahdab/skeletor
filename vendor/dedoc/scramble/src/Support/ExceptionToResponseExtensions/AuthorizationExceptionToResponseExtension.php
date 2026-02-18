@@ -31,10 +31,10 @@ class AuthorizationExceptionToResponseExtension extends ExceptionToResponseExten
             ->setRequired(['message']);
 
         return Response::make(403)
-            ->description('Authorization error')
+            ->setDescription('Authorization error')
             ->setContent(
                 'application/json',
-                Schema::fromType($validationResponseBodyType)
+                Schema::fromType($validationResponseBodyType),
             );
     }
 

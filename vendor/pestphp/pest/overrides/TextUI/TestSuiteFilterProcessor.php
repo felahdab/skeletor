@@ -45,6 +45,7 @@ declare(strict_types=1);
 namespace PHPUnit\TextUI;
 
 use Pest\Plugins\Only;
+use Pest\Runner\Filter\EnsureTestCaseIsInitiatedFilter;
 use PHPUnit\Event;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Runner\Filter\Factory;
@@ -66,6 +67,12 @@ final readonly class TestSuiteFilterProcessor
     {
         $factory = new Factory;
 
+        // @phpstan-ignore-next-line
+        (fn () => $this->filters[] = [
+            'className' => EnsureTestCaseIsInitiatedFilter::class,
+            'argument' => '',
+        ])->call($factory);
+
         if (! $configuration->hasFilter() &&
             ! $configuration->hasGroups() &&
             ! $configuration->hasExcludeGroups() &&
@@ -73,6 +80,8 @@ final readonly class TestSuiteFilterProcessor
             ! $configuration->hasTestsCovering() &&
             ! $configuration->hasTestsUsing() &&
             ! Only::isEnabled()) {
+            $suite->injectFilter($factory);
+
             return;
         }
 

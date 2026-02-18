@@ -4,7 +4,6 @@ namespace Spatie\Backup\Tasks\Backup;
 
 use Generator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Symfony\Component\Finder\Finder;
 
 class FileSelection
@@ -117,8 +116,8 @@ class FileSelection
         }
 
         foreach ($this->excludeFilesAndDirectories as $excludedPath) {
-            if (Str::startsWith($path, $excludedPath.(is_dir($excludedPath) ? DIRECTORY_SEPARATOR : ''))) {
-                if ($path != $excludedPath && is_file($excludedPath)) {
+            if (str_starts_with($path, $excludedPath.(is_dir($excludedPath) ? DIRECTORY_SEPARATOR : ''))) {
+                if ($path !== $excludedPath && is_file($excludedPath)) {
                     continue;
                 }
 
@@ -145,10 +144,14 @@ class FileSelection
     protected function getMatchingPaths(string $path): array
     {
         if ($this->canUseGlobBrace($path)) {
-            return glob(str_replace('*', '{.[!.],}*', $path), GLOB_BRACE);
+            $result = @glob(str_replace('*', '{.[!.],}*', $path), GLOB_BRACE);
+
+            if ($result !== false) {
+                return $result;
+            }
         }
 
-        return glob($path);
+        return glob($path) ?: [];
     }
 
     protected function canUseGlobBrace(string $path): bool

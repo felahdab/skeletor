@@ -1,6 +1,7 @@
 <?php
 namespace App\Traits;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -285,7 +286,7 @@ trait VersionableTrait
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     protected function getLatestVersions()
     {

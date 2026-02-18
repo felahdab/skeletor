@@ -2,23 +2,28 @@
 
 namespace App\Filament\PageTemplates;
 
+use BackedEnum;
+
 use Filament\Pages\Page;
-use Filament\Forms\Form;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Tables\Contracts\HasTable;
-use Filament\Actions\Action;
 use Illuminate\Support\HtmlString;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Actions;
+use Filament\Actions\Action;
 
 use App\Models\AnnuaireUser;
 
 class RechercheAnnuairePageTemplate extends Page implements HasTable
 {
     use InteractsWithTable;
+    use InteractsWithSchemas;
 
-    protected static ?string $navigationIcon = 'heroicon-o-magnifying-glass-circle';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-magnifying-glass-circle';
     
     protected static ?string $title = 'Recherche dans l\'annuaire';
 
@@ -26,7 +31,7 @@ class RechercheAnnuairePageTemplate extends Page implements HasTable
         'table-force-refresh' => '$refresh'
     ];
 
-    protected static string $view = 'filament.resources.annudef-user-resource.pages.recherche-annudef';
+    protected string $view = 'filament.resources.annudef-user-resource.pages.recherche-annudef';
 
     public ?array $data;
 
@@ -35,26 +40,17 @@ class RechercheAnnuairePageTemplate extends Page implements HasTable
         $this->form->fill();
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $form): Schema
     {
         return $form
             ->statePath('data')
             ->columns(4)
-            ->schema([
+            ->components([
                 TextInput::make('nom'),
                 TextInput::make('prenom'),
                 TextInput::make('email'),
                 TextInput::make('unite'),
             ]);
-    }
-
-    public function submitAction()
-    {
-        return Action::make('submit-annudef-search')
-        ->label('Rechercher')
-        ->extraAttributes([
-            'wire:click' => new HtmlString("submit()")
-        ]);
     }
 
     public function submit()
@@ -89,7 +85,11 @@ class RechercheAnnuairePageTemplate extends Page implements HasTable
             )
             ->bulkActions(
                 $this->getBulkActions()
-            );
+            )->headerActions([
+                Action::make('submitAction')
+                    ->label('Rechercher')
+                    ->action(fn()=> $this->submit() )
+            ]);
     }
 
     public function getRowActions()

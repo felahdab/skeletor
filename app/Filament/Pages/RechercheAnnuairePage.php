@@ -4,8 +4,8 @@ namespace App\Filament\Pages;
 
 use App\Filament\PageTemplates\RechercheAnnuairePageTemplate;
 
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\BulkAction;
+use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
 use Filament\Forms\Components\Select;
 
 use App\Events\UnUtilisateurLocalDoitEtreCreeEvent;
@@ -15,7 +15,9 @@ class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
 {
     public static function canAccess(): bool
     {
-        return auth()->check() && auth()->user()->can('skeletor.recherche-annuaire');
+        return auth()->check() && 
+                auth()->user()->can('skeletor.recherche-annuaire') &&
+                config('skeletor.reseau_de_deploiement') == 'intradef';
     }
 
     public function getRowActions()
@@ -28,7 +30,7 @@ class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
                 ->icon('heroicon-o-plus')
                 ->label("Créé l'utilisateur local")
                 ->requiresConfirmation()
-                ->form([
+                ->schema([
                     Select::make('roles')
                         ->label("Rôles à attribuer")
                         ->options(Role::all()->pluck('name', 'id'))
@@ -51,7 +53,7 @@ class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
                 ->icon('heroicon-o-plus')
                 ->label("Créé l'utilisateur local")
                 ->requiresConfirmation()
-                ->form([
+                ->schema([
                     Select::make('roles')
                         ->label("Rôles à attribuer")
                         ->options(Role::all()->pluck('name', 'id'))

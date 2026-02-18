@@ -2,18 +2,22 @@
 
 namespace App\Livewire;
 
+use Filament\Actions\Contracts\HasActions;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Livewire\Component;
 use Illuminate\Contracts\View\View;
 
 use App\Events\BugOrSuggestionReportEvent;
 
-class ReportBugOrSuggestion extends Component implements HasForms
+class ReportBugOrSuggestion extends Component implements HasForms, HasActions
 {
+    use InteractsWithActions;
     use InteractsWithForms;
 
     public ?array $data = [];
@@ -25,11 +29,11 @@ class ReportBugOrSuggestion extends Component implements HasForms
         $this->form->fill();
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Textarea::make('commentaire')
+        return $schema
+            ->components([
+                Textarea::make('commentaire')
                     ->label('Commentaire ou bug')
                     ->cols(40)
                     ->rows(10)

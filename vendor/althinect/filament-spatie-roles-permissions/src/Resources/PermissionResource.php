@@ -8,16 +8,16 @@ use Althinect\FilamentSpatieRolesPermissions\Resources\PermissionResource\Pages\
 use Althinect\FilamentSpatieRolesPermissions\Resources\PermissionResource\Pages\ViewPermission;
 use Althinect\FilamentSpatieRolesPermissions\Resources\PermissionResource\RelationManager\RoleRelationManager;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Section;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
-use Filament\Tables\Actions\BulkAction;
+use Filament\Actions\BulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -31,7 +31,7 @@ class PermissionResource extends Resource
     public static function isScopedToTenant(): bool
     {
         return config('filament-spatie-roles-permissions.scope_premissions_to_tenant', config('filament-spatie-roles-permissions.scope_to_tenant', true));
-    }   
+    }
 
     public static function getNavigationIcon(): ?string
     {
@@ -73,9 +73,9 @@ class PermissionResource extends Resource
         return config('filament-spatie-roles-permissions.clusters.permissions', null);
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Section::make()
                     ->schema([
@@ -165,12 +165,12 @@ class PermissionResource extends Resource
                     ->multiple()
                     ->options(config('filament-spatie-roles-permissions.guard_names')),
             ])->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make(),
+                \Filament\Actions\EditAction::make(),
+                \Filament\Actions\ViewAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                \Filament\Actions\BulkActionGroup::make([
+                    \Filament\Actions\DeleteBulkAction::make(),
                 ]),
                 BulkAction::make('Attach to roles')
                     ->label(__('filament-spatie-roles-permissions::filament-spatie.action.attach_to_roles'))
@@ -190,7 +190,7 @@ class PermissionResource extends Resource
             ->emptyStateActions(
                 config('filament-spatie-roles-permissions.should_remove_empty_state_actions.permissions') ? [] :
                     [
-                        Tables\Actions\CreateAction::make()
+                        \Filament\Actions\CreateAction::make()
                     ]
             );
     }

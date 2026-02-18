@@ -1,16 +1,18 @@
 <?php
 
-namespace Barryvdh\Debugbar\Support\Clockwork;
+declare(strict_types=1);
+
+namespace Fruitcake\LaravelDebugbar\Support\Clockwork;
 
 class Converter
 {
     /**
      * Convert the phpdebugbar data to Clockwork format.
      *
-     * @param  array $data
-     * @return array
+     * @param array $data
+     *
      */
-    public function convert($data)
+    public function convert($data): array
     {
         $meta = $data['__meta'];
 
@@ -72,14 +74,14 @@ class Converter
 
             $output['controller'] = preg_replace('/<a\b[^>]*>(.*?)<\/a>/i', '', (string) $controller) ?: null;
 
-            list($method, $uri) = explode(' ', $route['uri'], 2);
+            [$method, $uri] = explode(' ', $route['uri'], 2);
 
             $output['routes'][] = [
                 'action' => $output['controller'],
-                'after' => isset($route['after']) ? $route['after'] : null,
-                'before' => isset($route['before']) ? $route['before'] : null,
+                'after' => $route['after'] ?? null,
+                'before' => $route['before'] ?? null,
                 'method' => $method,
-                'name' => isset($route['as']) ? $route['as'] : null,
+                'name' => $route['as'] ?? null,
                 'uri' => $uri,
             ];
         }
@@ -105,7 +107,7 @@ class Converter
                     'bindings' => $statement['params'],
                     'duration' => $statement['duration'] * 1000,
                     'time' => $statement['start'] ?? null,
-                    'connection' => $statement['connection']
+                    'connection' => $statement['connection'],
                 ];
             }
 
@@ -117,7 +119,16 @@ class Converter
             $output['modelsCreated'] = [];
             $output['modelsUpdated'] = [];
             $output['modelsDeleted'] = [];
-            $output['modelsRetrieved'] = $data['models']['data'];
+            $output['modelsRetrieved'] = [];
+
+            foreach ($data['models']['data'] as $model => $value) {
+                foreach ($value as $event => $count) {
+                    $eventKey = 'models' . ucfirst($event);
+                    if (isset($output[$eventKey])) {
+                        $output[$eventKey][$model] = $count;
+                    }
+                }
+            }
         }
 
         if (isset($data['views']['templates'])) {

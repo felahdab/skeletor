@@ -2,18 +2,18 @@
 
 namespace Dedoc\Scramble\Infer\Handler;
 
+use Dedoc\Scramble\Infer\Definition\FunctionLikeAstDefinition;
 use Dedoc\Scramble\Infer\Definition\FunctionLikeDefinition;
+use Dedoc\Scramble\Infer\DefinitionBuilders\FunctionLikeDeclarationAstDefinitionBuilder;
+use Dedoc\Scramble\Infer\DefinitionBuilders\FunctionLikeDeclarationPhpDocDefinitionBuilder;
 use Dedoc\Scramble\Infer\Scope\Scope;
-use Dedoc\Scramble\Support\Type\FloatType;
 use Dedoc\Scramble\Support\Type\FunctionType;
-use Dedoc\Scramble\Support\Type\IntegerType;
 use Dedoc\Scramble\Support\Type\TemplateType;
 use Dedoc\Scramble\Support\Type\TypeHelper;
-use Dedoc\Scramble\Support\Type\UnknownType;
-use Dedoc\Scramble\Support\Type\VoidType;
 use Illuminate\Support\Str;
 use PhpParser\Node;
 use PhpParser\Node\FunctionLike;
+use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocNode;
 
 class FunctionLikeHandler implements CreatesScope
 {
@@ -45,12 +45,17 @@ class FunctionLikeHandler implements CreatesScope
         // is to set node param types to scope.
         // Also, if here we add a reference to the function node type, it may allow us to
         // set function return types not in leave function, but in the return handlers.
-        $scope->context->setFunctionDefinition($fnDefinition = new FunctionLikeDefinition(
+        $scope->context->setFunctionDefinition($fnDefinition = new FunctionLikeAstDefinition(
             type: $fnType = new FunctionType($node->name->name ?? 'anonymous'),
-            sideEffects: [],
             definingClassName: $scope->context->classDefinition?->name,
             isStatic: $node instanceof Node\Stmt\ClassMethod ? $node->isStatic() : false,
         ));
+
+        $fnDefinition
+            ->setAstNode($node)
+            ->setScope($scope)
+            ->setDeclarationDefinition($this->buildDeclarationDefinition($node, $scope));
+
         $fnDefinition->isFullyAnalyzed = true;
 
         if ($node instanceof Node\Expr\ArrowFunction || $node instanceof Node\Expr\Closure) {
@@ -70,7 +75,7 @@ class FunctionLikeHandler implements CreatesScope
         $localTemplates = [];
         $fnType->arguments = collect($node->getParams())
             ->mapWithKeys(function (Node\Param $param) use ($scope, $classDefinitionTemplatesTypes, &$localTemplates) {
-                if (! $param->var instanceof Node\Expr\Variable) {
+                if (! $param->var instanceof Node\Expr\Variable || ! is_string($param->var->name)) {
                     return [];
                 }
 
@@ -87,13 +92,11 @@ class FunctionLikeHandler implements CreatesScope
                     $annotatedType,
                 );
 
-                if ($type instanceof TemplateType) {
-                    $localTemplates[] = $type;
-                }
+                $localTemplates[] = $type;
 
                 return [$param->var->name => $type];
             })
-            ->toArray();
+            ->all();
 
         $fnType->templates = $localTemplates;
 
@@ -120,36 +123,6 @@ class FunctionLikeHandler implements CreatesScope
 
     public function leave(FunctionLike $node, Scope $scope)
     {
-        $fnDefinition = $scope->functionDefinition();
-
-        /*
-         * @todo
-         *
-         * Here we may not need to go deep in the fn and analyze nodes as we already know the type from
-         * the annotation. The problem is that almost always annotated type is not specific enough to be
-         * useful for analysis.
-         */
-        if (
-            ($returnTypeAnnotation = $node->getReturnType())
-            && (
-                in_array(get_class($fnDefinition->type->getReturnType()), [
-                    UnknownType::class,
-                    VoidType::class, // When fn is not analyzed (?)
-                ])
-                || in_array(get_class(TypeHelper::createTypeFromTypeNode($returnTypeAnnotation)), [
-                    IntegerType::class,
-                    FloatType::class,
-                ])
-            )
-        ) {
-            $fnDefinition->type->setAttribute('inferredReturnType', $fnDefinition->type->getReturnType());
-            $fnDefinition->type->setReturnType(TypeHelper::createTypeFromTypeNode($returnTypeAnnotation) ?: new VoidType);
-        }
-
-        if ($returnTypeAnnotation = $node->getReturnType()) {
-            $fnDefinition->type->setAttribute('annotatedReturnType', TypeHelper::createTypeFromTypeNode($returnTypeAnnotation));
-        }
-
         // Simple way of handling the arrow functions, as they do not have a return statement.
         // So here we just create a "virtual" return and processing it as by default.
         if ($node instanceof Node\Expr\ArrowFunction) {
@@ -172,7 +145,7 @@ class FunctionLikeHandler implements CreatesScope
 
         $argumentsByKeys = collect($node->getParams())
             ->mapWithKeys(function (Node\Param $param) {
-                return $param->var instanceof Node\Expr\Variable ? [
+                return $param->var instanceof Node\Expr\Variable && is_string($param->var->name) ? [
                     $param->var->name => true,
                 ] : [];
             })
@@ -180,7 +153,9 @@ class FunctionLikeHandler implements CreatesScope
 
         $argumentsAssignedToProperties = [];
 
-        $callToParentConstruct = $scope->classDefinition()->parentFqn ? array_filter(
+        $parentFqn = $scope->classDefinition()->parentFqn;
+
+        $callToParentConstruct = $parentFqn ? array_filter(
             $node->getStmts() ?: [],
             fn (Node\Stmt $s) => $s instanceof Node\Stmt\Expression
                 && $s->expr instanceof Node\Expr\StaticCall
@@ -192,7 +167,8 @@ class FunctionLikeHandler implements CreatesScope
 
         if (
             $callToParentConstruct
-            && ($parentDefinition = $scope->index->getClassDefinition($scope->classDefinition()->parentFqn))
+            && $parentFqn
+            && ($parentDefinition = $scope->index->getClass($parentFqn))
             && ($parentConstructorDefinition = $parentDefinition->getMethodDefinition('__construct'))
         ) {
             $parentConstructorArguments = $parentConstructorDefinition->type->arguments;
@@ -223,6 +199,7 @@ class FunctionLikeHandler implements CreatesScope
                 && $s->expr->var->var->name === 'this'
                 && $s->expr->var->name instanceof Node\Identifier
                 && $s->expr->expr instanceof Node\Expr\Variable
+                && is_string($s->expr->expr->name)
                 && ($argumentsByKeys[$s->expr->expr->name] ?? false),
         );
 
@@ -241,11 +218,30 @@ class FunctionLikeHandler implements CreatesScope
 
         $promotedProperties = collect($node->getParams())
             ->filter(fn (Node\Param $p) => $p->isPromoted())
-            ->mapWithKeys(fn (Node\Param $param) => $param->var instanceof Node\Expr\Variable ? [
+            ->mapWithKeys(fn (Node\Param $param) => $param->var instanceof Node\Expr\Variable && is_string($param->var->name) ? [
                 $param->var->name => $scope->classDefinition()->properties[$param->var->name]->type,
             ] : [])
             ->toArray();
 
         return array_merge($assignPropertiesToThisNodes, $promotedProperties);
+    }
+
+    private function buildDeclarationDefinition(FunctionLike $node, Scope $scope): FunctionLikeDefinition
+    {
+        $definition = (new FunctionLikeDeclarationAstDefinitionBuilder(
+            $node,
+            $scope->context->classDefinition,
+        ))->build();
+
+        $phpDocNode = $node->getAttribute('parsedPhpDoc');
+        if (! $phpDocNode instanceof PhpDocNode) {
+            return $definition;
+        }
+
+        return (new FunctionLikeDeclarationPhpDocDefinitionBuilder(
+            $definition,
+            $phpDocNode,
+            $scope->context->classDefinition
+        ))->build();
     }
 }

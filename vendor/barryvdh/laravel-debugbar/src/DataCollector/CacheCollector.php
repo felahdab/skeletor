@@ -1,78 +1,108 @@
 <?php
 
-namespace Barryvdh\Debugbar\DataCollector;
+declare(strict_types=1);
 
+namespace Fruitcake\LaravelDebugbar\DataCollector;
+
+use DebugBar\DataCollector\AssetProvider;
+use DebugBar\DataCollector\HasTimeDataCollector;
+use DebugBar\DataCollector\Resettable;
 use DebugBar\DataCollector\TimeDataCollector;
-use DebugBar\DataFormatter\HasDataFormatter;
-use Illuminate\Cache\Events\CacheEvent;
-use Illuminate\Cache\Events\CacheHit;
-use Illuminate\Cache\Events\CacheMissed;
-use Illuminate\Cache\Events\KeyForgotten;
-use Illuminate\Cache\Events\KeyWritten;
-use Illuminate\Events\Dispatcher;
+use Illuminate\Cache\Events\{CacheEvent,
+    CacheFailedOver,
+    CacheFlushed,
+    CacheFlushFailed,
+    CacheFlushing,
+    CacheHit,
+    CacheMissed,
+    ForgettingKey,
+    KeyForgetFailed,
+    KeyForgotten,
+    KeyWriteFailed,
+    KeyWritten,
+    RetrievingKey,
+    WritingKey};
+use Illuminate\Support\Facades\Route;
 
-class CacheCollector extends TimeDataCollector
+class CacheCollector extends TimeDataCollector implements AssetProvider, Resettable
 {
-    use HasDataFormatter;
+    use HasTimeDataCollector;
 
-    /** @var bool */
-    protected $collectValues;
+    protected bool $collectValues = false;
 
-    /** @var array */
-    protected $classMap = [
-        CacheHit::class => 'hit',
-        CacheMissed::class => 'missed',
-        KeyWritten::class => 'written',
-        KeyForgotten::class => 'forgotten',
+    protected array $eventStarts = [];
+
+    protected array $classMap = [
+        CacheHit::class => ['hit', RetrievingKey::class],
+        CacheMissed::class => ['missed', RetrievingKey::class],
+        CacheFlushed::class => ['flushed', CacheFlushing::class],
+        CacheFlushFailed::class => ['flush_failed', CacheFlushing::class],
+        KeyWritten::class => ['written', WritingKey::class],
+        KeyWriteFailed::class => ['write_failed', WritingKey::class],
+        KeyForgotten::class => ['forgotten', ForgettingKey::class],
+        KeyForgetFailed::class => ['forget_failed', ForgettingKey::class],
     ];
 
-    public function __construct($requestStartTime, $collectValues)
+    public function __construct(float $requestStartTime, bool $collectValues)
     {
-        parent::__construct();
+        parent::__construct($requestStartTime);
 
         $this->collectValues = $collectValues;
+        $this->memoryMeasure = true;
     }
 
-    public function onCacheEvent(CacheEvent $event)
+    public function getCacheEvents(): array
+    {
+        return $this->classMap;
+    }
+
+    public function onCacheEvent(CacheEvent|CacheFailedOver|CacheFlushed|CacheFlushFailed|CacheFlushing $event): void
     {
         $class = get_class($event);
         $params = get_object_vars($event);
-
-        $label = $this->classMap[$class];
+        $label = $this->classMap[$class][0];
 
         if (isset($params['value'])) {
-            if ($this->collectValues) {
-                if ($this->isHtmlVarDumperUsed()) {
-                    $params['value'] = $this->getVarDumper()->renderVar($params['value']);
-                } else {
-                    $params['value'] = htmlspecialchars($this->getDataFormatter()->formatVar($params['value']));
-                }
-            } else {
+            $params['memoryUsage'] = strlen(serialize($params['value'])) * 8;
+
+            if (!$this->collectValues) {
                 unset($params['value']);
             }
         }
 
+        $time = microtime(true);
+        $startHashKey = $this->getEventHash($this->classMap[$class][1] ?? '', $params);
+        $startTime = $this->eventStarts[$startHashKey] ?? $time;
 
-        if (!empty($params['key']) && in_array($label, ['hit', 'written'])) {
-            $params['delete'] = route('debugbar.cache.delete', [
-                'key' => urlencode($params['key']),
-                'tags' => !empty($params['tags']) ? json_encode($params['tags']) : '',
+        $this->addMeasure($label . "\t" . ($params['key'] ?? ''), $startTime, $time, $params);
+
+        if ($this->hasTimeDataCollector()) {
+            $this->addTimeMeasure('Cache ' . $label . "\t" . ($params['key'] ?? ''), $startTime, $time);
+        }
+
+        if (isset($event->key) && in_array($label, ['hit', 'written'], true) && Route::has('debugbar.cache.delete')) {
+            $measureIndex = array_key_last($this->measures);
+            $this->measures[$measureIndex]['delete_url'] = url()->signedRoute('debugbar.cache.delete', [
+                'key' => urlencode((string) $event->key),
+                'tags' => $params['tags'] ?? [],
             ]);
         }
-
-        $time = microtime(true);
-        $this->addMeasure($label . "\t" . $event->key, $time, $time, $params);
     }
 
-
-    public function subscribe(Dispatcher $dispatcher)
+    public function onStartCacheEvent(mixed $event): void
     {
-        foreach ($this->classMap as $eventClass => $type) {
-            $dispatcher->listen($eventClass, [$this, 'onCacheEvent']);
-        }
+        $startHashKey = $this->getEventHash(get_class($event), get_object_vars($event));
+        $this->eventStarts[$startHashKey] = microtime(true);
     }
 
-    public function collect()
+    protected function getEventHash(string $class, array $params): string
+    {
+        unset($params['value']);
+
+        return $class . ':' . substr(hash('sha256', json_encode($params)), 0, 12);
+    }
+
+    public function collect(): array
     {
         $data = parent::collect();
         $data['nb_measures'] = $data['count'] = count($data['measures']);
@@ -80,24 +110,37 @@ class CacheCollector extends TimeDataCollector
         return $data;
     }
 
-    public function getName()
+    public function reset(): void
+    {
+        parent::reset();
+        $this->eventStarts = [];
+    }
+
+    public function getName(): string
     {
         return 'cache';
     }
 
-    public function getWidgets()
+    public function getWidgets(): array
     {
         return [
-          'cache' => [
-            'icon' => 'clipboard',
-            'widget' => 'PhpDebugBar.Widgets.LaravelCacheWidget',
-            'map' => 'cache',
-            'default' => '{}',
-          ],
-          'cache:badge' => [
-            'map' => 'cache.nb_measures',
-            'default' => 'null',
-          ],
+            'cache' => [
+                'icon' => 'clipboard-text',
+                'widget' => 'PhpDebugBar.Widgets.LaravelCacheWidget',
+                'map' => 'cache',
+                'default' => '{}',
+            ],
+            'cache:badge' => [
+                'map' => 'cache.nb_measures',
+                'default' => 'null',
+            ],
+        ];
+    }
+
+    public function getAssets(): array
+    {
+        return [
+            'js' => __DIR__ . '/../../resources/cache/widget.js',
         ];
     }
 }

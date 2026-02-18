@@ -2,8 +2,12 @@
 
 namespace App\Filament\Resources\RemotesystemResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -23,11 +27,11 @@ class TokensRelationManager extends RelationManager
 {
     protected static string $relationship = 'tokens';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -37,7 +41,7 @@ class TokensRelationManager extends RelationManager
     public function showtokenAction():FilamentAction {
         return FilamentAction::make('token_created')
             ->modalHeading('Token créé')
-            ->form([
+            ->schema([
                 CopyablePlaceholder::make('clear_text_token')
                                     ->label('N\'oubliez pas de copier ce token: vous ne pourrez plus y accéder ensuite !')
                                     ->content(function() { 
@@ -56,8 +60,8 @@ class TokensRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('expires_at')->date(),
+                TextColumn::make('name'),
+                TextColumn::make('expires_at')->date(),
             ])
             ->filters([
                 //
@@ -65,8 +69,8 @@ class TokensRelationManager extends RelationManager
             ->headerActions([
                 //Tables\Actions\CreateAction::make(),
                 
-                Tables\Actions\Action::make('Nouveau token')
-                    ->form([
+                \Filament\Actions\Action::make('Nouveau token')
+                    ->schema([
                         TextInput::make("name")
                             ->label("Nom du nouveau token")
                             ->default("token")
@@ -87,13 +91,13 @@ class TokensRelationManager extends RelationManager
                         $this->replaceMountedAction('showtoken', ["token" => $token->plainTextToken]);
                     })
             ])
-            ->actions([
+            ->recordActions([
                // Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

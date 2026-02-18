@@ -29,6 +29,11 @@
         "livewire/livewire": "^3.0",
         "nwidart/laravel-modules": ">=11.0"
     },
+    "require-dev": {
+        "mockery/mockery": "^1.3.1",
+        "phpunit/phpunit": "^10.4|^11.5",
+        "orchestra/testbench": "^8.21.0|^9.0|^10.0"
+    },
     "extra": {
         "laravel": {
             "providers": [
@@ -41,6 +46,20 @@
             "Mhmiton\\LaravelModulesLivewire\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Mhmiton\\LaravelModulesLivewire\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "composer dump-autoload && phpunit",
+        "test-quick": "phpunit"
+    },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "wikimedia/composer-merge-plugin": true
+        }
+    }
 }

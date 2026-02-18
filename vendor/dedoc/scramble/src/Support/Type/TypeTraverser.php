@@ -4,41 +4,83 @@ namespace Dedoc\Scramble\Support\Type;
 
 class TypeTraverser
 {
+    /**
+     * @param  TypeVisitor[]  $visitors
+     */
     public function __construct(
         private array $visitors = [],
     ) {}
 
-    public function traverse(Type $type): void
+    public function traverse(Type $type): Type
     {
-        $this->enterType($type);
+        $enterResult = $this->enterType($type);
 
-        $propertiesWithNodes = $type->nodes();
+        if ($enterResult === TypeVisitor::DONT_TRAVERSE_CURRENT_AND_CHILDREN) {
+            return $type;
+        }
 
-        foreach ($propertiesWithNodes as $propertyWithNode) {
-            $node = $type->$propertyWithNode;
-            if (! is_array($node)) {
-                $this->traverse($node);
-            } else {
-                foreach ($node as $item) {
-                    $this->traverse($item);
+        if ($enterResult instanceof Type) {
+            $type = $enterResult;
+        }
+
+        if ($enterResult !== TypeVisitor::DONT_TRAVERSE_CHILDREN) {
+            $propertiesWithNodes = $type->nodes();
+
+            foreach ($propertiesWithNodes as $propertyWithNode) {
+                $node = $type->$propertyWithNode;
+                if (! is_array($node)) {
+                    $type->$propertyWithNode = $this->traverse($node);
+                } else {
+                    foreach ($node as $index => $item) {
+                        $type->$propertyWithNode[$index] = $this->traverse($item);
+                    }
                 }
             }
         }
 
-        $this->leaveType($type);
+        $leaveResult = $this->leaveType($type);
+        if ($leaveResult instanceof Type) {
+            $type = $leaveResult;
+        }
+
+        return $type;
     }
 
-    private function enterType(Type $type): void
+    private function enterType(Type $type): Type|int|null
     {
+        $result = null;
+        $resultType = $type;
         foreach ($this->visitors as $visitor) {
-            $visitor->enter($type);
+            $enterResult = $visitor->enter($resultType);
+
+            if ($enterResult === TypeVisitor::DONT_TRAVERSE_CURRENT_AND_CHILDREN) {
+                return $enterResult;
+            }
+
+            if ($enterResult instanceof Type) {
+                $resultType = $enterResult;
+            }
+
+            $result = $enterResult;
         }
+
+        return $resultType === $type ? $result : $resultType;
     }
 
-    private function leaveType(Type $type): void
+    private function leaveType(Type $type): Type|int|null
     {
+        $result = null;
+        $resultType = $type;
         foreach ($this->visitors as $visitor) {
-            $visitor->leave($type);
+            $leaveResult = $visitor->leave($resultType);
+
+            if ($leaveResult instanceof Type) {
+                $resultType = $leaveResult;
+            }
+
+            $result = $leaveResult;
         }
+
+        return $resultType === $type ? $result : $resultType;
     }
 }

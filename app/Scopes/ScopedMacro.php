@@ -12,14 +12,14 @@ use InvalidArgumentException;
 class ScopedMacro
 {
     /**
-     * @var \Illuminate\Database\Eloquent\Builder
+     * @var Builder
      */
     protected $query;
 
     /**
      * ScopedMacro constructor.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      */
     public function __construct(Builder $query)
     {
@@ -29,9 +29,9 @@ class ScopedMacro
     /**
      * Apply Scope to Eloquent\Builder.
      *
-     * @param \Illuminate\Database\Eloquent\Scope|string $scope
+     * @param Scope|string $scope
      * @param mixed ...$parameters
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function __invoke($scope, ...$parameters): Builder
     {

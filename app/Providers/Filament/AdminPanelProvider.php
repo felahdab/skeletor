@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Pages\Dashboard;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -51,13 +52,12 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->profile(UserPreferences::class)
             ->favicon(asset('assets/images/favicon-32x32.png'))
-            ->font('Inter', provider: SpatieGoogleFontProvider::class)
             ->defaultAvatarProvider(SkeletorAvatarProvider::class)
             ->brandName("Administration")
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
-                Pages\Dashboard::class,
+                Dashboard::class,
             ])
             ->plugin(FilamentSpatieRolesPermissionsPlugin::make())
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
@@ -88,7 +88,7 @@ class AdminPanelProvider extends PanelProvider
                 'help' => MenuItem::make()
                     ->label('Aide')
                     ->icon('heroicon-m-question-mark-circle')
-                    ->url(fn () => url(config('skeletor.prefixe_instance') . '/docs/' . Filament::getCurrentPanel()->getId()) . '/', shouldOpenInNewTab:true),
+                    ->url(fn () => url(config('skeletor.prefixe_instance') . '/docs/' . Filament::getCurrentOrDefaultPanel()->getId()) . '/', shouldOpenInNewTab:true),
                 'apidoc' => MenuItem::make()
                     ->label('API')
                     ->icon('heroicon-m-cloud')

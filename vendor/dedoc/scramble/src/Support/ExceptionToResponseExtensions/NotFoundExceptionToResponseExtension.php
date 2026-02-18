@@ -35,10 +35,10 @@ class NotFoundExceptionToResponseExtension extends ExceptionToResponseExtension
             ->setRequired(['message']);
 
         return Response::make(404)
-            ->description('Not found')
+            ->setDescription('Not found')
             ->setContent(
                 'application/json',
-                Schema::fromType($validationResponseBodyType)
+                Schema::fromType($validationResponseBodyType),
             );
     }
 

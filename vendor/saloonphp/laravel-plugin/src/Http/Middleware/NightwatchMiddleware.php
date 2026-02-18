@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Saloon\Laravel\Http\Middleware;
 
+use Saloon\Laravel\Saloon;
 use Saloon\Http\PendingRequest;
+use Saloon\Http\Senders\GuzzleSender;
 use Saloon\Contracts\RequestMiddleware;
 
 class NightwatchMiddleware implements RequestMiddleware
@@ -16,17 +18,19 @@ class NightwatchMiddleware implements RequestMiddleware
     {
         $sender = $pendingRequest->getConnector()->sender();
 
-        // Check if Nightwatch is installed
-        if (! class_exists('Nightwatch\\Nightwatch')) {
+        // Check if we're using the Guzzle Sender, Nightwatch is installed and
+        // if the middleware hasn't been registered yet.
+
+        if (
+            class_exists('Laravel\Nightwatch\Facades\Nightwatch') === false
+            || $sender instanceof GuzzleSender === false
+            || isset(Saloon::$registeredSenders[$senderId = spl_object_id($sender)]['nightwatch']) === true
+        ) {
             return;
         }
 
-        // Check if we're using GuzzleSender
-        if ($sender instanceof \Saloon\Http\Senders\GuzzleSender === false) {
-            return;
-        }
+        $sender->addMiddleware(\Laravel\Nightwatch\Facades\Nightwatch::guzzleMiddleware(), 'nightwatch');
 
-        $sender->addMiddleware(\Nightwatch\Nightwatch::guzzleMiddleware(), 'nightwatch');
+        Saloon::$registeredSenders[$senderId]['nightwatch'] = true;
     }
-
 }

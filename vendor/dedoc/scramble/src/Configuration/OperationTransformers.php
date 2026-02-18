@@ -2,11 +2,13 @@
 
 namespace Dedoc\Scramble\Configuration;
 
+use Dedoc\Scramble\Contracts\OperationTransformer;
 use Dedoc\Scramble\Support\OperationExtensions\DeprecationExtension;
 use Dedoc\Scramble\Support\OperationExtensions\ErrorResponsesExtension;
 use Dedoc\Scramble\Support\OperationExtensions\RequestBodyExtension;
 use Dedoc\Scramble\Support\OperationExtensions\RequestEssentialsExtension;
 use Dedoc\Scramble\Support\OperationExtensions\ResponseExtension;
+use Dedoc\Scramble\Support\OperationExtensions\ResponseHeadersExtension;
 use Illuminate\Support\Arr;
 
 class OperationTransformers
@@ -44,6 +46,9 @@ class OperationTransformers
         return $this;
     }
 
+    /**
+     * @return list<callable|class-string<OperationTransformer>>
+     */
     public function all(): array
     {
         $base = $this->transformers ?: [
@@ -51,6 +56,7 @@ class OperationTransformers
             RequestBodyExtension::class,
             ErrorResponsesExtension::class,
             ResponseExtension::class,
+            ResponseHeadersExtension::class,
             DeprecationExtension::class,
         ];
 

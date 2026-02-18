@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Response;
 use App\Http\Requests\StoreBugReportRequest;
 use App\Http\Requests\UpdateBugReportRequest;
 use App\Models\BugReport;
@@ -13,8 +14,8 @@ class BugReportController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreBugReportRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreBugReportRequest $request
+     * @return Response
      */
     public function store(StoreBugReportRequest $request)
     {

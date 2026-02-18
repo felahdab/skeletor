@@ -69,10 +69,10 @@ class HttpExceptionToResponseExtension extends ExceptionToResponseExtension
             ->setRequired(['message']);
 
         return Response::make($responseCode)
-            ->description($this->getDescription($type))
+            ->setDescription($this->getDescription($type))
             ->setContent(
                 'application/json',
-                Schema::fromType($responseBodyType)
+                Schema::fromType($responseBodyType),
             );
     }
 

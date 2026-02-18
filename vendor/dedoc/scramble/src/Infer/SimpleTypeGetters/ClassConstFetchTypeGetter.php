@@ -3,12 +3,14 @@
 namespace Dedoc\Scramble\Infer\SimpleTypeGetters;
 
 use Dedoc\Scramble\Infer\Scope\Scope;
+use Dedoc\Scramble\Support\Type\GenericClassStringType;
 use Dedoc\Scramble\Support\Type\Literal\LiteralStringType;
 use Dedoc\Scramble\Support\Type\ObjectType;
 use Dedoc\Scramble\Support\Type\Reference\ConstFetchReferenceType;
 use Dedoc\Scramble\Support\Type\Reference\NewCallReferenceType;
 use Dedoc\Scramble\Support\Type\Reference\StaticReference;
 use Dedoc\Scramble\Support\Type\StringType;
+use Dedoc\Scramble\Support\Type\TemplateType;
 use Dedoc\Scramble\Support\Type\Type;
 use Dedoc\Scramble\Support\Type\UnknownType;
 use PhpParser\Node;
@@ -19,13 +21,23 @@ class ClassConstFetchTypeGetter
     {
         if ($node->name instanceof Node\Identifier && $node->name->toString() === 'class') {
             if ($node->class instanceof Node\Name) {
-                return new LiteralStringType($node->class->toString());
+                if (in_array($node->class->toString(), StaticReference::KEYWORDS)) {
+                    return new ConstFetchReferenceType(
+                        new StaticReference($node->class->toString()),
+                        $node->name->toString(),
+                    );
+                }
+
+                return new GenericClassStringType(new ObjectType($node->class->toString()));
             }
 
             $type = $scope->getType($node->class);
 
-            if ($type instanceof ObjectType || $type instanceof NewCallReferenceType) {
-                return new LiteralStringType($type->name);
+            if (
+                ($type instanceof ObjectType || $type instanceof NewCallReferenceType)
+                && $className = $this->getClassName($type)
+            ) {
+                return new GenericClassStringType(new ObjectType($className));
             }
         }
 
@@ -50,5 +62,28 @@ class ClassConstFetchTypeGetter
         }
 
         return new UnknownType('Cannot get type from class const fetch');
+    }
+
+    private function getClassName(ObjectType|NewCallReferenceType $type): ?string
+    {
+        if ($type instanceof ObjectType) {
+            return $type->name;
+        }
+
+        if (is_string($type->name)) {
+            return $type->name;
+        }
+
+        $typeName = $type->name;
+
+        if ($typeName instanceof LiteralStringType) {
+            return $typeName->value;
+        }
+
+        if ($typeName instanceof TemplateType && $typeName->is instanceof ObjectType) {
+            return $typeName->is->name;
+        }
+
+        return null;
     }
 }

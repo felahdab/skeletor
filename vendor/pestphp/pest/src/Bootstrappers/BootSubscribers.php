@@ -20,7 +20,7 @@ final readonly class BootSubscribers implements Bootstrapper
      *
      * @var array<int, class-string<Subscriber>>
      */
-    private const SUBSCRIBERS = [
+    private const array SUBSCRIBERS = [
         Subscribers\EnsureConfigurationIsAvailable::class,
         Subscribers\EnsureIgnorableTestCasesAreIgnored::class,
         Subscribers\EnsureKernelDumpIsFlushed::class,

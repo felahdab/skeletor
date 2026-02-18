@@ -17,16 +17,14 @@ class DestinationConfig extends Data
         public int $compressionLevel,
         public string $filenamePrefix,
         public array $disks,
+        public bool $continueOnFailure,
     ) {
-        if ($compressionLevel > 9) {
-            throw InvalidConfig::integerMustBeBetween('compression_level', 0, 9);
-        }
-
-        if ($compressionLevel < 0) {
+        if ($compressionLevel < 0 || $compressionLevel > 9) {
             throw InvalidConfig::integerMustBeBetween('compression_level', 0, 9);
         }
     }
 
+    /** @param array<string, mixed> $data */
     public static function fromArray(array $data): self
     {
         return new self(
@@ -34,6 +32,7 @@ class DestinationConfig extends Data
             compressionLevel: $data['compression_level'] ?? 9,
             filenamePrefix: $data['filename_prefix'] ?? '',
             disks: $data['disks'] ?? ['local'],
+            continueOnFailure: $data['continue_on_failure'] ?? false,
         );
     }
 }

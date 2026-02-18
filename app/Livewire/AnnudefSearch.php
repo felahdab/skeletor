@@ -48,21 +48,21 @@ class AnnudefSearch extends Component
                                                         $this->nid
                                                         );
             // [ "titre" => "M."
-            // "nom" => "EL-AHDAB"
-            // "prenom" => "Florian,Rémy"
-            // "gradelong" => "Capitaine de vaisseau"
-            // "gradecourt" => "CV"
-            // "nid" => "0012030028"
-            // "nomcomplet" => "EL-AHDAB Florian"
-            // "nomaffiche" => "EL-AHDAB Florian CV"
-            // "uid" => "florian.el-ahdab"
-            // "email" => "florian.el-ahdab@intradef.gouv.fr"
-            // "unites" => "MARINE/ALFAN/GTR FREMM TOULON/COMMANDEMENT"
-            // "status" => "EL-AHDAB"
-            // "prenomusuel" => "Florian"
-            // "categorystatus" => "Officiers de marine"
-            // "categoryrank" => "Officier"
-            // "familyname" => "EL-AHDAB" ]
+            // "nom" => "NOM"
+            // "prenom" => "Prénom1,Prénom2"
+            // "gradelong" => "Grade long"
+            // "gradecourt" => "GL"
+            // "nid" => "123456789"
+            // "nomcomplet" => "NOM Prénom1"
+            // "nomaffiche" => "NOM Prénom1 (GL)"
+            // "uid" => "prenom.nom"
+            // "email" => "prenom.nom@domaine.fr"
+            // "unites" => "RACINE/BRANCHE/BRANCHE/UNITE"
+            // "status" => "NOM"
+            // "prenomusuel" => "Prénom1"
+            // "categorystatus" => "Corps"
+            // "categoryrank" => "Catégorie"
+            // "familyname" => "NOM" ]
             foreach($this->users as $key=>$ldapuser)
             {
                 $localuser = User::withTrashed()->where('email', $ldapuser['email'])->first();

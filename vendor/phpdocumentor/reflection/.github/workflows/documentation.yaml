@@ -12,14 +12,14 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: "actions/checkout@v6"
 
       - name: "Build"
         uses: "phpDocumentor/phpDocumentor@master"
 
       - name: "Deploy"
         if: "${{ github.event_name == 'push' && github.ref == 'refs/heads/6.x' }}"
-        uses: "actions/upload-artifact@v4"
+        uses: "actions/upload-artifact@v5"
         with:
           name: "documentation"
           path: "build/docs"
@@ -32,14 +32,14 @@ jobs:
     needs: "documentation"
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: "actions/checkout@v6"
         with:
           repository: "phpDocumentor/docs"
           token: "${{ secrets.BOT_TOKEN }}"
           path: "docs"
 
       - name: "Download"
-        uses: "actions/download-artifact@v4"
+        uses: "actions/download-artifact@v6"
         with:
           name: "documentation"
           path: "build/docs"
@@ -48,7 +48,7 @@ jobs:
         run: "rsync -r --delete build/docs/* docs/docs/components/reflection"
 
       - name: "Commit"
-        uses: "stefanzweifel/git-auto-commit-action@v5"
+        uses: "stefanzweifel/git-auto-commit-action@v7"
         with:
           repository: "docs"
           commit_message: "Update reflection documentation"

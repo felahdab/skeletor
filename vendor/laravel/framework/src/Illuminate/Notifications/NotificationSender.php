@@ -12,6 +12,8 @@ use Illuminate\Notifications\Events\NotificationSent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Localizable;
+use Symfony\Component\Mailer\Exception\HttpTransportException;
+use Symfony\Component\Mailer\Exception\TransportException;
 use Throwable;
 
 class NotificationSender
@@ -74,7 +76,7 @@ class NotificationSender
     /**
      * Send the given notification to the given notifiable entities.
      *
-     * @param  \Illuminate\Support\Collection|array|mixed  $notifiables
+     * @param  \Illuminate\Support\Collection|mixed  $notifiables
      * @param  mixed  $notification
      * @return void
      */
@@ -92,7 +94,7 @@ class NotificationSender
     /**
      * Send the given notification immediately.
      *
-     * @param  \Illuminate\Support\Collection|array|mixed  $notifiables
+     * @param  \Illuminate\Support\Collection|mixed  $notifiables
      * @param  mixed  $notification
      * @param  array|null  $channels
      * @return void
@@ -104,12 +106,12 @@ class NotificationSender
         $original = clone $notification;
 
         foreach ($notifiables as $notifiable) {
-            if (empty($viaChannels = $channels ?: $notification->via($notifiable))) {
+            if (empty($viaChannels = $channels ?: $original->via($notifiable))) {
                 continue;
             }
 
-            $this->withLocale($this->preferredLocale($notifiable, $notification), function () use ($viaChannels, $notifiable, $original) {
-                $notificationId = Str::uuid()->toString();
+            $this->withLocale($this->preferredLocale($notifiable, $original), function () use ($viaChannels, $notifiable, $original) {
+                $notificationId = (string) Str::uuid();
 
                 foreach ((array) $viaChannels as $channel) {
                     if (! ($notifiable instanceof AnonymousNotifiable && $channel === 'database')) {
@@ -144,6 +146,8 @@ class NotificationSender
      * @param  mixed  $notification
      * @param  string  $channel
      * @return void
+     *
+     * @throws \Throwable
      */
     protected function sendToNotifiable($notifiable, $id, $notification, $channel)
     {
@@ -159,6 +163,10 @@ class NotificationSender
             $response = $this->manager->driver($channel)->send($notifiable, $notification);
         } catch (Throwable $exception) {
             if (! $this->failedEventWasDispatched) {
+                if ($exception instanceof HttpTransportException) {
+                    $exception = new TransportException($exception->getMessage(), $exception->getCode());
+                }
+
                 $this->events->dispatch(
                     new NotificationFailed($notifiable, $notification, $channel, ['exception' => $exception])
                 );
@@ -167,6 +175,10 @@ class NotificationSender
             $this->failedEventWasDispatched = false;
 
             throw $exception;
+        }
+
+        if (method_exists($notification, 'afterSending')) {
+            $notification->afterSending($notifiable, $channel, $response);
         }
 
         $this->events->dispatch(
@@ -208,7 +220,7 @@ class NotificationSender
         $original = clone $notification;
 
         foreach ($notifiables as $notifiable) {
-            $notificationId = Str::uuid()->toString();
+            $notificationId = (string) Str::uuid();
 
             foreach ((array) $original->via($notifiable) as $channel) {
                 $notification = clone $original;
@@ -224,19 +236,31 @@ class NotificationSender
                 $connection = $notification->connection;
 
                 if (method_exists($notification, 'viaConnections')) {
-                    $connection = $notification->viaConnections()[$channel] ?? null;
+                    $connection = $notification->viaConnections()[$channel] ?? $connection;
                 }
 
                 $queue = $notification->queue;
 
                 if (method_exists($notification, 'viaQueues')) {
-                    $queue = $notification->viaQueues()[$channel] ?? null;
+                    $queue = $notification->viaQueues()[$channel] ?? $queue;
                 }
 
                 $delay = $notification->delay;
 
                 if (method_exists($notification, 'withDelay')) {
                     $delay = $notification->withDelay($notifiable, $channel) ?? null;
+                }
+
+                $messageGroup = $notification->messageGroup ?? (method_exists($notification, 'messageGroup') ? $notification->messageGroup() : null);
+
+                if (method_exists($notification, 'withMessageGroups')) {
+                    $messageGroup = $notification->withMessageGroups($notifiable, $channel) ?? null;
+                }
+
+                $deduplicator = $notification->deduplicator ?? (method_exists($notification, 'deduplicationId') ? $notification->deduplicationId(...) : null);
+
+                if (method_exists($notification, 'withDeduplicators')) {
+                    $deduplicator = $notification->withDeduplicators($notifiable, $channel) ?? null;
                 }
 
                 $middleware = $notification->middleware ?? [];
@@ -257,6 +281,8 @@ class NotificationSender
                         ->onConnection($connection)
                         ->onQueue($queue)
                         ->delay(is_array($delay) ? ($delay[$channel] ?? null) : $delay)
+                        ->onGroup(is_array($messageGroup) ? ($messageGroup[$channel] ?? null) : $messageGroup)
+                        ->withDeduplicator(is_array($deduplicator) ? ($deduplicator[$channel] ?? null) : $deduplicator)
                         ->through($middleware)
                 );
             }

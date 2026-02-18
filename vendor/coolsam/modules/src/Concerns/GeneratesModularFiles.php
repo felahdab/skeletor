@@ -3,6 +3,7 @@
 namespace Coolsam\Modules\Concerns;
 
 use Coolsam\Modules\Facades\FilamentModules;
+use Illuminate\Console\Concerns\PromptsForMissingInput;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Module;
 use Symfony\Component\Console\Input\InputArgument;
@@ -10,10 +11,12 @@ use Symfony\Component\Finder\Finder;
 
 trait GeneratesModularFiles
 {
+    use PromptsForMissingInput;
+
     protected function getArguments(): array
     {
         return array_merge(parent::getArguments(), [
-            ['module', InputArgument::REQUIRED, 'The name of the module in which this should be installed'],
+            ['module', InputArgument::OPTIONAL, 'The name of the module in which this should be installed'],
         ]);
     }
 
@@ -41,19 +44,31 @@ trait GeneratesModularFiles
 
     protected function getPath($name): string
     {
-        $name = Str::replaceFirst($this->rootNamespace(), 'app', $name);
+        $appFolder = trim(config('modules.paths.app_folder', 'app/'), '/\\');
+        $rootNamespace = str($this->rootNamespace())->trim('\\')->toString();
+        $name = Str::replaceFirst($rootNamespace, $appFolder, $name);
 
         return $this->getModule()->getExtraPath(str_replace('\\', DIRECTORY_SEPARATOR, $name) . '.php');
     }
 
     protected function possibleModels()
     {
-        $modelPath = $this->getModule()->appPath('Models');
+        $appFolder = trim(config('modules.paths.app_folder', 'app/'), '/\\');
+        $modelPath = str(config('modules.paths.model_folder', 'app/Models'))
+            ->replaceFirst($appFolder, '')->replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR)->trim(DIRECTORY_SEPARATOR)->toString();
+        $modelPath = $this->getModule()->appPath($modelPath);
 
         return collect(Finder::create()->files()->depth(0)->in($modelPath))
             ->map(fn ($file) => $file->getBasename('.php'))
             ->sort()
             ->values()
+            ->all();
+    }
+
+    public function possibleFqnModels(): array
+    {
+        return collect($this->possibleModels())
+            ->map(fn ($model) => str($this->getModule()->appNamespace('Models'))->trim('\\')->append("\\{$model}")->toString())
             ->all();
     }
 
@@ -118,6 +133,11 @@ trait GeneratesModularFiles
                     'Filament Plugin' => 'e.g AccessControlPlugin',
                     default => '',
                 },
+            ],
+            'module' => [
+                'In which Module should we create this?',
+                'e.g Blog',
+                true,
             ],
         ];
     }

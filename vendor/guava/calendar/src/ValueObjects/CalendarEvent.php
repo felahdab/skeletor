@@ -3,15 +3,17 @@
 namespace Guava\Calendar\ValueObjects;
 
 use Carbon\Carbon;
-use Guava\Calendar\Contracts\Eventable;
-use Illuminate\Contracts\Support\Arrayable;
+use Filament\Support\Facades\FilamentTimezone;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-class CalendarEvent implements Arrayable, Eventable
+use function Guava\Calendar\utc_to_user_local_time;
+
+class CalendarEvent
 {
-    protected string $title;
+    protected string | Htmlable $title;
 
     protected Carbon $start;
 
@@ -39,6 +41,8 @@ class CalendarEvent implements Arrayable, Eventable
 
     protected array $classNames = [];
 
+    protected ?string $timezone = null;
+
     private function __construct(?Model $model = null)
     {
         if ($model) {
@@ -49,9 +53,12 @@ class CalendarEvent implements Arrayable, Eventable
 
     public function start(string | Carbon $start): static
     {
-        $this->start = is_string($start)
+        $start = is_string($start)
             ? Carbon::make($start)
             : $start;
+
+        $this->start = $start; // ->setTimezone(FilamentTimezone::get());
+        //        $this->start = $start->setTimezone(FilamentTimezone::get());
 
         return $this;
     }
@@ -63,9 +70,12 @@ class CalendarEvent implements Arrayable, Eventable
 
     public function end(string | Carbon $end): static
     {
-        $this->end = is_string($end)
+        $end = is_string($end)
             ? Carbon::make($end)
             : $end;
+
+        $this->end = $end; // ->setTimezone(FilamentTimezone::get());
+        //        $this->end = $end->setTimezone(FilamentTimezone::get());
 
         return $this;
     }
@@ -87,14 +97,14 @@ class CalendarEvent implements Arrayable, Eventable
         return $this->allDay;
     }
 
-    public function title(string $title): static
+    public function title(string | Htmlable $title): static
     {
         $this->title = $title;
 
         return $this;
     }
 
-    public function getTitle(): string
+    public function getTitle(): string | Htmlable
     {
         return $this->title;
     }
@@ -292,6 +302,13 @@ class CalendarEvent implements Arrayable, Eventable
         return $this;
     }
 
+    public function timezone(string $timezone): static
+    {
+        $this->timezone = $timezone;
+
+        return $this;
+    }
+
     public function getExtendedProps(): array
     {
         return $this->extendedProps;
@@ -302,12 +319,16 @@ class CalendarEvent implements Arrayable, Eventable
         return new static($model);
     }
 
-    public function toArray(): array
+    public function toCalendarObject(int $timezoneOffset, bool $useFilamentTimezone): array
     {
         $array = [
-            'title' => $this->getTitle(),
-            'start' => $this->getStart(),
-            'end' => $this->getEnd(),
+            'title' => $this->getTitle() instanceof Htmlable ? ['html' => $this->getTitle()->toHtml()] : $this->getTitle(),
+            'start' => $useFilamentTimezone
+                ? $this->getStart()->setTimezone($this->timezone ?? FilamentTimezone::get())->toIso8601String()
+                : $this->getStart()->utcOffset($timezoneOffset)->toIso8601String(),
+            'end' => $useFilamentTimezone
+                ? $this->getEnd()->setTimezone($this->timezone ?? FilamentTimezone::get())->toIso8601String()
+                : $this->getEnd()->utcOffset($timezoneOffset)->toIso8601String(),
             'allDay' => $this->getAllDay(),
             'backgroundColor' => $this->getBackgroundColor(),
             'textColor' => $this->getTextColor(),
@@ -336,8 +357,24 @@ class CalendarEvent implements Arrayable, Eventable
         return $array;
     }
 
-    public function toCalendarEvent(): array
+    public function fromCalendarObject(array $data, int $timezoneOffset, bool $useFilamentTimezone): static
     {
-        return $this->toArray();
+        $this
+            ->title($data['title'])
+            ->start(utc_to_user_local_time($data['start'], $timezoneOffset, $useFilamentTimezone))
+            ->end(utc_to_user_local_time($data['end'], $timezoneOffset, $useFilamentTimezone))
+            ->allDay($data['allDay'])
+            ->styles($data['styles'])
+            ->classNames($data['classNames'])
+            ->extendedProps($data['extendedProps'])
+            ->display($data['display'])
+            ->resourceIds($data['resourceIds'])
+        ;
+
+        if ($backgroundColor = data_get($data, 'backgroundColor')) {
+            $this->backgroundColor($backgroundColor);
+        }
+
+        return $this;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\UserResource\Actions;
 
+use Filament\Forms\Components\TextInput;
 use Filament\Actions\Action;
 use Filament\Forms\Components;
 
@@ -13,8 +14,8 @@ class ChangePasswordAction extends Action
             ->label("Changer le mot de passe")
             ->requiresConfirmation()
             ->visible(fn($record) => auth()->user()->IsSuperAdmin() || (! $record->IsSuperAdmin() && auth()->user()->can('skeletor.changer_le_mot_de_passe_des_utilisateurs')))
-            ->form([
-                Components\TextInput::make('password')
+            ->schema([
+                TextInput::make('password')
                     ->label('Mot de passe')
                     ->password()
                     ->revealable()
@@ -23,7 +24,7 @@ class ChangePasswordAction extends Action
                     ->confirmed()
                     ->live(onBlur: true),
 
-                Components\TextInput::make('password_confirmation')
+                TextInput::make('password_confirmation')
                     ->label('Confirmez le mot de passe')
                     ->password()
                     ->revealable()

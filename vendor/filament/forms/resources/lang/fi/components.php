@@ -284,7 +284,11 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'file_attachments_accepted_file_types_message' => 'Lähetetyn tiedoston pitää olla tyyppiä:: :values.',
+
+        'file_attachments_max_size_message' => 'Lähetetyt tiedostot eivät voi olla isompia kuin :max kilotavua.',
+
+        'tools' => [
             'attach_files' => 'Liitä tiedostoja',
             'blockquote' => 'Lainaus',
             'bold' => 'Lihavointi',
@@ -298,6 +302,28 @@ return [
             'strike' => 'Yliviivaus',
             'table' => 'Taulukko',
             'undo' => 'Peruuta',
+        ],
+
+    ],
+
+    'modal_table_select' => [
+
+        'actions' => [
+
+            'select' => [
+
+                'label' => 'Valitse',
+
+                'actions' => [
+
+                    'select' => [
+                        'label' => 'Valitse',
+                    ],
+
+                ],
+
+            ],
+
         ],
 
     ],
@@ -365,40 +391,238 @@ return [
 
     'rich_editor' => [
 
-        'dialogs' => [
+        'actions' => [
+
+            'attach_files' => [
+
+                'label' => 'Lisää tiedosto',
+
+                'modal' => [
+
+                    'heading' => 'Siirrä tiedosto',
+
+                    'form' => [
+
+                        'file' => [
+
+                            'label' => [
+                                'new' => 'Tiedosto',
+                                'existing' => 'Korvaa tiedosto',
+                            ],
+
+                        ],
+
+                        'alt' => [
+
+                            'label' => [
+                                'new' => 'Vaihtoehtoinen teksti',
+                                'existing' => 'Korvaa vaihtoehtoinen teksti',
+                            ],
+
+                        ],
+
+                    ],
+
+                ],
+
+            ],
+
+            'custom_block' => [
+
+                'modal' => [
+
+                    'actions' => [
+
+                        'insert' => [
+                            'label' => 'Sijoita',
+                        ],
+
+                        'save' => [
+                            'label' => 'Tallenna',
+                        ],
+
+                    ],
+
+                ],
+
+            ],
+
+            'grid' => [
+
+                'label' => 'Ruudukko',
+
+                'modal' => [
+
+                    'heading' => 'Ruudukko',
+
+                    'form' => [
+
+                        'preset' => [
+
+                            'label' => 'Pohja',
+
+                            'placeholder' => 'Ei mitään',
+
+                            'options' => [
+                                'two' => 'Kaksi',
+                                'three' => 'Kolme',
+                                'four' => 'Neljä',
+                                'five' => 'Viisi',
+                                'two_start_third' => 'Kaksi (33/66)',
+                                'two_end_third' => 'Kaksi (66/33)',
+                                'two_start_fourth' => 'Kaksi (25/75)',
+                                'two_end_fourth' => 'Kaksi (75/25)',
+                            ],
+                        ],
+
+                        'columns' => [
+                            'label' => 'Sarakkeet',
+                        ],
+
+                        'from_breakpoint' => [
+
+                            'label' => 'Kokoluokasta',
+
+                            'options' => [
+                                'default' => 'Kaikki',
+                                'sm' => 'Pieni',
+                                'md' => 'Keskikoko',
+                                'lg' => 'Iso',
+                                'xl' => 'Isompi',
+                                '2xl' => 'Isoin',
+                            ],
+
+                        ],
+
+                        'is_asymmetric' => [
+                            'label' => 'Kaksi epäsymmetristä saraketta',
+                        ],
+
+                        'start_span' => [
+                            'label' => 'Alun leveys',
+                        ],
+
+                        'end_span' => [
+                            'label' => 'Lopun leveys',
+                        ],
+
+                    ],
+
+                ],
+
+            ],
 
             'link' => [
 
-                'actions' => [
-                    'link' => 'Linkitä',
-                    'unlink' => 'Poista linkki',
+                'label' => 'Muokkaa',
+
+                'modal' => [
+
+                    'heading' => 'Linkki',
+
+                    'form' => [
+
+                        'url' => [
+                            'label' => 'URL',
+                        ],
+
+                        'should_open_in_new_tab' => [
+                            'label' => 'Avaa uudessa välilehdessä',
+                        ],
+
+                    ],
+
                 ],
 
-                'label' => 'URL',
+            ],
 
-                'placeholder' => 'Lisää osoite',
+            'text_color' => [
+
+                'label' => 'Tekstin väri',
+
+                'modal' => [
+
+                    'heading' => 'Tekstin väri',
+
+                    'form' => [
+
+                        'color' => [
+                            'label' => 'Väri',
+                        ],
+
+                        'custom_color' => [
+                            'label' => 'Omavalintainen väri',
+                        ],
+
+                    ],
+
+                ],
 
             ],
 
         ],
 
-        'toolbar_buttons' => [
+        'file_attachments_accepted_file_types_message' => 'Lähetetyn tiedoston pitää olla tyyppiä:: :values.',
+
+        'file_attachments_max_size_message' => 'Lähetetyt tiedostot eivät voi olla isompia kuin :max kilotavua.',
+
+        'no_merge_tag_search_results_message' => 'Tunnisteita ei löytynyt.',
+
+        'mentions' => [
+            'no_options_message' => 'Ei vaihtoehtoja saatavilla.',
+            'no_search_results_message' => 'Ei hakuasi vastaavia vaihtoehtoja.',
+            'search_prompt' => 'Aloita kirjoittaminen hakeaksesi...',
+            'searching_message' => 'Haetaan...',
+        ],
+        'tools' => [
+            'align_center' => 'Keskitä',
+            'align_end' => 'Tasaa oikealle',
+            'align_justify' => 'Tasaa keskelle',
+            'align_start' => 'Tasaa vasemmalle',
             'attach_files' => 'Liitä tiedostoja',
             'blockquote' => 'Lainaus',
             'bold' => 'Lihavointi',
             'bullet_list' => 'Lista',
+            'clear_formatting' => 'Tyhjennä muotoilu',
+            'code' => 'Koodi',
             'code_block' => 'Koodialue',
+            'custom_blocks' => 'Lohkot',
+            'details' => 'Lisätiedot',
             'h1' => 'Pääotsikko',
             'h2' => 'Otsikko',
             'h3' => 'Aliotsikko',
+            'grid' => 'Ruudukko',
+            'grid_delete' => 'Poista ruudukko',
+            'highlight' => 'Korostus',
+            'horizontal_rule' => 'Erotin',
             'italic' => 'Kursivoitu',
+            'lead' => 'Johdatus',
             'link' => 'Linkki',
+            'merge_tags' => 'Yhdistä tunniste',
             'ordered_list' => 'Luettelo',
             'redo' => 'Toista',
+            'small' => 'Pieni teksti',
             'strike' => 'Yliviivaus',
+            'subscript' => 'Alaindeksi',
+            'superscript' => 'Yläindeksi',
+            'table' => 'Taulukko',
+            'table_delete' => 'Poista taulukko',
+            'table_add_column_before' => 'Lisää sarake ennen',
+            'table_add_column_after' => 'Lisää sarake jälkeen',
+            'table_delete_column' => 'Poista sarake',
+            'table_add_row_before' => 'Lisää rivi ennen',
+            'table_add_row_after' => 'Lisää rivi jälkeen',
+            'table_delete_row' => 'Poista rivi',
+            'table_merge_cells' => 'Yhdistä solut',
+            'table_split_cell' => 'Pilko solu',
+            'table_toggle_header_row' => 'Vaihda otsikkorivi',
+            'table_toggle_header_cell' => 'Vaihda otsikkosolu',
+            'text_color' => 'Tekstin väri',
             'underline' => 'Alleviivaus',
             'undo' => 'Peruuta',
         ],
+
+        'uploading_file_message' => 'Lähetetään tiedostoa...',
 
     ],
 
@@ -461,6 +685,8 @@ return [
 
         'max_items_message' => 'Voit valita enintään :count.',
 
+        'no_options_message' => 'Ei vaihtoehtoja saatavilla.',
+
         'no_search_results_message' => 'Haku ei löytänyt tuloksia.',
 
         'placeholder' => 'Valitse vaihtoehto',
@@ -472,12 +698,27 @@ return [
     ],
 
     'tags_input' => [
+
+        'actions' => [
+
+            'delete' => [
+                'label' => 'Poista',
+            ],
+
+        ],
+
         'placeholder' => 'Uusi tunniste',
+
     ],
 
     'text_input' => [
 
         'actions' => [
+
+            'copy' => [
+                'label' => 'Kopioi',
+                'message' => 'Kopioitu',
+            ],
 
             'hide_password' => [
                 'label' => 'Piilota salasana',
@@ -496,22 +737,6 @@ return [
         'boolean' => [
             'true' => 'Kyllä',
             'false' => 'Ei',
-        ],
-
-    ],
-
-    'wizard' => [
-
-        'actions' => [
-
-            'previous_step' => [
-                'label' => 'Edellinen',
-            ],
-
-            'next_step' => [
-                'label' => 'Seuraava',
-            ],
-
         ],
 
     ],

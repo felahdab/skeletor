@@ -59,8 +59,6 @@ class StreamConnection extends AbstractConnection
     public function __construct(ParametersInterface $parameters, ?StreamFactoryInterface $factory = null)
     {
         parent::__construct($parameters);
-        $this->parameters->conn_uid = spl_object_hash($this);
-
         $this->streamFactory = $factory ?? new StreamFactory();
     }
 
@@ -92,12 +90,44 @@ class StreamConnection extends AbstractConnection
     public function connect()
     {
         if (parent::connect() && $this->initCommands) {
-            foreach ($this->initCommands as $command) {
-                $response = $this->executeCommand($command);
+            $responses = $this->sendPipeline($this->initCommands);
 
-                $this->handleOnConnectResponse($response, $command);
+            if ($responses[0][0] instanceof ErrorResponseInterface) {
+                // Error in HELLO command, Redis < 6.0.
+                // We need to handle it separately and re-send other commands.
+                $this->handleOnConnectResponse($responses[0][0], $responses[0][1]);
+                $responses = $this->sendPipeline(array_slice($this->initCommands, 1));
+            }
+
+            foreach ($responses as $response) {
+                $this->handleOnConnectResponse($response[0], $response[1]);
             }
         }
+    }
+
+    /**
+     * Sends commands to the server as pipeline and returns responses.
+     *
+     * @param  CommandInterface[]     $commands
+     * @return array<int, array>
+     * @throws CommunicationException
+     */
+    protected function sendPipeline(array $commands): array
+    {
+        $serialisedCommands = '';
+
+        foreach ($commands as $command) {
+            $serialisedCommands .= $command->serializeCommand();
+        }
+
+        $this->write($serialisedCommands);
+        $responses = [];
+
+        foreach ($commands as $command) {
+            $responses[] = [$this->readResponse($command), $command];
+        }
+
+        return $responses;
     }
 
     /**
@@ -145,7 +175,7 @@ class StreamConnection extends AbstractConnection
         $stream = $this->getResource();
 
         if ($stream->eof()) {
-            $this->onStreamError(new RuntimeException('Stream is already at the end'), '');
+            $this->onStreamError(new RuntimeException('', 1), 'Stream is already at the end');
         }
 
         try {
@@ -342,11 +372,14 @@ class StreamConnection extends AbstractConnection
      * @param  string|null                             $message
      * @throws RuntimeException|CommunicationException
      */
-    protected function onStreamError(RuntimeException $e, ?string $message = null)
+    protected function onStreamError($e, ?string $message = null)
     {
-        // Code = 1 represents issues related to read/write operation.
+        // Code = 1 represents issues related to read/write operation, connection broken.
         if ($e->getCode() === 1) {
             $this->onConnectionError($message);
+        } elseif ($e->getCode() === 2) {
+            // Operation has been timed out, connection not necessarily broken.
+            $this->onTimeoutError();
         }
 
         throw $e;

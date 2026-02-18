@@ -2,9 +2,21 @@
 
 return [
 
-    'column_toggle' => [
+    'column_manager' => [
 
         'heading' => 'Columns',
+
+        'actions' => [
+
+            'apply' => [
+                'label' => 'Apply columns',
+            ],
+
+            'reset' => [
+                'label' => 'Reset',
+            ],
+
+        ],
 
     ],
 
@@ -12,6 +24,22 @@ return [
 
         'actions' => [
             'label' => 'Action|Actions',
+        ],
+
+        'select' => [
+
+            'loading_message' => 'Loading...',
+
+            'no_options_message' => 'No options available.',
+
+            'no_search_results_message' => 'No options match your search.',
+
+            'placeholder' => 'Select an option',
+
+            'searching_message' => 'Searching...',
+
+            'search_prompt' => 'Start typing to search...',
+
         ],
 
         'text' => [
@@ -99,8 +127,8 @@ return [
             'label' => 'Bulk actions',
         ],
 
-        'toggle_columns' => [
-            'label' => 'Toggle columns',
+        'column_manager' => [
+            'label' => 'Column manager',
         ],
 
     ],
@@ -145,7 +173,13 @@ return [
         ],
 
         'select' => [
+
             'placeholder' => 'All',
+
+            'relationship' => [
+                'empty_option_label' => 'None',
+            ],
+
         ],
 
         'trashed' => [
@@ -168,7 +202,6 @@ return [
 
             'group' => [
                 'label' => 'Group by',
-                'placeholder' => 'Group by',
             ],
 
             'direction' => [
@@ -228,5 +261,7 @@ return [
         ],
 
     ],
+
+    'default_model_label' => 'record',
 
 ];

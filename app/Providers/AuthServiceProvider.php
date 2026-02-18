@@ -2,6 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use App\Policies\UserPolicy;
+use App\Models\Remotesystem;
+use App\Policies\RemotesystemPolicy;
+use App\Models\MindefConnectUser;
+use App\Policies\MindefConnectUserPolicy;
+use App\Policies\PermissionPolicy;
+use App\Policies\RolePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -18,11 +26,11 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        Models\User::class => Policies\UserPolicy::class,
-        Models\Remotesystem::class => Policies\RemotesystemPolicy::class,
-        Models\MindefConnectUser::class => Policies\MindefConnectUserPolicy::class,
-        Permission::class => Policies\PermissionPolicy::class,
-        Role::class => Policies\RolePolicy::class,
+        User::class => UserPolicy::class,
+        Remotesystem::class => RemotesystemPolicy::class,
+        MindefConnectUser::class => MindefConnectUserPolicy::class,
+        Permission::class => PermissionPolicy::class,
+        Role::class => RolePolicy::class,
 
     ];
 

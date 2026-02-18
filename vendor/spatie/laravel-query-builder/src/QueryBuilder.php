@@ -50,6 +50,12 @@ class QueryBuilder implements ArrayAccess
         return $this->subject;
     }
 
+    /**
+     * @template T of Model
+     *
+     * @param EloquentBuilder<T>|Relation<T, *, *>|class-string<T> $subject
+     * @return static<T>
+     */
     public static function for(
         EloquentBuilder|Relation|string $subject,
         ?Request $request = null
@@ -58,7 +64,7 @@ class QueryBuilder implements ArrayAccess
             $subject = $subject::query();
         }
 
-        /** @var static<TModel> $queryBuilder */
+        /** @var static<T> $queryBuilder */
         $queryBuilder = new static($subject, $request);
 
         return $queryBuilder;

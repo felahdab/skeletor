@@ -1,0 +1,13 @@
+/vendor
+/node_modules
+composer.lock
+.phpunit.cache
+.phpunit.result.cache
+
+# OS generated files
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

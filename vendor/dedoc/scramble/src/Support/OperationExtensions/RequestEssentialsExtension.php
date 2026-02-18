@@ -2,6 +2,7 @@
 
 namespace Dedoc\Scramble\Support\OperationExtensions;
 
+use Dedoc\Scramble\Attributes\Endpoint;
 use Dedoc\Scramble\Attributes\Group;
 use Dedoc\Scramble\Extensions\OperationExtension;
 use Dedoc\Scramble\GeneratorConfig;
@@ -19,9 +20,11 @@ use Dedoc\Scramble\Support\RouteInfo;
 use Dedoc\Scramble\Support\ServerFactory;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocNode;
 use ReflectionAttribute;
+use ReflectionMethod;
 
 class RequestEssentialsExtension extends OperationExtension
 {
@@ -35,24 +38,27 @@ class RequestEssentialsExtension extends OperationExtension
         parent::__construct($infer, $openApiTransformer, $config);
     }
 
-    private function getDefaultTags(Operation $operation, RouteInfo $routeInfo)
+    /**
+     * @return string[]
+     */
+    private function getDefaultTags(Operation $operation, RouteInfo $routeInfo): array
     {
-        $defaultName = Str::of(class_basename($routeInfo->className()))->replace('Controller', '');
+        $defaultName = (string) Str::of(class_basename($routeInfo->className()))->replace('Controller', '');
 
         if ($groupAttrsInstances = $this->getTagsAnnotatedByGroups($routeInfo)) {
             $attributeInstance = $groupAttrsInstances[0]->newInstance();
 
             $operation->setAttribute('groupWeight', $attributeInstance->weight);
 
-            return [
+            return array_filter([
                 $attributeInstance->name ?: $defaultName,
-            ];
+            ]);
         }
 
-        return array_unique([
+        return array_values(array_unique(array_filter([
             ...$this->extractTagsForMethod($routeInfo),
             $defaultName,
-        ]);
+        ])));
     }
 
     public function handle(Operation $operation, RouteInfo $routeInfo)
@@ -66,7 +72,7 @@ class RequestEssentialsExtension extends OperationExtension
         $uriWithoutOptionalParams = Str::replace('?}', '}', $routeInfo->route->uri);
 
         $operation
-            ->setMethod(strtolower($routeInfo->route->methods()[0]))
+            ->setMethod($this->getOperationMethod($routeInfo))
             ->setPath(Str::replace(
                 collect($pathAliases)->keys()->map(fn ($k) => '{'.$k.'}')->all(),
                 collect($pathAliases)->values()->map(fn ($v) => '{'.$v.'}')->all(),
@@ -80,6 +86,23 @@ class RequestEssentialsExtension extends OperationExtension
         }
 
         $operation->setAttribute('operationId', $this->getOperationId($routeInfo));
+
+        $this->setTitleAndDescriptionFromEndpointAttribute($operation, $routeInfo);
+    }
+
+    private function getOperationMethod(RouteInfo $routeInfo): string
+    {
+        $methods = array_map('strtolower', $routeInfo->route->methods());
+
+        if ($explicitMethod = $this->getEndpointAttributeInstance($routeInfo)?->method) {
+            $explicitMethod = strtolower($explicitMethod);
+
+            if (in_array($explicitMethod, $methods)) {
+                return $explicitMethod;
+            }
+        }
+
+        return $routeInfo->method;
     }
 
     /**
@@ -121,6 +144,7 @@ class RequestEssentialsExtension extends OperationExtension
             [, $urlPart] = explode('://', $url);
             [$domain, $path] = count($parts = explode('/', $urlPart, 2)) !== 2 ? [$parts[0], ''] : $parts;
 
+            /** @var Collection<int, string> $params */
             $params = Str::of($domain)->matchAll('/\{(.*?)\}/');
 
             return $params->join('.').'/'.$path;
@@ -131,8 +155,8 @@ class RequestEssentialsExtension extends OperationExtension
 
     private function extractTagsForMethod(RouteInfo $routeInfo)
     {
-        $classPhpDoc = $routeInfo->reflectionMethod()
-            ? $routeInfo->reflectionMethod()->getDeclaringClass()->getDocComment()
+        $classPhpDoc = $routeInfo->isClassBased()
+            ? $routeInfo->reflectionMethod()?->getDeclaringClass()->getDocComment()
             : false;
 
         $classPhpDoc = $classPhpDoc ? PhpDoc::parse($classPhpDoc) : new PhpDocNode([]);
@@ -151,6 +175,14 @@ class RequestEssentialsExtension extends OperationExtension
         return new UniqueNameOptions(
             eloquent: (function () use ($routeInfo) {
                 // Manual operation ID setting.
+                // Check if Endpoint attribute is present with an `operationId` value
+                $operationId = $this->getEndpointAttributeInstance($routeInfo)?->operationId;
+
+                if ($operationId) {
+                    return $operationId;
+                }
+
+                // Failing that, lets look for the annotation
                 if (
                     ($operationId = $routeInfo->phpDoc()->getTagsByName('@operationId'))
                     && ($value = trim(Arr::first($operationId)?->value?->value))
@@ -188,9 +220,15 @@ class RequestEssentialsExtension extends OperationExtension
      */
     private function getTagsAnnotatedByGroups(RouteInfo $routeInfo): array
     {
+        $reflection = $routeInfo->reflectionAction();
+
+        $methodClassGroupAttributes = $reflection instanceof ReflectionMethod
+            ? $reflection->getDeclaringClass()->getAttributes(Group::class)
+            : [];
+
         return [
-            ...($routeInfo->reflectionMethod()?->getAttributes(Group::class) ?? []),
-            ...($routeInfo->reflectionMethod()?->getDeclaringClass()->getAttributes(Group::class) ?? []),
+            ...($reflection?->getAttributes(Group::class) ?? []),
+            ...$methodClassGroupAttributes,
         ];
     }
 
@@ -209,5 +247,26 @@ class RequestEssentialsExtension extends OperationExtension
 
             $this->openApiContext->groups->push($group);
         }
+    }
+
+    private function setTitleAndDescriptionFromEndpointAttribute(Operation $operation, RouteInfo $routeInfo): void
+    {
+        if (! $endpointAttribute = $this->getEndpointAttributeInstance($routeInfo)) {
+            return;
+        }
+
+        if ($endpointAttribute->title) {
+            $operation->summary($endpointAttribute->title);
+        }
+
+        if ($endpointAttribute->description) {
+            $operation->description($endpointAttribute->description);
+        }
+    }
+
+    private function getEndpointAttributeInstance(RouteInfo $routeInfo): ?Endpoint
+    {
+        return ($routeInfo->reflectionAction()?->getAttributes(Endpoint::class)[0] ?? null)
+            ?->newInstance();
     }
 }

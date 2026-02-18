@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
+use App\Service\RandomPasswordGeneratorService;
 
 class CreateAdminUserSeeder extends Seeder
 {
@@ -16,11 +17,13 @@ class CreateAdminUserSeeder extends Seeder
      */
     public function run()
     {
+        $mot_de_passe = (new RandomPasswordGeneratorService())->generateRandomString(10);
+
         $user = User::create([
             'nom' => 'Admin', 
             'prenom' => 'Admin', 
-            'email' => 'admin@intradef.gouv.fr',
-            'password' => 'admin123',
+            'email' => 'admin@skeletor.fr',
+            'password' => $mot_de_passe,
             'display_name' => 'Admin Admin',
             'admin' => true
         ]);

@@ -6,10 +6,12 @@ namespace Pest\Concerns;
 
 use Closure;
 use Pest\Exceptions\DatasetArgumentsMismatch;
+use Pest\Panic;
 use Pest\Preset;
 use Pest\Support\ChainableClosure;
 use Pest\Support\ExceptionTrace;
 use Pest\Support\Reflection;
+use Pest\Support\Shell;
 use Pest\TestSuite;
 use PHPUnit\Framework\Attributes\PostCondition;
 use PHPUnit\Framework\TestCase;
@@ -100,27 +102,6 @@ trait Testable
      * The list of snapshot changes, if any.
      */
     private array $__snapshotChanges = [];
-
-    /**
-     * Creates a new Test Case instance.
-     */
-    public function __construct(string $name)
-    {
-        parent::__construct($name);
-
-        $test = TestSuite::getInstance()->tests->get(self::$__filename);
-
-        if ($test->hasMethod($name)) {
-            $method = $test->getMethod($name);
-            $this->__description = self::$__latestDescription = $method->description;
-            self::$__latestAssignees = $method->assignees;
-            self::$__latestNotes = $method->notes;
-            self::$__latestIssues = $method->issues;
-            self::$__latestPrs = $method->prs;
-            $this->__describing = $method->describing;
-            $this->__test = $method->getClosure();
-        }
-    }
 
     /**
      * Resets the test case static properties.
@@ -214,7 +195,11 @@ trait Testable
             $beforeAll = ChainableClosure::boundStatically(self::$__beforeAll, $beforeAll);
         }
 
-        call_user_func(Closure::bind($beforeAll, null, self::class));
+        try {
+            call_user_func(Closure::bind($beforeAll, null, self::class));
+        } catch (Throwable $e) {
+            Panic::with($e);
+        }
     }
 
     /**
@@ -241,8 +226,6 @@ trait Testable
         TestSuite::getInstance()->test = $this;
 
         $method = TestSuite::getInstance()->tests->get(self::$__filename)->getMethod($this->name());
-
-        $method->setUp($this);
 
         $description = $method->description;
         if ($this->dataName()) {
@@ -283,6 +266,33 @@ trait Testable
         }
 
         $this->__callClosure($beforeEach, $arguments);
+    }
+
+    /**
+     * Initialize test case properties from TestSuite.
+     */
+    public function __initializeTestCase(): void
+    {
+        // Return if the test case has already been initialized
+        if (isset($this->__test)) {
+            return;
+        }
+
+        $name = $this->name();
+        $test = TestSuite::getInstance()->tests->get(self::$__filename);
+
+        if ($test->hasMethod($name)) {
+            $method = $test->getMethod($name);
+            $this->__description = self::$__latestDescription = $method->description;
+            self::$__latestAssignees = $method->assignees;
+            self::$__latestNotes = $method->notes;
+            self::$__latestIssues = $method->issues;
+            self::$__latestPrs = $method->prs;
+            $this->__describing = $method->describing;
+            $this->__test = $method->getClosure();
+
+            $method->setUp($this);
+        }
     }
 
     /**
@@ -434,15 +444,7 @@ trait Testable
             return;
         }
 
-        if (count($this->__snapshotChanges) === 1) {
-            $this->markTestIncomplete($this->__snapshotChanges[0]);
-
-            return;
-        }
-
-        $messages = implode(PHP_EOL, array_map(static fn (string $message): string => '- $message', $this->__snapshotChanges));
-
-        $this->markTestIncomplete($messages);
+        $this->markTestIncomplete(implode('. ', $this->__snapshotChanges));
     }
 
     /**
@@ -466,7 +468,7 @@ trait Testable
      */
     public static function getLatestPrintableTestCaseMethodName(): string
     {
-        return self::$__latestDescription;
+        return self::$__latestDescription ?? '';
     }
 
     /**
@@ -480,5 +482,13 @@ trait Testable
             'prs' => self::$__latestPrs,
             'notes' => self::$__latestNotes,
         ];
+    }
+
+    /**
+     * Opens a shell for the test case.
+     */
+    public function shell(): void
+    {
+        Shell::open();
     }
 }

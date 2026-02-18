@@ -2,6 +2,7 @@
 
 namespace App\Filament\AvatarProviders;
 
+use Filament\AvatarProviders\Contracts\AvatarProvider;
 use Filament\AvatarProviders\Contracts;
 use Filament\Facades\Filament;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Service\AnnudefAjaxRequestService;
 
 
-class SkeletorAvatarProvider implements Contracts\AvatarProvider
+class SkeletorAvatarProvider implements AvatarProvider
 {
     public function get(Model | Authenticatable $record): string
     {

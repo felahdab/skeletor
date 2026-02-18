@@ -10,16 +10,22 @@ use Dedoc\Scramble\Support\OperationExtensions\RulesExtractor\GeneratesParameter
 use Dedoc\Scramble\Support\OperationExtensions\RulesExtractor\ParametersExtractionResult;
 use Dedoc\Scramble\Support\RouteInfo;
 use Dedoc\Scramble\Support\SchemaClassDocReflector;
+use Dedoc\Scramble\Support\Type\ObjectType;
+use Dedoc\Scramble\Support\Type\Reference\MethodCallReferenceType;
 use Illuminate\Support\Arr;
 use PhpParser\PrettyPrinter;
 use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionParameter;
-use Spatie\LaravelData\Contracts\BaseData;
 
 class FormRequestParametersExtractor implements ParameterExtractor
 {
     use GeneratesParametersFromRules;
+
+    /**
+     * @var class-string<mixed>[]
+     */
+    private static array $ignoredInstancesOf = [];
 
     public function __construct(
         private PrettyPrinter $printer,
@@ -32,7 +38,7 @@ class FormRequestParametersExtractor implements ParameterExtractor
             return $parameterExtractionResults;
         }
 
-        if (is_a($requestClassName, BaseData::class, true)) {
+        if ($this->isIgnored($requestClassName)) {
             return $parameterExtractionResults;
         }
 
@@ -41,14 +47,28 @@ class FormRequestParametersExtractor implements ParameterExtractor
         return $parameterExtractionResults;
     }
 
+    /**
+     * @param  class-string<mixed>|class-string<mixed>[]  $ignoredClasses
+     */
+    public static function ignoreInstanceOf(string|array $ignoredClasses): void
+    {
+        $ignoredClasses = Arr::wrap($ignoredClasses);
+
+        foreach ($ignoredClasses as $ignoredClass) {
+            if (! in_array($ignoredClass, self::$ignoredInstancesOf, true)) {
+                self::$ignoredInstancesOf[] = $ignoredClass;
+            }
+        }
+    }
+
     private function getFormRequestClassName(RouteInfo $routeInfo): ?string
     {
-        if (! $reflectionMethod = $routeInfo->reflectionMethod()) {
+        if (! $reflectionAction = $routeInfo->reflectionAction()) {
             return null;
         }
 
         /** @var ReflectionParameter $requestParam */
-        if (! $requestParam = collect($reflectionMethod->getParameters())->first($this->isCustomRequestParam(...))) {
+        if (! $requestParam = collect($reflectionAction->getParameters())->first($this->isCustomRequestParam(...))) {
             return null;
         }
 
@@ -76,6 +96,17 @@ class FormRequestParametersExtractor implements ParameterExtractor
         return method_exists($className, 'rules');
     }
 
+    private function isIgnored(string $className): bool
+    {
+        foreach (self::$ignoredInstancesOf as $ignoredClass) {
+            if (is_a($className, $ignoredClass, true)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function extractFormRequestParameters(string $requestClassName, RouteInfo $routeInfo): ParametersExtractionResult
     {
         $classReflector = Infer\Reflector\ClassReflector::make($requestClassName);
@@ -88,13 +119,13 @@ class FormRequestParametersExtractor implements ParameterExtractor
 
         return new ParametersExtractionResult(
             parameters: $this->makeParameters(
-                node: RulesNodes::makeFromStatements(
-                    statements: Arr::wrap($classReflector->getMethod('rules')->getAstNode()->stmts),
-                    className: $classReflector->className,
-                ),
-                rules: (new ComposedFormRequestRulesEvaluator($this->printer, $classReflector, $routeInfo->route))->handle(),
+                rules: (new ComposedFormRequestRulesEvaluator($this->printer, $classReflector, $routeInfo->method))->handle(),
                 typeTransformer: $this->openApiTransformer,
-                in: in_array(mb_strtolower($routeInfo->route->methods()[0]), RequestBodyExtension::HTTP_METHODS_WITHOUT_REQUEST_BODY)
+                rulesDocsRetriever: new TypeBasedRulesDocumentationRetriever(
+                    $routeInfo->getScope(),
+                    new MethodCallReferenceType(new ObjectType($requestClassName), 'rules', []),
+                ),
+                in: in_array(mb_strtolower($routeInfo->method), RequestBodyExtension::HTTP_METHODS_WITHOUT_REQUEST_BODY)
                     ? 'query'
                     : 'body',
             ),

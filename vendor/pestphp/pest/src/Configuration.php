@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pest;
 
+use Pest\PendingCalls\BeforeEachCall;
 use Pest\PendingCalls\UsesCall;
 
 /**
@@ -63,6 +64,14 @@ final readonly class Configuration
     }
 
     /**
+     * Marks all tests in the current file to be run exclusively.
+     */
+    public function only(): void
+    {
+        (new BeforeEachCall(TestSuite::getInstance(), $this->filename))->only();
+    }
+
+    /**
      * Depending on where is called, it will extend the given classes and traits globally or locally.
      */
     public function use(string ...$classAndTraits): UsesCall
@@ -100,6 +109,14 @@ final readonly class Configuration
     public function project(): Configuration\Project
     {
         return Configuration\Project::getInstance();
+    }
+
+    /**
+     * Gets the browser configuration.
+     */
+    public function browser(): Browser\Configuration
+    {
+        return new Browser\Configuration;
     }
 
     /**

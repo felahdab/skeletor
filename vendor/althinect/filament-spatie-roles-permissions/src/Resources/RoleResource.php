@@ -9,12 +9,12 @@ use Althinect\FilamentSpatieRolesPermissions\Resources\RoleResource\Pages\ViewRo
 use Althinect\FilamentSpatieRolesPermissions\Resources\RoleResource\RelationManager\PermissionRelationManager;
 use Althinect\FilamentSpatieRolesPermissions\Resources\RoleResource\RelationManager\UserRelationManager;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Section;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -25,8 +25,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class RoleResource extends Resource
 {
-
-
     public static function isScopedToTenant(): bool
     {
         return config('filament-spatie-roles-permissions.scope_roles_to_tenant', config('filament-spatie-roles-permissions.scope_to_tenant', true));
@@ -72,9 +70,9 @@ class RoleResource extends Resource
         return config('filament-spatie-roles-permissions.clusters.roles', null);
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Section::make()
                     ->schema([
@@ -147,18 +145,18 @@ class RoleResource extends Resource
             ])
             ->filters([])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make(),
+                \Filament\Actions\EditAction::make(),
+                \Filament\Actions\ViewAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                \Filament\Actions\BulkActionGroup::make([
+                    \Filament\Actions\DeleteBulkAction::make(),
                 ]),
             ])
             ->emptyStateActions(
                 config('filament-spatie-roles-permissions.should_remove_empty_state_actions.roles') ? [] :
                     [
-                        Tables\Actions\CreateAction::make()
+                        \Filament\Actions\CreateAction::make()
                     ]
             );
     }
