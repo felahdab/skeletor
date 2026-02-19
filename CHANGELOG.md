@@ -1,3 +1,18 @@
+## 4.0.0 (February 19, 2026)
+- Cet upgrade est un upgrade majeur: on passe Filament de la v3 à la v4, ce qui nécessite en général des changements significatifs dans les panneaux Filament.
+- Bugfix: la création d'utilisateur ne fonctionnait pas car le mot de passe initial n'était pas défini.
+- Ajustement page de recherche dans l'annuaire.
+- Blanchiement du code de Skeletor.
+- Modification des méthodes de logs des login. Retrait de code inutilisé datant de FFAST toute première version (stockage du role de l'utilisateur dans la session)
+- Complément d'explication sur la méthode pour récupérer le mot de passe depuis le conteneur code-editor.
+- fix(docker): Conteneurs node et mailpit commentés pour enlever de la charge en local et fluidifier les opérations docker
+- docs(README): Mise à jour de la documentation d'installation pour prendre en compte le changement de permissions du projet pour l'éditeur et les workers
+- fix(nginx): Port de PMA par défaut 80 pas 8080
+- fix(docker,nginx): URL PMA fixée, app -> dans /home/coder/app plutôt qu'à la racine
+- docs(README): Ajout d'une section 'Installation rapide' permettant à un développeur débutant d'exécuter des commandes sans se poser de questions et d'avoir une instance de Skeletor fonctionnelle en quelques minutes. (PS: Supplément formatage du README)
+- fix(docker): Modification des images bitnami (retirées depuis) en images docker.io/library/xxx classiques. Les versions utilisées sont les mêmes.
+- fix(config): Modification de la version en 3.1.4 (actuelle), modification de l'url de l'application pour pointer directement sur skeletor, pas sur /
+
 ## 3.1.8 (February 06, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 3.1.7 –> 3.1.8
 - Implements artifact #674177: permet de visualiser les roles et les permissions d'un utilisateur donné depuis la fiche de celui-ci. Introduit plusieurs tests des pages du panneau d'admin.
