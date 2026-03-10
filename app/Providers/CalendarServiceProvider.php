@@ -15,6 +15,13 @@ use Guava\Calendar\CalendarServiceProvider as BaseProvider;
 
 class CalendarServiceProvider extends BaseProvider
 {
+
+    protected function getPackageBaseDir(): string
+    {
+        return base_path("vendor/guava/calendar/src");
+    }
+
+
     public function packageBooted(): void
     {
         //Livewire::component('calendar-widget', CalendarWidget::class);
