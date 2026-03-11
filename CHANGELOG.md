@@ -1,3 +1,7 @@
+## 4.0.1 (March 11, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.0 –> 4.0.1
+- Correction du service provider qui outrepasse guava/calendar pour restaurer le fonctionnement normal des vues.
+
 ## 4.0.0 (February 19, 2026)
 - Cet upgrade est un upgrade majeur: on passe Filament de la v3 à la v4, ce qui nécessite en général des changements significatifs dans les panneaux Filament.
 - Bugfix: la création d'utilisateur ne fonctionnait pas car le mot de passe initial n'était pas défini.
