@@ -19,9 +19,11 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets;
-use Filament\Support\Enums\MaxWidth;
-use Filament\FontProviders\SpatieGoogleFontProvider;
+use Filament\Support\Enums\Width;
 use Filament\Navigation\NavigationItem;
+use Filament\Navigation\MenuItem;
+use Filament\Facades\Filament;
+
 
 use App\Filament\AvatarProviders\SkeletorAvatarProvider;
 use App\Filament\Widgets\PanelSwitcher;
@@ -49,7 +51,6 @@ class FilamentPanelProvider extends PanelProvider
                 'primary' => Color::Blue,
             ])
             ->favicon(asset('assets/images/favicon-32x32.png')) 
-            ->font('Inter', provider: SpatieGoogleFontProvider::class)
             ->defaultAvatarProvider(SkeletorAvatarProvider::class)
             ->brandName('$STUDLY_NAME$')
             ->databaseNotifications()
@@ -91,7 +92,17 @@ class FilamentPanelProvider extends PanelProvider
                 #Authenticate::class,
             ])
             ->sidebarCollapsibleOnDesktop()
-            ->maxContentWidth(MaxWidth::Full);
+            ->maxContentWidth(Width::Full)
+            ->userMenuItems([
+                'help' => MenuItem::make()
+                    ->label('Aide')
+                    ->icon('heroicon-m-question-mark-circle')
+                    ->url(fn () => url(config('skeletor.prefixe_instance') . '/docs/' . Filament::getCurrentOrDefaultPanel()->getId()) . '/', shouldOpenInNewTab:true),
+                'apidoc' => MenuItem::make()
+                    ->label('API')
+                    ->icon('heroicon-m-cloud')
+                    ->url(fn () => url(route('l5-swagger.default.api')), shouldOpenInNewTab:true),
+            ]);
     }
 
     protected function getModuleNamespace(): string
