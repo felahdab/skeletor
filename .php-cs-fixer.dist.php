@@ -9,7 +9,6 @@ return (new Config())
     ->setRiskyAllowed(true)
     ->setRules([
         '@auto' => true,
-        '@auto:risky' => true,
         '@PhpCsFixer' => true
     ])
     // 💡 by default, Fixer looks for `*.php` files excluding `./vendor/` - here, you can groom this config
