@@ -24,7 +24,6 @@ class StoreGroupementRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

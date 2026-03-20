@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\View\Components\Asantibanez\LaravelBladeSortable;
-
 
 use Illuminate\View\Component;
 

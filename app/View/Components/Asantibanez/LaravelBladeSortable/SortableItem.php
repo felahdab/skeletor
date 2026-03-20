@@ -1,10 +1,7 @@
 <?php
 
-
 namespace App\View\Components\Asantibanez\LaravelBladeSortable;
 
-
-use Exception;
 use Illuminate\View\Component;
 
 class SortableItem extends Component
@@ -21,8 +18,8 @@ class SortableItem extends Component
         $this->as = $as;
         $this->component = $component;
 
-        if ($this->sortKey === null) {
-            throw new Exception("Must pass 'sort-key' property to Sortable Item");
+        if (null === $this->sortKey) {
+            throw new \Exception("Must pass 'sort-key' property to Sortable Item");
         }
     }
 

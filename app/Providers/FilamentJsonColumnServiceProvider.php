@@ -5,7 +5,6 @@ namespace App\Providers;
 use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
-
 use ValentinMorice\FilamentJsonColumn\FilamentJsonColumnServiceProvider as BaseProvider;
 
 class FilamentJsonColumnServiceProvider extends BaseProvider

@@ -2,38 +2,33 @@
 
 namespace App\Filament\PageTemplates;
 
-use BackedEnum;
-
-use Filament\Pages\Page;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
-use Filament\Tables\Concerns\InteractsWithTable;
-use Filament\Schemas\Concerns\InteractsWithSchemas;
-use Filament\Tables\Contracts\HasTable;
-use Illuminate\Support\HtmlString;
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Actions;
-use Filament\Actions\Action;
-
 use App\Models\AnnuaireUser;
+use Filament\Actions\Action;
+use Filament\Forms\Components\TextInput;
+use Filament\Pages\Page;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Table;
 
 class RechercheAnnuairePageTemplate extends Page implements HasTable
 {
     use InteractsWithTable;
     use InteractsWithSchemas;
 
-    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-magnifying-glass-circle';
-    
+    public ?array $data;
+
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-magnifying-glass-circle';
+
     protected static ?string $title = 'Recherche dans l\'annuaire';
 
     protected $listeners = [
-        'table-force-refresh' => '$refresh'
+        'table-force-refresh' => '$refresh',
     ];
 
     protected string $view = 'filament.resources.annudef-user-resource.pages.recherche-annudef';
-
-    public ?array $data;
 
     public function mount()
     {
@@ -50,7 +45,8 @@ class RechercheAnnuairePageTemplate extends Page implements HasTable
                 TextInput::make('prenom'),
                 TextInput::make('email'),
                 TextInput::make('unite'),
-            ]);
+            ])
+        ;
     }
 
     public function submit()
@@ -75,7 +71,6 @@ class RechercheAnnuairePageTemplate extends Page implements HasTable
                     ->sortable(),
                 TextColumn::make('nid')
                     ->sortable(),
-                
             ])
             ->filters([
                 // ...
@@ -88,8 +83,9 @@ class RechercheAnnuairePageTemplate extends Page implements HasTable
             )->headerActions([
                 Action::make('submitAction')
                     ->label('Rechercher')
-                    ->action(fn()=> $this->submit() )
-            ]);
+                    ->action(fn () => $this->submit()),
+            ])
+        ;
     }
 
     public function getRowActions()
@@ -101,5 +97,4 @@ class RechercheAnnuairePageTemplate extends Page implements HasTable
     {
         return [];
     }
-
 }

@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources\MindefConnectUserResource\Pages;
 
-use Filament\Actions\DeleteAction;
 use App\Filament\Resources\MindefConnectUserResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditMindefConnectUser extends EditRecord

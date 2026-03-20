@@ -24,7 +24,6 @@ class UpdateDiplomeRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

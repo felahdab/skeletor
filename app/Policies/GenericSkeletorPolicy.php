@@ -3,9 +3,8 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\Remotesystem;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class GenericSkeletorPolicy
 {
@@ -15,14 +14,17 @@ class GenericSkeletorPolicy
     {
         return $this->slug;
     }
+
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(?Authenticatable $user): bool
     {
-        if ($user == null)
+        if (null == $user) {
             return false;
-        return $user->can($this->slug . '.index');
+        }
+
+        return $user->can($this->slug.'.index');
     }
 
     /**
@@ -30,9 +32,11 @@ class GenericSkeletorPolicy
      */
     public function view(?Authenticatable $user, Model $model): bool
     {
-        if ($user == null)
+        if (null == $user) {
             return false;
-        return $user->can($this->slug . '.index');
+        }
+
+        return $user->can($this->slug.'.index');
     }
 
     /**
@@ -41,8 +45,8 @@ class GenericSkeletorPolicy
     public function create(Authenticatable $user): bool
     {
         return $user->hasAnyPermission([
-            $this->slug . '.create',
-            $this->slug . '.store'
+            $this->slug.'.create',
+            $this->slug.'.store',
         ]);
     }
 
@@ -52,7 +56,7 @@ class GenericSkeletorPolicy
     public function update(Authenticatable $user, Model $model): bool
     {
         return $user->hasAnyPermission([
-            $this->slug . '.update'
+            $this->slug.'.update',
         ]);
     }
 
@@ -62,7 +66,7 @@ class GenericSkeletorPolicy
     public function delete(Authenticatable $user, Model $model): bool
     {
         return $user->hasAnyPermission([
-            $this->slug . '.delete'
+            $this->slug.'.delete',
         ]);
     }
 
@@ -72,7 +76,7 @@ class GenericSkeletorPolicy
     public function deleteAny(Authenticatable $user): bool
     {
         return $user->hasAnyPermission([
-            $this->slug . '.deleteAny'
+            $this->slug.'.deleteAny',
         ]);
     }
 
@@ -82,7 +86,7 @@ class GenericSkeletorPolicy
     public function restore(Authenticatable $user, Model $model): bool
     {
         return $user->hasAnyPermission([
-            $this->slug . '.restore'
+            $this->slug.'.restore',
         ]);
     }
 
@@ -92,7 +96,7 @@ class GenericSkeletorPolicy
     public function forceDelete(Authenticatable $user, Model $model): bool
     {
         return $user->hasAnyPermission([
-            $this->slug . '.forceDelete'
+            $this->slug.'.forceDelete',
         ]);
     }
 
@@ -102,7 +106,7 @@ class GenericSkeletorPolicy
     public function forceDeleteAny(Authenticatable $user): bool
     {
         return $user->hasAnyPermission([
-            $this->slug . '.forceDeleteAny'
+            $this->slug.'.forceDeleteAny',
         ]);
     }
 
@@ -112,7 +116,7 @@ class GenericSkeletorPolicy
     public function reorder(Authenticatable $user): bool
     {
         return $user->hasAnyPermission([
-            $this->slug . '.reorder'
+            $this->slug.'.reorder',
         ]);
     }
 }

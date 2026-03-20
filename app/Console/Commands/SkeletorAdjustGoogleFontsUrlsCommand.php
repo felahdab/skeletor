@@ -2,10 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Console\Commands\Utility\SkeletorGoogleFonts;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\FilesystemManager;
-
-use App\Console\Commands\Utility\SkeletorGoogleFonts;
 
 class SkeletorAdjustGoogleFontsUrlsCommand extends Command
 {
@@ -34,11 +33,10 @@ class SkeletorAdjustGoogleFontsUrlsCommand extends Command
             'https:\/\/fanlab.el-ahdab.fr',
             'https:\/\/c2n.adalfantln.marine.defensecdd.gouv.fr',
             'https:\/\/pprod.c2n.adalfantln.marine.defensecdd.gouv.fr',
-            'https:\/\/polaris-online.c2n.adalfantln.marine.defensecdd.gouv.fr'
+            'https:\/\/polaris-online.c2n.adalfantln.marine.defensecdd.gouv.fr',
         ];
 
         foreach ($sourceDomains as $domain) {
-
             $googleFonts = new SkeletorGoogleFonts(
                 filesystem: app()->make(FilesystemManager::class)->disk(config('google-fonts.disk')),
                 path: config('google-fonts.path'),

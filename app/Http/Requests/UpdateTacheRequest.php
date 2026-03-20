@@ -24,7 +24,6 @@ class UpdateTacheRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

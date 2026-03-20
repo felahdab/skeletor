@@ -4,7 +4,6 @@ use Nwidart\Modules\Activators\FileActivator;
 use Nwidart\Modules\Providers\ConsoleServiceProvider;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Module Namespace
@@ -27,7 +26,7 @@ return [
 
     'stubs' => [
         'enabled' => false,
-        'path' => base_path() . '/stubs/module',
+        'path' => base_path().'/stubs/module',
         'files' => [
             'routes/web' => 'routes/web.php',
             'routes/api' => 'routes/api.php',
@@ -40,8 +39,7 @@ return [
             'vite' => 'vite.config.js',
             'package' => 'package.json',
             'filament-provider' => 'app/Providers/Filament/FilamentPanelProvider.php',
-            'table-prefix-trait' => 'app/Traits/HasTablePrefix.php'
-
+            'table-prefix-trait' => 'app/Traits/HasTablePrefix.php',
         ],
         'replacements' => [
             'routes/web' => ['LOWER_NAME', 'STUDLY_NAME', 'MODULE_NAMESPACE', 'CONTROLLER_NAMESPACE'],
@@ -67,12 +65,12 @@ return [
             ],
             'table-prefix-trait' => [
                 'MODULE',
-                'NAMESPACE',    
+                'NAMESPACE',
                 'LOWER_NAME',
                 'STUDLY_NAME',
                 'MODULE_NAMESPACE',
                 'PROVIDER_NAMESPACE',
-            ], 
+            ],
         ],
         'gitkeep' => true,
     ],
@@ -250,9 +248,7 @@ return [
     */
     'register' => [
         'translations' => true,
-        /**
-         * load files on boot or register method
-         */
+        // load files on boot or register method
         'files' => 'register',
     ],
 

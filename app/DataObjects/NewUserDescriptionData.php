@@ -13,16 +13,16 @@ final class NewUserDescriptionData extends Data
         public ?string $unite,
         public ?string $nid,
         public ?string $gradelong
-   ) {}
+    ) {}
 
-   public static function make(    
-                string $nom,
-                string $prenom,
-                string $email,
-                ?string $unite = null,
-                ?string $nid = null,
-                ?string $gradelong = null)
-   {
-        return new static($nom, $prenom, $email, $unite, $nid, $gradelong);
-   }
+    public static function make(
+        string $nom,
+        string $prenom,
+        string $email,
+        ?string $unite = null,
+        ?string $nid = null,
+        ?string $gradelong = null
+    ) {
+        return new self($nom, $prenom, $email, $unite, $nid, $gradelong);
+    }
 }

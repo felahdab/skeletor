@@ -2,9 +2,8 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\BugReport>
@@ -19,11 +18,11 @@ class BugReportFactory extends Factory
     public function definition()
     {
         $user = User::all()->first();
-        
+
         return [
-            "message"=> "test message",
-            "user_id"=> $user->id,
-            "url" => "https://app.url.tld/"
+            'message' => 'test message',
+            'user_id' => $user->id,
+            'url' => 'https://app.url.tld/',
         ];
     }
 }

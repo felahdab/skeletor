@@ -3,8 +3,8 @@
 namespace App\Console\Commands\Utility;
 
 use Illuminate\Contracts\Filesystem\Filesystem;
-use Spatie\GoogleFonts\GoogleFonts;
 use Illuminate\Support\Str;
+use Spatie\GoogleFonts\GoogleFonts;
 
 class SkeletorGoogleFonts extends GoogleFonts
 {
@@ -16,17 +16,7 @@ class SkeletorGoogleFonts extends GoogleFonts
         public string $userAgent,
         public array $fonts,
         public string $basedomain,
-    ) {
-    }
-
-    protected function extractPprodFontUrls(string $css): array
-    {
-        $matches = [];
-        $re = '/url\(('. $this->basedomain . '\/[^)]+)\)/';
-        preg_match_all($re, $css, $matches);
-
-        return $matches[1] ?? [];
-    }
+    ) {}
 
     public function adjustUrls()
     {
@@ -37,7 +27,7 @@ class SkeletorGoogleFonts extends GoogleFonts
 
                 $newFontUrl = Str::replace(
                     $start,
-                    config('app.url') . '/' . config('skeletor.prefixe_instance'),
+                    config('app.url').'/'.config('skeletor.prefixe_instance'),
                     $fontUrl
                 );
 
@@ -46,5 +36,14 @@ class SkeletorGoogleFonts extends GoogleFonts
 
             $this->filesystem->put($this->path($url, 'fonts.css'), $css);
         }
+    }
+
+    protected function extractPprodFontUrls(string $css): array
+    {
+        $matches = [];
+        $re = '/url\(('.$this->basedomain.'\/[^)]+)\)/';
+        preg_match_all($re, $css, $matches);
+
+        return $matches[1] ?? [];
     }
 }

@@ -2,24 +2,16 @@
 
 namespace App\Listeners;
 
-use Exception;
-use Illuminate\Foundation\Http\Events\RequestHandled;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Str;
-
 use App\Models\SkeletorUsageLog;
+use Illuminate\Foundation\Http\Events\RequestHandled;
+use Illuminate\Support\Str;
 
 class RecordUsageDataListener
 {
     /**
      * Create the event listener.
      */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct() {}
 
     /**
      * Handle the event.
@@ -44,11 +36,11 @@ class RecordUsageDataListener
 
         foreach (config('analytics.exclude', []) as $except) {
             if (!Str::contains($except, config('skeletor.prefixe_instance'))) {
-                $prefix = Str::startsWith($except, '/') ? config('skeletor.prefixe_instance')  : config('skeletor.prefixe_instance') . '/';
-                $except = $prefix . $except;
+                $prefix = Str::startsWith($except, '/') ? config('skeletor.prefixe_instance') : config('skeletor.prefixe_instance').'/';
+                $except = $prefix.$except;
             }
 
-            if ($except !== '/') {
+            if ('/' !== $except) {
                 $except = trim($except, '/');
             }
 
@@ -58,27 +50,27 @@ class RecordUsageDataListener
         }
 
         $sessionid = 'no_session_id';
+
         try {
             $sessionid = $request->session()?->getId();
-        } catch (Exception) {
+        } catch (\Exception) {
         }
-
 
         $uri = str_replace($request->root(), '', $request->url()) ?: '/';
         $user_name = $request->user()?->email ?? 'anonyme';
 
         $s = SkeletorUsageLog::firstOrCreate([
-            'uri'        => $uri,
-            'route'      => $request->route()?->getName() ?? 'unnamed_route',
-            'session'    => $sessionid,
-            'source'     => $request->headers->get('referer'),
+            'uri' => $uri,
+            'route' => $request->route()?->getName() ?? 'unnamed_route',
+            'session' => $sessionid,
+            'source' => $request->headers->get('referer'),
             'user-agent' => $request->userAgent(),
             'user-email' => $user_name,
-            'status'     => $response->getStatusCode(),
-            'ip'         => $request->ip(),
-            'method'     => $request->getMethod(),
+            'status' => $response->getStatusCode(),
+            'ip' => $request->ip(),
+            'method' => $request->getMethod(),
         ], ['counter' => 0]);
-        $s->fill(['response_time' =>  $request->responsetime ?? 0]);
+        $s->fill(['response_time' => $request->responsetime ?? 0]);
         $s->increment('counter', 1);
         $s->save();
     }

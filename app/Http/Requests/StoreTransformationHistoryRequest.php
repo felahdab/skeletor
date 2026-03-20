@@ -24,7 +24,6 @@ class StoreTransformationHistoryRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

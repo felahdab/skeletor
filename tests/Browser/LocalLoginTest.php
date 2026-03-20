@@ -2,45 +2,48 @@
 
 namespace Tests\Browser;
 
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Models\User;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
-use App\Models\User;
-
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class LocalLoginTest extends DuskTestCase
 {
     /**
      * A Dusk test example.
-     *
-     * @return void
      */
-    public function test_local_login_page()
+    public function testLocalLoginPage()
     {
         $this->browse(function (Browser $browser) {
             $browser->maximize()
-                    ->visit(route('login'))
-                    ->assertSee('Login');
+                ->visit(route('login'))
+                ->assertSee('Login')
+            ;
         });
     }
 
-    public function test_local_login_as_admin()
+    public function testLocalLoginAsAdmin()
     {
-        $user=User::factory()->create();
-        $user->password="admin123";
+        $user = User::factory()->create();
+        $user->password = 'admin123';
         $user->admin = true;
         $user->save();
-        
-        $this->browse(function (Browser $browser) use($user) {
+
+        $this->browse(function (Browser $browser) use ($user) {
             $browser->maximize()
-                    ->visit(route('login'))
-                    ->assertSee('Login')
-                    ->type('@login-email', $user->email)
-                    ->type('@login-password', 'admin123')
-                    ->press('@login-button')
-                    ->assertSee($user->name);
+                ->visit(route('login'))
+                ->assertSee('Login')
+                ->type('@login-email', $user->email)
+                ->type('@login-password', 'admin123')
+                ->press('@login-button')
+                ->assertSee($user->name)
+            ;
         });
-        
+
         $user->forceDelete();
     }
 }

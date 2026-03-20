@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
-//use Dedoc\Scramble\Scramble;
+// use Dedoc\Scramble\Scramble;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -26,53 +26,50 @@ class RouteServiceProvider extends ServiceProvider
      *
      * When present, controller route declarations will automatically be prefixed with this namespace.
      *
-     * @var string|null
+     * @var null|string
      */
     // protected $namespace = 'App\\Http\\Controllers';
 
     /**
      * Define your route model bindings, pattern filters, etc.
-     *
-     * @return void
      */
     public function boot()
     {
         $this->configureRateLimiting();
 
-        if (config('skeletor.multi_tenancy'))
-        {
-            app()['config']->set('skeletor.prefixe_instance', config('skeletor.prefixe_instance') . '/{tenant}');
+        if (config('skeletor.multi_tenancy')) {
+            app()['config']->set('skeletor.prefixe_instance', config('skeletor.prefixe_instance').'/{tenant}');
         }
+    }
+
+    public function map()
+    {
+        // Route::prefix(env('APP_PREFIX'))
+        //     ->group(function() {
+        //         Scramble::registerUiRoute('scramble/doc');
+        //         Scramble::registerJsonSpecificationRoute('api.json');
+        //     });
+
+        Route::prefix(config('skeletor.prefixe_instance').'/api')
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/api.php'))
+        ;
+
+        Route::prefix(config('skeletor.prefixe_instance'))
+            ->middleware('web')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/web.php'))
+        ;
     }
 
     /**
      * Configure the rate limiters for the application.
-     *
-     * @return void
      */
     protected function configureRateLimiting()
     {
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
-    }
-    
-    public function map()
-    {
-        // Route::prefix(env('APP_PREFIX'))
-        //     ->group(function() {
-        //         Scramble::registerUiRoute('scramble/doc');
-        //         Scramble::registerJsonSpecificationRoute('api.json');       
-        //     });
-
-        Route::prefix(config('skeletor.prefixe_instance') . '/api')
-            ->middleware('api')
-            ->namespace($this->namespace)
-            ->group(base_path('routes/api.php'));
-
-        Route::prefix(config('skeletor.prefixe_instance'))
-            ->middleware('web')
-            ->namespace($this->namespace)
-            ->group(base_path('routes/web.php'));
     }
 }

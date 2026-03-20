@@ -4,61 +4,58 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use Stancl\Tenancy\Events\CreatingTenant;
-use Stancl\Tenancy\Events\TenantCreated;
-use Stancl\Tenancy\Jobs\CreateDatabase;
-use Stancl\Tenancy\Jobs\MigrateDatabase;
-use Stancl\Tenancy\Jobs\SeedDatabase;
-use Stancl\Tenancy\Events\SavingTenant;
-use Stancl\Tenancy\Events\TenantSaved;
-use Stancl\Tenancy\Events\UpdatingTenant;
-use Stancl\Tenancy\Events\TenantUpdated;
-use Stancl\Tenancy\Events\DeletingTenant;
-use Stancl\Tenancy\Events\TenantDeleted;
-use Stancl\Tenancy\Jobs\DeleteDatabase;
-use Stancl\Tenancy\Events\CreatingDomain;
-use Stancl\Tenancy\Events\DomainCreated;
-use Stancl\Tenancy\Events\SavingDomain;
-use Stancl\Tenancy\Events\DomainSaved;
-use Stancl\Tenancy\Events\UpdatingDomain;
-use Stancl\Tenancy\Events\DomainUpdated;
-use Stancl\Tenancy\Events\DeletingDomain;
-use Stancl\Tenancy\Events\DomainDeleted;
-use Stancl\Tenancy\Events\DatabaseCreated;
-use Stancl\Tenancy\Events\DatabaseMigrated;
-use Stancl\Tenancy\Events\DatabaseSeeded;
-use Stancl\Tenancy\Events\DatabaseRolledBack;
-use Stancl\Tenancy\Events\DatabaseDeleted;
-use Stancl\Tenancy\Events\InitializingTenancy;
-use Stancl\Tenancy\Events\TenancyInitialized;
-use Stancl\Tenancy\Listeners\BootstrapTenancy;
-use Stancl\Tenancy\Events\EndingTenancy;
-use Stancl\Tenancy\Events\TenancyEnded;
-use Stancl\Tenancy\Listeners\RevertToCentralContext;
-use Stancl\Tenancy\Events\BootstrappingTenancy;
-use Stancl\Tenancy\Events\TenancyBootstrapped;
-use Stancl\Tenancy\Events\RevertingToCentralContext;
-use Stancl\Tenancy\Events\RevertedToCentralContext;
-use Stancl\Tenancy\Events\SyncedResourceSaved;
-use Stancl\Tenancy\Listeners\UpdateSyncedResource;
-use Stancl\Tenancy\Events\SyncedResourceChangedInForeignDatabase;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
-use Stancl\Tenancy\Middleware\InitializeTenancyBySubdomain;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
-use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
-use Stancl\Tenancy\Middleware\InitializeTenancyByRequestData;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Events;
+use Stancl\Tenancy\Events\BootstrappingTenancy;
+use Stancl\Tenancy\Events\CreatingDomain;
+use Stancl\Tenancy\Events\CreatingTenant;
+use Stancl\Tenancy\Events\DatabaseCreated;
+use Stancl\Tenancy\Events\DatabaseDeleted;
+use Stancl\Tenancy\Events\DatabaseMigrated;
+use Stancl\Tenancy\Events\DatabaseRolledBack;
+use Stancl\Tenancy\Events\DatabaseSeeded;
+use Stancl\Tenancy\Events\DeletingDomain;
+use Stancl\Tenancy\Events\DeletingTenant;
+use Stancl\Tenancy\Events\DomainCreated;
+use Stancl\Tenancy\Events\DomainDeleted;
+use Stancl\Tenancy\Events\DomainSaved;
+use Stancl\Tenancy\Events\DomainUpdated;
+use Stancl\Tenancy\Events\EndingTenancy;
+use Stancl\Tenancy\Events\InitializingTenancy;
+use Stancl\Tenancy\Events\RevertedToCentralContext;
+use Stancl\Tenancy\Events\RevertingToCentralContext;
+use Stancl\Tenancy\Events\SavingDomain;
+use Stancl\Tenancy\Events\SavingTenant;
+use Stancl\Tenancy\Events\SyncedResourceChangedInForeignDatabase;
+use Stancl\Tenancy\Events\SyncedResourceSaved;
+use Stancl\Tenancy\Events\TenancyBootstrapped;
+use Stancl\Tenancy\Events\TenancyEnded;
+use Stancl\Tenancy\Events\TenancyInitialized;
+use Stancl\Tenancy\Events\TenantCreated;
+use Stancl\Tenancy\Events\TenantDeleted;
+use Stancl\Tenancy\Events\TenantSaved;
+use Stancl\Tenancy\Events\TenantUpdated;
+use Stancl\Tenancy\Events\UpdatingDomain;
+use Stancl\Tenancy\Events\UpdatingTenant;
 use Stancl\Tenancy\Jobs;
-use Stancl\Tenancy\Listeners;
+use Stancl\Tenancy\Jobs\CreateDatabase;
+use Stancl\Tenancy\Jobs\DeleteDatabase;
+use Stancl\Tenancy\Jobs\MigrateDatabase;
+use Stancl\Tenancy\Jobs\SeedDatabase;
+use Stancl\Tenancy\Listeners\BootstrapTenancy;
+use Stancl\Tenancy\Listeners\RevertToCentralContext;
+use Stancl\Tenancy\Listeners\UpdateSyncedResource;
 use Stancl\Tenancy\Middleware;
-
-use Illuminate\Support\Facades\Log;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
+use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
+use Stancl\Tenancy\Middleware\InitializeTenancyByRequestData;
+use Stancl\Tenancy\Middleware\InitializeTenancyBySubdomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -78,7 +75,6 @@ class TenancyServiceProvider extends ServiceProvider
 
                     // Your own jobs to prepare the tenant.
                     // Provision API keys, create S3 buckets, anything you want!
-
                 ])->send(function (TenantCreated $event) {
                     return $event->tenant;
                 })->shouldBeQueued(false), // `false` by default, but you probably want to make this `true` for production.
@@ -141,8 +137,8 @@ class TenancyServiceProvider extends ServiceProvider
 
     public function register()
     {
-        if (config("skeletor.multi_tenancy")){
-            app('config')->set('session.connection','tenant');
+        if (config('skeletor.multi_tenancy')) {
+            app('config')->set('session.connection', 'tenant');
         }
     }
 

@@ -2,26 +2,23 @@
 
 namespace App\Mail;
 
-use Illuminate\Mail\Mailables\Attachment;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-use App\Models\User;
-
 class WelcomeMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(public User $user)
-    {
-    }
+    public function __construct(public User $user) {}
 
     /**
      * Get the message envelope.

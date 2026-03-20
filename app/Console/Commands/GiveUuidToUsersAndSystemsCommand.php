@@ -2,11 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-
-use App\Models\User;
 use App\Models\Remotesystem;
-
+use App\Models\User;
+use Illuminate\Console\Command;
 use Ramsey\Uuid\Uuid;
 
 class GiveUuidToUsersAndSystemsCommand extends Command
@@ -30,20 +28,18 @@ class GiveUuidToUsersAndSystemsCommand extends Command
      */
     public function handle()
     {
-        foreach(User::whereNull("uuid")->get() as $user){
+        foreach (User::whereNull('uuid')->get() as $user) {
             $this->info($user->name);
             $uuid = Uuid::uuid4();
-            $user->uuid=$uuid;
+            $user->uuid = $uuid;
             $user->save();
         }
 
-        foreach(Remotesystem::whereNull("uuid")->get() as $remotesystem){
+        foreach (Remotesystem::whereNull('uuid')->get() as $remotesystem) {
             $this->info($remotesystem->name);
             $uuid = Uuid::uuid4();
-            $remotesystem->uuid=$uuid;
+            $remotesystem->uuid = $uuid;
             $remotesystem->save();
         }
-
-
     }
 }

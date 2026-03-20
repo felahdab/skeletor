@@ -24,7 +24,6 @@ class StoreTypeFonctionRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

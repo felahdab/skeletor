@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 use Illuminate\Support\Arr;
 
 class Setting extends Model
@@ -13,19 +12,12 @@ class Setting extends Model
 
     protected $fillable = [
         'key',
-        'data'
+        'data',
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'data' => 'array',
-        ];
-    }
 
     public static function forKey($key)
     {
-        return static::firstOrCreate(["key" => $key]);
+        return static::firstOrCreate(['key' => $key]);
     }
 
     public function updateSetting($data)
@@ -45,7 +37,14 @@ class Setting extends Model
     public function get($key)
     {
         $data = $this->data;
+
         return Arr::get($data, $key);
     }
 
+    protected function casts(): array
+    {
+        return [
+            'data' => 'array',
+        ];
+    }
 }

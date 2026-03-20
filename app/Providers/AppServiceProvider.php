@@ -2,74 +2,59 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Database\Eloquent\Builder;
-
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
-
-use Illuminate\Routing\Route;
-
+use App\Filament\PanelRegistry\DirectMenuItem;
+use App\Filament\PanelRegistry\ModuleDefinedMenusRegistry;
+use App\Filament\PanelRegistry\ModuleDefinedPreferedPagesRegistry;
+use App\Scopes\ScopedMacro;
 use Dedoc\Scramble\Scramble;
+use Dedoc\Scramble\Support\Generator\OpenApi;
+use Dedoc\Scramble\Support\Generator\SecurityScheme;
+use Filament\Pages\Dashboard;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Contracts\View\View;
-
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Blade;
-
-use App\Scopes\ScopedMacro;
-use Filament\Pages\Dashboard;
-
-use Dedoc\Scramble\Support\Generator\OpenApi;
-use Dedoc\Scramble\Support\Generator\SecurityScheme;
-
-use App\Filament\PanelRegistry\ModuleDefinedMenusRegistry;
-use App\Filament\PanelRegistry\ModuleDefinedPreferedPagesRegistry;
-use App\Filament\PanelRegistry\DirectMenuItem;
-
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
-     *
-     * @return void
      */
     public function register()
     {
         Scramble::ignoreDefaultRoutes();
-        $this->app->singleton(ModuleDefinedMenusRegistry::class, function () 
-        {
+        $this->app->singleton(ModuleDefinedMenusRegistry::class, function () {
             return new ModuleDefinedMenusRegistry();
         });
-        $this->app->singleton(ModuleDefinedPreferedPagesRegistry::class, function () 
-        {
+        $this->app->singleton(ModuleDefinedPreferedPagesRegistry::class, function () {
             return new ModuleDefinedPreferedPagesRegistry();
         });
-        
     }
 
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
     public function boot()
     {
         Paginator::useBootstrap();
 
-        if (config('app.env') != 'production') {
-            //logger('Setting non production global destination email adres.');
-            $email=config('skeletor.destinataire_email_non_production');
+        if ('production' != config('app.env')) {
+            // logger('Setting non production global destination email adres.');
+            $email = config('skeletor.destinataire_email_non_production');
             Mail::alwaysTo($email);
         }
 
-        if (config('app.env') != 'production') {
+        if ('production' != config('app.env')) {
             FilamentView::registerRenderHook(
                 'panels::body.start',
-                static fn (): string => Blade::render("<x-banner-non-production/>")
+                static fn (): string => Blade::render('<x-banner-non-production/>')
             );
         }
 
@@ -80,7 +65,7 @@ class AppServiceProvider extends ServiceProvider
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
-            fn (): View => view('layouts.partials.additionnal-menus', ["menus" => app(ModuleDefinedMenusRegistry::class)->getDirectMenuItems()]),
+            fn (): View => view('layouts.partials.additionnal-menus', ['menus' => app(ModuleDefinedMenusRegistry::class)->getDirectMenuItems()]),
         );
 
         FilamentView::registerRenderHook(
@@ -93,15 +78,14 @@ class AppServiceProvider extends ServiceProvider
             fn (): View => view('layouts.partials.trigger-report-bug-or-suggestion'),
         );
 
-        
-
-
-        if (config('app.scheme') == 'https')
+        if ('https' == config('app.scheme')) {
             URL::forceScheme('https');
+        }
 
         Builder::macro('scoped', function ($scope, ...$parameters) {
             $query = $this;
             \assert($query instanceof Builder);
+
             return (new ScopedMacro($query))($scope, ...$parameters);
         });
 
@@ -113,22 +97,20 @@ class AppServiceProvider extends ServiceProvider
             $openApi->secure(SecurityScheme::http('bearer', 'JWT'));
         });
 
-        $link_config = config("filesystems.links");
-        $link_config[base_path( 'public/' . config('skeletor.prefixe_instance'))] = public_path();
+        $link_config = config('filesystems.links');
+        $link_config[base_path('public/'.config('skeletor.prefixe_instance'))] = public_path();
         app('config')->set('filesystems.links', $link_config);
 
         app(ModuleDefinedMenusRegistry::class)->registerDirectMenuItems([
             DirectMenuItem::make()
                 ->name('Administration')
-                ->visible(fn() => auth()->check() )
+                ->visible(fn () => auth()->check())
                 ->children([
                     DirectMenuItem::make()
                         ->name('Panneau d\'administration')
-                        ->url(fn() => Dashboard::getUrl(panel: "Skeletor"))
-                        ->visible(fn() => auth()->check() && Dashboard::canAccess()),
-                    
+                        ->url(fn () => Dashboard::getUrl(panel: 'Skeletor'))
+                        ->visible(fn () => auth()->check() && Dashboard::canAccess()),
                 ]),
-            ]);
-
+        ]);
     }
 }

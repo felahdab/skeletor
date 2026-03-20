@@ -4,10 +4,9 @@ namespace App\Scopes;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Scope;
-use InvalidArgumentException;
 
 /**
- * Class ScopedMacro
+ * Class ScopedMacro.
  */
 class ScopedMacro
 {
@@ -18,8 +17,6 @@ class ScopedMacro
 
     /**
      * ScopedMacro constructor.
-     *
-     * @param Builder $query
      */
     public function __construct(Builder $query)
     {
@@ -30,8 +27,7 @@ class ScopedMacro
      * Apply Scope to Eloquent\Builder.
      *
      * @param Scope|string $scope
-     * @param mixed ...$parameters
-     * @return Builder
+     * @param mixed        ...$parameters
      */
     public function __invoke($scope, ...$parameters): Builder
     {
@@ -39,7 +35,7 @@ class ScopedMacro
             $scope = new $scope(...$parameters);
         }
         if (!$scope instanceof Scope) {
-            throw new InvalidArgumentException('$scope must be an instance of Scope');
+            throw new \InvalidArgumentException('$scope must be an instance of Scope');
         }
 
         $scope->apply($this->query, $this->query->getModel());

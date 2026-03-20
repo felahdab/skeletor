@@ -2,23 +2,19 @@
 
 namespace App\Console;
 
+use App\Jobs\AdjustDisplayNames;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-
-use App\Jobs\AdjustDisplayNames;
 
 class Kernel extends ConsoleKernel
 {
     /**
      * Define the application's command schedule.
-     *
-     * @param Schedule $schedule
-     * @return void
      */
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('queue:prune-batches')->hourly();
-        $schedule->job(new AdjustDisplayNames)->daily();
+        $schedule->job(new AdjustDisplayNames())->daily();
 
         $schedule->command('backup:clean')->daily()->at('07:00');
         $schedule->command('backup:run')->daily()->at('07:15');
@@ -26,8 +22,6 @@ class Kernel extends ConsoleKernel
 
     /**
      * Register the commands for the application.
-     *
-     * @return void
      */
     protected function commands()
     {

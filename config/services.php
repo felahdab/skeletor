@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Third Party Services
@@ -31,18 +30,18 @@ return [
     ],
     'keycloak' => [
         'client_id' => env('KEYCLOAK_CLIENT_ID'),
-        'client_secret' =>env('KEYCLOAK_CLIENT_SECRET'),
+        'client_secret' => env('KEYCLOAK_CLIENT_SECRET'),
         'redirect' => env('KEYCLOAK_REDIRECT_URI'),
         'base_url' => env('KEYCLOAK_BASE_URL'),
-        'realms' => env('KEYCLOAK_REALM')
-	],
+        'realms' => env('KEYCLOAK_REALM'),
+    ],
     'recherche_annuaire' => [
         'base_url' => env('SKELETOR_RECHERCHE_ANNUAIRE_BASE_URL'),
     ],
     'intradef' => [
-        'mail_tld' => env('SKELETOR_INTRADEF_MAIL_TLD')
+        'mail_tld' => env('SKELETOR_INTRADEF_MAIL_TLD'),
     ],
     'sic21' => [
-        'mail_tld' => env('SKELETOR_SIC21_MAIL_TLD')
+        'mail_tld' => env('SKELETOR_SIC21_MAIL_TLD'),
     ],
 ];

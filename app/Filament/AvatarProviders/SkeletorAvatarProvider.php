@@ -2,35 +2,33 @@
 
 namespace App\Filament\AvatarProviders;
 
+use App\Service\AnnudefAjaxRequestService;
 use Filament\AvatarProviders\Contracts\AvatarProvider;
-use Filament\AvatarProviders\Contracts;
-use Filament\Facades\Filament;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
-use App\Service\AnnudefAjaxRequestService;
-
 
 class SkeletorAvatarProvider implements AvatarProvider
 {
-    public function get(Model | Authenticatable $record): string
+    public function get(Authenticatable|Model $record): string
     {
-        if (config('skeletor.reseau_de_deploiement') == "sic21")
-        {
+        if ('sic21' == config('skeletor.reseau_de_deploiement')) {
             return asset('assets/images/unknown.jpg');
         }
-        
+
         $cacheKey = sprintf(
-            "users/%s-%s",
+            'users/%s-%s',
             $record->getKey(),
             $record->updated_at->timestamp
         );
 
-        $url=Cache::remember($cacheKey . ':annudef_picture_url', 60*5, function () use ($record){
+        $url = Cache::remember($cacheKey.':annudef_picture_url', 60 * 5, function () use ($record) {
             return AnnudefAjaxRequestService::searchPictureForEmail($record->email);
         });
 
-        if ($url == null) return asset('assets/images/unknown.jpg');
+        if (null == $url) {
+            return asset('assets/images/unknown.jpg');
+        }
 
         return $url;
     }

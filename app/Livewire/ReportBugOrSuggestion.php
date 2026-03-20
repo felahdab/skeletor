@@ -2,18 +2,16 @@
 
 namespace App\Livewire;
 
-use Filament\Actions\Contracts\HasActions;
+use App\Events\BugOrSuggestionReportEvent;
 use Filament\Actions\Concerns\InteractsWithActions;
-use Filament\Schemas\Schema;
+use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
-use Livewire\Component;
+use Filament\Schemas\Schema;
 use Illuminate\Contracts\View\View;
-
-use App\Events\BugOrSuggestionReportEvent;
+use Livewire\Component;
 
 class ReportBugOrSuggestion extends Component implements HasForms, HasActions
 {
@@ -40,28 +38,29 @@ class ReportBugOrSuggestion extends Component implements HasForms, HasActions
                     ->required()
                     ->maxLength(1000),
             ])
-            ->statePath('data');
+            ->statePath('data')
+        ;
     }
 
     public function create(): void
     {
         $data = $this->form->getState();
 
-        $event=[];
-        $event["user"] = auth()->user();
-        $event["url"] = $this->url;
-        $event["commentaire"] = $data['commentaire'];
+        $event = [];
+        $event['user'] = auth()->user();
+        $event['url'] = $this->url;
+        $event['commentaire'] = $data['commentaire'];
 
-        event(new BugOrSuggestionReportEvent(user: $event["user"], url: $event["url"], commentaire: $event["commentaire"]));
+        event(new BugOrSuggestionReportEvent(user: $event['user'], url: $event['url'], commentaire: $event['commentaire']));
 
         Notification::make()
             ->title('Merci pour votre retour !')
             ->body('Votre commentaire a bien été envoyé.')
             ->success()
-            ->send();
+            ->send()
+        ;
 
         $this->dispatch('close-modal', id: 'report-bug-or-suggestion');
-
     }
 
     public function render(): View

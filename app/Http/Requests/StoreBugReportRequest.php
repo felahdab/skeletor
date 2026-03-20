@@ -24,8 +24,8 @@ class StoreBugReportRequest extends FormRequest
     public function rules()
     {
         return [
-            "message" => "required",
-            "url" => "required",
+            'message' => 'required',
+            'url' => 'required',
         ];
     }
 }

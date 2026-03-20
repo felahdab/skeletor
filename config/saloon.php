@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Saloon\Http\Senders\GuzzleSender;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Saloon Sender

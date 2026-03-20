@@ -23,40 +23,39 @@ class FullCalendar extends Component
 
     public function getEvents()
     {
-        $events = [
+        return [
             [
                 'id' => '1',
                 'resourceIds' => ['a', 'b'],
                 'title' => 'Formidable Shield 2023',
-                'start' => '2023-09-28'
-            ]
+                'start' => '2023-09-28',
+            ],
         ];
-        return $events;
     }
 
     public function getResources()
     {
-        $resources = [
+        return [
             [
                 'id' => 'a',
                 'groupId' => 'FDA',
-                'title' => 'Chevalier Paul'
+                'title' => 'Chevalier Paul',
             ],
             [
                 'id' => 'b',
                 'groupId' => 'FDA',
-                'title' => 'Forbin'
+                'title' => 'Forbin',
             ],
             [
                 'id' => 'c',
                 'groupId' => 'FLF',
-                'title' => 'Courbet'
-            ]
+                'title' => 'Courbet',
+            ],
         ];
-        return $resources;
     }
 
-    public function refreshCalendar(){
+    public function refreshCalendar()
+    {
         $this->dispatch('refreshCalendar');
     }
 

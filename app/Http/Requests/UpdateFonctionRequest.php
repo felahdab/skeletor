@@ -24,7 +24,6 @@ class UpdateFonctionRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

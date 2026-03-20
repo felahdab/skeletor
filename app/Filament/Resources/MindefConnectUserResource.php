@@ -2,39 +2,33 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
+use App\Filament\Resources\MindefConnectUserResource\Pages;
+use App\Filament\Resources\MindefConnectUserResource\Pages\ListMindefConnectUsers;
+use App\Mail\WelcomeMail;
+use App\Models\MindefConnectUser;
+use App\Models\Role;
+use App\Models\User;
+use App\Service\RandomPasswordGeneratorService;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\BulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use App\Filament\Resources\MindefConnectUserResource\Pages\ListMindefConnectUsers;
-use App\Filament\Resources\MindefConnectUserResource\Pages;
-use App\Filament\Resources\MindefConnectUserResource\RelationManagers;
-use App\Models\MindefConnectUser;
-use App\Models\User;
-use App\Models\Role;
-use App\Service\RandomPasswordGeneratorService;
-use Filament\Forms;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-
 use Illuminate\Support\Facades\Mail;
-use App\Mail\WelcomeMail;
 
 class MindefConnectUserResource extends Resource
 {
     protected static ?string $model = MindefConnectUser::class;
 
-    protected static ?string $navigationLabel = "Demandes Mindef Connect";
+    protected static ?string $navigationLabel = 'Demandes Mindef Connect';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Schema $schema): Schema
     {
@@ -78,7 +72,8 @@ class MindefConnectUserResource extends Resource
                 TextInput::make('sub')
                     ->maxLength(255)
                     ->default(null),
-            ]);
+            ])
+        ;
     }
 
     public static function table(Table $table): Table
@@ -115,7 +110,6 @@ class MindefConnectUserResource extends Resource
                     ->searchable(),
             ])
             ->filters([
-                //
             ])
             ->recordActions([
                 EditAction::make(),
@@ -123,60 +117,58 @@ class MindefConnectUserResource extends Resource
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
-                        ->label("Refuser les demandes"),
+                        ->label('Refuser les demandes'),
                     BulkAction::make('valider')
-                        ->label("Valider les demandes de compte")
+                        ->label('Valider les demandes de compte')
                         ->color('success')
-                        ->icon( 'heroicon-m-check')
+                        ->icon('heroicon-m-check')
                         ->requiresConfirmation()
                         ->form([
-                            Select::make("roles")
-                                ->label("Roles à attribuer")
+                            Select::make('roles')
+                                ->label('Roles à attribuer')
                                 ->multiple()
                                 ->options(Role::where('guard_name', 'web')->get()->pluck('name', 'id')),
-                            Toggle::make("make_them_admin")
-                                ->label("En faire des administrateurs ?")
+                            Toggle::make('make_them_admin')
+                                ->label('En faire des administrateurs ?')
                                 ->default(false),
                         ])
-                        ->action(function ($records, $data)
-                        {
-                            //ddd($data);
-                            foreach($records as $record){
-                                if (User::where('email', $record->email)->first() == null){
+                        ->action(function ($records, $data) {
+                            // ddd($data);
+                            foreach ($records as $record) {
+                                if (null == User::where('email', $record->email)->first()) {
                                     $attributes = [
-                                        "nom" => $record->nom,
-                                        "prenom" => $record->prenom,
-                                        "email" => $record->email,
-                                        "display_name" => $record->display_name,
-                                        "password" => RandomPasswordGeneratorService::generateRandomString(),
-                                        "admin" => $data['make_them_admin'] ? 1: 0,
+                                        'nom' => $record->nom,
+                                        'prenom' => $record->prenom,
+                                        'email' => $record->email,
+                                        'display_name' => $record->display_name,
+                                        'password' => RandomPasswordGeneratorService::generateRandomString(),
+                                        'admin' => $data['make_them_admin'] ? 1 : 0,
                                     ];
                                     $newUser = User::create($attributes);
 
-                                    $roles = collect($data['roles'])->map(function ($item)
-                                    {
+                                    $roles = collect($data['roles'])->map(function ($item) {
                                         return Role::find($item);
                                     });
-                                    
+
                                     $newUser->refresh();
                                     $newUser->syncRoles($roles);
 
                                     $record->delete();
 
                                     Mail::to($newUser->email)
-                                        ->queue(new WelcomeMail($newUser));
-
+                                        ->queue(new WelcomeMail($newUser))
+                                    ;
                                 }
                             }
                         }),
                 ]),
-            ]);
+            ])
+        ;
     }
 
     public static function getRelations(): array
     {
         return [
-            //
         ];
     }
 
@@ -184,8 +176,8 @@ class MindefConnectUserResource extends Resource
     {
         return [
             'index' => ListMindefConnectUsers::route('/'),
-            //'create' => Pages\CreateMindefConnectUser::route('/create'),
-            //'edit' => Pages\EditMindefConnectUser::route('/{record}/edit'),
+            // 'create' => Pages\CreateMindefConnectUser::route('/create'),
+            // 'edit' => Pages\EditMindefConnectUser::route('/{record}/edit'),
         ];
     }
 }

@@ -24,7 +24,6 @@ class UpdateTransformationHistoryRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

@@ -24,7 +24,6 @@ class UpdateTypeLicenceRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

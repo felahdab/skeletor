@@ -20,7 +20,6 @@ use Spatie\LaravelIgnition\Solutions\SolutionProviders\UnknownValidationSolution
 use Spatie\LaravelIgnition\Solutions\SolutionProviders\ViewNotFoundSolutionProvider;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Editor
@@ -125,7 +124,6 @@ return [
     */
 
     'ignored_solution_providers' => [
-
     ],
 
     /*
@@ -179,7 +177,7 @@ return [
     |
     */
 
-    'housekeeping_endpoint_prefix' => env('APP_PREFIX') . '/_ignition',
+    'housekeeping_endpoint_prefix' => env('APP_PREFIX').'/_ignition',
 
     /*
     |--------------------------------------------------------------------------
@@ -205,5 +203,4 @@ return [
     */
 
     'settings_file_path' => '',
-
 ];

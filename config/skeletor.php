@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Réseau de déploiement
@@ -13,7 +12,7 @@ return [
     |
     */
 
-    'reseau_de_deploiement' => env('SKELETOR_RESEAU', "intradef"),
+    'reseau_de_deploiement' => env('SKELETOR_RESEAU', 'intradef'),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +41,7 @@ return [
     |
     */
 
-    'matches_user_rank_if_possible' => false ,
+    'matches_user_rank_if_possible' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -50,7 +49,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'groupe_par_defaut_des_nouveaux_comptes' => env('APP_ROLE_DEFAUT', "user"),
+    'groupe_par_defaut_des_nouveaux_comptes' => env('APP_ROLE_DEFAUT', 'user'),
 
     /*
     |--------------------------------------------------------------------------
@@ -63,7 +62,7 @@ return [
     | Attention: la page par defaut doit etre accessible meme aux utilisateurs non authentifies.
     | Sinon, le navigateur va tourner en boucle.
     */
-    
+
     'page_par_defaut' => env('APP_PAGE_ACCUEIL', false),
 
     /*
@@ -74,7 +73,7 @@ return [
     | dans le layout des vues (resources/views/layout/app-master.blade.php)
     */
 
-    'instance_titre' => env('SKELETOR_TITLE', "Skeletor"),
+    'instance_titre' => env('SKELETOR_TITLE', 'Skeletor'),
 
     /*
     |--------------------------------------------------------------------------
@@ -83,7 +82,7 @@ return [
     | Ce parametre determine le prefixe de l'instance qui doit être rajoute a toutes
     | les urls générées.
     */
-    
+
     'prefixe_instance' => env('APP_PREFIX', ''),
 
     /*
@@ -91,14 +90,14 @@ return [
     | Activation du fonctionnement multi tenant
     |--------------------------------------------------------------------------
     |
-    | Par défaut, cette option est à false. 
+    | Par défaut, cette option est à false.
     | Lorsque cette option est à true, de multiples changements ont lieu dans l'application.
     | - les routes sont toutes modifiées pour rajouter un paramètre {tenant} destiné à identifier
     | le tenant souhaité.
     | - certains middlewares sont activés (pour déclancher le changement de tenant, y compris pour
     | les services comme Livewire)
     |
-    | Attention: une fois qu'une instance est initialisée, elle ne peut être que multi tenant ou 
+    | Attention: une fois qu'une instance est initialisée, elle ne peut être que multi tenant ou
     | single tenant. Rien n'est prévu pour réaliser la transition à chaud entre les 2 modes.
     |
     */
@@ -114,7 +113,7 @@ return [
     | tous les mails sont envoyés à l'adresse indiquée ci-dessous:
     |
     */
-    'destinataire_email_non_production'=> env('SKELETOR_EMAIL_NON_PRODUCTION', 'nomail@nowhere.mail.tld'),
+    'destinataire_email_non_production' => env('SKELETOR_EMAIL_NON_PRODUCTION', 'nomail@nowhere.mail.tld'),
 
     /*
     |--------------------------------------------------------------------------
@@ -125,11 +124,9 @@ return [
     | produits depuis le composant MailEditComponent.
     |
     */
-    'destinataire_systematique_bcc'=> env('SKELETOR_BCC_RECIPIENT', []),
+    'destinataire_systematique_bcc' => env('SKELETOR_BCC_RECIPIENT', []),
 
-    /**
-     * Configuration des services communs de Skeletor
-     */
+    // Configuration des services communs de Skeletor
     'services' => [
         'annudef' => [
             'url' => env('ANNUDEF_URL', ''),
@@ -152,5 +149,4 @@ return [
             'tracker_mindef_connect' => env('TULEAP_TRACKER_MINDEFCONNECT', ''),
         ],
     ],
-    
 ];

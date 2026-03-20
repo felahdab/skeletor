@@ -15,11 +15,10 @@ abstract class DuskTestCase extends BaseTestCase
      * Prepare for Dusk test execution.
      *
      * @beforeClass
-     * @return void
      */
     public static function prepare()
     {
-        if (! static::runningInSail()) {
+        if (!static::runningInSail()) {
             static::startChromeDriver();
         }
     }
@@ -27,11 +26,11 @@ abstract class DuskTestCase extends BaseTestCase
     /**
      * Create the RemoteWebDriver instance.
      *
-     * @return \Facebook\WebDriver\Remote\RemoteWebDriver
+     * @return RemoteWebDriver
      */
     protected function driver()
     {
-        $options = (new ChromeOptions)->addArguments(collect([
+        $options = (new ChromeOptions())->addArguments(collect([
             $this->shouldStartMaximized() ? '--start-maximized' : '--window-size=1920,1080',
         ])->unless($this->hasHeadlessDisabled(), function ($items) {
             return $items->merge([
@@ -43,7 +42,8 @@ abstract class DuskTestCase extends BaseTestCase
         return RemoteWebDriver::create(
             $_ENV['DUSK_DRIVER_URL'] ?? 'http://localhost:9515',
             DesiredCapabilities::chrome()->setCapability(
-                ChromeOptions::CAPABILITY, $options
+                ChromeOptions::CAPABILITY,
+                $options
             )
         );
     }
@@ -55,8 +55,8 @@ abstract class DuskTestCase extends BaseTestCase
      */
     protected function hasHeadlessDisabled()
     {
-        return isset($_SERVER['DUSK_HEADLESS_DISABLED']) ||
-               isset($_ENV['DUSK_HEADLESS_DISABLED']);
+        return isset($_SERVER['DUSK_HEADLESS_DISABLED'])
+               || isset($_ENV['DUSK_HEADLESS_DISABLED']);
     }
 
     /**
@@ -66,7 +66,7 @@ abstract class DuskTestCase extends BaseTestCase
      */
     protected function shouldStartMaximized()
     {
-        return isset($_SERVER['DUSK_START_MAXIMIZED']) ||
-               isset($_ENV['DUSK_START_MAXIMIZED']);
+        return isset($_SERVER['DUSK_START_MAXIMIZED'])
+               || isset($_ENV['DUSK_START_MAXIMIZED']);
     }
 }

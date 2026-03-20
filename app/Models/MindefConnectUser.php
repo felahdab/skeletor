@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class MindefConnectUser extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'sub',
         'email',
@@ -20,5 +20,5 @@ class MindefConnectUser extends Model
         'short_rank',
         'display_name',
         'commentaire',
-        ];
+    ];
 }

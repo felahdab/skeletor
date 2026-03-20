@@ -2,43 +2,42 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\TrustProxies;
-use Illuminate\Http\Middleware\HandleCors;
-use App\Http\Middleware\PreventRequestsDuringMaintenance;
-use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
-use App\Http\Middleware\TrimStrings;
-use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
-use App\Http\Middleware\EncryptCookies;
-use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
-use Illuminate\Session\Middleware\StartSession;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
-use App\Http\Middleware\VerifyCsrfToken;
-use Illuminate\Routing\Middleware\SubstituteBindings;
-use App\Http\Middleware\RecordRequestHandlingTime;
-use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 use App\Http\Middleware\Authenticate;
-use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
-use Illuminate\Http\Middleware\SetCacheHeaders;
-use Illuminate\Auth\Middleware\Authorize;
-use App\Http\Middleware\RedirectIfAuthenticated;
-use Illuminate\Auth\Middleware\RequirePassword;
-use Illuminate\Routing\Middleware\ValidateSignature;
-use Illuminate\Routing\Middleware\ThrottleRequests;
-use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
-use App\Http\Middleware\PermissionMiddleware;
+use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\ForceJsonMiddleware;
-use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
-use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
-use Illuminate\Routing\Middleware\ThrottleRequestsWithRedis;
-use Illuminate\Contracts\Session\Middleware\AuthenticatesSessions;
-use Illuminate\Foundation\Http\Kernel as HttpKernel;
-
+use App\Http\Middleware\InitializeTenancyByCookieData;
+use App\Http\Middleware\InitializeTenancyByPath;
+use App\Http\Middleware\PermissionMiddleware;
+use App\Http\Middleware\PreventRequestsDuringMaintenance;
+use App\Http\Middleware\ReconfigureSessionDatabaseWhenTenantNotInitialized;
+use App\Http\Middleware\RecordRequestHandlingTime;
+use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Middleware\SetTenantAwareKeycloakCallbackRedirect;
 use App\Http\Middleware\SetTenantCookieMiddleware;
 use App\Http\Middleware\SetTenantDefaultForRoutesMiddleware;
-use App\Http\Middleware\InitializeTenancyByPath;
-use App\Http\Middleware\InitializeTenancyByCookieData;
-use App\Http\Middleware\ReconfigureSessionDatabaseWhenTenantNotInitialized;
-use App\Http\Middleware\SetTenantAwareKeycloakCallbackRedirect;
+use App\Http\Middleware\TrimStrings;
+use App\Http\Middleware\TrustProxies;
+use App\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
+use Illuminate\Auth\Middleware\Authorize;
+use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
+use Illuminate\Auth\Middleware\RequirePassword;
+use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
+use Illuminate\Contracts\Session\Middleware\AuthenticatesSessions;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
+use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
+use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
+use Illuminate\Http\Middleware\HandleCors;
+use Illuminate\Http\Middleware\SetCacheHeaders;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Routing\Middleware\ThrottleRequests;
+use Illuminate\Routing\Middleware\ThrottleRequestsWithRedis;
+use Illuminate\Routing\Middleware\ValidateSignature;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 class Kernel extends HttpKernel
 {
@@ -79,7 +78,7 @@ class Kernel extends HttpKernel
             RecordRequestHandlingTime::class,
             SetTenantDefaultForRoutesMiddleware::class,
             SetTenantAwareKeycloakCallbackRedirect::class,
-            SetTenantCookieMiddleware::class
+            SetTenantCookieMiddleware::class,
         ],
 
         'webexcepttenancybypath' => [
@@ -95,7 +94,7 @@ class Kernel extends HttpKernel
             RecordRequestHandlingTime::class,
             SetTenantDefaultForRoutesMiddleware::class,
             SetTenantAwareKeycloakCallbackRedirect::class,
-            SetTenantCookieMiddleware::class
+            SetTenantCookieMiddleware::class,
         ],
 
         'webwithoutanytenancy' => [
@@ -136,7 +135,7 @@ class Kernel extends HttpKernel
         'throttle' => ThrottleRequests::class,
         'verified' => EnsureEmailIsVerified::class,
         'permission' => PermissionMiddleware::class,
-        'forcejson' => ForceJsonMiddleware::class
+        'forcejson' => ForceJsonMiddleware::class,
     ];
 
     /**
@@ -160,5 +159,4 @@ class Kernel extends HttpKernel
         SubstituteBindings::class,
         Authorize::class,
     ];
-
 }

@@ -3,16 +3,15 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class ManualMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public $data;
     public $subject;
@@ -35,8 +34,8 @@ class ManualMail extends Mailable
         return new Content(
             markdown: 'mails.markdownmail',
             with: [
-                'data' => $this->data
-                ]);
+                'data' => $this->data,
+            ]
+        );
     }
 }
-

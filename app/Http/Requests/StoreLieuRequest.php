@@ -24,7 +24,6 @@ class StoreLieuRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

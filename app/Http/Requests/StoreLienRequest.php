@@ -24,7 +24,6 @@ class StoreLienRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

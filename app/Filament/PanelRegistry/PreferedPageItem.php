@@ -2,18 +2,13 @@
 
 namespace App\Filament\PanelRegistry;
 
-use Closure;
-
 class PreferedPageItem
 {
-    private string $name ='';
-    private bool | Closure $visible = true;
-    private string | Closure $routename ='';
+    private string $name = '';
+    private bool|\Closure $visible = true;
+    private \Closure|string $routename = '';
 
-    public function __construct()
-    {
-        //
-    }
+    public function __construct() {}
 
     public static function make()
     {
@@ -23,6 +18,7 @@ class PreferedPageItem
     public function name(string $name): static
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -31,15 +27,17 @@ class PreferedPageItem
         return $this->name;
     }
 
-    public function routeName(string | Closure $routename): static
+    public function routeName(\Closure|string $routename): static
     {
         $this->routename = $routename;
+
         return $this;
     }
 
-    public function visible(bool | Closure $visible): static
+    public function visible(bool|\Closure $visible): static
     {
         $this->visible = $visible;
+
         return $this;
     }
 
@@ -52,6 +50,4 @@ class PreferedPageItem
     {
         return value($this->visible);
     }
-
-    
 }

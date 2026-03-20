@@ -1,13 +1,11 @@
 <?php
 
-use Dedoc\Scramble\Http\Middleware\RestrictedDocsAccess;
-
 return [
     /*
      * Your API path. By default, all routes starting with this path will be added to the docs.
      * If you need to change this behavior, you can add your custom routes resolver using `Scramble::routes()`.
      */
-    'api_path' => env('APP_PREFIX') . '/api/',
+    'api_path' => env('APP_PREFIX').'/api/',
 
     /*
      * Your API domain. By default, app domain is used. This is also a part of the default API routes
@@ -15,50 +13,32 @@ return [
      */
     'api_domain' => null,
 
-    /*
-     * The path where your OpenAPI specification will be exported.
-     */
+    // The path where your OpenAPI specification will be exported.
     'export_path' => base_path('storage/api-docs/api-docs.json'),
 
     'info' => [
-        /*
-         * API version.
-         */
+        // API version.
         'version' => env('API_VERSION', '0.0.1'),
 
-        /*
-         * Description rendered on the home page of the API documentation (`/docs/api`).
-         */
+        // Description rendered on the home page of the API documentation (`/docs/api`).
         'description' => '',
     ],
 
-    /*
-     * Customize Stoplight Elements UI
-     */
+    // Customize Stoplight Elements UI
     'ui' => [
-        /*
-         * Define the title of the documentation's website. App name is used when this config is `null`.
-         */
+        // Define the title of the documentation's website. App name is used when this config is `null`.
         'title' => null,
 
-        /*
-         * Define the theme of the documentation. Available options are `light` and `dark`.
-         */
+        // Define the theme of the documentation. Available options are `light` and `dark`.
         'theme' => 'light',
 
-        /*
-         * Hide the `Try It` feature. Enabled by default.
-         */
+        // Hide the `Try It` feature. Enabled by default.
         'hide_try_it' => false,
 
-        /*
-         * URL to an image that displays as a small square logo next to the title, above the table of contents.
-         */
+        // URL to an image that displays as a small square logo next to the title, above the table of contents.
         'logo' => '',
 
-        /*
-         * Use to fetch the credential policy for the Try It feature. Options are: omit, include (default), and same-origin
-         */
+        // Use to fetch the credential policy for the Try It feature. Options are: omit, include (default), and same-origin
         'try_it_credentials_policy' => 'include',
     ],
 
@@ -76,7 +56,7 @@ return [
      * ],
      * ```
      */
-    'servers' => null, 
+    'servers' => null,
 
     'middleware' => [
         'webexcepttenancybypath',

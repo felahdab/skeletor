@@ -1,7 +1,9 @@
 <?php
 
-return [
+use App\Models\Remotesystem;
+use App\Models\User;
 
+return [
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults
@@ -66,11 +68,11 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => User::class,
         ],
         'remotesystems' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Remotesystem::class,
+            'model' => Remotesystem::class,
         ],
 
         // 'users' => [
@@ -115,5 +117,4 @@ return [
     */
 
     'password_timeout' => 10800,
-
 ];

@@ -2,19 +2,16 @@
 
 namespace App\Providers;
 
-use App\Models\User;
-use App\Policies\UserPolicy;
-use App\Models\Remotesystem;
-use App\Policies\RemotesystemPolicy;
 use App\Models\MindefConnectUser;
+use App\Models\Remotesystem;
+use App\Models\User;
 use App\Policies\MindefConnectUserPolicy;
 use App\Policies\PermissionPolicy;
+use App\Policies\RemotesystemPolicy;
 use App\Policies\RolePolicy;
+use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
-
-use App\Models;
-use App\Policies;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -31,13 +28,10 @@ class AuthServiceProvider extends ServiceProvider
         MindefConnectUser::class => MindefConnectUserPolicy::class,
         Permission::class => PermissionPolicy::class,
         Role::class => RolePolicy::class,
-
     ];
 
     /**
      * Register any authentication / authorization services.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -47,6 +41,6 @@ class AuthServiceProvider extends ServiceProvider
         // This works in the app by using gate-related functions like auth()->user->can() and @can()
         Gate::before(function ($user, $ability) {
             return $user->IsSuperAdmin() ? true : null;
-        });    
+        });
     }
 }

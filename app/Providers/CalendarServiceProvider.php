@@ -6,31 +6,21 @@ use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
+use Guava\Calendar\CalendarServiceProvider as BaseProvider;
 use Guava\Calendar\Widgets\CalendarWidget;
 use Livewire\Livewire;
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
-
-use Guava\Calendar\CalendarServiceProvider as BaseProvider;
 
 class CalendarServiceProvider extends BaseProvider
 {
-
-    protected function getPackageBaseDir(): string
-    {
-        return base_path("vendor/guava/calendar/src");
-    }
-
-
     public function packageBooted(): void
     {
-        //Livewire::component('calendar-widget', CalendarWidget::class);
+        // Livewire::component('calendar-widget', CalendarWidget::class);
 
         FilamentAsset::register(
             assets: [
                 AlpineComponent::make(
                     'calendar',
-                     base_path('vendor/guava/calendar/dist/js/calendar.js'),
+                    base_path('vendor/guava/calendar/dist/js/calendar.js'),
                 ),
                 AlpineComponent::make(
                     'calendar-context-menu',
@@ -45,5 +35,10 @@ class CalendarServiceProvider extends BaseProvider
             ],
             package: 'guava/calendar'
         );
+    }
+
+    protected function getPackageBaseDir(): string
+    {
+        return base_path('vendor/guava/calendar/src');
     }
 }

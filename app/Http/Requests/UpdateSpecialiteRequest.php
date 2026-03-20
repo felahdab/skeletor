@@ -24,7 +24,6 @@ class UpdateSpecialiteRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

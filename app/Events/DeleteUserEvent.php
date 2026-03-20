@@ -9,15 +9,13 @@ use Illuminate\Queue\SerializesModels;
 
 class DeleteUserEvent
 {
-    use Dispatchable, SerializesModels;
+    use Dispatchable;
+    use SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public string $id, public string $mode)
-    {
-        //
-    }
+    public function __construct(public string $id, public string $mode) {}
 
     /**
      * Get the channels the event should broadcast on.

@@ -1,10 +1,14 @@
 <?php
 
-return [
+use Althinect\FilamentSpatieRolesPermissions\Resources\PermissionResource;
+use Althinect\FilamentSpatieRolesPermissions\Resources\RoleResource;
+use App\Models\Team;
+use App\Models\User;
 
+return [
     'resources' => [
-        'PermissionResource' => \Althinect\FilamentSpatieRolesPermissions\Resources\PermissionResource::class,
-        'RoleResource' => \Althinect\FilamentSpatieRolesPermissions\Resources\RoleResource::class,
+        'PermissionResource' => PermissionResource::class,
+        'RoleResource' => RoleResource::class,
     ],
 
     'preload_roles' => true,
@@ -13,47 +17,39 @@ return [
 
     'navigation_section_group' => 'filament-spatie-roles-permissions::filament-spatie.section.roles_and_permissions', // Default uses language constant
 
-    'team_model' => \App\Models\Team::class,
+    'team_model' => Team::class,
 
     'scope_to_tenant' => true,
 
-    /*
-     * Set as false to remove from navigation.
-     */
+    // Set as false to remove from navigation.
     'should_register_on_navigation' => [
         'permissions' => true,
         'roles' => true,
     ],
 
     'should_show_permissions_for_roles' => true,
-    
-    /*
-     * Set as true to use simple modal resource.
-     */
+
+    // Set as true to use simple modal resource.
     'should_use_simple_modal_resource' => [
         'permissions' => false,
         'roles' => false,
     ],
 
-    /*
-     * Set as true to remove empty state actions.
-     */
+    // Set as true to remove empty state actions.
     'should_remove_empty_state_actions' => [
         'permissions' => false,
         'roles' => false,
     ],
 
-    /**
-     * Set to true to redirect to the resource index instead of the view
-     */
+    // Set to true to redirect to the resource index instead of the view
     'should_redirect_to_index' => [
         'permissions' => [
             'after_create' => false,
-            'after_edit' => false
+            'after_edit' => false,
         ],
         'roles' => [
             'after_create' => false,
-            'after_edit' => false
+            'after_edit' => false,
         ],
     ],
 
@@ -90,32 +86,26 @@ return [
     'user_name_column' => 'nom',
     'user_name_searchable_columns' => ['nom'],
 
-    /*
-     * Icons to use for navigation
-     */
+    // Icons to use for navigation
     'icons' => [
         'role_navigation' => 'heroicon-o-lock-closed',
         'permission_navigation' => 'heroicon-o-lock-closed',
     ],
 
-    /*
-     *  Navigation items order - int value, false  restores the default position
-     */
+    // Navigation items order - int value, false  restores the default position
 
     'sort' => [
         'role_navigation' => false,
-        'permission_navigation' => false
+        'permission_navigation' => false,
     ],
 
     'generator' => [
-
         'guard_names' => [
             'web',
             'api',
         ],
 
         'permission_affixes' => [
-
             /*
              * Permissions Aligned with Policies.
              * DO NOT change the keys unless the genericPolicy.stub is published and altered accordingly
@@ -128,9 +118,7 @@ return [
             'restorePermission' => 'restore',
             'forceDeletePermission' => 'force-delete',
 
-            /*
-             * Additional Resource Permissions
-             */
+            // Additional Resource Permissions
             'replicate',
             'reorder',
         ],
@@ -147,45 +135,33 @@ return [
          */
         'permission_name' => 'return $permissionAffix . \' \' . $modelName;',
 
-        /*
-         * Permissions will be generated for the models associated with the respective Filament Resources
-         */
+        // Permissions will be generated for the models associated with the respective Filament Resources
         'discover_models_through_filament_resources' => false,
 
-        /*
-         * Include directories which consists of models.
-         */
+        // Include directories which consists of models.
         'model_directories' => [
             app_path('Models'),
-            //app_path('Domains/Forum')
+            // app_path('Domains/Forum')
         ],
 
-        /*
-         * Define custom_models
-         */
+        // Define custom_models
         'custom_models' => [
-            //
         ],
 
-        /*
-         * Define excluded_models
-         */
+        // Define excluded_models
         'excluded_models' => [
-            //
         ],
 
         'excluded_policy_models' => [
-            \App\Models\User::class,
+            User::class,
         ],
 
-        /*
-         * Define any other permission that should be synced with the DB
-         */
+        // Define any other permission that should be synced with the DB
         'custom_permissions' => [
-            //'view-log'
+            // 'view-log'
         ],
 
-        'user_model' => \App\Models\User::class,
+        'user_model' => User::class,
 
         'policies_namespace' => 'App\Policies',
     ],

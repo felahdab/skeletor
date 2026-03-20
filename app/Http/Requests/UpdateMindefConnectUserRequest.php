@@ -24,7 +24,6 @@ class UpdateMindefConnectUserRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

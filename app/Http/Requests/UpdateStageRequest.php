@@ -24,7 +24,6 @@ class UpdateStageRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

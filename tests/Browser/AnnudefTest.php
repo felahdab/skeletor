@@ -2,46 +2,49 @@
 
 namespace Tests\Browser;
 
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Laravel\Dusk\Browser;
+use App\Models\User;
 use Tests\DuskTestCase;
 
-use App\Models\User;
-
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class AnnudefTest extends DuskTestCase
 {
-
-    public function test_annudef_page_displays()
+    public function testAnnudefPageDisplays()
     {
-        $user=User::factory()->create();
+        $user = User::factory()->create();
         $user->admin = true;
         $user->save();
-        
-        $this->browse(function ($browser)  use ($user){
+
+        $this->browse(function ($browser) use ($user) {
             $browser->maximize()
-                    ->loginAs($user)
-                  ->visit(route('annudef.index'))
-                  ->assertSee('Annudef');
+                ->loginAs($user)
+                ->visit(route('annudef.index'))
+                ->assertSee('Annudef')
+            ;
         });
-        
+
         $user->forceDelete();
     }
 
-    public function test_annudef_search_by_name_doesnt_crash()
+    public function testAnnudefSearchByNameDoesntCrash()
     {
-        $user=User::factory()->create();
+        $user = User::factory()->create();
         $user->admin = true;
         $user->save();
-        
-        $this->browse(function ($browser)  use ($user){
+
+        $this->browse(function ($browser) use ($user) {
             $browser->maximize()
-                    ->loginAs($user)
-                  ->visit(route('annudef.index'))
-                  ->type('@input-nom', 'EL-AHDAB')
-                  ->pause(1000)
-                  ->assertSee('CV');
+                ->loginAs($user)
+                ->visit(route('annudef.index'))
+                ->type('@input-nom', 'EL-AHDAB')
+                ->pause(1000)
+                ->assertSee('CV')
+            ;
         });
-        
+
         $user->forceDelete();
     }
 }

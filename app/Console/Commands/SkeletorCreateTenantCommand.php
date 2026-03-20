@@ -2,10 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\CentralObjects\Tenant;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
-
-use App\CentralObjects\Tenant;
 use Illuminate\Support\Facades\Storage;
 
 class SkeletorCreateTenantCommand extends Command implements PromptsForMissingInput
@@ -24,29 +23,27 @@ class SkeletorCreateTenantCommand extends Command implements PromptsForMissingIn
      */
     protected $description = 'Lorsque l application est en mode multi tenant, permet de creer un nouveau tenant.';
 
-    
-
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        if (! config('skeletor.multi_tenancy')){
+        if (!config('skeletor.multi_tenancy')) {
             $this->fail('Cette commande n a pas de sens: Skeletor est configure en mono tenant.');
         }
 
-        $tenant_slug =  $this->argument('tenantid');
+        $tenant_slug = $this->argument('tenantid');
 
         $tenant = Tenant::create(['id' => $tenant_slug]);
 
         tenancy()->initialize($tenant);
 
         // Il faut aussi creer le dossier de cache suivant: (notamment pour le preview Livewire)
-        ///app/storage/instancecourbet/framework/cache/
+        // /app/storage/instancecourbet/framework/cache/
         Storage::disk('framework_cache')->makeDirectory('framework/cache/');
 
         // Il faut aussi s'occuper des assets:
-        //- Google fonts
+        // - Google fonts
 
         tenancy()->end();
     }

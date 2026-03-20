@@ -2,20 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Response;
-use App\Http\Requests\StoreMindefConnectUserRequest;
-use App\Http\Requests\UpdateMindefConnectUserRequest;
-use App\Models\MindefConnectUser;
-use Illuminate\Http\Request;
-
-use App\Models\User;
-use App\Models\Role;
-
-use Illuminate\Support\Facades\Mail;
-use App\Mail\WelcomeMail;
-
 use App\Events\UnUtilisateurDoitEtreRestaureEvent;
-
+use App\Http\Requests\StoreMindefConnectUserRequest;
+use App\Mail\WelcomeMail;
+use App\Models\MindefConnectUser;
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Mail;
 
 class MindefConnectUserController extends Controller
 {
@@ -27,42 +21,44 @@ class MindefConnectUserController extends Controller
     public function index()
     {
         $mcusers = MindefConnectUser::paginate(10);
-        
-        return view('mindefconnect.index', ['mcusers' => $mcusers]);
 
+        return view('mindefconnect.index', ['mcusers' => $mcusers]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreMindefConnectUserRequest $request
+     * @param mixed $length
+     *
      * @return Response
      */
-    function generateRandomString($length = 10) {
-       return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
+    public function generateRandomString($length = 10)
+    {
+        return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
     }
-    
+
     public function store(MindefConnectUser $user, StoreMindefConnectUserRequest $request)
     {
-        $newUser = User::create(array_merge($request->input(), [ "password" =>$this->generateRandomString()]));
-        $newUser->display_name=$newUser->displayString();
-        $newUser->admin = false;  
-        if ($request->has('admin'))
-            $newUser->admin = true;       
+        $newUser = User::create(array_merge($request->input(), ['password' => $this->generateRandomString()]));
+        $newUser->display_name = $newUser->displayString();
+        $newUser->admin = false;
+        if ($request->has('admin')) {
+            $newUser->admin = true;
+        }
         $newUser->save();
-        
+
         $newUser->syncRoles($request->get('role'));
-        
-        if (is_null($request->get('role')) or ! in_array("user", $request->get('role')))
-        {
-            $roletransfo = Role::where("name", "user")->first();
+
+        if (is_null($request->get('role')) or !in_array('user', $request->get('role'))) {
+            $roletransfo = Role::where('name', 'user')->first();
             $newUser->roles()->attach($roletransfo);
         }
-        
+
         $user->delete();
 
         Mail::to($newUser->email)
-            ->queue(new WelcomeMail($newUser));
+            ->queue(new WelcomeMail($newUser))
+        ;
 
         return redirect()->route('mindefconnect.index');
     }
@@ -70,7 +66,6 @@ class MindefConnectUserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param MindefConnectUser $mindefConnectUser
      * @return Response
      */
     public function edit(MindefConnectUser $User)
@@ -78,14 +73,14 @@ class MindefConnectUserController extends Controller
         $userGrade = strtoupper($User->rank);
 
         $cpte_exist = false;
-        if (User::withTrashed()->where ("email", $User->email)->first()) {
+        if (User::withTrashed()->where('email', $User->email)->first()) {
             $cpte_exist = true;
-        }            
-        
+        }
+
         return view('mindefconnect.edit', ['mcuser' => $User,
-                                    'roles' => Role::latest()->get(),
-                                    'cpte_exist' => $cpte_exist
-                                ]);
+            'roles' => Role::latest()->get(),
+            'cpte_exist' => $cpte_exist,
+        ]);
     }
 
     public function comebacklater()
@@ -96,28 +91,32 @@ class MindefConnectUserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param MindefConnectUser $mindefConnectUser
      * @return Response
      */
     public function destroy(MindefConnectUser $user)
     {
         $user->delete();
+
         return redirect()->route('mindefconnect.index');
     }
+
     public function conservcpte(MindefConnectUser $mcuser)
     {
         UnUtilisateurDoitEtreRestaureEvent::dispatch($mcuser->email, true);
         $mcuser->delete();
 
         return redirect()->route('mindefconnect.index')
-            ->withSuccess(__('Utilisateur restauré avec succès.'));
+            ->withSuccess(__('Utilisateur restauré avec succès.'))
+        ;
     }
+
     public function effacecpte(MindefConnectUser $mcuser)
     {
         UnUtilisateurDoitEtreRestaureEvent::dispatch($mcuser->email, false);
         $mcuser->delete();
-        
+
         return redirect()->route('mindefconnect.index')
-            ->withSuccess(__('Utilisateur restauré avec succès.'));
+            ->withSuccess(__('Utilisateur restauré avec succès.'))
+        ;
     }
 }

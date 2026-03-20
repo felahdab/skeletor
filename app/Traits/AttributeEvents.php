@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-// Taken from https://attribute.events/ and integrated directly into Skeletor out of simplification and to avoid adding a new dependency. 
+// Taken from https://attribute.events/ and integrated directly into Skeletor out of simplification and to avoid adding a new dependency.
 
 use Illuminate\Database\Eloquent\MissingAttributeException;
 use Illuminate\Support\Arr;
@@ -25,6 +25,40 @@ trait AttributeEvents
         static::saved(function ($model) {
             $model->syncOriginalAccessors();
         });
+    }
+
+    public function isDirtyAccessor(string $attribute): bool
+    {
+        if (!isset($this->originalAccessors[$attribute])) {
+            return false; // Attribute does not have a original value saved
+        }
+
+        $originalValue = $this->originalAccessors[$attribute];
+
+        try {
+            $currentValue = $this->getAttribute($attribute);
+        } catch (MissingAttributeException) {
+            return false;
+        }
+
+        return $originalValue !== $currentValue;
+    }
+
+    public function isDirtyNested(string $attribute, string $path): bool
+    {
+        $originalValue = Arr::get($this->getOriginal($attribute), $path);
+
+        try {
+            $currentValue = Arr::get($this->getAttribute($attribute), $path);
+        } catch (MissingAttributeException) {
+            return false;
+        }
+
+        if (null === $currentValue) {
+            return false;
+        }
+
+        return $originalValue !== $currentValue;
     }
 
     private function fireAttributeEvents(): void
@@ -74,7 +108,7 @@ trait AttributeEvents
 
     private function shouldFireAttributeEvent($value, $expected)
     {
-        if ($expected === '*') {
+        if ('*' === $expected) {
             return true;
         }
 
@@ -82,12 +116,12 @@ trait AttributeEvents
             return $value->name === $expected;
         }
 
-        if ($expected === 'true') {
-            return $value === true;
+        if ('true' === $expected) {
+            return true === $value;
         }
 
-        if ($expected === 'false') {
-            return $value === false;
+        if ('false' === $expected) {
+            return false === $value;
         }
 
         // Float
@@ -118,46 +152,12 @@ trait AttributeEvents
                 continue;
             }
 
-            if ($value === null) {
+            if (null === $value) {
                 continue; // Attribute does not exist
             }
 
             $this->originalAccessors[$attribute] = $value;
         }
-    }
-
-    public function isDirtyAccessor(string $attribute): bool
-    {
-        if (!isset($this->originalAccessors[$attribute])) {
-            return false; // Attribute does not have a original value saved
-        }
-
-        $originalValue = $this->originalAccessors[$attribute];
-
-        try {
-            $currentValue = $this->getAttribute($attribute);
-        } catch (MissingAttributeException) {
-            return false;
-        }
-
-        return $originalValue !== $currentValue;
-    }
-
-    public function isDirtyNested(string $attribute, string $path): bool
-    {
-        $originalValue = Arr::get($this->getOriginal($attribute), $path);
-
-        try {
-            $currentValue = Arr::get($this->getAttribute($attribute), $path);
-        } catch (MissingAttributeException) {
-            return false;
-        }
-
-        if ($currentValue === null) {
-            return false;
-        }
-
-        return $originalValue !== $currentValue;
     }
 
     /**

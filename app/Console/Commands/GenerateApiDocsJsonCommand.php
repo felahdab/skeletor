@@ -4,9 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
-
 use Illuminate\Support\Facades\Artisan;
-
 
 class GenerateApiDocsJsonCommand extends Command
 {
@@ -29,7 +27,7 @@ class GenerateApiDocsJsonCommand extends Command
      */
     public function handle()
     {
-        /**
+        /*
          *  Cette commande repose sur scramble:export qui réalise le plus gros du travail.
          *  Puis, cette commande récupère le fichier api-docs.json et le nettoie pour que le rendu avec swagger UI soit plus
          *  propre.
@@ -39,20 +37,19 @@ class GenerateApiDocsJsonCommand extends Command
         $apidocspath = config('scramble.export_path');
         $api_doc = json_decode(file_get_contents($apidocspath), true);
 
-        foreach ($api_doc["paths"] as $path => $path_description)
-        {
-            foreach ($path_description as $method => $method_description){
-                $tags = Arr::get($api_doc, "paths." . $path. "." . $method . ".tags");
+        foreach ($api_doc['paths'] as $path => $path_description) {
+            foreach ($path_description as $method => $method_description) {
+                $tags = Arr::get($api_doc, 'paths.'.$path.'.'.$method.'.tags');
 
                 $maxlength = max(array_map('strlen', $tags));
-                $longest_tag = array_filter($tags, function($value) use ($maxlength){
+                $longest_tag = array_filter($tags, function ($value) use ($maxlength) {
                     return strlen($value) === $maxlength;
                 });
 
-                Arr::set($api_doc, "paths." . $path. "." . $method . ".tags", [ $longest_tag ]);
+                Arr::set($api_doc, 'paths.'.$path.'.'.$method.'.tags', [$longest_tag]);
             }
         }
-        
+
         file_put_contents($apidocspath, json_encode($api_doc));
     }
 }

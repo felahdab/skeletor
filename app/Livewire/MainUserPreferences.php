@@ -2,16 +2,13 @@
 
 namespace App\Livewire;
 
-use Throwable;
 use Livewire\Component;
-
-use Nwidart\Modules\Facades\Module;
 use Livewire\Mechanisms\ComponentRegistry;
+use Nwidart\Modules\Facades\Module;
 
 class MainUserPreferences extends Component
 {
     public array $settings = [];
-
 
     public function mount()
     {
@@ -28,26 +25,25 @@ class MainUserPreferences extends Component
         $listpagesaccueil = [];
         $composants_des_modules = [];
         foreach (Module::allEnabled() as $module) {
-            $listpagesaccueil=[];
-            if($listpagesdumodule = config($module->getLowerName() . ".pageaccueilpossible")){
+            $listpagesaccueil = [];
+            if ($listpagesdumodule = config($module->getLowerName().'.pageaccueilpossible')) {
                 foreach ($listpagesdumodule as $key => $route) {
-                    $listpagesaccueil[$module->getName() . " - " . $key] = $route;
-                }    
+                    $listpagesaccueil[$module->getName().' - '.$key] = $route;
+                }
             }
-            $candidat_composant = $module->getLowerName() . "::user-preferences-component";
+            $candidat_composant = $module->getLowerName().'::user-preferences-component';
 
             try {
                 $livewire_registry->getClass($candidat_composant);
-         
-                $composants_des_modules[]  = $candidat_composant;
-            } catch(Throwable $th) {
-                
+
+                $composants_des_modules[] = $candidat_composant;
+            } catch (\Throwable $th) {
             }
         }
 
         return view('livewire.main-user-preferences', [
             'listpagesaccueil' => $listpagesaccueil,
-            'composants_des_modules' => $composants_des_modules
+            'composants_des_modules' => $composants_des_modules,
         ]);
     }
 }

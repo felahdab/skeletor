@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class AnnudefEntry extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'titre',
         'nom',
@@ -25,5 +25,5 @@ class AnnudefEntry extends Model
         'prenomusuel',
         'categorystatus',
         'categoryrank',
-        ];
+    ];
 }

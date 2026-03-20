@@ -3,11 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-
 use Illuminate\Contracts\Console\PromptsForMissingInput;
-
-use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\Http;
 
 class TestRemoteSystem extends Command implements PromptsForMissingInput
 {
@@ -32,19 +30,19 @@ class TestRemoteSystem extends Command implements PromptsForMissingInput
     {
         $url = $this->argument('url');
         $token = $this->argument('token');
-        try{
+
+        try {
             $response = Http::withToken($token)
-                ->withOptions(["verify"=>false])
-                ->get($url);
-            if ($response->successful() ) {
-                $this->info("Connection reussie");
+                ->withOptions(['verify' => false])
+                ->get($url)
+            ;
+            if ($response->successful()) {
+                $this->info('Connection reussie');
+            } else {
+                $this->warn('Echec: '.$response->body());
             }
-            else {
-                $this->warn("Echec: " . $response->body());
-            }
-        }
-        catch (ConnectionException){
-            $this->warn("Exception pendant la connexion.");
+        } catch (ConnectionException) {
+            $this->warn('Exception pendant la connexion.');
         }
     }
 }

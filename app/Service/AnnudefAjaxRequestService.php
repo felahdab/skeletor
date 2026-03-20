@@ -2,32 +2,34 @@
 
 namespace App\Service;
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\Http;
 
 class AnnudefAjaxRequestService
 {
     /**
-     * Fonction qui permet de récupérer l'entrée Annudef de l'utilisateur par son email
+     * Fonction qui permet de récupérer l'entrée Annudef de l'utilisateur par son email.
+     *
+     * @param mixed $email
      */
     public static function getUserAnnudefEntryByEmail($email)
     {
         $base_url = config('services.recherche_annuaire.base_url');
 
         $request_params = [
-            'nomsimple'     => '',
-            'nomavancee'    => '',
-            'tel'           => '',
-            'NID'           => '',
-            'mail'          => $email,
-            'fonction'      => '',
-            'vue'           => 'rh',
-            'sirh'          => '',
-            'zone'          => '',
-            'bdd'           => '',
-            'site'          => '',
-            'organisation'  => '',
-            'entite'        => '',
+            'nomsimple' => '',
+            'nomavancee' => '',
+            'tel' => '',
+            'NID' => '',
+            'mail' => $email,
+            'fonction' => '',
+            'vue' => 'rh',
+            'sirh' => '',
+            'zone' => '',
+            'bdd' => '',
+            'site' => '',
+            'organisation' => '',
+            'entite' => '',
         ];
 
         try {
@@ -35,14 +37,15 @@ class AnnudefAjaxRequestService
                 ->timeout(1)
                 ->connectTimeout(1)
                 ->asForm()
-                ->post("{$base_url}/index.php?c=AJAXpagesjaunesbl&a=Recherche", $request_params);
+                ->post("{$base_url}/index.php?c=AJAXpagesjaunesbl&a=Recherche", $request_params)
+            ;
         } catch (ConnectionException $e) {
             return null;
         }
 
-        if ($response->json()["success"]) {
-            if ($response->json()["data"]["total"] == 1) {
-                return $response->json()["data"]["rows"][0];
+        if ($response->json()['success']) {
+            if (1 == $response->json()['data']['total']) {
+                return $response->json()['data']['rows'][0];
             }
         }
 
@@ -51,26 +54,30 @@ class AnnudefAjaxRequestService
 
     /**
      * Fonction qui permet de récupérer l'unité de l'utilisateur par son mail.
+     *
+     * @param mixed $email
      */
     public static function searchUserUnitByEmail($email)
     {
         $userAnnudefEntry = static::getUserAnnudefEntryByEmail($email);
-        if ($userAnnudefEntry == null)
+        if (null == $userAnnudefEntry) {
             return null;
+        }
 
-        return $userAnnudefEntry["unite"];
-        
+        return $userAnnudefEntry['unite'];
     }
 
     public static function searchUserByEmail($email)
     {
         $userAnnudefEntry = static::getUserAnnudefEntryByEmail($email);
-        if ($userAnnudefEntry == null)
+        if (null == $userAnnudefEntry) {
             return null;
+        }
 
-        $dn = $userAnnudefEntry["dn"];
-        $pieces = explode(",", $dn);
-        $uid = explode("=", $pieces[0])[1];
+        $dn = $userAnnudefEntry['dn'];
+        $pieces = explode(',', $dn);
+        $uid = explode('=', $pieces[0])[1];
+
         return $uid;
     }
 
@@ -83,18 +90,19 @@ class AnnudefAjaxRequestService
                 ->timeout(1)
                 ->connectTimeout(1)
                 ->asForm()
-                ->post("{$base_url}/index.php?c=AJAXparcourir&a=RemplirFicheIndividuelle&type=user&uid=" . $uid, null);
+                ->post("{$base_url}/index.php?c=AJAXparcourir&a=RemplirFicheIndividuelle&type=user&uid=".$uid, null)
+            ;
         } catch (ConnectionException $e) {
             return null;
         }
 
         // return $response;
-        if ($response->json()["success"]) {
-            if ($response->json()["data"]["total"] == 1) {
-                $photo = $response->json()["data"]["photo"];
-                $photo = str_replace("./images/photos/", "", $photo);
-                $photo = str_replace("]", "/", $photo);
-                return $photo;
+        if ($response->json()['success']) {
+            if (1 == $response->json()['data']['total']) {
+                $photo = $response->json()['data']['photo'];
+                $photo = str_replace('./images/photos/', '', $photo);
+
+                return str_replace(']', '/', $photo);
             }
         }
 
@@ -105,11 +113,10 @@ class AnnudefAjaxRequestService
     {
         $uid = self::searchUserByEmail($email);
 
-        if ($uid == null)
+        if (null == $uid) {
             return null;
+        }
 
-        $picture = self::searchPictureForUid($uid);
-
-        return $picture;
+        return self::searchPictureForUid($uid);
     }
 }

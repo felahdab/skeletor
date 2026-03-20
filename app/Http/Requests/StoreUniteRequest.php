@@ -24,7 +24,6 @@ class StoreUniteRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

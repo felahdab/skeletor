@@ -24,7 +24,6 @@ class UpdateBugReportRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

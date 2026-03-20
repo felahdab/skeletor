@@ -2,105 +2,101 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
+use App\Models\MindefConnectUser;
+use App\Models\User;
+use App\Service\RandomPasswordGeneratorService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-
-use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Password;
+use Laravel\Socialite\Facades\Socialite;
 use Spatie\Permission\Models\Role;
-
-use App\Models\User;
-use App\Models\MindefConnectUser;
-use App\Http\Requests\LoginRequest;
-use App\Service\RandomPasswordGeneratorService;
 
 class LoginController extends Controller
 {
     /**
      * Display login page.
-     * 
+     *
      * @return Renderable
      */
     public function show()
     {
-        [$logo, $sso_name] = match (config('skeletor.reseau_de_deploiement')){
-            "intradef" => [asset("assets/images/MDC_intradef.png"), "Mindef Connect"],
-            "sic21" => [asset("assets/images/Keycloak.png"), "POLARIS Online"]
+        [$logo, $sso_name] = match (config('skeletor.reseau_de_deploiement')) {
+            'intradef' => [asset('assets/images/MDC_intradef.png'), 'Mindef Connect'],
+            'sic21' => [asset('assets/images/Keycloak.png'), 'POLARIS Online']
         };
-        
-        return view('auth.login', ["logo" => $logo, "sso_name" => $sso_name]);
+
+        return view('auth.login', ['logo' => $logo, 'sso_name' => $sso_name]);
     }
 
     /**
-     * Handle account login request
-     * 
+     * Handle account login request.
+     *
      * @param LoginRequest $request
-     * 
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
     public function login(Request $request)
     {
         $MCuser = null;
-        try
-        {
+
+        try {
             $driver = Socialite::driver('keycloak');
-            $driver->setHttpClient(new Client(["verify" => false]));
-    
+            $driver->setHttpClient(new Client(['verify' => false]));
+
             $MCuser = $driver->stateless()->user();
-    
-        }
-        catch (ClientException $e) {
-            logger()->error("Error while trying to get user from SSO", ["exception" => $e->getMessage()]);
+        } catch (ClientException $e) {
+            logger()->error('Error while trying to get user from SSO', ['exception' => $e->getMessage()]);
+
             return redirect()->route('login')->withErrors(['error' => 'Erreur de connexion au serveur SSO. Veuillez réessayer plus tard ou utiliser votre login local.']);
         }
-        
-        ///ddd($MCuser);
 
-        $user = User::where('sub', $MCuser->user["sub"])->first();
-        if ($user != null) {
+        // /ddd($MCuser);
+
+        $user = User::where('sub', $MCuser->user['sub'])->first();
+        if (null != $user) {
             $user->storeMindefConnectInformations($MCuser->user);
             Auth::login($user);
-            logger()->info("Logged user based on sub attribute.", ["user" => $user]);
+            logger()->info('Logged user based on sub attribute.', ['user' => $user]);
 
             // Let's update the email information from the SSO server.
-            $user->email = $MCuser->user["email"];
+            $user->email = $MCuser->user['email'];
             $user->save();
 
             return $this->authenticated($request, $user);
         }
 
         $user = User::where('email', $MCuser->email)->first();
-        if ($user != null) {
+        if (null != $user) {
             $user->storeMindefConnectInformations($MCuser->user);
             Auth::login($user);
-            
+
             // Let's save the sub of the user so that it is used next time the user logs in.
-            if ($user->sub == null)
-            {
-                $user->sub = $MCuser->user["sub"];
+            if (null == $user->sub) {
+                $user->sub = $MCuser->user['sub'];
                 $user->save();
             }
 
-            logger()->info("Logged user based on sub attribute.", ["user" => $user]);
+            logger()->info('Logged user based on sub attribute.', ['user' => $user]);
 
             return $this->authenticated($request, $user);
         }
 
-        // si le user n'existe pas, test de la variable APP_VALID_MDC pour savoir si on l'enregistre dans la table MDC 
-        if (! config('skeletor.validation_automatique_des_comptes_mindef_connect')){
+        // si le user n'existe pas, test de la variable APP_VALID_MDC pour savoir si on l'enregistre dans la table MDC
+        if (!config('skeletor.validation_automatique_des_comptes_mindef_connect')) {
             // on cree un compte temporaire ds MDC
             $MCuserexist = MindefConnectUser::where('email', $MCuser->email)->first();
             if ($MCuserexist) {
                 $MCuserexist->updated_at = date('Y-m-d G:i:s');
                 $MCuserexist->msg = true;
-            } 
-            else {
-                $mapping = match (config('skeletor.reseau_de_deploiement')){
-                    "intradef" => [
+            } else {
+                $mapping = match (config('skeletor.reseau_de_deploiement')) {
+                    'intradef' => [
                         'sub' => $MCuser->user['sub'],
                         'email' => $MCuser->email,
                         'nom' => $MCuser->user['usual_name'],
@@ -111,7 +107,7 @@ class LoginController extends Controller
                         'short_rank' => $MCuser->user['short_rank'],
                         'display_name' => $MCuser->user['display_name'],
                     ],
-                    "sic21" => [
+                    'sic21' => [
                         'sub' => $MCuser->user['sub'],
                         'email' => $MCuser->email,
                         'nom' => $MCuser->user['family_name'],
@@ -121,72 +117,71 @@ class LoginController extends Controller
                 };
                 $MCuserexist = MindefConnectUser::create($mapping);
             }
+
             return view('auth.comebacklater', ['MCuserexist' => $MCuserexist]);
         }
         // variable false = on cree directement le user dans user
-        else{
-            $mapping = match (config('skeletor.reseau_de_deploiement')){
-                "intradef" => [
-                    'sub' => $MCuser->user['sub'],
-                    "password" => RandomPasswordGeneratorService::generateRandomString(),
-                    'email' => $MCuser->email,
-                    'nom' => $MCuser->user['usual_name'],
-                    'prenom' => $MCuser->user['usual_forename'],
-                    'display_name' => $MCuser->user['display_name'],
-                    "date_embarq" => date('Y-m-d')
-                ],
-                "sic21" => [
-                    'sub' => $MCuser->user['sub'],
-                    "password" => RandomPasswordGeneratorService::generateRandomString(),
-                    'email' => $MCuser->email,
-                    'nom' => $MCuser->user['family_name'],
-                    'prenom' => $MCuser->user['given_name'],
-                    'display_name' => $MCuser->user['name']
-                ]
-            };
 
-            $Newuser=User::create($mapping);
+        $mapping = match (config('skeletor.reseau_de_deploiement')) {
+            'intradef' => [
+                'sub' => $MCuser->user['sub'],
+                'password' => RandomPasswordGeneratorService::generateRandomString(),
+                'email' => $MCuser->email,
+                'nom' => $MCuser->user['usual_name'],
+                'prenom' => $MCuser->user['usual_forename'],
+                'display_name' => $MCuser->user['display_name'],
+                'date_embarq' => date('Y-m-d'),
+            ],
+            'sic21' => [
+                'sub' => $MCuser->user['sub'],
+                'password' => RandomPasswordGeneratorService::generateRandomString(),
+                'email' => $MCuser->email,
+                'nom' => $MCuser->user['family_name'],
+                'prenom' => $MCuser->user['given_name'],
+                'display_name' => $MCuser->user['name'],
+            ]
+        };
 
-            $role= Role::where('name', config('skeletor.groupe_par_defaut_des_nouveaux_comptes'))->first();
-             if ($role){
-                $Newuser->roles()->attach($role->id);
-            }
-            
-            $Newuser->storeMindefConnectInformations($MCuser->user);
+        $Newuser = User::create($mapping);
 
-            Auth::login($Newuser);
-            
-            return $this->authenticated($request, $Newuser);
+        $role = Role::where('name', config('skeletor.groupe_par_defaut_des_nouveaux_comptes'))->first();
+        if ($role) {
+            $Newuser->roles()->attach($role->id);
         }
+
+        $Newuser->storeMindefConnectInformations($MCuser->user);
+
+        Auth::login($Newuser);
+
+        return $this->authenticated($request, $Newuser);
     }
 
     public function newMdcLogin(Request $request, MindefConnectUser $MCuserexist)
     {
-        //enregistrer le commentaire
+        // enregistrer le commentaire
         $MCuserexist->commentaire = $request->comment_mdconnect;
         $MCuserexist->save();
 
         $TULEAP_TOKEN = config('skeletor.services.tuleap.token');
         $TULEAP_URL = config('skeletor.services.tuleap.url');
         $TULEAP_TRACKER_MINDEFCONNECT = config('skeletor.services.tuleap.tracker_mindef_connect');
-        
 
-        if (config('skeletor.reseau_de_deploiement') == "intradef") {
-
+        if ('intradef' == config('skeletor.reseau_de_deploiement')) {
             $response = Http::withoutVerifying()
-                ->withHeaders(["X-Auth-AccessKey" => $TULEAP_TOKEN])
+                ->withHeaders(['X-Auth-AccessKey' => $TULEAP_TOKEN])
                 ->post(
-                    $TULEAP_URL. "api/artifacts",
+                    $TULEAP_URL.'api/artifacts',
                     [
-                        "tracker" =>  ["id" => $TULEAP_TRACKER_MINDEFCONNECT],
-                        "values_by_field" => [
-                            "affectation" =>  ["value"  => $MCuserexist->main_department_number],
-                            "user" => ["value" => $MCuserexist->display_name],
-                            "raison" => ["value" => $MCuserexist->commentaire],
-                            "instance" => ["value" => config('skeletor.prefixe_instance')],
-                        ]
+                        'tracker' => ['id' => $TULEAP_TRACKER_MINDEFCONNECT],
+                        'values_by_field' => [
+                            'affectation' => ['value' => $MCuserexist->main_department_number],
+                            'user' => ['value' => $MCuserexist->display_name],
+                            'raison' => ['value' => $MCuserexist->commentaire],
+                            'instance' => ['value' => config('skeletor.prefixe_instance')],
+                        ],
                     ]
-                );
+                )
+            ;
         }
 
         return redirect()->route(config('skeletor.page_par_defaut'));
@@ -199,32 +194,22 @@ class LoginController extends Controller
 
         if (!Auth::validate($credentials)) {
             return redirect()->to(route('login'))
-                ->withErrors(trans('auth.failed'));
+                ->withErrors(trans('auth.failed'))
+            ;
         }
 
         $user = Auth::getProvider()->retrieveByCredentials($credentials);
 
         Auth::login($user);
 
-        logger()->info("Logged user based on local credentials.", ["user" => $user]);
+        logger()->info('Logged user based on local credentials.', ['user' => $user]);
+
         return $this->authenticated($request, $user);
     }
 
     /**
-     * Handle response after user authenticated
-     * 
-     * @param Request $request
-     * @param Auth    $user
-     * 
-     * @return \Illuminate\Http\Response
-     */
-    protected function authenticated(Request $request, $user)
-    {
-        return redirect()->route('home.index');
-    }
-
-    /**
-     * Dispay page for send link reset pwd
+     * Dispay page for send link reset pwd.
+     *
      * @return view
      */
     public function indexforgotpwd()
@@ -233,36 +218,33 @@ class LoginController extends Controller
     }
 
     /**
-     * send link to the user email
-     * @param Request $request
+     * send link to the user email.
      */
     public function forgotpwd(Request $request)
     {
-
-        [$logo, $sso_name] = match (config('skeletor.reseau_de_deploiement')){
-            "intradef" => [asset("assets/images/MDC_intradef.png"), "Mindef Connect"],
-            "sic21" => [asset("assets/images/Keycloak.png"), "POLARIS Online"]
+        [$logo, $sso_name] = match (config('skeletor.reseau_de_deploiement')) {
+            'intradef' => [asset('assets/images/MDC_intradef.png'), 'Mindef Connect'],
+            'sic21' => [asset('assets/images/Keycloak.png'), 'POLARIS Online']
         };
 
-        $request->validate(['email' => "required|email"]);
-        //$user = User::getEmailSingle($request->email);
+        $request->validate(['email' => 'required|email']);
+        // $user = User::getEmailSingle($request->email);
         $user = Auth::guard()->getProvider()->retrieveByCredentials(['email' => $request->email]);
         if (!empty($user)) {
             $status = Password::sendResetLink(
                 $request->only('email')
             );
 
-            return $status === Password::RESET_LINK_SENT
-                ? view('auth.login', ["logo" => $logo, "sso_name" => $sso_name])->with(['success' => 'email envoyé'])
+            return Password::RESET_LINK_SENT === $status
+                ? view('auth.login', ['logo' => $logo, 'sso_name' => $sso_name])->with(['success' => 'email envoyé'])
                 : back()->withErrors(['email' => __($status)]);
-        } else {
-            return back()->withErrors('l\'email n\'est pas dans la base de donnée');
         }
+
+        return back()->withErrors('l\'email n\'est pas dans la base de donnée');
     }
 
     /**
-     * Display page reset password
-     * @param string $token
+     * Display page reset password.
      */
     public function resetpwdpage(string $token, string $email)
     {
@@ -270,8 +252,7 @@ class LoginController extends Controller
     }
 
     /**
-     * Update the password with new pwd
-     * @param Request $request
+     * Update the password with new pwd.
      */
     public function updatepwd(Request $request)
     {
@@ -291,14 +272,27 @@ class LoginController extends Controller
             }
         );
 
-        [$logo, $sso_name] = match (config('skeletor.reseau_de_deploiement')){
-            "intradef" => [asset("assets/images/MDC_intradef.png"), "Mindef Connect"],
-            "sic21" => [asset("assets/images/Keycloak.png"), "POLARIS Online"]
+        [$logo, $sso_name] = match (config('skeletor.reseau_de_deploiement')) {
+            'intradef' => [asset('assets/images/MDC_intradef.png'), 'Mindef Connect'],
+            'sic21' => [asset('assets/images/Keycloak.png'), 'POLARIS Online']
         };
 
-        return $status === Password::PASSWORD_RESET
-            ? view('auth.login', ["logo" => $logo, "sso_name" => $sso_name])->with(['success' => 'mot de passe modifié'])
+        return Password::PASSWORD_RESET === $status
+            ? view('auth.login', ['logo' => $logo, 'sso_name' => $sso_name])->with(['success' => 'mot de passe modifié'])
             : redirect(route('password.reset', ['token' => $request->input('token'), 'email' => $request->input('email')]))
-            ->withErrors(['email' => [__($status)]]);
+                ->withErrors(['email' => [__($status)]])
+        ;
+    }
+
+    /**
+     * Handle response after user authenticated.
+     *
+     * @param Auth $user
+     *
+     * @return Response
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        return redirect()->route('home.index');
     }
 }

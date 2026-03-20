@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use Illuminate\Support\Facades\Http;
-use SimpleXMLElement;
 
 class AnnudefLDAPRequestService
 {
@@ -40,19 +39,19 @@ class AnnudefLDAPRequestService
                 </ns1:searchUsers>
             </SOAP-ENV:Body>
         </SOAP-ENV:Envelope>';
-        $request = str_replace("TEL", $tel, $template);
-        $request = str_replace("PRENOM", $prenom, $request);
-        $request = str_replace("NOM", $nom, $request);
-        $request = str_replace("MAIL", $mail, $request);
-        $request = str_replace("BDD", $bdd, $request);
-        $request = str_replace("ZONE", $zone, $request);
-        $request = str_replace("LOCALITE", $localite, $request);
-        $request = str_replace("ENTITE", $entite, $request);
-        $request = str_replace("FONCTION", $fonction, $request);
-        $request = str_replace("NID", $nid, $request);
-        $request = str_replace("LOGIN", $login, $request);
-        $request = str_replace("PASSWORD", $password, $request);
-        return $request;
+        $request = str_replace('TEL', $tel, $template);
+        $request = str_replace('PRENOM', $prenom, $request);
+        $request = str_replace('NOM', $nom, $request);
+        $request = str_replace('MAIL', $mail, $request);
+        $request = str_replace('BDD', $bdd, $request);
+        $request = str_replace('ZONE', $zone, $request);
+        $request = str_replace('LOCALITE', $localite, $request);
+        $request = str_replace('ENTITE', $entite, $request);
+        $request = str_replace('FONCTION', $fonction, $request);
+        $request = str_replace('NID', $nid, $request);
+        $request = str_replace('LOGIN', $login, $request);
+
+        return str_replace('PASSWORD', $password, $request);
     }
 
     public static function searchUsers(
@@ -67,14 +66,13 @@ class AnnudefLDAPRequestService
         $fonction = '',
         $nid = ''
     ) {
-
-        $LDAPSERVER   = config('skeletor.services.ldap.server');
-        $LDAPLOGIN   = config('skeletor.services.ldap.login');
-        $LDAPPASSWORD   = config('skeletor.services.ldap.password');
+        $LDAPSERVER = config('skeletor.services.ldap.server');
+        $LDAPLOGIN = config('skeletor.services.ldap.login');
+        $LDAPPASSWORD = config('skeletor.services.ldap.password');
         $LDAPANNUURL = config('skeletor.services.ldap.url');
         $LDAPTIMEOUT = config('skeletor.services.ldap.timeout');
 
-        $ANNUBASEURL = "https://" . $LDAPSERVER . "/" . $LDAPANNUURL;
+        $ANNUBASEURL = 'https://'.$LDAPSERVER.'/'.$LDAPANNUURL;
 
         $request = static::searchUsersRequest(
             $tel,
@@ -94,22 +92,24 @@ class AnnudefLDAPRequestService
         $response = Http::withoutVerifying()
             ->timeout(intval($LDAPTIMEOUT))
             ->withBody($request, 'application/soap+xml')
-            ->post($ANNUBASEURL);
+            ->post($ANNUBASEURL)
+        ;
 
-        $result = new SimpleXMLElement($response->body(), 0, 0, "http://schemas.xmlsoap.org/soap/envelope/");
-        $returncode = intval($result->Body->children("ns1", true)->children()->response->codeErreur);
+        $result = new \SimpleXMLElement($response->body(), 0, 0, 'http://schemas.xmlsoap.org/soap/envelope/');
+        $returncode = intval($result->Body->children('ns1', true)->children()->response->codeErreur);
         $results = [];
 
-        if ($returncode == 0) {
+        if (0 == $returncode) {
             $xmlstr = $result
                 ->Body
-                ->children("ns1", true)
+                ->children('ns1', true)
                 ->children()
                 ->response
-                ->xml;
+                ->xml
+            ;
             // $this->info($xmlstr);
 
-            $xmlresult = new SimpleXMLElement($xmlstr);
+            $xmlresult = new \SimpleXMLElement($xmlstr);
 
             foreach ($xmlresult->children() as $userdata) {
                 // var_dump($userdata);
@@ -130,16 +130,15 @@ class AnnudefLDAPRequestService
                     'categorystatus' => trim($userdata->categorystatus),
                     'categoryrank' => trim($userdata->categoryrank),
                     'familyname' => trim($userdata->familyname),
-
                 ];
-                // $this->info(json_encode($userdatatbl)); 
+                // $this->info(json_encode($userdatatbl));
                 array_push($results, $userdatatbl);
             }
-        } else {
-            // $this->error("Error code: " . $returncode . "\n");
-            // $this->info("Request: \n");
-            // $this->info($request . "\n");
         }
+        // $this->error("Error code: " . $returncode . "\n");
+        // $this->info("Request: \n");
+        // $this->info($request . "\n");
+
         return $results;
     }
 

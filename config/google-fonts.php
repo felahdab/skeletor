@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
      * Here you can register fonts to call from the @googlefonts Blade directive.
      * The google-fonts:fetch command will prefetch these fonts.
@@ -32,7 +31,7 @@ return [
      * When something goes wrong fonts are loaded directly from Google.
      * With fallback disabled, this package will throw an exception.
      */
-    'fallback' => ! env('APP_DEBUG'),
+    'fallback' => !env('APP_DEBUG'),
 
     /*
      * This user agent will be used to request the stylesheet from Google Fonts.
@@ -40,5 +39,4 @@ return [
      * you want to target older browsers, use different user agent string.
      */
     'user_agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15',
-
 ];

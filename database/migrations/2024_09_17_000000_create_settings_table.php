@@ -1,11 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Apply the migrations.
      */
@@ -17,7 +16,6 @@ return new class extends Migration
             $table->json('data')->nullable()->default(null);
 
             $table->timestamps();
-
         });
     }
 

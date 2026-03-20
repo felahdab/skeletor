@@ -24,7 +24,6 @@ class UpdateGradeRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

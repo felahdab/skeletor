@@ -9,7 +9,8 @@ use Illuminate\Queue\SerializesModels;
 
 class RestoreUserEvent
 {
-    use Dispatchable, SerializesModels;
+    use Dispatchable;
+    use SerializesModels;
 
     /**
      * Create a new event instance.

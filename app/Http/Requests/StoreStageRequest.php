@@ -24,7 +24,6 @@ class StoreStageRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

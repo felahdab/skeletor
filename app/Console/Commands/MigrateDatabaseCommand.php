@@ -4,8 +4,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 
 class MigrateDatabaseCommand extends Command
 {
@@ -15,9 +13,8 @@ class MigrateDatabaseCommand extends Command
 
     public function handle()
     {
-
-        if (config('database.connections.source') == null || config('database.connections.destination') == null){
-            $this->fail("Source or destination database connections are undefined.");
+        if (null == config('database.connections.source') || null == config('database.connections.destination')) {
+            $this->fail('Source or destination database connections are undefined.');
         }
 
         $table = $this->argument('table');
@@ -26,18 +23,19 @@ class MigrateDatabaseCommand extends Command
 
         $total = DB::connection('source')
             ->table($table)
-            ->count();
-        $this->info($total . " total records to transfer.");
+            ->count()
+        ;
+        $this->info($total.' total records to transfer.');
 
         $records = DB::connection('source')
             ->table($table)
-            ->get();
+            ->get()
+        ;
 
-        $records = $records->map(function($item) {
-            return json_decode(json_encode($item), true);;
+        $records = $records->map(function ($item) {
+            return json_decode(json_encode($item), true);
         })->toArray();
 
         DB::connection('destination')->table($table)->insert($records);
-
     }
 }

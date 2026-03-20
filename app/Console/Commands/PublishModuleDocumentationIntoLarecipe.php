@@ -3,11 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-
-use Illuminate\Contracts\Console\PromptsForMissingInput;
 
 class PublishModuleDocumentationIntoLarecipe extends Command implements PromptsForMissingInput
 {
@@ -48,32 +47,6 @@ class PublishModuleDocumentationIntoLarecipe extends Command implements PromptsF
     }
 
     /**
-     * @param string $module
-     * @return string
-     */
-    private function getServiceProviderForModule($module)
-    {
-        $namespace = $this->laravel['config']->get('modules.namespace');
-        $studlyName = Str::studly($module);
-
-        return "$namespace\\$studlyName\\Providers\\{$studlyName}ServiceProvider";
-    }
-
-    /**
-     * @param string $module
-     */
-    private function publishConfiguration($module)
-    {
-        $this->call('vendor:publish', [
-            '--provider' => $this->getServiceProviderForModule($module),
-            '--force' => true,
-            '--tag' => ['doc'],
-        ]);
-
-        # TODO: c'est là qu'il faut ajuster comment on intègre la doc 
-    }
-
-    /**
      * Get the console command arguments.
      *
      * @return array
@@ -93,5 +66,32 @@ class PublishModuleDocumentationIntoLarecipe extends Command implements PromptsF
         return [
             ['--force', '-f', InputOption::VALUE_NONE, 'Force the publishing of config files'],
         ];
+    }
+
+    /**
+     * @param string $module
+     *
+     * @return string
+     */
+    private function getServiceProviderForModule($module)
+    {
+        $namespace = $this->laravel['config']->get('modules.namespace');
+        $studlyName = Str::studly($module);
+
+        return "{$namespace}\\{$studlyName}\\Providers\\{$studlyName}ServiceProvider";
+    }
+
+    /**
+     * @param string $module
+     */
+    private function publishConfiguration($module)
+    {
+        $this->call('vendor:publish', [
+            '--provider' => $this->getServiceProviderForModule($module),
+            '--force' => true,
+            '--tag' => ['doc'],
+        ]);
+
+        // TODO: c'est là qu'il faut ajuster comment on intègre la doc
     }
 }

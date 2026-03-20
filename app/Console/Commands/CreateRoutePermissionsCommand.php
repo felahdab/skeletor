@@ -24,8 +24,6 @@ class CreateRoutePermissionsCommand extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -43,14 +41,14 @@ class CreateRoutePermissionsCommand extends Command
 
         foreach ($routes as $route) {
             if (
-                $route->getName() != '' &&
-                key_exists('middleware', $route->getAction()) &&
-                $route->getAction()['middleware']['0'] == 'web'
+                '' != $route->getName()
+                && key_exists('middleware', $route->getAction())
+                && 'web' == $route->getAction()['middleware']['0']
             ) {
                 $permission = Permission::where('name', $route->getName())->first();
 
                 if (is_null($permission)) {
-                    permission::create(['name' => $route->getName()]);
+                    Permission::create(['name' => $route->getName()]);
                 }
             }
         }

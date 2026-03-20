@@ -13,19 +13,18 @@ class UpdatePasswdRequest extends FormRequest
      */
     public function authorize()
     {
-		// L'utilisateur a le droit de modifier son propre mot de passe
-		// meme s'il n'a pas d'autre autorisation.
-		if (intval($this->input('userid')) == auth()->user()->id) 
-			return true;
-		// Dans tous les autres cas, il faut que l'utilisateur ait l'autorisation
-		// de modifier le mot de passe des autres.
-		if (auth()->user()->hasPermissionTo('changepasswd.allusers') || auth()->user()->IsSuperAdmin())
-		{
-			return true;
-		}
-		else {
-			return false;
-		}
+        // L'utilisateur a le droit de modifier son propre mot de passe
+        // meme s'il n'a pas d'autre autorisation.
+        if (intval($this->input('userid')) == auth()->user()->id) {
+            return true;
+        }
+        // Dans tous les autres cas, il faut que l'utilisateur ait l'autorisation
+        // de modifier le mot de passe des autres.
+        if (auth()->user()->hasPermissionTo('changepasswd.allusers') || auth()->user()->IsSuperAdmin()) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -36,9 +35,9 @@ class UpdatePasswdRequest extends FormRequest
     public function rules()
     {
         return [
-            'userid'   => 'required|int',
+            'userid' => 'required|int',
             'password' => 'required|min:8',
-            'password_confirmation' => 'required|same:password'
+            'password_confirmation' => 'required|same:password',
         ];
     }
 }

@@ -24,7 +24,6 @@ class StoreTacheRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

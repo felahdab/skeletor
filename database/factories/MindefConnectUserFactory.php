@@ -18,24 +18,23 @@ class MindefConnectUserFactory extends Factory
     {
         $lastname = strtolower($this->faker->lastName());
         $firstname = strtolower($this->faker->firstName());
-        $email = $firstname . "." . $lastname . "@skeletor.no.tld";
-        
+        $email = $firstname.'.'.$lastname.'@skeletor.no.tld';
+
         $shortrank = 'SPB';
-        $displayname = strtoupper($lastname) . " " . $firstname . " " . $shortrank;
-        
+        $displayname = strtoupper($lastname).' '.$firstname.' '.$shortrank;
+
         $unitesPossibles = ['RACINE/BRANCH1/BRANCHE2/COMMANDEMENT'];
         $randUnite = $unitesPossibles[array_rand($unitesPossibles)];
 
-        
         return [
-            'name'                      => $lastname,
-            'prenom'                    => $firstname,
-            'email'                     => $email,
-            'main_department_number'    => $randUnite,
-            'personal_title'            => 'M.',
-            'rank'                      => 'Super Big Boss',
-            'short_rank'                => $shortrank,
-            'display_name'              => $displayname
+            'name' => $lastname,
+            'prenom' => $firstname,
+            'email' => $email,
+            'main_department_number' => $randUnite,
+            'personal_title' => 'M.',
+            'rank' => 'Super Big Boss',
+            'short_rank' => $shortrank,
+            'display_name' => $displayname,
         ];
     }
 }

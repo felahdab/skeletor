@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-
 use Filament\Facades\Filament;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Gate;
 use Spatie\Permission\Models\Permission;
 
@@ -33,8 +32,8 @@ class SkeletorGeneratePermissionsForFilamentResourcesCommand extends Command
         'deleteAny',
         'restore',
         'forceDelete',
-        'forceDeleteAny', 
-        'reorder'
+        'forceDeleteAny',
+        'reorder',
     ];
 
     /**
@@ -42,21 +41,19 @@ class SkeletorGeneratePermissionsForFilamentResourcesCommand extends Command
      */
     public function handle()
     {
-        foreach($this->getResources() as $path => $resource){
+        foreach ($this->getResources() as $path => $resource) {
             $model = $resource::getModel();
             $this->info($model);
             $policy = Gate::getPolicyFor($model);
-            if ($policy != null){
+            if (null != $policy) {
                 $this->info($policy->getSlug());
 
-                foreach($this->verbs as $verb)
-                {
-                    $permission_name = $policy->getSlug() . '.' . $verb;
-                    $this->info($permission_name . ' should exist.');
+                foreach ($this->verbs as $verb) {
+                    $permission_name = $policy->getSlug().'.'.$verb;
+                    $this->info($permission_name.' should exist.');
 
-                    Permission::firstOrCreate(['guard_name' => 'web','name'=> $permission_name]);
+                    Permission::firstOrCreate(['guard_name' => 'web', 'name' => $permission_name]);
                 }
-
             }
         }
     }
@@ -67,8 +64,7 @@ class SkeletorGeneratePermissionsForFilamentResourcesCommand extends Command
         foreach (Filament::getPanels() as $panel) {
             $resources = array_merge($resources, $panel->getResources());
         }
-        $resources = array_unique($resources);
 
-        return $resources;
+        return array_unique($resources);
     }
 }

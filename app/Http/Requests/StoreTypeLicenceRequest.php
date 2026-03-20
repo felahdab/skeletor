@@ -24,7 +24,6 @@ class StoreTypeLicenceRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

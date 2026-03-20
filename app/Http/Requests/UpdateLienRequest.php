@@ -24,7 +24,6 @@ class UpdateLienRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

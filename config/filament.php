@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Broadcasting
@@ -15,7 +14,6 @@ return [
     */
 
     'broadcasting' => [
-
         // 'echo' => [
         //     'broadcaster' => 'pusher',
         //     'key' => env('VITE_PUSHER_APP_KEY'),
@@ -27,7 +25,6 @@ return [
         //     'disableStats' => true,
         //     'encrypted' => true,
         // ],
-
     ],
 
     /*
@@ -70,5 +67,4 @@ return [
     */
 
     'livewire_loading_delay' => 'default',
-
 ];

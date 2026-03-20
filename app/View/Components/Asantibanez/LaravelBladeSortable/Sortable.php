@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\View\Components\Asantibanez\LaravelBladeSortable;
-
 
 use Illuminate\View\Component;
 
@@ -26,16 +24,17 @@ class Sortable extends Component
 
     public $allowSort;
 
-    public function __construct($as = null,
-                                $component = null,
-                                $name = null,
-                                $animation = 150,
-                                $ghostClass = '',
-                                $dragHandle = null,
-                                $group = null,
-                                $allowSort = true,
-                                $allowDrop = true)
-    {
+    public function __construct(
+        $as = null,
+        $component = null,
+        $name = null,
+        $animation = 150,
+        $ghostClass = '',
+        $dragHandle = null,
+        $group = null,
+        $allowSort = true,
+        $allowDrop = true
+    ) {
         $this->as = $as;
         $this->component = $component;
         $this->name = $name;
@@ -51,11 +50,11 @@ class Sortable extends Component
     {
         $wireOnSortOrderChange = $this->attributes->whereStartsWith('wire:onSortOrderChange')->first();
 
-        $hasWireOnSortOrderChangeDirective = $wireOnSortOrderChange !== null;
+        $hasWireOnSortOrderChangeDirective = null !== $wireOnSortOrderChange;
 
-        $hasDragHandle = $this->dragHandle !== null;
+        $hasDragHandle = null !== $this->dragHandle;
 
-        $hasGroup = $this->group !== null;
+        $hasGroup = null !== $this->group;
 
         return collect()
             ->push("name = '{$this->name}'")
@@ -64,14 +63,15 @@ class Sortable extends Component
             ->push($hasDragHandle ? "dragHandle = '.{$this->dragHandle}'" : null)
             ->push($hasGroup ? "group = '{$this->group}'" : null)
             ->push($hasWireOnSortOrderChangeDirective ? 'wireComponent = $wire' : null)
-            ->push($hasWireOnSortOrderChangeDirective ? "wireOnSortOrderChange = '$wireOnSortOrderChange'" : null)
+            ->push($hasWireOnSortOrderChangeDirective ? "wireOnSortOrderChange = '{$wireOnSortOrderChange}'" : null)
             ->push($this->allowSort ? 'allowSort = true' : 'allowSort = false')
             ->push($this->allowDrop ? 'allowDrop = true' : 'allowDrop = false')
             ->push('init()')
             ->filter(function ($line) {
-                return $line !== null;
+                return null !== $line;
             })
-            ->join('; ');
+            ->join('; ')
+        ;
     }
 
     public function render()

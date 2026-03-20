@@ -2,27 +2,27 @@
 
 namespace App\Filament\PanelRegistry;
 
-use InvalidArgumentException;
 use Illuminate\Support\Arr;
 
 class ModuleDefinedPreferedPagesRegistry
 {
-    private array $preferedpages=[];
+    private array $preferedpages = [];
 
     public function __construct()
     {
         $this->preferedpages[] = PreferedPageItem::make()
             ->name("Page par défaut de l'application")
-            ->routeName(fn() => null);
+            ->routeName(fn () => null)
+        ;
     }
 
-    public function registerPreferedPagesItems(array | PreferedPageItem $preferedPageItem): void
+    public function registerPreferedPagesItems(array|PreferedPageItem $preferedPageItem): void
     {
         $preferedPageItem = Arr::wrap($preferedPageItem);
-        foreach($preferedPageItem as $item) {
-            //dump($item);
-            if (!($item instanceof PreferedPageItem)) {
-                throw new InvalidArgumentException('Prefered page item must be an instance of PreferedPageItem');
+        foreach ($preferedPageItem as $item) {
+            // dump($item);
+            if (!$item instanceof PreferedPageItem) {
+                throw new \InvalidArgumentException('Prefered page item must be an instance of PreferedPageItem');
             }
             $this->preferedpages[] = $item;
         }
@@ -36,17 +36,16 @@ class ModuleDefinedPreferedPagesRegistry
     public function getPreferedPagesItemsForSelect()
     {
         return collect($this->preferedpages)
-            ->filter(function ($item)
-            {
+            ->filter(function ($item) {
                 return $item->isVisible();
             })
-            ->map(function ($item)
-            {
+            ->map(function ($item) {
                 return (object) [
-                    "name" => $item->getName(),
-                    "routename" => $item->getRouteName()
+                    'name' => $item->getName(),
+                    'routename' => $item->getRouteName(),
                 ];
             })
-            ->pluck("name", "routename");
+            ->pluck('name', 'routename')
+        ;
     }
 }

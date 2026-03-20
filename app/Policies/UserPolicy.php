@@ -4,5 +4,5 @@ namespace App\Policies;
 
 class UserPolicy extends GenericSkeletorPolicy
 {
-   protected $slug='users';
+    protected $slug = 'users';
 }

@@ -2,15 +2,14 @@
 
 namespace App\Console\Commands;
 
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
-
-use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
-class ChangeDbPasswordCommand extends Command  implements PromptsForMissingInput
+class ChangeDbPasswordCommand extends Command implements PromptsForMissingInput
 {
     /**
      * The name and signature of the console command.
@@ -37,7 +36,6 @@ class ChangeDbPasswordCommand extends Command  implements PromptsForMissingInput
         $newpassword2 = $this->argument('newpassword2');
         $target_username = $this->argument('target_username');
 
-        
         Config::set('database.connections.temp', [
             'driver' => 'mysql',
             'host' => config('database.connections.mysql.host'),
@@ -49,26 +47,22 @@ class ChangeDbPasswordCommand extends Command  implements PromptsForMissingInput
             'collation' => 'utf8mb4_unicode_ci',
         ]);
 
-        if ( $newpassword === $newpassword2 )
-        {
-            try{
+        if ($newpassword === $newpassword2) {
+            try {
                 // Nouveau statement à prendre en compte après une montée de versiond de MariaDB.
                 // DB::connection('temp')->statement(
                 //     "ALTER USER '{$target_username}'@'%' IDENTIFIED BY ?",
                 //     [$newpassword]
                 // );
                 DB::connection('temp')->statement("SET PASSWORD FOR '{$target_username}'@'%' = PASSWORD('{$newpassword}')");
-            }
-            catch (\Exception $e){
-                $this->warn("Failed!");
+            } catch (\Exception $e) {
+                $this->warn('Failed!');
                 $this->warn($e->getMessage());
-            }
-            finally {
+            } finally {
                 DB::purge('temp');
             }
-        }
-        else {
-            $this->fail("Les 2 mots de passe ne correspondent pas.");
+        } else {
+            $this->fail('Les 2 mots de passe ne correspondent pas.');
         }
     }
 
@@ -89,5 +83,4 @@ class ChangeDbPasswordCommand extends Command  implements PromptsForMissingInput
             ['newpassword2', InputArgument::REQUIRED, 'Le nouveau mot de passe de connexion une seconde fois'],
         ];
     }
-
 }

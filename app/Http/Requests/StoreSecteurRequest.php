@@ -24,7 +24,6 @@ class StoreSecteurRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

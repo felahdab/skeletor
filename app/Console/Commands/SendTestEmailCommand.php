@@ -2,10 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\EssaiMail;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-
-use App\Mail\EssaiMail;
 
 class SendTestEmailCommand extends Command
 {
@@ -28,7 +27,7 @@ class SendTestEmailCommand extends Command
      */
     public function handle()
     {
-        $email =  $this->ask('A quel email voulez vous envoyer un email de test ?');
+        $email = $this->ask('A quel email voulez vous envoyer un email de test ?');
         Mail::alwaysTo(null); // Pour annuler la configuration imposée dans le AppServiceProvider le cas échéant.
         Mail::to($email)->send(new EssaiMail());
     }

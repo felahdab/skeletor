@@ -12,33 +12,33 @@ class TitreMentionTexteNotification extends Notification // implements ShouldQue
 {
     use Queueable;
 
-    public $titre = "";
-    public $texte = "";
-    public $mention="";
+    public $titre = '';
+    public $texte = '';
+    public $mention = '';
 
     /**
      * Create a new notification instance.
      */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct() {}
 
-    public function withTitre($title="")
+    public function withTitre($title = '')
     {
-        $this->titre=$title;
+        $this->titre = $title;
+
         return $this;
     }
 
-    public function withTexte($texte="")
+    public function withTexte($texte = '')
     {
-        $this->texte=$texte;
+        $this->texte = $texte;
+
         return $this;
     }
 
-    public function withMention($mention="")
+    public function withMention($mention = '')
     {
-        $this->mention=$mention;
+        $this->mention = $mention;
+
         return $this;
     }
 
@@ -57,10 +57,11 @@ class TitreMentionTexteNotification extends Notification // implements ShouldQue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->line('The introduction to the notification.')
             ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+            ->line('Thank you for using our application!')
+        ;
     }
 
     /**
@@ -74,7 +75,7 @@ class TitreMentionTexteNotification extends Notification // implements ShouldQue
             'titre' => $this->titre,
             'texte' => $this->texte,
             'mention' => $this->mention,
-            'gdh' => Carbon::now()
+            'gdh' => Carbon::now(),
         ];
     }
 }

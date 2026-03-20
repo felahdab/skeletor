@@ -1,7 +1,8 @@
 <?php
 
-return [
+use App\Http\Middleware\EncryptCookies;
 
+return [
     /*
     |--------------------------------------------------------------------------
     | Stateful Domains
@@ -58,10 +59,9 @@ return [
     */
 
     'middleware' => [
-        'verify_csrf_token' => null, //App\Http\Middleware\VerifyCsrfToken::class,
-        'encrypt_cookies' => App\Http\Middleware\EncryptCookies::class,
+        'verify_csrf_token' => null, // App\Http\Middleware\VerifyCsrfToken::class,
+        'encrypt_cookies' => EncryptCookies::class,
     ],
-    
-    'prefix' => env('APP_PREFIX'),
 
+    'prefix' => env('APP_PREFIX'),
 ];

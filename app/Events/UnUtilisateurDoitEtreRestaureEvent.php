@@ -8,19 +8,16 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-use App\Models\User;
-
 class UnUtilisateurDoitEtreRestaureEvent
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public string $email, public bool $avecdonnees=false)
-    {
-        //
-    }
+    public function __construct(public string $email, public bool $avecdonnees = false) {}
 
     /**
      * Get the channels the event should broadcast on.

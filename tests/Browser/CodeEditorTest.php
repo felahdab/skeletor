@@ -2,23 +2,26 @@
 
 namespace Tests\Browser;
 
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class CodeEditorTest extends DuskTestCase
 {
     /**
      * A Dusk test example.
-     *
-     * @return void
      */
-    public function test_code_editor_login_displays()
+    public function testCodeEditorLoginDisplays()
     {
         $this->browse(function (Browser $browser) {
             $browser->maximize()
-                    ->visit(env('APP_PREFIX') . '/code-editor')
-                    ->assertSee('code-server');
+                ->visit(env('APP_PREFIX').'/code-editor')
+                ->assertSee('code-server')
+            ;
         });
     }
 }

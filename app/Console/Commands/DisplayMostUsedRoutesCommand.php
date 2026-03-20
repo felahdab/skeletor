@@ -45,7 +45,8 @@ class DisplayMostUsedRoutesCommand extends Command
         if ($this->option('group')) {
             $query->select($this->option('group'))
                 ->addSelect(DB::raw('MAX(updated_at) as last_used'))
-                ->addSelect(DB::raw('SUM(counter) as counter'));
+                ->addSelect(DB::raw('SUM(counter) as counter'))
+            ;
         }
 
         $this->applyFilters($query);

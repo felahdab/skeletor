@@ -2,18 +2,17 @@
 
 namespace App\Filament\Resources\UserResource\Actions;
 
-use Filament\Forms\Components\TextInput;
 use Filament\Actions\Action;
-use Filament\Forms\Components;
+use Filament\Forms\Components\TextInput;
 
 class ChangePasswordAction extends Action
 {
     public static function make(?string $name = null): static
     {
         return parent::make($name)
-            ->label("Changer le mot de passe")
+            ->label('Changer le mot de passe')
             ->requiresConfirmation()
-            ->visible(fn($record) => auth()->user()->IsSuperAdmin() || (! $record->IsSuperAdmin() && auth()->user()->can('skeletor.changer_le_mot_de_passe_des_utilisateurs')))
+            ->visible(fn ($record) => auth()->user()->IsSuperAdmin() || (!$record->IsSuperAdmin() && auth()->user()->can('skeletor.changer_le_mot_de_passe_des_utilisateurs')))
             ->schema([
                 TextInput::make('password')
                     ->label('Mot de passe')
@@ -31,13 +30,14 @@ class ChangePasswordAction extends Action
                     ->required()
                     ->live(onBlur: true),
             ])
-            ->action(function($record, $data) {
+            ->action(function ($record, $data) {
                 $validated = validator($data, [
                     'password' => ['required', 'string', 'min:8', 'confirmed'],
                 ])->validate();
-                
+
                 $record->password = $validated['password'];
                 $record->save();
-            });
+            })
+        ;
     }
 }
