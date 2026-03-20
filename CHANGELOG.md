@@ -1,3 +1,8 @@
+## 4.0.2 (March 20, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.1 –> 4.0.2
+- Rajout dans la stack Skeletor de la librairie php-amqplib, de flysystem-aws-s3 et de php-cs-fixer.
+- Ajustement du modèle de provider pour Filament v4 + insertion par défaut des menus utilisateur vers l'aide et l'API.
+
 ## 4.0.1 (March 11, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.0 –> 4.0.1
 - Correction du service provider qui outrepasse guava/calendar pour restaurer le fonctionnement normal des vues.
