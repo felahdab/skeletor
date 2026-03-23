@@ -19,6 +19,7 @@
         "darkaonline/l5-swagger": "^10.0.0",
         "dedoc/scramble": "^0.13.14",
         "doode/filament-map-picker": "dev-fldb-module-fleetprogram",
+        "elastic/ecs-logging": "^2.0",
         "filament/filament": "^4.7.1",
         "guava/calendar": "^2.1.1",
         "guzzlehttp/guzzle": "^7.10.0",

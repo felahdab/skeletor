@@ -3,7 +3,7 @@
         'name' => 'fanlab/skeletor',
         'pretty_version' => 'dev-3.1x',
         'version' => 'dev-3.1x',
-        'reference' => 'e2f8ab0cfbb416cf332429bfedf2e607df984106',
+        'reference' => 'e2e8b723c10c8eadbc7ed88918881b10caabc6cf',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -337,6 +337,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'elastic/ecs-logging' => array(
+            'pretty_version' => '2.0.0',
+            'version' => '2.0.0.0',
+            'reference' => 'c748e55ae80d676f283551efb9b65d2b4b1881b6',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../elastic/ecs-logging',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'evenement/evenement' => array(
             'pretty_version' => 'v3.0.2',
             'version' => '3.0.2.0',
@@ -373,7 +382,7 @@
         'fanlab/skeletor' => array(
             'pretty_version' => 'dev-3.1x',
             'version' => 'dev-3.1x',
-            'reference' => 'e2f8ab0cfbb416cf332429bfedf2e607df984106',
+            'reference' => 'e2e8b723c10c8eadbc7ed88918881b10caabc6cf',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1649,9 +1658,9 @@
             ),
         ),
         'psr/log' => array(
-            'pretty_version' => '3.0.2',
-            'version' => '3.0.2.0',
-            'reference' => 'f16e1d5863e37f8d8c2a01719f5b34baa2b714d3',
+            'pretty_version' => '3.0.0',
+            'version' => '3.0.0.0',
+            'reference' => 'fe5ea303b0887d5caefd3d431c3e61ad47037001',
             'type' => 'library',
             'install_path' => __DIR__ . '/../psr/log',
             'aliases' => array(),
@@ -1660,8 +1669,9 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0|3.0',
-                1 => '3.0.0',
+                0 => '1.0.0',
+                1 => '1.0|2.0|3.0',
+                2 => '3.0.0',
             ),
         ),
         'psr/simple-cache' => array(

@@ -1,0 +1,55 @@
+{
+    "name": "elastic/ecs-logging",
+    "description": "Format and enrich your log files in the elastic common schema",
+    "keywords": ["log", "logging", "psr-3", "ecs", "elastic", "filebeat"],
+    "homepage": "https://www.elastic.co/guide/en/ecs/",
+    "type": "library",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Philip Krauss",
+            "email": "philip.krauss@elastic.co",
+            "homepage": "https://github.com/philkra"
+        },
+        {
+            "name": "Sergey Kleyman",
+            "homepage": "https://github.com/SergeyKleyman"
+        },
+        {
+            "name": "Pawel Filipczak",
+            "homepage": "https://github.com/intuibase"
+        }
+
+    ],
+    "require": {
+        "php": ">=8.1",
+        "psr/log": "^1|^2|3",
+	    "ext-json": "*"
+    },
+    "require-dev": {
+        "php-parallel-lint/php-parallel-lint": "^1.3.2",
+        "squizlabs/php_codesniffer": "3.*",
+        "monolog/monolog": "^3.0",
+        "phpunit/phpunit": "^8.5||^9.5||^10"
+    },
+    "autoload": {
+        "psr-4": {"Elastic\\": "src/Elastic"}
+    },
+    "autoload-dev": {
+        "psr-4": {"Elastic\\Tests\\": "tests/Elastic"}
+    },
+    "provide": {
+        "psr/log-implementation": "1.0.0"
+    },
+    "scripts": {
+        "test": [
+            "parallel-lint . --exclude vendor",
+            "phpcs --standard=phpcs.xml --extensions=php --encoding=utf-8 --tab-width=4 -sp src/Elastic",
+            "phpcs --standard=phpcs.xml --extensions=php --encoding=utf-8 --tab-width=4 -sp tests/Elastic",
+            "phpunit --log-junit=junit-${VERSION}.xml"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

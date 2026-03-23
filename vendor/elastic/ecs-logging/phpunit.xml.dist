@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    beStrictAboutTestsThatDoNotTestAnything="true"
+    beStrictAboutOutputDuringTests="true"
+    bootstrap="./tests/bootstrap.php"
+    colors="true"
+    failOnRisky="true"
+    stopOnDefect="true"
+    stopOnError="true"
+    stopOnFailure="true"
+    stopOnIncomplete="true"
+    stopOnRisky="true"
+    stopOnWarning="true"
+    testdox="true"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd"
+    cacheDirectory="_GENERATED/phpunit_cache"
+>
+    <coverage>
+        <include>
+            <directory suffix=".php">./src/Elastic</directory>
+        </include>
+    </coverage>
+
+    <testsuites>
+        <testsuite name="ECS Logging Frameworks Test Suite">
+            <directory>./tests/Elastic</directory>
+        </testsuite>
+    </testsuites>
+
+    <php>
+        <ini name="date.timezone" value="UTC"/>
+    </php>
+</phpunit>
