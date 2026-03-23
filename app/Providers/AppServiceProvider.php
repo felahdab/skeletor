@@ -18,6 +18,7 @@ use Filament\View\PanelsRenderHook;
 use Illuminate\Contracts\View\View;
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Log;
 
 use App\Scopes\ScopedMacro;
 use Filament\Pages\Dashboard;
@@ -59,6 +60,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::useBootstrap();
+
+        Log::withContext([
+            'service' => 'poseidon',
+            'url' => url()->current(),
+        ]);
 
         if (config('app.env') != 'production') {
             //logger('Setting non production global destination email adres.');
