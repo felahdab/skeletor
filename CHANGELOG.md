@@ -1,3 +1,11 @@
+## 4.0.3 (March 25, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.2 –> 4.0.3
+- Ajustement de la stack de dev au passage en php 8.4
+- Installation des librairies amqp (pour RabbitMQ), league/flysystem-path-prefixing pour la gestion des bucket S3, php-cs-fixer pour le code linting.
+- Implements artifact #713288: création d'une commande skeletor permettant de modifier le mot de passe d'un utilisateur MariaDB. Pour faciliter les tâches d'exploitation.
+- Suppression des anciennes Requests devenues inutiles.
+- Application du code styling php-cs-fixer.
+
 ## 4.0.2 (March 20, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.1 –> 4.0.2
 - Rajout dans la stack Skeletor de la librairie php-amqplib, de flysystem-aws-s3 et de php-cs-fixer.
