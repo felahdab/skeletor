@@ -14,7 +14,7 @@ services:
           - code-editor
           - markserv
     php:
-        image: falahdab/php-supervisor:1.0
+        image: falahdab/php-supervisor:1.4
         volumes:
             - ../:/app
             - backups:/backups
@@ -57,7 +57,7 @@ services:
            DATABASE_HOST: db
         restart: unless-stopped
     code-editor:
-        image: falahdab/codeserver:1.0
+        image: falahdab/codeserver:1.4
         user: "1111:1111"
         volumes:
           - ./code-editor-ssh:/home/coder/.ssh
