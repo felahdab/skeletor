@@ -19,6 +19,7 @@ use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 
@@ -44,6 +45,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::useBootstrap();
+
+
+        Log::withContext([
+            'service' => 'poseidon',
+            'url' => url()->current(),
+        ]);
 
         if ('production' != config('app.env')) {
             // logger('Setting non production global destination email adres.');
