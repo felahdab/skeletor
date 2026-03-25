@@ -70,9 +70,8 @@ return [
         's3' => [
             'driver' => 'scoped',
             'disk' => 'flat-s3',
-            'prefix' => env('APP_PREFIX') . '/public',
-        ]
-
+            'prefix' => env('APP_PREFIX').'/public',
+        ],
     ],
 
     /*

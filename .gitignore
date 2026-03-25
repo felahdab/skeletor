@@ -21,5 +21,6 @@ worker.log
 modules_statuses.json
 junit_dusk.xml
 junit.xml
+/vendor/pestphp/pest/.temp/test-results
 node_modules/
 .php-cs-fixer.cache

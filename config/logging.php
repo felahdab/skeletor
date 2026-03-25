@@ -1,9 +1,9 @@
 <?php
 
+use Elastic\Monolog\Formatter\ElasticCommonSchemaFormatter;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
-use Elastic\Monolog\Formatter\ElasticCommonSchemaFormatter;
 
 return [
     /*
