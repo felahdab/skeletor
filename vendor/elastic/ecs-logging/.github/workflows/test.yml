@@ -1,0 +1,44 @@
+name: test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_call: ~
+
+permissions:
+  contents: read
+
+jobs:
+  sanity-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: elastic/apm-pipeline-library/.github/actions/pre-commit@current
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        php-image:
+          - 8.1-alpine
+          - 8.2-alpine
+    runs-on: ubuntu-latest
+    container: php:${{ matrix.php-image }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Append PATH
+        run: echo "${GITHUB_WORKSPACE}" >> $GITHUB_PATH
+      - name: Install composer
+        run: .ci/scripts/install-composer.sh
+      - name: Install dependencies
+        run: composer --no-progress install
+      - name: Run tests
+        env:
+          VERSION: ${{ matrix.php-image }}
+        run: composer test
+      - uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: junit-*.xml
