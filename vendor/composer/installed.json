@@ -850,6 +850,81 @@
             "install-path": "../brick/math"
         },
         {
+            "name": "bschmitt/laravel-amqp",
+            "version": "v3.1.1",
+            "version_normalized": "3.1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bschmitt/laravel-amqp.git",
+                "reference": "730875ec5127f82a1ebd9b8a0b441d747408a0fb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bschmitt/laravel-amqp/zipball/730875ec5127f82a1ebd9b8a0b441d747408a0fb",
+                "reference": "730875ec5127f82a1ebd9b8a0b441d747408a0fb",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": ">=6.20.0",
+                "php": "^7.3|^8.0",
+                "php-amqplib/php-amqplib": "^3.0"
+            },
+            "require-dev": {
+                "illuminate/config": ">=5.5",
+                "mockery/mockery": "^1.2",
+                "phpoption/phpoption": "1.7.x-dev",
+                "phpunit/phpunit": ">=6.0",
+                "squizlabs/php_codesniffer": "^3.0@dev",
+                "vlucas/phpdotenv": "^5.3"
+            },
+            "time": "2025-12-27T14:09:49+00:00",
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Amqp": "Bschmitt\\Amqp\\Facades\\Amqp"
+                    },
+                    "providers": [
+                        "Bschmitt\\Amqp\\Providers\\AmqpServiceProvider"
+                    ]
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Bschmitt\\Amqp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Björn Schmitt",
+                    "email": "code@bjoern.io"
+                }
+            ],
+            "description": "AMQP wrapper for Laravel and Lumen to publish and consume messages",
+            "keywords": [
+                "AMQP",
+                "Björn Schmitt",
+                "bschmitt",
+                "laravel",
+                "laravel5",
+                "lumen",
+                "message queue",
+                "package",
+                "queue",
+                "rabbitmq"
+            ],
+            "support": {
+                "issues": "https://github.com/bschmitt/laravel-amqp/issues",
+                "source": "https://github.com/bschmitt/laravel-amqp"
+            },
+            "install-path": "../bschmitt/laravel-amqp"
+        },
+        {
             "name": "calebporzio/sushi",
             "version": "v2.5.3",
             "version_normalized": "2.5.3.0",

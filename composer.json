@@ -13,6 +13,7 @@
         "althinect/filament-spatie-roles-permissions": "^3.1.0",
         "barryvdh/laravel-debugbar": "^4.0.9",
         "barryvdh/laravel-dompdf": "^3.1.1",
+        "bschmitt/laravel-amqp": "^3.1",
         "calebporzio/sushi": "^2.5.3",
         "clickbar/laravel-magellan": "^2.0.1",
         "coolsam/modules": "^5.1.0",
