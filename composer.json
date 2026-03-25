@@ -30,6 +30,7 @@
         "laravel/socialite": "^5.24.2",
         "laravel/tinker": "^2.11.1",
         "league/flysystem-aws-s3-v3": "^3.0",
+        "league/flysystem-path-prefixing": "^3.31",
         "livewire/livewire": "^3.7.10",
         "mhmiton/laravel-modules-livewire": "^5.2.0",
         "nunomaduro/collision": "^8.9.0",
