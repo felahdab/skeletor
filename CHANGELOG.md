@@ -1,3 +1,7 @@
+## 4.0.4 (April 02, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.3 –> 4.0.4
+- Introduction configuration S3. Correction DuskTestCase.
+
 ## 4.0.3 (March 25, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.2 –> 4.0.3
 - Ajustement de la stack de dev au passage en php 8.4
