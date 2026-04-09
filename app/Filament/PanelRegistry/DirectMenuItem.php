@@ -72,4 +72,17 @@ class DirectMenuItem
     {
         return value($this->visible);
     }
+
+    public function hasVisibleChildren(): bool
+    {
+        if (!$this->hasChildren()) {
+            return false;
+        }
+
+        return collect($this->getChildren())
+            ->some(fn($child) => $child->isVisible());
+    }
+
+
+    
 }
