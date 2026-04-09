@@ -289,3 +289,23 @@ it('affiche le résultat de la recherche Annudef et le bouton de creation d un c
         ->assertCanSeeTableRecords([$resultat])
         ->assertActionVisible(TestAction::make('create-local-user')->table($resultat));
 });
+
+it('affiche la page de préférences de l utilisateur', function () {
+    $user = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(Pages\UserPreferences::class)
+        ->assertSuccessful();
+
+});
+
+it('affiche l action de changement de mot de passe sur la page de préférences de l utilisateur', function () {
+    $user = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(Pages\UserPreferences::class)
+        ->assertSuccessful()
+        ->assertActionVisible(TestAction::make('changer_mon_mot_de_passe')->table());
+        // ->assertCanSeeTableRecords([$resultat])
+        // ->assertActionVisible(TestAction::make('create-local-user')->table($resultat));
+})->skip();
