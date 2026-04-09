@@ -5,6 +5,9 @@ namespace App\Filament\Pages;
 use App\Filament\PanelRegistry\ModuleDefinedPreferedPagesRegistry;
 use Filament\Auth\Pages\EditProfile;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Actions\Action;
+
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
 use Illuminate\Support\Arr;
@@ -29,6 +32,30 @@ class UserPreferences extends EditProfile
                     ->afterStateHydrated(function (Select $component, ?string $state) use ($record) {
                         $component->state($record['prefered_page']);
                     }),
+                Action::make("changer_mon_mot_de_passe")
+                    ->label("Modifier mon mot de passe")
+                    ->requiresConfirmation()
+                    ->visible(fn() => auth()->check())
+                    ->schema([
+                        TextInput::make('password')
+                        ->label("Nouveau mot de passe")
+                        ->password()
+                        ->required(),
+                        TextInput::make('password_confirmation')
+                        ->label("Nouveau mot de passe pour confirmation")
+                        ->required()
+                        ->password()
+                        ->same('password'),
+                        
+                    ])
+                    ->action(function($data){
+                        if (! auth()->check()) return; 
+                        # Pour le principe, mais ne peut pas se produire car la page préférences n'est visible que quand l'utilisateur
+                        # est connecté, et en plus l'action n'est elle aussi visible que quand l'utilisateur est connecté.
+                        $user = auth()->user();
+                        $user->password=$data['password'];
+                        $user->save();
+                    })
             ])
         ;
     }
