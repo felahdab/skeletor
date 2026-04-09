@@ -1,3 +1,8 @@
+## 4.0.5 (April 09, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.4 –> 4.0.5
+- Implements art #737795 : Les lien d'accès rapide des modules ne s'affichent pas si aucun des lien définis à l'intérieur ne sont visibles. Evite d'afficher des entrées inutiles.
+- Implements artifact #739209: L'utilisateur peut redéfinir son mot de passe local depuis la page de préférences personnelle.
+
 ## 4.0.4 (April 02, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.3 –> 4.0.4
 - Introduction configuration S3. Correction DuskTestCase.
