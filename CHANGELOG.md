@@ -1,3 +1,8 @@
+## 4.0.6 (April 09, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.5 –> 4.0.6
+- Implements artifact #739199: Un évènement est émis après la création d'un utilisateur depuis la recherche Annudef.
+- Un évènement est également émis lorsque l'utilisateur valide une demande Mindefconnect. Dans ce cas, le NID est récupéré par une requête vers Annudef car il n'est pas présent dans les données Mindef Connect.
+
 ## 4.0.5 (April 09, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.4 –> 4.0.5
 - Implements art #737795 : Les lien d'accès rapide des modules ne s'affichent pas si aucun des lien définis à l'intérieur ne sont visibles. Evite d'afficher des entrées inutiles.
