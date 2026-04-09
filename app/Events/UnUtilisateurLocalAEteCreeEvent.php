@@ -22,7 +22,7 @@ class UnUtilisateurLocalAEteCreeEvent
      */
     public function __construct(array $data)
     {
-        $this->description = NewUserDescriptionData::make($data['nom'], $data['prenom'], $data['email'], $data['unite']);
+        $this->description = NewUserDescriptionData::make($data['nom'], $data['prenom'], $data['email'], $data['unite'], nid: $data['nid'], gradelong: $data['gradelong']);
     }
 
     /**

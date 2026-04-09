@@ -4,11 +4,14 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\MindefConnectUserResource\Pages;
 use App\Filament\Resources\MindefConnectUserResource\Pages\ListMindefConnectUsers;
+use App\Events\UnUtilisateurLocalDoitEtreCreeEvent;
+use App\Events\UnUtilisateurLocalAEteCreeEvent;
 use App\Mail\WelcomeMail;
 use App\Models\MindefConnectUser;
 use App\Models\Role;
 use App\Models\User;
 use App\Service\RandomPasswordGeneratorService;
+use App\Service\AnnudefAjaxRequestService;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -21,6 +24,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Arr;
 
 class MindefConnectUserResource extends Resource
 {
@@ -133,7 +137,7 @@ class MindefConnectUserResource extends Resource
                                 ->default(false),
                         ])
                         ->action(function ($records, $data) {
-                            // ddd($data);
+                            
                             foreach ($records as $record) {
                                 if (null == User::where('email', $record->email)->first()) {
                                     $attributes = [
@@ -144,16 +148,44 @@ class MindefConnectUserResource extends Resource
                                         'password' => RandomPasswordGeneratorService::generateRandomString(),
                                         'admin' => $data['make_them_admin'] ? 1 : 0,
                                     ];
-                                    $newUser = User::create($attributes);
+                                    //$newUser = User::create($attributes);
+
+                                    $description = [
+                                        'nom' => $record->nom,
+                                        'prenom' => $record->prenom,
+                                        'email' => $record->email,
+                                        'unite' => $record->main_department_number
+                                    ];
 
                                     $roles = collect($data['roles'])->map(function ($item) {
                                         return Role::find($item);
                                     });
 
-                                    $newUser->refresh();
+                                    UnUtilisateurLocalDoitEtreCreeEvent::dispatch($description, []);
+                                    
+                                    $newUser = User::where("email", $record->email)->first();
+                                    logger()->info("Utilisateur cree.", ["user" => $newUser]);
+
+                                    $newUser->display_name = $record->display_name;
+                                    $newUser->password = RandomPasswordGeneratorService::generateRandomString();
+                                    $newUser->admin = $data['make_them_admin'] ? 1 : 0;
+                                    $newUser->save();
+
                                     $newUser->syncRoles($roles);
 
-                                    $record->delete();
+                                    logger()->info("Roles attribues", ["user" => $newUser, "roles" => $roles]);
+
+                                    $nid = AnnudefAjaxRequestService::searchUserNidByEmail($record->email);
+
+                                    if ($nid != null && $nid !=='')
+                                    {
+                                        logger()->info("NID de l utilisateur trouve. On signale le nouvel utilisateur par UnUtilisateurLocalAEteCreeEvent", ["user" => $newUser, "nid" => $nid]);
+                                        $description["nid"] = $nid;
+                                        $description["gradelong"] = $record->rank;
+                                        UnUtilisateurLocalAEteCreeEvent::dispatch($description);
+                                    }
+
+                                    //$record->delete();
 
                                     Mail::to($newUser->email)
                                         ->queue(new WelcomeMail($newUser))

@@ -71,6 +71,9 @@ class RechercheAnnuairePageTemplate extends Page implements HasTable
                     ->sortable(),
                 TextColumn::make('nid')
                     ->sortable(),
+                TextColumn::make('gradelong')
+                    ->label("Grade")
+                    ->sortable(),
             ])
             ->filters([
                 // ...

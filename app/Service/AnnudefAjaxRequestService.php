@@ -40,6 +40,7 @@ class AnnudefAjaxRequestService
                 ->post("{$base_url}/index.php?c=AJAXpagesjaunesbl&a=Recherche", $request_params)
             ;
         } catch (ConnectionException $e) {
+            logger()->error($e);
             return null;
         }
 
@@ -65,6 +66,16 @@ class AnnudefAjaxRequestService
         }
 
         return $userAnnudefEntry['unite'];
+    }
+
+    public static function searchUserNidByEmail($email)
+    {
+        $userAnnudefEntry = static::getUserAnnudefEntryByEmail($email);
+        if (null == $userAnnudefEntry) {
+            return null;
+        }
+
+        return $userAnnudefEntry['employeeNumber'];
     }
 
     public static function searchUserByEmail($email)
