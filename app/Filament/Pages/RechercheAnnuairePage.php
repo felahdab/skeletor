@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Events\UnUtilisateurLocalDoitEtreCreeEvent;
+use App\Events\UnUtilisateurLocalAEteCreeEvent;
 use App\Filament\PageTemplates\RechercheAnnuairePageTemplate;
 use App\Models\Role;
 use Filament\Actions\Action;
@@ -37,6 +38,7 @@ class RechercheAnnuairePage extends RechercheAnnuairePageTemplate
                 ])
                 ->action(function ($record, $data) {
                     UnUtilisateurLocalDoitEtreCreeEvent::dispatch($record->toArray(), $data['roles']);
+                    UnUtilisateurLocalAEteCreeEvent::dispatch($record->toArray());
                 }),
         ];
     }
