@@ -27,7 +27,7 @@ class MindefConnectUserFactory extends Factory
         $randUnite = $unitesPossibles[array_rand($unitesPossibles)];
 
         return [
-            'name' => $lastname,
+            'nom' => $lastname,
             'prenom' => $firstname,
             'email' => $email,
             'main_department_number' => $randUnite,
