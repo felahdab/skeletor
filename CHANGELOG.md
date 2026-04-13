@@ -1,3 +1,9 @@
+## 4.0.7 (April 13, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.6 –> 4.0.7
+- Implements artifact #740646: Les répertoires du dossier resources/docs sont ajustés pour permettre de faire tourner mkdocs et générer la documentation. La documentation de Skeletor est ajustée à la v4+. Les anciennes documentations de FFAST v1 et v2 sont retirées.
+- Complément: mise à jour de la documentation relative au développement sous Skeletor.
+- Cette version accompagne la stack v0.0.14
+
 ## 4.0.6 (April 09, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.5 –> 4.0.6
 - Implements artifact #739199: Un évènement est émis après la création d'un utilisateur depuis la recherche Annudef.
