@@ -38,14 +38,17 @@ class UserPreferences extends EditProfile
                     ->visible(fn() => auth()->check())
                     ->schema([
                         TextInput::make('password')
-                        ->label("Nouveau mot de passe")
-                        ->password()
-                        ->required(),
+                            ->label("Nouveau mot de passe")
+                            ->password()
+                            ->revealable()
+                            ->minLength(8)
+                            ->required(),
                         TextInput::make('password_confirmation')
-                        ->label("Nouveau mot de passe pour confirmation")
-                        ->required()
-                        ->password()
-                        ->same('password'),
+                            ->label("Nouveau mot de passe pour confirmation")
+                            ->required()
+                            ->revealable()
+                            ->password()
+                            ->same('password'),
                         
                     ])
                     ->action(function($data){
