@@ -17,7 +17,12 @@ A l'usage, ces contraintes ne sont pas difficiles à intégrer et ne posent pas 
 
 
 !!! note "Lire la documentation"
-    Cette documentation ne reprend pas la documentation des briques techniques utilisées. Pour parfaitement la comprendre, il faut que le développeur se soit déjà intéressé à la documentation du framework Laravel et du framework Filament qui constituent la base de travail. Les informations ci-dessous viennent préciser comment cet ensemble est mis en oeuvre dans le cadre particulier de la plateforme de développement du FANLab.
+    Cette documentation ne reprend pas la documentation des briques techniques utilisées. Pour parfaitement la comprendre, il est préférable que le développeur se soit déjà intéressé à la documentation des composants techniques suivants:
+    
+    - [le framework Laravel](https://laravel.com/docs/12.x)
+    -  [le framework Filament](https://filamentphp.com/docs/4.x)
+    
+    Les informations ci-dessous viennent préciser comment cet ensemble est mis en oeuvre dans le cadre particulier de la plateforme de développement du FANLab.
 
 ## Distinguer ce qui relève du spécifique de ce qui relève du générique
 
@@ -181,6 +186,42 @@ Pour respecter les principes généraux du développement modulaire dans Skeleto
 Skeletor inclue un lien vers la documentation dans le menu de l'utilisateur (en haut à droite) ainsi qu'en bas à gauche de la barre de navigation lorsque celle-ci est en mode vertical.  
 
 Ce lien redirige automatiquement vers la section de documentation relative au panneau depuis lequel elle est appelée.
+
+<a name="modules-documentation"></a>
+
+### Documenter son module
+
+Pour documenter son module, le développeur peut tout simplement créér sa documentation sous la forme de fichiers Markdown dans son module. L'emplacement recommandé est le dossier resources/docs (dans l'arborescence du module).
+
+L'outil utilisé pour générer la documentation dans sa version publiée est [materials for mkdocs](https://squidfunk.github.io/mkdocs-material/).
+
+Par ailleurs, dans le service provider du module, il doit signaler à Laravel que les fichiers de documentation doivent être publiés vers le dossier resources/docs/docs (il y a bien 2 fois docs) de l'arborescence de l'application, avec une déclaration ressemblant à celle-ci dessous.
+
+```php
+<?php
+
+ protected function registerDocumentation()
+{
+    $this->publishes([
+        module_path($this->moduleName, 'resources/docs') => base_path('resources/docs/docs/FCM Central'),
+    ], 'doc');
+}
+```
+
+!!! warning "Tag à utiliser pour la publication de la documentation"
+
+    Il faut utiliser le tag 'doc' pour la publication de la documentation car Skeletor comprend une commande artisan qui récupère la documentation des modules en utilisant ce tag. Cette commande est utilisée dans la chaîne automatisée de packaging des applications.
+
+Une instance de mkdocs est fournie et configurée lors de la fourniture des instances de développement. Cette brique vérifie que la documentation publiée au niveau de l'application a changé, et le cas échéant, reconstruit les fichiers de documentation accessibles depuis le menu des panneaux Filament.
+
+Donc en pratique, une fois la déclaration ci-dessus effectuée, le développeur peut créer ses fichiers de documentation dans le dossier de son module. A chaque fois qu'il veut voir le résultat, il execute la commande de publication de la documentation de son module:
+```bash
+./artisan skeletor:publish-module-doc MonModule
+```
+
+!!! note 
+
+    Il faut donc quelques secondes entre l'exécution de la commande de publication et la mise à jour de la documentation en ligne.
 
 <a name="contraintes-routage"></a>
 

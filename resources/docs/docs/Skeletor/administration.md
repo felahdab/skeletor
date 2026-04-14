@@ -63,7 +63,8 @@ Skeletor offre une fonctionnalité très puissante permettant à l'administrateu
 
 !!! note "Super administrateur"
 
-    Dans Skeletor, un utilisateur dispose de permissions (voir ci-dessous). Mais certains utilisateur peuvent se voir attribuer la qualité d'Administrateur du serveur. Lorsqu'un utilisateur est Administrateur du serveur, c'est comme s'il avait toutes les permissions.
+    Dans Skeletor, un utilisateur dispose de permissions (voir ci-dessous). Mais certains utilisateurs peuvent se voir attribuer la qualité d'Administrateur du serveur. Lorsqu'un utilisateur est Administrateur du serveur, c'est comme s'il avait toutes les permissions.
+    On désignera ces utilisateurs sous le terme de "Super-Administrateur" dans la documentation.
 
 <a name="roles"></a>
 
