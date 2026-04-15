@@ -1,3 +1,7 @@
+## 4.0.8 (April 15, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.7 –> 4.0.8
+- Complément de documentation sur Skeletor
+
 ## 4.0.7 (April 13, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.6 –> 4.0.7
 - Implements artifact #740646: Les répertoires du dossier resources/docs sont ajustés pour permettre de faire tourner mkdocs et générer la documentation. La documentation de Skeletor est ajustée à la v4+. Les anciennes documentations de FFAST v1 et v2 sont retirées.
