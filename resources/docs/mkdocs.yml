@@ -48,4 +48,4 @@ copyright: Copyright &copy; 2026 Force d'Action Navale
 extra_javascript:
   - ./mermaid.min.js
 
-site_dir: /app/public/assets/docs
+site_dir: ../../public/assets/site
