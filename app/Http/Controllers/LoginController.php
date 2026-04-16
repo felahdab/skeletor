@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
+use App\Events\UnUtilisateurLocalAEteCreeEvent;
 use App\Models\MindefConnectUser;
 use App\Models\User;
 use App\Service\RandomPasswordGeneratorService;
+use App\Service\AnnudefAjaxRequestService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Auth\Events\PasswordReset;
@@ -87,7 +89,7 @@ class LoginController extends Controller
             return $this->authenticated($request, $user);
         }
 
-        // si le user n'existe pas, test de la variable APP_VALID_MDC pour savoir si on l'enregistre dans la table MDC
+        // si le user n'existe pas, test de la configuration de l'instance pour savoir si on l'enregistre dans la table MDC ou si on créé le compte immédiatement
         if (!config('skeletor.validation_automatique_des_comptes_mindef_connect')) {
             // on cree un compte temporaire ds MDC
             $MCuserexist = MindefConnectUser::where('email', $MCuser->email)->first();
@@ -143,6 +145,21 @@ class LoginController extends Controller
         };
 
         $Newuser = User::create($mapping);
+        
+        if ("intradef" === config('skeletor.reseau_de_deploiement')){
+            $nid = AnnudefAjaxRequestService::searchUserNidByEmail($MCuser->email);
+
+            $description = [
+                'nom' => $MCuser->user['usual_name'],
+                'prenom' => $MCuser->user['usual_forename'],
+                'email' => $MCuser->email,
+                'unite' => $MCuser->user['main_department_number'],
+                'nid' => $nid,
+                'gradelong' => $MCuser->user['rank'],
+            ];
+
+            UnUtilisateurLocalAEteCreeEvent::dispatch($description);
+        }
 
         $role = Role::where('name', config('skeletor.groupe_par_defaut_des_nouveaux_comptes'))->first();
         if ($role) {
