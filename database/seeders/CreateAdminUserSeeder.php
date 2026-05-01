@@ -14,19 +14,23 @@ class CreateAdminUserSeeder extends Seeder
      */
     public function run()
     {
-        $mot_de_passe = (new RandomPasswordGeneratorService())->generateRandomString(10);
+        $currentAdmin = User::where("email", "admin@skeletor.fr")->first();
 
-        $user = User::create([
-            'nom' => 'Admin',
-            'prenom' => 'Admin',
-            'email' => 'admin@skeletor.fr',
-            'password' => $mot_de_passe,
-            'display_name' => 'Admin Admin',
-            'admin' => true,
-        ]);
+        if (null == $currentAdmin)
+        {
+            $mot_de_passe = (new RandomPasswordGeneratorService())->generateRandomString(10);
 
-        $roles = Role::all()->pluck('name')->all();
+            $user = User::create([
+                'email' => 'admin@skeletor.fr',
+                'nom' => 'Admin',
+                'prenom' => 'Admin',
+                'password' => $mot_de_passe,
+                'display_name' => 'Admin Admin',
+                'admin' => true,
+            ]);
 
-        $user->syncRoles($roles);
+            echo "Admin user created with password: {$mot_de_passe}\n";
+        }
+        
     }
 }

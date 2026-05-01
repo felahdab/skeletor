@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class ChangeDbPasswordCommand extends Command implements PromptsForMissingInput
+class SkeletorChangeDbPasswordCommand extends Command implements PromptsForMissingInput
 {
     /**
      * The name and signature of the console command.
