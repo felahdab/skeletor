@@ -18,7 +18,8 @@ class CreateAdminUserSeeder extends Seeder
 
         if (null == $currentAdmin)
         {
-            $mot_de_passe = (new RandomPasswordGeneratorService())->generateRandomString(10);
+            #$mot_de_passe = (new RandomPasswordGeneratorService())->generateRandomString(10);
+            $mot_de_passe = env('SKELETOR_ADMIN_PASSWORD');
 
             $user = User::create([
                 'email' => 'admin@skeletor.fr',
