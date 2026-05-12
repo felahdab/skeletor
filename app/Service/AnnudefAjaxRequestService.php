@@ -33,7 +33,10 @@ class AnnudefAjaxRequestService
         ];
 
         try {
-            $response = Http::acceptJson()
+            $response = Http::withOptions([
+                'verify' => false,
+                ])
+                ->acceptJson()
                 ->timeout(1)
                 ->connectTimeout(1)
                 ->asForm()
@@ -97,7 +100,10 @@ class AnnudefAjaxRequestService
         $base_url = config('services.recherche_annuaire.base_url');
 
         try {
-            $response = Http::acceptJson()
+            $response = Http::withOptions([
+                'verify' => false,
+                ])
+                ->acceptJson()
                 ->timeout(1)
                 ->connectTimeout(1)
                 ->asForm()
