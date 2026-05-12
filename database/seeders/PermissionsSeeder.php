@@ -15,6 +15,7 @@ class PermissionsSeeder extends Seeder
     {
         // Artisan::call('mail:send', ['user' => $user, '--queue' => 'default']);
         Artisan::call('permission:create-permission-routes');
+        Artisan::call('skeletor:generate-permissions-for-filament-resources-command');
 
         Permission::firstOrCreate(['name' => 'skeletor.recherche-annuaire', 'guard_name' => 'web']);
         Permission::firstOrCreate(['name' => 'skeletor.se_faire_passer_pour', 'guard_name' => 'web']);
