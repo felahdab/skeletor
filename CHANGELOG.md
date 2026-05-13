@@ -1,3 +1,15 @@
+## 4.0.9 (May 13, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.8 –> 4.0.9
+- Ajout de l'information de version Skeletor dans la config et dans le menu du panneau d'administration.
+- Désactivation de la vérification des certificats SSL dans le service de recherche dans Annudef.
+- Ajout de l'appel à la commande skeletor:generate-permissions-for-filament-resources-command dans le seeder des permissions de Skeletor.
+- Les liens vers la documentation depuis la page de login, et depuis le panneau d'administration sont corrigés pour tenir compte de la nouvelle structure de la doc.
+- Le seeder qui cree le premier utilisateur utilise la variable d environement SKELETOR_ADMIN_PASSWORD pour definir le mot de passe.
+- Retrait du seeder du role admin qui ne sert plus à rien. Modification du seeder de l utilisateur admin qui devient idempotent. Création de la commande artisan skeletor:change-user-password qui permet de modifier le mot de passe local d'un utilisateur sans avoir à faire du php dans tinker.
+- Changement du moteur de log par défaut pour passer en rotating daily.
+- Implements artifact #739799: lorsque l'instance est configurée pour automatiquement créer les comptes lorsque l'utilisateur a été authentifié par le SSO, le controleur de login émet l'évènement UnUtilisateurLocalAEteCree pour permettre aux autres modules de faire quelque chose s'ils le souhaitent (typiquement utilisé pour le module RH et l'association automatique utilisateur/unité)
+- Passage en lien relatif pour le chemin de génération de la documentation.
+
 ## 4.0.8 (April 15, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.7 –> 4.0.8
 - Complément de documentation sur Skeletor

@@ -4,7 +4,7 @@ return [
     /**
      * Version de skeletor
      */
-    'version' => env('SKELETOR_VERSION', ''),
+    'version' => env('SKELETOR_VERSION', '4.0.9'),
     /*
     |--------------------------------------------------------------------------
     | Réseau de déploiement
