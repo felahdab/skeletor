@@ -1,6 +1,10 @@
 <?php
 
 return [
+    /**
+     * Version de skeletor
+     */
+    'version' => env('SKELETOR_VERSION', ''),
     /*
     |--------------------------------------------------------------------------
     | Réseau de déploiement

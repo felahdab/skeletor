@@ -44,7 +44,7 @@ class AdminPanelProvider extends PanelProvider
             ->profile(UserPreferences::class)
             ->favicon(asset('assets/images/favicon-32x32.png'))
             ->defaultAvatarProvider(SkeletorAvatarProvider::class)
-            ->brandName('Administration')
+            ->brandName('Administration ' . config('skeletor.version'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
@@ -84,6 +84,8 @@ class AdminPanelProvider extends PanelProvider
                     ->label('API')
                     ->icon('heroicon-m-cloud')
                     ->url(fn () => url(route('l5-swagger.default.api')), shouldOpenInNewTab: true),
+                'version' => MenuItem::make()
+                    ->label('Skeletor v' . config("skeletor.version"))
             ])
         ;
     }
