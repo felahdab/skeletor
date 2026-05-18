@@ -4,6 +4,7 @@ namespace App\Service;
 
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\support\Arr;
 
 class AnnudefAjaxRequestService
 {
@@ -47,9 +48,11 @@ class AnnudefAjaxRequestService
             return null;
         }
 
-        if ($response->json()['success']) {
-            if (1 == $response->json()['data']['total']) {
-                return $response->json()['data']['rows'][0];
+        if (Arr::get($response->json(), "success")){
+            if ($response->json()['success']) {
+                if (1 == $response->json()['data']['total']) {
+                    return $response->json()['data']['rows'][0];
+                }
             }
         }
 
