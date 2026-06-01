@@ -32,33 +32,43 @@ class AnnuaireUser extends Model
         'familyname' => 'string',
     ];
 
-    public static function setQuery(array $query)
+    public static function setQuery(array $query): bool
     {
-        if ('intradef' == config('skeletor.reseau_de_deploiement')) {
-            $users = AnnudefLDAPRequestService::searchUsers(
-                nom: $query['nom'],
-                prenom: $query['prenom'],
-                mail: $query['email'],
-                entite: $query['unite']
-            );
-            // Ici, le retour est dans le format spécifique de la méthode d'interrogation de l'annuaire.
-            // En l'occurence, Annudef.
+        $users = [];
+        $success = true;
 
-            // Ci-dessous, on normalise les données en choisissant quel champs devient l'un des 3 champs nécessaires
-            // pour créér un User local (nom, prenom et email).
-            $users = Arr::map($users, function ($value, $key) {
-                return NewUserDescriptionData::make($value['nom'], $value['prenomusuel'], $value['email'], $value['unites'], $value['nid'], $value['gradelong']);
-            });
+        if ('intradef' == config('skeletor.reseau_de_deploiement')) {
+            $cacheKey = 'annuaire_ldap_' . md5(serialize($query));
+
+            if (Cache::has($cacheKey)) {
+                $users = Cache::get($cacheKey);
+            } else {
+                try {
+                    $raw = AnnudefLDAPRequestService::searchUsers(
+                        nom: $query['nom'],
+                        prenom: $query['prenom'],
+                        mail: $query['email'],
+                        entite: $query['unite']
+                    );
+
+                    $raw = Arr::map($raw, function ($value, $key) {
+                        return NewUserDescriptionData::make($value['nom'], $value['prenomusuel'], $value['email'], $value['unites'], $value['nid'], $value['gradelong']);
+                    });
+
+                    $users = Arr::map($raw, fn ($item) => $item->toArray());
+
+                    Cache::put($cacheKey, $users, now()->addMinutes(10));
+                } catch (\Exception $e) {
+                    $success = false;
+                    $users = [];
+                }
+            }
         } elseif ('sic21' == config('skeletor.reseau_de_deploiement')) {
             $users = [];
         }
 
-        // Et ici, on retransforme les objets normalises en tableau pour la suite de Sushi.
-        $users = Arr::map($users, function ($item) {
-            return $item->toArray();
-        });
-
         static::setUsers($users);
+        return $success;
     }
 
     public static function setUsers($users)
