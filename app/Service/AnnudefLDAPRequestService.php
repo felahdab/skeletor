@@ -89,11 +89,18 @@ class AnnudefLDAPRequestService
             $LDAPPASSWORD
         );
 
-        $response = Http::withoutVerifying()
-            ->timeout(intval($LDAPTIMEOUT))
-            ->withBody($request, 'application/soap+xml')
-            ->post($ANNUBASEURL)
-        ;
+        try {
+            $response = Http::withoutVerifying()
+                ->timeout(intval($LDAPTIMEOUT))
+                ->withBody($request, 'application/soap+xml')
+                ->post($ANNUBASEURL);
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            throw new \RuntimeException('Annuaire inaccessible (timeout).', 0, $e);
+        }
+
+        if (! $response->successful()) {
+            throw new \RuntimeException('Erreur serveur annuaire : ' . $response->status());
+        }
 
         $result = new \SimpleXMLElement($response->body(), 0, 0, 'http://schemas.xmlsoap.org/soap/envelope/');
         $returncode = intval($result->Body->children('ns1', true)->children()->response->codeErreur);
@@ -147,3 +154,5 @@ class AnnudefLDAPRequestService
         return view('annudef.index');
     }
 }
+
+
