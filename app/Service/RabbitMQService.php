@@ -27,7 +27,7 @@ class RabbitMQService
 
         $connection = new AMQPStreamConnection($config['host'], $config['port'], $config['user'], $config['password'], $config['vhost']);
         $channel = $connection->channel();
-        $channel->exchange_declare($config['outgoing_exchange'], 'fanout', passive: false, durable: true, auto_delete: false);
+        $channel->exchange_declare($config['outgoing_exchange'], 'topic', passive: false, durable: true, auto_delete: false);
         $channel->basic_publish($message, exchange: $config['outgoing_exchange'], routing_key: $routing_key);
         
         $channel->close();
