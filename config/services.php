@@ -47,11 +47,11 @@ return [
     'rabbitmq' => [
         'host' => env('AMQP_HOST', 'rabbitmq'),
         'port' => env('AMQP_PORT', 5672),
-        'user' => env('AMQP_USER', 'hubuser'),
+        'user' => env('AMQP_USER', 'poseidon'),
         'password' => env('AMQP_PASSWORD', 'strongpassword'),
         'vhost' => env('AMQP_VHOST', '/'),
-        'incoming_queue' => env('AMQP_INCOMING_QUEUE', 'to_skeletor'),
-        'outgoing_exchange' => env('AMQP_OUTGOING_EXCHANGE', 'to_hub'),
+        'incoming_queue' => env('AMQP_INCOMING_QUEUE', 'from_agora'),
+        'outgoing_exchange' => env('AMQP_OUTGOING_EXCHANGE', 'to_agora'),
         'source_nodename' => env('AMQP_SOURCE_NODENAME', 'skeletor'),
     ],
 ];
