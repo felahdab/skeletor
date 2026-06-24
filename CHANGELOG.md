@@ -1,3 +1,13 @@
+## 4.1.0 (June 24, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.9 –> 4.1.0
+- Insertion de la commande skeletor:send-rabbitmq-ping et du PingListener qui y répond pour faciliter les vérifications de fonctionnement.
+- Ajustement du type de l exchange to_agora pour tenir compte de la configuration definie en CD.
+- Ajustement des valeurs par défaut aux valeurs utilisés en CD pour éviter de devoir repréciser l'ensemble dans le .env de la stack à chaque fois.
+- Implémentation préliminaire du service RabbitMQ, de la commande skeletor:get-rabbitmq-messages et  de l'Event RabbitMQMessageReceived et d'un Listener élémentaire pour essais.
+- Mise en cache des résultats des requetes Annudef pour éviter les exceptions de RateLimiting
+- Bugfix: dans le cas où la recherche d'avatar via Annudef échoue sans qu'il y ait d'exception de connection.
+- Implémentation nouveau panel switcher pour mieux indiquer à l'utilisateur les modules disponibles.
+
 ## 4.0.9 (May 13, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.8 –> 4.0.9
 - Ajout de l'information de version Skeletor dans la config et dans le menu du panneau d'administration.
