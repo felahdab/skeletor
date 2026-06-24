@@ -44,4 +44,14 @@ return [
     'sic21' => [
         'mail_tld' => env('SKELETOR_SIC21_MAIL_TLD'),
     ],
+    'rabbitmq' => [
+        'host' => env('AMQP_HOST', 'rabbitmq'),
+        'port' => env('AMQP_PORT', 5672),
+        'user' => env('AMQP_USER', 'poseidon'),
+        'password' => env('AMQP_PASSWORD', 'strongpassword'),
+        'vhost' => env('AMQP_VHOST', '/'),
+        'incoming_queue' => env('AMQP_INCOMING_QUEUE', 'from_agora'),
+        'outgoing_exchange' => env('AMQP_OUTGOING_EXCHANGE', 'to_agora'),
+        'source_nodename' => env('AMQP_SOURCE_NODENAME', 'skeletor'),
+    ],
 ];

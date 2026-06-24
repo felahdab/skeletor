@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('backup:clean')->daily()->at('07:00');
         $schedule->command('backup:run')->daily()->at('07:15');
+        $schedule->command('skeletor:get-rabbitmq-messages --limit=100')->everyMinute();
     }
 
     /**

@@ -219,8 +219,7 @@ class LoginController extends Controller
 
         Auth::login($user);
 
-        logger()->info('Logged user based on local credentials.', ['user' => $user]);
-
+        logger()->info("Logged user based on local credentials.", ["user" => $user]);
         return $this->authenticated($request, $user);
     }
 
