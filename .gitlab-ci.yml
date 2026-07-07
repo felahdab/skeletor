@@ -22,6 +22,7 @@ sonarqube-check:
     - master
     - main
     - develop
+    - feature-ajout-sonarqube
 
 sonarqube-vulnerability-report:
   stage: sonarqube-vulnerability-report
@@ -33,6 +34,7 @@ sonarqube-vulnerability-report:
     - master
     - main
     - develop
+    - feature-ajout-sonarqube
   artifacts:
     expire_in: 1 day
     reports:
