@@ -21,7 +21,7 @@ class SkeletorController
         return $request->user();
     }
 
-    public function status(Request $request)
+    public function status()
     {
         // Test du fonctionnement de l'API: retourne l'état du service.
         return ['status' => 'OK'];
