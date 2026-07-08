@@ -56,8 +56,9 @@ class UserPreferences extends EditProfile
                         { 
                             return ;
                         }
-                        # Pour le principe, mais ne peut pas se produire car la page préférences n'est visible que quand l'utilisateur
-                        # est connecté, et en plus l'action n'est elle aussi visible que quand l'utilisateur est connecté.
+                        # Pour le principe, mais ne peut pas se produire car la page préférences 
+                        # n'est visible que quand l'utilisateur est connecté, et en plus l'action 
+                        # n'est elle aussi visible que quand l'utilisateur est connecté.
                         $user = auth()->user();
                         $user->password=$data['password'];
                         $user->save();
