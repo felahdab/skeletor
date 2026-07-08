@@ -55,7 +55,7 @@ class SkeletorChangeUserPassword extends Command implements PromptsForMissingInp
     protected function getArguments()
     {
         return [
-            ['user_email', InputArgument::REQUIRED, 'L adresse email de l utilisateur dont le mot de passe doit etre redéfini'],
+            ['user_email', InputArgument::REQUIRED, 'L adresse email de l utilisateur a modifier'],
             ['newpassword', InputArgument::REQUIRED, 'Le nouveau mot de passe de connexion'],
             ['newpassword2', InputArgument::REQUIRED, 'Le nouveau mot de passe de connexion une seconde fois'],
         ];
