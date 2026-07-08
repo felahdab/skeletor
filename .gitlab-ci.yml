@@ -7,7 +7,7 @@ sonarqube-check:
   tags:
    - vRAGenerated
   image: 
-    name: medusa.picsel.defense.gouv.fr/zp_fanlab-sonar/commun/sonarsource/sonar-scanner-cli:5.0
+    name: medusa.picsel.defense.gouv.fr/zp_fanlab-docker/commun/sonarsource/sonar-scanner-cli:5.0
     entrypoint: [""]
   variables:
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
