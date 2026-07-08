@@ -20,7 +20,7 @@ class GenerateApiDocsJsonCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Cette commande génère le fichier api-docs.json nécessaire pour le fonctionnement de SwaggerUI.';
+    protected $description = 'Cette commande génère le fichier api-docs.json nécessaire pour SwaggerUI.';
 
     /**
      * Execute the console command.
