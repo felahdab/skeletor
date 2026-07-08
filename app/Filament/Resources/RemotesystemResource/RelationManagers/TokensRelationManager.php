@@ -42,7 +42,7 @@ class TokensRelationManager extends RelationManager
                         return $this->getAction('token_created')->getArguments()['token'];
                     }),
             ])
-            ->action(function (array $arguments) {
+            ->action(function () {
                 return true;
             })
             ->modalSubmitActionLabel('Fermer')
