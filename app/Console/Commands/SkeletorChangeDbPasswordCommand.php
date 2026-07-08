@@ -80,7 +80,7 @@ class SkeletorChangeDbPasswordCommand extends Command implements PromptsForMissi
         return [
             ['username', InputArgument::REQUIRED, 'Le nom d utilisateur a utiliser pour se connecter à la base'],
             ['password', InputArgument::REQUIRED, 'Le mot de passe de connexion'],
-            ['target_username', InputArgument::REQUIRED, 'Le nom de l utilisateur dont on veut changer le mot de passe'],
+            ['target_username', InputArgument::REQUIRED, 'L utilisateur dont on veut changer le mot de passe'],
             ['newpassword', InputArgument::REQUIRED, 'Le nouveau mot de passe de connexion'],
             ['newpassword2', InputArgument::REQUIRED, 'Le nouveau mot de passe de connexion une seconde fois'],
         ];
