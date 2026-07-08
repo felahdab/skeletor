@@ -4,6 +4,8 @@ stages:
 
 sonarqube-check:
   stage: sonarqube-check
+  tags:
+   - vRAGenerated
   image: 
     name: sonarsource/sonar-scanner-cli:5.0
     entrypoint: [""]
