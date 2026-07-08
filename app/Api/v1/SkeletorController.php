@@ -15,7 +15,7 @@ class SkeletorController
     /**
      * Qui suis-je ?
      */
-    public function who_am_i(Request $request)
+    public function whoami(Request $request)
     {
         // Test du fonctionnement de l'API: retourne l'objet utilisateur.
         return $request->user();
