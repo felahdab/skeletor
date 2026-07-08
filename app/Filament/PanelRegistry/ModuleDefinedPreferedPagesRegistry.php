@@ -20,7 +20,6 @@ class ModuleDefinedPreferedPagesRegistry
     {
         $preferedPageItem = Arr::wrap($preferedPageItem);
         foreach ($preferedPageItem as $item) {
-            // dump($item);
             if (!$item instanceof PreferedPageItem) {
                 throw new \InvalidArgumentException('Prefered page item must be an instance of PreferedPageItem');
             }
