@@ -36,7 +36,6 @@ class TestLdapConnexion extends Command
             nid : ''
         ));
 
-        // $this->info(count($results));
         $this->info(json_encode($results, JSON_PRETTY_PRINT));
 
         return 0;
