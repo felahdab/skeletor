@@ -29,7 +29,7 @@ class UserPreferences extends EditProfile
                     ->helperText("L'application vous emmenera automatiquement à cette page lorsque vous vous connecterez")
                     ->options(app(ModuleDefinedPreferedPagesRegistry::class)->getPreferedPagesItemsForSelect())
                     ->selectablePlaceholder(false)
-                    ->afterStateHydrated(function (Select $component, ?string $state) use ($record) {
+                    ->afterStateHydrated(function (Select $component) use ($record) {
                         $component->state($record['prefered_page']);
                     }),
                 Action::make("changer_mon_mot_de_passe")
