@@ -22,6 +22,7 @@ sonarqube-check:
   allow_failure: true
   only:
     - merge_requests
+    - skeletor
     - master
     - main
     - develop
@@ -37,6 +38,7 @@ sonarqube-vulnerability-report:
   allow_failure: true
   only:
     - merge_requests
+    - skeletor
     - master
     - main
     - develop
