@@ -17,5 +17,5 @@ use Illuminate\Support\Facades\Route;
 Route::group(['namespace' => 'App\Api\v1', 'prefix' => 'v1', 'middleware' => ['forcejson', 'auth:sanctum'], 'as' => 'api.v1.'], function () {
     Route::get('/whoami', [SkeletorController::class, 'whoami']);
     Route::get('/status', [SkeletorController::class, 'status']);
-    Route::get('/status-detailed', [SkeletorController::class, 'status_detailed']);
+    Route::get('/status-detailed', [SkeletorController::class, 'statusdetailed']);
 });
