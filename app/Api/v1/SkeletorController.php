@@ -27,7 +27,7 @@ class SkeletorController
         return ['status' => 'OK'];
     }
 
-    public function status_detailed(Request $request)
+    public function status_detailed()
     {
         /**
          * Test du fonctionnement de l'API: retourne l'état du service et les principales variables de configuration.
