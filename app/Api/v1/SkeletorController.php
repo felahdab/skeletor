@@ -40,7 +40,7 @@ class SkeletorController
         ];
 
         try {
-            $result = DB::statement('SELECT 1');
+            DB::statement('SELECT 1');
             $db_infos['CONNECTION_TEST'] = 'OK';
         } catch (QueryException $e) {
             $db_infos['CONNECTION_TEST'] = 'NOK';
