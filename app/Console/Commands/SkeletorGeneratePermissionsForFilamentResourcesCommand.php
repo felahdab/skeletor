@@ -41,7 +41,7 @@ class SkeletorGeneratePermissionsForFilamentResourcesCommand extends Command
      */
     public function handle()
     {
-        foreach ($this->getResources() as $path => $resource) {
+        foreach ($this->getResources() as $resource) {
             $model = $resource::getModel();
             $this->info($model);
             $policy = Gate::getPolicyFor($model);
