@@ -20,7 +20,6 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
-// use STS\FilamentImpersonate\Tables\Actions\Impersonate;
 use STS\FilamentImpersonate\Actions\Impersonate;
 
 class UserResource extends Resource
