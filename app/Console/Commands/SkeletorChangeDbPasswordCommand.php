@@ -55,7 +55,8 @@ class SkeletorChangeDbPasswordCommand extends Command implements PromptsForMissi
                 //     "ALTER USER '{$target_username}'@'%' IDENTIFIED BY ?",
                 //     [$newpassword]
                 // );
-                DB::connection('temp')->statement("SET PASSWORD FOR '{$target_username}'@'%' = PASSWORD('{$newpassword}')");
+                DB::connection('temp')
+                    ->statement("SET PASSWORD FOR '{$target_username}'@'%' = PASSWORD('{$newpassword}')");
             } catch (\Exception $e) {
                 $this->warn('Failed!');
                 $this->warn($e->getMessage());
