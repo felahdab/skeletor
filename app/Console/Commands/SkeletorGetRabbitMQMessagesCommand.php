@@ -43,7 +43,10 @@ class SkeletorGetRabbitMQMessagesCommand extends Command
 
         while ($count < $this->option('limit')) {
             $message = $channel->basic_get($config['incoming_queue']);
-            if ($message == null) break;
+            if ($message == null)
+            { 
+                break;
+            }
             
             $this->info("Message reçu : " . $message->getBody() . " Routing key : " . $message->getRoutingKey());
 
