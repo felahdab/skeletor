@@ -140,16 +140,6 @@ class MindefConnectUserResource extends Resource
                             
                             foreach ($records as $record) {
                                 if (null == User::where('email', $record->email)->first()) {
-                                    $attributes = [
-                                        'nom' => $record->nom,
-                                        'prenom' => $record->prenom,
-                                        'email' => $record->email,
-                                        'display_name' => $record->display_name,
-                                        'password' => RandomPasswordGeneratorService::generateRandomString(),
-                                        'admin' => $data['make_them_admin'] ? 1 : 0,
-                                    ];
-                                    //$newUser = User::create($attributes);
-
                                     $description = [
                                         'nom' => $record->nom,
                                         'prenom' => $record->prenom,
@@ -179,13 +169,13 @@ class MindefConnectUserResource extends Resource
 
                                     if ($nid != null && $nid !=='')
                                     {
-                                        logger()->info("NID de l utilisateur trouve. On signale le nouvel utilisateur par UnUtilisateurLocalAEteCreeEvent", ["user" => $newUser, "nid" => $nid]);
+                                        logger()->info("UnUtilisateurLocalAEteCreeEvent", ["user" => $newUser, "nid" => $nid]);
                                         $description["nid"] = $nid;
                                         $description["gradelong"] = $record->rank;
                                         UnUtilisateurLocalAEteCreeEvent::dispatch($description);
                                     }
 
-                                    //$record->delete();
+                                    $record->delete();
 
                                     Mail::to($newUser->email)
                                         ->queue(new WelcomeMail($newUser))
