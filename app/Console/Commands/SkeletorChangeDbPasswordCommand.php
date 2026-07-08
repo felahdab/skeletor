@@ -23,7 +23,7 @@ class SkeletorChangeDbPasswordCommand extends Command implements PromptsForMissi
      *
      * @var string
      */
-    protected $description = 'Cette commande permet de changer le mot de passe d\' un utilisateur dans 
+    protected $description = 'Cette commande permet de changer le mot de passe d\' un utilisateur dans
     le serveur de base de données';
 
     /**

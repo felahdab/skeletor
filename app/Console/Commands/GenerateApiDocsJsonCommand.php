@@ -29,7 +29,7 @@ class GenerateApiDocsJsonCommand extends Command
     {
         /*
          *  Cette commande repose sur scramble:export qui réalise le plus gros du travail.
-         *  Puis, cette commande récupère le fichier api-docs.json et le nettoie pour que le 
+         *  Puis, cette commande récupère le fichier api-docs.json et le nettoie pour que le
          * rendu avec swagger UI soit plus propre.
          */
         Artisan::call('scramble:export');

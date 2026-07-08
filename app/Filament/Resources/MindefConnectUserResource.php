@@ -169,7 +169,11 @@ class MindefConnectUserResource extends Resource
 
                                     if ($nid != null && $nid !=='')
                                     {
-                                        logger()->info("UnUtilisateurLocalAEteCreeEvent", ["user" => $newUser, "nid" => $nid]);
+                                        logger()->info("UnUtilisateurLocalAEteCreeEvent", [
+                                                        "user" => $newUser, 
+                                                        "nid" => $nid
+                                                    ]
+                                                );
                                         $description["nid"] = $nid;
                                         $description["gradelong"] = $record->rank;
                                         UnUtilisateurLocalAEteCreeEvent::dispatch($description);
