@@ -54,7 +54,7 @@ class UserPreferences extends EditProfile
                     ->action(function($data){
                         if (! auth()->check()) 
                         { 
-                            return; 
+                            return ;
                         }
                         # Pour le principe, mais ne peut pas se produire car la page préférences n'est visible que quand l'utilisateur
                         # est connecté, et en plus l'action n'est elle aussi visible que quand l'utilisateur est connecté.
