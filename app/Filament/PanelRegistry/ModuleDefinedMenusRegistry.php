@@ -8,8 +8,6 @@ class ModuleDefinedMenusRegistry
 {
     private array $directmenuitems = [];
 
-    public function __construct() {}
-
     public function registerDirectMenuItems(array|DirectMenuItem $menuItem): void
     {
         $menuItem = Arr::wrap($menuItem);
