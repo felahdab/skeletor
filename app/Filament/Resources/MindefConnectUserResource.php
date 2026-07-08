@@ -170,7 +170,7 @@ class MindefConnectUserResource extends Resource
                                     if ($nid != null && $nid !=='')
                                     {
                                         logger()->info("UnUtilisateurLocalAEteCreeEvent", [
-                                                        "user" => $newUser, 
+                                                        "user" => $newUser,
                                                         "nid" => $nid
                                                     ]
                                                 );

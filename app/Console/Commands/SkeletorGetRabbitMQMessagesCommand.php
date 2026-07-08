@@ -44,7 +44,7 @@ class SkeletorGetRabbitMQMessagesCommand extends Command
         while ($count < $this->option('limit')) {
             $message = $channel->basic_get($config['incoming_queue']);
             if ($message == null)
-            { 
+            {
                 break;
             }
             

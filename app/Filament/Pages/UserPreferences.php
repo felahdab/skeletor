@@ -53,7 +53,7 @@ class UserPreferences extends EditProfile
                     ])
                     ->action(function($data){
                         if ( ! auth()->check() )
-                        { 
+                        {
                             return ;
                         }
                         # Pour le principe, mais ne peut pas se produire car la page préférences
