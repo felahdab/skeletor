@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class RabbitMQMessageReceivedEvent
 {
-     public function __construct(public AMQPMessage $message) 
+     public function __construct(public AMQPMessage $message)
      {
 
      }
