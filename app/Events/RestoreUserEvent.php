@@ -17,7 +17,6 @@ class RestoreUserEvent
      */
     public function __construct(public string $id, public string $mode)
     {
-        // dd($id);
     }
 
     /**
