@@ -33,7 +33,11 @@ class SkeletorGetRabbitMQMessagesCommand extends Command
     public function handle()
     {
         $config = config('services.rabbitmq');
-        $connection = new AMQPStreamConnection($config['host'], $config['port'], $config['user'], $config['password'], $config['vhost']);
+        $connection = new AMQPStreamConnection($config['host'], 
+                                                $config['port'], 
+                                                $config['user'], 
+                                                $config['password'], 
+                                                $config['vhost']);
         $channel = $connection->channel();
         $count = 0;
 
