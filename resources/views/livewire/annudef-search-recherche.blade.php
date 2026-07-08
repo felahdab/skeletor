@@ -24,6 +24,7 @@
     </div>
 
     <table class="table table-sm table-hover table-bordered mt-4">
+        <caption>Résultats de la recherche</caption>
         <thead class="text-center align-middle table-light ">
             <tr>
                 <th scope="col">Titre</th>
