@@ -26,6 +26,7 @@ sonarqube-check:
     - main
     - develop
     - feature-ajout-sonarqube
+    - refactor-apply-quality-recommendations
 
 sonarqube-vulnerability-report:
   stage: sonarqube-vulnerability-report
@@ -40,6 +41,7 @@ sonarqube-vulnerability-report:
     - main
     - develop
     - feature-ajout-sonarqube
+    - refactor-apply-quality-recommendations
   artifacts:
     expire_in: 1 day
     reports:

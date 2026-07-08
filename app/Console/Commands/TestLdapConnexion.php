@@ -23,20 +23,19 @@ class TestLdapConnexion extends Command
 
     public function handle()
     {
-        $results = collect(AnnudefLDAPRequestService::searchUsers(
-            $tel = '',
-            $nom = '',
-            $prenom = '',
-            $mail = '',
-            $bdd = '',
-            $zone = '',
-            $localite = '',
-            $entite = 'MARINE/ALFAN/GTR FREMM TOULON',
-            $fonction = '',
-            $nid = ''
+        $results =collect(AnnudefLDAPRequestService::searchUsers(
+            tel : '',
+            nom : '',
+            prenom : '',
+            mail : '',
+            bdd : '',
+            zone : '',
+            localite : '',
+            entite :  'MARINE/ALFAN/FPS TOULON',
+            fonction : '',
+            nid : ''
         ));
 
-        // $this->info(count($results));
         $this->info(json_encode($results, JSON_PRETTY_PRINT));
 
         return 0;

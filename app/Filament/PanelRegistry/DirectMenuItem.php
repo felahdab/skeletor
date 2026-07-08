@@ -9,8 +9,6 @@ class DirectMenuItem
     private \Closure|string $url = '';
     private array|\Closure $children = [];
 
-    public function __construct() {}
-
     public static function make()
     {
         return new static(...func_get_args());

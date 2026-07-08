@@ -15,19 +15,19 @@ class SkeletorController
     /**
      * Qui suis-je ?
      */
-    public function who_am_i(Request $request)
+    public function whoami(Request $request)
     {
         // Test du fonctionnement de l'API: retourne l'objet utilisateur.
         return $request->user();
     }
 
-    public function status(Request $request)
+    public function status()
     {
         // Test du fonctionnement de l'API: retourne l'état du service.
         return ['status' => 'OK'];
     }
 
-    public function status_detailed(Request $request)
+    public function statusdetailed()
     {
         /**
          * Test du fonctionnement de l'API: retourne l'état du service et les principales variables de configuration.
@@ -40,7 +40,7 @@ class SkeletorController
         ];
 
         try {
-            $result = DB::statement('SELECT 1');
+            DB::statement('SELECT 1');
             $db_infos['CONNECTION_TEST'] = 'OK';
         } catch (QueryException $e) {
             $db_infos['CONNECTION_TEST'] = 'NOK';

@@ -23,7 +23,8 @@ class SkeletorChangeDbPasswordCommand extends Command implements PromptsForMissi
      *
      * @var string
      */
-    protected $description = 'Cette commande permet de changer le mot de passe d\' un utilisateur dans le serveur de base de données';
+    protected $description = 'Cette commande permet de changer le mot de passe d\' un utilisateur dans
+    le serveur de base de données';
 
     /**
      * Execute the console command.
@@ -54,7 +55,8 @@ class SkeletorChangeDbPasswordCommand extends Command implements PromptsForMissi
                 //     "ALTER USER '{$target_username}'@'%' IDENTIFIED BY ?",
                 //     [$newpassword]
                 // );
-                DB::connection('temp')->statement("SET PASSWORD FOR '{$target_username}'@'%' = PASSWORD('{$newpassword}')");
+                DB::connection('temp')
+                    ->statement("SET PASSWORD FOR '{$target_username}'@'%' = PASSWORD('{$newpassword}')");
             } catch (\Exception $e) {
                 $this->warn('Failed!');
                 $this->warn($e->getMessage());
@@ -78,7 +80,7 @@ class SkeletorChangeDbPasswordCommand extends Command implements PromptsForMissi
         return [
             ['username', InputArgument::REQUIRED, 'Le nom d utilisateur a utiliser pour se connecter à la base'],
             ['password', InputArgument::REQUIRED, 'Le mot de passe de connexion'],
-            ['target_username', InputArgument::REQUIRED, 'Le nom de l utilisateur dont on veut changer le mot de passe'],
+            ['target_username', InputArgument::REQUIRED, 'L utilisateur dont on veut changer le mot de passe'],
             ['newpassword', InputArgument::REQUIRED, 'Le nouveau mot de passe de connexion'],
             ['newpassword2', InputArgument::REQUIRED, 'Le nouveau mot de passe de connexion une seconde fois'],
         ];

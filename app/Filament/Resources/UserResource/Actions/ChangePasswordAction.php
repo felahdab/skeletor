@@ -12,7 +12,12 @@ class ChangePasswordAction extends Action
         return parent::make($name)
             ->label('Changer le mot de passe')
             ->requiresConfirmation()
-            ->visible(fn ($record) => auth()->user()->IsSuperAdmin() || (!$record->IsSuperAdmin() && auth()->user()->can('skeletor.changer_le_mot_de_passe_des_utilisateurs')))
+            ->visible(fn ($record) => auth()->user()->IsSuperAdmin() ||
+                            (
+                                ! $record->IsSuperAdmin() &&
+                                auth()->user()->can('skeletor.changer_le_mot_de_passe_des_utilisateurs')
+                                )
+                            )
             ->schema([
                 TextInput::make('password')
                     ->label('Mot de passe')

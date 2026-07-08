@@ -18,7 +18,6 @@ class RecordUsageDataListener
      */
     public function handle(RequestHandled $event): void
     {
-        return;
         $request = $event->request;
         $response = $event->response;
 
@@ -57,6 +56,8 @@ class RecordUsageDataListener
         }
 
         $uri = str_replace($request->root(), '', $request->url()) ?: '/';
+        $uri = Str::limit( $uri , 2047);
+
         $user_name = $request->user()?->email ?? 'anonyme';
 
         $s = SkeletorUsageLog::firstOrCreate([

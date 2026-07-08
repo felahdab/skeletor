@@ -27,16 +27,16 @@ class FixUsersFromLdap extends Command
         $users = User::all();
         foreach ($users as $localuser) {
             $ldapusers = collect(AnnudefLDAPRequestService::searchUsers(
-                $tel = '',
-                $nom = '',
-                $prenom = '',
-                $mail = $localuser->email,
-                $bdd = '',
-                $zone = '',
-                $localite = '',
-                $entite = '',
-                $fonction = '',
-                $nid = ''
+                tel : '',
+                nom : '',
+                prenom : '',
+                mail : $localuser->email,
+                bdd : '',
+                zone : '',
+                localite : '',
+                entite : '',
+                fonction : '',
+                nid : ''
             ));
             if (1 == count($ldapusers)) {
                 $ldapuser = $ldapusers[0];

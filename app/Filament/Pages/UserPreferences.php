@@ -29,7 +29,7 @@ class UserPreferences extends EditProfile
                     ->helperText("L'application vous emmenera automatiquement à cette page lorsque vous vous connecterez")
                     ->options(app(ModuleDefinedPreferedPagesRegistry::class)->getPreferedPagesItemsForSelect())
                     ->selectablePlaceholder(false)
-                    ->afterStateHydrated(function (Select $component, ?string $state) use ($record) {
+                    ->afterStateHydrated(function (Select $component) use ($record) {
                         $component->state($record['prefered_page']);
                     }),
                 Action::make("changer_mon_mot_de_passe")
@@ -52,9 +52,13 @@ class UserPreferences extends EditProfile
                         
                     ])
                     ->action(function($data){
-                        if (! auth()->check()) return; 
-                        # Pour le principe, mais ne peut pas se produire car la page préférences n'est visible que quand l'utilisateur
-                        # est connecté, et en plus l'action n'est elle aussi visible que quand l'utilisateur est connecté.
+                        if ( ! auth()->check() )
+                        {
+                            return ;
+                        }
+                        # Pour le principe, mais ne peut pas se produire car la page préférences
+                        # n'est visible que quand l'utilisateur est connecté, et en plus l'action
+                        # n'est elle aussi visible que quand l'utilisateur est connecté.
                         $user = auth()->user();
                         $user->password=$data['password'];
                         $user->save();

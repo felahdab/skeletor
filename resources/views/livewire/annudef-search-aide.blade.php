@@ -16,6 +16,7 @@
     @if (count($users))
     
     <table class="table table-sm table-hover mt-4">
+        <caption>Résultats de la recherche</caption>
         <thead>
             <tr>
                 <th scope="col"></th>

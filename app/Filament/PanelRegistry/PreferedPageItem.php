@@ -8,8 +8,6 @@ class PreferedPageItem
     private bool|\Closure $visible = true;
     private \Closure|string $routename = '';
 
-    public function __construct() {}
-
     public static function make()
     {
         return new static(...func_get_args());

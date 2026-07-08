@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'enabled' => env('ANALYTICS_ENABLED', true),
+    'enabled' => env('ANALYTICS_ENABLED', false),
 
     /*
      * Exclude.
