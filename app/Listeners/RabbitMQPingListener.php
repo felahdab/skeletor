@@ -5,6 +5,7 @@ namespace App\Listeners;
 use Exception;
 use App\Events\RabbitMQMessageReceivedEvent;
 use App\Service\RabbitMQService;
+use App\Service\NodeDescriptorService;
 use Illuminate\Support\Str;
 
 class RabbitMQPingListener
@@ -54,10 +55,13 @@ class RabbitMQPingListener
                 $timestamp = $message->get('timestamp');
             }
 
+            $node_description = NodeDescriptorService::describeCurrentNode();
+
             $content = [
                 "message" => "pong",
                 "in_reply_to" => $ping_id,
-                "ping_timestamp" => $timestamp
+                "ping_timestamp" => $timestamp,
+                "node_description" => $node_description
             ];
 
             $message = RabbitMQService::makeMessage($content);
