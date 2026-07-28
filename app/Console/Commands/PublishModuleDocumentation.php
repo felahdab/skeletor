@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class PublishModuleDocumentationIntoLarecipe extends Command implements PromptsForMissingInput
+class PublishModuleDocumentation extends Command implements PromptsForMissingInput
 {
     /**
      * The console command name.
