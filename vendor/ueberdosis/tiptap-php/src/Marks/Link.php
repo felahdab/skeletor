@@ -33,6 +33,10 @@ class Link extends Mark
             return true;
         }
 
+        if (! is_string($uri)) {
+            return false;
+        }
+
         $sanitised = preg_replace(self::ATTR_WHITESPACE, '', $uri);
 
         $pattern = '/^(?:(?:' . implode('|', array_map('preg_quote', $this->options['allowedProtocols']))

@@ -237,14 +237,14 @@ final class ClassDefinitionFixer extends AbstractFixer implements ConfigurableFi
         }
 
         if ($classDefInfo['anonymousClass'] && false === $this->configuration['inline_constructor_arguments']) {
-            if (!$tokens[$end]->equals(')')) { // anonymous class with `extends` and/or `implements`
+            while (!$tokens[$end]->equals(')') && !$tokens[$end]->isGivenKind(\T_CLASS)) { // anonymous class with `extends` and/or `implements`
                 $start = $tokens->getPrevMeaningfulToken($end);
                 $this->makeClassyDefinitionSingleLine($tokens, $start, $end);
                 $end = $start;
             }
 
             if ($tokens[$end]->equals(')')) { // skip constructor arguments of anonymous class
-                $end = $tokens->findBlockStart(Tokens::BLOCK_TYPE_PARENTHESIS_BRACE, $end);
+                $end = $tokens->findBlockStart(Tokens::BLOCK_TYPE_PARENTHESIS, $end);
             }
         }
 
@@ -535,11 +535,7 @@ final class ClassDefinitionFixer extends AbstractFixer implements ConfigurableFi
     }
 
     /**
-     * @param array{
-     *     final: false|int,
-     *     abstract: false|int,
-     *     readonly: false|int,
-     * } $classDefInfo
+     * @param _ClassyDefinitionInfo $classDefInfo
      */
     private function sortClassModifiers(Tokens $tokens, array $classDefInfo): void
     {

@@ -3,51 +3,61 @@ title: Multi value delimiter
 weight: 4
 ---
 
-Sometimes values to filter for could include commas. This is why you can specify the delimiter symbol using the `QueryBuilderRequest` to overwrite the default behaviour.
+Sometimes values to filter for could include commas. You can change the delimiter used to split array values by setting the `delimiter` key in the `query-builder` config file.
 
 ```php
-// GET /api/endpoint?filter=12,4V|4,7V|2,1V
+// config/query-builder.php
 
-QueryBuilderRequest::setArrayValueDelimiter('|');
+return [
+    'delimiter' => '|',
+];
+```
 
-QueryBuilder::for(Model::class)
-    ->allowedFilters(AllowedFilter::exact('voltage'))
-    ->get();
+With this configuration, a request like `GET /api/endpoint?filter[voltage]=12,4V|4,7V|2,1V` would be parsed as:
 
+```php
 // filters: [ 'voltage' => [ '12,4V', '4,7V', '2,1V' ]]
 ```
 
-__Note that this applies to ALL values for filters, includes and sorts__
+__Note that this applies to ALL values for filters, includes and sorts.__
 
-## Usage 
+To disable splitting entirely for all parameters, set the global delimiter to an empty string:
 
-There are multiple opportunities where the delimiter can be set.
-
-You can define it in a `ServiceProvider` to apply it globally, or define a middleware that can be applied only on certain `Controllers`.
 ```php
-// YourServiceProvider.php
-public function boot() {
-    QueryBuilderRequest::setArrayValueDelimiter(';');
-}
+// config/query-builder.php
 
-// ApplySemicolonDelimiterMiddleware.php
-public function handle($request, $next) {
-    QueryBuilderRequest::setArrayValueDelimiter(';');
-    return $next($request);
-}
+return [
+    'delimiter' => '',
+];
 ```
 
-You can also set the delimiter for each feature individually:
+If you need only filter values to stay intact globally, you can disable filter delimiter splitting in config:
+
 ```php
-QueryBuilderRequest::setIncludesArrayValueDelimiter(';'); // Includes
-QueryBuilderRequest::setAppendsArrayValueDelimiter(';');  // Appends
-QueryBuilderRequest::setFieldsArrayValueDelimiter(';');   // Fields
-QueryBuilderRequest::setSortsArrayValueDelimiter(';');    // Sorts
-QueryBuilderRequest::setFilterArrayValueDelimiter(';');   // Filter
+// config/query-builder.php
+
+'filter_value_splitting_enabled' => false,
 ```
 
-You can override the default delimiter for single filters:
+This only affects filter values. Includes, sorts, fields, and appends will continue using the configured global delimiter. The default value is `true`. 
+
+## Per filter delimiter
+
+You can override the delimiter for a specific filter using the `delimiter()` method. This is useful when a filter value may contain the default delimiter character.
+
 ```php
-// GET /api/endpoint?filter[id]=h4S4MG3(+>azv4z/I<o>,>XZII/Q1On
-AllowedFilter::exact('id', 'ref_id', true, ';');
+// GET /api/endpoint?filter[voltage]=12,4V|4,7V|2,1V&filter[name]=John,Jane
+
+QueryBuilder::for(Model::class)
+    ->allowedFilters(
+        AllowedFilter::exact('voltage')->delimiter('|'),
+        AllowedFilter::exact('name'), // still uses the default comma delimiter
+    )
+    ->get();
+```
+
+To disable splitting entirely for a filter, set the delimiter to an empty string:
+
+```php
+AllowedFilter::exact('external_id')->delimiter('')
 ```

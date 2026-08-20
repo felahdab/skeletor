@@ -3,12 +3,13 @@
 namespace Clickbar\Magellan\Http\Requests;
 
 use Clickbar\Magellan\IO\Parser\Geojson\GeojsonParser;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ValidatedInput;
 
 /**
- * @mixin \Illuminate\Foundation\Http\FormRequest
+ * @mixin FormRequest
  */
 trait TransformsGeojsonGeometry
 {
@@ -22,13 +23,15 @@ trait TransformsGeojsonGeometry
         /** @var GeojsonParser $parser */
         $parser = App::make(GeojsonParser::class);
         $input = $this->all();
+        $srids = $this->geometrySrids();
 
         foreach ($attributes as $key) {
             if (! isset($this[$key]) || empty($this[$key])) {
                 continue;
             }
 
-            Arr::set($input, $key, $parser->parse($this[$key]));
+            $srid = $srids[$key] ?? 4326;
+            Arr::set($input, $key, $parser->parseWithSrid($this[$key], $srid));
         }
 
         // Note: This only replaces the values on the request itself, not
@@ -40,9 +43,20 @@ trait TransformsGeojsonGeometry
     abstract public function geometries(): array;
 
     /**
+     * Return a map of field name to SRID for geometry fields that require a non-default SRID.
+     * Fields not listed here default to SRID 4326.
+     *
+     * @return array<string, int>
+     */
+    public function geometrySrids(): array
+    {
+        return [];
+    }
+
+    /**
      * Get a validated input container for the validated input.
      *
-     * @return \Illuminate\Support\ValidatedInput|array
+     * @return ValidatedInput|array
      */
     public function safe(?array $keys = null)
     {

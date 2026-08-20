@@ -44,6 +44,7 @@ final readonly class DeprecationTriggered implements Event
     private bool $suppressed;
     private bool $ignoredByBaseline;
     private bool $ignoredByTest;
+    private bool $ignoredByFilter;
     private IssueTrigger $trigger;
 
     /**
@@ -56,8 +57,10 @@ final readonly class DeprecationTriggered implements Event
      * @param non-empty-string $file
      * @param positive-int     $line
      * @param non-empty-string $stackTrace
+     *
+     * @internal This method is not covered by the backward compatibility promise for PHPUnit
      */
-    public function __construct(Telemetry\Info $telemetryInfo, Test $test, string $message, string $file, int $line, bool $suppressed, bool $ignoredByBaseline, bool $ignoredByTest, IssueTrigger $trigger, string $stackTrace)
+    public function __construct(Telemetry\Info $telemetryInfo, Test $test, string $message, string $file, int $line, bool $suppressed, bool $ignoredByBaseline, bool $ignoredByTest, bool $ignoredByFilter, IssueTrigger $trigger, string $stackTrace)
     {
         $this->telemetryInfo     = $telemetryInfo;
         $this->test              = $test;
@@ -67,6 +70,7 @@ final readonly class DeprecationTriggered implements Event
         $this->suppressed        = $suppressed;
         $this->ignoredByBaseline = $ignoredByBaseline;
         $this->ignoredByTest     = $ignoredByTest;
+        $this->ignoredByFilter   = $ignoredByFilter;
         $this->trigger           = $trigger;
         $this->stackTrace        = $stackTrace;
     }
@@ -120,6 +124,11 @@ final readonly class DeprecationTriggered implements Event
         return $this->ignoredByTest;
     }
 
+    public function ignoredByFilter(): bool
+    {
+        return $this->ignoredByFilter;
+    }
+
     public function trigger(): IssueTrigger
     {
         return $this->trigger;
@@ -152,6 +161,10 @@ final readonly class DeprecationTriggered implements Event
 
         if ($this->ignoredByTest) {
             $details[] = 'ignored by test';
+        }
+
+        if ($this->ignoredByFilter) {
+            $details[] = 'ignored by filter';
         }
 
         if ($this->ignoredByBaseline) {

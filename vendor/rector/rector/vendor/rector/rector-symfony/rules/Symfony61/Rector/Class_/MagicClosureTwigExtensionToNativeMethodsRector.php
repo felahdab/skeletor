@@ -5,11 +5,13 @@ namespace Rector\Symfony\Symfony61\Rector\Class_;
 
 use PhpParser\Node;
 use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\VariadicPlaceholder;
 use PHPStan\Analyser\Scope;
+use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\ObjectType;
 use Rector\NodeCollector\NodeAnalyzer\ArrayCallableMethodMatcher;
 use Rector\NodeCollector\ValueObject\ArrayCallable;
@@ -17,7 +19,9 @@ use Rector\PHPStan\ScopeFetcher;
 use Rector\Rector\AbstractRector;
 use Rector\Symfony\Enum\TwigClass;
 use Rector\ValueObject\PhpVersion;
+use Rector\VersionBonding\Contract\ComposerPackageConstraintInterface;
 use Rector\VersionBonding\Contract\MinPhpVersionInterface;
+use Rector\VersionBonding\ValueObject\ComposerPackageConstraint;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 /**
@@ -25,15 +29,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  *
  * @see PHP 8.1 way to handle functions/filters https://github.com/symfony/symfony/blob/e0ad2eead3513a558c09d8aa3ae9e867fb10b419/src/Symfony/Bridge/Twig/Extension/CodeExtension.php#L41-L52
  */
-final class MagicClosureTwigExtensionToNativeMethodsRector extends AbstractRector implements MinPhpVersionInterface
+final class MagicClosureTwigExtensionToNativeMethodsRector extends AbstractRector implements MinPhpVersionInterface, ComposerPackageConstraintInterface
 {
     /**
      * @readonly
      */
     private ArrayCallableMethodMatcher $arrayCallableMethodMatcher;
-    public function __construct(ArrayCallableMethodMatcher $arrayCallableMethodMatcher)
+    /**
+     * @readonly
+     */
+    private ReflectionProvider $reflectionProvider;
+    public function __construct(ArrayCallableMethodMatcher $arrayCallableMethodMatcher, ReflectionProvider $reflectionProvider)
     {
         $this->arrayCallableMethodMatcher = $arrayCallableMethodMatcher;
+        $this->reflectionProvider = $reflectionProvider;
     }
     public function getRuleDefinition(): RuleDefinition
     {
@@ -112,6 +121,10 @@ CODE_SAMPLE
     {
         return PhpVersion::PHP_81;
     }
+    public function provideComposerPackageConstraint(): ComposerPackageConstraint
+    {
+        return new ComposerPackageConstraint('symfony/twig-bridge', '>=6.1');
+    }
     private function refactorClassMethod(ClassMethod $classMethod, Scope $scope): bool
     {
         $hasChanged = \false;
@@ -123,9 +136,28 @@ CODE_SAMPLE
             if (!$arrayCallable instanceof ArrayCallable) {
                 return null;
             }
+            if ($this->isNonStaticExternalClassCallable($arrayCallable, $scope)) {
+                return null;
+            }
             $hasChanged = \true;
             return new MethodCall($arrayCallable->getCallerExpr(), $arrayCallable->getMethod(), [new VariadicPlaceholder()]);
         });
         return $hasChanged;
+    }
+    private function isNonStaticExternalClassCallable(ArrayCallable $arrayCallable, Scope $scope): bool
+    {
+        if (!$arrayCallable->getCallerExpr() instanceof ClassConstFetch) {
+            return \false;
+        }
+        $className = $arrayCallable->getClass();
+        if (!$this->reflectionProvider->hasClass($className)) {
+            return \false;
+        }
+        $classReflection = $this->reflectionProvider->getClass($className);
+        $methodName = $arrayCallable->getMethod();
+        if (!$classReflection->hasMethod($methodName)) {
+            return \false;
+        }
+        return !$classReflection->getMethod($methodName, $scope)->isStatic();
     }
 }

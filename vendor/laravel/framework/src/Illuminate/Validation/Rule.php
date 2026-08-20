@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Validation\Rules\AnyOf;
+use Illuminate\Validation\Rules\ArrayKeys;
 use Illuminate\Validation\Rules\ArrayRule;
 use Illuminate\Validation\Rules\Can;
 use Illuminate\Validation\Rules\Date;
@@ -13,6 +14,7 @@ use Illuminate\Validation\Rules\Dimensions;
 use Illuminate\Validation\Rules\Email;
 use Illuminate\Validation\Rules\Enum;
 use Illuminate\Validation\Rules\ExcludeIf;
+use Illuminate\Validation\Rules\ExcludeUnless;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\Rules\ImageFile;
@@ -20,7 +22,10 @@ use Illuminate\Validation\Rules\In;
 use Illuminate\Validation\Rules\NotIn;
 use Illuminate\Validation\Rules\Numeric;
 use Illuminate\Validation\Rules\ProhibitedIf;
+use Illuminate\Validation\Rules\ProhibitedUnless;
 use Illuminate\Validation\Rules\RequiredIf;
+use Illuminate\Validation\Rules\RequiredUnless;
+use Illuminate\Validation\Rules\StringRule;
 use Illuminate\Validation\Rules\Unique;
 
 class Rule
@@ -74,6 +79,17 @@ class Rule
     public static function array($keys = null)
     {
         return new ArrayRule(...func_get_args());
+    }
+
+    /**
+     * Get an array keys rule builder instance.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable|array|string  $keys
+     * @return \Illuminate\Validation\Rules\ArrayKeys
+     */
+    public static function arrayKeys($keys)
+    {
+        return new ArrayKeys(...func_get_args());
     }
 
     /**
@@ -153,7 +169,18 @@ class Rule
     }
 
     /**
-     * Get a exclude_if rule builder instance.
+     * Get a required_unless rule builder instance.
+     *
+     * @param  (\Closure(): bool)|bool|null  $callback
+     * @return \Illuminate\Validation\Rules\RequiredUnless
+     */
+    public static function requiredUnless($callback)
+    {
+        return new RequiredUnless($callback);
+    }
+
+    /**
+     * Get an exclude_if rule builder instance.
      *
      * @param  (\Closure(): bool)|bool  $callback
      * @return \Illuminate\Validation\Rules\ExcludeIf
@@ -161,6 +188,17 @@ class Rule
     public static function excludeIf($callback)
     {
         return new ExcludeIf($callback);
+    }
+
+    /**
+     * Get an exclude_unless rule builder instance.
+     *
+     * @param  (\Closure(): bool)|bool  $callback
+     * @return \Illuminate\Validation\Rules\ExcludeUnless
+     */
+    public static function excludeUnless($callback)
+    {
+        return new ExcludeUnless($callback);
     }
 
     /**
@@ -172,6 +210,17 @@ class Rule
     public static function prohibitedIf($callback)
     {
         return new ProhibitedIf($callback);
+    }
+
+    /**
+     * Get a prohibited_unless rule builder instance.
+     *
+     * @param  (\Closure(): bool)|bool  $callback
+     * @return \Illuminate\Validation\Rules\ProhibitedUnless
+     */
+    public static function prohibitedUnless($callback)
+    {
+        return new ProhibitedUnless($callback);
     }
 
     /**
@@ -243,6 +292,16 @@ class Rule
     public static function dimensions(array $constraints = [])
     {
         return new Dimensions($constraints);
+    }
+
+    /**
+     * Get a string rule builder instance.
+     *
+     * @return \Illuminate\Validation\Rules\StringRule
+     */
+    public static function string()
+    {
+        return new StringRule;
     }
 
     /**

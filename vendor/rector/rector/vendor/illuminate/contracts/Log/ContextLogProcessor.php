@@ -1,8 +1,8 @@
 <?php
 
-namespace RectorPrefix202602\Illuminate\Contracts\Log;
+namespace RectorPrefix202608\Illuminate\Contracts\Log;
 
-use RectorPrefix202602\Monolog\Processor\ProcessorInterface;
+use RectorPrefix202608\Monolog\Processor\ProcessorInterface;
 interface ContextLogProcessor extends ProcessorInterface
 {
 }

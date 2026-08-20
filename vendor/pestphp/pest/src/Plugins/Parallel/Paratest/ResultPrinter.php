@@ -29,24 +29,12 @@ use function strlen;
  */
 final class ResultPrinter
 {
-    /**
-     * If the test should be marked as todo.
-     */
     public bool $lastWasTodo = false;
 
-    /**
-     * The "native" printer.
-     */
     public readonly Printer $printer;
 
-    /**
-     * The state.
-     */
     public int $passedTests = 0;
 
-    /**
-     * The "compact" printer.
-     */
     private readonly CompactPrinter $compactPrinter;
 
     /** @var resource|null */
@@ -81,7 +69,9 @@ final class ResultPrinter
             public function flush(): void {}
         };
 
-        $this->compactPrinter = CompactPrinter::default();
+        $this->compactPrinter = CompactPrinter::default(
+            decorated: ! in_array('--colors=never', $_SERVER['argv'] ?? [], true),
+        );
 
         if (! $this->options->configuration->hasLogfileTeamcity()) {
             return;
@@ -92,14 +82,13 @@ final class ResultPrinter
         $this->teamcityLogFileHandle = $teamcityLogFileHandle;
     }
 
-    /** @param  list<SplFileInfo>  $teamcityFiles */
     public function printFeedback(
         SplFileInfo $progressFile,
         SplFileInfo $outputFile,
-        array $teamcityFiles
+        ?SplFileInfo $teamcityFile,
     ): void {
-        if ($this->options->needsTeamcity) {
-            $teamcityProgress = $this->tailMultiple($teamcityFiles);
+        if ($this->options->needsTeamcity && $teamcityFile instanceof SplFileInfo) {
+            $teamcityProgress = $this->tailMultiple([$teamcityFile]);
 
             if ($this->teamcityLogFileHandle !== null) {
                 fwrite($this->teamcityLogFileHandle, $teamcityProgress);
@@ -119,10 +108,6 @@ final class ResultPrinter
 
         $unexpectedOutput = $this->tail($outputFile);
         if ($unexpectedOutput !== '') {
-            if (preg_match('/^T+$/', $unexpectedOutput) > 0) {
-                return;
-            }
-
             $this->output->write($unexpectedOutput);
         }
 
@@ -171,8 +156,18 @@ final class ResultPrinter
 
         $state = (new StateGenerator)->fromPhpUnitTestResult($this->passedTests, $testResult);
 
-        $this->compactPrinter->errors($state);
-        $this->compactPrinter->recap($state, $testResult, $duration, $this->options);
+        if ($testResult->numberOfTestsRun() === 0 && $state->testSuiteTestsCount() === 0) {
+            $this->output->writeln([
+                '',
+                '  <fg=white;options=bold;bg=blue> INFO </> No tests found.',
+                '',
+            ]);
+        }
+
+        if (! isset($_SERVER['PEST_PARALLEL_NO_OUTPUT'])) {
+            $this->compactPrinter->errors($state);
+            $this->compactPrinter->recap($state, $testResult, $duration, $this->options);
+        }
     }
 
     private function printFeedbackItem(string $item): void

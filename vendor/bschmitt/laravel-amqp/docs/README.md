@@ -76,6 +76,24 @@ Welcome to the Laravel AMQP package documentation. This directory contains compr
     - Coupling analysis
     - Scalability assessment
 
+### Feature Pages (Version 3.4.0)
+
+These pages live under [`docs/content/`](./content/) and are also served by
+the Vue.js documentation site (`docs/index.html`).
+
+- **[Delayed Messaging](./content/delayed-messaging.md)** — `publishLater()`,
+  TTL+DLX vs. plugin strategies, publisher backoff (`PublishBackoff`), CLI
+  `--delay-ms`.
+- **[Typed Messaging](./content/typed-messaging.md)** — `MessageContractInterface`,
+  `TypedMessage`, pluggable serializers, `publishTyped()` / `consumeTyped()`,
+  `amqp:work --contract`.
+- **[Schema Validation](./content/schema-validation.md)** — JSON-Schema-lite
+  validator, supported keywords, `SchemaValidationException`,
+  `amqp:work --validate-schema`.
+- **[Advanced Retry & Dead-Letter Abstractions](./content/advanced.md#advanced-retry--dead-letter-abstractions)**
+  — `RetryPolicy`, `DeadLetterTopology`, `RetryHandler`, `consumeWithRetry()`,
+  `amqp:work --retry`.
+
 ### New Modules (Version 3.1.0+)
 
 13. **[RPC Module](./modules/RPC_MODULE.md)**
@@ -131,6 +149,7 @@ Welcome to the Laravel AMQP package documentation. This directory contains compr
 ## Quick Links
 
 - [Main README](../README.md) - Package overview and installation
+- [Laravel Queue Driver](content/queue-driver.md) - Native `queue:work amqp` integration
 - [Test Documentation](../test/README.md) - Testing guide
 - [Integration Test Guide](../test/README-INTEGRATION.md) - Integration testing
 
@@ -158,6 +177,12 @@ Welcome to the Laravel AMQP package documentation. This directory contains compr
 | Listen Method | Supported | [LISTEN_METHOD.md](./modules/LISTEN_METHOD.md) |
 | Consumer Prefetch | Supported | [CONSUMER_PREFETCH.md](./modules/CONSUMER_PREFETCH.md) |
 | Connection Config | Supported | [CONNECTION_CONFIG.md](./modules/CONNECTION_CONFIG.md) |
+| Native Laravel Queue Driver | Supported | [queue-driver.md](./content/queue-driver.md) |
+| Advanced Retry & DLQ Abstractions | Supported | [advanced.md](./content/advanced.md#advanced-retry--dead-letter-abstractions) |
+| Delayed Messaging | Supported | [delayed-messaging.md](./content/delayed-messaging.md) |
+| Publisher-Side Backoff | Supported | [delayed-messaging.md](./content/delayed-messaging.md#publisher-side-backoff-publishbackoff) |
+| Typed Message Contracts | Supported | [typed-messaging.md](./content/typed-messaging.md) |
+| JSON Schema Validation | Supported | [schema-validation.md](./content/schema-validation.md) |
 
 ## Getting Started
 

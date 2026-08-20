@@ -7,7 +7,7 @@ use Rector\ChangesReporting\Output\ConsoleOutputFormatter;
 use Rector\Configuration\Option;
 use Rector\Configuration\Parameter\SimpleParameterProvider;
 use Rector\ValueObject\Configuration\LevelOverflow;
-use RectorPrefix202602\Webmozart\Assert\Assert;
+use RectorPrefix202608\Webmozart\Assert\Assert;
 final class Configuration
 {
     /**
@@ -81,11 +81,23 @@ final class Configuration
      */
     private array $levelOverflows = [];
     /**
+     * @readonly
+     */
+    private bool $showRulesSummary = \false;
+    /**
+     * @readonly
+     */
+    private bool $isComposerBased = \false;
+    /**
+     * @readonly
+     */
+    private bool $isPhpOnly = \false;
+    /**
      * @param string[] $fileExtensions
      * @param string[] $paths
      * @param LevelOverflow[] $levelOverflows
      */
-    public function __construct(bool $isDryRun = \false, bool $showProgressBar = \true, bool $shouldClearCache = \false, string $outputFormat = ConsoleOutputFormatter::NAME, array $fileExtensions = ['php'], array $paths = [], bool $showDiffs = \true, ?string $parallelPort = null, ?string $parallelIdentifier = null, bool $isParallel = \false, ?string $memoryLimit = null, bool $isDebug = \false, bool $reportingWithRealPath = \false, ?string $onlyRule = null, ?string $onlySuffix = null, array $levelOverflows = [])
+    public function __construct(bool $isDryRun = \false, bool $showProgressBar = \true, bool $shouldClearCache = \false, string $outputFormat = ConsoleOutputFormatter::NAME, array $fileExtensions = ['php'], array $paths = [], bool $showDiffs = \true, ?string $parallelPort = null, ?string $parallelIdentifier = null, bool $isParallel = \false, ?string $memoryLimit = null, bool $isDebug = \false, bool $reportingWithRealPath = \false, ?string $onlyRule = null, ?string $onlySuffix = null, array $levelOverflows = [], bool $showRulesSummary = \false, bool $isComposerBased = \false, bool $isPhpOnly = \false)
     {
         $this->isDryRun = $isDryRun;
         $this->showProgressBar = $showProgressBar;
@@ -103,6 +115,17 @@ final class Configuration
         $this->onlyRule = $onlyRule;
         $this->onlySuffix = $onlySuffix;
         $this->levelOverflows = $levelOverflows;
+        $this->showRulesSummary = $showRulesSummary;
+        $this->isComposerBased = $isComposerBased;
+        $this->isPhpOnly = $isPhpOnly;
+    }
+    public function isComposerBased(): bool
+    {
+        return $this->isComposerBased;
+    }
+    public function isPhpOnly(): bool
+    {
+        return $this->isPhpOnly;
     }
     public function isDryRun(): bool
     {
@@ -187,5 +210,9 @@ final class Configuration
         $setRegisteredRules = SimpleParameterProvider::provideArrayParameter(Option::SET_REGISTERED_RULES);
         $ruleDuplicatedRegistrations = array_intersect($rootStandaloneRegisteredRules, $setRegisteredRules);
         return array_unique($ruleDuplicatedRegistrations);
+    }
+    public function shouldShowRulesSummary(): bool
+    {
+        return $this->showRulesSummary;
     }
 }

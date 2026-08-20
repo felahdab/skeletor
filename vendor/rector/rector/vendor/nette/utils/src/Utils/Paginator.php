@@ -1,13 +1,13 @@
 <?php
 
+declare (strict_types=1);
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-declare (strict_types=1);
-namespace RectorPrefix202602\Nette\Utils;
+namespace RectorPrefix202608\Nette\Utils;
 
-use RectorPrefix202602\Nette;
+use RectorPrefix202608\Nette;
 /**
  * Paginating math.
  *
@@ -56,7 +56,7 @@ class Paginator
         return $this->itemCount === null ? null : $this->base + max(0, $this->getPageCount() - 1);
     }
     /**
-     * Returns the sequence number of the first element on the page
+     * Returns the 1-based index of the first item on the current page, or 0 if the page is empty.
      * @return int<0, max>
      */
     public function getFirstItemOnPage(): int
@@ -64,7 +64,7 @@ class Paginator
         return $this->itemCount !== 0 ? $this->offset + 1 : 0;
     }
     /**
-     * Returns the sequence number of the last element on the page
+     * Returns the 1-based index of the last item on the current page.
      * @return int<0, max>
      */
     public function getLastItemOnPage(): int
@@ -105,7 +105,7 @@ class Paginator
      */
     public function getPageCount(): ?int
     {
-        return $this->itemCount === null ? null : (int) ceil($this->itemCount / $this->itemsPerPage);
+        return $this->itemCount === null ? null : max(0, (int) ceil($this->itemCount / $this->itemsPerPage));
     }
     /**
      * @return static
@@ -159,6 +159,6 @@ class Paginator
      */
     public function getLength(): int
     {
-        return $this->itemCount === null ? $this->itemsPerPage : min($this->itemsPerPage, $this->itemCount - $this->getPageIndex() * $this->itemsPerPage);
+        return $this->itemCount === null ? $this->itemsPerPage : max(0, min($this->itemsPerPage, $this->itemCount - $this->getPageIndex() * $this->itemsPerPage));
     }
 }

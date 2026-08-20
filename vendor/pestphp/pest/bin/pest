@@ -3,13 +3,16 @@
 
 declare(strict_types=1);
 
+use Pest\Contracts\Restarter;
 use Pest\Kernel;
 use Pest\Panic;
+use Pest\Support\Container;
 use Pest\TestCaseFilters\GitDirtyTestCaseFilter;
 use Pest\TestCaseMethodFilters\AssigneeTestCaseFilter;
 use Pest\TestCaseMethodFilters\IssueTestCaseFilter;
 use Pest\TestCaseMethodFilters\NotesTestCaseFilter;
 use Pest\TestCaseMethodFilters\PrTestCaseFilter;
+use Pest\TestCaseMethodFilters\FlakyTestCaseFilter;
 use Pest\TestCaseMethodFilters\TodoTestCaseFilter;
 use Pest\TestSuite;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -23,6 +26,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
     $dirty = false;
     $todo = false;
+    $flaky = false;
     $notes = false;
 
     foreach ($arguments as $key => $value) {
@@ -54,6 +58,11 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
         if (in_array($value, ['--todo', '--todos'], true)) {
             $todo = true;
+            unset($arguments[$key]);
+        }
+
+        if ($value === '--flaky') {
+            $flaky = true;
             unset($arguments[$key]);
         }
 
@@ -135,6 +144,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
     // Get $rootPath based on $autoloadPath
     $rootPath = dirname($autoloadPath, 2);
+
     $input = new ArgvInput;
 
     $testSuite = TestSuite::getInstance(
@@ -148,6 +158,10 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
     if ($todo) {
         $testSuite->tests->addTestCaseMethodFilter(new TodoTestCaseFilter);
+    }
+
+    if ($flaky) {
+        $testSuite->tests->addTestCaseMethodFilter(new FlakyTestCaseFilter);
     }
 
     if ($notes) {
@@ -180,6 +194,15 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
     try {
         $kernel = Kernel::boot($testSuite, $input, $output);
+
+        $container = Container::getInstance();
+
+        foreach (Kernel::RESTARTERS as $restarterClass) {
+            $restarter = $container->get($restarterClass);
+            assert($restarter instanceof Restarter);
+
+            $restarter->maybeRestart($rootPath, $originalArguments);
+        }
 
         $result = $kernel->handle($originalArguments, $arguments);
 

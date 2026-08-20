@@ -11,7 +11,7 @@ class LivewireMakeFormCommand extends Command implements PromptsForMissingInput
 {
     use LivewireComponentParser;
 
-    protected $signature = 'module:make-livewire-form {component} {module} {--force} {--stub=}';
+    protected $signature = 'module:make-livewire-form {component} {module} {--class} {--force} {--stub=}';
 
     /**
      * The console command description.
@@ -27,15 +27,9 @@ class LivewireMakeFormCommand extends Command implements PromptsForMissingInput
      */
     public function handle()
     {
+        $this->input->setOption('class', true);
+
         if (! $this->parser()) {
-            return false;
-        }
-
-        if (! $this->checkClassNameValid()) {
-            return false;
-        }
-
-        if (! $this->checkReservedClassName()) {
             return false;
         }
 
@@ -61,7 +55,7 @@ class LivewireMakeFormCommand extends Command implements PromptsForMissingInput
         $classFile = $this->component->class->file;
 
         if (File::exists($classFile) && ! $this->isForce()) {
-            $this->line("<options=bold,reverse;fg=red> WHOOPS-IE-TOOTLES </> 😳 \n");
+            $this->line("<options=bold,reverse;fg=red> COMPONENT EXISTS </> 😳 \n");
             $this->line("<fg=red;options=bold>Class already exists:</> {$this->getClassSourcePath()}");
 
             return false;

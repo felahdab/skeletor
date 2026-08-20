@@ -3,9 +3,12 @@
 namespace Dedoc\Scramble;
 
 use Closure;
+use Dedoc\Scramble\Attributes\Api;
 use Dedoc\Scramble\Attributes\ExcludeAllRoutesFromDocs;
 use Dedoc\Scramble\Attributes\ExcludeRouteFromDocs;
+use Dedoc\Scramble\Configuration\SecurityDocumentationContext;
 use Dedoc\Scramble\Contracts\DocumentTransformer;
+use Dedoc\Scramble\Diagnostics\DiagnosticsCollector;
 use Dedoc\Scramble\Exceptions\RouteAware;
 use Dedoc\Scramble\OpenApiVisitor\SchemaEnforceVisitor;
 use Dedoc\Scramble\Support\ContainerUtils;
@@ -19,28 +22,33 @@ use Dedoc\Scramble\Support\Generator\Server;
 use Dedoc\Scramble\Support\Generator\TypeTransformer;
 use Dedoc\Scramble\Support\Generator\UniqueNameOptions;
 use Dedoc\Scramble\Support\Generator\UniqueNamesOptionsCollection;
+use Dedoc\Scramble\Support\InferExtensions\ModelExtension;
 use Dedoc\Scramble\Support\OperationBuilder;
-use Dedoc\Scramble\Support\RouteInfo;
+use Dedoc\Scramble\Support\ProNudge\ProNudgeCollector;
 use Dedoc\Scramble\Support\ServerFactory;
 use Illuminate\Routing\Route;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route as RouteFacade;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use LogicException;
 use ReflectionException;
 use ReflectionMethod;
 use Throwable;
 
 class Generator
 {
-    public array $exceptions = [];
+    public ProNudgeCollector $proNudge;
+
+    public DiagnosticsCollector $diagnostics;
 
     protected bool $throwExceptions = true;
 
     public function __construct(
         private OperationBuilder $operationBuilder,
-    ) {}
+    ) {
+        $this->resetContext();
+    }
 
     public function setThrowExceptions(bool $throwExceptions): static
     {
@@ -49,18 +57,56 @@ class Generator
         return $this;
     }
 
+    private function resetContext(): void
+    {
+        $this->proNudge = new ProNudgeCollector;
+        $this->diagnostics = new DiagnosticsCollector(throwOnError: $this->throwExceptions);
+    }
+
+    private function configureInference(): void
+    {
+        Scramble::infer()
+            ->configure()
+            ->replaceExtensions([
+                new ModelExtension($this->diagnostics),
+            ]);
+    }
+
     public function __invoke(?GeneratorConfig $config = null)
     {
+        $this->resetContext();
+        $this->configureInference();
+
         $config ??= Scramble::getGeneratorConfig(Scramble::DEFAULT_API);
 
+        $routes = $this->getRoutes($config);
+        $config = $this->configureSecurityStrategy($routes, $config);
+
         $openApi = $this->makeOpenApi($config);
-        $context = new OpenApiContext($openApi, $config);
+        $context = new OpenApiContext($openApi, $config, diagnostics: $this->diagnostics);
         $typeTransformer = $this->buildTypeTransformer($context);
 
-        $this->getRoutes($config)
-            ->flatMap(function (Route $route, int $index) use ($openApi, $config, $typeTransformer) {
+        $operations = $this->generateOperations($context, $typeTransformer);
+
+        $this->setUniqueOperationId($operations);
+        $operations->each(fn (Operation $operation) => $openApi->addPath(
+            Path::make(
+                $config->apiPath()->stripPrefix($operation->path)
+            )->addOperation($operation)
+        ));
+        $this->moveSameAlternativeServersToPath($openApi);
+
+        $this->applyDocumentTransformers($context, $typeTransformer);
+
+        return $openApi->toArray();
+    }
+
+    private function generateOperations(OpenApiContext $context, TypeTransformer $typeTransformer): Collection
+    {
+        return $this->getRoutes($context->config)
+            ->flatMap(function (Route $route, int $index) use ($context, $typeTransformer) {
                 try {
-                    $operations = $this->routeToOperations($openApi, $route, $config, $typeTransformer);
+                    $operations = $this->routeToOperations($context, $route, $typeTransformer);
 
                     foreach ($operations as $i => $operation) {
                         if ($route->getAction('uses') instanceof Closure) {
@@ -91,44 +137,21 @@ class Generator
                 }
             })
             ->filter()
-            ->sortBy($this->createOperationsSorter())
-            ->each(fn (Operation $operation) => $openApi->addPath(
-                Path::make(
-                    (string) Str::of($operation->path)
-                        ->replaceStart($config->get('api_path', 'api'), '')
-                        ->trim('/')
-                )->addOperation($operation)
-            ))
-            ->toArray();
+            ->sortBy($this->createOperationsSorter());
+    }
 
-        $this->setUniqueOperationId($openApi);
+    /**
+     * @param  Collection<int, Route>  $routes
+     */
+    private function configureSecurityStrategy(Collection $routes, GeneratorConfig $config): GeneratorConfig
+    {
+        $strategy = $config->securityStrategy();
 
-        $this->moveSameAlternativeServersToPath($openApi);
-
-        foreach ($config->documentTransformers->all() as $openApiTransformer) {
-            $openApiTransformer = is_callable($openApiTransformer)
-                ? $openApiTransformer
-                : ContainerUtils::makeContextable($openApiTransformer, [
-                    TypeTransformer::class => $typeTransformer,
-                ]);
-
-            if (is_callable($openApiTransformer)) {
-                $openApiTransformer($openApi, $context);
-
-                continue;
-            }
-
-            if ($openApiTransformer instanceof DocumentTransformer) {
-                $openApiTransformer->handle($openApi, $context);
-
-                continue;
-            }
-
-            // @phpstan-ignore deadCode.unreachable
-            throw new InvalidArgumentException('(callable(OpenApi, OpenApiContext): void)|DocumentTransformer type for document transformer expected, received '.$openApiTransformer::class);
+        if (! $strategy) {
+            return $config;
         }
 
-        return $openApi->toArray();
+        return $strategy->configure(new SecurityDocumentationContext($routes, $config->cloneWithoutExposing()));
     }
 
     private function createOperationsSorter(): array
@@ -156,8 +179,8 @@ class Generator
         [$defaultProtocol] = explode('://', url('/'));
         $servers = $config->get('servers') ?: [
             '' => ($domain = $config->get('api_domain'))
-                ? $defaultProtocol.'://'.$domain.'/'.$config->get('api_path', 'api')
-                : $config->get('api_path', 'api'),
+                ? $defaultProtocol.'://'.$domain.'/'.$config->apiPath()->serverPath()
+                : $config->apiPath()->serverPath(),
         ];
         foreach ($servers as $description => $url) {
             $openApi->addServer(
@@ -166,6 +189,32 @@ class Generator
         }
 
         return $openApi;
+    }
+
+    private function applyDocumentTransformers(OpenApiContext $context, TypeTransformer $typeTransformer): void
+    {
+        foreach ($context->config->documentTransformers->all() as $openApiTransformer) {
+            $openApiTransformer = is_callable($openApiTransformer)
+                ? $openApiTransformer
+                : ContainerUtils::makeContextable($openApiTransformer, [
+                    TypeTransformer::class => $typeTransformer,
+                ]);
+
+            if (is_callable($openApiTransformer)) {
+                $openApiTransformer($context->openApi, $context);
+
+                continue;
+            }
+
+            if ($openApiTransformer instanceof DocumentTransformer) {
+                $openApiTransformer->handle($context->openApi, $context);
+
+                continue;
+            }
+
+            // @phpstan-ignore deadCode.unreachable
+            throw new InvalidArgumentException('(callable(OpenApi, OpenApiContext): void)|DocumentTransformer type for document transformer expected, received '.$openApiTransformer::class);
+        }
     }
 
     /**
@@ -203,7 +252,7 @@ class Generator
                 return ! ($name = $route->getAction('as')) || ! Str::startsWith($name, 'scramble');
             })
             ->filter($config->routes())
-            ->filter(function (Route $route) {
+            ->filter(function (Route $route) use ($config) {
                 if (! is_string($route->getAction('uses'))) {
                     return true;
                 }
@@ -226,9 +275,50 @@ class Generator
                     return false;
                 }
 
+                $apiNames = $this->getApiAttributeNames($reflection);
+                if ($apiNames !== null && ! in_array($config->name, $apiNames, true)) {
+                    return false;
+                }
+
                 return true;
             })
             ->values();
+    }
+
+    /**
+     * @return list<string>|null `null` when the route has no #[Api] restriction
+     */
+    private function getApiAttributeNames(ReflectionMethod $reflection): ?array
+    {
+        $attributes = $reflection->getAttributes(Api::class);
+
+        if (! count($attributes)) {
+            $attributes = $reflection->getDeclaringClass()->getAttributes(Api::class);
+        }
+
+        if (! count($attributes)) {
+            return null;
+        }
+
+        $apiNames = $attributes[0]->newInstance()->only;
+
+        $this->ensureRegisteredApiNames($apiNames);
+
+        return $apiNames;
+    }
+
+    /**
+     * @param  list<string>  $apiNames
+     */
+    private function ensureRegisteredApiNames(array $apiNames): void
+    {
+        $registeredApis = array_keys(Scramble::getConfigurationsInstance()->all());
+
+        foreach ($apiNames as $apiName) {
+            if (! in_array($apiName, $registeredApis, true)) {
+                throw new LogicException("$apiName API is not registered. Register the API using `Scramble::registerApi` first.");
+            }
+        }
     }
 
     private function buildTypeTransformer(OpenApiContext $context): TypeTransformer
@@ -239,31 +329,24 @@ class Generator
     }
 
     /** @return Operation[] */
-    private function routeToOperations(OpenApi $openApi, Route $route, GeneratorConfig $config, TypeTransformer $typeTransformer): array
+    private function routeToOperations(OpenApiContext $context, Route $route, TypeTransformer $typeTransformer): array
     {
-        $methods = array_map('strtolower', Arr::wrap(($config->operationMethodsResolver)($route)));
+        $operations = $this->operationBuilder->buildAll($context, $route, $typeTransformer, $this->proNudge);
 
-        $operations = [];
-        foreach ($methods as $method) {
-            $routeInfo = new RouteInfo($route, $method);
-
-            $operation = $this->operationBuilder->build($routeInfo, $openApi, $config, $typeTransformer);
-
-            $this->ensureSchemaTypes($route, $operation);
-
-            $operations[] = $operation;
+        foreach ($operations as $operation) {
+            $this->ensureSchemaTypes($context, $route, $operation);
         }
 
         return $operations;
     }
 
-    private function ensureSchemaTypes(Route $route, Operation $operation): void
+    private function ensureSchemaTypes(OpenApiContext $context, Route $route, Operation $operation): void
     {
         if (! Scramble::getSchemaValidator()->hasRules()) {
             return;
         }
 
-        [$traverser, $visitor] = $this->createSchemaEnforceTraverser($route);
+        [$traverser, $visitor] = $this->createSchemaEnforceTraverser($route, $context);
 
         $traverser->traverse($operation, ['', 'paths', $operation->path, $operation->method]);
         $references = $visitor->popReferences();
@@ -276,14 +359,17 @@ class Generator
         }
     }
 
-    private function createSchemaEnforceTraverser(Route $route)
+    /**
+     * @return array{OpenApiTraverser, SchemaEnforceVisitor}
+     */
+    private function createSchemaEnforceTraverser(Route $route, OpenApiContext $context): array
     {
-        $traverser = new OpenApiTraverser([$visitor = new SchemaEnforceVisitor($route, $this->throwExceptions, $this->exceptions)]);
+        $traverser = new OpenApiTraverser([$visitor = new SchemaEnforceVisitor($context->diagnostics->forRoute($route))]);
 
         return [$traverser, $visitor];
     }
 
-    private function moveSameAlternativeServersToPath(OpenApi $openApi)
+    private function moveSameAlternativeServersToPath(OpenApi $openApi): void
     {
         foreach (collect($openApi->paths)->groupBy('path') as $pathsGroup) {
             if ($pathsGroup->isEmpty()) {
@@ -310,11 +396,14 @@ class Generator
         }
     }
 
-    private function setUniqueOperationId(OpenApi $openApi)
+    /**
+     * @param  Collection<int, Operation>  $operations
+     */
+    private function setUniqueOperationId(Collection $operations): void
     {
         $names = new UniqueNamesOptionsCollection;
 
-        $this->foreachOperation($openApi, function (Operation $operation) use ($names) {
+        $operations->each(function (Operation $operation) use ($names) {
             if ($operation->operationId) {
                 return;
             }
@@ -322,7 +411,7 @@ class Generator
             $names->push($operation->getAttribute('operationId')); // @phpstan-ignore argument.type
         });
 
-        $this->foreachOperation($openApi, function (Operation $operation, $index) use ($names) {
+        $operations->each(function (Operation $operation, $index) use ($names) {
             if ($operation->operationId) {
                 return;
             }
@@ -340,20 +429,5 @@ class Generator
                 return "{$fallback}_{$index}";
             }));
         });
-    }
-
-    private function foreachOperation(OpenApi $openApi, callable $callback)
-    {
-        foreach (collect($openApi->paths)->groupBy('path') as $pathsGroup) {
-            if ($pathsGroup->isEmpty()) {
-                continue;
-            }
-
-            $operations = collect($pathsGroup->pluck('operations')->flatten());
-
-            foreach ($operations as $index => $operation) {
-                $callback($operation, $index);
-            }
-        }
     }
 }

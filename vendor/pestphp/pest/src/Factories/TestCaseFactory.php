@@ -9,6 +9,7 @@ use Pest\Concerns;
 use Pest\Contracts\HasPrintableTestCaseName;
 use Pest\Evaluators\Attributes;
 use Pest\Exceptions\DatasetMissing;
+use Pest\Exceptions\InvalidTestClassName;
 use Pest\Exceptions\ShouldNotHappen;
 use Pest\Exceptions\TestAlreadyExist;
 use Pest\Exceptions\TestClosureMustNotBeStatic;
@@ -17,6 +18,7 @@ use Pest\Factories\Concerns\HigherOrderable;
 use Pest\Support\Reflection;
 use Pest\Support\Str;
 use Pest\TestSuite;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -28,29 +30,21 @@ final class TestCaseFactory
     use HigherOrderable;
 
     /**
-     * The list of attributes.
-     *
      * @var array<int, Attribute>
      */
     public array $attributes = [];
 
     /**
-     * The FQN of the Test Case class.
-     *
      * @var class-string
      */
     public string $class = TestCase::class;
 
     /**
-     * The list of class methods.
-     *
      * @var array<string, TestCaseMethodFactory>
      */
     public array $methods = [];
 
     /**
-     * The list of class traits.
-     *
      * @var array <int, class-string>
      */
     public array $traits = [
@@ -58,9 +52,8 @@ final class TestCaseFactory
         Concerns\Expectable::class,
     ];
 
-    /**
-     * Creates a new Factory instance.
-     */
+    public ?string $namespace = null;
+
     public function __construct(
         public string $filename
     ) {
@@ -77,18 +70,16 @@ final class TestCaseFactory
     }
 
     /**
-     * Creates a Test Case class using a runtime evaluate.
-     *
      * @param  array<string, TestCaseMethodFactory>  $methods
      */
     public function evaluate(string $filename, array $methods): void
     {
         if ('\\' === DIRECTORY_SEPARATOR) {
-            // In case Windows, strtolower drive name, like in UsesCall.
             $filename = (string) preg_replace_callback('~^(?P<drive>[a-z]+:\\\)~i', static fn (array $match): string => strtolower($match['drive']), $filename);
         }
 
-        $filename = str_replace('\\\\', '\\', addslashes((string) realpath($filename)));
+        $realpath = (string) realpath($filename);
+        $filename = str_replace('\\\\', '\\', addslashes($realpath));
         $rootPath = TestSuite::getInstance()->rootPath;
         $relativePath = str_replace($rootPath.DIRECTORY_SEPARATOR, '', $filename);
 
@@ -106,12 +97,9 @@ final class TestCaseFactory
 
         $relativePath = str_replace(DIRECTORY_SEPARATOR, '\\', $relativePath);
 
-        // Strip out any %-encoded octets.
         $relativePath = (string) preg_replace('|%[a-fA-F0-9][a-fA-F0-9]|', '', $relativePath);
-        // Remove escaped quote sequences (maintain namespace)
         $relativePath = str_replace(array_map(fn (string $quote): string => sprintf('\\%s', $quote), ['\'', '"']), '', $relativePath);
-        // Limit to A-Z, a-z, 0-9, '_', '-'.
-        $relativePath = (string) preg_replace('/[^A-Za-z0-9\\\\]/', '', $relativePath);
+        $relativePath = (string) preg_replace('/[^\p{L}\p{N}\\\\]/u', '', $relativePath);
 
         $classFQN = 'P\\'.$relativePath;
 
@@ -126,22 +114,34 @@ final class TestCaseFactory
 
         $partsFQN = explode('\\', $classFQN);
         $className = array_pop($partsFQN);
-        $namespace = implode('\\', $partsFQN);
+        $namespace = $this->namespace ?? implode('\\', $partsFQN);
         $baseClass = sprintf('\%s', $this->class);
 
         if (trim($className) === '') {
             $className = 'InvalidTestName'.Str::random();
+        } elseif (! Str::isValidClassName($className)) {
+            throw InvalidTestClassName::fromClassName($this->filename, $className);
+        }
+
+        if ($this->namespace === null) {
+            foreach ($partsFQN as $partFQN) {
+                if (! Str::isValidIdentifier($partFQN)) {
+                    throw InvalidTestClassName::fromNamespace($this->filename, $namespace, $partFQN);
+                }
+            }
         }
 
         $this->attributes = [
             new Attribute(
-                \PHPUnit\Framework\Attributes\TestDox::class,
+                TestDox::class,
                 [$this->filename],
             ),
             ...$this->attributes,
         ];
 
         $attributesCode = Attributes::code($this->attributes);
+
+        $filenameLiteral = var_export($realpath, true);
 
         $methodsCode = implode('', array_map(
             fn (TestCaseMethodFactory $methodFactory): string => $methodFactory->buildForEvaluation(),
@@ -152,6 +152,7 @@ final class TestCaseFactory
             $classCode = <<<PHP
             namespace $namespace;
 
+            use Pest\Exceptions\DatasetProviderError as __PestDatasetProviderError;
             use Pest\Repositories\DatasetsRepository as __PestDatasets;
             use Pest\TestSuite as __PestTestSuite;
 
@@ -160,7 +161,7 @@ final class TestCaseFactory
             final class $className extends $baseClass implements $hasPrintableTestCaseClassFQN {
                 $traitsCode
 
-                private static \$__filename = '$filename';
+                public static \$__filename = $filenameLiteral;
 
                 $methodsCode
             }
@@ -169,16 +170,13 @@ final class TestCaseFactory
             eval($classCode);
         } catch (ParseError $caught) {
             throw new RuntimeException(sprintf(
-                "Unable to create test case for test file at %s. \n %s",
+                "Unable to create test case for test file at [%s]. \n %s",
                 $filename,
                 $classCode
             ), 1, $caught);
         }
     }
 
-    /**
-     * Adds the given Method to the Test Case.
-     */
     public function addMethod(TestCaseMethodFactory $method): void
     {
         if ($method->description === null) {
@@ -191,7 +189,7 @@ final class TestCaseFactory
 
         if (
             $method->closure instanceof \Closure &&
-            (new \ReflectionFunction($method->closure))->isStatic()
+            new \ReflectionFunction($method->closure)->isStatic()
         ) {
 
             throw new TestClosureMustNotBeStatic($method);
@@ -212,9 +210,6 @@ final class TestCaseFactory
         $this->methods[$method->description] = $method;
     }
 
-    /**
-     * Checks if a test case has a method.
-     */
     public function hasMethod(string $methodName): bool
     {
         foreach ($this->methods as $method) {
@@ -230,9 +225,6 @@ final class TestCaseFactory
         return false;
     }
 
-    /**
-     * Gets a Method by the given name.
-     */
     public function getMethod(string $methodName): TestCaseMethodFactory
     {
         foreach ($this->methods as $method) {
@@ -245,6 +237,6 @@ final class TestCaseFactory
             }
         }
 
-        throw ShouldNotHappen::fromMessage(sprintf('Method %s not found.', $methodName));
+        throw ShouldNotHappen::fromMessage(sprintf('Method [%s] not found.', $methodName));
     }
 }

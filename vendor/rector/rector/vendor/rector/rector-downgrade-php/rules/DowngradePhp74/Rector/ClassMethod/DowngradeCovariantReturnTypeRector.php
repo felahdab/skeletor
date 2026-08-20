@@ -219,7 +219,7 @@ CODE_SAMPLE
             if ($parentReturnType instanceof StaticType && $returnType->accepts($parentReturnType, \true)->yes()) {
                 continue;
             }
-            if ($parentReturnType->equals($returnType)) {
+            if ($returnType->equals($parentReturnType)) {
                 continue;
             }
             if ($this->isNullable($parentReturnType, $returnType)) {
@@ -238,11 +238,13 @@ CODE_SAMPLE
         if (!TypeCombinator::containsNull($parentReturnType)) {
             return \false;
         }
+        $found = \false;
         foreach ($parentReturnType->getTypes() as $type) {
             if ($type->equals($returnType)) {
-                return \true;
+                $found = \true;
+                break;
             }
         }
-        return \false;
+        return $found;
     }
 }

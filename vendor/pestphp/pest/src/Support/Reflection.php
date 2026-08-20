@@ -8,6 +8,7 @@ use Closure;
 use InvalidArgumentException;
 use Pest\Exceptions\ShouldNotHappen;
 use Pest\TestSuite;
+use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
@@ -23,8 +24,6 @@ use ReflectionUnionType;
 final class Reflection
 {
     /**
-     * Calls the given method with args on the given object.
-     *
      * @param  array<int, mixed>  $args
      */
     public static function call(object $object, string $method, array $args = []): mixed
@@ -49,8 +48,6 @@ final class Reflection
     }
 
     /**
-     * Bind a callable to the TestCase and return the result.
-     *
      * @param  array<int, mixed>  $args
      */
     public static function bindCallable(callable $callable, array $args = []): mixed
@@ -58,15 +55,11 @@ final class Reflection
         return Closure::fromCallable($callable)->bindTo(TestSuite::getInstance()->test)(...$args);
     }
 
-    /**
-     * Bind a callable to the TestCase and return the result,
-     * passing in the current dataset values as arguments.
-     */
     public static function bindCallableWithData(callable $callable): mixed
     {
         $test = TestSuite::getInstance()->test;
 
-        if (! $test instanceof \PHPUnit\Framework\TestCase) {
+        if (! $test instanceof TestCase) {
             return self::bindCallable($callable);
         }
 
@@ -79,9 +72,6 @@ final class Reflection
         return Closure::fromCallable($callable)->bindTo($test)(...$test->providedData());
     }
 
-    /**
-     * Infers the file name from the given closure.
-     */
     public static function getFileNameFromClosure(Closure $closure): string
     {
         $reflectionClosure = new ReflectionFunction($closure);
@@ -89,9 +79,6 @@ final class Reflection
         return (string) $reflectionClosure->getFileName();
     }
 
-    /**
-     * Gets the property value from of the given object.
-     */
     public static function getPropertyValue(object $object, string $property): mixed
     {
         $reflectionClass = new ReflectionClass($object);
@@ -115,8 +102,6 @@ final class Reflection
     }
 
     /**
-     * Sets the property value of the given object.
-     *
      * @template TValue of object
      *
      * @param  TValue  $object
@@ -144,8 +129,6 @@ final class Reflection
     }
 
     /**
-     * Get the class name of the given parameter's type, if possible.
-     *
      * @see https://github.com/laravel/framework/blob/v6.18.25/src/Illuminate/Support/Reflector.php
      */
     public static function getParameterClassName(ReflectionParameter $parameter): ?string
@@ -174,13 +157,11 @@ final class Reflection
     }
 
     /**
-     * Receive a map of function argument names to their types.
-     *
      * @return array<string, string>
      */
     public static function getFunctionArguments(Closure $function): array
     {
-        $parameters = (new ReflectionFunction($function))->getParameters();
+        $parameters = new ReflectionFunction($function)->getParameters();
         $arguments = [];
 
         foreach ($parameters as $parameter) {
@@ -196,7 +177,7 @@ final class Reflection
             $arguments[$parameter->getName()] = implode('|', array_map(
                 static fn (ReflectionNamedType $type): string => $type->getName(), // @phpstan-ignore-line
                 ($types instanceof ReflectionNamedType)
-                    ? [$types] // NOTE: normalize as list of to handle unions
+                    ? [$types]
                     : $types->getTypes(),
             ));
         }
@@ -206,14 +187,10 @@ final class Reflection
 
     public static function getFunctionVariable(Closure $function, string $key): mixed
     {
-        return (new ReflectionFunction($function))->getStaticVariables()[$key] ?? null;
+        return new ReflectionFunction($function)->getStaticVariables()[$key] ?? null;
     }
 
     /**
-     * Get the properties from the given reflection class.
-     *
-     * Used by `expect()->toHavePropertiesDocumented()`.
-     *
      * @param  ReflectionClass<object>  $reflectionClass
      * @return array<int, ReflectionProperty>
      */
@@ -221,7 +198,7 @@ final class Reflection
     {
         $getProperties = fn (ReflectionClass $reflectionClass): array => array_filter(
             array_map(
-                fn (ReflectionProperty $property): \ReflectionProperty => $property,
+                fn (ReflectionProperty $property): ReflectionProperty => $property,
                 $reflectionClass->getProperties(),
             ), fn (ReflectionProperty $property): bool => $property->getDeclaringClass()->getName() === $reflectionClass->getName(),
         );
@@ -245,10 +222,6 @@ final class Reflection
     }
 
     /**
-     * Get the methods from the given reflection class.
-     *
-     * Used by `expect()->toHaveMethodsDocumented()`.
-     *
      * @param  ReflectionClass<object>  $reflectionClass
      * @return array<int, ReflectionMethod>
      */
@@ -256,7 +229,7 @@ final class Reflection
     {
         $getMethods = fn (ReflectionClass $reflectionClass): array => array_filter(
             array_map(
-                fn (ReflectionMethod $method): \ReflectionMethod => $method,
+                fn (ReflectionMethod $method): ReflectionMethod => $method,
                 $reflectionClass->getMethods($filter),
             ), fn (ReflectionMethod $method): bool => $method->getDeclaringClass()->getName() === $reflectionClass->getName(),
         );

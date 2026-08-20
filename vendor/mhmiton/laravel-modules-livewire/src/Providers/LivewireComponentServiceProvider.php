@@ -2,16 +2,12 @@
 
 namespace Mhmiton\LaravelModulesLivewire\Providers;
 
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Livewire\Component;
 use Livewire\Livewire;
 use Mhmiton\LaravelModulesLivewire\Support\Decomposer;
 use Mhmiton\LaravelModulesLivewire\Support\ModuleVoltComponentRegistry;
 use Mhmiton\LaravelModulesLivewire\View\ModuleVoltViewFactory;
-use ReflectionClass;
-use Symfony\Component\Finder\SplFileInfo;
 
 class LivewireComponentServiceProvider extends ServiceProvider
 {
@@ -26,7 +22,7 @@ class LivewireComponentServiceProvider extends ServiceProvider
 
         $this->registerCustomModuleComponents();
 
-        $this->registerModuleVoltViewFactory();
+        $this->registerModuleVoltComponents();
     }
 
     /**
@@ -60,15 +56,31 @@ class LivewireComponentServiceProvider extends ServiceProvider
 
             $namespace = $moduleNamespace.'\\'.$module->getName().'\\'.$modulesLivewireNamespace;
 
-            $this->registerComponentDirectory($directory, $namespace, $module->getLowerName().'::');
+            $moduleLivewireViewPath = $module->getPath().'/'.config('modules-livewire.view', 'resources/views/livewire');
 
-            (new ModuleVoltComponentRegistry())
-                ->registerComponents([
-                    'path' => $module->getPath(),
-                    'aliasPrefix' => $module->getLowerName().'::',
-                    'namespace' => $namespace,
-                    'view_namespaces' => config('modules-livewire.volt_view_namespaces', ['livewire', 'pages']),
-                ]);
+            // Register Locations
+            Livewire::addLocation(
+                viewPath: $moduleLivewireViewPath
+            );
+
+            // Register Namespaces
+            Livewire::addNamespace(
+                namespace: $module->getLowerName(),
+                viewPath: $moduleLivewireViewPath
+            );
+
+            // Register a location for class-based components
+            Livewire::addLocation(
+                classNamespace: $namespace
+            );
+
+            // Register Class Based Components with Namespace
+            Livewire::addNamespace(
+                namespace: $module->getLowerName(),
+                classNamespace: $namespace,
+                classPath: $directory,
+                classViewPath: $moduleLivewireViewPath
+            );
         });
     }
 
@@ -93,57 +105,46 @@ class LivewireComponentServiceProvider extends ServiceProvider
 
             $lowerName = $module['name_lower'] ?? strtolower($moduleName);
 
-            $this->registerComponentDirectory($directory, $namespace, $lowerName.'::');
+            $moduleLivewireViewPath = $module['path'].'/'.$module['view'];
 
-            (new ModuleVoltComponentRegistry())
-                ->registerComponents([
-                    'path' => $module['path'] ?? null,
-                    'aliasPrefix' => $lowerName.'::',
-                    'namespace' => $namespace,
-                    'view_namespaces' => $module['volt_view_namespaces'] ?? ['livewire', 'pages'],
-                ]);
+            // Register Locations
+            Livewire::addLocation(
+                viewPath: $moduleLivewireViewPath
+            );
+
+            // Register Namespaces
+            Livewire::addNamespace(
+                namespace: $lowerName,
+                viewPath: $moduleLivewireViewPath
+            );
+
+            // Register a location for class-based components
+            Livewire::addLocation(
+                classNamespace: $namespace
+            );
+
+            // Register Class Based Components with Namespace
+            Livewire::addNamespace(
+                namespace: $lowerName,
+                classNamespace: $namespace,
+                classPath: $directory,
+                classViewPath: $moduleLivewireViewPath
+            );
         });
     }
 
-    protected function registerComponentDirectory($directory, $namespace, $aliasPrefix = '')
-    {
-        $filesystem = new Filesystem();
-
-        if (! $filesystem->isDirectory($directory)) {
-            return false;
-        }
-
-        collect($filesystem->allFiles($directory))
-            ->map(function (SplFileInfo $file) use ($namespace) {
-                return (string) Str::of($namespace)
-                    ->append('\\', $file->getRelativePathname())
-                    ->replace(['/', '.php'], ['\\', '']);
-            })
-            ->filter(function ($class) {
-                return is_subclass_of($class, Component::class) && ! (new ReflectionClass($class))->isAbstract();
-            })
-            ->each(function ($class) use ($namespace, $aliasPrefix) {
-                $alias = $aliasPrefix.Str::of($class)
-                    ->after($namespace.'\\')
-                    ->replace(['/', '\\'], '.')
-                    ->explode('.')
-                    ->map([Str::class, 'kebab'])
-                    ->implode('.');
-
-                if (Str::endsWith($class, ['\Index', '\index'])) {
-                    Livewire::component(Str::beforeLast($alias, '.index'), $class);
-                }
-
-                Livewire::component($alias, $class);
-            });
-    }
-
-    public function registerModuleVoltViewFactory()
+    public function registerModuleVoltComponents()
     {
         if (Decomposer::checkDependencies(['livewire/volt'])->type == 'error') {
             return false;
         }
 
+        // Resolve Missing Module Volt Component
+        Livewire::resolveMissingComponent(function (string $name) {
+            return app(ModuleVoltComponentRegistry::class)->resolveComponent($name);
+        });
+
+        // Register ModuleVoltViewFactory
         $this->app->extend('view', function ($view, $app) {
             $factory = new ModuleVoltViewFactory(
                 $app['view.engine.resolver'],

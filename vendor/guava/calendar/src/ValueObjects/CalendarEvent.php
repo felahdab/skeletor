@@ -3,14 +3,21 @@
 namespace Guava\Calendar\ValueObjects;
 
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Filament\Support\Facades\FilamentTimezone;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
+use function Guava\Calendar\calendar_event_signature;
+use function Guava\Calendar\to_carbon;
 use function Guava\Calendar\utc_to_user_local_time;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class CalendarEvent
 {
     protected string | Htmlable $title;
@@ -43,7 +50,7 @@ class CalendarEvent
 
     protected ?string $timezone = null;
 
-    private function __construct(?Model $model = null)
+    protected function __construct(?Model $model = null)
     {
         if ($model) {
             $this->key($model->getKey());
@@ -51,14 +58,9 @@ class CalendarEvent
         }
     }
 
-    public function start(string | Carbon $start): static
+    public function start(string | CarbonInterface $start): static
     {
-        $start = is_string($start)
-            ? Carbon::make($start)
-            : $start;
-
-        $this->start = $start; // ->setTimezone(FilamentTimezone::get());
-        //        $this->start = $start->setTimezone(FilamentTimezone::get());
+        $this->start = to_carbon($start);
 
         return $this;
     }
@@ -68,14 +70,9 @@ class CalendarEvent
         return $this->start;
     }
 
-    public function end(string | Carbon $end): static
+    public function end(string | CarbonInterface $end): static
     {
-        $end = is_string($end)
-            ? Carbon::make($end)
-            : $end;
-
-        $this->end = $end; // ->setTimezone(FilamentTimezone::get());
-        //        $this->end = $end->setTimezone(FilamentTimezone::get());
+        $this->end = to_carbon($end);
 
         return $this;
     }
@@ -309,6 +306,11 @@ class CalendarEvent
         return $this;
     }
 
+    public function getTimezone(): ?string
+    {
+        return $this->timezone;
+    }
+
     public function getExtendedProps(): array
     {
         return $this->extendedProps;
@@ -321,33 +323,65 @@ class CalendarEvent
 
     public function toCalendarObject(int $timezoneOffset, bool $useFilamentTimezone): array
     {
+        // Carry the per-event timezone across the JS boundary so fromCalendarObject() can use
+        // it as the inverse of the shift applied here; otherwise inbound conversion would fall
+        // back to the Filament timezone and corrupt the instant for per-event-timezone events.
+        $extendedProps = $this->getExtendedProps();
+        if ($this->timezone !== null) {
+            $extendedProps['timezone'] = $this->timezone;
+        }
+
+        // The global drag/resize flags are authoritative: a per-event value can only *restrict*
+        // (lock) an event, never enable one the widget disabled globally. Distil the developer's
+        // editable settings into two "locked" booleans and sign them together with model/key/action
+        // so the server can enforce a per-event lock even against a tampered client, and so a client
+        // cannot strip a lock or forge model/key/action (see InteractsWithEventRecord).
+        $editable = $this->getEditable();
+        $dragLocked = $this->getStartEditable() === false || ($this->getStartEditable() === null && $editable === false);
+        $resizeLocked = $this->getDurationEditable() === false || ($this->getDurationEditable() === null && $editable === false);
+
+        $model = $extendedProps['model'] ?? null;
+        $key = $extendedProps['key'] ?? null;
+        if ($model !== null && $key !== null) {
+            $action = $extendedProps['action'] ?? '';
+            $extendedProps['dragLocked'] = $dragLocked;
+            $extendedProps['resizeLocked'] = $resizeLocked;
+            $extendedProps['signature'] = calendar_event_signature(
+                $model,
+                $key,
+                is_scalar($action) ? (string) $action : '',
+                $dragLocked,
+                $resizeLocked,
+            );
+        }
+
         $array = [
             'title' => $this->getTitle() instanceof Htmlable ? ['html' => $this->getTitle()->toHtml()] : $this->getTitle(),
             'start' => $useFilamentTimezone
-                ? $this->getStart()->setTimezone($this->timezone ?? FilamentTimezone::get())->toIso8601String()
-                : $this->getStart()->utcOffset($timezoneOffset)->toIso8601String(),
+                ? $this->getStart()->copy()->setTimezone($this->timezone ?? FilamentTimezone::get())->toIso8601String()
+                : $this->getStart()->copy()->utcOffset($timezoneOffset)->toIso8601String(),
             'end' => $useFilamentTimezone
-                ? $this->getEnd()->setTimezone($this->timezone ?? FilamentTimezone::get())->toIso8601String()
-                : $this->getEnd()->utcOffset($timezoneOffset)->toIso8601String(),
+                ? $this->getEnd()->copy()->setTimezone($this->timezone ?? FilamentTimezone::get())->toIso8601String()
+                : $this->getEnd()->copy()->utcOffset($timezoneOffset)->toIso8601String(),
             'allDay' => $this->getAllDay(),
             'backgroundColor' => $this->getBackgroundColor(),
             'textColor' => $this->getTextColor(),
             'styles' => $this->getStyles(),
             'classNames' => $this->getClassNames(),
             'resourceIds' => $this->getResourceIds(),
-            'extendedProps' => $this->getExtendedProps(),
+            'extendedProps' => $extendedProps,
         ];
 
-        if (($editable = $this->getEditable()) !== null) {
-            $array['editable'] = $editable;
+        // Only forward the restricting (locked) state to EventCalendar. We never send a per-event
+        // "true", so EventCalendar's global eventStartEditable/eventDurationEditable governs whether
+        // an event can be dragged/resized at all — keeping the global flag authoritative and avoiding
+        // the "draggable in the UI, then reverted by the server" flicker.
+        if ($dragLocked) {
+            $array['startEditable'] = false;
         }
 
-        if (($startEditable = $this->getStartEditable()) !== null) {
-            $array['startEditable'] = $startEditable;
-        }
-
-        if (($durationEditable = $this->getDurationEditable()) !== null) {
-            $array['durationEditable'] = $durationEditable;
+        if ($resizeLocked) {
+            $array['durationEditable'] = false;
         }
 
         if (($display = $this->getDisplay()) !== null) {
@@ -359,17 +393,39 @@ class CalendarEvent
 
     public function fromCalendarObject(array $data, int $timezoneOffset, bool $useFilamentTimezone): static
     {
+        $title = $data['title'];
+        if (is_array($data['title']) && array_key_exists('html', $data['title'])) {
+            $title = new HtmlString($data['title']['html']);
+        }
+
+        $timezone = data_get($data, 'extendedProps.timezone');
+
         $this
-            ->title($data['title'])
-            ->start(utc_to_user_local_time($data['start'], $timezoneOffset, $useFilamentTimezone))
-            ->end(utc_to_user_local_time($data['end'], $timezoneOffset, $useFilamentTimezone))
-            ->allDay($data['allDay'])
-            ->styles($data['styles'])
-            ->classNames($data['classNames'])
-            ->extendedProps($data['extendedProps'])
-            ->display($data['display'])
-            ->resourceIds($data['resourceIds'])
+            ->title($title)
+            ->start(utc_to_user_local_time($data['start'], $timezoneOffset, $useFilamentTimezone, $timezone))
+            ->end(utc_to_user_local_time($data['end'], $timezoneOffset, $useFilamentTimezone, $timezone))
+            ->allDay((bool) data_get($data, 'allDay', false))
+            ->extendedProps((array) data_get($data, 'extendedProps', []))
+            ->resourceIds((array) data_get($data, 'resourceIds', []))
         ;
+
+        // styles/classNames are serialized as CSS strings by toCalendarObject(), so only re-apply
+        // them when the payload actually carries the array shape the setters expect.
+        if (is_array($styles = data_get($data, 'styles'))) {
+            $this->styles($styles);
+        }
+
+        if (is_array($classNames = data_get($data, 'classNames'))) {
+            $this->classNames($classNames);
+        }
+
+        if ($display = data_get($data, 'display')) {
+            $this->display($display);
+        }
+
+        if ($timezone) {
+            $this->timezone($timezone);
+        }
 
         if ($backgroundColor = data_get($data, 'backgroundColor')) {
             $this->backgroundColor($backgroundColor);

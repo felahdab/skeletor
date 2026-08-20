@@ -18,22 +18,115 @@
     };
 
     /**
-     * Returns a string representation of value, using JSON.stringify
-     * if it's an object.
+     * Renders any value as a DOM element. Handles dump objects (with "_sd"
+     * marker), and plain HTML/scalar strings.
      *
-     * @param {object} value
-     * @param {boolean} prettify Uses htmlize() if true
-     * @return {string}
+     * @param {string|object} value
+     * @return {HTMLElement|string}
      */
+    let dumpRenderer;
     const renderValue = PhpDebugBar.Widgets.renderValue = function (value, prettify) {
+        // Arrays and objects → render as interactive tree
+        if (value && typeof value === 'object') {
+            if (!dumpRenderer) {
+                dumpRenderer = new PhpDebugBar.Widgets.VarDumpRenderer();
+            }
+            return dumpRenderer.render(value);
+        }
+
         if (typeof value !== 'string') {
             if (prettify) {
                 return htmlize(JSON.stringify(value, undefined, 2));
             }
             return JSON.stringify(value);
         }
+
         return value;
     };
+
+    PhpDebugBar.Widgets.renderValueInto = function (el, value, prettify) {
+        const rendered = renderValue(value, prettify);
+        if (rendered instanceof Node) {
+            el.append(rendered);
+        } else {
+            el.insertAdjacentHTML('beforeend', rendered);
+        }
+    };
+
+    /**
+     * Creates html editor link span
+     *
+     * @param  {Object} value
+     * @return {HTMLElement}
+     */
+    const editorLink = PhpDebugBar.Widgets.editorLink = function (value) {
+        const linkWrapper = document.createElement('span'), line = value.line ? `#${value.line}` : '';
+        linkWrapper.classList.add(csscls('filename'));
+        linkWrapper.textContent = value.filename + line;
+        if (value.path) {
+            linkWrapper.setAttribute('title', value.path + line);
+            linkWrapper.addEventListener('click', (event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                if (window.getSelection().type === 'Range') {
+                    return '';
+                }
+                copyToClipboard(value.path).then(success => {
+                    if (!success) return;
+                    const icon = document.createElement('a');
+                    icon.classList.add(csscls('copy-clipboard-check'));
+                    linkWrapper.prepend(icon);
+                    setTimeout(() => {
+                        linkWrapper.removeChild(icon);
+                    }, 2000);
+                });
+            });
+        }
+
+        if (value.url) {
+            const link = document.createElement('a');
+            link.classList.add(csscls('editor-link'));
+            link.setAttribute(link.ajax ? 'title' : 'href', value.url);
+            link.addEventListener('click', (event) => {
+                event.stopPropagation();
+                if (value.ajax) {
+                    fetch(stmt.xdebug_link.url);
+                    event.preventDefault();
+                }
+            });
+            linkWrapper.append(link);
+        }
+
+        return linkWrapper;
+    };
+    
+    const copyToClipboard = PhpDebugBar.Widgets.copyToClipboard = async function (input) {
+        const text = input instanceof Element ? input.innerText : input;
+        if (navigator.clipboard && window.isSecureContext) {
+            try {
+              await navigator.clipboard.writeText(text);
+              return true;
+            } catch (err) {}
+        }
+
+        let success = false;        
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        textarea.style.top = "-9999px";
+
+        document.body.appendChild(textarea);
+        try {
+            textarea.focus();
+            textarea.select();
+            textarea.setSelectionRange(0, 99999);
+            success = document.execCommand("copy");
+        } catch (err) {}
+        
+        document.body.removeChild(textarea);
+        return success;
+    }
 
     /**
      * Highlights a block of code
@@ -283,26 +376,8 @@
 
             dd.innerHTML = value && value.value || value;
 
-            if (value && value.xdebug_link) {
-                const header = document.createElement('span');
-                header.classList.add(csscls('filename'));
-                header.textContent = value.xdebug_link.filename + (value.xdebug_link.line ? `#${value.xdebug_link.line}` : '');
-
-                if (value.xdebug_link) {
-                    const link = document.createElement('a');
-                    link.classList.add(csscls('editor-link'));
-
-                    if (value.xdebug_link.ajax) {
-                        link.setAttribute('title', value.xdebug_link.url);
-                        link.addEventListener('click', () => {
-                            fetch(value.xdebug_link.url);
-                        });
-                    } else {
-                        link.setAttribute('href', value.xdebug_link.url);
-                    }
-                    header.append(link);
-                }
-                dd.append(header);
+            if (value?.xdebug_link) {
+                dd.append(editorLink(value.xdebug_link));
             }
         }
     }
@@ -398,24 +473,8 @@
                     if (values.xdebug_link) {
                         const editorCell = document.createElement('td');
                         editorCell.classList.add(csscls('editor'));
+                        editorCell.append(editorLink(values.xdebug_link));
                         tr.append(editorCell);
-
-                        const filename = document.createElement('span');
-                        filename.classList.add(csscls('filename'));
-                        filename.textContent = values.xdebug_link.filename + (values.xdebug_link.line ? `#${values.xdebug_link.line}` : '');
-                        editorCell.append(filename);
-
-                        const link = document.createElement('a');
-                        link.classList.add(csscls('editor-link'));
-                        if (values.xdebug_link.ajax) {
-                            link.setAttribute('title', values.xdebug_link.url);
-                            link.addEventListener('click', () => {
-                                fetch(values.xdebug_link.url);
-                            });
-                        } else {
-                            link.setAttribute('href', values.xdebug_link.url);
-                        }
-                        filename.append(link);
 
                         if (!hasXdebuglinks) {
                             hasXdebuglinks = true;
@@ -510,7 +569,12 @@
 
             this.list = new ListWidget({ itemRenderer(li, value) {
                 let val;
-                if (value.message_html) {
+                if (value.message_json) {
+                    val = document.createElement('span');
+                    val.classList.add(csscls('value'));
+                    PhpDebugBar.Widgets.renderValueInto(val, value.message_json);
+                    li.append(val);
+                } else if (value.message_html) {
                     val = document.createElement('span');
                     val.classList.add(csscls('value'));
                     val.innerHTML = value.message_html;
@@ -548,27 +612,6 @@
                         });
                     }
                 }
-                if (value.xdebug_link) {
-                    const header = document.createElement('span');
-                    header.classList.add(csscls('filename'));
-                    header.textContent = value.xdebug_link.filename + (value.xdebug_link.line ? `#${value.xdebug_link.line}` : '');
-
-                    if (value.xdebug_link) {
-                        const link = document.createElement('a');
-                        link.classList.add(csscls('editor-link'));
-
-                        if (value.xdebug_link.ajax) {
-                            link.setAttribute('title', value.xdebug_link.url);
-                            link.addEventListener('click', () => {
-                                fetch(value.xdebug_link.url);
-                            });
-                        } else {
-                            link.setAttribute('href', value.xdebug_link.url);
-                        }
-                        header.append(link);
-                    }
-                    li.prepend(header);
-                }
                 if (value.collector) {
                     const collector = document.createElement('span');
                     collector.classList.add(csscls('collector'));
@@ -594,6 +637,7 @@
                     contextTable.hidden = true;
                     contextTable.innerHTML = '<tr><th colspan="2">Context</th></tr>';
 
+                    const contextJsonData = value.context_json || {};
                     for (const key in value.context) {
                         if (typeof value.context[key] !== 'function') {
                             const tr = document.createElement('tr');
@@ -604,7 +648,11 @@
 
                             const td2 = document.createElement('td');
                             td2.classList.add(csscls('value'));
-                            td2.innerHTML = value.context[key];
+                            if (contextJsonData[key]) {
+                                PhpDebugBar.Widgets.renderValueInto(td2, contextJsonData[key]);
+                            } else {
+                                td2.innerHTML = value.context[key];
+                            }
                             tr.append(td2);
 
                             contextTable.append(tr);
@@ -619,6 +667,9 @@
                         }
                         contextTable.hidden = !contextTable.hidden;
                     });
+                }
+                if (value.xdebug_link) {
+                    li.prepend(editorLink(value.xdebug_link));
                 }
             } });
 
@@ -697,7 +748,16 @@
                 }
 
                 this.get('data').forEach((item) => {
-                    const message = caseless ? item.message.toLowerCase() : item.message;
+                    let message = item.message;
+                    if (item.message_json) {
+                        message = JSON.stringify(item.message_json);
+                    } else if (item.message_html) {
+                        message = item.message_html.replace(/<[^>]*>/g, '');
+                    }
+
+                    if (caseless) {
+                        message = message.toLowerCase();
+                    }
 
                     if (
                         !excludelabel.includes(item.label || undefined)
@@ -831,14 +891,22 @@
                             for (const key in measure.params) {
                                 if (typeof measure.params[key] !== 'function') {
                                     const tr = document.createElement('tr');
-                                    tr.innerHTML = `<td class="${csscls('name')}">${key}</td><td class="${csscls('value')}"><pre><code>${measure.params[key]}</code></pre></td>`;
+                                    const nameTd = document.createElement('td');
+                                    nameTd.className = csscls('name');
+                                    nameTd.textContent = key;
+                                    tr.append(nameTd);
+
+                                    const valueTd = document.createElement('td');
+                                    valueTd.className = csscls('value');
+                                    PhpDebugBar.Widgets.renderValueInto(valueTd, measure.params[key]);
+                                    tr.append(valueTd);
                                     table.append(tr);
                                 }
                             }
                             li.append(table);
 
                             li.style.cursor = 'pointer';
-                            li.addEventListener('click', function () {
+                            li.addEventListener('click', function (event) {
                                 if (window.getSelection().type === 'Range' || event.target.closest('.sf-dump')) {
                                     return '';
                                 }
@@ -846,11 +914,6 @@
                                 table.hidden = !table.hidden;
                             });
 
-                            li.addEventListener('click', (event) => {
-                                if (event.target.closest('.sf-dump')) {
-                                    event.stopPropagation();
-                                }
-                            });
                         }
                     }
 
@@ -923,25 +986,7 @@
                 li.append(messageSpan);
 
                 if (e.file) {
-                    const header = document.createElement('span');
-                    header.classList.add(csscls('filename'));
-                    header.textContent = `${e.file}#${e.line}`;
-
-                    if (e.xdebug_link) {
-                        const link = document.createElement('a');
-                        link.classList.add(csscls('editor-link'));
-
-                        if (e.xdebug_link.ajax) {
-                            link.setAttribute('title', e.xdebug_link.url);
-                            link.addEventListener('click', () => {
-                                fetch(e.xdebug_link.url);
-                            });
-                        } else {
-                            link.setAttribute('href', e.xdebug_link.url);
-                        }
-                        header.append(link);
-                    }
-                    li.append(header);
+                    li.append(editorLink(e.xdebug_link || {filename: e.file, line: e.line}));
                 }
 
                 if (e.type) {
@@ -967,20 +1012,24 @@
                     });
                 }
 
-                if (e.stack_trace_html) {
+                if (e.stack_trace_json || e.stack_trace_html) {
                     const trace = document.createElement('span');
                     trace.classList.add(csscls('filename'));
-                    trace.innerHTML = e.stack_trace_html;
 
-                    const samps = trace.querySelectorAll('samp[data-depth="1"]');
-                    for (const samp of samps) {
-                        samp.classList.remove('sf-dump-expanded');
-                        samp.classList.add('sf-dump-compact');
+                    if (e.stack_trace_json) {
+                        const data = e.stack_trace_json;
+                        const savedSd = data._sd;
+                        data._sd = 0;
+                        PhpDebugBar.Widgets.renderValueInto(trace, data);
+                        data._sd = savedSd;
+                    } else {
+                        trace.innerHTML = e.stack_trace_html;
+                    }
 
-                        const note = samp.parentElement.querySelector(':scope > .sf-dump-note');
-                        if (note) {
-                            note.innerHTML = `${note.innerHTML.replace(/^array:/, '<span class="sf-dump-key">Stack Trace:</span> ')} files`;
-                        }
+                    // Relabel root array as "Stack Trace:"
+                    const note = trace.querySelector('.sf-dump-note');
+                    if (note) {
+                        note.innerHTML = `${note.innerHTML.replace(/^array:/, '<span class="sf-dump-key">Stack Trace:</span> ')} lines`;
                     }
                     li.append(trace);
                 } else if (e.stack_trace) {
@@ -1343,6 +1392,31 @@
                         }
                     }
                     item.append(badges);
+
+                    // Copy ID button
+                    const copyIdBtn = document.createElement('a');
+                    copyIdBtn.classList.add(csscls('datasets-item-copy-id'));
+                    copyIdBtn.title = `Copy Request ID: ${datasetId}`;
+                    copyIdBtn.innerHTML = '<i class="phpdebugbar-icon phpdebugbar-icon-copy"></i>';
+                    copyIdBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const tmp = document.createElement('textarea');
+                        tmp.value = datasetId;
+                        tmp.style.position = 'fixed';
+                        tmp.style.opacity = '0';
+                        document.body.append(tmp);
+                        tmp.select();
+                        document.execCommand('copy');
+                        tmp.remove();
+                        const icon = copyIdBtn.querySelector('i');
+                        icon.className = 'phpdebugbar-icon phpdebugbar-icon-circle-check';
+                        copyIdBtn.classList.add(csscls('copied'));
+                        setTimeout(() => {
+                            icon.className = 'phpdebugbar-icon phpdebugbar-icon-copy';
+                            copyIdBtn.classList.remove(csscls('copied'));
+                        }, 2000);
+                    });
+                    item.append(copyIdBtn);
 
                     // Click handler
                     item.addEventListener('click', () => {

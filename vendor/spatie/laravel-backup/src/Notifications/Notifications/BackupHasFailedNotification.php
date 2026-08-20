@@ -30,8 +30,12 @@ class BackupHasFailedNotification extends BaseNotification
         return $mailMessage;
     }
 
-    public function toSlack(): SlackMessage
+    public function toSlack(): mixed
     {
+        if (! class_exists(SlackMessage::class)) {
+            return null;
+        }
+
         return (new SlackMessage)
             ->error()
             ->from($this->config()->notifications->slack->username, $this->config()->notifications->slack->icon)
@@ -61,5 +65,17 @@ class BackupHasFailedNotification extends BaseNotification
             ->fields([
                 trans('backup::notifications.exception_message_title') => $this->event->exception->getMessage(),
             ]);
+    }
+
+    /** @return array<string, mixed> */
+    public function toWebhook(): array
+    {
+        return [
+            'type' => 'backup_failed',
+            'application_name' => $this->applicationName(),
+            'exception' => $this->event->exception->getMessage(),
+            'disk_name' => $this->event->diskName,
+            'backup_name' => $this->event->backupName,
+        ];
     }
 }

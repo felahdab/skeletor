@@ -122,9 +122,53 @@ return [
 
     ],
 
+    'color_picker' => [
+
+        'panel_label' => 'Výběr barvy',
+
+    ],
+
+    'date_time_picker' => [
+
+        'month_select' => [
+            'label' => 'Měsíc',
+        ],
+
+        'year_input' => [
+            'label' => 'Rok',
+        ],
+
+        'hour_input' => [
+            'label' => 'Hodina',
+        ],
+
+        'minute_input' => [
+            'label' => 'Minuta',
+        ],
+
+        'second_input' => [
+            'label' => 'Sekunda',
+        ],
+
+    ],
+
     'file_upload' => [
 
+        'actions' => [
+
+            'download' => [
+                'label' => 'Stáhnout',
+            ],
+
+            'open' => [
+                'label' => 'Otevřít v nové záložce',
+            ],
+
+        ],
+
         'editor' => [
+
+            'label' => 'Editor obrázků',
 
             'actions' => [
 
@@ -268,6 +312,18 @@ return [
 
         ],
 
+        'columns' => [
+
+            'actions' => [
+                'label' => 'Akce',
+            ],
+
+            'reorder' => [
+                'label' => 'Přesunout',
+            ],
+
+        ],
+
         'fields' => [
 
             'key' => [
@@ -338,6 +394,18 @@ return [
     ],
 
     'repeater' => [
+
+        'columns' => [
+
+            'actions' => [
+                'label' => 'Akce',
+            ],
+
+            'reorder' => [
+                'label' => 'Přesunout',
+            ],
+
+        ],
 
         'actions' => [
 
@@ -548,6 +616,35 @@ return [
 
                         'color' => [
                             'label' => 'Barva',
+
+                            'options' => [
+                                'slate' => 'Břidlicová',
+                                'gray' => 'Šedá',
+                                'zinc' => 'Zinková',
+                                'neutral' => 'Neutrální',
+                                'stone' => 'Kamenná',
+                                'mauve' => 'Starorůžová',
+                                'olive' => 'Olivová',
+                                'mist' => 'Mlhová',
+                                'taupe' => 'Taupe',
+                                'red' => 'Červená',
+                                'orange' => 'Oranžová',
+                                'amber' => 'Jantarová',
+                                'yellow' => 'Žlutá',
+                                'lime' => 'Limetková',
+                                'green' => 'Zelená',
+                                'emerald' => 'Smaragdová',
+                                'teal' => 'Modrozelená',
+                                'cyan' => 'Azurová',
+                                'sky' => 'Nebeská',
+                                'blue' => 'Modrá',
+                                'indigo' => 'Indigová',
+                                'violet' => 'Fialová',
+                                'purple' => 'Purpurová',
+                                'fuchsia' => 'Fuchsiová',
+                                'pink' => 'Růžová',
+                                'rose' => 'Růžová',
+                            ],
                         ],
 
                         'custom_color' => [
@@ -575,6 +672,10 @@ return [
             'searching_message' => 'Hledám...',
         ],
 
+        'toolbar' => [
+            'label' => 'Panel nástrojů',
+        ],
+
         'tools' => [
             'align_center' => 'Zarovnat na střed',
             'align_end' => 'Zarovnat vpravo',
@@ -589,9 +690,12 @@ return [
             'code_block' => 'Blok kódu',
             'custom_blocks' => 'Bloky',
             'details' => 'Detaily',
-            'h1' => 'Nadpis 1',
+            'h1' => 'Nadpis',
             'h2' => 'Nadpis 2',
             'h3' => 'Nadpis 3',
+            'h4' => 'Nadpis 4',
+            'h5' => 'Nadpis 5',
+            'h6' => 'Nadpis 6',
             'grid' => 'Mřížka',
             'grid_delete' => 'Smazat mřížku',
             'highlight' => 'Zvýraznit',
@@ -601,6 +705,7 @@ return [
             'link' => 'Odkaz',
             'merge_tags' => 'Sloučit značky',
             'ordered_list' => 'Číslovaný seznam',
+            'paragraph' => 'Odstavec',
             'redo' => 'Vpřed',
             'small' => 'Malý text',
             'strike' => 'Přeškrtnutí',
@@ -709,6 +814,10 @@ return [
         ],
 
         'placeholder' => 'Nový štítek',
+
+        'tag_added' => 'Přidáno: :tag',
+
+        'tag_removed' => 'Odstraněno: :tag',
 
     ],
 

@@ -4,7 +4,7 @@
  * This file is part of the Predis package.
  *
  * (c) 2009-2020 Daniele Alessandri
- * (c) 2021-2025 Till Krüss
+ * (c) 2021-2026 Till Krüss
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -32,6 +32,14 @@ class XREADGROUP_CLAIM extends RedisCommand
             array_push($processedArguments, 'COUNT', $arguments[3]);
         }
 
+        if (count($arguments) >= 8 && null !== $arguments[7]) {
+            array_push($processedArguments, 'MAXCOUNT', $arguments[7]);
+        }
+
+        if (count($arguments) >= 9 && null !== $arguments[8]) {
+            array_push($processedArguments, 'MAXSIZE', $arguments[8]);
+        }
+
         if (count($arguments) >= 5 && null !== $arguments[4]) {
             array_push($processedArguments, 'BLOCK', $arguments[4]);
         }
@@ -40,7 +48,7 @@ class XREADGROUP_CLAIM extends RedisCommand
             $processedArguments[] = 'NOACK';
         }
 
-        if (count($arguments) >= 7 && false !== $arguments[6]) {
+        if (count($arguments) >= 7 && false !== $arguments[6] && null !== $arguments[6]) {
             array_push($processedArguments, 'CLAIM', $arguments[6]);
         }
 

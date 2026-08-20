@@ -1,15 +1,15 @@
 <?php
 
+declare (strict_types=1);
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-declare (strict_types=1);
-namespace RectorPrefix202602\Nette\Utils;
+namespace RectorPrefix202608\Nette\Utils;
 
-use RectorPrefix202602\JetBrains\PhpStorm\Language;
-use RectorPrefix202602\Nette;
-use function array_keys, array_map, array_shift, array_values, bin2hex, class_exists, defined, extension_loaded, function_exists, htmlspecialchars, htmlspecialchars_decode, iconv, iconv_strlen, iconv_substr, implode, in_array, is_array, is_callable, is_int, is_object, is_string, key, max, mb_convert_case, mb_strlen, mb_strtolower, mb_strtoupper, mb_substr, pack, preg_last_error, preg_last_error_msg, preg_quote, preg_replace, str_contains, str_ends_with, str_repeat, str_replace, str_starts_with, strlen, strpos, strrev, strrpos, strtolower, strtoupper, strtr, substr, trim, unpack, utf8_decode;
+use RectorPrefix202608\JetBrains\PhpStorm\Language;
+use RectorPrefix202608\Nette;
+use function array_keys, array_map, array_shift, array_values, bin2hex, class_exists, defined, extension_loaded, function_exists, htmlspecialchars, htmlspecialchars_decode, iconv, iconv_strlen, iconv_substr, implode, in_array, is_array, is_callable, is_int, is_object, is_string, key, max, mb_convert_case, mb_strlen, mb_strtolower, mb_strtoupper, mb_substr, pack, preg_last_error, preg_last_error_msg, preg_quote, preg_replace, str_contains, str_ends_with, str_repeat, str_replace, str_starts_with, strlen, strpos, strrev, strrpos, strtolower, strtoupper, strtr, substr, trim, unpack;
 use const ENT_IGNORE, ENT_NOQUOTES, ICONV_IMPL, MB_CASE_TITLE, PHP_EOL, PREG_OFFSET_CAPTURE, PREG_PATTERN_ORDER, PREG_SET_ORDER, PREG_SPLIT_DELIM_CAPTURE, PREG_SPLIT_NO_EMPTY, PREG_SPLIT_OFFSET_CAPTURE, PREG_UNMATCHED_AS_NULL;
 /**
  * String tools library.
@@ -46,7 +46,11 @@ class Strings
         } elseif (!extension_loaded('iconv')) {
             throw new Nette\NotSupportedException(__METHOD__ . '() requires ICONV extension that is not loaded.');
         }
-        return iconv('UTF-32BE', 'UTF-8//IGNORE', pack('N', $code));
+        $res = iconv('UTF-32BE', 'UTF-8//IGNORE', pack('N', $code));
+        if ($res === \false) {
+            throw new Nette\ShouldNotHappenException();
+        }
+        return $res;
     }
     /**
      * Returns a code point of specific character in UTF-8 (number in range 0x0000..D7FF or 0xE000..10FFFF).
@@ -57,8 +61,11 @@ class Strings
             throw new Nette\NotSupportedException(__METHOD__ . '() requires ICONV extension that is not loaded.');
         }
         $tmp = iconv('UTF-8', 'UTF-32BE//IGNORE', $c);
-        if (!$tmp) {
+        if ($tmp === \false || $tmp === '') {
             throw new Nette\InvalidArgumentException('Invalid UTF-8 character "' . ($c === '' ? '' : '\x' . strtoupper(bin2hex($c))) . '".');
+        }
+        if (!isset(unpack('N', $tmp)[1])) {
+            throw new Nette\ShouldNotHappenException();
         }
         return unpack('N', $tmp)[1];
     }
@@ -100,7 +107,11 @@ class Strings
             $start += self::length($s);
             // unifies iconv_substr behavior with mb_substr
         }
-        return iconv_substr($s, $start, $length, 'UTF-8');
+        $res = iconv_substr($s, $start, $length, 'UTF-8');
+        if ($res === \false) {
+            throw new Nette\InvalidStateException('iconv_substr() failed.');
+        }
+        return $res;
     }
     /**
      * Removes control characters, normalizes line breaks to `\n`, removes leading and trailing blank lines,
@@ -160,16 +171,25 @@ class Strings
             $s = strtr($s, ["®" => '(R)', "©" => '(c)', "…" => '...', "«" => '<<', "»" => '>>', "£" => 'lb', "¥" => 'yen', "²" => '^2', "³" => '^3', "µ" => 'u', "¹" => '^1', "º" => 'o', "¿" => '?', "ˊ" => "'", "ˍ" => '_', "˝" => '"', "`" => '', "€" => 'EUR', "™" => 'TM', "℮" => 'e', "←" => '<-', "↑" => '^', "→" => '->', "↓" => 'V', "↔" => '<->']);
             // ® © … « » £ ¥ ² ³ µ ¹ º ¿ ˊ ˍ ˝ ` € ™ ℮ ← ↑ → ↓ ↔
         }
-        $s = \Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($s);
+        if ((($nullsafeVariable1 = \Transliterator::create('Any-Latin; Latin-ASCII')) ? $nullsafeVariable1->transliterate($s) : null) === null) {
+            throw new Nette\InvalidStateException('Transliterator::transliterate() failed.');
+        }
+        $s = ($nullsafeVariable2 = \Transliterator::create('Any-Latin; Latin-ASCII')) ? $nullsafeVariable2->transliterate($s) : null;
         // use iconv because The transliterator leaves some characters out of ASCII, eg → ʾ
         if ($iconv === 'glibc') {
             $s = strtr($s, '?', "\x01");
             // temporarily hide ? to distinguish them from the garbage that iconv creates
             $s = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $s);
+            if ($s === \false) {
+                throw new Nette\InvalidStateException('iconv() failed.');
+            }
             $s = str_replace(['?', "\x01"], ['', '?'], $s);
             // remove garbage and restore ? characters
         } elseif ($iconv === 'libiconv') {
             $s = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $s);
+            if ($s === \false) {
+                throw new Nette\InvalidStateException('iconv() failed.');
+            }
         } else {
             // null or 'unknown' (#216)
             $s = self::pcre('preg_replace', ['#[^\x00-\x7F]++#', '', $s]);
@@ -263,10 +283,10 @@ class Strings
     public static function compare(string $left, string $right, ?int $length = null): bool
     {
         if (class_exists('Normalizer', \false)) {
-            $left = \Normalizer::normalize($left, \Normalizer::FORM_D);
-            // form NFD is faster
-            $right = \Normalizer::normalize($right, \Normalizer::FORM_D);
-            // form NFD is faster
+            $left = \Normalizer::normalize($left, \Normalizer::FORM_D) ?: $left;
+            // form NFD is faster, false on invalid UTF-8
+            $right = \Normalizer::normalize($right, \Normalizer::FORM_D) ?: $right;
+            // form NFD is faster, false on invalid UTF-8
         }
         if ($length < 0) {
             $left = self::substring($left, $length, -$length);
@@ -284,6 +304,9 @@ class Strings
     public static function findPrefix(array $strings): string
     {
         $first = array_shift($strings);
+        if ($first === null) {
+            return '';
+        }
         for ($i = 0; $i < strlen($first); $i++) {
             foreach ($strings as $s) {
                 if (!isset($s[$i]) || $first[$i] !== $s[$i]) {
@@ -304,11 +327,11 @@ class Strings
     {
         switch (\true) {
             case extension_loaded('mbstring'):
-                return mb_strlen($s, 'UTF-8');
+                return (int) mb_strlen($s, 'UTF-8');
             case extension_loaded('iconv'):
-                return iconv_strlen($s, 'UTF-8');
+                return (int) iconv_strlen($s, 'UTF-8');
             default:
-                return strlen(@utf8_decode($s));
+                return strlen((string) preg_replace('#[\x80-\xBF]#', '', $s));
         }
     }
     /**
@@ -317,7 +340,7 @@ class Strings
     public static function trim(string $s, string $charlist = self::TrimCharacters): string
     {
         $charlist = preg_quote($charlist, '#');
-        return self::replace($s, '#^[' . $charlist . ']+|[' . $charlist . ']+$#Du', '');
+        return self::replace($s, '#^[' . $charlist . ']+|[' . $charlist . ']+$#Du');
     }
     /**
      * Pads a UTF-8 string to given length by prepending the $pad string to the beginning.
@@ -347,7 +370,11 @@ class Strings
         if (!extension_loaded('iconv')) {
             throw new Nette\NotSupportedException(__METHOD__ . '() requires ICONV extension that is not loaded.');
         }
-        return iconv('UTF-32LE', 'UTF-8', strrev(iconv('UTF-8', 'UTF-32BE', $s)));
+        $tmp = iconv('UTF-8', 'UTF-32BE', $s);
+        if ($tmp === \false) {
+            throw new Nette\InvalidStateException('iconv() failed.');
+        }
+        return (string) iconv('UTF-32LE', 'UTF-8', strrev($tmp));
     }
     /**
      * Returns part of $haystack before $nth occurence of $needle or returns null if the needle was not found.
@@ -406,8 +433,8 @@ class Strings
         return Helpers::falseToNull($pos);
     }
     /**
-     * Divides the string into arrays according to the regular expression. Expressions in parentheses will be captured and returned as well.
-     * @return ($captureOffset is true ? list<array{string, int}> : list<string>)
+     * Splits the string by a regular expression. Expressions in parentheses will be captured and returned as well.
+     * @return list<string>
      * @param bool|int $captureOffset
      */
     public static function split(
@@ -428,9 +455,9 @@ class Strings
         return $utf8 && $captureOffset ? self::bytesToChars($subject, [$m])[0] : $m;
     }
     /**
-     * Searches the string for the part matching the regular expression and returns
-     * an array with the found expression and individual subexpressions, or `null`.
-     * @return ($captureOffset is true ? ?array<?array{string, int}> : ?array<?string>)
+     * Searches the string for the first match of the regular expression and returns
+     * an array with the found expression and individual subexpressions, or null.
+     * @return ?array<string>
      * @param bool|int $captureOffset
      */
     public static function match(
@@ -462,12 +489,9 @@ class Strings
         }
     }
     /**
-     * Searches the string for all occurrences matching the regular expression and
-     * returns an array of arrays containing the found expression and each subexpression.
-     * @return ($lazy is true
-     *     ? \Generator<int, ($captureOffset is true ? array<?array{string, int}> : array<?string>)>
-     *     : ($captureOffset is true ? list<array<?array{string, int}>> : list<array<?string>>)
-     * )
+     * Searches the string for all occurrences matching the regular expression and returns
+     * an array of arrays containing the found expression and each subexpression.
+     * @return ($lazy is true ? \Generator<int, array<string>> : list<array<string>>)
      * @param bool|int $captureOffset
      */
     public static function matchAll(
@@ -492,8 +516,9 @@ class Strings
             $flags = PREG_OFFSET_CAPTURE | ($unmatchedAsNull ? PREG_UNMATCHED_AS_NULL : 0);
             return (function () use ($utf8, $captureOffset, $flags, $subject, $pattern, $offset) {
                 $counter = 0;
-                $m = null;
+                $m = [];
                 while ($offset <= strlen($subject) - ($counter ? 1 : 0) && self::pcre('preg_match', [$pattern, $subject, &$m, $flags, $offset])) {
+                    /** @var list<array{string, int}> $m */
                     $offset = $m[0][1] + max(1, strlen($m[0][0]));
                     if (!$captureOffset) {
                         $m = array_map(fn($item) => $item[0], $m);
@@ -513,9 +538,9 @@ class Strings
         return $utf8 && $captureOffset ? self::bytesToChars($subject, $m) : $m;
     }
     /**
-     * Replaces all occurrences matching regular expression $pattern which can be string or array in the form `pattern => replacement`.
+     * Replaces all occurrences matching the regular expression $pattern, which can be a string or array in the form `pattern => replacement`.
      * @param  string|array<string, string>  $pattern
-     * @param  string|(callable(array<?string>): string)  $replacement
+     * @param string|callable $replacement
      */
     public static function replace(
         string $subject,
@@ -536,7 +561,7 @@ class Strings
             }
             $flags = ($captureOffset ? PREG_OFFSET_CAPTURE : 0) | ($unmatchedAsNull ? PREG_UNMATCHED_AS_NULL : 0);
             if ($utf8) {
-                $pattern .= 'u';
+                $pattern = is_array($pattern) ? array_map(fn($item) => $item . 'u', $pattern) : $pattern . 'u';
                 if ($captureOffset) {
                     $replacement = fn($m) => $replacement(self::bytesToChars($subject, [$m])[0]);
                 }
@@ -572,6 +597,7 @@ class Strings
         return $groups;
     }
     /**
+     * @param  callable-string  $func
      * @param  list<mixed>  $args
      * @internal
      * @return mixed

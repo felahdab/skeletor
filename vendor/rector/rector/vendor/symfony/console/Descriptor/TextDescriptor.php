@@ -8,15 +8,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace RectorPrefix202602\Symfony\Component\Console\Descriptor;
+namespace RectorPrefix202608\Symfony\Component\Console\Descriptor;
 
-use RectorPrefix202602\Symfony\Component\Console\Application;
-use RectorPrefix202602\Symfony\Component\Console\Command\Command;
-use RectorPrefix202602\Symfony\Component\Console\Formatter\OutputFormatter;
-use RectorPrefix202602\Symfony\Component\Console\Helper\Helper;
-use RectorPrefix202602\Symfony\Component\Console\Input\InputArgument;
-use RectorPrefix202602\Symfony\Component\Console\Input\InputDefinition;
-use RectorPrefix202602\Symfony\Component\Console\Input\InputOption;
+use RectorPrefix202608\Symfony\Component\Console\Application;
+use RectorPrefix202608\Symfony\Component\Console\Command\Command;
+use RectorPrefix202608\Symfony\Component\Console\Formatter\OutputFormatter;
+use RectorPrefix202608\Symfony\Component\Console\Helper\Helper;
+use RectorPrefix202608\Symfony\Component\Console\Input\InputArgument;
+use RectorPrefix202608\Symfony\Component\Console\Input\InputDefinition;
+use RectorPrefix202608\Symfony\Component\Console\Input\InputOption;
 /**
  * Text descriptor.
  *
@@ -34,7 +34,7 @@ class TextDescriptor extends Descriptor
             $default = '';
         }
         $totalWidth = $options['total_width'] ?? Helper::width($argument->getName());
-        $spacingWidth = $totalWidth - \strlen($argument->getName());
+        $spacingWidth = $totalWidth - Helper::width($argument->getName());
         $this->writeText(\sprintf(
             '  <info>%s</info>  %s%s%s',
             $argument->getName(),
@@ -164,14 +164,14 @@ class TextDescriptor extends Descriptor
                 }
             }
             // calculate max. width based on available commands per namespace
-            $width = $this->getColumnWidth(array_merge(...array_values(array_map(fn($namespace) => array_intersect($namespace['commands'], array_keys($commands)), array_values($namespaces)))));
+            $width = $this->getColumnWidth(array_merge(...array_values(array_map(static fn($namespace) => array_intersect($namespace['commands'], array_keys($commands)), array_values($namespaces)))));
             if ($describedNamespace) {
                 $this->writeText(\sprintf('<comment>Available commands for the "%s" namespace:</comment>', $describedNamespace), $options);
             } else {
                 $this->writeText('<comment>Available commands:</comment>', $options);
             }
             foreach ($namespaces as $namespace) {
-                $namespace['commands'] = array_filter($namespace['commands'], fn($name) => isset($commands[$name]));
+                $namespace['commands'] = array_filter($namespace['commands'], static fn($name) => isset($commands[$name]));
                 if (!$namespace['commands']) {
                     continue;
                 }

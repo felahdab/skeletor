@@ -15,25 +15,27 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @internal
  */
-final readonly class EnsureTeamCityEnabled implements ConfiguredSubscriber
+final class EnsureTeamCityEnabled implements ConfiguredSubscriber
 {
-    /**
-     * Creates a new Configured Subscriber instance.
-     */
+    private static bool $registered = false;
+
     public function __construct(
-        private InputInterface $input,
-        private OutputInterface $output,
-        private TestSuite $testSuite,
+        private readonly InputInterface $input,
+        private readonly OutputInterface $output,
+        private readonly TestSuite $testSuite,
     ) {}
 
-    /**
-     * Runs the subscriber.
-     */
     public function notify(Configured $event): void
     {
+        if (self::$registered) {
+            return;
+        }
+
         if (! $this->input->hasParameterOption('--teamcity')) {
             return;
         }
+
+        self::$registered = true;
 
         $flowId = getenv('FLOW_ID');
         $flowId = is_string($flowId) ? (int) $flowId : getmypid();

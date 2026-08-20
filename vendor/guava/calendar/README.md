@@ -8,13 +8,16 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/guava/calendar/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/GuavaCZ/calendar/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/guava/calendar.svg?style=flat-square)](https://packagist.org/packages/guava/calendar)
 
-> [!NOTE]  
-> You are viewing the documentation for guava/calendar v2, which supports only filament v4.
-> For filament v3, please check guava/calendar v1 here.
-
 This package adds support for [vkurko/calendar](https://github.com/vkurko/calendar) (free, open-source alternative to FullCalendar) to your FilamentPHP panels.
 
 It allows you to create a widget with a calendar with support for **multiple** models and even resources you can group your events into. For example, you could have lessons (events) that are held in different rooms (resources).
+
+## Version compatibility
+| Filament version | Plugin version | Min. PHP version |
+| ---------------- |:--------------:|:----------------:|
+| 3.x              | 1.x            | 8.1              |
+| 4.x              | 2.x            | 8.1              |
+| 5.x              | 3.x            | 8.2              |
 
 ## Showcase
 ![Showcase 01](https://github.com/GuavaCZ/calendar/raw/main/docs/images/showcase_01.png)
@@ -661,7 +664,7 @@ Both variants are equal, and it's just up to your personal preference which one 
 whenever you want to mount an action programmatically within a calendar context, such as in the `onDateClick` method (more on this later), you can use the `mountAction` method. 
 
 ```php
-public function onDateClick(DateClickInfo $info) {
+protected function onDateClick(DateClickInfo $info): void {
     $this->mountAction('createFoo');
 }
 ```
@@ -1012,10 +1015,12 @@ To handle the callback, override the `onEventResize` method and implement your o
 use Illuminate\Database\Eloquent\Model;
 use Guava\Calendar\ValueObjects\EventResizeInfo;
 
-protected function onEventResize(EventResizeInfo $info, Model $event): void
+protected function onEventResize(EventResizeInfo $info, Model $event): bool
 {
     // Validate the data and handle the event
     // Most likely you will want to update the event with the new start /end dates to persist the resize in the database
+
+    return true;
 }
 ```
 

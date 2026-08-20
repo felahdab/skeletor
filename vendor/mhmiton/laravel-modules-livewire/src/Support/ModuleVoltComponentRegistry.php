@@ -87,6 +87,8 @@ class ModuleVoltComponentRegistry
                         $alias = $aliasPrefix.$view;
 
                         return [
+                            'aliasPrefix' => $aliasPrefix,
+                            'view' => $view,
                             'alias' => $alias,
                             'path' => $file->getPathname(),
                         ];
@@ -155,12 +157,44 @@ class ModuleVoltComponentRegistry
 
     public function component($alias, $path)
     {
-        $voltComponentRegistry = new \Livewire\Volt\ComponentFactory(
-            new \Livewire\Volt\MountedDirectories()
-        );
-
-        $componentClass = $voltComponentRegistry->make($alias, $path);
+        $componentClass = app(\Livewire\Volt\ComponentFactory::class)->make($alias, $path);
 
         Livewire::component($alias, $componentClass);
+    }
+
+    public function resolveComponent($component)
+    {
+        $isModuleView = count(explode('::', $component)) == 2;
+
+        if (! $isModuleView) {
+            return null;
+        }
+
+        $moduleName = Str::of($component)
+            ->beforeLast('::')
+            ->toString();
+
+        $moduleComponentData = $this->getModuleComponentData($moduleName);
+
+        $moduleVoltViewNamespaces = data_get($moduleComponentData, 'volt_view_namespaces');
+
+        $isModulePathExists = data_get($moduleComponentData, 'is_path_exists') ? true : false;
+
+        if (! $isModulePathExists) {
+            return null;
+        }
+
+        foreach ($moduleVoltViewNamespaces as $moduleVoltViewNamespace) {
+            $componentWithoutAlias = Str::afterLast($component, '::');
+
+            $moduleVoltView = "{$moduleName}::{$moduleVoltViewNamespace}.{$componentWithoutAlias}";
+
+            if (view()->exists($moduleVoltView)) {
+                return app(\Livewire\Volt\ComponentFactory::class)
+                    ->make($component, view()->getFinder()->find($moduleVoltView));
+            }
+        }
+
+        return null;
     }
 }

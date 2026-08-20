@@ -42,7 +42,7 @@ const findClosestLivewireComponent = (el) => {
 }
 
 document.addEventListener('alpine:init', () => {
-    window.Alpine.data('filamentSchema', ({ livewireId }) => ({
+    window.Alpine.data('filamentSchema', ({ livewireId, schemaKey }) => ({
         handleFormValidationError(event) {
             if (event.detail.livewireId !== livewireId) {
                 return
@@ -72,6 +72,35 @@ document.addEventListener('alpine:init', () => {
                         }),
                     200,
                 )
+            })
+        },
+
+        handleClientSideStateReset(event) {
+            if (
+                event.detail.livewireId !== livewireId ||
+                event.detail.schemaKey !== schemaKey
+            ) {
+                return
+            }
+
+            this.$nextTick(() => {
+                const fields = this.$el.querySelectorAll('[autofocus]')
+
+                for (const field of fields) {
+                    // Skip fields hidden by an ancestor (e.g. an inactive
+                    // wizard step or tab) — the wizard/tab Alpine scope owns
+                    // its own `$watch` that refocuses once the active step
+                    // or tab is restored.
+                    if (field.offsetParent === null) {
+                        continue
+                    }
+
+                    field.focus()
+
+                    if (document.activeElement === field) {
+                        break
+                    }
+                }
             })
         },
 
@@ -112,18 +141,21 @@ document.addEventListener('alpine:init', () => {
 
     window.Alpine.data('filamentActionsSchemaComponent', actions)
 
-    Livewire.hook('commit', ({ component, commit, respond, succeed, fail }) => {
-        succeed(({ snapshot, effects }) => {
-            effects.dispatches?.forEach((dispatch) => {
+    Livewire.interceptMessage(({ message, onSuccess }) => {
+        onSuccess(({ payload }) => {
+            payload.effects?.dispatches?.forEach((dispatch) => {
                 if (!dispatch.params?.awaitSchemaComponent) {
                     return
                 }
 
                 let els = Array.from(
-                    component.el.querySelectorAll(
+                    message.component.el.querySelectorAll(
                         `[wire\\:partial="schema-component::${dispatch.params.awaitSchemaComponent}"]`,
                     ),
-                ).filter((el) => findClosestLivewireComponent(el) === component)
+                ).filter(
+                    (el) =>
+                        findClosestLivewireComponent(el) === message.component,
+                )
 
                 if (els.length === 1) {
                     return
@@ -134,7 +166,7 @@ document.addEventListener('alpine:init', () => {
                 }
 
                 window.addEventListener(
-                    `schema-component-${component.id}-${dispatch.params.awaitSchemaComponent}-loaded`,
+                    `schema-component-${message.component.id}-${dispatch.params.awaitSchemaComponent}-loaded`,
                     () => {
                         window.dispatchEvent(
                             new CustomEvent(dispatch.name, {

@@ -114,12 +114,12 @@ CODE_SAMPLE
      */
     public function refactor(Node $node): ?Node
     {
+        if ($node->returnType instanceof Node && !$this->isName($node->returnType, 'array')) {
+            return null;
+        }
         $phpDocInfo = $this->phpDocInfoFactory->createFromNodeOrEmpty($node);
         $returnType = $phpDocInfo->getReturnType();
         if (!$returnType instanceof MixedType || $returnType->isExplicitMixed()) {
-            return null;
-        }
-        if ($node->returnType instanceof Node && !$this->isName($node->returnType, 'array')) {
             return null;
         }
         $returnsScoped = $this->betterNodeFinder->findReturnsScoped($node);
@@ -187,7 +187,6 @@ CODE_SAMPLE
             if (!$assign->var instanceof ArrayDimFetch) {
                 continue;
             }
-            /** @var ArrayDimFetch $arrayDimFetch */
             $arrayDimFetch = $assign->var;
             if (!$arrayDimFetch->var instanceof Variable) {
                 continue;
@@ -195,7 +194,7 @@ CODE_SAMPLE
             if (!$this->isName($arrayDimFetch->var, $variableName)) {
                 continue;
             }
-            if ($arrayDimFetch->dim !== null) {
+            if ($arrayDimFetch->dim instanceof Expr) {
                 continue;
             }
             $arrayHasDimAssigns = \true;

@@ -3,7 +3,7 @@
 declare (strict_types=1);
 namespace Rector\CodingStyle\Rector\Catch_;
 
-use RectorPrefix202602\Nette\Utils\Strings;
+use RectorPrefix202608\Nette\Utils\Strings;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\Closure;
@@ -129,7 +129,7 @@ CODE_SAMPLE
     private function resolveNewVariableName(string $typeShortName): string
     {
         return Strings::replace(lcfirst($typeShortName), self::STARTS_WITH_ABBREVIATION_REGEX, static function (array $matches): string {
-            $output = isset($matches[1]) ? strtolower($matches[1]) : '';
+            $output = isset($matches[1]) ? strtolower((string) $matches[1]) : '';
             $output .= $matches[2] ?? '';
             return $output . ($matches[3] ?? '');
         });

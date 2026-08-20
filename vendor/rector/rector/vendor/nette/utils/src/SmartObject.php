@@ -1,13 +1,13 @@
 <?php
 
+declare (strict_types=1);
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-declare (strict_types=1);
-namespace RectorPrefix202602\Nette;
+namespace RectorPrefix202608\Nette;
 
-use RectorPrefix202602\Nette\Utils\ObjectHelpers;
+use RectorPrefix202608\Nette\Utils\ObjectHelpers;
 /**
  * Strict class for better experience.
  * - 'did you mean' hints
@@ -18,7 +18,7 @@ use RectorPrefix202602\Nette\Utils\ObjectHelpers;
 trait SmartObject
 {
     /**
-     * @param  list<mixed>  $args
+     * @param  mixed[]  $args
      * @return mixed
      * @throws MemberAccessException
      */
@@ -40,7 +40,7 @@ trait SmartObject
         ObjectHelpers::strictCall($class, $name);
     }
     /**
-     * @param  list<mixed>  $args
+     * @param  mixed[]  $args
      * @return never
      * @throws MemberAccessException
      */

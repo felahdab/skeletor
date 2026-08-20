@@ -59,12 +59,14 @@ class LaravelModulesLivewireServiceProvider extends ServiceProvider
 
     protected function registerPublishables()
     {
-        $this->publishes([
-            __DIR__.'/../config/modules-livewire.php' => base_path('config/modules-livewire.php'),
-        ], ['modules-livewire-config']);
+        $this->publishes(
+            [__DIR__.'/../config/modules-livewire.php' => base_path('config/modules-livewire.php')],
+            ['modules-livewire:config'],
+        );
 
-        $this->publishes([
-            __DIR__.'/Commands/stubs/' => base_path('stubs/modules-livewire'),
-        ], ['modules-livewire-stub']);
+        $this->publishes(
+            [__DIR__.'/Commands/stubs/' => base_path('stubs/modules-livewire')],
+            ['modules-livewire:stub'],
+        );
     }
 }

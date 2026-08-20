@@ -27,7 +27,8 @@
                     @foreach ($navigationGroup->getItems() as $navigationItem)
                         @php
                             $navigationItemBadge = $navigationItem->getBadge();
-                            $navigationItemBadgeColor = $navigationItem->getBadgeColor();
+                            $navigationItemBadgeColor = $navigationItem->getBadgeColor($navigationItemBadge);
+                            $navigationItemBadgeTooltip = $navigationItem->getBadgeTooltip($navigationItemBadge);
                             $navigationItemIcon = $navigationItem->isActive() ? ($navigationItem->getActiveIcon() ?? $navigationItem->getIcon()) : $navigationItem->getIcon();
                             $navigationItemUrl = $navigationItem->getUrl();
                             $shouldNavigationItemOpenUrlInNewTab = $navigationItem->shouldOpenUrlInNewTab();
@@ -37,6 +38,7 @@
                         <x-filament::dropdown.list.item
                             :badge="$navigationItemBadge"
                             :badge-color="$navigationItemBadgeColor"
+                            :badge-tooltip="$navigationItemBadgeTooltip"
                             :href="$navigationItemUrl"
                             :icon="$navigationItemIcon"
                             tag="a"
@@ -59,7 +61,8 @@
                 @php
                     $isNavigationItemActive = $navigationItem->isActive();
                     $navigationItemBadge = $navigationItem->getBadge();
-                    $navigationItemBadgeColor = $navigationItem->getBadgeColor();
+                    $navigationItemBadgeColor = $navigationItem->getBadgeColor($navigationItemBadge);
+                    $navigationItemBadgeTooltip = $navigationItem->getBadgeTooltip($navigationItemBadge);
                     $navigationItemIcon = $navigationItem->isActive() ? ($navigationItem->getActiveIcon() ?? $navigationItem->getIcon()) : $navigationItem->getIcon();
                     $navigationItemUrl = $navigationItem->getUrl();
                     $shouldNavigationItemOpenUrlInNewTab = $navigationItem->shouldOpenUrlInNewTab();
@@ -70,6 +73,7 @@
                     :active="$isNavigationItemActive"
                     :badge="$navigationItemBadge"
                     :badge-color="$navigationItemBadgeColor"
+                    :badge-tooltip="$navigationItemBadgeTooltip"
                     :href="$navigationItemUrl"
                     :icon="$navigationItemIcon"
                     tag="a"

@@ -35,8 +35,8 @@ The Laravel AMQP package provides a simple and elegant way to work with RabbitMQ
 
 ### Requirements
 
-- PHP 7.3+ or PHP 8.0+
-- Laravel 6.20+ / Lumen 6.20+
+- PHP 7.3+ through 8.5 (Laravel 8 on PHP 7.3–7.4; Laravel 9 requires PHP 8.0.2+; Laravel 13 requires PHP 8.3+)
+- Laravel 8.x through 13.x / Lumen 8.x+
 - RabbitMQ 3.x server
 - php-amqplib/php-amqplib ^3.0
 
@@ -78,14 +78,14 @@ Edit `config/amqp.php`:
 
 ```php
 return [
-    'use' => env('AMQP_USE', 'production'),
-    
+    'use' => env('AMQP_ENV', 'production'),
+
     'properties' => [
         'production' => [
             'host' => env('AMQP_HOST', 'localhost'),
             'port' => env('AMQP_PORT', 5672),
-            'username' => env('AMQP_USERNAME', 'guest'),
-            'password' => env('AMQP_PASSWORD', 'guest'),
+            'username' => env('AMQP_USER', ''),
+            'password' => env('AMQP_PASSWORD', ''),
             'vhost' => env('AMQP_VHOST', '/'),
             'exchange' => env('AMQP_EXCHANGE', 'amq.topic'),
             'exchange_type' => env('AMQP_EXCHANGE_TYPE', 'topic'),
@@ -104,7 +104,7 @@ Add to your `.env` file:
 ```env
 AMQP_HOST=localhost
 AMQP_PORT=5672
-AMQP_USERNAME=guest
+AMQP_USER=guest
 AMQP_PASSWORD=guest
 AMQP_VHOST=/
 AMQP_EXCHANGE=amq.topic
@@ -779,6 +779,70 @@ Amqp::consume('queue', function ($message, $resolver) {
 ]);
 ```
 
+For declarative retry + DLQ wiring (recommended for production), use the
+`RetryPolicy` / `DeadLetterTopology` / `RetryHandler` abstractions:
+
+```php
+use Bschmitt\Amqp\Support\DeadLetterTopology;
+use Bschmitt\Amqp\Support\RetryPolicy;
+
+$amqp = app('Amqp');
+
+// RetryPolicy::exponential($maxAttempts, $baseDelayMs, $multiplier, $maxDelayMs)
+$policy   = RetryPolicy::exponential(5, 1000, 2.0, 60000);
+$topology = DeadLetterTopology::for('orders.process', $policy)
+    ->on('app.events', 'topic');
+
+$amqp->declareRetryTopology($topology);
+
+$amqp->consumeWithRetry($topology, function ($message, $resolver) {
+    processMessage($message->body);
+    $resolver->acknowledge($message);
+});
+```
+
+On exception the handler republishes the message to `orders.process.retry.{ms}`
+with a TTL matching the policy; once the retry budget is exhausted the
+message is rejected and RabbitMQ forwards it to `orders.process.dlq` via the
+work queue's `x-dead-letter-exchange`. The `x-retry-attempt`,
+`x-first-failed-at`, and `x-last-error` headers carry diagnostics across
+deliveries.
+
+See **[Advanced Features → Advanced Retry & Dead-Letter Abstractions](content/advanced.md)** for the full reference.
+
+### 3a. Delayed Publishing
+
+Schedule messages without hand-rolling TTL queues:
+
+```php
+$amqp = app('Amqp');
+$amqp->publishLater('orders.reminder', json_encode(['orderId' => 42]), 60000, [
+    'exchange' => 'shop.events',
+]);
+```
+
+Use `delay_strategy => 'plugin'` when the delayed-message exchange plugin is installed. For publisher-side transient failures, wrap publishes in `withPublishBackoff(RetryPolicy::...)`.
+
+### 3b. Typed Messages & Schema Validation
+
+Define DTOs with `TypedMessage`, publish with `publishTyped()`, consume with `consumeTyped()`:
+
+```php
+$amqp->publishTyped(new OrderCreated('order-1', 19.99, 'USD'));
+
+$amqp->consumeTyped('orders.queue', OrderCreated::class, function ($order, $message, $resolver) {
+    processOrder($order->orderId);
+    $resolver->acknowledge($message);
+});
+```
+
+Add a static `schema()` method on the contract to enable JSON Schema validation (see `SchemaValidator` in `docs/content/advanced.md`). On the CLI:
+
+```bash
+php artisan amqp:work orders --handler="App\\Messaging\\Handler" \
+    --contract="App\\Messaging\\OrderCreated" --validate-schema
+```
+
 ### 4. Production Consumers
 
 Use Artisan commands with process managers:
@@ -865,6 +929,6 @@ For issues, questions, or contributions:
 
 ---
 
-**Last Updated:** December 2025
-**Package Version:** 3.1.1
+**Last Updated:** May 2026
+**Package Version:** 3.4.0
 

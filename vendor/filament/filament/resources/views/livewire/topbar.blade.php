@@ -8,7 +8,10 @@
         $hasTenancy = filament()->hasTenancy();
     @endphp
 
-    <nav class="fi-topbar">
+    <nav
+        aria-label="{{ __('filament-panels::layout.topbar.label') }}"
+        class="fi-topbar"
+    >
         {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::TOPBAR_START) }}
 
         @if ($hasNavigation)
@@ -20,6 +23,8 @@
                 :label="__('filament-panels::layout.actions.sidebar.expand.label')"
                 x-cloak
                 x-data="{}"
+                aria-controls="fi-main-sidebar"
+                x-bind:aria-expanded="$store.sidebar.isOpen"
                 x-on:click="$store.sidebar.open()"
                 x-show="! $store.sidebar.isOpen"
                 class="fi-topbar-open-sidebar-btn"
@@ -33,6 +38,8 @@
                 :label="__('filament-panels::layout.actions.sidebar.collapse.label')"
                 x-cloak
                 x-data="{}"
+                aria-controls="fi-main-sidebar"
+                x-bind:aria-expanded="$store.sidebar.isOpen"
                 x-on:click="$store.sidebar.close()"
                 x-show="$store.sidebar.isOpen"
                 class="fi-topbar-close-sidebar-btn"
@@ -62,6 +69,8 @@
                             :label="__('filament-panels::layout.actions.sidebar.expand.label')"
                             x-cloak
                             x-data="{}"
+                            aria-controls="fi-main-sidebar"
+                            x-bind:aria-expanded="$store.sidebar.isOpen"
                             x-on:click="$store.sidebar.open()"
                             x-show="! $store.sidebar.isOpen"
                             class="fi-topbar-open-collapse-sidebar-btn"
@@ -85,6 +94,8 @@
                             :label="__('filament-panels::layout.actions.sidebar.collapse.label')"
                             x-cloak
                             x-data="{}"
+                            aria-controls="fi-main-sidebar"
+                            x-bind:aria-expanded="$store.sidebar.isOpen"
                             x-on:click="$store.sidebar.close()"
                             x-show="$store.sidebar.isOpen"
                             class="fi-topbar-close-collapse-sidebar-btn"
@@ -174,8 +185,8 @@
                                             @php
                                                 $isItemActive = $item->isActive();
                                                 $itemBadge = $item->getBadge();
-                                                $itemBadgeColor = $item->getBadgeColor();
-                                                $itemBadgeTooltip = $item->getBadgeTooltip();
+                                                $itemBadgeColor = $item->getBadgeColor($itemBadge);
+                                                $itemBadgeTooltip = $item->getBadgeTooltip($itemBadge);
                                                 $itemUrl = $item->getUrl();
                                                 $itemIcon = $isItemActive ? ($item->getActiveIcon() ?? $item->getIcon()) : $item->getIcon();
                                                 $shouldItemOpenUrlInNewTab = $item->shouldOpenUrlInNewTab();
@@ -191,6 +202,7 @@
                                                 :icon="$itemIcon"
                                                 tag="a"
                                                 :target="$shouldItemOpenUrlInNewTab ? '_blank' : null"
+                                                :aria-current="$isItemActive ? 'page' : null"
                                                 :attributes="\Filament\Support\prepare_inherited_attributes($itemExtraAttributes)"
                                             >
                                                 {{ $item->getLabel() }}
@@ -205,8 +217,8 @@
                                     $isItemActive = $item->isActive();
                                     $itemActiveIcon = $item->getActiveIcon();
                                     $itemBadge = $item->getBadge();
-                                    $itemBadgeColor = $item->getBadgeColor();
-                                    $itemBadgeTooltip = $item->getBadgeTooltip();
+                                    $itemBadgeColor = $item->getBadgeColor($itemBadge);
+                                    $itemBadgeTooltip = $item->getBadgeTooltip($itemBadge);
                                     $itemIcon = $item->getIcon();
                                     $shouldItemOpenUrlInNewTab = $item->shouldOpenUrlInNewTab();
                                     $itemUrl = $item->getUrl();
