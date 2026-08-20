@@ -3,7 +3,7 @@
         'name' => 'fanlab/skeletor',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '1a22dfc06603560e82f357633c18f39eceff8ce4',
+        'reference' => '41a522a4a4703b989bb213ce82258794852c1d30',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -400,7 +400,7 @@
         'fanlab/skeletor' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '1a22dfc06603560e82f357633c18f39eceff8ce4',
+            'reference' => '41a522a4a4703b989bb213ce82258794852c1d30',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
