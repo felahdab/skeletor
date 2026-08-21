@@ -8,7 +8,6 @@ use Closure;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Routing\Router;
-use Livewire\Mechanisms\HandleComponents\HandleComponents;
 
 /**
  * Based on Illuminate\Foundation\Console\RoutesCommand for Taylor Otwell
@@ -45,7 +44,7 @@ class RouteCollector extends DataCollector implements Renderable
         $uses = $action['uses'] ?? null;
         $controller = is_string($action['controller'] ?? null) ? $action['controller'] : '';
 
-        if (request()->hasHeader('X-Livewire') && class_exists(HandleComponents::class)) {
+        if (request()->hasHeader('X-Livewire') && app()->bound('livewire.factory')) {
             try {
                 $componentData = request('components')[0] ?? null;
                 if (isset($componentData['snapshot'], $componentData['updates'])) {
@@ -55,10 +54,13 @@ class RouteCollector extends DataCollector implements Renderable
                     } else {
                         $method = null;
                     }
-                    [$component] = app(HandleComponents::class)->fromSnapshot($snapshot);
-                    $result['controller'] = ltrim($component::class, '\\');
-                    $reflector = new \ReflectionClass($component);
-                    $controller = $component::class . '@' . $method;
+
+                    if (isset($snapshot['memo']['name'])) {
+                        $component = app('livewire.factory')->resolveComponentClass($snapshot['memo']['name']);
+                        $result['controller'] = $component;
+                        $reflector = new \ReflectionClass($component);
+                        $controller = $component . '@' . $method;
+                    }
                 }
             } catch (\Throwable $e) {
                 //
@@ -130,14 +132,19 @@ class RouteCollector extends DataCollector implements Renderable
      */
     public function getWidgets(): array
     {
-        $widgets = [
+        $widget = match (true) {
+            $this->isJsonVarDumperUsed() => "PhpDebugBar.Widgets.JsonVariableListWidget",
+            $this->isHtmlVarDumperUsed() => "PhpDebugBar.Widgets.HtmlVariableListWidget",
+            default => "PhpDebugBar.Widgets.VariableListWidget",
+        };
+
+        return [
             "route" => [
                 "icon" => "share-3",
-                "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
+                "widget" => $widget,
                 "map" => "route",
                 "default" => "{}",
             ],
         ];
-        return $widgets;
     }
 }

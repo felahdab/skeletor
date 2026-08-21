@@ -9,9 +9,12 @@ use Filament\Auth\MultiFactor\Email\EmailAuthentication;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\OneTimeCodeInput;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
+use SensitiveParameter;
 
 class DisableEmailAuthenticationAction
 {
@@ -22,7 +25,9 @@ class DisableEmailAuthenticationAction
             ->color('danger')
             ->icon(Heroicon::LockOpen)
             ->link()
-            ->mountUsing(function () use ($emailAuthentication): void {
+            ->mountUsing(function (Schema $schema) use ($emailAuthentication): void {
+                $schema->fill();
+
                 /** @var HasEmailAuthentication $user */
                 $user = Filament::auth()->user();
 
@@ -59,7 +64,17 @@ class DisableEmailAuthenticationAction
                         }))
                     ->required()
                     ->rule(function () use ($emailAuthentication): Closure {
-                        return function (string $attribute, mixed $value, Closure $fail) use ($emailAuthentication): void {
+                        return function (string $attribute, #[SensitiveParameter] mixed $value, Closure $fail) use ($emailAuthentication): void {
+                            $rateLimitingKey = 'filament-disable-email-authentication:' . Filament::auth()->id();
+
+                            if (RateLimiter::tooManyAttempts($rateLimitingKey, maxAttempts: 5)) {
+                                $fail(__('filament-panels::auth/multi-factor/email/actions/disable.modal.form.code.messages.rate_limited'));
+
+                                return;
+                            }
+
+                            RateLimiter::hit($rateLimitingKey);
+
                             if (is_string($value) && $emailAuthentication->verifyCode($value)) {
                                 return;
                             }

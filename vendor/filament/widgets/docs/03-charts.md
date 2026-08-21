@@ -1,6 +1,7 @@
 ---
 title: Chart widgets
 ---
+import AutoScreenshot from "@components/AutoScreenshot.astro"
 import Aside from "@components/Aside.astro"
 
 ## Introduction
@@ -52,6 +53,8 @@ class BlogPostsChart extends ChartWidget
 
 Now, check out your widget in the dashboard.
 
+<AutoScreenshot name="widgets/chart/line" alt="Line chart" version="5.x" />
+
 ## Available chart types
 
 Below is a list of available chart widget classes which you may extend, and their corresponding [Chart.js](https://www.chartjs.org/docs) documentation page, for inspiration on what to return from `getData()`:
@@ -64,6 +67,24 @@ Below is a list of available chart widget classes which you may extend, and thei
 - Polar area chart - [Chart.js documentation](https://www.chartjs.org/docs/latest/charts/polar)
 - Radar chart - [Chart.js documentation](https://www.chartjs.org/docs/latest/charts/radar)
 - Scatter chart - [Chart.js documentation](https://www.chartjs.org/docs/latest/charts/scatter)
+
+For example, you could use a bar chart by returning `'bar'` from the `getType()` method:
+
+<AutoScreenshot name="widgets/chart/bar" alt="Bar chart" version="5.x" />
+
+Here are examples of the other available chart types:
+
+<AutoScreenshot name="widgets/chart/pie" alt="Pie chart" version="5.x" />
+
+<AutoScreenshot name="widgets/chart/doughnut" alt="Doughnut chart" version="5.x" />
+
+<AutoScreenshot name="widgets/chart/radar" alt="Radar chart" version="5.x" />
+
+<AutoScreenshot name="widgets/chart/polar-area" alt="Polar area chart" version="5.x" />
+
+<AutoScreenshot name="widgets/chart/scatter" alt="Scatter chart" version="5.x" />
+
+<AutoScreenshot name="widgets/chart/bubble" alt="Bubble chart" version="5.x" />
 
 ## Customizing the chart color
 
@@ -161,6 +182,12 @@ protected function getData(): array
 }
 ```
 
+<AutoScreenshot name="widgets/chart/filter" alt="Chart with filter" version="5.x" />
+
+<Aside variant="danger">
+    The `$filter` property is user-controllable. Although the `<select>` element only offers the keys returned from `getFilters()`, a crafted request can set `$this->filter` to any string, so it is not limited to those keys. You must ensure the value is valid before using it in a query — for example, by checking it against the keys of `getFilters()`, or by using a `match` expression with a safe default. Never interpolate `$this->filter` directly into a raw query.
+</Aside>
+
 ### Custom filters
 
 You can use [schema components](../schemas) to build custom filters for your chart widget. This approach offers a more flexible way to define filters.
@@ -205,6 +232,8 @@ protected function getData(): array
 ```
 
 The `$this->filters` array will always reflect the current form data. Please note that this data is not validated, as it is available live and not intended to be used for anything other than querying the database. You must ensure that the data is valid before using it.
+
+<AutoScreenshot name="widgets/chart/custom-filters" alt="Chart with custom filters" version="5.x" />
 
 <Aside variant="info">
     If you want to add filters that apply to multiple widgets at once, see [filtering widget data](overview#filtering-widget-data) in the dashboard.
@@ -268,6 +297,113 @@ public function filtersResetAction(Action $action): Action
 }
 ```
 
+## Empty state
+
+When the `getData()` method returns an empty array, the chart widget renders an "empty state" instead of the chart.
+
+To customize when the empty state is rendered, override the `isEmpty()` method:
+
+```php
+public function isEmpty(): bool
+{
+    $data = $this->getCachedData();
+
+    return empty($data['datasets'][0]['data'] ?? []);
+}
+```
+
+### Setting the empty state heading
+
+To customize the heading of the empty state, set the `$emptyStateHeading` property:
+
+```php
+protected ?string $emptyStateHeading = 'No data available';
+```
+
+Alternatively, you can override the `getEmptyStateHeading()` method to return a dynamic heading:
+
+```php
+use Illuminate\Contracts\Support\Htmlable;
+
+public function getEmptyStateHeading(): string | Htmlable
+{
+    return "No sales yet for {$this->filter}";
+}
+```
+
+### Setting the empty state description
+
+To customize the description of the empty state, set the `$emptyStateDescription` property:
+
+```php
+protected ?string $emptyStateDescription = 'Check back later once data has been collected.';
+```
+
+Alternatively, you can override the `getEmptyStateDescription()` method to return a dynamic description:
+
+```php
+use Illuminate\Contracts\Support\Htmlable;
+
+public function getEmptyStateDescription(): string | Htmlable | null
+{
+    return 'Sales data will appear here once orders are placed.';
+}
+```
+
+### Setting the empty state icon
+
+To customize the [icon](../styling/icons) of the empty state, set the `$emptyStateIcon` property:
+
+```php
+use Filament\Support\Icons\Heroicon;
+
+protected string | BackedEnum | null $emptyStateIcon = Heroicon::OutlinedChartBar;
+```
+
+Alternatively, you can override the `getEmptyStateIcon()` method to return a dynamic icon:
+
+```php
+use BackedEnum;
+use Filament\Support\Icons\Heroicon;
+use Illuminate\Contracts\Support\Htmlable;
+
+public function getEmptyStateIcon(): string | BackedEnum | Htmlable
+{
+    return Heroicon::OutlinedShoppingCart;
+}
+```
+
+### Adding empty state actions
+
+You can add [actions](../actions/overview) to the empty state to prompt users to take action by overriding the `getEmptyStateActions()` method:
+
+```php
+use Filament\Actions\Action;
+
+public function getEmptyStateActions(): array
+{
+    return [
+        Action::make('refresh')
+            ->label('Refresh')
+            ->action('refresh'),
+    ];
+}
+```
+
+### Using a custom empty state view
+
+You may use a completely custom empty state view by overriding the `getEmptyState()` method:
+
+```php
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Contracts\View\View;
+
+public function getEmptyState(): View | Htmlable | null
+{
+    return view('widgets.charts.custom-empty-state');
+}
+```
+
 ## Live updating chart data (polling)
 
 By default, chart widgets refresh their data every 5 seconds.
@@ -291,6 +427,8 @@ You may place a maximum height on the chart to ensure that it doesn't get too bi
 ```php
 protected ?string $maxHeight = '300px';
 ```
+
+<AutoScreenshot name="widgets/chart/max-height" alt="Chart with maximum height" version="5.x" />
 
 ## Setting chart configuration options
 
@@ -353,6 +491,8 @@ public function getDescription(): ?string
 }
 ```
 
+<AutoScreenshot name="widgets/chart/description" alt="Chart with description" version="5.x" />
+
 ## Disabling lazy loading
 
 By default, widgets are lazy-loaded. This means that they will only be loaded when they are visible on the page.
@@ -370,6 +510,8 @@ You may allow the chart to be collapsible by setting the `$isCollapsible` proper
 ```php
 protected bool $isCollapsible = true;
 ```
+
+<AutoScreenshot name="widgets/chart/collapsible" alt="Collapsible chart" version="5.x" />
 
 ## Using custom Chart.js plugins
 

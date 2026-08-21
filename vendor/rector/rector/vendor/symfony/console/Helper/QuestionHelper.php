@@ -8,22 +8,22 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace RectorPrefix202602\Symfony\Component\Console\Helper;
+namespace RectorPrefix202608\Symfony\Component\Console\Helper;
 
-use RectorPrefix202602\Symfony\Component\Console\Cursor;
-use RectorPrefix202602\Symfony\Component\Console\Exception\MissingInputException;
-use RectorPrefix202602\Symfony\Component\Console\Exception\RuntimeException;
-use RectorPrefix202602\Symfony\Component\Console\Formatter\OutputFormatter;
-use RectorPrefix202602\Symfony\Component\Console\Formatter\OutputFormatterStyle;
-use RectorPrefix202602\Symfony\Component\Console\Input\InputInterface;
-use RectorPrefix202602\Symfony\Component\Console\Input\StreamableInputInterface;
-use RectorPrefix202602\Symfony\Component\Console\Output\ConsoleOutputInterface;
-use RectorPrefix202602\Symfony\Component\Console\Output\ConsoleSectionOutput;
-use RectorPrefix202602\Symfony\Component\Console\Output\OutputInterface;
-use RectorPrefix202602\Symfony\Component\Console\Question\ChoiceQuestion;
-use RectorPrefix202602\Symfony\Component\Console\Question\Question;
-use RectorPrefix202602\Symfony\Component\Console\Terminal;
-use function RectorPrefix202602\Symfony\Component\String\s;
+use RectorPrefix202608\Symfony\Component\Console\Cursor;
+use RectorPrefix202608\Symfony\Component\Console\Exception\MissingInputException;
+use RectorPrefix202608\Symfony\Component\Console\Exception\RuntimeException;
+use RectorPrefix202608\Symfony\Component\Console\Formatter\OutputFormatter;
+use RectorPrefix202608\Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use RectorPrefix202608\Symfony\Component\Console\Input\InputInterface;
+use RectorPrefix202608\Symfony\Component\Console\Input\StreamableInputInterface;
+use RectorPrefix202608\Symfony\Component\Console\Output\ConsoleOutputInterface;
+use RectorPrefix202608\Symfony\Component\Console\Output\ConsoleSectionOutput;
+use RectorPrefix202608\Symfony\Component\Console\Output\OutputInterface;
+use RectorPrefix202608\Symfony\Component\Console\Question\ChoiceQuestion;
+use RectorPrefix202608\Symfony\Component\Console\Question\Question;
+use RectorPrefix202608\Symfony\Component\Console\Terminal;
+use function RectorPrefix202608\Symfony\Component\String\s;
 /**
  * The QuestionHelper class provides helpers to interact with the user.
  *
@@ -268,7 +268,7 @@ class QuestionHelper extends Helper
                         $output->write($remainingCharacters);
                         $fullChoice .= $remainingCharacters;
                         $i = \false === ($encoding = mb_detect_encoding($fullChoice, null, \true)) ? \strlen($fullChoice) : mb_strlen($fullChoice, $encoding);
-                        $matches = array_filter($autocomplete($ret), fn($match) => '' === $ret || strncmp($match, $ret, strlen($ret)) === 0);
+                        $matches = array_filter($autocomplete($ret), static fn($match) => '' === $ret || strncmp($match, $ret, strlen($ret)) === 0);
                         $numMatches = \count($matches);
                         $ofs = -1;
                     }
@@ -389,6 +389,8 @@ class QuestionHelper extends Helper
             }
             try {
                 return $question->getValidator()($interviewer());
+            } catch (MissingInputException $e) {
+                throw $error ?? $e;
             } catch (RuntimeException $e) {
                 throw $e;
             } catch (\Exception $error) {
@@ -442,8 +444,8 @@ class QuestionHelper extends Helper
     }
     /**
      * Sets console I/O to the specified code page and converts the user input.
-     * @param string|false $input
      * @return string|false
+     * @param string|false $input
      */
     private function resetIOCodepage(int $cp, $input)
     {

@@ -17,11 +17,11 @@ use PHPUnit\Runner\CodeCoverage;
 use PHPUnit\Runner\DeprecationCollector\Facade as DeprecationCollector;
 use PHPUnit\Runner\ErrorHandler;
 use PHPUnit\Runner\Extension\ExtensionBootstrapper;
-use PHPUnit\Runner\Extension\Facade as ExtensionFacade;
+use PHPUnit\Runner\Extension\ExtensionFacade;
 use PHPUnit\Runner\Extension\PharLoader;
 use PHPUnit\Runner\Filter\Factory;
-use PHPUnit\Runner\ResultCache\DefaultResultCache;
-use PHPUnit\Runner\ResultCache\ResultCacheHandler;
+use PHPUnit\Runner\TestRunHistory\DefaultTestRunHistory;
+use PHPUnit\Runner\TestRunHistory\TestRunHistoryHandler;
 use PHPUnit\Runner\TestSuiteLoader;
 use PHPUnit\Runner\TestSuiteSorter;
 use PHPUnit\TestRunner\IssueFilter;
@@ -38,10 +38,15 @@ use PHPUnit\TextUI\TestSuiteFilterProcessor;
 use PHPUnit\Util\ExcludeList;
 
 use function assert;
+use function class_exists;
+use function explode;
 use function file_put_contents;
+use function function_exists;
 use function is_file;
+use function method_exists;
 use function mt_srand;
 use function serialize;
+use function str_contains;
 use function str_ends_with;
 use function strpos;
 use function substr;
@@ -205,9 +210,10 @@ final class ApplicationForWrapperWorker
         DeprecationCollector::init();
 
         if (isset($this->resultCacheFile)) {
-            new ResultCacheHandler(
-                new DefaultResultCache($this->resultCacheFile),
+            new TestRunHistoryHandler(
+                new DefaultTestRunHistory($this->resultCacheFile),
                 EventFacade::instance(),
+                false,
             );
         }
 
@@ -234,6 +240,8 @@ final class ApplicationForWrapperWorker
             $extensionRequiresCodeCoverageCollection,
         );
 
+        $this->configureDeprecationTriggers($this->configuration);
+
         $this->hasBeenBootstrapped = true;
     }
 
@@ -258,5 +266,37 @@ final class ApplicationForWrapperWorker
         file_put_contents($this->testResultFile, serialize($result));
 
         EventFacade::emitter()->applicationFinished(0);
+    }
+
+    private function configureDeprecationTriggers(Configuration $configuration): void
+    {
+        $deprecationTriggers = [
+            'functions' => [],
+            'methods'   => [],
+        ];
+
+        foreach ($configuration->source()->deprecationTriggers()['functions'] as $function) {
+            assert(function_exists($function));
+            $deprecationTriggers['functions'][] = $function;
+        }
+
+        foreach ($configuration->source()->deprecationTriggers()['methods'] as $method) {
+            assert(str_contains($method, '::'));
+            [$className, $methodName] = explode('::', $method);
+
+            assert(class_exists($className));
+            assert($methodName !== '');
+            assert(method_exists($className, $methodName));
+            $deprecationTriggers['methods'][] = [
+                'className'  => $className,
+                'methodName' => $methodName,
+            ];
+        }
+
+        if ($deprecationTriggers === ['functions' => [], 'methods' => []]) {
+            return;
+        }
+
+        ErrorHandler::instance()->useDeprecationTriggers($deprecationTriggers);
     }
 }

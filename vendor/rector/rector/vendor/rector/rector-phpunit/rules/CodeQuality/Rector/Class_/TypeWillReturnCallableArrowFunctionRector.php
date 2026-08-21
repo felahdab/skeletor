@@ -12,6 +12,8 @@ use PhpParser\Node\Expr\PropertyFetch;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Return_;
+use PhpParser\NodeFinder;
 use PHPStan\Reflection\ClassReflection;
 use PHPStan\Type\IntersectionType;
 use PHPStan\Type\MixedType;
@@ -161,7 +163,7 @@ CODE_SAMPLE
             }
             $methodName = $methodNameExpr->value;
             $callerType = $this->getType($parentMethodCall->var);
-            if ($callerType instanceof ObjectType && in_array($callerType->getClassName(), [PHPUnitClassName::INVOCATION_MOCKER, PHPUnitClassName::INVOCATION_STUBBER], \true)) {
+            if ($callerType instanceof ObjectType && in_array($callerType->getClassName(), [PHPUnitClassName::INVOCATION_MOCKER, PHPUnitClassName::INVOCATION_MOCKER_INTERFACE, PHPUnitClassName::INVOCATION_STUBBER], \true)) {
                 $parentMethodCall = $parentMethodCall->var;
                 if ($parentMethodCall instanceof MethodCall) {
                     $callerType = $this->getType($parentMethodCall->var);
@@ -204,6 +206,9 @@ CODE_SAMPLE
             if (!$innerClosure->returnType instanceof Node) {
                 $returnType = $parameterTypesAndReturnType->getReturnType();
                 if (!$returnType instanceof Type) {
+                    return null;
+                }
+                if ($this->shouldSkipReturnForConflictWithReturnedNodeType($innerClosure, $returnType)) {
                     return null;
                 }
                 $returnTypeNode = $this->staticTypeMapper->mapPHPStanTypeToPhpParserNode($returnType, TypeKind::RETURN);
@@ -274,5 +279,27 @@ CODE_SAMPLE
             return new IntersectionType([$callerType, new ObjectType($mockedType)]);
         }
         return $callerType;
+    }
+    /**
+     * @param \PhpParser\Node\Expr\Closure|\PhpParser\Node\Expr\ArrowFunction $functionLike
+     */
+    private function shouldSkipReturnForConflictWithReturnedNodeType($functionLike, Type $returnType): bool
+    {
+        // find return functionLike, to check current type
+        $nodeFinder = new NodeFinder();
+        $returns = $nodeFinder->findInstanceOf($functionLike, Return_::class);
+        $returnTypes = [];
+        foreach ($returns as $return) {
+            if ($return->expr instanceof Node) {
+                $returnTypes[] = $this->getType($return->expr);
+            }
+        }
+        if (count($returnTypes) === 1) {
+            $closureReturnedNodeType = $returnTypes[0];
+            if (!$closureReturnedNodeType->isSuperTypeOf($returnType)->yes()) {
+                return \true;
+            }
+        }
+        return \false;
     }
 }

@@ -35,10 +35,13 @@ use Filament\Support\Concerns\CanOrderColumns;
 use Filament\Support\Concerns\CanSpanColumns;
 use Filament\Support\Concerns\HasExtraAttributes;
 use Filament\Support\Enums\Width;
+use Filament\Support\View\ComponentAttributeBag as FilamentComponentAttributeBag;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Js;
 use Illuminate\View\ComponentAttributeBag;
+use Illuminate\View\ComponentSlot;
 
 class Component extends ViewComponent
 {
@@ -111,9 +114,7 @@ class Component extends ViewComponent
         }
 
         return match ($parameterType) {
-            Get::class => [$this->makeGetUtility()],
             Model::class, $record::class => [$record],
-            Set::class => [$this->makeSetUtility()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
     }
@@ -168,7 +169,7 @@ class Component extends ViewComponent
 
         $key = $this->getKey();
 
-        $attributes = (new ComponentAttributeBag)
+        $attributes = (new FilamentComponentAttributeBag)
             ->when(
                 ! $container->isInline(),
                 fn (ComponentAttributeBag $attributes) => $attributes->gridColumn($this->getColumnSpan(), $this->getColumnStart(), $this->getColumnOrder(), ! $isVisible),
@@ -179,6 +180,7 @@ class Component extends ViewComponent
             ], escape: false)
             ->class([
                 ($maxWidth instanceof Width) ? "fi-width-{$maxWidth->value}" : $maxWidth,
+                'fi-growable' => $container->isInline() && $this->canGrow(default: false),
             ]);
 
         ob_start(); ?>
@@ -195,7 +197,7 @@ class Component extends ViewComponent
                 })"
                 <?php if ($afterStateUpdatedJs = $this->getAfterStateUpdatedJs()) { ?>
                     x-init="<?= implode(';', array_map(
-                        fn (string $js): string => '$wire.watch(' . Js::from($statePath) . ', ($state, $old) => isStateChanged($state, $old) && eval(' . Js::from($js) . '))',
+                        fn (string $js): string => '$wire; $wire.watch(' . Js::from($statePath) . ', ($state, $old) => isStateChanged($state, $old) && eval(' . Js::from($js) . '))',
                         $afterStateUpdatedJs,
                     )) ?>"
                 <?php } ?>
@@ -224,5 +226,23 @@ class Component extends ViewComponent
         </div>
 
         <?php return ob_get_clean();
+    }
+
+    /**
+     * @internal This method is not part of the public API and should not be used. Its parameters may change at any time without notice.
+     */
+    protected function renderWrapperBladeComponent(string $component, ComponentSlot $slot, ComponentAttributeBag $attributes): string
+    {
+        // Wrappers were originally rendered using the `<x-dynamic-component>` Blade component,
+        // so `fieldWrapperView()` and `entryWrapperView()` accepted any Blade component name,
+        // which is still supported for backwards compatibility.
+        return Blade::render(
+            '<x-dynamic-component :component="$component" {{ $attributes }}>{{ $slot }}</x-dynamic-component>',
+            [
+                'component' => $component,
+                'attributes' => $attributes,
+                'slot' => $slot,
+            ],
+        );
     }
 }

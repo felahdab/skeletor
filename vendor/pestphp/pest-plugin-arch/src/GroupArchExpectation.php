@@ -13,7 +13,7 @@ use Pest\Expectation;
  *
  * @mixin Expectation<string>
  */
-final class GroupArchExpectation implements Contracts\ArchExpectation
+final class GroupArchExpectation implements ArchExpectation
 {
     /**
      * Creates a new Arch Expectation instance.
@@ -30,7 +30,6 @@ final class GroupArchExpectation implements Contracts\ArchExpectation
      * Ignores the given layers.
      *
      * @param  array<int, string>|string  $targetsOrDependencies
-     * @return $this
      */
     public function ignoring(array|string $targetsOrDependencies): self
     {
@@ -43,8 +42,6 @@ final class GroupArchExpectation implements Contracts\ArchExpectation
 
     /**
      * Ignores the global "user defined" functions.
-     *
-     * @return $this
      */
     public function ignoringGlobalFunctions(): self
     {

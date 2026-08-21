@@ -21,7 +21,7 @@ use Rector\ValueObject\PhpVersionFeature;
 use Rector\VersionBonding\Contract\MinPhpVersionInterface;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
-use RectorPrefix202602\Webmozart\Assert\Assert;
+use RectorPrefix202608\Webmozart\Assert\Assert;
 /**
  * @see \Rector\Tests\Php70\Rector\FuncCall\EregToPregMatchRector\EregToPregMatchRectorTest
  */
@@ -123,7 +123,6 @@ final class EregToPregMatchRector extends AbstractRector implements MinPhpVersio
         if (!$funcCall->args[2]->value instanceof Int_) {
             return;
         }
-        /** @var Int_ $limitNumberNode */
         $limitNumberNode = $funcCall->args[2]->value;
         if ($limitNumberNode->value !== 0) {
             return;

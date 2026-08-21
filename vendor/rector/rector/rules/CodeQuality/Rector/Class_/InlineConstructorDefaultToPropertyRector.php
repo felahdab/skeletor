@@ -7,14 +7,19 @@ use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\PropertyFetch;
+use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\If_;
 use PhpParser\Node\Stmt\Property;
+use PHPStan\Reflection\ClassReflection;
 use Rector\NodeAnalyzer\ExprAnalyzer;
 use Rector\NodeTypeResolver\Node\AttributeKey;
+use Rector\PhpParser\Node\BetterNodeFinder;
+use Rector\PhpParser\NodeFinder\PropertyFetchFinder;
 use Rector\Rector\AbstractRector;
+use Rector\Reflection\ReflectionResolver;
 use Rector\ValueObject\MethodName;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
@@ -27,9 +32,24 @@ final class InlineConstructorDefaultToPropertyRector extends AbstractRector
      * @readonly
      */
     private ExprAnalyzer $exprAnalyzer;
-    public function __construct(ExprAnalyzer $exprAnalyzer)
+    /**
+     * @readonly
+     */
+    private BetterNodeFinder $betterNodeFinder;
+    /**
+     * @readonly
+     */
+    private PropertyFetchFinder $propertyFetchFinder;
+    /**
+     * @readonly
+     */
+    private ReflectionResolver $reflectionResolver;
+    public function __construct(ExprAnalyzer $exprAnalyzer, BetterNodeFinder $betterNodeFinder, PropertyFetchFinder $propertyFetchFinder, ReflectionResolver $reflectionResolver)
     {
         $this->exprAnalyzer = $exprAnalyzer;
+        $this->betterNodeFinder = $betterNodeFinder;
+        $this->propertyFetchFinder = $propertyFetchFinder;
+        $this->reflectionResolver = $reflectionResolver;
     }
     public function getRuleDefinition(): RuleDefinition
     {
@@ -68,6 +88,10 @@ CODE_SAMPLE
      */
     public function refactor(Node $node): ?Node
     {
+        // A child class may bypass the constructor and depend on the declared property default
+        if (!$node->isFinal()) {
+            return null;
+        }
         $hasChanged = \false;
         $constructClassMethod = $node->getMethod(MethodName::CONSTRUCT);
         if (!$constructClassMethod instanceof ClassMethod) {
@@ -76,12 +100,17 @@ CODE_SAMPLE
         if ($constructClassMethod->stmts === null) {
             return null;
         }
+        $hasParentConstructCall = \false;
         foreach ($constructClassMethod->stmts as $key => $stmt) {
             // code that is possibly breaking flow
             if ($stmt instanceof If_) {
                 return null;
             }
             if (!$stmt instanceof Expression) {
+                continue;
+            }
+            if ($this->isParentConstructCall($stmt->expr)) {
+                $hasParentConstructCall = \true;
                 continue;
             }
             if (!$stmt->expr instanceof Assign) {
@@ -96,6 +125,10 @@ CODE_SAMPLE
             if ($this->exprAnalyzer->isDynamicExpr($defaultExpr)) {
                 continue;
             }
+            // parent constructor may set the very same property, keep assign order as is
+            if ($hasParentConstructCall && $this->isPropertyDefinedInParentClass($node, $propertyName)) {
+                continue;
+            }
             $hasPropertyChanged = $this->refactorProperty($node, $propertyName, $defaultExpr, $constructClassMethod, $key);
             if ($hasPropertyChanged) {
                 $hasChanged = \true;
@@ -105,6 +138,32 @@ CODE_SAMPLE
             return null;
         }
         return $node;
+    }
+    private function isParentConstructCall(Expr $expr): bool
+    {
+        if (!$expr instanceof StaticCall) {
+            return \false;
+        }
+        if (!$this->isName($expr->class, 'parent')) {
+            return \false;
+        }
+        return $this->isName($expr->name, MethodName::CONSTRUCT);
+    }
+    private function isPropertyDefinedInParentClass(Class_ $class, string $propertyName): bool
+    {
+        $classReflection = $this->reflectionResolver->resolveClassReflection($class);
+        if (!$classReflection instanceof ClassReflection) {
+            // unknown parent, keep it safe
+            return \true;
+        }
+        $found = \false;
+        foreach ($classReflection->getParents() as $parentClassReflection) {
+            if ($parentClassReflection->getNativeReflection()->hasProperty($propertyName)) {
+                $found = \true;
+                break;
+            }
+        }
+        return $found;
     }
     private function matchAssignedLocalPropertyName(Assign $assign): ?string
     {
@@ -121,9 +180,22 @@ CODE_SAMPLE
         }
         return $propertyName;
     }
+    private function isFoundInAnyPropertyHooks(Class_ $class, string $propertyName): bool
+    {
+        $propertyHooks = array_reduce($class->getProperties(), static fn(array $hooks, Property $property): array => array_merge($hooks, $property->hooks), []);
+        return (bool) $this->betterNodeFinder->findFirst($propertyHooks, function (Node $subNode) use ($class, $propertyName): bool {
+            if (!$subNode instanceof PropertyFetch) {
+                return \false;
+            }
+            return $this->propertyFetchFinder->isLocalPropertyFetchByName($subNode, $class, $propertyName);
+        });
+    }
     private function refactorProperty(Class_ $class, string $propertyName, Expr $defaultExpr, ClassMethod $constructClassMethod, int $key): bool
     {
         if ($class->isReadonly()) {
+            return \false;
+        }
+        if ($this->isFoundInAnyPropertyHooks($class, $propertyName)) {
             return \false;
         }
         foreach ($class->stmts as $classStmt) {

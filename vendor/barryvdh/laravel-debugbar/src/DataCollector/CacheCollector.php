@@ -23,6 +23,7 @@ use Illuminate\Cache\Events\{CacheEvent,
     RetrievingKey,
     WritingKey};
 use Illuminate\Support\Facades\Route;
+use Throwable;
 
 class CacheCollector extends TimeDataCollector implements AssetProvider, Resettable
 {
@@ -61,9 +62,15 @@ class CacheCollector extends TimeDataCollector implements AssetProvider, Resetta
         $class = get_class($event);
         $params = get_object_vars($event);
         $label = $this->classMap[$class][0];
+        $startHashKey = $this->getEventHash($this->classMap[$class][1] ?? '', $params);
 
         if (isset($params['value'])) {
-            $params['memoryUsage'] = strlen(serialize($params['value'])) * 8;
+            if (!($params['value'] instanceof \Closure || is_resource($params['value']))) {
+                try {
+                    $params['memoryUsage'] = strlen(serialize($params['value'])) * 8;
+                } catch (Throwable) {
+                }
+            }
 
             if (!$this->collectValues) {
                 unset($params['value']);
@@ -71,7 +78,6 @@ class CacheCollector extends TimeDataCollector implements AssetProvider, Resetta
         }
 
         $time = microtime(true);
-        $startHashKey = $this->getEventHash($this->classMap[$class][1] ?? '', $params);
         $startTime = $this->eventStarts[$startHashKey] ?? $time;
 
         $this->addMeasure($label . "\t" . ($params['key'] ?? ''), $startTime, $time, $params);

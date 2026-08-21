@@ -10,42 +10,27 @@ namespace Pest\Configuration;
 final class Project
 {
     /**
-     * The assignees link.
-     *
      * @internal
      */
     public string $assignees = '';
 
     /**
-     * The issues link.
-     *
      * @internal
      */
     public string $issues = '';
 
     /**
-     * The PRs link.
-     *
      * @internal
      */
     public string $prs = '';
 
-    /**
-     * The singleton instance.
-     */
     private static ?self $instance = null;
 
-    /**
-     * Creates a new instance of the project.
-     */
     public static function getInstance(): self
     {
         return self::$instance ??= new self;
     }
 
-    /**
-     * Sets the test project to GitHub.
-     */
     public function github(string $project): self
     {
         $this->issues = "https://github.com/{$project}/issues/%s";
@@ -56,22 +41,18 @@ final class Project
         return $this;
     }
 
-    /**
-     * Sets the test project to GitLab.
-     */
-    public function gitlab(string $project): self
+    public function gitlab(string $project, string $hostname = 'gitlab.com'): self
     {
-        $this->issues = "https://gitlab.com/{$project}/issues/%s";
-        $this->prs = "https://gitlab.com/{$project}/merge_requests/%s";
+        $hostname = parse_url($hostname, PHP_URL_HOST) ?? $hostname;
 
-        $this->assignees = 'https://gitlab.com/%s';
+        $this->issues = "https://{$hostname}/{$project}/-/work_items/%s";
+        $this->prs = "https://{$hostname}/{$project}/-/merge_requests/%s";
+
+        $this->assignees = "https://{$hostname}/%s";
 
         return $this;
     }
 
-    /**
-     * Sets the test project to Bitbucket.
-     */
     public function bitbucket(string $project): self
     {
         $this->issues = "https://bitbucket.org/{$project}/issues/%s";
@@ -82,9 +63,6 @@ final class Project
         return $this;
     }
 
-    /**
-     * Sets the test project to Jira.
-     */
     public function jira(string $namespace, string $project): self
     {
         $this->issues = "https://{$namespace}.atlassian.net/browse/{$project}-%s";
@@ -94,9 +72,6 @@ final class Project
         return $this;
     }
 
-    /**
-     * Sets the test project to custom.
-     */
     public function custom(string $issues, string $prs, string $assignees): self
     {
         $this->issues = $issues;

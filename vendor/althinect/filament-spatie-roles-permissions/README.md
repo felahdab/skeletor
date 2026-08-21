@@ -4,7 +4,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/althinect/filament-spatie-roles-permissions.svg?style=flat-square)](https://packagist.org/packages/althinect/filament-spatie-roles-permissions)
 [![GitHub Actions](https://github.com/althinect/filament-spatie-roles-permissions/actions/workflows/main.yml/badge.svg)](https://github.com/Althinect/filament-spatie-roles-permissions)
 
-This plugin is built on top of [Spatie's Permission](https://spatie.be/docs/laravel-permission/v6/introduction) package. 
+This plugin is built on top of [Spatie's Permission](https://spatie.be/docs/laravel-permission/v8/introduction) package. 
 
 Provides Resources for Roles and Permissions
 
@@ -33,7 +33,7 @@ You can install the package via composer:
 composer require althinect/filament-spatie-roles-permissions
 ```
 
-Since the package depends on [Spatie's Permission](https://spatie.be/docs/laravel-permission/v5/introduction) package. You have to publish the migrations by running:
+Since the package depends on [Spatie's Permission](https://spatie.be/docs/laravel-permission/v8/introduction) package. You have to publish the migrations by running:
 ```bash
 php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
 ```
@@ -245,14 +245,17 @@ Follow the instructions on [Filament Multi-tenancy](https://filamentphp.com/docs
 
 In the **filament-spatie-roles-permissions.php** config file, you can customize the permission generation
 
+If you are using a custom theme from a previous version of filament then there is a possibility that the layout 
+for the roles and permissions will not be full-width. 
+You can set the default column span to 'full' in the config to preserve the v3 default (full-width) layout.
+
 ## Security
 
 If you discover any security related issues, please create an issue.
 
 ## Credits
 
--   [Tharinda Rodrigo](https://github.com/tharindarodrigo/)
--   [Udam Liyanage](https://github.com/UdamLiyanage/)
+-   [Althinect](https://github.com/Althinect/)
 -   [Contributors](https://github.com/Althinect/filament-spatie-roles-permissions/graphs/contributors)
 
 ## License

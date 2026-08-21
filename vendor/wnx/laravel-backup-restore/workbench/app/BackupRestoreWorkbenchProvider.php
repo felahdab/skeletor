@@ -5,6 +5,17 @@ declare(strict_types=1);
 namespace Workbench\App;
 
 use Illuminate\Support\ServiceProvider;
+use Spatie\Backup\Notifications\Notifiable;
+use Spatie\Backup\Notifications\Notifications\BackupHasFailedNotification;
+use Spatie\Backup\Notifications\Notifications\BackupWasSuccessfulNotification;
+use Spatie\Backup\Notifications\Notifications\CleanupHasFailedNotification;
+use Spatie\Backup\Notifications\Notifications\CleanupWasSuccessfulNotification;
+use Spatie\Backup\Notifications\Notifications\HealthyBackupWasFoundNotification;
+use Spatie\Backup\Notifications\Notifications\UnhealthyBackupWasFoundNotification;
+use Spatie\Backup\Tasks\Cleanup\Strategies\DefaultStrategy;
+use Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays;
+use Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes;
+use Spatie\DbDumper\Compressors\GzipCompressor;
 use ZipArchive;
 
 class BackupRestoreWorkbenchProvider extends ServiceProvider
@@ -90,7 +101,7 @@ class BackupRestoreWorkbenchProvider extends ServiceProvider
                         'mysql',
                     ],
                 ],
-                'database_dump_compressor' => \Spatie\DbDumper\Compressors\GzipCompressor::class,
+                'database_dump_compressor' => GzipCompressor::class,
                 'database_dump_file_timestamp_format' => null,
                 'database_dump_filename_base' => 'database',
                 'database_dump_file_extension' => '',
@@ -111,14 +122,14 @@ class BackupRestoreWorkbenchProvider extends ServiceProvider
             ],
             'notifications' => [
                 'notifications' => [
-                    \Spatie\Backup\Notifications\Notifications\BackupHasFailedNotification::class => ['mail'],
-                    \Spatie\Backup\Notifications\Notifications\UnhealthyBackupWasFoundNotification::class => ['mail'],
-                    \Spatie\Backup\Notifications\Notifications\CleanupHasFailedNotification::class => ['mail'],
-                    \Spatie\Backup\Notifications\Notifications\BackupWasSuccessfulNotification::class => ['mail'],
-                    \Spatie\Backup\Notifications\Notifications\HealthyBackupWasFoundNotification::class => ['mail'],
-                    \Spatie\Backup\Notifications\Notifications\CleanupWasSuccessfulNotification::class => ['mail'],
+                    BackupHasFailedNotification::class => ['mail'],
+                    UnhealthyBackupWasFoundNotification::class => ['mail'],
+                    CleanupHasFailedNotification::class => ['mail'],
+                    BackupWasSuccessfulNotification::class => ['mail'],
+                    HealthyBackupWasFoundNotification::class => ['mail'],
+                    CleanupWasSuccessfulNotification::class => ['mail'],
                 ],
-                'notifiable' => \Spatie\Backup\Notifications\Notifiable::class,
+                'notifiable' => Notifiable::class,
                 'mail' => [
                     'to' => 'your@example.com',
                     'from' => [
@@ -143,13 +154,13 @@ class BackupRestoreWorkbenchProvider extends ServiceProvider
                     'name' => env('APP_NAME', 'laravel-backup'),
                     'disks' => ['local'],
                     'health_checks' => [
-                        \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 1,
-                        \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes::class => 5000,
+                        MaximumAgeInDays::class => 1,
+                        MaximumStorageInMegabytes::class => 5000,
                     ],
                 ],
             ],
             'cleanup' => [
-                'strategy' => \Spatie\Backup\Tasks\Cleanup\Strategies\DefaultStrategy::class,
+                'strategy' => DefaultStrategy::class,
                 'default_strategy' => [
                     'keep_all_backups_for_days' => 7,
                     'keep_daily_backups_for_days' => 16,

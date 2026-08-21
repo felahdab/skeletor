@@ -2,7 +2,10 @@
 
 namespace Dedoc\Scramble\Support\OperationExtensions\RulesEvaluator;
 
+use Dedoc\Scramble\Diagnostics\DiagnosticsCollector;
+use Dedoc\Scramble\Exceptions\RulesEvaluationException;
 use Dedoc\Scramble\Infer\Reflector\ClassReflector;
+use Dedoc\Scramble\Support\RouteInfo;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\NodeFinder;
@@ -14,11 +17,14 @@ class ComposedFormRequestRulesEvaluator implements RulesEvaluator
         private PrettyPrinter $printer,
         private ClassReflector $classReflector,
         private string $method,
+        private DiagnosticsCollector $diagnostics,
+        private RouteInfo $routeInfo,
     ) {}
 
     public function handle(): array
     {
-        $rulesMethodNode = $this->classReflector->getMethod('rules')->getAstNode();
+        $rulesMethod = $this->classReflector->getMethod('rules');
+        $rulesMethodNode = $rulesMethod->getAstNode();
 
         /** @var Return_ $returnNodeStatement */
         $returnNodeStatement = (new NodeFinder)->findFirst(
@@ -28,18 +34,21 @@ class ComposedFormRequestRulesEvaluator implements RulesEvaluator
         $returnNode = $returnNodeStatement?->expr ?? null;
 
         $evaluators = [
-            new FormRequestRulesEvaluator($this->classReflector, $this->method),
-            new NodeRulesEvaluator($this->printer, $rulesMethodNode, $returnNode, $this->method, $this->classReflector->className),
+            new FormRequestRulesEvaluator($this->classReflector, $this->method, $this->diagnostics),
+            new NodeRulesEvaluator($this->printer, $rulesMethodNode, $returnNode, $this->method, $this->classReflector->className, $rulesMethod->getFunctionLikeDefinition()->getScope(), $this->diagnostics, $this->routeInfo),
         ];
+
+        $exceptions = [];
 
         foreach ($evaluators as $evaluator) {
             try {
                 return $evaluator->handle();
             } catch (\Throwable $e) {
-                // @todo communicate error
+                $exceptions[$evaluator::class] = $e;
             }
         }
 
-        return [];
+        throw RulesEvaluationException::fromExceptions($exceptions)
+            ->forClass($this->classReflector->className);
     }
 }

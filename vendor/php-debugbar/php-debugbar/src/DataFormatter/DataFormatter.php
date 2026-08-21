@@ -32,19 +32,36 @@ class DataFormatter implements DataFormatterInterface
 
     protected ?DataDumperInterface $dumper = null;
 
-    public function formatVar(mixed $data, bool $deep = true): string
+    public function formatVar(mixed $data, bool $deep = true): mixed
     {
+        if (is_string($data)) {
+            $maxString = $this->getClonerOptions()['max_string'] ?? 10_000;
+            if (strlen($data) <= $maxString) {
+                return $data;
+            }
+            return substr($data, 0, $maxString) . '[truncated ' . (strlen($data) - $maxString) . ' chars]';
+        }
+
+        if ($data === null || is_bool($data) || is_int($data) || is_float($data)) {
+            return var_export($data, true);
+        }
+
+        return trim($this->dumpClonedVar($this->cloneVar($data, $deep)));
+    }
+
+    protected function cloneVar(mixed $data, bool $deep): Data
+    {
+        $isNonIterableObject = is_object($data) && !is_iterable($data);
         if ($deep) {
             // Set sensible default max depth for deep dumps if not set
-            $maxDepth = $this->clonerOptions['max_depth'] ?? (is_object($data) ? 2 : 4);
+            $maxDepth = $this->clonerOptions['max_depth'] ?? ($isNonIterableObject ? 2 : 4);
         } else {
-            $maxDepth = min($this->clonerOptions['max_depth'] ?? 1, is_object($data) ? 0 : 1);
+            $maxDepth = min($this->clonerOptions['max_depth'] ?? 1, $isNonIterableObject ? 0 : 1);
         }
 
         $cloner = $this->getCloner();
-        $data = $cloner->cloneVar($data)->withMaxDepth($maxDepth);
 
-        return trim($this->dumpClonedVar($data));
+        return $cloner->cloneVar($data)->withMaxDepth($maxDepth);
     }
 
     protected function dumpClonedVar(Data $data): string

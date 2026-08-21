@@ -8,6 +8,7 @@ use LogicException;
 use Saloon\Enums\Method;
 use Saloon\Traits\Bootable;
 use Saloon\Traits\Makeable;
+use Saloon\Traits\Macroable;
 use Saloon\Traits\HasDebugging;
 use Saloon\Traits\Conditionable;
 use Saloon\Traits\HasMockClient;
@@ -30,9 +31,16 @@ abstract class Request
     use HasMockClient;
     use Conditionable;
     use HasDebugging;
+    use Macroable;
     use HasTries;
     use Bootable;
     use Makeable;
+
+    /**
+     * When non-null, overrides connector / OAuth resolution for absolute endpoints in resolveEndpoint().
+     * null = inherit. Set true/false on the instance or declare on your request subclass.
+     */
+    public ?bool $allowBaseUrlOverride = null;
 
     /**
      * Define the HTTP method.

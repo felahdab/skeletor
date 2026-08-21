@@ -8,10 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace RectorPrefix202602\Symfony\Component\Console\Input;
+namespace RectorPrefix202608\Symfony\Component\Console\Input;
 
-use RectorPrefix202602\Symfony\Component\Console\Exception\InvalidArgumentException;
-use RectorPrefix202602\Symfony\Component\Console\Exception\RuntimeException;
+use RectorPrefix202608\Symfony\Component\Console\Exception\InvalidArgumentException;
+use RectorPrefix202608\Symfony\Component\Console\Exception\RuntimeException;
 /**
  * Input is the base class for all concrete Input classes.
  *
@@ -63,7 +63,7 @@ abstract class Input implements InputInterface, StreamableInputInterface
     {
         $definition = $this->definition;
         $givenArguments = $this->arguments;
-        $missingArguments = array_filter(array_keys($definition->getArguments()), fn($argument) => !\array_key_exists($argument, $givenArguments) && $definition->getArgument($argument)->isRequired());
+        $missingArguments = array_filter(array_keys($definition->getArguments()), static fn($argument) => !\array_key_exists($argument, $givenArguments) && $definition->getArgument($argument)->isRequired());
         if (\count($missingArguments) > 0) {
             throw new RuntimeException(\sprintf('Not enough arguments (missing: "%s").', implode(', ', $missingArguments)));
         }

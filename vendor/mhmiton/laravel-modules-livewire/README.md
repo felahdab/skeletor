@@ -25,39 +25,130 @@ composer require mhmiton/laravel-modules-livewire
 Publish the package's configuration file:
 
 ```
-php artisan vendor:publish --tag=modules-livewire-config
+php artisan vendor:publish --tag=modules-livewire:config
 ```
 
-### Making Components:
+### Creating Single File Components (SFC):
 
 **Command Signature:**
 
-`php artisan module:make-livewire {component} {module} {--view=} {--force} {--inline} {--stub=}`
+`php artisan module:make-livewire {component} {module} {--sfc} {--force} {--emoji=} {--stub=}`
 
 **Example:**
 
 ```
-php artisan module:make-livewire Pages/AboutPage Core
+php artisan module:make-livewire sfc.post.create Core --sfc
 ```
 
-```
-php artisan module:make-livewire Pages\\AboutPage Core
-```
+**Force create component if the component already exists:**
 
 ```
-php artisan module:make-livewire pages.about-page Core
-```
-
-**Force create component if the class already exists:**
-
-```
-php artisan module:make-livewire Pages/AboutPage Core --force
+php artisan module:make-livewire sfc.post.create Core --sfc --force
 ```
 
 **Output:**
 
 ```
-COMPONENT CREATED  🤙
+COMPONENT CREATED - SFC  🤙
+
+VIEW:  modules/Core/resources/views/livewire/sfc/post/⚡create.blade.php
+TAG: <livewire:core::sfc.post.create />
+```
+
+**Option (--emoji):**
+
+Use emoji (⚡) in file/directory names (true or false)
+
+```
+php artisan module:make-livewire sfc.post.create Core --sfc --emoji=false
+```
+
+**Modifying Stubs:**
+
+Check the [Modifying Stubs](#modifying-stubs) section for the `--stub` option.
+
+### Creating Multi File Components (MFC):
+
+**Command Signature:**
+
+`php artisan module:make-livewire {component} {module} {--mfc} {--force} {--emoji=} {--test} {--js} {--stub=}`
+
+**Example:**
+
+```
+php artisan module:make-livewire mfc.post.create Core --mfc
+```
+
+**Force create component if the component already exists:**
+
+```
+php artisan module:make-livewire mfc.post.create Core --mfc --force
+```
+
+**Output:**
+
+```
+COMPONENT CREATED - MFC  🤙
+
+CLASS:  modules/Core/resources/views/livewire/mfc/post/⚡create/create.php
+VIEW:  modules/Core/resources/views/livewire/mfc/post/⚡create/create.blade.php
+TAG: <livewire:core::mfc.post.create />
+```
+
+**Option (--emoji):**
+
+Use emoji (⚡) in file/directory names (true or false)
+
+```
+php artisan module:make-livewire mfc.post.create Core --mfc --emoji=false
+```
+
+**Option (--test): Create MFC with test file.:**
+
+```
+php artisan module:make-livewire mfc.post.create Core --mfc --test
+```
+
+**Option (--js): Create MFC with js file:**
+
+```
+php artisan module:make-livewire mfc.post.create Core --mfc --js
+```
+
+**Modifying Stubs:**
+
+Check the [Modifying Stubs](#modifying-stubs) section for the `--stub` option.
+
+### Creating Class-based Components:
+
+**Command Signature:**
+
+`php artisan module:make-livewire {component} {module} {--class} {--view=} {--force} {--inline} {--stub=}`
+
+**Example:**
+
+```
+php artisan module:make-livewire Pages/AboutPage Core --class
+```
+
+```
+php artisan module:make-livewire Pages\\AboutPage Core --class
+```
+
+```
+php artisan module:make-livewire pages.about-page Core --class
+```
+
+**Force create component if the class already exists:**
+
+```
+php artisan module:make-livewire Pages/AboutPage Core --class --force
+```
+
+**Output:**
+
+```
+COMPONENT CREATED - CLASS BASED  🤙
 
 CLASS: Modules/Core/app/Livewire/Pages/AboutPage.php
 VIEW:  Modules/Core/resources/views/livewire/pages/about-page.blade.php
@@ -67,50 +158,16 @@ TAG: <livewire:core::pages.about-page />
 **Inline Component:**
 
 ```
-php artisan module:make-livewire Pages/AboutPage Core --inline
+php artisan module:make-livewire Pages/AboutPage Core --class --inline
 ```
 
 **Output:**
 
 ```
-COMPONENT CREATED  🤙
+COMPONENT CREATED - CLASS BASED  🤙
 
 CLASS: Modules/Core/app/Livewire/Pages/AboutPage.php
 TAG: <livewire:core::pages.about-page />
-```
-
-**Modifying Stubs:**
-
-Publish the package's stubs:
-
-```
-php artisan vendor:publish --tag=modules-livewire-stub
-```
-
-After publishing the stubs, will create these files. And when running the make command, will use these stub files by default.
-
-```
-stubs/modules-livewire/livewire.inline.stub
-stubs/modules-livewire/livewire.stub
-stubs/modules-livewire/livewire.view.stub
-
-// For Volt
-stubs/modules-livewire/volt-component-class.stub
-stubs/modules-livewire/volt-component.stub
-```
-
-**You're able to set a custom stub directory for component with (--stub) option.**
-
-```
-php artisan module:make-livewire Pages/AboutPage Core --stub=about
-```
-
-```
-php artisan module:make-livewire Pages/AboutPage Core --stub=modules-livewire/core
-```
-
-```
-php artisan module:make-livewire Pages/AboutPage Core --stub=./
 ```
 
 **Extra Option (--view):**
@@ -120,17 +177,17 @@ php artisan module:make-livewire Pages/AboutPage Core --stub=./
 **Example:**
 
 ```
-php artisan module:make-livewire Pages/AboutPage Core --view=pages/about
+php artisan module:make-livewire Pages/AboutPage Core --class --view=pages/about
 ```
 
 ```
-php artisan module:make-livewire Pages/AboutPage Core --view=pages.about
+php artisan module:make-livewire Pages/AboutPage Core --class --view=pages.about
 ```
 
 **Output:**
 
 ```
-COMPONENT CREATED  🤙
+COMPONENT CREATED - CLASS BASED  🤙
 
 CLASS: Modules/Core/app/Livewire/Pages/AboutPage.php
 VIEW:  Modules/Core/resources/views/livewire/pages/about.blade.php
@@ -147,7 +204,51 @@ TAG: <livewire:core::pages.about-page />
 <livewire:core::pages.about-page />
 ```
 
-### Making Form Components:
+### Modifying Stubs:
+
+Publish the package's stubs:
+
+```
+php artisan vendor:publish --tag=modules-livewire:stub
+```
+
+After publishing the stubs, will create these files. And when running the make command, will use these stub files by default.
+
+```
+// For Single File Component (SFC)
+stubs/modules-livewire/livewire-sfc.stub
+
+// For Multi File Component (MFC)
+stubs/modules-livewire/livewire-mfc-class.stub
+stubs/modules-livewire/livewire-mfc-view.stub
+stubs/modules-livewire/livewire-mfc-test.stub
+stubs/modules-livewire/livewire-mfc-js.stub
+
+// For Class-based Component
+stubs/modules-livewire/livewire.inline.stub
+stubs/modules-livewire/livewire.stub
+stubs/modules-livewire/livewire.view.stub
+
+// For Volt
+stubs/modules-livewire/volt-component-class.stub
+stubs/modules-livewire/volt-component.stub
+```
+
+**You're able to set a custom stub directory for component with (--stub) option.**
+
+```
+php artisan module:make-livewire Pages/AboutPage Core --class --stub=about
+```
+
+```
+php artisan module:make-livewire Pages/AboutPage Core --class --stub=modules-livewire/core
+```
+
+```
+php artisan module:make-livewire Pages/AboutPage Core --class --stub=./
+```
+
+### Creating Form Components:
 
 **Command Signature:**
 
@@ -181,10 +282,9 @@ COMPONENT CREATED  🤙
 CLASS: Modules/Core/app/Livewire/Forms/PostForm.php
 ```
 
-
 ### Volt:
 
-### Making Volt Components:
+### Creating Volt Components:
 
 **Command Signature:**
 
@@ -255,7 +355,7 @@ Note:: By default will be create class based or functional component by register
 
 **Modifying Stubs:**
 
-The `--stub` option is the same to `module::make-livewire`.
+Check the [Modifying Stubs](#modifying-stubs) section for the `--stub` option.
 
 ### Rendering Volt Components:
 

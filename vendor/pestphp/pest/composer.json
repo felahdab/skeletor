@@ -17,20 +17,20 @@
         }
     ],
     "require": {
-        "php": "^8.3.0",
-        "brianium/paratest": "^7.16.1",
-        "nunomaduro/collision": "^8.8.3",
-        "nunomaduro/termwind": "^2.3.3",
-        "pestphp/pest-plugin": "^4.0.0",
-        "pestphp/pest-plugin-arch": "^4.0.0",
-        "pestphp/pest-plugin-mutate": "^4.0.1",
-        "pestphp/pest-plugin-profanity": "^4.2.1",
-        "phpunit/phpunit": "^12.5.8",
-        "symfony/process": "^7.4.4|^8.0.0"
+        "php": "^8.4",
+        "brianium/paratest": "^7.24.0",
+        "nunomaduro/collision": "^8.9.5",
+        "nunomaduro/termwind": "^2.4.0",
+        "pestphp/pest-plugin": "^5.0.0",
+        "pestphp/pest-plugin-arch": "^5.0.0",
+        "pestphp/pest-plugin-mutate": "^5.0.2",
+        "pestphp/pest-plugin-profanity": "^5.0.0",
+        "phpunit/phpunit": "^13.3.0",
+        "symfony/process": "^8.1.0"
     },
     "conflict": {
         "filp/whoops": "<2.18.3",
-        "phpunit/phpunit": ">12.5.8",
+        "phpunit/phpunit": ">13.3.0",
         "sebastian/exporter": "<7.0.0",
         "webmozart/assert": "<1.11.0"
     },
@@ -48,23 +48,30 @@
             "Tests\\Fixtures\\Covers\\": "tests/Fixtures/Covers",
             "Tests\\Fixtures\\Inheritance\\": "tests/Fixtures/Inheritance",
             "Tests\\Fixtures\\Arch\\": "tests/Fixtures/Arch",
+            "Tests\\Fixtures\\Tia\\": "tests/Fixtures/Tia",
             "Tests\\": "tests/PHPUnit/"
         },
+        "classmap": [
+            "tests/Fixtures/Arch/ToBeCasedCorrectly/IncorrectCasing/incorrectCasing.php"
+        ],
         "files": [
             "tests/Autoload.php"
         ]
     },
     "require-dev": {
-        "pestphp/pest-dev-tools": "^4.0.0",
-        "pestphp/pest-plugin-browser": "^4.2.1",
-        "pestphp/pest-plugin-type-coverage": "^4.0.3",
-        "psy/psysh": "^0.12.18"
+        "pestphp/pest-dev-tools": "^5.0.0",
+        "pestphp/pest-plugin-browser": "^5.0.1",
+        "pestphp/pest-plugin-phpstan": "^5.0.2",
+        "pestphp/pest-plugin-rector": "^5.0.3",
+        "pestphp/pest-plugin-type-coverage": "^5.0.2",
+        "psy/psysh": "^0.12.24"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
         "sort-packages": true,
         "preferred-install": "dist",
+        "process-timeout": 0,
         "allow-plugins": {
             "pestphp/pest-plugin": true
         }
@@ -73,10 +80,14 @@
         "bin/pest"
     ],
     "scripts": {
-        "refacto": "rector",
-        "lint": "pint --parallel",
-        "test:refacto": "rector --dry-run",
-        "test:lint": "pint --parallel --test",
+        "lint": [
+            "rector",
+            "pint --parallel"
+        ],
+        "test:lint": [
+            "rector --dry-run",
+            "pint --parallel --test"
+        ],
         "test:profanity": "php bin/pest --profanity --compact",
         "test:type:check": "phpstan analyse --ansi --memory-limit=-1 --debug",
         "test:type:coverage": "php -d memory_limit=-1  bin/pest --type-coverage --min=100",
@@ -84,9 +95,9 @@
         "test:inline": "php bin/pest --configuration=phpunit.inline.xml",
         "test:parallel": "php bin/pest --exclude-group=integration --parallel --processes=3",
         "test:integration": "php bin/pest --group=integration -v",
-        "update:snapshots": "REBUILD_SNAPSHOTS=true php bin/pest --update-snapshots",
+        "test:tia": "php bin/pest --group=tia -v",
+        "update:snapshots": "REBUILD_SNAPSHOTS=true php bin/pest --update-snapshots --exclude-group=tia",
         "test": [
-            "@test:refacto",
             "@test:lint",
             "@test:type:check",
             "@test:type:coverage",
@@ -116,6 +127,7 @@
                 "Pest\\Plugins\\Verbose",
                 "Pest\\Plugins\\Version",
                 "Pest\\Plugins\\Shard",
+                "Pest\\Plugins\\Tia",
                 "Pest\\Plugins\\Parallel"
             ]
         },

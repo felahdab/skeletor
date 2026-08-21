@@ -1,6 +1,7 @@
 import { Select } from '../../../../../support/resources/js/utilities/select.js'
 
 export default function selectTableColumn({
+    ariaLabel,
     canOptionLabelsWrap,
     canSelectPlaceholder,
     getOptionLabelUsing,
@@ -43,6 +44,7 @@ export default function selectTableColumn({
         init() {
             if (!isNative) {
                 this.select = new Select({
+                    ariaLabel,
                     canOptionLabelsWrap,
                     canSelectPlaceholder,
                     element: this.$refs.select,
@@ -74,17 +76,16 @@ export default function selectTableColumn({
                 })
             }
 
-            this.unsubscribeLivewireHook = Livewire.hook(
-                'commit',
-                ({ component, commit, succeed, fail, respond }) => {
-                    succeed(({ snapshot, effect }) => {
+            this.unsubscribeLivewireHook = Livewire.interceptMessage(
+                ({ message, onSuccess }) => {
+                    onSuccess(() => {
                         this.$nextTick(() => {
                             if (this.isLoading) {
                                 return
                             }
 
                             if (
-                                component.id !==
+                                message.component.id !==
                                 this.$root.closest('[wire\\:id]')?.attributes[
                                     'wire:id'
                                 ].value

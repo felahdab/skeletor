@@ -39,7 +39,7 @@ final class AttributeTransformer extends AbstractTransformer
         return 8_00_00;
     }
 
-    public function process(Tokens $tokens, Token $token, int $index): void
+    public function processToken(Tokens $tokens, Token $token, int $index): void
     {
         if (!$tokens[$index]->isGivenKind(\T_ATTRIBUTE)) {
             return;
@@ -49,7 +49,7 @@ final class AttributeTransformer extends AbstractTransformer
             ++$index;
 
             if ($tokens[$index]->equals('(')) {
-                $index = $tokens->findBlockEnd(Tokens::BLOCK_TYPE_PARENTHESIS_BRACE, $index) + 1;
+                $index = $tokens->findBlockEnd(Tokens::BLOCK_TYPE_PARENTHESIS, $index) + 1;
             }
         } while (!$tokens[$index]->equals(']'));
 

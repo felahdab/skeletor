@@ -1,5 +1,5 @@
 @php
-    use Illuminate\View\ComponentAttributeBag;
+    use Filament\Support\View\ComponentAttributeBag as FilamentComponentAttributeBag;
 @endphp
 
 @props([
@@ -10,7 +10,7 @@
 ])
 
 @php
-    $wireModelAttribute = $onBlur ? 'wire:model.blur' : "wire:model.live.debounce.{$debounce}";
+    $wireModelAttribute = $onBlur ? 'wire:model.live.blur' : "wire:model.live.debounce.{$debounce}";
 @endphp
 
 <div
@@ -29,7 +29,7 @@
     >
         <x-filament::input
             :attributes="
-                (new ComponentAttributeBag)->merge([
+                (new FilamentComponentAttributeBag)->merge([
                     'autocomplete' => 'off',
                     'inlinePrefix' => true,
                     'maxlength' => 1000,

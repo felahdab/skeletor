@@ -1,6 +1,7 @@
 @php
     use Filament\Support\Enums\IconSize;
     use Filament\Support\Enums\Size;
+    use Filament\Support\View\ComponentAttributeBag as FilamentComponentAttributeBag;
     use Filament\Support\View\Components\BadgeComponent;
     use Filament\Support\View\Components\DropdownComponent\ItemComponent;
     use Filament\Support\View\Components\DropdownComponent\ItemComponent\IconComponent;
@@ -8,6 +9,8 @@
 @endphp
 
 @props([
+    'alpineDeferredBadgeData' => null,
+    'alpineDeferredBadgeLoading' => null,
     'badge' => null,
     'badgeColor' => 'primary',
     'badgeTooltip' => null,
@@ -42,7 +45,12 @@
         $loadingIndicatorTarget = html_entity_decode($wireTarget, ENT_QUOTES);
     }
 
+    $hasDeferredBadge = filled($alpineDeferredBadgeData);
     $hasTooltip = filled($tooltip);
+
+    $loadingDelay = ($icon || $hasLoadingIndicator)
+        ? config('filament.livewire_loading_delay', 'default')
+        : null;
 @endphp
 
 {!! ($tag === 'form') ? ('<form ' . $attributes->only(['action', 'class', 'method', 'wire:submit'])->toHtml() . '>') : '' !!}
@@ -96,10 +104,10 @@
             ->color(ItemComponent::class, $color)
     }}
 >
-    @if ($icon)
+    @if ($icon || $iconAlias)
         {{
-            \Filament\Support\generate_icon_html($icon, $iconAlias, (new ComponentAttributeBag([
-                'wire:loading.remove.delay.' . config('filament.livewire_loading_delay', 'default') => $hasLoadingIndicator,
+            \Filament\Support\generate_icon_html($icon, $iconAlias, (new FilamentComponentAttributeBag([
+                'wire:loading.remove.delay.' . $loadingDelay => $hasLoadingIndicator,
                 'wire:target' => $hasLoadingIndicator ? $loadingIndicatorTarget : false,
             ]))->color(IconComponent::class, $iconColor), size: $iconSize)
         }}
@@ -110,7 +118,7 @@
             class="fi-dropdown-list-item-image"
             style="background-image: url('{{ $image }}')"
             @if ($hasLoadingIndicator)
-                wire:loading.remove.delay.{{ config('filament.livewire_loading_delay', 'default') }}
+                wire:loading.remove.delay.{{ $loadingDelay }}
                 wire:target="{{ $loadingIndicatorTarget }}"
             @endif
         ></div>
@@ -118,8 +126,8 @@
 
     @if ($hasLoadingIndicator)
         {{
-            \Filament\Support\generate_loading_indicator_html((new ComponentAttributeBag([
-                'wire:loading.delay.' . config('filament.livewire_loading_delay', 'default') => '',
+            \Filament\Support\generate_loading_indicator_html((new FilamentComponentAttributeBag([
+                'wire:loading.delay.' . $loadingDelay => '',
                 'wire:target' => $loadingIndicatorTarget,
             ]))->color(IconComponent::class, $iconColor), size: $iconSize)
         }}
@@ -141,11 +149,47 @@
                         allowHTML: @js($badgeTooltip instanceof \Illuminate\Contracts\Support\Htmlable),
                     }"
                 @endif
-                {{ (new ComponentAttributeBag)->color(BadgeComponent::class, $badgeColor)->class(['fi-badge']) }}
+                {{ (new FilamentComponentAttributeBag)->color(BadgeComponent::class, $badgeColor)->class(['fi-badge']) }}
             >
                 {{ $badge }}
             </span>
         @endif
+    @elseif ($hasDeferredBadge)
+        <span
+            x-show="{{ $alpineDeferredBadgeLoading }}"
+            x-cloak
+            class="fi-dropdown-list-item-badge-placeholder"
+        >
+            {{ \Filament\Support\generate_loading_indicator_html(size: \Filament\Support\Enums\IconSize::Small) }}
+        </span>
+
+        <template
+            x-if="
+                ! {{ $alpineDeferredBadgeLoading }} &&
+                    {{ $alpineDeferredBadgeData }}?.badge != null
+            "
+        >
+            <span
+                x-bind:class="'fi-badge ' + ({{ $alpineDeferredBadgeData }}?.badgeColorClasses ?? '')"
+                x-bind:style="{{ $alpineDeferredBadgeData }}?.badgeColorStyles ?? ''"
+                x-init="
+                    let tooltip = {{ $alpineDeferredBadgeData }}?.badgeTooltip
+                    if (tooltip) {
+                        window.tippy?.($el, {
+                            content: tooltip,
+                            theme: $store.theme,
+                        })
+                    }
+                "
+            >
+                <span class="fi-badge-label-ctn">
+                    <span
+                        class="fi-badge-label"
+                        x-text="{{ $alpineDeferredBadgeData }}?.badge"
+                    ></span>
+                </span>
+            </span>
+        </template>
     @endif
 </{{ ($tag === 'form') ? 'button' : $tag }}>
 

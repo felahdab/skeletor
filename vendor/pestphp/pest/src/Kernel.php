@@ -27,35 +27,34 @@ use Whoops\Exception\Inspector;
 /**
  * @internal
  */
-final readonly class Kernel
+final class Kernel
 {
+    private bool $terminated = false;
+
     /**
-     * The Kernel bootstrappers.
-     *
      * @var array<int, class-string>
      */
     private const array BOOTSTRAPPERS = [
         Bootstrappers\BootOverrides::class,
+        Bootstrappers\BootPhpUnitConfiguration::class,
         Bootstrappers\BootSubscribers::class,
         Bootstrappers\BootFiles::class,
+        Plugins\Tia\Bootstrapper::class,
         Bootstrappers\BootView::class,
         Bootstrappers\BootKernelDump::class,
         Bootstrappers\BootExcludeList::class,
     ];
 
     /**
-     * Creates a new Kernel instance.
+     * @var array<int, class-string<Contracts\Restarter>>
      */
-    public function __construct(
-        private Application $application,
-        private OutputInterface $output,
-    ) {
-        //
-    }
+    public const array RESTARTERS = [
+        Restarters\XdebugRestarter::class,
+        Restarters\PcovRestarter::class,
+    ];
 
-    /**
-     * Boots the Kernel.
-     */
+    public function __construct(private readonly Application $application, private readonly OutputInterface $output) {}
+
     public static function boot(TestSuite $testSuite, InputInterface $input, OutputInterface $output): self
     {
         $container = Container::getInstance();
@@ -88,8 +87,6 @@ final readonly class Kernel
     }
 
     /**
-     * Runs the application, and returns the exit code.
-     *
      * @param  array<int, string>  $originalArguments
      * @param  array<int, string>  $arguments
      */
@@ -112,16 +109,23 @@ final readonly class Kernel
         $configuration = Registry::get();
         $result = Facade::result();
 
-        return CallsAddsOutput::execute(
+        $result = CallsAddsOutput::execute(
             Result::exitCode($configuration, $result),
         );
+
+        $this->terminate();
+
+        return $result;
     }
 
-    /**
-     * Terminate the Kernel.
-     */
     public function terminate(): void
     {
+        if ($this->terminated) {
+            return;
+        }
+
+        $this->terminated = true;
+
         $preBufferOutput = Container::getInstance()->get(KernelDump::class);
 
         assert($preBufferOutput instanceof KernelDump);
@@ -131,15 +135,12 @@ final readonly class Kernel
         CallsTerminable::execute();
     }
 
-    /**
-     * Shutdowns unexpectedly the Kernel.
-     */
     public function shutdown(): void
     {
         $this->terminate();
 
         if (is_array($error = error_get_last())) {
-            if (! in_array($error['type'], [E_ERROR, E_CORE_ERROR], true)) {
+            if (! in_array($error['type'], [E_ERROR, E_COMPILE_ERROR, E_CORE_ERROR], true)) {
                 return;
             }
 

@@ -13,8 +13,8 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
-        "pestphp/pest-plugin": "^4.0.0"
+        "php": "^8.4",
+        "pestphp/pest-plugin": "^5.0.0"
     },
     "autoload": {
         "psr-4": {
@@ -22,9 +22,12 @@
         }
     },
     "require-dev": {
-        "faissaloux/pest-plugin-inside": "^1.9",
-        "pestphp/pest": "^4.0.0",
-        "pestphp/pest-dev-tools": "^4.0.0"
+        "faissaloux/pest-plugin-inside": "^1.11",
+        "pestphp/pest": "^5.0.0",
+        "pestphp/pest-dev-tools": "^5.0.0"
+    },
+    "conflict": {
+        "pestphp/pest": "<5.0.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

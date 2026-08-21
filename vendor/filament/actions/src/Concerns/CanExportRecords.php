@@ -112,7 +112,7 @@ trait CanExportRecords
                     $isEnablingVisibleTableColumnsByDefault = $action->isEnablingVisibleTableColumnsByDefault();
                     $visibleTableColumnNames = $isEnablingVisibleTableColumnsByDefault ? $action->getVisibleTableColumnNames() : [];
 
-                    $columns = $action->getExporter()::getColumns();
+                    $columns = $action->getExporter()::getVisibleColumns();
                     $hasMultipleToggleableColumns = count($columns) > 1;
 
                     return [
@@ -237,7 +237,7 @@ trait CanExportRecords
             $user = auth($authGuard)->user();
 
             if ($action->hasColumnMapping()) {
-                $columnMap = collect($exporter::getColumns())
+                $columnMap = collect($exporter::getVisibleColumns())
                     ->filter(fn (ExportColumn $column): bool => (bool) data_get($data['columnMap'], "{$column->getName()}.isEnabled", false))
                     ->mapWithKeys(fn (ExportColumn $column): array => [
                         $column->getName() => data_get($data['columnMap'], "{$column->getName()}.label", $column->getLabel()),
@@ -247,7 +247,7 @@ trait CanExportRecords
                 $isEnablingVisibleTableColumnsByDefault = $action->isEnablingVisibleTableColumnsByDefault();
                 $visibleTableColumnNames = $isEnablingVisibleTableColumnsByDefault ? $action->getVisibleTableColumnNames() : [];
 
-                $columnMap = collect($exporter::getColumns())
+                $columnMap = collect($exporter::getVisibleColumns())
                     ->when(
                         $isEnablingVisibleTableColumnsByDefault,
                         fn ($columns): Collection => $columns->filter(
@@ -284,7 +284,8 @@ trait CanExportRecords
             // Temporary save to obtain the sequence number of the export file.
             $export->save();
 
-            // Delete the export directory to prevent data contamination from previous exports with the same ID.
+            // Delete the export directory to prevent data contamination
+            // from previous exports with the same ID.
             $export->deleteFileDirectory();
 
             $export->file_name = $action->getFileName($export) ?? $exporter->getFileName($export);
@@ -301,8 +302,9 @@ trait CanExportRecords
             $jobConnection = $exporter->getJobConnection();
             $jobBatchName = $exporter->getJobBatchName();
 
-            // We do not want to send the loaded user relationship to the queue in job payloads,
-            // in case it contains attributes that are not serializable, such as binary columns.
+            // We do not want to send the loaded user relationship to the
+            // queue in job payloads, in case it contains attributes that
+            // are not serializable, such as binary columns.
             $export->unsetRelation('user');
 
             $makeCreateXlsxFileJob = fn (): CreateXlsxFile => app(CreateXlsxFile::class, [
@@ -549,6 +551,9 @@ trait CanExportRecords
 
     public function modifyQueryUsing(?Closure $callback): static
     {
+        // Security: Exports do not check per-record policies. Use this
+        // to scope the query to records the user is authorized to see.
+
         $this->modifyQueryUsing = $callback;
 
         return $this;

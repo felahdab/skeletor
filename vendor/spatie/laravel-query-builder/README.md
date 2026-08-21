@@ -9,8 +9,8 @@
 <h1>Build Eloquent queries from API requests</h1>
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-query-builder.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-query-builder)
-![Test Status](https://img.shields.io/github/actions/workflow/status/spatie/laravel-query-builder/run-tests.yml?label=tests&branch=main)
-![Code Style Status](https://img.shields.io/github/actions/workflow/status/spatie/laravel-query-builder/php-cs-fixer.yml?label=code%20style&branch=main)
+![Test Status](https://github.com/spatie/laravel-query-builder/actions/workflows/run-tests.yml/badge.svg)
+![Code Style Status](https://github.com/spatie/laravel-query-builder/actions/workflows/pint.yml/badge.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-query-builder.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-query-builder)
     
 </div>
@@ -29,7 +29,35 @@ $users = QueryBuilder::for(User::class)
 // all `User`s that contain the string "John" in their name
 ```
 
-[Read more about filtering features like: partial filters, exact filters, scope filters, custom filters, ignored values, default filter values, ...](https://spatie.be/docs/laravel-query-builder/v6/features/filtering/)
+[Read more about filtering features like: partial filters, exact filters, scope filters, custom filters, ignored values, default filter values, ...](https://spatie.be/docs/laravel-query-builder/v7/features/filtering/)
+
+### Grouping multiple filters with OR/AND: `/users?filter[q]=John`:
+
+```php
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
+
+$users = QueryBuilder::for(User::class)
+    ->allowedFilters(
+        AllowedFilter::partial('name'),
+        AllowedFilter::partial('full_name'),
+        AllowedFilter::groupOr('q', [
+            AllowedFilter::partial('name'),
+            AllowedFilter::partial('full_name'),
+        ]),
+    )
+    ->get();
+
+// /users?filter[q]=John
+//   → WHERE (name LIKE '%John%' OR full_name LIKE '%John%')
+//
+// /users?filter[q]=John&filter[name]=Doe
+//   → WHERE name LIKE '%Doe%' AND (name LIKE '%John%' OR full_name LIKE '%John%')
+```
+
+`AllowedFilter::groupAnd()` is also available. Members can be any `AllowedFilter` type and the shorthand value is broadcast to every member.
+
+[Read more about the JSON:API Fancy Filters recommendation this feature follows.](https://gist.github.com/e0ipso/efcc4e96ca2aed58e32948e4f70c2460)
 
 ### Including relations based on a request: `/users?include=posts`:
 
@@ -41,7 +69,7 @@ $users = QueryBuilder::for(User::class)
 // all `User`s with their `posts` loaded
 ```
 
-[Read more about include features like: including nested relationships, including relationship count, custom includes, ...](https://spatie.be/docs/laravel-query-builder/v6/features/including-relationships/)
+[Read more about include features like: including nested relationships, including relationship count, custom includes, ...](https://spatie.be/docs/laravel-query-builder/v7/features/including-relationships/)
 
 ### Sorting a query based on a request: `/users?sort=id`:
 
@@ -53,7 +81,7 @@ $users = QueryBuilder::for(User::class)
 // all `User`s sorted by ascending id
 ```
 
-[Read more about sorting features like: custom sorts, sort direction, ...](https://spatie.be/docs/laravel-query-builder/v6/features/sorting/)
+[Read more about sorting features like: custom sorts, sort direction, ...](https://spatie.be/docs/laravel-query-builder/v7/features/sorting/)
 
 ### Works together nicely with existing queries:
 
@@ -70,13 +98,13 @@ $userQuery = QueryBuilder::for($query) // start from an existing Builder instanc
 
 ```php
 $users = QueryBuilder::for(User::class)
-    ->allowedFields(['id', 'email'])
+    ->allowedFields('id', 'email')
     ->get();
 
 // the fetched `User`s will only have their id & email set
 ```
 
-[Read more about selecting fields.](https://spatie.be/docs/laravel-query-builder/v6/features/selecting-fields/)
+[Read more about selecting fields.](https://spatie.be/docs/laravel-query-builder/v7/features/selecting-fields/)
 
 ## Support us
 
@@ -94,11 +122,11 @@ You can install the package via composer:
 composer require spatie/laravel-query-builder
 ```
 
-Read the installation notes on the docs site: [https://spatie.be/docs/laravel-query-builder/v6/installation-setup](https://spatie.be/docs/laravel-query-builder/v6/installation-setup/).
+Read the installation notes on the docs site: [https://spatie.be/docs/laravel-query-builder/v7/installation-setup](https://spatie.be/docs/laravel-query-builder/v7/installation-setup/).
 
 ## Documentation
 
-You can find the documentation on [https://spatie.be/docs/laravel-query-builder/v6](https://spatie.be/docs/laravel-query-builder/v6).
+You can find the documentation on [https://spatie.be/docs/laravel-query-builder/v7](https://spatie.be/docs/laravel-query-builder/v7).
 
 Find yourself stuck using the package? Found a bug? Do you have general questions or suggestions for improving the media library? Feel free to [create an issue on GitHub](https://github.com/spatie/laravel-query-builder/issues), we'll try to address it as soon as possible.
 

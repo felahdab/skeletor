@@ -10,8 +10,6 @@ namespace Pest\Plugins\Concerns;
 trait HandleArguments
 {
     /**
-     * Checks if the given argument exists on the arguments.
-     *
      * @param  array<int, string>  $arguments
      */
     public function hasArgument(string $argument, array $arguments): bool
@@ -30,8 +28,6 @@ trait HandleArguments
     }
 
     /**
-     * Adds the given argument and value to the list of arguments.
-     *
      * @param  array<int, string>  $arguments
      * @return array<int, string>
      */
@@ -43,17 +39,43 @@ trait HandleArguments
     }
 
     /**
-     * Pops the given argument from the arguments.
-     *
      * @param  array<int, string>  $arguments
      * @return array<int, string>
      */
     public function popArgument(string $argument, array $arguments): array
     {
-        $arguments = array_flip($arguments);
+        $key = array_search($argument, $arguments, true);
 
-        unset($arguments[$argument]);
+        while ($key !== false) {
+            unset($arguments[$key]);
+            $key = array_search($argument, $arguments, true);
+        }
 
-        return array_values(array_flip($arguments));
+        return array_values($arguments);
+    }
+
+    /**
+     * @param  array<int, string>  $arguments
+     */
+    public function popArgumentValue(string $argument, array &$arguments): ?string
+    {
+        foreach ($arguments as $key => $value) {
+            if (str_contains($value, "$argument=")) {
+                unset($arguments[$key]);
+                $arguments = array_values($arguments);
+
+                return substr($value, strlen($argument) + 1);
+            }
+
+            if ($value === $argument && isset($arguments[$key + 1])) {
+                $result = $arguments[$key + 1];
+                unset($arguments[$key], $arguments[$key + 1]);
+                $arguments = array_values($arguments);
+
+                return $result;
+            }
+        }
+
+        return null;
     }
 }

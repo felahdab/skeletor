@@ -13,6 +13,7 @@ use PHPUnit\TextUI\Output\Printer;
 use PHPUnit\TextUI\Output\SummaryPrinter;
 use PHPUnit\TextUI\Output\TestDox\ResultPrinter as TestDoxResultPrinter;
 use PHPUnit\Util\Color;
+use SebastianBergmann\CodeCoverage\Driver\Granularity;
 use SebastianBergmann\CodeCoverage\Driver\Selector;
 use SebastianBergmann\CodeCoverage\Filter;
 use SebastianBergmann\Timer\ResourceUsageFormatter;
@@ -107,6 +108,10 @@ final class ResultPrinter
 
         if ($this->options->hasShard()) {
             $write('Shard', $this->options->currentShard . '/' . $this->options->totalShards);
+            $write('Distribution', $this->options->shardDistribution->value);
+            if ($this->options->shardDistribution === ShardDistribution::Random) {
+                $write('Seed', (string) $this->options->shardDistributionSeed);
+            }
         }
 
         $runtime = 'PHP ' . PHP_VERSION;
@@ -114,9 +119,9 @@ final class ResultPrinter
         if ($this->options->configuration->hasCoverageReport()) {
             $filter = new Filter();
             if ($this->options->configuration->pathCoverage()) {
-                $codeCoverageDriver = (new Selector())->forLineAndPathCoverage($filter); // @codeCoverageIgnore
+                $codeCoverageDriver = (new Selector())->select($filter, Granularity::LineBranchAndPath); // @codeCoverageIgnore
             } else {
-                $codeCoverageDriver = (new Selector())->forLineCoverage($filter);
+                $codeCoverageDriver = (new Selector())->select($filter, Granularity::Line);
             }
 
             $runtime .= ' with ' . $codeCoverageDriver->nameAndVersion();
@@ -176,8 +181,8 @@ final class ResultPrinter
     }
 
     /**
-     * @param list<SplFileInfo>                         $teamcityFiles
-     * @param array<string,TestDoxTestResultCollection> $testdoxResults
+     * @param list<SplFileInfo>                                $teamcityFiles
+     * @param array<class-string, TestDoxTestResultCollection> $testdoxResults
      */
     public function printResults(TestResult $testResult, array $teamcityFiles, array $testdoxResults): void
     {
@@ -203,20 +208,20 @@ final class ResultPrinter
 
         $defaultResultPrinter = new DefaultResultPrinter(
             $this->printer,
-            $this->options->configuration->displayDetailsOnPhpunitDeprecations(),
+            $this->options->configuration->displayDetailsOnPhpunitDeprecations() || $this->options->configuration->displayDetailsOnAllIssues(),
+            true,
+            $this->options->configuration->displayDetailsOnPhpunitNotices() || $this->options->configuration->displayDetailsOnAllIssues(),
             true,
             true,
             true,
             true,
-            true,
-            true,
-            $this->options->configuration->displayDetailsOnIncompleteTests(),
-            $this->options->configuration->displayDetailsOnSkippedTests(),
-            $this->options->configuration->displayDetailsOnTestsThatTriggerDeprecations(),
-            $this->options->configuration->displayDetailsOnTestsThatTriggerErrors(),
-            $this->options->configuration->displayDetailsOnTestsThatTriggerNotices(),
-            $this->options->configuration->displayDetailsOnTestsThatTriggerWarnings(),
-            false,
+            $this->options->configuration->displayDetailsOnIncompleteTests() || $this->options->configuration->displayDetailsOnAllIssues(),
+            $this->options->configuration->displayDetailsOnSkippedTests() || $this->options->configuration->displayDetailsOnAllIssues(),
+            $this->options->configuration->displayDetailsOnTestsThatTriggerDeprecations() || $this->options->configuration->displayDetailsOnAllIssues(),
+            $this->options->configuration->displayDetailsOnTestsThatTriggerErrors() || $this->options->configuration->displayDetailsOnAllIssues(),
+            $this->options->configuration->displayDetailsOnTestsThatTriggerNotices() || $this->options->configuration->displayDetailsOnAllIssues(),
+            $this->options->configuration->displayDetailsOnTestsThatTriggerWarnings() || $this->options->configuration->displayDetailsOnAllIssues(),
+            $this->options->configuration->reverseDefectList(),
         );
 
         if ($this->options->configuration->outputIsTestDox()) {
@@ -229,20 +234,20 @@ final class ResultPrinter
 
             $defaultResultPrinter = new DefaultResultPrinter(
                 $this->printer,
-                $this->options->configuration->displayDetailsOnPhpunitDeprecations(),
+                $this->options->configuration->displayDetailsOnPhpunitDeprecations() || $this->options->configuration->displayDetailsOnAllIssues(),
                 true,
+                $this->options->configuration->displayDetailsOnPhpunitNotices() || $this->options->configuration->displayDetailsOnAllIssues(),
                 true,
+                false,
+                false,
                 true,
                 false,
                 false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
+                $this->options->configuration->displayDetailsOnTestsThatTriggerDeprecations() || $this->options->configuration->displayDetailsOnAllIssues(),
+                $this->options->configuration->displayDetailsOnTestsThatTriggerErrors() || $this->options->configuration->displayDetailsOnAllIssues(),
+                $this->options->configuration->displayDetailsOnTestsThatTriggerNotices() || $this->options->configuration->displayDetailsOnAllIssues(),
+                $this->options->configuration->displayDetailsOnTestsThatTriggerWarnings() || $this->options->configuration->displayDetailsOnAllIssues(),
+                $this->options->configuration->reverseDefectList(),
             );
         }
 
@@ -254,6 +259,7 @@ final class ResultPrinter
         ))->print($testResult);
     }
 
+    /** @param non-empty-string $item */
     private function printFeedbackItem(string $item): void
     {
         $this->printFeedbackItemColor($item);
@@ -275,6 +281,7 @@ final class ResultPrinter
         $this->column = 0;
     }
 
+    /** @param non-empty-string $item */
     private function printFeedbackItemColor(string $item): void
     {
         $buffer = match ($item) {
@@ -297,6 +304,10 @@ final class ResultPrinter
         );
     }
 
+    /**
+     * @param non-empty-string $color
+     * @param non-empty-string $buffer
+     */
     private function colorizeTextBox(string $color, string $buffer): string
     {
         if (! $this->options->configuration->colors()) {

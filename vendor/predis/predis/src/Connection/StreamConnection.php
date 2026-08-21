@@ -4,7 +4,7 @@
  * This file is part of the Predis package.
  *
  * (c) 2009-2020 Daniele Alessandri
- * (c) 2021-2025 Till Krüss
+ * (c) 2021-2026 Till Krüss
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -89,7 +89,11 @@ class StreamConnection extends AbstractConnection
      */
     public function connect()
     {
-        if (parent::connect() && $this->initCommands) {
+        if (!parent::connect()) {
+            return;
+        }
+
+        if ($this->initCommands) {
             $responses = $this->sendPipeline($this->initCommands);
 
             if ($responses[0][0] instanceof ErrorResponseInterface) {
@@ -101,6 +105,35 @@ class StreamConnection extends AbstractConnection
 
             foreach ($responses as $response) {
                 $this->handleOnConnectResponse($response[0], $response[1]);
+            }
+        }
+
+        $this->replaySessionCommands();
+    }
+
+    /**
+     * Replays registered session commands after a (re)connect.
+     *
+     * Replay is best-effort: a server error for a single command drops only that
+     * entry and never tears down the connection (contrast with init commands,
+     * whose failures raise a ConnectionException). Whatever state could not be
+     * restored is surfaced later as the authoritative server error on the first
+     * command that depends on it.
+     *
+     * @throws CommunicationException
+     */
+    protected function replaySessionCommands(): void
+    {
+        if (!$this->sessionCommands) {
+            return;
+        }
+
+        $keys = array_keys($this->sessionCommands);
+        $responses = $this->sendPipeline(array_values($this->sessionCommands));
+
+        foreach ($responses as $index => $response) {
+            if ($response[0] instanceof ErrorResponseInterface) {
+                unset($this->sessionCommands[$keys[$index]]);
             }
         }
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Bschmitt\Amqp\Test;
+namespace Bschmitt\Amqp\Test\Integration;
 
 use Bschmitt\Amqp\Core\Publisher;
 use Bschmitt\Amqp\Core\Consumer;
@@ -173,7 +173,7 @@ class ConsumerVerificationTest extends IntegrationTestBase
         $consumedCount = 0;
         $consumedMessages = [];
         try {
-            $consumer->consume($this->testQueueName, function ($msg, $resolver) use (&$consumedCount, &$consumedMessages) {
+            $consumer->consume($this->testQueueName, function ($msg, $resolver) use (&$consumedCount, &$consumedMessages, $messageCount) {
                 $consumedCount++;
                 $consumedMessages[] = $msg->body;
                 echo "[TEST] Consumed message {$consumedCount}: {$msg->body}\n";

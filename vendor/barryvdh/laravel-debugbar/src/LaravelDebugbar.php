@@ -6,9 +6,11 @@ namespace Fruitcake\LaravelDebugbar;
 
 use DebugBar\Bridge\Symfony\SymfonyHttpDriver;
 use DebugBar\DataCollector\TimeDataCollector;
+use DebugBar\DataFormatter\JsonDataFormatter;
 use DebugBar\JavascriptRenderer;
 use DebugBar\RequestIdGeneratorInterface;
 use DebugBar\Storage\FileStorage;
+use Fruitcake\LaravelDebugbar\CollectorProviders\AiCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\ConfigCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\ExceptionsCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\HttpClientCollectorProvider;
@@ -40,7 +42,6 @@ use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\ExceptionsCollector;
 use DebugBar\DataCollector\MessagesCollector;
-use DebugBar\DataFormatter\HtmlDataFormatter;
 use DebugBar\DebugBar;
 use DebugBar\HttpDriverInterface;
 use DebugBar\Storage\PdoStorage;
@@ -52,8 +53,11 @@ use Illuminate\Contracts\Queue\Job;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\HttpFoundation\IpUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\VarDumper\Cloner\Stub;
@@ -82,6 +86,8 @@ class LaravelDebugbar extends DebugBar
 
     protected ?bool $enabled = null;
 
+    protected ?bool $storageOpen = null;
+
     /**
      * Laravel default error handler
      *
@@ -97,7 +103,7 @@ class LaravelDebugbar extends DebugBar
 
     public function __construct(Application $app, Request $request)
     {
-        $startTime = defined('LARAVEL_START') ? LARAVEL_START : microtime(true);
+        $startTime = defined('LARAVEL_START') ? (float) LARAVEL_START : microtime(true);
 
         $this->app = $app;
         $this->request = $request;
@@ -215,9 +221,9 @@ class LaravelDebugbar extends DebugBar
 
     public function booted(): void
     {
-        $startTime = defined('LARAVEL_START') ? LARAVEL_START : null;
+        $startTime = defined('LARAVEL_START') ? (float) LARAVEL_START : null;
         if ($startTime) {
-            $this->addMeasure('Booting', $startTime, microtime(true));
+            $this->addMeasure('Booting', $startTime, microtime(true), [], 'time');
         }
         $this->startMeasure('application', 'Application', 'time');
     }
@@ -248,6 +254,7 @@ class LaravelDebugbar extends DebugBar
             'cache' => CacheCollectorProvider::class,
             'jobs' => JobsCollectorProvider::class,
             'pennant' => PennantCollectorProvider::class,
+            'ai' => AiCollectorProvider::class,
             'config' => ConfigCollectorProvider::class,
             'session' => SessionCollectorProvider::class,
             'http_client' => HttpClientCollectorProvider::class,
@@ -305,7 +312,7 @@ class LaravelDebugbar extends DebugBar
      */
     protected function registerDataFormatter(): void
     {
-        $formatter = new HtmlDataFormatter();
+        $formatter = new JsonDataFormatter();
 
         $formatter->mergeClonerOptions([
             'casters' => [
@@ -346,6 +353,8 @@ class LaravelDebugbar extends DebugBar
         $renderer->setUseDistFiles($config->get('debugbar.use_dist_files', true));
         $renderer->setAjaxHandlerAutoShow($config->get('debugbar.ajax_handler_auto_show', true));
         $renderer->setAjaxHandlerEnableTab($config->get('debugbar.ajax_handler_enable_tab', true));
+        $renderer->setAjaxHandlerCaptureStreamed($config->get('debugbar.capture_streamed', false));
+        $renderer->setAjaxHandlerStreamedContentTypes($config->get('debugbar.streamed_content_types', ['text/event-stream']));
         $renderer->setTheme($config->get('debugbar.theme', 'auto'));
 
         $renderer->setAssetHandlerUrl(route('debugbar.assets'));
@@ -546,22 +555,73 @@ class LaravelDebugbar extends DebugBar
         return $response;
     }
 
+    public static function canBeEnabled(): bool
+    {
+        // For specific cases, Debugbar can be enabled even if app is in production
+        if (config('debugbar.force_allow_enable', false)) {
+            return true;
+        }
+
+        $app = app();
+        return $app->hasDebugModeEnabled() && !$app->environment('testing', 'production');
+    }
+
     /**
      * Check if the Debugbar is enabled
      */
     public function isEnabled(): bool
     {
         if ($this->enabled === null) {
-            $configEnabled = value(config('debugbar.enabled'));
+            if (!static::canBeEnabled()) {
+                $this->enabled = false;
+            } else {
+                $configEnabled = value(config('debugbar.enabled'));
 
-            if ($configEnabled === null) {
-                $configEnabled = config('app.debug');
+                if ($configEnabled === null) {
+                    $configEnabled = config('app.debug');
+                }
+
+                $this->enabled = $configEnabled && !$this->app->runningInConsole();
             }
-
-            $this->enabled = $configEnabled && !$this->app->runningInConsole() && !$this->app->environment('testing');
         }
 
         return $this->enabled;
+    }
+
+    public function isStorageOpen(Request $request): bool
+    {
+        // Additional safeguards that may never have storage open
+        if (!static::canBeEnabled() || !$this->isEnabled()) {
+            return false;
+        }
+
+        if ($this->storageOpen === null) {
+            $open = config('debugbar.storage.open');
+
+            if (is_callable($open)) {
+                $this->storageOpen = ($open)($request);
+                return $this->storageOpen;
+            }
+
+            if (is_string($open) && class_exists($open)) {
+                $this->storageOpen =  method_exists($open, 'resolve') ? $open::resolve($request) : false;
+                return $this->storageOpen;
+            }
+
+            if (is_bool($open)) {
+                $this->storageOpen = $open;
+                return $this->storageOpen;
+            }
+
+            try {
+                // Allow localhost request when not explicitly allowed/disallowed
+                $this->storageOpen = IpUtils::isPrivateIp($request->getClientIp());
+            } catch (\ValueError $e) {
+                $this->storageOpen = false;
+            }
+        }
+
+        return $this->storageOpen;
     }
 
     public function requestIsExcluded(Request $request): bool
@@ -635,48 +695,53 @@ class LaravelDebugbar extends DebugBar
     }
 
     /**
-     * Collects the data from the collectors
-     *
+     * Collects meta data about the current request
      */
-    public function collect(): array
+    public function collectMetaData(): array
     {
-        $this->data = [
-            '__meta' => [
-                'id' => $this->getCurrentRequestId(),
-                'datetime' => date('Y-m-d H:i:s'),
-                'utime' => microtime(true),
-                'method' => $this->request->getMethod(),
-                'uri' => $this->request->getRequestUri(),
-                'ip' => $this->request->getClientIp(),
-            ],
+        $meta = [
+            'id' => $this->getCurrentRequestId(),
+            'datetime' => date('Y-m-d H:i:s'),
+            'utime' => microtime(true),
+            'method' => $this->request->getMethod(),
+            'uri' => $this->request->getRequestUri(),
+            'ip' => $this->request->getClientIp(),
         ];
 
+        // Correlation id supplied by the client, so streamed/AJAX responses that
+        // cannot receive the phpdebugbar-id header can still be looked up later.
+        if ($rid = $this->getRequestCorrelationId()) {
+            $meta['rid'] = $rid;
+        }
+
         if ($this->processingJob) {
-            $this->data['__meta']['method'] = 'JOB';
-            $this->data['__meta']['uri'] =  $this->processingJob->resolveName() . '@' . $this->processingJob->getConnectionName();
+            $meta['method'] = 'JOB';
+            $meta['uri'] =  $this->processingJob->resolveName() . '@' . $this->processingJob->getConnectionName();
         } elseif ($this->app->runningInConsole()) {
-            $this->data['__meta']['method'] = 'CLI';
-            $this->data['__meta']['uri'] = implode(' ', (new ArgvInput())->getRawTokens());
+            $meta['method'] = 'CLI';
+            $meta['uri'] = implode(' ', (new ArgvInput())->getRawTokens());
         }
 
-        foreach ($this->collectors as $name => $collector) {
-            $this->data[$name] = $collector->collect();
+        return $meta;
+    }
+
+    /**
+     * Read a client-generated correlation id from the request, used to match a
+     * streamed response back to its stored Debugbar data via the OpenHandler.
+     *
+     * Sanitised so it can be safely used as an fnmatch() filter in storage.
+     */
+    protected function getRequestCorrelationId(): ?string
+    {
+        $rid = $this->request->headers->get('phpdebugbar-request-id');
+
+        if (!is_string($rid) || $rid === '') {
+            return null;
         }
 
-        // Remove all invalid (non UTF-8) characters
-        array_walk_recursive($this->data, function (&$item): void {
-            if (is_float($item) && !is_finite($item)) {
-                $item = '[NON-FINITE FLOAT]';
-            } elseif (is_string($item) && !mb_check_encoding($item, 'UTF-8')) {
-                $item = mb_convert_encoding($item, 'UTF-8', 'UTF-8');
-            }
-        });
+        $rid = preg_replace('/[^A-Za-z0-9\-_.]/', '', $rid);
 
-        if ($this->storage !== null) {
-            $this->storage->save($this->getCurrentRequestId(), $this->data);
-        }
-
-        return $this->data;
+        return $rid !== '' ? substr($rid, 0, 64) : null;
     }
 
     public function terminate(): void
@@ -696,6 +761,10 @@ class LaravelDebugbar extends DebugBar
         $content = $response->getContent();
 
         $renderer = $this->getJavascriptRenderer();
+
+        if ($renderer->getCspNonce() === null) {
+            $renderer->setCspNonce($this->detectCspNonce());
+        }
 
         $widget = "<!-- Laravel Debugbar Widget -->\n" . $renderer->renderHead() . $renderer->render();
 
@@ -737,8 +806,12 @@ class LaravelDebugbar extends DebugBar
         $this->exceptionsCollector->reset();
         $this->messagesCollector->reset();
         $this->enabled = null;
+        $this->storageOpen = null;
         $this->responseIsModified = false;
         $this->httpDriver = null;
+        if ($this->jsRenderer !== null) {
+            $this->jsRenderer->setCspNonce(null);
+        }
     }
 
     /**
@@ -866,5 +939,22 @@ class LaravelDebugbar extends DebugBar
         $remotePaths = array_filter(explode(',', config('debugbar.remote_sites_path') ?: '')) ?: [base_path()];
 
         return array_fill_keys($remotePaths, $localPath);
+    }
+
+    protected function detectCspNonce(): ?string
+    {
+        // Vite nonce
+        if ($nonce = Vite::cspNonce()) {
+            return $nonce;
+        }
+
+        // Spatie CSP nonce
+        if (app()->bound('csp-nonce') && $nonce = app('csp-nonce')) {
+            if (is_string($nonce)) {
+                return $nonce;
+            }
+        }
+
+        return null;
     }
 }

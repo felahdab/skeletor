@@ -16,14 +16,20 @@ use Rector\PHPUnit\Enum\PHPUnitAttribute;
 use Rector\PHPUnit\Enum\PHPUnitClassName;
 use Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer;
 use Rector\Rector\AbstractRector;
+use Rector\ValueObject\PhpVersionFeature;
+use Rector\VersionBonding\Contract\ComposerPackageConstraintInterface;
+use Rector\VersionBonding\Contract\MinPhpVersionInterface;
+use Rector\VersionBonding\ValueObject\ComposerPackageConstraint;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 /**
+ * The AllowMockObjectsWithoutExpectations attribute was added in PHPUnit 12.5.2
+ *
  * @see \Rector\PHPUnit\Tests\PHPUnit120\Rector\Class_\AllowMockObjectsWhereParentClassRector\AllowMockObjectsWhereParentClassRectorTest
  *
  * @see https://github.com/sebastianbergmann/phpunit/commit/24c208d6a340c3071f28a9b5cce02b9377adfd43
  */
-final class AllowMockObjectsWhereParentClassRector extends AbstractRector
+final class AllowMockObjectsWhereParentClassRector extends AbstractRector implements MinPhpVersionInterface, ComposerPackageConstraintInterface
 {
     /**
      * @readonly
@@ -40,16 +46,24 @@ final class AllowMockObjectsWhereParentClassRector extends AbstractRector
     /**
      * @var string[]
      */
-    private const PARENT_CLASSES = [PHPUnitClassName::SYMFONY_CONSTRAINT_VALIDATOR_TEST_CASE, PHPUnitClassName::SYMFONY_TYPE_TEST_CASE];
+    private const PARENT_CLASSES = [PHPUnitClassName::SYMFONY_TYPE_TEST_CASE];
     public function __construct(TestsNodeAnalyzer $testsNodeAnalyzer, AttributeFinder $attributeFinder, ReflectionProvider $reflectionProvider)
     {
         $this->testsNodeAnalyzer = $testsNodeAnalyzer;
         $this->attributeFinder = $attributeFinder;
         $this->reflectionProvider = $reflectionProvider;
     }
+    public function provideComposerPackageConstraint(): ComposerPackageConstraint
+    {
+        return new ComposerPackageConstraint('phpunit/phpunit', '>=12.5.2');
+    }
     public function getNodeTypes(): array
     {
         return [Class_::class];
+    }
+    public function provideMinPhpVersion(): int
+    {
+        return PhpVersionFeature::ATTRIBUTES;
     }
     /**
      * @param Class_ $node
@@ -69,17 +83,17 @@ final class AllowMockObjectsWhereParentClassRector extends AbstractRector
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition('Add #[AllowMockObjectsWithoutExpectations] attribute to PHPUnit test classes with a 3rd party test case, that provides any mocks', [new CodeSample(<<<'CODE_SAMPLE'
-use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
+use Symfony\Component\Form\Test\TypeTestCase;
 
-final class SomeTest extends ConstraintValidatorTestCase
+final class SomeTest extends TypeTestCase
 {
 }
 CODE_SAMPLE
 , <<<'CODE_SAMPLE'
-use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
+use Symfony\Component\Form\Test\TypeTestCase;
 
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
-final class SomeTest extends ConstraintValidatorTestCase
+final class SomeTest extends TypeTestCase
 {
 }
 CODE_SAMPLE
@@ -104,11 +118,13 @@ CODE_SAMPLE
         if (!$classReflection instanceof ClassReflection) {
             return \false;
         }
+        $found = \false;
         foreach (self::PARENT_CLASSES as $parentClass) {
             if ($classReflection->is($parentClass)) {
-                return \true;
+                $found = \true;
+                break;
             }
         }
-        return \false;
+        return $found;
     }
 }

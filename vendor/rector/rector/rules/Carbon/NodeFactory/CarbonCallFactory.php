@@ -3,7 +3,7 @@
 declare (strict_types=1);
 namespace Rector\Carbon\NodeFactory;
 
-use RectorPrefix202602\Nette\Utils\Strings;
+use RectorPrefix202608\Nette\Utils\Strings;
 use PhpParser\Node\Arg;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\StaticCall;
@@ -32,7 +32,7 @@ final class CarbonCallFactory
         $string->value = Strings::replace($string->value, self::STATIC_DATE_REGEX);
         // Handle add/sub multiple times
         while ($match = Strings::match($string->value, self::PLUS_MINUS_COUNT_REGEX)) {
-            $methodCall = $this->createModifyMethodCall($carbonCall, new Int_((int) $match['count']), (string) $match['unit'], (string) $match['operator']);
+            $methodCall = $this->createModifyMethodCall($carbonCall, new Int_((int) $match['count']), $match['unit'], $match['operator']);
             if ($methodCall instanceof MethodCall) {
                 $carbonCall = $methodCall;
                 $string->value = Strings::replace($string->value, self::PLUS_MINUS_COUNT_REGEX, '', 1);

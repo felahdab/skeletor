@@ -43,6 +43,7 @@ use Symfony\Component\TypeInfo\Type\BackedEnumType;
 use Symfony\Component\TypeInfo\Type\BuiltinType;
 use Symfony\Component\TypeInfo\Type\CollectionType;
 use Symfony\Component\TypeInfo\Type\GenericType;
+use Symfony\Component\TypeInfo\Type\ObjectType;
 use Symfony\Component\TypeInfo\TypeContext\TypeContext;
 use Symfony\Component\TypeInfo\TypeIdentifier;
 
@@ -99,7 +100,7 @@ final class StringTypeResolver implements TypeResolverInterface
 
     private function getTypeFromNode(TypeNode $node, ?TypeContext $typeContext): Type
     {
-        $typeIsCollectionObject = fn (Type $type): bool => $type->isIdentifiedBy(\Traversable::class) || $type->isIdentifiedBy(\ArrayAccess::class);
+        $typeIsCollectionObject = static fn (Type $type): bool => $type->isIdentifiedBy(\Traversable::class) || $type->isIdentifiedBy(\ArrayAccess::class);
 
         if ($node instanceof CallableTypeNode) {
             return Type::callable();
@@ -127,7 +128,15 @@ final class StringTypeResolver implements TypeResolverInterface
         }
 
         if ($node instanceof ObjectShapeNode) {
-            return Type::object();
+            $shape = [];
+            foreach ($node->items as $item) {
+                $shape[(string) $item->keyName] = [
+                    'type' => $this->getTypeFromNode($item->valueType, $typeContext),
+                    'optional' => $item->optional,
+                ];
+            }
+
+            return $shape ? Type::objectShape($shape) : Type::object();
         }
 
         if ($node instanceof ThisTypeNode) {
@@ -144,8 +153,17 @@ final class StringTypeResolver implements TypeResolverInterface
                     'self' => $typeContext->getDeclaringClass(),
                     'static' => $typeContext->getCalledClass(),
                     'parent' => $typeContext->getParentClass(),
-                    default => $node->constExpr->className,
+                    default => null,
                 };
+
+                if (null === $className) {
+                    $classType = $this->resolveCustomIdentifier($node->constExpr->className, $typeContext);
+                    if (!$classType instanceof ObjectType) {
+                        return Type::mixed();
+                    }
+
+                    $className = $classType->getClassName();
+                }
 
                 if (!class_exists($className)) {
                     return Type::mixed();
@@ -334,7 +352,7 @@ final class StringTypeResolver implements TypeResolverInterface
         }
 
         if (self::$classExistCache[$className]) {
-            if (is_subclass_of($className, \UnitEnum::class)) {
+            if (is_subclass_of($className, \UnitEnum::class) && !interface_exists($className)) {
                 return Type::enum($className);
             }
 

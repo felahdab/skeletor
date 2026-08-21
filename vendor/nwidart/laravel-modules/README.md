@@ -19,27 +19,13 @@
 | 10.0        | ^10.0               |
 | 11.0        | ^11.0               |
 | 12.0        | ^12.0               |
+| 13.0        | ^13.0               |
 
 `nwidart/laravel-modules` is a Laravel package created to manage your large Laravel app using modules. A Module is like a Laravel package, it has some views, controllers or models. This package is supported and tested in Laravel 11.
 
 This package is a re-published, re-organised and maintained version of [pingpong/modules](https://github.com/pingpong-labs/modules), which isn't maintained anymore.
 
 With one big bonus that the original package didn't have: **tests**.
-
-## Sponsors
-
-For those who are interested in becoming a sponsor, please visit Laravel Modules Sponsor page at **[laravelmodules.com/become-a-sponsor](https://laravelmodules.com/become-a-sponsor)**.
-
-See the website traffic at https://app.usefathom.com/share/sdinlflk/laravel+modules
-
-### Sponsors
-
-<a href="https://nativephp.com/mobile"><img src="https://laravelmodules.com/images/sponsors/NativePHP-mobile-light.svg" alt="NativePHP for Mobile" title="NativePHP for Mobile" width="200"/></a>
-
-<a href="https://dcblog.dev"><img src="https://laravelmodules.com/images/sponsors/dcblog.png" alt="David Carr" title="David Carr" width="200"/></a>
-
-## upgrade
-To upgrade to version V12 follow [Upgrade Guide](https://laravelmodules.com/docs/12/getting-started/upgrade) on official document.
 
 ## Install
 
@@ -59,6 +45,8 @@ php artisan vendor:publish --provider="Nwidart\Modules\LaravelModulesServiceProv
 
 ### Autoloading
 
+> from v11.0 autoloading `"Modules\\": "modules/",` is no longer required, and should be removed from your composer.json if present.
+
 By default, the module classes are not loaded automatically. You can autoload your modules by adding merge-plugin to the extra section:
 
 ```json
@@ -74,17 +62,30 @@ By default, the module classes are not loaded automatically. You can autoload yo
 },
 ```
 
-**Tip: don't forget to run `composer dump-autoload` afterwards.**
+**Important**
+
+on the first installation you will be asked:
+
+```bash
+Do you trust "wikimedia/composer-merge-plugin" to execute code and wish to enable it now? (writes "allow-plugins" to composer.json) [y,n,d,?]
+```
+
+Answer `y` to allow the plugin to be executed. Otherwise, you will need to manually enable the following to your composer.json:
+
+```json
+"config": {
+    "allow-plugins": {
+        "wikimedia/composer-merge-plugin": true
+    }
+```
+
+> if `"wikimedia/composer-merge-plugin": false` modules will not be autoloaded.
+
+**Tip: don't forget to run `composer dump-autoload` afterwards**
 
 ## Documentation
 
 You'll find installation instructions and full documentation on [https://laravelmodules.com/](https://laravelmodules.com/docs).
-
-## Demo
-
-You can see a demo using Laravel Breeze at https://github.com/laravel-modules-com/breeze-demo
-
-This is a complete application using Auth, Base and Profile modules.
 
 ## Community
 
