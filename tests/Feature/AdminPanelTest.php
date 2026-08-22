@@ -31,6 +31,7 @@ beforeEach(function () {
 it('has a login page', function () {
     $response = $this->get(route('login'));
 
+    ob_end_flush();
     $response->assertStatus(200);
 });
 
