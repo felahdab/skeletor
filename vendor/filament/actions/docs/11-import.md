@@ -2,6 +2,7 @@
 title: Import action
 ---
 import Aside from "@components/Aside.astro"
+import AutoScreenshot from "@components/AutoScreenshot.astro"
 import UtilityInjection from "@components/UtilityInjection.astro"
 
 ## Introduction
@@ -36,6 +37,8 @@ use Filament\Actions\ImportAction;
 ImportAction::make()
     ->importer(ProductImporter::class)
 ```
+
+<AutoScreenshot name="actions/import-action/modal" alt="Import action modal" version="5.x" />
 
 If you want to add this action to the header of a table, you may do so like this:
 
@@ -160,7 +163,7 @@ ImportColumn::make('sku')
 
 Any rows that do not pass validation will not be imported. Instead, they will be compiled into a new CSV of "failed rows", which the user can download after the import has finished. The user will be shown a list of validation errors for each row that failed.
 
-<UtilityInjection set="importColumns" version="4.x">As well as allowing a static value, the `rules()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
+<UtilityInjection set="importColumns" version="5.x">As well as allowing a static value, the `rules()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
 
 ### Casting state
 
@@ -182,7 +185,7 @@ ImportColumn::make('price')
     })
 ```
 
-<UtilityInjection set="importColumns" version="4.x" extras="State;;mixed;;$state;;The state to cast, after it has been processed by other casting methods.||Original state;;mixed;;$originalState;;The state to cast, before it was processed by other casting methods.">As well as `$state`, the `castStateUsing()` method allows you to inject various utilities into the function as parameters.</UtilityInjection>
+<UtilityInjection set="importColumns" version="5.x" extras="State;;mixed;;$state;;The state to cast, after it has been processed by other casting methods.||Original state;;mixed;;$originalState;;The state to cast, before it was processed by other casting methods.">As well as `$state`, the `castStateUsing()` method allows you to inject various utilities into the function as parameters.</UtilityInjection>
 
 In this example, we pass in a function that is used to cast the `$state`. This function removes any non-numeric characters from the string, casts it to a float, and rounds it to two decimal places.
 
@@ -238,7 +241,7 @@ ImportColumn::make('price')
     })
 ```
 
-<UtilityInjection set="importColumns" version="4.x" extras="State;;mixed;;$state;;The state to cast, after it has been processed by other casting methods.||Original state;;mixed;;$originalState;;The state to cast, before it was processed by other casting methods.">As well as `$state`, the `castStateUsing()` method allows you to inject various utilities into the function as parameters.</UtilityInjection>
+<UtilityInjection set="importColumns" version="5.x" extras="State;;mixed;;$state;;The state to cast, after it has been processed by other casting methods.||Original state;;mixed;;$originalState;;The state to cast, before it was processed by other casting methods.">As well as `$state`, the `castStateUsing()` method allows you to inject various utilities into the function as parameters.</UtilityInjection>
 
 ### Handling multiple values in a single column
 
@@ -251,7 +254,7 @@ ImportColumn::make('documentation_urls')
     ->multiple(',')
 ```
 
-<UtilityInjection set="importColumns" version="4.x">As well as allowing a static value, the `multiple()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
+<UtilityInjection set="importColumns" version="5.x">As well as allowing a static value, the `multiple()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
 
 In this example, we pass in a comma as the delimiter, so the values in the column will be split by commas, and cast to an array.
 
@@ -281,7 +284,7 @@ ImportColumn::make('customer_ratings')
     ->nestedRecursiveRules(['integer', 'min:1', 'max:5'])
 ```
 
-<UtilityInjection set="importColumns" version="4.x">As well as allowing a static value, the `nestedRecursiveRules()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
+<UtilityInjection set="importColumns" version="5.x">As well as allowing a static value, the `nestedRecursiveRules()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
 
 ### Importing relationships
 
@@ -343,7 +346,7 @@ ImportColumn::make('author')
     })
 ```
 
-<UtilityInjection set="importColumns" version="4.x" extras="State;;mixed;;$state;;The state to resolve into a record.">The function passed to `resolveUsing` allows you to inject various utilities into the function as parameters.</UtilityInjection>
+<UtilityInjection set="importColumns" version="5.x" extras="State;;mixed;;$state;;The state to resolve into a record.">The function passed to `resolveUsing` allows you to inject various utilities into the function as parameters.</UtilityInjection>
 
 If you are using a `BelongsToMany` relationship, the `$state` will be an array, and you should return a collection of records that you have resolved:
 
@@ -404,7 +407,7 @@ ImportColumn::make('sku')
     })
 ```
 
-<UtilityInjection set="importColumns" version="4.x" extras="State;;mixed;;$state;;The state to fill into the record.">The function passed to the `fillRecordUsing()` method allows you to inject various utilities into the function as parameters.</UtilityInjection>
+<UtilityInjection set="importColumns" version="5.x" extras="State;;mixed;;$state;;The state to fill into the record.">The function passed to the `fillRecordUsing()` method allows you to inject various utilities into the function as parameters.</UtilityInjection>
 
 ### Adding helper text below the import column
 
@@ -637,7 +640,7 @@ ImportAction::make()
     ->maxRows(100000)
 ```
 
-<UtilityInjection set="actions" version="4.x">As well as allowing a static value, the `maxRows()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
+<UtilityInjection set="actions" version="5.x">As well as allowing a static value, the `maxRows()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
 
 ## Changing the import chunk size
 
@@ -652,7 +655,7 @@ ImportAction::make()
     ->chunkSize(250)
 ```
 
-<UtilityInjection set="actions" version="4.x">As well as allowing a static value, the `chunkSize()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
+<UtilityInjection set="actions" version="5.x">As well as allowing a static value, the `chunkSize()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
 
 <Aside variant="tip">
     If you are encountering memory or timeout issues when importing large CSV files, you may wish to reduce the chunk size.
@@ -671,7 +674,7 @@ ImportAction::make()
     ->csvDelimiter(';')
 ```
 
-<UtilityInjection set="actions" version="4.x">As well as allowing a static value, the `csvDelimiter()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
+<UtilityInjection set="actions" version="5.x">As well as allowing a static value, the `csvDelimiter()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
 
 You can only specify a single character, otherwise an exception will be thrown.
 
@@ -688,7 +691,50 @@ ImportAction::make()
     ->headerOffset(5)
 ```
 
-<UtilityInjection set="actions" version="4.x">As well as allowing a static value, the `headerOffset()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
+<UtilityInjection set="actions" version="5.x">As well as allowing a static value, the `headerOffset()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
+
+## Customizing the completion notification
+
+When an import finishes, Filament sends a notification to the user who started it. You can customize the title and body of that notification by overriding `getCompletedNotificationTitle()` and `getCompletedNotificationBody()` on your importer:
+
+```php
+use Filament\Actions\Imports\Models\Import;
+
+public static function getCompletedNotificationTitle(Import $import): string
+{
+    return 'Your product import has finished';
+}
+
+public static function getCompletedNotificationBody(Import $import): string
+{
+    return $import->successful_rows . ' products were imported.';
+}
+```
+
+For anything beyond the title and body — for example, changing the notification color, adding extra actions, or replacing the icon — override `modifyCompletedNotification()`. You can either mutate the `Notification` passed in and return it, or build and return a completely new one:
+
+```php
+use Filament\Actions\Action;
+use Filament\Actions\Imports\Models\Import;
+use Filament\Notifications\Notification;
+
+public static function modifyCompletedNotification(Notification $notification, Import $import): Notification
+{
+    $notification->icon('heroicon-o-shopping-bag');
+
+    if ($import->getOptions()['sendWelcomeEmails'] ?? false) {
+        $notification->actions([
+            ...$notification->getActions(),
+            Action::make('viewWelcomeEmails')
+                ->url(route('emails.sent')),
+        ]);
+    }
+
+    return $notification;
+}
+```
+
+The `Import` model exposes the column mapping and options the user selected via `$import->getColumnMap()` and `$import->getOptions()`, so you can tailor the notification based on what the user imported.
 
 ## Customizing the import job
 
@@ -752,7 +798,7 @@ If you'd like to customize the middleware that is applied to jobs of a certain i
 
 ### Customizing the import job retries
 
-By default, the import system will retry a job for 24 hours, or until it fails 5 times with unhandled exceptions, whichever happens first. This is to allow for temporary issues, such as the database being unavailable, to be resolved. You may change the time period for the job to retry, which is defined in the `getJobRetryUntil()` method on the exporter class:
+By default, the import system will retry a job for 24 hours, or until it fails 5 times with unhandled exceptions, whichever happens first. This is to allow for temporary issues, such as the database being unavailable, to be resolved. You may change the time period for the job to retry, which is defined in the `getJobRetryUntil()` method on the importer class:
 
 ```php
 use Carbon\CarbonInterface;
@@ -848,7 +894,7 @@ ImportAction::make()
     ]),
 ```
 
-<UtilityInjection set="actions" version="4.x">As well as allowing a static value, the `fileRules()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
+<UtilityInjection set="actions" version="5.x">As well as allowing a static value, the `fileRules()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
 
 ## Lifecycle hooks
 
@@ -954,3 +1000,44 @@ public function view(User $user, Import $import): bool
     return $import->user()->is($user);
 }
 ```
+
+## Security
+
+### Per-record authorization
+
+The import system does not perform per-record authorization checks when creating or updating records. Each row from the CSV is processed by the importer's `resolveRecord()`, `fillRecord()`, and `saveRecord()` methods without consulting your application's [Laravel policies](https://laravel.com/docs/authorization#creating-policies). This means that if a user is allowed to trigger an import, they can create or update any record that the importer supports, regardless of whether they would normally be authorized to do so through your application's UI.
+
+If you need per-record authorization during import, you should add checks in your importer's [lifecycle hooks](#lifecycle-hooks), such as `beforeCreate()` or `beforeUpdate()`, to authorize the current user against the record.
+
+<Aside variant="danger">
+    If your application allows untrusted users to trigger imports, you should implement per-record authorization checks to prevent unauthorized record creation or modification.
+</Aside>
+
+### CSV formula injection
+
+When rows fail validation during import, Filament compiles them into a downloadable CSV for the user to review. This failure CSV contains the original data from the uploaded file exactly as it was submitted, without any transformation. If the uploaded CSV contains values beginning with characters like `=`, `+`, `-`, or `@`, they will appear unchanged in the failure CSV. When opened in spreadsheet software such as Microsoft Excel or Google Sheets, these values may be interpreted as formulas, which could pose a security risk if the original CSV was provided by an untrusted source. You should ensure that your users are aware of this risk when reviewing failure CSVs, or implement sanitization in your importer's lifecycle hooks to neutralize potentially dangerous values before they are stored as failed rows.
+
+Alternatively, you may opt in to Filament's built-in protection for the failure CSV. When enabled, any cell that begins with a formula-triggering character (`=`, `+`, `-`, `@`, a tab, or a carriage return) is prefixed with a single quote (`'`) so that spreadsheet software treats it as plain text. Because the failure CSV includes every column from the uploaded file — even columns that are not mapped to an `ImportColumn` — this protection is applied to the whole file rather than to individual columns.
+
+To enable it for a single importer, set the `$shouldPreventFormulaInjection` property on your importer class:
+
+```php
+use Filament\Actions\Imports\Importer;
+
+class ProductImporter extends Importer
+{
+    protected static bool $shouldPreventFormulaInjection = true;
+}
+```
+
+To enable it for every importer across your application, call the `preventFormulaInjection()` method inside the `boot()` method of a service provider:
+
+```php
+use Filament\Actions\Imports\Importer;
+
+Importer::preventFormulaInjection();
+```
+
+<Aside variant="warning">
+    This protection is **opt in** and disabled by default, because the failure CSV is intended to be corrected and re-uploaded. Prefixing a single quote alters legitimate data — for example, values such as `-5` or a phone number like `+44 1234 567890` are valid formula triggers and would be rewritten to `'-5` and `'+44 1234 567890`, which would then be imported with the leading quote intact. Only enable it when the uploaded files may come from an untrusted source.
+</Aside>

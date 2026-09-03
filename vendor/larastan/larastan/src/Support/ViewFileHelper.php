@@ -19,6 +19,7 @@ use function count;
 use function explode;
 use function is_dir;
 use function iterator_to_array;
+use function rtrim;
 use function str_contains;
 use function str_replace;
 
@@ -45,6 +46,7 @@ final class ViewFileHelper
         $this->viewDirectories = $viewDirectories; // @phpstan-ignore-line
     }
 
+    /** @return Generator<int, string, void, void> */
     public function getRootViewFilePaths(): Generator
     {
         $finder = $this->resolve(ViewFactory::class)->getFinder();
@@ -56,6 +58,7 @@ final class ViewFileHelper
         }
     }
 
+    /** @return Generator<int, string, void, void> */
     public function getAllViewFilePaths(): Generator
     {
         foreach ($this->viewDirectories as $viewDirectory) {
@@ -65,6 +68,7 @@ final class ViewFileHelper
         }
     }
 
+    /** @return Generator<int, string, void, void> */
     public function getAllViewNames(): Generator
     {
         foreach ($this->viewDirectories as $viewDirectory) {
@@ -73,7 +77,7 @@ final class ViewFileHelper
                     continue;
                 }
 
-                $viewName = explode($viewDirectory . DIRECTORY_SEPARATOR, $view->getPathname());
+                $viewName = explode(rtrim($viewDirectory, '/\\') . DIRECTORY_SEPARATOR, $view->getPathname());
 
                 yield str_replace([DIRECTORY_SEPARATOR, '.blade.php'], ['.', ''], $viewName[1]);
             }

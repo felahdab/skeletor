@@ -3,21 +3,26 @@
 declare (strict_types=1);
 namespace Rector\Console;
 
-use RectorPrefix202602\Composer\XdebugHandler\XdebugHandler;
+use RectorPrefix202608\Composer\XdebugHandler\XdebugHandler;
 use Override;
 use Rector\Application\VersionResolver;
 use Rector\ChangesReporting\Output\ConsoleOutputFormatter;
 use Rector\Configuration\Option;
 use Rector\Util\Reflection\PrivatesAccessor;
-use RectorPrefix202602\Symfony\Component\Console\Application;
-use RectorPrefix202602\Symfony\Component\Console\Command\Command;
-use RectorPrefix202602\Symfony\Component\Console\Input\InputDefinition;
-use RectorPrefix202602\Symfony\Component\Console\Input\InputInterface;
-use RectorPrefix202602\Symfony\Component\Console\Input\InputOption;
-use RectorPrefix202602\Symfony\Component\Console\Output\OutputInterface;
-use RectorPrefix202602\Webmozart\Assert\Assert;
+use RectorPrefix202608\Symfony\Component\Console\Application;
+use RectorPrefix202608\Symfony\Component\Console\Command\Command;
+use RectorPrefix202608\Symfony\Component\Console\Input\InputDefinition;
+use RectorPrefix202608\Symfony\Component\Console\Input\InputInterface;
+use RectorPrefix202608\Symfony\Component\Console\Input\InputOption;
+use RectorPrefix202608\Symfony\Component\Console\Output\OutputInterface;
+use RectorPrefix202608\Symfony\Component\Console\Style\SymfonyStyle;
+use RectorPrefix202608\Webmozart\Assert\Assert;
 final class ConsoleApplication extends Application
 {
+    /**
+     * @readonly
+     */
+    private SymfonyStyle $symfonyStyle;
     /**
      * @var string
      */
@@ -25,8 +30,9 @@ final class ConsoleApplication extends Application
     /**
      * @param Command[] $commands
      */
-    public function __construct(array $commands)
+    public function __construct(array $commands, SymfonyStyle $symfonyStyle)
     {
+        $this->symfonyStyle = $symfonyStyle;
         parent::__construct(self::NAME, VersionResolver::PACKAGE_VERSION);
         Assert::notEmpty($commands);
         Assert::allIsInstanceOf($commands, Command::class);
@@ -37,6 +43,11 @@ final class ConsoleApplication extends Application
     #[Override]
     public function doRun(InputInterface $input, OutputInterface $output): int
     {
+        // support "-v" as an alias for "--version", as "verbose" option is removed
+        if ($input->hasParameterOption('-v', \true)) {
+            $output->writeln($this->getLongVersion());
+            return \Rector\Console\ExitCode::SUCCESS;
+        }
         $this->enableXdebug($input);
         $shouldFollowByNewline = \false;
         // skip in this case, since generate content must be clear from meta-info
@@ -48,16 +59,22 @@ final class ConsoleApplication extends Application
             $output->write(\PHP_EOL);
         }
         $commandName = $input->getFirstArgument();
+        if ($commandName === null) {
+            return parent::doRun($input, $output);
+        }
         // if paths exist or if the command name is not the first argument but with --option, eg:
         // bin/rector src
         // bin/rector --only "RemovePhpVersionIdCheckRector"
         // file_exists() can check directory and file
-        if (is_string($commandName) && (file_exists($commandName) || isset($_SERVER['argv'][1]) && $commandName !== $_SERVER['argv'][1] && $input->hasParameterOption($_SERVER['argv'][1]))) {
+        if (file_exists($commandName) || isset($_SERVER['argv'][1]) && $commandName !== $_SERVER['argv'][1] && $input->hasParameterOption($_SERVER['argv'][1])) {
             // prepend command name if implicit
             $privatesAccessor = new PrivatesAccessor();
             $tokens = $privatesAccessor->getPrivateProperty($input, 'tokens');
             $tokens = array_merge(['process'], $tokens);
             $privatesAccessor->setPrivateProperty($input, 'tokens', $tokens);
+        } elseif (!$this->has($commandName)) {
+            $this->symfonyStyle->error(sprintf('The following given path does not match any files or directories: %s%s', "\n\n - ", $commandName));
+            return \Rector\Console\ExitCode::FAILURE;
         }
         return parent::doRun($input, $output);
     }

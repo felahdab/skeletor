@@ -9,6 +9,7 @@
  */
 namespace PHPUnit\Event\TestRunner;
 
+use function sprintf;
 use PHPUnit\Event\Event;
 use PHPUnit\Event\Telemetry;
 
@@ -20,10 +21,23 @@ use PHPUnit\Event\Telemetry;
 final readonly class ChildProcessErrored implements Event
 {
     private Telemetry\Info $telemetryInfo;
+    private ChildProcessReason $reason;
 
-    public function __construct(Telemetry\Info $telemetryInfo)
+    /**
+     * @var non-empty-string
+     */
+    private string $message;
+
+    /**
+     * @param non-empty-string $message
+     *
+     * @internal This method is not covered by the backward compatibility promise for PHPUnit
+     */
+    public function __construct(Telemetry\Info $telemetryInfo, ChildProcessReason $reason, string $message)
     {
         $this->telemetryInfo = $telemetryInfo;
+        $this->reason        = $reason;
+        $this->message       = $message;
     }
 
     public function telemetryInfo(): Telemetry\Info
@@ -31,11 +45,27 @@ final readonly class ChildProcessErrored implements Event
         return $this->telemetryInfo;
     }
 
+    public function reason(): ChildProcessReason
+    {
+        return $this->reason;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function message(): string
+    {
+        return $this->message;
+    }
+
     /**
      * @return non-empty-string
      */
     public function asString(): string
     {
-        return 'Child Process Errored';
+        return sprintf(
+            'Child Process Errored (%s)',
+            $this->reason->value,
+        );
     }
 }

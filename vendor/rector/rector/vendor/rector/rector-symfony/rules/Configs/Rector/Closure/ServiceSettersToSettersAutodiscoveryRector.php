@@ -24,7 +24,7 @@ use Rector\Symfony\Enum\SymfonyClass;
 use Rector\Symfony\MinimalSharedStringSolver;
 use Rector\Symfony\NodeAnalyzer\SymfonyPhpClosureDetector;
 use Rector\Symfony\ValueObject\ClassNameAndFilePath;
-use RectorPrefix202602\Symfony\Component\Filesystem\Filesystem;
+use RectorPrefix202608\Symfony\Component\Filesystem\Filesystem;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 /**
@@ -191,7 +191,7 @@ CODE_SAMPLE
     }
     private function createAbsolutePathConcat(string $classFilePath): Concat
     {
-        $relativeDirectoryPath = $this->filesystem->makePathRelative(dirname($classFilePath), dirname($this->file->getFilePath()));
+        $relativeDirectoryPath = $this->filesystem->makePathRelative(dirname($classFilePath), dirname($this->getFile()->getFilePath()));
         $distConstFetch = new ConstFetch(new Name('__DIR__'));
         return new Concat($distConstFetch, new String_('/' . $relativeDirectoryPath));
     }

@@ -186,7 +186,15 @@ class Generator
      */
     protected function createOpenApiGenerator(): OpenApiGenerator
     {
-        $generator = new OpenApiGenerator();
+        $factory = $this->scanOptions['generator_factory'] ?? null;
+
+        if (is_string($factory) && is_subclass_of($factory, CustomGeneratorInterface::class)) {
+            $factory = new $factory();
+        }
+
+        $generator = $factory instanceof CustomGeneratorInterface
+            ? $factory->create()
+            : new OpenApiGenerator();
 
         if (! empty($this->scanOptions['default_processors_configuration'])
             && is_array($this->scanOptions['default_processors_configuration'])
@@ -215,23 +223,34 @@ class Generator
      */
     protected function setProcessors(OpenApiGenerator $generator): void
     {
-        $processorClasses = Arr::get($this->scanOptions, self::SCAN_OPTION_PROCESSORS, []);
-        $newPipeLine = [];
+        $processorConfigs = Arr::get($this->scanOptions, self::SCAN_OPTION_PROCESSORS, []);
 
+        if (empty($processorConfigs)) {
+            return;
+        }
+
+        $normalizedConfigs = [];
+        foreach ($processorConfigs as $config) {
+            $normalizedConfigs[] = is_array($config)
+                ? $config
+                : ['class' => $config, 'after' => \OpenApi\Processors\BuildPaths::class];
+        }
+
+        $newPipeLine = [];
         $generator->getProcessorPipeline()->walk(
-            function (callable $pipe) use ($processorClasses, &$newPipeLine) {
+            function (callable $pipe) use ($normalizedConfigs, &$newPipeLine) {
                 $newPipeLine[] = $pipe;
-                if ($pipe instanceof \OpenApi\Processors\BuildPaths) {
-                    foreach ($processorClasses as $customProcessor) {
-                        $newPipeLine[] = new $customProcessor();
+                foreach ($normalizedConfigs as $entry) {
+                    $after = $entry['after'];
+                    if ($pipe instanceof $after) {
+                        $processor = $entry['class'];
+                        $newPipeLine[] = is_string($processor) ? new $processor() : $processor;
                     }
                 }
             }
         );
 
-        if (! empty($newPipeLine)) {
-            $generator->setProcessorPipeline(new Pipeline($newPipeLine));
-        }
+        $generator->setProcessorPipeline(new Pipeline($newPipeLine));
     }
 
     /**

@@ -2,6 +2,105 @@
 
 All notable changes to `laravel-query-builder` will be documented in this file
 
+## 7.3.2 - 2026-08-07
+
+### What's Changed
+
+* Default direction getter for AllowedSort by @67cwr3ej in https://github.com/spatie/laravel-query-builder/pull/1067
+
+### New Contributors
+
+* @67cwr3ej made their first contribution in https://github.com/spatie/laravel-query-builder/pull/1067
+
+**Full Changelog**: https://github.com/spatie/laravel-query-builder/compare/7.3.1...7.3.2
+
+## 7.3.1 - 2026-08-02
+
+### What's Changed
+
+* Bump actions/checkout from 5 to 6 by @dependabot[bot] in https://github.com/spatie/laravel-query-builder/pull/1061
+* Bump actions/checkout from 6 to 7 by @dependabot[bot] in https://github.com/spatie/laravel-query-builder/pull/1063
+* Make PHPStan level 6 pass without a baseline by @freekmurze in https://github.com/spatie/laravel-query-builder/pull/1066
+
+**Full Changelog**: https://github.com/spatie/laravel-query-builder/compare/7.3.0...7.3.1
+
+## 7.3.0 - 2026-05-02
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 3.0.0 to 3.1.0 by @dependabot[bot] in https://github.com/spatie/laravel-query-builder/pull/1058
+* docs: add Angular front-end implementation by @AndreaAlhena in https://github.com/spatie/laravel-query-builder/pull/1059
+* feat: filter groups (OR/AND conjunction) — JSON:API Fancy Filters by @taskinbirtan in https://github.com/spatie/laravel-query-builder/pull/1060
+
+### New Contributors
+
+* @AndreaAlhena made their first contribution in https://github.com/spatie/laravel-query-builder/pull/1059
+* @taskinbirtan made their first contribution in https://github.com/spatie/laravel-query-builder/pull/1060
+
+**Full Changelog**: https://github.com/spatie/laravel-query-builder/compare/7.2.1...7.3.0
+
+## Unreleased
+
+- Added `AllowedFilter::groupOr()` and `AllowedFilter::groupAnd()` for grouping multiple filters under a single URL parameter with an explicit AND/OR conjunction. Anchored on the [JSON:API Fancy Filters](https://gist.github.com/e0ipso/efcc4e96ca2aed58e32948e4f70c2460) recommendation. Members can be any `AllowedFilter` type. Multiple independent groups are supported, AND-joined to each other.
+- Added `AllowedFilter::applyTo(Builder $builder, mixed $value)` public primitive. `AllowedFilter::filter()` is refactored to delegate to it (behavior is byte-identical).
+
+## 7.2.1 - 2026-04-17
+
+### What's Changed
+
+* Add support for disabling global filter value splitting by @paulandroshchuk in https://github.com/spatie/laravel-query-builder/pull/1056
+* Fix PHPStan errors on main by @freekmurze in https://github.com/spatie/laravel-query-builder/pull/1057
+
+### New Contributors
+
+* @paulandroshchuk made their first contribution in https://github.com/spatie/laravel-query-builder/pull/1056
+
+**Full Changelog**: https://github.com/spatie/laravel-query-builder/compare/7.2.0...7.2.1
+
+## 7.2.0 - 2026-04-08
+
+- Fix empty global delimiter causing a `ValueError` in query parameter parsing (#1055)
+
+## 7.1.0 - 2026-03-29
+
+- Add per-filter delimiter support via fluent `delimiter()` method on `AllowedFilter`
+
+## 7.0.1 - 2026-03-16
+
+- Fix nullable filter edge cases for empty and not-null values with dynamic operators (#1051)
+
+## 7.0.0 - 2026-03-15
+
+### What's Changed
+
+* v7: Modernized API and aggregate includes by @freekmurze in https://github.com/spatie/laravel-query-builder/pull/1050
+
+**Full Changelog**: https://github.com/spatie/laravel-query-builder/compare/6.4.4...7.0.0
+
+## 6.4.4 - 2026-03-08
+
+### What's Changed
+
+* Fix TypeError when nullable operator filter receives null value by @isaackaara in https://github.com/spatie/laravel-query-builder/pull/1048
+
+## 6.4.3 - 2026-02-21
+
+Add Laravel 13 support
+
+## 6.4.2 - 2026-02-18
+
+- Add generics to QueryBuilder class (#1044)
+
+## 6.4.1 - 2026-01-27
+
+### What's Changed
+
+#### Fixed
+
+- Fix typo in docs by @zigzagdev in https://github.com/spatie/laravel-query-builder/pull/1040
+
+**Full Changelog**: https://github.com/spatie/laravel-query-builder/compare/6.4.0...6.4.1
+
 ## 6.4.0 - 2026-01-09
 
 ### What's Changed

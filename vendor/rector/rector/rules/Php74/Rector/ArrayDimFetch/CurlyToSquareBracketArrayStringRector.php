@@ -51,7 +51,7 @@ CODE_SAMPLE
      */
     public function refactor(Node $node): ?Node
     {
-        if (!$this->isFollowedByCurlyBracket($this->file, $node)) {
+        if (!$this->isFollowedByCurlyBracket($this->getFile(), $node)) {
             return null;
         }
         // re-draw the ArrayDimFetch to use [] bracket
@@ -64,7 +64,7 @@ CODE_SAMPLE
         $endTokenPost = $arrayDimFetch->getEndTokenPos();
         if (isset($oldTokens[$endTokenPost]) && (string) $oldTokens[$endTokenPost] === '}') {
             $startTokenPos = $arrayDimFetch->getStartTokenPos();
-            return !(isset($oldTokens[$startTokenPos]) && (string) $oldTokens[$startTokenPos] === '${');
+            return !isset($oldTokens[$startTokenPos]) || (string) $oldTokens[$startTokenPos] !== '${';
         }
         return \false;
     }

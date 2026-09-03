@@ -30,19 +30,21 @@ abstract class Type
             }
         }
 
-        $typeName = gettype($value);
-
         if (is_object($value)) {
             return new ObjectType(TypeName::fromQualifiedName($value::class), $allowsNull);
         }
 
-        $type = self::fromName($typeName, $allowsNull);
+        /*
+         * For a value that is not an object, gettype() only returns "NULL" or
+         * one of the type names that map to SimpleType.
+         */
+        $typeName = gettype($value);
 
-        if ($type instanceof SimpleType) {
-            $type = new SimpleType($typeName, $allowsNull, $value);
+        if ($typeName === 'NULL') {
+            return new NullType;
         }
 
-        return $type;
+        return new SimpleType($typeName, $allowsNull, $value);
     }
 
     /**
@@ -51,17 +53,17 @@ abstract class Type
     public static function fromName(string $typeName, bool $allowsNull): self
     {
         return match (strtolower($typeName)) {
-            'callable'     => new CallableType($allowsNull),
-            'true'         => new TrueType,
-            'false'        => new FalseType,
-            'iterable'     => new IterableType($allowsNull),
-            'never'        => new NeverType,
-            'null'         => new NullType,
-            'object'       => new GenericObjectType($allowsNull),
-            'unknown type' => new UnknownType,
-            'void'         => new VoidType,
+            'callable'                                                                                                         => new CallableType($allowsNull),
+            'true'                                                                                                             => new TrueType,
+            'false'                                                                                                            => new FalseType,
+            'iterable'                                                                                                         => new IterableType($allowsNull),
+            'never'                                                                                                            => new NeverType,
+            'null'                                                                                                             => new NullType,
+            'object'                                                                                                           => new GenericObjectType($allowsNull),
+            'unknown type'                                                                                                     => new UnknownType,
+            'void'                                                                                                             => new VoidType,
             'array', 'bool', 'boolean', 'double', 'float', 'int', 'integer', 'real', 'resource', 'resource (closed)', 'string' => new SimpleType($typeName, $allowsNull),
-            'mixed' => new MixedType,
+            'mixed'                                                                                                            => new MixedType,
             /** @phpstan-ignore argument.type */
             default => new ObjectType(TypeName::fromQualifiedName($typeName), $allowsNull),
         };

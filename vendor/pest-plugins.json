@@ -17,6 +17,7 @@
     "Pest\\Plugins\\Verbose",
     "Pest\\Plugins\\Version",
     "Pest\\Plugins\\Shard",
+    "Pest\\Plugins\\Tia",
     "Pest\\Plugins\\Parallel",
     "Pest\\Arch\\Plugin",
     "Pest\\Laravel\\Plugin",

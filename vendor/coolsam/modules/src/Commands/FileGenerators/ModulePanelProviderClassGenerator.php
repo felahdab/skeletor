@@ -24,10 +24,11 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\Method;
+use Nwidart\Modules\Module;
 
 class ModulePanelProviderClassGenerator extends ClassGenerator
 {
-    public ?\Nwidart\Modules\Module $module;
+    public ?Module $module;
 
     final public function __construct(
         protected string $fqn,
@@ -36,7 +37,7 @@ class ModulePanelProviderClassGenerator extends ClassGenerator
         protected string $navigationLabel,
         protected bool $isDefault = false,
     ) {
-        $this->module = \Module::find($this->moduleName);
+        $this->module = \Nwidart\Modules\Facades\Module::find($this->moduleName);
         if (! $this->module) {
             throw new \InvalidArgumentException("Module '{$this->moduleName}' not found.");
         }
@@ -88,7 +89,7 @@ class ModulePanelProviderClassGenerator extends ClassGenerator
         $this->addNavigationLabelMethodToClass($class);
     }
 
-    public function getModule(): \Nwidart\Modules\Module
+    public function getModule(): Module
     {
         return $this->module;
     }

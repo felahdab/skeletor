@@ -22,12 +22,14 @@ use Rector\PHPUnit\CodeQuality\NodeAnalyser\AssignedMocksCollector;
 use Rector\PHPUnit\CodeQuality\NodeFinder\VariableFinder;
 use Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer;
 use Rector\Rector\AbstractRector;
+use Rector\VersionBonding\Contract\ComposerPackageConstraintInterface;
+use Rector\VersionBonding\ValueObject\ComposerPackageConstraint;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 /**
  * @see \Rector\PHPUnit\Tests\CodeQuality\Rector\ClassMethod\BareCreateMockAssignToDirectUseRector\BareCreateMockAssignToDirectUseRectorTest
  */
-final class BareCreateMockAssignToDirectUseRector extends AbstractRector
+final class BareCreateMockAssignToDirectUseRector extends AbstractRector implements ComposerPackageConstraintInterface
 {
     /**
      * @readonly
@@ -56,6 +58,10 @@ final class BareCreateMockAssignToDirectUseRector extends AbstractRector
         $this->betterNodeFinder = $betterNodeFinder;
         $this->variableFinder = $variableFinder;
         $this->assertMethodAnalyzer = $assertMethodAnalyzer;
+    }
+    public function provideComposerPackageConstraint(): ComposerPackageConstraint
+    {
+        return new ComposerPackageConstraint('phpunit/phpunit', '>=11.0');
     }
     public function getRuleDefinition(): RuleDefinition
     {
@@ -209,8 +215,7 @@ CODE_SAMPLE
                 ++$callLikeVariableUseCount;
             }
         }
-        // not suitable for direct replacing
-        return count($foundVariables) - 1 > $callLikeVariableUseCount;
+        return $callLikeVariableUseCount > 1 || count($foundVariables) - 1 > $callLikeVariableUseCount;
     }
     /**
      * @return CallLike[]

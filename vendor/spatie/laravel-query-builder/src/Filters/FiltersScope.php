@@ -8,23 +8,23 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionNamedType;
 use ReflectionObject;
 use ReflectionParameter;
-use ReflectionUnionType;
 use Spatie\QueryBuilder\Exceptions\InvalidFilterValue;
 
 /**
- * @template TModelClass of \Illuminate\Database\Eloquent\Model
- * @template-implements \Spatie\QueryBuilder\Filters\Filter<TModelClass>
+ * @template TModel of Model
+ *
+ * @implements Filter<TModel>
  */
 class FiltersScope implements Filter
 {
-    /** {@inheritdoc} */
-    public function __invoke(Builder $query, mixed $values, string $property): Builder
+    public function __invoke(Builder $query, mixed $values, string $property): void
     {
         $propertyParts = collect(explode('.', $property));
 
-        $scope = Str::camel($propertyParts->pop()); // TODO: Make this configurable?
+        $scope = Str::camel($propertyParts->pop());
 
         $values = array_values(Arr::wrap($values));
         $values = $this->resolveParameters($query, $values, $scope);
@@ -32,25 +32,30 @@ class FiltersScope implements Filter
         $relation = $propertyParts->implode('.');
 
         if ($relation) {
-            return $query->whereHas($relation, function (Builder $query) use (
-                $scope,
-                $values
-            ) {
-                return $query->$scope(...$values);
+            $query->whereHas($relation, function (Builder $query) use ($scope, $values) {
+                $query->$scope(...$values);
             });
+
+            return;
         }
 
-        return $query->$scope(...$values);
+        $query->$scope(...$values);
     }
 
-    protected function resolveParameters(Builder $query, $values, string $scope): array
+    /**
+     * @param  Builder<TModel>  $query
+     * @param  array<int, mixed>  $values
+     * @return array<int, mixed>
+     */
+    protected function resolveParameters(Builder $query, array $values, string $scope): array
     {
         if (! $query->getModel()->hasNamedScope($scope)) {
             return $values;
         }
+
         $reflectionObject = new ReflectionObject($query->getModel());
-        $scopeMethod = method_exists($query->getModel(), 'scope' . ucfirst($scope))
-            ? 'scope' . ucfirst($scope)
+        $scopeMethod = method_exists($query->getModel(), 'scope'.ucfirst($scope))
+            ? 'scope'.ucfirst($scope)
             : $scope;
 
         try {
@@ -65,7 +70,7 @@ class FiltersScope implements Filter
                 continue;
             }
 
-            /** @var TModelClass $model */
+            /** @var Model $model */
             $model = $this->getClass($parameter)->newInstance();
             $index = $parameter->getPosition() - 1;
             $value = $values[$index];
@@ -82,15 +87,14 @@ class FiltersScope implements Filter
         return $values;
     }
 
+    /**
+     * @return ReflectionClass<object>|null
+     */
     protected function getClass(ReflectionParameter $parameter): ?ReflectionClass
     {
         $type = $parameter->getType();
 
-        if (is_null($type)) {
-            return null;
-        }
-
-        if ($type instanceof ReflectionUnionType) {
+        if (! $type instanceof ReflectionNamedType) {
             return null;
         }
 

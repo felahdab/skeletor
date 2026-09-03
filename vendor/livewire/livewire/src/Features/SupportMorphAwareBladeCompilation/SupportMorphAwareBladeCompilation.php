@@ -3,7 +3,6 @@
 namespace Livewire\Features\SupportMorphAwareBladeCompilation;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Blade;
 use Livewire\ComponentHook;
 use Livewire\Livewire;
 
@@ -18,11 +17,11 @@ class SupportMorphAwareBladeCompilation extends ComponentHook
     {
         on('flush-state', function () {
             static::$shouldInjectConditionalMarkers = config('livewire.inject_morph_markers', true);
-            static::$shouldInjectLoopMarkers = config('livewire.smart_wire_keys', false);
+            static::$shouldInjectLoopMarkers = config('livewire.smart_wire_keys', true);
         });
 
         static::$shouldInjectConditionalMarkers = config('livewire.inject_morph_markers', true);
-        static::$shouldInjectLoopMarkers = config('livewire.smart_wire_keys', false);
+        static::$shouldInjectLoopMarkers = config('livewire.smart_wire_keys', true);
 
         if (! static::$shouldInjectConditionalMarkers && ! static::$shouldInjectLoopMarkers) {
             return;
@@ -33,6 +32,8 @@ class SupportMorphAwareBladeCompilation extends ComponentHook
 
     public static function registerPrecompilers()
     {
+        $compiler = app('blade.compiler');
+
         $directives = [
             '@if' => '@endif',
             '@unless' => '@endunless',
@@ -48,8 +49,8 @@ class SupportMorphAwareBladeCompilation extends ComponentHook
             '@for' => '@endfor',
         ];
 
-        Blade::precompiler(function ($entire) use ($directives) {
-            $conditions = \Livewire\invade(app('blade.compiler'))->conditions;
+        $compiler->precompiler(function ($entire) use ($compiler, $directives) {
+            $conditions = \Livewire\invade($compiler)->conditions;
 
             foreach (array_keys($conditions) as $conditionalDirective) {
                 $directives['@'.$conditionalDirective] = '@end'.$conditionalDirective;
@@ -155,6 +156,8 @@ class SupportMorphAwareBladeCompilation extends ComponentHook
                 $template = static::suffixClosingDirective($match[0], $template, $matchPosition);
             } elseif (preg_match($loopEmptyDirectivePattern, $match[0])) {
                 $template = static::suffixLoopEmptyDirective($match[0], $template, $matchPosition);
+            } elseif (preg_match('/@(continue|break)(?![a-zA-Z])/', $match[0])) {
+                $template = static::compileEarlyLoopExitDirective($match[0], $template, $matchPosition, $match[1], $match[3]);
             }
         }
 
@@ -180,7 +183,7 @@ class SupportMorphAwareBladeCompilation extends ComponentHook
         if (static::$shouldInjectLoopMarkers && static::isLoop($found)) {
             $prefix .= '<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?>';
 
-            $suffix .= '<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?>';
+            $suffix .= '<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?>';
         }
 
         if ($prefix === '' && $suffix === '') {
@@ -209,6 +212,38 @@ class SupportMorphAwareBladeCompilation extends ComponentHook
         $pattern .= "/mUi";
 
         return static::replaceMatchIfNotInsideAHtmlTag($template, $position, $pattern, $found, $prefix, $suffix);
+    }
+
+    protected static function compileEarlyLoopExitDirective($found, $template, $position, $directive, $expression)
+    {
+        if (! static::$shouldInjectConditionalMarkers) {
+            return $template;
+        }
+
+        $foundEscaped = preg_quote($found, '/');
+
+        $livewireCheckOpeningTag = '<?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?>';
+
+        $livewireCheckClosingTag = '<?php endif; ?>';
+
+        $marker = $livewireCheckOpeningTag.'<!--[if ENDBLOCK]><![endif]-->'.$livewireCheckClosingTag;
+
+        /*
+         * Mirrors Laravel's loop-exit compilation from
+         * Illuminate\View\Compilers\Concerns\CompilesLoops::compileBreak()
+         * and ::compileContinue(), adding Livewire's marker before the early exit.
+         */
+        if ($expression && preg_match('/\(\s*(-?\d+)\s*\)$/', $expression, $matches)) {
+            $replacement = $marker.'<?php '.$directive.' '.max(1, $matches[1]).'; ?>';
+        } elseif ($expression) {
+            $replacement = '<?php if'.$expression.': ?>'.$marker.'<?php '.$directive.'; ?><?php endif; ?>';
+        } else {
+            $replacement = $marker.'<?php '.$directive.'; ?>';
+        }
+
+        $pattern = "/{$foundEscaped}/mUi";
+
+        return static::replaceMatchIfNotInsideAHtmlTag($template, $position, $pattern, $replacement, '', '');
     }
 
     protected static function suffixClosingDirective($found, $template, $position)

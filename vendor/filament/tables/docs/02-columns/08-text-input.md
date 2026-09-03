@@ -14,7 +14,7 @@ use Filament\Tables\Columns\TextInputColumn;
 TextInputColumn::make('email')
 ```
 
-<AutoScreenshot name="tables/columns/text-input/simple" alt="Text input column" version="4.x" />
+<AutoScreenshot name="tables/columns/text-input/simple" alt="Text input column" version="5.x" />
 
 ## Validation
 
@@ -88,7 +88,9 @@ TextInputColumn::make('domain')
     ->suffix('.com')
 ```
 
-<UtilityInjection set="tableColumns" version="4.x">As well as allowing static values, the `prefix()` and `suffix()` methods also accept a function to dynamically calculate them. You can inject various utilities into the function as parameters.</UtilityInjection>
+<UtilityInjection set="tableColumns" version="5.x">As well as allowing static values, the `prefix()` and `suffix()` methods also accept a function to dynamically calculate them. You can inject various utilities into the function as parameters.</UtilityInjection>
+
+<AutoScreenshot name="tables/columns/text-input/affix" alt="Text input column with affixes" version="5.x" />
 
 ### Using icons as affixes
 
@@ -103,7 +105,9 @@ TextInputColumn::make('domain')
     ->suffixIcon(Heroicon::CheckCircle)
 ```
 
-<UtilityInjection set="tableColumns" version="4.x">As well as allowing static values, the `prefixIcon()` and `suffixIcon()` methods also accept a function to dynamically calculate them. You can inject various utilities into the function as parameters.</UtilityInjection>
+<UtilityInjection set="tableColumns" version="5.x">As well as allowing static values, the `prefixIcon()` and `suffixIcon()` methods also accept a function to dynamically calculate them. You can inject various utilities into the function as parameters.</UtilityInjection>
+
+<AutoScreenshot name="tables/columns/text-input/prefix-icon" alt="Text input column with prefix icon" version="5.x" />
 
 #### Setting the affix icon's color
 
@@ -118,4 +122,12 @@ TextInputColumn::make('status')
     ->suffixIconColor('success')
 ```
 
-<UtilityInjection set="tableColumns" version="4.x">As well as allowing static values, the `prefixIconColor()` and `suffixIconColor()` methods also accept a function to dynamically calculate them. You can inject various utilities into the function as parameters.</UtilityInjection>
+<UtilityInjection set="tableColumns" version="5.x">As well as allowing static values, the `prefixIconColor()` and `suffixIconColor()` methods also accept a function to dynamically calculate them. You can inject various utilities into the function as parameters.</UtilityInjection>
+
+<AutoScreenshot name="tables/columns/text-input/suffix-icon-color" alt="Text input column with suffix icon in color" version="5.x" />
+
+## Security
+
+### Authorization
+
+The text input column does not automatically check Laravel Model Policies before saving changes. When a user updates a value via the text input column, Filament checks whether the column is `disabled()` but does not run any `update` policy gate check. This means that if a user can see a record in the table and the column is not disabled, they can update that column's value regardless of any `update` policy you have defined. If you need to restrict who can edit this column, you should use the `disabled()` method to conditionally prevent editing based on your own authorization logic, for example `disabled(fn ($record) => $record->user_id !== auth()->id())`. Alternatively, consider using a full edit page or modal action where Filament's resource authorization is enforced.

@@ -15,12 +15,14 @@ use PHPUnit\Framework\MockObject\Generator\ReflectionException;
 use ReflectionClass;
 
 /**
+ * @template T of object
+ *
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  */
 abstract class TestDoubleBuilder
 {
     /**
-     * @var class-string|trait-string
+     * @var class-string<T>
      */
     protected readonly string $type;
 
@@ -39,7 +41,12 @@ abstract class TestDoubleBuilder
     protected bool $returnValueGeneration = true;
 
     /**
-     * @param class-string|trait-string $type
+     * @var list<non-empty-string>
+     */
+    protected array $doubledProperties = [];
+
+    /**
+     * @param class-string<T> $type
      */
     public function __construct(string $type)
     {
@@ -56,7 +63,7 @@ abstract class TestDoubleBuilder
      *
      * @return $this
      */
-    public function onlyMethods(array $methods): self
+    public function onlyMethods(array $methods): static
     {
         if ($methods === []) {
             $this->emptyMethodsArray = true;
@@ -68,7 +75,6 @@ abstract class TestDoubleBuilder
             $reflector = new ReflectionClass($this->type);
 
             // @codeCoverageIgnoreStart
-            /** @phpstan-ignore catch.neverThrown */
         } catch (\ReflectionException $e) {
             throw new ReflectionException(
                 $e->getMessage(),
@@ -90,13 +96,71 @@ abstract class TestDoubleBuilder
     }
 
     /**
+     * Specifies properties that do not declare property hooks for which property hooks should be doubled.
+     *
+     * @param list<non-empty-string> $properties
+     *
+     * @throws PropertyCannotBeDoubledException
+     * @throws ReflectionException
+     *
+     * @return $this
+     */
+    public function doubleProperties(array $properties): static
+    {
+        try {
+            $reflector = new ReflectionClass($this->type);
+
+            // @codeCoverageIgnoreStart
+        } catch (\ReflectionException $e) {
+            throw new ReflectionException(
+                $e->getMessage(),
+                $e->getCode(),
+                $e,
+            );
+            // @codeCoverageIgnoreEnd
+        }
+
+        foreach ($properties as $propertyName) {
+            if (!$reflector->hasProperty($propertyName)) {
+                throw new PropertyCannotBeDoubledException($this->type, $propertyName, 'it does not exist');
+            }
+
+            $property = $reflector->getProperty($propertyName);
+
+            if (!$property->isPublic()) {
+                throw new PropertyCannotBeDoubledException($this->type, $propertyName, 'it is not public');
+            }
+
+            if ($property->isStatic()) {
+                throw new PropertyCannotBeDoubledException($this->type, $propertyName, 'it is static');
+            }
+
+            if ($property->isReadOnly()) {
+                throw new PropertyCannotBeDoubledException($this->type, $propertyName, 'it is readonly');
+            }
+
+            if ($property->isFinal()) {
+                throw new PropertyCannotBeDoubledException($this->type, $propertyName, 'it is final');
+            }
+
+            if (!$property->hasType()) {
+                throw new PropertyCannotBeDoubledException($this->type, $propertyName, 'it does not declare a type');
+            }
+        }
+
+        $this->doubledProperties = array_merge($this->doubledProperties, $properties);
+
+        return $this;
+    }
+
+    /**
      * Specifies the arguments for the constructor.
      *
      * @param array<mixed> $arguments
      *
      * @return $this
      */
-    public function setConstructorArgs(array $arguments): self
+    public function setConstructorArgs(array $arguments): static
     {
         $this->constructorArgs = $arguments;
 
@@ -108,7 +172,7 @@ abstract class TestDoubleBuilder
      *
      * @return $this
      */
-    public function disableOriginalConstructor(): self
+    public function disableOriginalConstructor(): static
     {
         $this->originalConstructor = false;
 
@@ -120,7 +184,7 @@ abstract class TestDoubleBuilder
      *
      * @return $this
      */
-    public function enableOriginalConstructor(): self
+    public function enableOriginalConstructor(): static
     {
         $this->originalConstructor = true;
 
@@ -132,7 +196,7 @@ abstract class TestDoubleBuilder
      *
      * @return $this
      */
-    public function disableOriginalClone(): self
+    public function disableOriginalClone(): static
     {
         $this->originalClone = false;
 
@@ -144,7 +208,7 @@ abstract class TestDoubleBuilder
      *
      * @return $this
      */
-    public function enableOriginalClone(): self
+    public function enableOriginalClone(): static
     {
         $this->originalClone = true;
 
@@ -154,7 +218,7 @@ abstract class TestDoubleBuilder
     /**
      * @return $this
      */
-    public function enableAutoReturnValueGeneration(): self
+    public function enableAutoReturnValueGeneration(): static
     {
         $this->returnValueGeneration = true;
 
@@ -164,7 +228,7 @@ abstract class TestDoubleBuilder
     /**
      * @return $this
      */
-    public function disableAutoReturnValueGeneration(): self
+    public function disableAutoReturnValueGeneration(): static
     {
         $this->returnValueGeneration = false;
 
@@ -182,6 +246,7 @@ abstract class TestDoubleBuilder
             $this->originalConstructor,
             $this->originalClone,
             $this->returnValueGeneration,
+            $this->doubledProperties,
         );
     }
 }

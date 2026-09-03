@@ -8,18 +8,18 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace RectorPrefix202602\Symfony\Component\Console\Command;
+namespace RectorPrefix202608\Symfony\Component\Console\Command;
 
-use RectorPrefix202602\Symfony\Component\Console\Application;
-use RectorPrefix202602\Symfony\Component\Console\Completion\CompletionInput;
-use RectorPrefix202602\Symfony\Component\Console\Completion\CompletionSuggestions;
-use RectorPrefix202602\Symfony\Component\Console\Helper\HelperInterface;
-use RectorPrefix202602\Symfony\Component\Console\Helper\HelperSet;
-use RectorPrefix202602\Symfony\Component\Console\Input\InputDefinition;
-use RectorPrefix202602\Symfony\Component\Console\Input\InputInterface;
-use RectorPrefix202602\Symfony\Component\Console\Output\ConsoleOutputInterface;
-use RectorPrefix202602\Symfony\Component\Console\Output\OutputInterface;
-use RectorPrefix202602\Symfony\Component\Stopwatch\Stopwatch;
+use RectorPrefix202608\Symfony\Component\Console\Application;
+use RectorPrefix202608\Symfony\Component\Console\Completion\CompletionInput;
+use RectorPrefix202608\Symfony\Component\Console\Completion\CompletionSuggestions;
+use RectorPrefix202608\Symfony\Component\Console\Helper\HelperInterface;
+use RectorPrefix202608\Symfony\Component\Console\Helper\HelperSet;
+use RectorPrefix202608\Symfony\Component\Console\Input\InputDefinition;
+use RectorPrefix202608\Symfony\Component\Console\Input\InputInterface;
+use RectorPrefix202608\Symfony\Component\Console\Output\ConsoleOutputInterface;
+use RectorPrefix202608\Symfony\Component\Console\Output\OutputInterface;
+use RectorPrefix202608\Symfony\Component\Stopwatch\Stopwatch;
 /**
  * @internal
  *
@@ -61,9 +61,7 @@ final class TraceableCommand extends Command implements SignalableCommandInterfa
         $this->setDescription($command->getDescription());
         parent::__construct($command->getName());
         // init below enables calling {@see parent::run()}
-        [$code, $processTitle, $ignoreValidationErrors] = \Closure::bind(function () {
-            return [$this->code, $this->processTitle, $this->ignoreValidationErrors];
-        }, $command, Command::class)();
+        [$code, $processTitle, $ignoreValidationErrors] = \Closure::bind(fn() => [$this->code, $this->processTitle, $this->ignoreValidationErrors], $command, Command::class)();
         if (\is_callable($code)) {
             $this->setCode($code);
         }
@@ -87,8 +85,8 @@ final class TraceableCommand extends Command implements SignalableCommandInterfa
         return $this->command instanceof SignalableCommandInterface ? $this->command->getSubscribedSignals() : [];
     }
     /**
-     * @param int|false $previousExitCode
      * @return int|false
+     * @param int|false $previousExitCode
      */
     public function handleSignal(int $signal, $previousExitCode = 0)
     {

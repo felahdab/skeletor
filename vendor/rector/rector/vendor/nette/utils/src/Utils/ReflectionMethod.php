@@ -1,11 +1,11 @@
 <?php
 
+declare (strict_types=1);
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-declare (strict_types=1);
-namespace RectorPrefix202602\Nette\Utils;
+namespace RectorPrefix202608\Nette\Utils;
 
 use function explode, is_string, str_contains;
 /**
@@ -17,9 +17,7 @@ final class ReflectionMethod extends \ReflectionMethod
     /** @var \ReflectionClass<object>
      * @readonly */
     private \ReflectionClass $originalClass;
-    /**
-     * @param object|string $objectOrMethod
-     */
+    /** @param  class-string|object  $objectOrMethod */
     public function __construct($objectOrMethod, ?string $method = null)
     {
         if (is_string($objectOrMethod) && strpos($objectOrMethod, '::') !== \false) {

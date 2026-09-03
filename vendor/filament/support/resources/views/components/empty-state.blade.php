@@ -21,10 +21,11 @@
     }
 
     $hasDescription = filled((string) $description);
+    $hasFooter = filled((string) $footer);
     $hasIcon = filled($icon);
 @endphp
 
-<section
+<div
     {{
         $attributes->class([
             'fi-empty-state',
@@ -42,7 +43,7 @@
                 ])
             >
                 {{
-                    \Filament\Support\generate_icon_html($icon, attributes: (new \Illuminate\View\ComponentAttributeBag)
+                    \Filament\Support\generate_icon_html($icon, attributes: (new \Filament\Support\View\ComponentAttributeBag)
                         ->color(IconComponent::class, $iconColor), size: $iconSize ?? IconSize::Large)
                 }}
             </div>
@@ -59,9 +60,11 @@
                 </p>
             @endif
 
-            <footer class="fi-empty-state-footer">
-                {{ $footer }}
-            </footer>
+            @if ($hasFooter)
+                <footer class="fi-empty-state-footer">
+                    {{ $footer }}
+                </footer>
+            @endif
         </div>
     </div>
-</section>
+</div>

@@ -5,7 +5,6 @@ namespace Guava\Calendar\Concerns;
 use Filament\Actions\Action;
 use Guava\Calendar\Enums\Context;
 use Illuminate\Support\Collection;
-use InvalidArgumentException;
 
 trait HasContextMenu
 {
@@ -24,14 +23,16 @@ trait HasContextMenu
             Context::EventClick => $this->getCachedEventClickContextMenuActions(),
             Context::DateClick => $this->getCachedDateClickContextMenuActions(),
             Context::DateSelect => $this->getCachedDateSelectContextMenuActions(),
-            Context::NoEventsClick => $this->getCachedNoEventsClickContextMenuActions()
+            Context::NoEventsClick => $this->getCachedNoEventsClickContextMenuActions(),
+            default => [],
         };
 
         return collect($actions)
             ->filter(fn (Action $action) => $action->isVisible())
             ->map(
-                fn (Action $action) => $action
-                    ->arguments($this->getRawCalendarContextData())
+                // Invoked, not ->arguments(): the rendered mountAction() handler comes from
+                // getInvokedArguments(), which only __invoke() sets.
+                fn (Action $action) => ($action)($this->getRawCalendarContextData() ?? [])
                     ->toHtml()
             )
         ;
@@ -114,10 +115,6 @@ trait HasContextMenu
         $action = $action
             ->grouped()
         ;
-
-        if (! $action instanceof Action) {
-            throw new InvalidArgumentException('Context menu actions must be an instance of ' . Action::class . '.');
-        }
 
         $this->cacheAction($action);
         $cachedActions = data_get($this->cachedContextMenuActions, $context->value, []);

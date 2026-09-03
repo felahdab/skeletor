@@ -3,6 +3,7 @@
 namespace Nwidart\Modules\Migrations;
 
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Module;
@@ -236,11 +237,11 @@ class Migrator
     /**
      * Get table instance.
      *
-     * @return \Illuminate\Database\Query\Builder
+     * @return Builder
      */
     public function table()
     {
-        return $this->laravel['db']->connection($this->database ?: null)->table(config('database.migrations.table'));
+        return $this->laravel['db']->connection($this->database ?: null)->table(config('database.migrations.table', 'migrations'));
     }
 
     /**

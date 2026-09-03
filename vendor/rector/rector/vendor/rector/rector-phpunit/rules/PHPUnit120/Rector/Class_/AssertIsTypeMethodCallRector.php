@@ -10,15 +10,19 @@ use PhpParser\Node\Expr\StaticCall;
 use Rector\PhpParser\Node\Value\ValueResolver;
 use Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer;
 use Rector\Rector\AbstractRector;
+use Rector\VersionBonding\Contract\ComposerPackageConstraintInterface;
+use Rector\VersionBonding\ValueObject\ComposerPackageConstraint;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 /**
- * @see https://github.com/sebastianbergmann/phpunit/issues/6053
- * @see https://github.com/sebastianbergmann/phpunit/blob/12.0.0/ChangeLog-12.0.md
+ * The is*() methods were added and isType() deprecated in PHPUnit 11.5
+ *
+ * @see https://github.com/sebastianbergmann/phpunit/issues/6052
+ * @see https://github.com/sebastianbergmann/phpunit/blob/11.5.0/ChangeLog-11.5.md
  *
  * @see \Rector\PHPUnit\Tests\PHPUnit120\Rector\Class_\AssertIsTypeMethodCallRector\AssertIsTypeMethodCallRectorTest
  */
-final class AssertIsTypeMethodCallRector extends AbstractRector
+final class AssertIsTypeMethodCallRector extends AbstractRector implements ComposerPackageConstraintInterface
 {
     /**
      * @readonly
@@ -29,13 +33,17 @@ final class AssertIsTypeMethodCallRector extends AbstractRector
      */
     private TestsNodeAnalyzer $testsNodeAnalyzer;
     /**
-     * @var mixed[]
+     * @var array<string, string>
      */
     private const IS_TYPE_VALUE_TO_METHOD = ['array' => 'isArray', 'bool' => 'isBool', 'boolean' => 'isBool', 'callable' => 'isCallable', 'double' => 'isFloat', 'float' => 'isFloat', 'integer' => 'isInt', 'int' => 'isInt', 'iterable' => 'isIterable', 'null' => 'isNull', 'numeric' => 'isNumeric', 'object' => 'isObject', 'real' => 'isFloat', 'resource' => 'isResource', 'resource (closed)' => 'isClosedResource', 'scalar' => 'isScalar', 'string' => 'isString'];
     public function __construct(ValueResolver $valueResolver, TestsNodeAnalyzer $testsNodeAnalyzer)
     {
         $this->valueResolver = $valueResolver;
         $this->testsNodeAnalyzer = $testsNodeAnalyzer;
+    }
+    public function provideComposerPackageConstraint(): ComposerPackageConstraint
+    {
+        return new ComposerPackageConstraint('phpunit/phpunit', '>=11.5');
     }
     public function getRuleDefinition(): RuleDefinition
     {
@@ -89,6 +97,9 @@ CODE_SAMPLE
             return null;
         }
         $argValue = $this->valueResolver->getValue($arg);
+        if (!is_string($argValue)) {
+            return null;
+        }
         if (isset(self::IS_TYPE_VALUE_TO_METHOD[$argValue])) {
             if ($node instanceof MethodCall) {
                 return new MethodCall($node->var, self::IS_TYPE_VALUE_TO_METHOD[$argValue]);

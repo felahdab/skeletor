@@ -5,6 +5,7 @@ namespace Rector\Symfony\Symfony73\Rector\Class_;
 
 use PhpParser\Modifiers;
 use PhpParser\Node;
+use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Identifier;
@@ -25,6 +26,8 @@ use Rector\Symfony\Symfony73\NodeTransformer\CommandUnusedInputOutputRemover;
 use Rector\Symfony\Symfony73\NodeTransformer\ConsoleOptionAndArgumentMethodCallVariableReplacer;
 use Rector\Symfony\Symfony73\NodeTransformer\OutputInputSymfonyStyleReplacer;
 use Rector\ValueObject\MethodName;
+use Rector\VersionBonding\Contract\ComposerPackageConstraintInterface;
+use Rector\VersionBonding\ValueObject\ComposerPackageConstraint;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 /**
@@ -35,7 +38,7 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  *
  * @see \Rector\Symfony\Tests\Symfony73\Rector\Class_\InvokableCommandInputAttributeRector\InvokableCommandInputAttributeRectorTest
  */
-final class InvokableCommandInputAttributeRector extends AbstractRector
+final class InvokableCommandInputAttributeRector extends AbstractRector implements ComposerPackageConstraintInterface
 {
     /**
      * @readonly
@@ -78,6 +81,10 @@ final class InvokableCommandInputAttributeRector extends AbstractRector
         $this->consoleOptionAndArgumentMethodCallVariableReplacer = $consoleOptionAndArgumentMethodCallVariableReplacer;
         $this->outputInputSymfonyStyleReplacer = $outputInputSymfonyStyleReplacer;
         $this->commandUnusedInputOutputRemover = $commandUnusedInputOutputRemover;
+    }
+    public function provideComposerPackageConstraint(): ComposerPackageConstraint
+    {
+        return new ComposerPackageConstraint('symfony/console', '>=7.3');
     }
     public function getRuleDefinition(): RuleDefinition
     {
@@ -172,7 +179,9 @@ CODE_SAMPLE
             $invokeClassMethod->returnType = new Identifier('int');
             $invokeClassMethod->stmts = $classStmt->stmts;
             $invokeParams = $this->createInvokeParams($node);
-            $invokeClassMethod->params = array_merge($invokeParams, [$executeClassMethod->params[1]]);
+            $allParams = array_merge($invokeParams, [$executeClassMethod->params[1]]);
+            // optional parameters (with a default value) must be listed last, to keep a valid signature
+            $invokeClassMethod->params = $this->sortRequiredParamsFirst($allParams);
             // 6. remove parent class
             $node->extends = null;
             // 7. replace input->getArgument() and input->getOption() calls with direct variable access
@@ -239,6 +248,23 @@ CODE_SAMPLE
         }
         // the left-most var must be $this
         return $current instanceof Variable && $this->isName($current, 'this');
+    }
+    /**
+     * @param Param[] $params
+     * @return Param[]
+     */
+    private function sortRequiredParamsFirst(array $params): array
+    {
+        $requiredParams = [];
+        $optionalParams = [];
+        foreach ($params as $param) {
+            if ($param->default instanceof Expr) {
+                $optionalParams[] = $param;
+            } else {
+                $requiredParams[] = $param;
+            }
+        }
+        return array_merge($requiredParams, $optionalParams);
     }
     /**
      * @return Param[]

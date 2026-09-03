@@ -4,6 +4,7 @@ namespace Guava\Calendar\Concerns;
 
 use Guava\Calendar\Contracts\ContextualInfo;
 use Guava\Calendar\Contracts\HasCalendar;
+use Guava\Calendar\Enums\Context;
 use Guava\Calendar\ValueObjects\DateClickInfo;
 use Guava\Calendar\ValueObjects\DateSelectInfo;
 use Guava\Calendar\ValueObjects\EventClickInfo;
@@ -13,7 +14,6 @@ trait CalendarAction
 {
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
-        /** @var InteractsWithCalendar $livewire */
         $livewire = $this->getLivewire();
 
         // Action is used outside the calendar
@@ -21,11 +21,23 @@ trait CalendarAction
             return parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType);
         }
 
-        return match ($parameterType) {
-            DateClickInfo::class, DateSelectInfo::class, EventClickInfo::class, NoEventsClickInfo::class, ContextualInfo::class => [
-                $livewire->getCalendarContextInfo(),
-            ],
-            default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
+        $expectedContext = match ($parameterType) {
+            DateClickInfo::class => Context::DateClick,
+            DateSelectInfo::class => Context::DateSelect,
+            EventClickInfo::class => Context::EventClick,
+            NoEventsClickInfo::class => Context::NoEventsClick,
+            ContextualInfo::class => null,
+            default => false,
         };
+
+        if ($expectedContext !== false) {
+            $contextInfo = $livewire->getCalendarContextInfo();
+
+            return ($expectedContext === null || $contextInfo?->getContext() === $expectedContext)
+                ? [$contextInfo]
+                : [null];
+        }
+
+        return parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType);
     }
 }

@@ -103,6 +103,15 @@ return [
 
         'scanOptions' => [
             /**
+             * Optional CustomGeneratorInterface implementation that creates an OpenApi\Generator instance.
+             * Use this to provide a custom pre-configured generator.
+             * Accepts an instance or a class name (FQCN) implementing the interface.
+             *
+             * @see \L5Swagger\CustomGeneratorInterface
+             */
+            'generator_factory' => null,
+
+            /**
              * Configuration for default processors. Allows to pass processors configuration to swagger-php.
              *
              * @link https://zircote.github.io/swagger-php/reference/processors.html
@@ -135,13 +144,19 @@ return [
             'analysis' => null,
 
             /**
-             * Custom query path processors classes.
+             * Custom processors.
+             *
+             * Each entry can be:
+             * - A class name or instance (inserted after BuildPaths by default)
+             * - An array with 'class' and 'after' keys for precise positioning:
+             *   ['class' => MyProcessor::class, 'after' => SomeProcessor::class]
              *
              * @link https://github.com/zircote/swagger-php/tree/master/Examples/processors/schema-query-parameter
              * @see \OpenApi\scan
              */
             'processors' => [
-                // new \App\SwaggerProcessors\SchemaQueryParameter(),
+                // \App\SwaggerProcessors\SchemaQueryParameter::class,
+                // ['class' => \App\SwaggerProcessors\Custom::class, 'after' => \OpenApi\Processors\AugmentSchemas::class],
             ],
 
             /**

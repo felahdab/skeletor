@@ -118,10 +118,10 @@ class InstallCommand extends Command
                 default: true,
             ))
         ) {
-            $layout = $filesystem->get(resource_path('views/components/layouts/app.blade.php'));
+            $layout = $filesystem->get(resource_path('views/layouts/app.blade.php'));
             $layout = (string) str($layout)
                 ->replace('{{ $slot }}', '{{ $slot }}' . PHP_EOL . PHP_EOL . '        @livewire(\'notifications\')');
-            $filesystem->put(resource_path('views/components/layouts/app.blade.php'), $layout);
+            $filesystem->put(resource_path('views/layouts/app.blade.php'), $layout);
 
             $hasNotifications = true;
         }
@@ -159,6 +159,12 @@ class InstallCommand extends Command
         }
 
         $configuration = json_decode(file_get_contents($path), associative: true);
+
+        if (! is_array($configuration)) {
+            $this->components->warn('Could not update [composer.json] because it could not be parsed as JSON. Please add "@php artisan filament:upgrade" to the "post-autoload-dump" scripts manually.');
+
+            return;
+        }
 
         $command = '@php artisan filament:upgrade';
 

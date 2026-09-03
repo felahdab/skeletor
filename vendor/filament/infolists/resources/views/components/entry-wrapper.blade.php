@@ -8,7 +8,7 @@
 
 @php
     use Filament\Support\Enums\Alignment;
-    use Illuminate\View\ComponentAttributeBag;
+    use Filament\Support\View\ComponentAttributeBag as FilamentComponentAttributeBag;
 
     if ($entry) {
         $action ??= $entry->getAction();
@@ -41,9 +41,9 @@
     }}
 >
     @if ($label && $labelSrOnly)
-        <dt class="fi-in-entry-label fi-sr-only">
+        <div class="fi-in-entry-label fi-sr-only" role="term">
             {{ $label }}
-        </dt>
+        </div>
     @endif
 
     <div class="fi-in-entry-label-col">
@@ -59,18 +59,19 @@
                 {{ $beforeLabelContainer }}
 
                 @if ($label && (! $labelSrOnly))
-                    <dt
+                    <div
                         {{
                             (
                                 ($label instanceof \Illuminate\View\ComponentSlot)
                                 ? $label->attributes
-                                : (new ComponentAttributeBag)
+                                : (new FilamentComponentAttributeBag)
                             )
                                 ->class(['fi-in-entry-label'])
                         }}
+                        role="term"
                     >
                         {{ $label }}
-                    </dt>
+                    </div>
                 @endif
 
                 {{ $afterLabelContainer }}
@@ -83,7 +84,7 @@
     <div class="fi-in-entry-content-col">
         {{ $entry?->getChildSchema($entry::ABOVE_CONTENT_SCHEMA_KEY) }}
 
-        <dd class="fi-in-entry-content-ctn">
+        <div class="fi-in-entry-content-ctn" role="definition">
             {{ $beforeContentContainer }}
 
             @if (filled($url))
@@ -125,7 +126,7 @@
             @endif
 
             {{ $afterContentContainer }}
-        </dd>
+        </div>
 
         {{ $entry?->getChildSchema($entry::BELOW_CONTENT_SCHEMA_KEY) }}
     </div>

@@ -13,35 +13,38 @@ jobs:
       max-parallel: 15
       fail-fast: false
       matrix:
+        php-versions: [ '8.3', '8.4' ]
         coverage: [ 'none' ]
-        php-versions: [ '8.1', '8.2', '8.3', '8.4' ]
-        exclude:
-          - php-versions: '8.4'
         include:
-          - php-versions: '8.4'
+          - php-versions: '8.5'
             coverage: 'xdebug'
 
     name: PHP ${{ matrix.php-versions }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          extensions: json, mbstring, xdebug
+          extensions: json, mbstring
           coverage: ${{ matrix.coverage }}
 
       - name: Install dependencies
-        run: composer update --no-interaction --prefer-dist --no-suggest --prefer-stable
+        run: composer update --no-interaction --prefer-dist --prefer-stable
 
       - name: Lint composer.json
         run: composer validate --strict
 
       - name: Run Tests
-        run: vendor/bin/phpunit -v
+        if: matrix.coverage == 'none'
+        run: vendor/bin/phpunit
+
+      - name: Run Tests with coverage
+        if: matrix.coverage != 'none'
+        run: vendor/bin/phpunit --coverage-clover build/logs/clover.xml --coverage-text
 
       - name: Upload coverage results
         if: matrix.coverage != 'none'
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5

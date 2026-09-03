@@ -20,32 +20,12 @@ final class SetGroup
      * Version-based set provider
      * @var string
      */
-    public const TWIG = 'twig';
-    /**
-     * Version-based set provider
-     * @var string
-     */
-    public const PHPUNIT = 'phpunit';
-    /**
-     * Version-based set provider
-     * @var string
-     */
-    public const DOCTRINE = 'doctrine';
-    /**
-     * Version-based set provider
-     * @var string
-     */
-    public const SYMFONY = 'symfony';
-    /**
-     * Version-based set provider
-     * @var string
-     */
-    public const NETTE_UTILS = 'nette-utils';
-    /**
-     * Version-based set provider
-     * @var string
-     */
     public const LARAVEL = 'laravel';
+    /**
+     * Version-based set provider
+     * @var string
+     */
+    public const DRUPAL = 'drupal';
     /**
      * @var string
      */

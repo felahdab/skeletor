@@ -20,6 +20,7 @@ use Pest\Support\Container;
 use Pest\Support\Coverage;
 use Psr\SimpleCache\CacheInterface;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
+use SebastianBergmann\CodeCoverage\Data\ProcessedCodeCoverageData;
 
 class MutationTestRunner implements MutationTestRunnerContract
 {
@@ -109,12 +110,27 @@ class MutationTestRunner implements MutationTestRunnerContract
 
         Facade::instance()->emitter()->startMutationGeneration($mutationSuite);
 
-        /** @var CodeCoverage $codeCoverage */
-        $codeCoverage = require $reportPath;
+        /** @var CodeCoverage|array{basePath: string, codeCoverage: ProcessedCodeCoverageData} $loadedCoverage */
+        $loadedCoverage = require $reportPath;
 
         unlink($reportPath);
-        $coveredLines = array_map(fn (array $lines): array => array_filter($lines, fn (?array $tests): bool => $tests !== [] && $tests !== null), $codeCoverage->getData()->lineCoverage());
-        $coveredLines = array_filter($coveredLines, fn (array $lines): bool => $lines !== []);
+
+        if ($loadedCoverage instanceof CodeCoverage) {
+            $coverageData = $loadedCoverage->getData();
+        } else {
+            // since phpunit/php-code-coverage 14, `--coverage-php` writes an array instead of a
+            // serialized CodeCoverage, and its file keys are relative to `basePath`
+            $coverageData = $loadedCoverage['codeCoverage'];
+            $basePath = $loadedCoverage['basePath'];
+
+            if ($basePath !== '') {
+                foreach ($coverageData->coveredFiles() as $relativePath) {
+                    $coverageData->renameFile($relativePath, $basePath.DIRECTORY_SEPARATOR.$relativePath);
+                }
+            }
+        }
+
+        $coveredLines = $this->coveredLines($coverageData);
 
         $files = FileFinder::files($this->getConfiguration()->paths, $this->getConfiguration()->pathsToIgnore);
 
@@ -175,6 +191,34 @@ class MutationTestRunner implements MutationTestRunnerContract
         return $this->isMinScoreIsReached($mutationSuite) ? 0 : 1;
     }
 
+    /**
+     * Maps every covered line to the ids of the test cases that executed it.
+     *
+     * @return array<string, array<int, array<int, string>>>
+     */
+    private function coveredLines(ProcessedCodeCoverageData $coverageData): array
+    {
+        // since phpunit/php-code-coverage 14.3, test case ids are interned: the hit map of a
+        // line is keyed by test index, and `testIds()` resolves an index back to its id
+        $testIds = $coverageData->testIds();
+
+        $coveredLines = [];
+
+        foreach ($coverageData->lineCoverage() as $file => $lines) {
+            foreach ($lines as $line => $tests) {
+                $tests = array_values(array_intersect_key($testIds, $tests ?? []));
+
+                if ($tests === []) {
+                    continue;
+                }
+
+                $coveredLines[$file][$line] = $tests;
+            }
+        }
+
+        return $coveredLines;
+    }
+
     private function getConfiguration(): Configuration
     {
         return Container::getInstance()->get(ConfigurationRepository::class)->mergedConfiguration(); // @phpstan-ignore-line
@@ -182,9 +226,10 @@ class MutationTestRunner implements MutationTestRunnerContract
 
     private function isMinScoreIsReached(MutationSuite $mutationSuite): bool
     {
-        /** @var Configuration $configuration */
-        $configuration = Container::getInstance()->get(ConfigurationRepository::class) // @phpstan-ignore-line
-            ->mergedConfiguration();
+        /** @var ConfigurationRepository $configurationRepository */
+        $configurationRepository = Container::getInstance()->get(ConfigurationRepository::class);
+
+        $configuration = $configurationRepository->mergedConfiguration();
 
         $minScore = $configuration->minScore;
 
@@ -201,8 +246,10 @@ class MutationTestRunner implements MutationTestRunnerContract
             return true;
         }
 
-        Container::getInstance()->get(Printer::class) // @phpstan-ignore-line
-            ->reportScoreNotReached($score, $minScore);
+        /** @var Printer $printer */
+        $printer = Container::getInstance()->get(Printer::class);
+
+        $printer->reportScoreNotReached($score, $minScore);
 
         return false;
     }

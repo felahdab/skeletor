@@ -262,7 +262,7 @@ abstract class AbstractProvider implements ProviderContract
     }
 
     /**
-     * Get a Social User instance from a known access token.
+     * Get a Socialite user instance from a known access token.
      *
      * @param  string  $token
      * @return \Laravel\Socialite\Two\User
@@ -287,7 +287,7 @@ abstract class AbstractProvider implements ProviderContract
 
         $state = $this->request->session()->pull('state');
 
-        return empty($state) || $this->request->input('state') !== $state;
+        return empty($state) || ! hash_equals($state, (string) $this->request->input('state'));
     }
 
     /**

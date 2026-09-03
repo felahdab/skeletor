@@ -52,6 +52,9 @@ trait CanFormatState
 
     public function markdown(bool | Closure $condition = true): static
     {
+        // Security: Markdown is converted to HTML and then sanitized via
+        // `Str::sanitizeHtml()`. Same inline `style` caveat as `html()`.
+
         $this->isMarkdown = $condition;
 
         return $this;
@@ -250,7 +253,7 @@ trait CanFormatState
         return $this;
     }
 
-    public function numeric(int | Closure | null $decimalPlaces = null, string | Closure | null | ArgumentValue $decimalSeparator = ArgumentValue::Default, string | Closure | null | ArgumentValue $thousandsSeparator = ArgumentValue::Default, int | Closure | null $maxDecimalPlaces = null, string | Closure | null $locale = null): static
+    public function numeric(int | Closure | null $decimalPlaces = null, string | Closure | null | ArgumentValue $decimalSeparator = ArgumentValue::Default, string | Closure | null | ArgumentValue $thousandsSeparator = ArgumentValue::Default, int | Closure | null $maxDecimalPlaces = null, string | BackedEnum | Closure | null $locale = null): static
     {
         $this->isNumeric = true;
 
@@ -280,6 +283,10 @@ trait CanFormatState
             }
 
             $locale = $column->evaluate($locale) ?? $column->getTable()->getDefaultNumberLocale() ?? config('app.locale');
+
+            if ($locale instanceof BackedEnum) {
+                $locale = (string) $locale->value;
+            }
 
             return Number::format($state, $decimalPlaces, $column->evaluate($maxDecimalPlaces), $locale);
         });
@@ -348,6 +355,12 @@ trait CanFormatState
 
     public function html(bool | Closure $condition = true): static
     {
+        // Security: Content is automatically sanitized via Symfony's
+        // `HtmlSanitizer`. The default config permits inline `style`
+        // attributes, which can enable CSS-based attacks (e.g.
+        // `background: url(...)`). Configure a custom sanitizer
+        // if rendering untrusted user content.
+
         $this->isHtml = $condition;
 
         return $this;
@@ -362,6 +375,14 @@ trait CanFormatState
 
     public function formatState(mixed $state): mixed
     {
+        if (! $this->hasStateFormatting()) {
+            if ($state instanceof LabelInterface) {
+                return $state->getLabel();
+            }
+
+            return $state;
+        }
+
         $isHtml = $this->isHtml();
 
         $state = $this->evaluate($this->formatStateUsing ?? $state, [
@@ -502,5 +523,26 @@ trait CanFormatState
     public function isTime(): bool
     {
         return $this->isTime;
+    }
+
+    /**
+     * Returns true if any state-formatting property is configured. Used to
+     * decide whether to call `formatState()` or emit the raw state directly.
+     * When adding a new state-formatting setter, ensure it is reflected here.
+     */
+    public function hasStateFormatting(): bool
+    {
+        return $this->formatStateUsing !== null
+            || $this->characterLimit !== null
+            || $this->wordLimit !== null
+            || $this->prefix !== null
+            || $this->suffix !== null
+            || $this->isHtml !== false
+            || $this->isMarkdown !== false
+            || $this->isMoney
+            || $this->isDate
+            || $this->isDateTime
+            || $this->isNumeric
+            || $this->isTime;
     }
 }

@@ -5,7 +5,37 @@ All notable changes to `laravel-backup-restore` will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.8.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.9.4...HEAD)
+
+## [v1.9.4](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.9.3...v1.9.4) - 2026-06-02
+
+### Fixed
+
+- Enhance dump file path validation and add related tests ([#116](https://github.com/stefanzweifel/laravel-backup-restore/pull/116), fixes GHSA-w9mx-xmg4-gc4r)
+
+## [v1.9.3](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.9.2...v1.9.3) - 2026-05-04
+
+### Fixed
+
+- Fix grammar in ImportFailed exception message ([#115](https://github.com/stefanzweifel/laravel-backup-restore/pull/115))
+
+## [v1.9.2](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.9.1...v1.9.2) - 2026-02-27
+
+### Changed
+
+- Add Support for Laravel 13 ([#112](https://github.com/stefanzweifel/laravel-backup-restore/pull/112))
+
+## [v1.9.1](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.9.0...v1.9.1) - 2026-02-25
+
+### Changed
+
+- Add Support for laravel-backup v10 ([#111](https://github.com/stefanzweifel/laravel-backup-restore/pull/111))
+
+## [v1.9.0](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.8.0...v1.9.0) - 2025-12-26
+
+### Added
+
+- Add Support for PostgreSQL Binary Dumps ([#107](https://github.com/stefanzweifel/laravel-backup-restore/pull/107))
 
 ## [v1.8.0](https://github.com/stefanzweifel/laravel-backup-restore/compare/v1.7.0...v1.8.0) - 2025-11-30
 

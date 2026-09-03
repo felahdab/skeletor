@@ -8,14 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace RectorPrefix202602\Symfony\Component\Console\Helper;
+namespace RectorPrefix202608\Symfony\Component\Console\Helper;
 
-use RectorPrefix202602\Symfony\Component\Console\Cursor;
-use RectorPrefix202602\Symfony\Component\Console\Exception\LogicException;
-use RectorPrefix202602\Symfony\Component\Console\Output\ConsoleOutputInterface;
-use RectorPrefix202602\Symfony\Component\Console\Output\ConsoleSectionOutput;
-use RectorPrefix202602\Symfony\Component\Console\Output\OutputInterface;
-use RectorPrefix202602\Symfony\Component\Console\Terminal;
+use RectorPrefix202608\Symfony\Component\Console\Cursor;
+use RectorPrefix202608\Symfony\Component\Console\Exception\LogicException;
+use RectorPrefix202608\Symfony\Component\Console\Output\ConsoleOutputInterface;
+use RectorPrefix202608\Symfony\Component\Console\Output\ConsoleSectionOutput;
+use RectorPrefix202608\Symfony\Component\Console\Output\OutputInterface;
+use RectorPrefix202608\Symfony\Component\Console\Terminal;
 /**
  * The ProgressBar provides helpers to display progress output.
  *
@@ -457,25 +457,25 @@ final class ProgressBar
     }
     private static function initPlaceholderFormatters(): array
     {
-        return ['bar' => function (self $bar, OutputInterface $output) {
+        return ['bar' => static function (self $bar, OutputInterface $output) {
             $completeBars = $bar->getBarOffset();
             $display = str_repeat($bar->getBarCharacter(), $completeBars);
             if ($completeBars < $bar->getBarWidth()) {
                 $emptyBars = $bar->getBarWidth() - $completeBars - Helper::length(Helper::removeDecoration($output->getFormatter(), $bar->getProgressCharacter()));
-                $display .= $bar->getProgressCharacter() . str_repeat($bar->getEmptyBarCharacter(), $emptyBars);
+                $display .= $bar->getProgressCharacter() . str_repeat($bar->getEmptyBarCharacter(), max(0, $emptyBars));
             }
             return $display;
-        }, 'elapsed' => fn(self $bar) => Helper::formatTime(time() - $bar->getStartTime(), 2), 'remaining' => function (self $bar) {
+        }, 'elapsed' => static fn(self $bar) => Helper::formatTime(time() - $bar->getStartTime(), 2), 'remaining' => static function (self $bar) {
             if (!$bar->getMaxSteps()) {
                 throw new LogicException('Unable to display the remaining time if the maximum number of steps is not set.');
             }
             return Helper::formatTime($bar->getRemaining(), 2);
-        }, 'estimated' => function (self $bar) {
+        }, 'estimated' => static function (self $bar) {
             if (!$bar->getMaxSteps()) {
                 throw new LogicException('Unable to display the estimated time if the maximum number of steps is not set.');
             }
             return Helper::formatTime($bar->getEstimated(), 2);
-        }, 'memory' => fn(self $bar) => Helper::formatMemory(memory_get_usage(\true)), 'current' => fn(self $bar) => str_pad($bar->getProgress(), $bar->getStepWidth(), ' ', \STR_PAD_LEFT), 'max' => fn(self $bar) => $bar->getMaxSteps(), 'percent' => fn(self $bar) => floor($bar->getProgressPercent() * 100)];
+        }, 'memory' => static fn(self $bar) => Helper::formatMemory(memory_get_usage(\true)), 'current' => static fn(self $bar) => str_pad($bar->getProgress(), $bar->getStepWidth(), ' ', \STR_PAD_LEFT), 'max' => static fn(self $bar) => $bar->getMaxSteps(), 'percent' => static fn(self $bar) => floor($bar->getProgressPercent() * 100)];
     }
     private static function initFormats(): array
     {

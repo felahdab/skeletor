@@ -29,7 +29,7 @@ use const DIRECTORY_SEPARATOR;
 /** @internal */
 final class WrapperWorker
 {
-    public const COMMAND_EXIT = "EXIT\n";
+    public const string COMMAND_EXIT = "EXIT\n";
 
     public readonly SplFileInfo $statusFile;
     public readonly SplFileInfo $progressFile;
@@ -69,7 +69,7 @@ final class WrapperWorker
         touch($this->unexpectedOutputFile->getPathname());
         $this->testResultFile = new SplFileInfo($commonTmpFilePath . 'test_result');
 
-        if ($this->options->configuration->cacheResult()) {
+        if ($this->options->configuration->recordTestRunHistory()) {
             $this->resultCacheFile = new SplFileInfo($commonTmpFilePath . 'result_cache');
         }
 

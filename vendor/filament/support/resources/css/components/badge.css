@@ -14,8 +14,9 @@
         }
     }
 
+    /* Pinning the badge's baseline to the label keeps it aligned with surrounding text, even when the loading indicator is the first flex item. */
     & .fi-badge-label-ctn {
-        @apply grid;
+        @apply grid self-baseline;
     }
 
     & .fi-badge-label {
@@ -51,6 +52,10 @@
 
     &:not(.fi-color) .fi-icon {
         @apply text-gray-400 dark:text-gray-500;
+    }
+
+    & .fi-icon.fi-color {
+        @apply text-color-500;
     }
 
     & .fi-badge-delete-btn {

@@ -7,15 +7,16 @@ namespace ParaTest\WrapperRunner;
 use Generator;
 use ParaTest\Options;
 use PHPUnit\Event\Facade as EventFacade;
+use PHPUnit\Framework\DataProviderTestSuite;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Runner\Extension\ExtensionBootstrapper;
-use PHPUnit\Runner\Extension\Facade as ExtensionFacade;
+use PHPUnit\Runner\Extension\ExtensionFacade;
 use PHPUnit\Runner\Extension\PharLoader;
 use PHPUnit\Runner\Phpt\TestCase as PhptTestCase;
-use PHPUnit\Runner\ResultCache\DefaultResultCache;
-use PHPUnit\Runner\ResultCache\NullResultCache;
+use PHPUnit\Runner\TestRunHistory\DefaultTestRunHistory;
+use PHPUnit\Runner\TestRunHistory\NullTestRunHistory;
 use PHPUnit\Runner\TestSuiteSorter;
 use PHPUnit\TestRunner\TestResult\Facade as TestResultFacade;
 use PHPUnit\TextUI\Command\Result;
@@ -24,13 +25,17 @@ use PHPUnit\TextUI\Configuration\CodeCoverageFilterRegistry;
 use PHPUnit\TextUI\Configuration\PhpHandler;
 use PHPUnit\TextUI\Configuration\TestSuiteBuilder;
 use PHPUnit\TextUI\TestSuiteFilterProcessor;
+use Random\Engine\Mt19937;
+use Random\Randomizer;
 use ReflectionClass;
 use ReflectionProperty;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function array_filter;
 use function array_keys;
 use function array_merge;
 use function array_slice;
+use function array_values;
 use function assert;
 use function ceil;
 use function count;
@@ -44,6 +49,8 @@ use function sprintf;
 use function str_starts_with;
 use function strlen;
 use function substr;
+
+use const ARRAY_FILTER_USE_KEY;
 
 /** @internal */
 final readonly class SuiteLoader
@@ -104,9 +111,9 @@ final readonly class SuiteLoader
             $this->options->configuration->executionOrderDefects() !== TestSuiteSorter::ORDER_DEFAULT ||
             $this->options->configuration->resolveDependencies()
         ) {
-            $resultCache = new NullResultCache();
-            if ($this->options->configuration->cacheResult()) {
-                $resultCache = new DefaultResultCache($this->options->configuration->testResultCacheFile());
+            $resultCache = new NullTestRunHistory();
+            if ($this->options->configuration->recordTestRunHistory()) {
+                $resultCache = new DefaultTestRunHistory($this->options->configuration->testRunHistoryFile());
                 $resultCache->load();
             }
 
@@ -225,15 +232,61 @@ final readonly class SuiteLoader
 
     private function shardTests(TestSuite $suite): void
     {
-        $tests = $this->extractTestsInSuite($suite);
+        $shards  = $this->options->totalShards;
+        $current = $this->options->currentShard - 1; // 0 indexed. Shard 1 is in reality shard 0
 
-        $shards        = $this->options->totalShards;
-        $current       = $this->options->currentShard - 1; // 0 indexed. Shard 1 is in reality shard 0
-        $total         = count($tests);
-        $testsPerShard = (int) ceil($total / $shards);
-        $offset        = $testsPerShard * $current;
+        // With --functional, shard over individual test methods (values).
+        // Without --functional, shard over class-level suites (keys) to keep whole files together.
+        $items = $this->options->functional
+            ? $this->extractTestsInSuite($suite)
+            : $this->extractClassSuites($suite);
 
-        $suite->setTests(array_slice($tests, $offset, $testsPerShard));
+        $shardedItems = match ($this->options->shardDistribution) {
+            ShardDistribution::Sequential => array_slice($items, (int) ceil(count($items) / $shards) * $current, (int) ceil(count($items) / $shards)),
+            ShardDistribution::RoundRobin => array_values(array_filter($items, static fn (int $i): bool => $i % $shards === $current, ARRAY_FILTER_USE_KEY)),
+            ShardDistribution::Random => $this->randomShardTests($items, $shards, $current),
+        };
+
+        $suite->setTests($shardedItems);
+    }
+
+    /**
+     * @param list<Test> $tests
+     *
+     * @return list<Test>
+     */
+    private function randomShardTests(array $tests, int $shards, int $current): array
+    {
+        $randomizer = new Randomizer(new Mt19937($this->options->shardDistributionSeed));
+        /** @var list<Test> $tests */
+        $tests = $randomizer->shuffleArray($tests);
+
+        return array_values(array_filter($tests, static fn (int $i): bool => $i % $shards === $current, ARRAY_FILTER_USE_KEY));
+    }
+
+    /** @return list<TestSuite> */
+    private function extractClassSuites(TestSuite $suite): array
+    {
+        $classSuites = [];
+
+        foreach ($suite->tests() as $item) {
+            if (! ($item instanceof TestSuite)) {
+                continue;
+            }
+
+            $children = $item->tests();
+            if (
+                $children !== []
+                && $children[0] instanceof TestSuite
+                && ! ($children[0] instanceof DataProviderTestSuite)
+            ) {
+                $classSuites = array_merge($classSuites, $this->extractClassSuites($item));
+            } else {
+                $classSuites[] = $item;
+            }
+        }
+
+        return $classSuites;
     }
 
     /** @return list<Test> */

@@ -24,6 +24,7 @@ cp .env.docker .env
 
 ```bash
 cd docker
+docker compose build
 docker compose up -d
 ```
 
@@ -34,7 +35,7 @@ docker compose up -d
 docker compose exec -it -u 0 php bash
 
 # changer les permissions du projet
-chown -R 1111:1111 .
+chown -R www-data:www-data .
 exit
 
 # Se connecter au conteneur

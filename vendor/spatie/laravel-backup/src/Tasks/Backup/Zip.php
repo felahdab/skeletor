@@ -15,10 +15,16 @@ class Zip
 
     protected Config $config;
 
+    protected ?int $encryptionAlgorithm = null;
+
     public function __construct(protected string $pathToZip)
     {
         $this->zipFile = new ZipArchive;
         $this->config = app(Config::class);
+
+        if ($this->config->backup->password !== null) {
+            $this->encryptionAlgorithm = $this->config->backup->encryption->algorithm();
+        }
 
         $this->open();
     }
@@ -85,6 +91,12 @@ class Zip
         if ($result !== true) {
             throw BackupFailed::from(new \Exception("Failed to open zip file at '{$this->pathToZip}'. ZipArchive error code: {$result}"));
         }
+
+        $password = $this->config->backup->password;
+
+        if ($this->encryptionAlgorithm !== null && $password !== null) {
+            $this->zipFile->setPassword($password);
+        }
     }
 
     public function close(): void
@@ -111,13 +123,19 @@ class Zip
             }
 
             if (is_file($file)) {
-                $this->zipFile->addFile($file, ltrim((string) $nameInZip, DIRECTORY_SEPARATOR));
+                $fileNameInZip = ltrim($nameInZip ?: $file, DIRECTORY_SEPARATOR);
 
-                $this->zipFile->setCompressionName(
-                    ltrim($nameInZip ?: $file, DIRECTORY_SEPARATOR),
-                    $compressionMethod,
-                    $compressionLevel
-                );
+                $this->zipFile->addFile($file, $fileNameInZip);
+
+                $this->zipFile->setCompressionName($fileNameInZip, $compressionMethod, $compressionLevel);
+
+                if ($this->encryptionAlgorithm !== null) {
+                    $result = $this->zipFile->setEncryptionName($fileNameInZip, $this->encryptionAlgorithm);
+
+                    if ($result !== true) {
+                        throw BackupFailed::from(new \Exception("Failed to set encryption for '{$fileNameInZip}' in zip file at '{$this->pathToZip}'."));
+                    }
+                }
             }
 
             $this->fileCount++;

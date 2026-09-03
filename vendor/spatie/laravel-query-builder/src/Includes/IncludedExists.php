@@ -2,17 +2,28 @@
 
 namespace Spatie\QueryBuilder\Includes;
 
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
+/**
+ * @template TModel of Model
+ *
+ * @implements IncludeInterface<TModel>
+ */
 class IncludedExists implements IncludeInterface
 {
-    public function __invoke(Builder $query, string $exists)
+    public function __construct(
+        protected ?Closure $constraint = null,
+    ) {}
+
+    public function __invoke(Builder $query, string $exists): void
     {
-        $exists = Str::before($exists, config('query-builder.exists_suffix', 'Exists'));
+        $exists = Str::before($exists, config('query-builder.suffixes.exists', 'Exists'));
 
         $query
-            ->withExists($exists)
+            ->withExists($this->constraint ? [$exists => $this->constraint] : $exists)
             ->withCasts([
                 "{$exists}_exists" => 'boolean',
             ]);

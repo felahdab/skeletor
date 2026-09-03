@@ -10,35 +10,26 @@ services:
         depends_on:
           - php
           - db
-          - phpmyadmin
+          - pgadmin
           - code-editor
           - markserv
     php:
-        image: falahdab/php-supervisor:1.4
+        image: poseidon/php
+        build: ./php
+        environment:
+          NGINX_WEBROOT: /app
         volumes:
             - ../:/app
             - backups:/backups
         restart: unless-stopped
-        links:
-          - code-editor:xdebug.client.host
-    # node:
-    #     image: node:20.0.0
-    #     volumes:
-    #         - ../:/app
-    #         - backups:/backups
-    #     restart: unless-stopped
-    #     tty: true
-    #     command: "bash -c 'sleep infinity'"
-    #     user: 1111:1111
     db:
-        image: mariadb:10.8.3
+        image: postgres:18-alpine
         environment:
-          MYSQL_ROOT_PASSWORD: 'changeme'
-          MYSQL_USER: 'skeletoruser'
-          MYSQL_PASSWORD: 'skeletorpassword'
-          MYSQL_DATABASE: 'skeletordb'
+          POSTGRES_USER: 'skeletoruser'
+          POSTGRES_PASSWORD: 'skeletorpassword'
+          POSTGRES_DB: 'skeletordb'
         volumes:
-            - mysqldata:/var/lib/mysql
+            - postgres_data:/var/lib/postgresql/
         restart: unless-stopped
     markserv:
         image: falahdab/markserv:1.0
@@ -50,29 +41,26 @@ services:
         restart: unless-stopped
         environment:
           REDIS_PASSWORD: 'redispassword'
-    phpmyadmin:
-        image:  docker.io/library/phpmyadmin:5
-        environment:
-           PMA_ABSOLUTE_URI: http://localhost/apps/pma/
-           DATABASE_HOST: db
+    # phpmyadmin:
+    #     image:  docker.io/library/phpmyadmin:5
+    #     environment:
+    #        PMA_ABSOLUTE_URI: http://localhost/apps/pma/
+    #        DATABASE_HOST: db
+    #     restart: unless-stopped
+    pgadmin:
+        image: dpage/pgadmin4
         restart: unless-stopped
+        environment:
+          PGADMIN_DEFAULT_EMAIL: admin@skeletor.fr
+          PGADMIN_DEFAULT_PASSWORD: changeme
     code-editor:
         image: falahdab/codeserver:1.4
-        user: "1111:1111"
+        user: "82:82"
         volumes:
           - ./code-editor-ssh:/home/coder/.ssh
           - ../:/home/coder/app
           - backups:/backups
         restart: unless-stopped
-    # mailpit:
-    #     image: docker.io/axllent/mailpit
-    #     ports:
-    #       - ${MAILPIT_PORT}:8025
-    #     user: "1111:1111"
-    #     restart: unless-stopped
-    #     environment:
-    #        MP_SMTP_AUTH_ACCEPT_ANY: 1
-    #        MP_SMTP_AUTH_ALLOW_INSECURE: 1
 volumes:
-    mysqldata: {}
+    postgres_data: {}
     backups: {}

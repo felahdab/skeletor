@@ -122,9 +122,29 @@ return [
 
     ],
 
+    'color_picker' => [
+
+        'panel_label' => 'Värinpoimija',
+
+    ],
+
     'file_upload' => [
 
+        'actions' => [
+
+            'download' => [
+                'label' => 'Lataa',
+            ],
+
+            'open' => [
+                'label' => 'Avaa uudessa välilehdessä',
+            ],
+
+        ],
+
         'editor' => [
+
+            'label' => 'Kuvan muokkaus',
 
             'actions' => [
 
@@ -268,6 +288,18 @@ return [
 
         ],
 
+        'columns' => [
+
+            'actions' => [
+                'label' => 'Toiminnot',
+            ],
+
+            'reorder' => [
+                'label' => 'Uudelleenjärjestä',
+            ],
+
+        ],
+
         'fields' => [
 
             'key' => [
@@ -338,6 +370,18 @@ return [
     ],
 
     'repeater' => [
+
+        'columns' => [
+
+            'actions' => [
+                'label' => 'Toiminnot',
+            ],
+
+            'reorder' => [
+                'label' => 'Uudelleenjärjestä',
+            ],
+
+        ],
 
         'actions' => [
 
@@ -548,6 +592,35 @@ return [
 
                         'color' => [
                             'label' => 'Väri',
+
+                            'options' => [
+                                'slate' => 'Liuskekivi',
+                                'gray' => 'Harmaa',
+                                'zinc' => 'Sinkki',
+                                'neutral' => 'Neutraali',
+                                'stone' => 'Kivi',
+                                'mauve' => 'Malva',
+                                'olive' => 'Oliivi',
+                                'mist' => 'Sumu',
+                                'taupe' => 'Ruskeanharmaa',
+                                'red' => 'Punainen',
+                                'orange' => 'Oranssi',
+                                'amber' => 'Meripihka',
+                                'yellow' => 'Keltainen',
+                                'lime' => 'Lime',
+                                'green' => 'Vihreä',
+                                'emerald' => 'Smaragdi',
+                                'teal' => 'Sinivihreä',
+                                'cyan' => 'Syaani',
+                                'sky' => 'Taivas',
+                                'blue' => 'Sininen',
+                                'indigo' => 'Indigo',
+                                'violet' => 'Violetti',
+                                'purple' => 'Purppura',
+                                'fuchsia' => 'Fuksia',
+                                'pink' => 'Pinkki',
+                                'rose' => 'Ruusu',
+                            ],
                         ],
 
                         'custom_color' => [
@@ -574,6 +647,11 @@ return [
             'search_prompt' => 'Aloita kirjoittaminen hakeaksesi...',
             'searching_message' => 'Haetaan...',
         ],
+
+        'toolbar' => [
+            'label' => 'Muokkauspalkki',
+        ],
+
         'tools' => [
             'align_center' => 'Keskitä',
             'align_end' => 'Tasaa oikealle',
@@ -588,9 +666,12 @@ return [
             'code_block' => 'Koodialue',
             'custom_blocks' => 'Lohkot',
             'details' => 'Lisätiedot',
-            'h1' => 'Pääotsikko',
-            'h2' => 'Otsikko',
-            'h3' => 'Aliotsikko',
+            'h1' => 'Otsikko',
+            'h2' => 'Otsikko 2',
+            'h3' => 'Otsikko 3',
+            'h4' => 'Otsikko 4',
+            'h5' => 'Otsikko 5',
+            'h6' => 'Otsikko 6',
             'grid' => 'Ruudukko',
             'grid_delete' => 'Poista ruudukko',
             'highlight' => 'Korostus',
@@ -600,6 +681,7 @@ return [
             'link' => 'Linkki',
             'merge_tags' => 'Yhdistä tunniste',
             'ordered_list' => 'Luettelo',
+            'paragraph' => 'Kappale',
             'redo' => 'Toista',
             'small' => 'Pieni teksti',
             'strike' => 'Yliviivaus',
@@ -708,6 +790,10 @@ return [
         ],
 
         'placeholder' => 'Uusi tunniste',
+
+        'tag_added' => 'Lisätty: :tag',
+
+        'tag_removed' => 'Poistettu: :tag',
 
     ],
 
