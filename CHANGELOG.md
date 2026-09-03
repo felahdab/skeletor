@@ -1,3 +1,7 @@
+## 5.0.1 (September 03, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 5.0.0 –> 5.0.1
+- BugFix: Correction api_path de scramble. Retrait du / sinon les routes sont ignorées. La 5.0.0 est donc non fonctionnelle et ne doit pas être déployée.
+
 ## 5.0.0 (September 03, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 4.1.0 –> 5.0.0
 - Passage en laravel 13, livewire 4 et Filament 5. Du coup, changement de version majeure.
