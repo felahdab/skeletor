@@ -1,3 +1,8 @@
+## 5.0.2 (September 07, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 5.0.1 –> 5.0.2
+- Bugfix: Restauration configuration spatie laravel-backup vers mysql.
+- Suppression fichier commite à tord.
+
 ## 5.0.1 (September 03, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 5.0.0 –> 5.0.1
 - BugFix: Correction api_path de scramble. Retrait du / sinon les routes sont ignorées. La 5.0.0 est donc non fonctionnelle et ne doit pas être déployée.
