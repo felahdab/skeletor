@@ -21,10 +21,6 @@ Before implementing a feature:
 * Do not introduce a new architectural pattern when an existing one is suitable.
 * Do not modify unrelated modules or infrastructure.
 
-Modules are independently structured provide the business logic. All modules are located in the Modules directory and each module has its own git repository that you will have to use. 
-The application layer is responsible for orchestrating the business logic and providing a public interface to the module only.
-Do not modify the base application unless explicitly requested.
-
 ## Filament
 
 * This project uses Filament 5.
@@ -43,6 +39,191 @@ Before using an unfamiliar Filament API:
 * Do not rely solely on remembered Filament APIs.
 
 If the user wants to implement a calendar display of the data, refer to the guava/calendar projet documentation (https://github.com/GuavaCZ/calendar). Do not implement a custom calendar component unless explicitly requested.
+
+# Module repository model
+
+This application is modular.
+
+The `Modules/` directory contains independently developed modules.
+
+**Each directory directly under `Modules/` is a separate Git repository.**
+
+For example:
+
+```text
+Modules/
+├── ModuleA/    # independent Git repository
+├── ModuleB/    # independent Git repository
+└── ModuleC/    # independent Git repository
+```
+
+These repositories are NOT Git submodules of the main application repository.
+
+They are cloned into `Modules/` on an as-needed basis.
+
+The main application repository does not track the contents of the module repositories as Git submodules.
+
+The main application must not depend on any module. Never introduce a dependency on a module in the main application.
+
+Modules are loaded dynamically at runtime via the Nwidart package. The main application does not need to know which modules are present.
+
+## Working across repository boundaries
+
+When a task involves functionality implemented by a module:
+
+1. Identify which module owns the relevant functionality.
+2. Inspect the module's source code before making assumptions.
+3. Treat the module as an independent repository.
+4. Inspect the module's own Git status, history, branches and repository structure when relevant.
+5. Do not assume that changes inside `Modules/<ModuleName>` belong to the main application's Git repository.
+6. Do not create Git submodules.
+7. Do not modify Git configuration to make a module a submodule.
+8. Do not commit module changes as part of the main application repository.
+9. If changes are required in both the application and a module, treat them as two separate changesets/repositories.
+
+The fact that the module directory is physically located below the main application's directory does NOT mean that the module belongs to the main application's Git repository.
+
+## Always inspect the module when appropriate
+
+Do not rely solely on the main application's references to a module.
+
+If a task concerns:
+
+* a Filament Resource defined in a module
+* a model defined in a module
+* a service/action defined in a module
+* a migration defined in a module
+* a module-specific configuration
+* module-specific tests
+* module-specific frontend assets
+* a module-specific dependency
+
+inspect the corresponding module repository.
+
+For example, if the task concerns:
+
+```text
+Modules/Foo/app/Filament/Resources/BarResource.php
+```
+
+inspect the `Modules/Foo` repository and its surrounding code before modifying the Resource.
+
+## Determine repository ownership
+
+When operating on a file under `Modules/`, determine the Git repository that owns the file.
+
+Do not assume that the nearest VS Code workspace root is the repository root.
+
+The repository boundary can be identified from the presence of the module's own `.git` directory or Git metadata.
+
+When useful, run Git commands from inside the module directory, for example:
+
+```bash
+git -C Modules/Foo status
+git -C Modules/Foo branch --show-current
+git -C Modules/Foo log -n 10 --oneline
+```
+
+Use the appropriate repository when inspecting history or reviewing changes.
+
+## Cross-repository changes
+
+Some application features span the main application and one or more modules.
+
+For example:
+
+```text
+Main application
+    ↓
+Module
+    ↓
+Filament Resource
+```
+
+When a change crosses repository boundaries:
+
+1. Identify all affected repositories.
+2. Inspect each repository independently.
+3. Make changes in the appropriate repository.
+4. Test each repository using its own conventions where applicable.
+5. Keep Git changes separate.
+6. Clearly report which files belong to which repository.
+
+Never hide a cross-repository change by treating all files as belonging to the main repository.
+
+## Git operations
+
+Before performing Git operations, determine which repository the operation should apply to.
+
+For a module:
+
+```bash
+git -C Modules/<ModuleName> ...
+```
+
+For the main application:
+
+```bash
+git ...
+```
+
+Do not run destructive Git commands.
+
+Do not reset, checkout, rebase, force-push, delete branches, or discard changes without explicit user instruction.
+
+Before committing, verify the repository being committed to.
+
+## Module dependencies
+
+The presence of a module in the filesystem is therefore part of the local development environment, even though the module is maintained in a separate Git repository.
+
+Do not remove or replace a module merely because it is not tracked by the main application's Git repository.
+
+Do not assume every module is present.
+
+If a requested feature references a module that is not currently available locally, report that fact and determine whether the task can be completed without it.
+
+## Module conventions
+
+Each module may have its own:
+
+* architecture
+* tests
+* Filament Resources
+* services/actions
+* models
+* configuration
+* dependencies
+* documentation
+* coding conventions
+
+When modifying a module, inspect its existing implementation and follow its conventions.
+
+Do not impose application-level conventions on a module if the module already has a clearly established local convention.
+
+The main application's architectural rules still apply where they explicitly govern the module integration.
+
+## Completion reporting
+
+When a task involves multiple repositories, report changes grouped by repository.
+
+For example:
+
+```text
+Main application:
+- changed config/...
+- changed app/...
+
+Module Foo:
+- changed app/Filament/...
+- changed tests/...
+
+Module Bar:
+- no changes
+```
+
+Also report tests and validation commands executed for each affected repository.
+
 
 ## Testing
 
