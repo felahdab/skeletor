@@ -227,6 +227,8 @@ Also report tests and validation commands executed for each affected repository.
 
 ## Testing
 
+The host system must not be used to run php for linting or testing. A docker compose stack if defined in the docker subdirectory. Use this stack to run php commands. Check if the stack is already running or start it.
+
 Use Pest.
 
 When adding or modifying functionality:
