@@ -263,3 +263,17 @@ After editing:
 4. Report the files changed and tests executed.
 
 If a requirement is ambiguous, make the smallest reasonable assumption and state it.
+
+## Repository access
+
+The user explicitly authorizes Copilot to read and modify all repositories under `Modules/`.
+
+These are independent Git repositories, not read-only dependencies.
+
+When a task requires changes to a module, freely inspect and modify that module repository just as you would the main application repository.
+
+Always determine the correct Git repository before running Git commands.
+
+Do not refuse or stop merely because `Modules/<ModuleName>` is a separate Git repository.
+
+Protect existing uncommitted work and do not perform destructive Git operations without explicit user authorization.
