@@ -21,7 +21,7 @@ Before implementing a feature:
 * Do not introduce a new architectural pattern when an existing one is suitable.
 * Do not modify unrelated modules or infrastructure.
 
-Modules are independently structured provide the business logic. 
+Modules are independently structured provide the business logic. All modules are located in the Modules directory and each module has its own git repository that you will have to use. 
 The application layer is responsible for orchestrating the business logic and providing a public interface to the module only.
 Do not modify the base application unless explicitly requested.
 
