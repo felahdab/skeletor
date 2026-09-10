@@ -249,6 +249,9 @@ Run the relevant tests after making changes.
 To run the tests of the main application, use the Skeletor pest group.
 To run the tests of a module, use the module pest group name. By default, the module pest group name is the module name. For example, to run the tests of the Foo module, use the Foo pest group.
 
+Never run the tests against the skeletordb database. Always use the testdb database for running the tests.
+The testmysql and testpgsql database connexions are already configured in the base application.
+
 ## Coding style
 
 * Follow existing PHP conventions.
