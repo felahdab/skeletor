@@ -236,7 +236,7 @@ return [
         HelperServiceProvider::class,
 
         FilamentJsonColumnServiceProvider::class,
-        CalendarServiceProvider::class,
+        //CalendarServiceProvider::class,
     ],
 
     /*
