@@ -13,17 +13,22 @@ services:
           - pgadmin
           - code-editor
           - markserv
+        networks:
+            - private
     php:
         image: poseidon/php
         build: ./php
         environment:
           NGINX_WEBROOT: /app
+          SKELETOR_ADMIN_PASSWORD: ${SKELETOR_ADMIN_PASSWORD}
         volumes:
             - ../:/app
             - backups:/backups
         restart: unless-stopped
+        networks:
+            - private
     db:
-        image: postgres:18-alpine
+        image: postgres:17-alpine
         environment:
           POSTGRES_USER: 'skeletoruser'
           POSTGRES_PASSWORD: 'skeletorpassword'
@@ -31,28 +36,50 @@ services:
         volumes:
             - postgres_data:/var/lib/postgresql/
         restart: unless-stopped
+        networks:
+            - private
+    db2:
+        image: mariadb:10.8.3
+        environment:
+          MARIADB_ROOT_PASSWORD: 'acteltoc'
+          MARIADB_USER: 'skeletoruser'
+          MARIADB_PASSWORD: 'skeletorpassword'
+          MARIADB_DATABASE: 'skeletordb'
+        volumes:
+            - mariadb_data:/var/lib/mysql/
+        restart: unless-stopped
+        networks:
+            - private
     markserv:
         image: falahdab/markserv:1.0
         restart: unless-stopped
         volumes:
            - ../resources/docs/:/usr/src/app/md/
+        networks:
+            - private
     redis:
         image: docker.io/library/redis:7.0
         restart: unless-stopped
         environment:
           REDIS_PASSWORD: 'redispassword'
-    # phpmyadmin:
-    #     image:  docker.io/library/phpmyadmin:5
-    #     environment:
-    #        PMA_ABSOLUTE_URI: http://localhost/apps/pma/
-    #        DATABASE_HOST: db
-    #     restart: unless-stopped
+        networks:
+            - private
+    phpmyadmin:
+        image:  docker.io/library/phpmyadmin:5
+        environment:
+           PMA_ABSOLUTE_URI: http://localhost/apps/pma/
+           PMA_HOST: db2
+        restart: unless-stopped
+        networks:
+            - private
     pgadmin:
         image: dpage/pgadmin4
         restart: unless-stopped
         environment:
           PGADMIN_DEFAULT_EMAIL: admin@skeletor.fr
           PGADMIN_DEFAULT_PASSWORD: changeme
+        networks:
+            - private
     code-editor:
         image: falahdab/codeserver:1.4
         user: "82:82"
@@ -61,6 +88,13 @@ services:
           - ../:/home/coder/app
           - backups:/backups
         restart: unless-stopped
+        networks:
+            - private
 volumes:
     postgres_data: {}
+    mariadb_data: {}
     backups: {}
+
+networks:
+    private:
+        driver: bridge
