@@ -44,7 +44,7 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', 'db'),
+            'host' => env('DB_HOST', 'db2'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'forge'),
             'username' => env('DB_USERNAME', 'forge'),
@@ -62,7 +62,7 @@ return [
         'testmysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => 'db',
+            'host' => env('DB_HOST', 'db2'),
             'port' => '3306',
             'database' => 'testdb',
             'username' => 'testuser',
@@ -79,7 +79,7 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'host' => env('DB_HOST', '127.0.0.1'),
+            'host' => env('DB_HOST', 'db'),
             'port' => env('DB_PORT', '5432'),
             'database' => env('DB_DATABASE', 'forge'),
             'username' => env('DB_USERNAME', 'forge'),
@@ -93,7 +93,7 @@ return [
 
         'testpgsql' => [
             'driver' => 'pgsql',
-            'host' => env('DB_HOST', '127.0.0.1'),
+            'host' => env('DB_HOST', 'db'),
             'port' => env('DB_PORT', '5432'),
             'database' => 'testdb',
             'username' => 'testuser',
