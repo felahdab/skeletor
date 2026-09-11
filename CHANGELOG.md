@@ -1,3 +1,11 @@
+## 5.0.3 (September 11, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 5.0.2 –> 5.0.3
+- Réactivation de la découverte automatique de guava/calendar qui a repris tous ses assets en local.
+- Ajustement configuration des bases de données pour la configuration mariadb et postgresql simultanees
+- Mise à jour definition stack docker.
+- Ajout dans le projet des instructions permettant de recourir aux agents LLM d'aide au codage
+- Implements artifact #932286: creation d une commande skeletor pour seeder les permissions definies par les modules, selectivement ou pour tous les modules
+
 ## 5.0.2 (September 07, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 5.0.1 –> 5.0.2
 - Bugfix: Restauration configuration spatie laravel-backup vers mysql.
