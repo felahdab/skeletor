@@ -53,5 +53,6 @@ return [
         'incoming_queue' => env('AMQP_INCOMING_QUEUE', 'from_agora'),
         'outgoing_exchange' => env('AMQP_OUTGOING_EXCHANGE', 'to_agora'),
         'source_nodename' => env('AMQP_SOURCE_NODENAME', 'skeletor'),
+        'debug' => env('SKELETOR_RABBITMQ_DEBUG', false)
     ],
 ];

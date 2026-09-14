@@ -23,7 +23,14 @@ class RabbitMQMessageReceivedListener
         try {
             $message = $event->message;
             $body = $message->getBody();
-            logger()->info("RabbitMQMessageReceivedEvent : " . $body . " with routing key : " . $message->getRoutingKey() . " and properties : " . json_encode($message->get_properties()));
+            if (config('services.rabbitmq.debug'))
+            {
+                logger()->info("RabbitMQMessageReceivedEvent : " . $body . " with routing key : " . $message->getRoutingKey() . " and properties : " . json_encode($message->get_properties()));
+            }
+            else{
+                logger()->info("RabbitMQMessageReceivedEvent with routing key : " . $message->getRoutingKey() . " and properties : " . json_encode($message->get_properties()));
+            }
+            
 
             if ($event->destinationNode() === "broadcast")
             {

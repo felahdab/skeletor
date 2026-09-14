@@ -47,8 +47,14 @@ class SkeletorGetRabbitMQMessagesCommand extends Command
             {
                 break;
             }
+            if (config('services.rabbitmq.debug'))
+            {
+                $this->info("Message RabbitMQ reçu : " . $message->getBody() . " Routing key : " . $message->getRoutingKey());
+            }
+            else{
+                $this->info("Message RabbitMQ reçu with routing key : " . $message->getRoutingKey());
+            }
             
-            $this->info("Message reçu : " . $message->getBody() . " Routing key : " . $message->getRoutingKey());
 
             Event::dispatch(RabbitMQMessageReceivedEvent::make($message));
 
