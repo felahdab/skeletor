@@ -5,10 +5,13 @@ namespace Spatie\QueryBuilder\Exceptions;
 use Exception;
 use Spatie\QueryBuilder\Enums\SortDirection;
 
+/**
+ * @consistent-constructor
+ */
 class InvalidDirection extends Exception
 {
-    public static function make(string $sort)
+    public static function make(string $sort): static
     {
-        return new static('The direction should be either `'.SortDirection::DESCENDING.'` or `'.SortDirection::ASCENDING)."`. {$sort} given.";
+        return new static('The direction should be either `'.SortDirection::Descending->value.'` or `'.SortDirection::Ascending->value."`. {$sort} given.");
     }
 }

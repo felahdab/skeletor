@@ -61,6 +61,12 @@ CODE_SAMPLE
         }
         $firstArg = $args[0];
         $argExpr = $firstArg->value;
+        if ($argExpr instanceof String_ && strlen($argExpr->value) === 1) {
+            return null;
+        }
+        if ($argExpr instanceof Int_ && strlen((string) $argExpr->value) === 1) {
+            return null;
+        }
         $type = $this->nodeTypeResolver->getNativeType($argExpr);
         if (!$type->isString()->yes() && !$type->isInteger()->yes()) {
             return null;

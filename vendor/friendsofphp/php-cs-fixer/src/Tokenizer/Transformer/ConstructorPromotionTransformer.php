@@ -35,7 +35,7 @@ final class ConstructorPromotionTransformer extends AbstractTransformer
         return 8_00_00;
     }
 
-    public function process(Tokens $tokens, Token $token, int $index): void
+    public function processToken(Tokens $tokens, Token $token, int $index): void
     {
         if (!$tokens[$index]->isGivenKind(\T_FUNCTION)) {
             return;
@@ -49,7 +49,7 @@ final class ConstructorPromotionTransformer extends AbstractTransformer
 
         /** @var int $openParenthesisIndex */
         $openParenthesisIndex = $tokens->getNextMeaningfulToken($functionNameIndex); // we are @ '(' now
-        $closeParenthesisIndex = $tokens->findBlockEnd(Tokens::BLOCK_TYPE_PARENTHESIS_BRACE, $openParenthesisIndex);
+        $closeParenthesisIndex = $tokens->findBlockEnd(Tokens::BLOCK_TYPE_PARENTHESIS, $openParenthesisIndex);
 
         for ($argsIndex = $openParenthesisIndex; $argsIndex < $closeParenthesisIndex; ++$argsIndex) {
             if ($tokens[$argsIndex]->isGivenKind(\T_PUBLIC)) {

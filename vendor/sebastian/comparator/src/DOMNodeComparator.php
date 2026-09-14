@@ -17,6 +17,10 @@ use DOMNode;
 use ValueError;
 
 /**
+ * An object exporter is not consulted for the representation of the DOMNode
+ * objects that are compared: the representation this comparator provides for
+ * them always has precedence.
+ *
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for sebastian/comparator
  *
  * @internal This class is not covered by the backward compatibility promise for sebastian/comparator
@@ -50,6 +54,7 @@ final class DOMNodeComparator extends ObjectComparator
                 $expectedAsString,
                 $actualAsString,
                 sprintf("Failed asserting that two DOM %s are equal.\n", $type),
+                $this->contextLines(),
             );
         }
     }
@@ -62,30 +67,56 @@ final class DOMNodeComparator extends ObjectComparator
      */
     private function nodeToText(DOMNode $node, bool $ignoreCase): string
     {
-        $document = new DOMDocument;
+        $c14n = @$node->C14N(false, true);
 
-        try {
-            $c14n = $node->C14N();
+        if ($c14n === false || $c14n === '') {
+            $text = $this->serialize($node);
+        } else {
+            $document = new DOMDocument;
 
-            assert($c14n !== false && $c14n !== '');
+            try {
+                @$document->loadXML($c14n);
+                // @codeCoverageIgnoreStart
+            } catch (ValueError) {
+                // @codeCoverageIgnoreEnd
+            }
 
-            @$document->loadXML($c14n);
-            // @codeCoverageIgnoreStart
-        } catch (ValueError) {
-            // @codeCoverageIgnoreEnd
+            $document->encoding     = 'UTF-8';
+            $document->formatOutput = true;
+            $document->normalizeDocument();
+
+            $saved = $document->saveXML();
+
+            assert($saved !== false);
+
+            $text = $saved;
         }
-
-        $document->formatOutput = true;
-        $document->normalizeDocument();
-
-        $text = $document->saveXML();
-
-        assert($text !== false);
 
         if ($ignoreCase) {
             return mb_strtolower($text, 'UTF-8');
         }
 
         return $text;
+    }
+
+    /**
+     * Serializes a node without canonicalization.
+     * Used as a fallback when DOMNode::C14N() fails.
+     */
+    private function serialize(DOMNode $node): string
+    {
+        if ($node instanceof DOMDocument) {
+            $document = $node;
+            $target   = null;
+        } else {
+            $document = $node->ownerDocument;
+            $target   = $node;
+        }
+
+        assert($document !== null);
+
+        $text = $document->saveXML($target);
+
+        return $text !== false ? $text : '';
     }
 }

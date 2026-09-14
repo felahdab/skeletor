@@ -36,7 +36,7 @@ trait LivewireComponentParser
         $this->module = $module;
 
         $this->directories = collect(
-            preg_split('/[.\/(\\\\)]+/', $this->argument('component'))
+            preg_split('/[.\/(\\\\)]+|::/', $this->argument('component'))
         )->map([Str::class, 'studly']);
 
         $this->component = $this->getComponent();
@@ -46,17 +46,15 @@ trait LivewireComponentParser
 
     protected function getComponent()
     {
-        $classInfo = $this->getClassInfo();
+        if ($this->isCbc()) {
+            $componentData['class'] = $this->getClassInfo();
+        }
 
-        $viewInfo = $this->getViewInfo();
+        $componentData['view'] = $this->getViewInfo();
 
-        $stubInfo = $this->getStubInfo();
+        $componentData['stub'] = $this->getStubInfo();
 
-        return (object) [
-            'class' => $classInfo,
-            'view' => $viewInfo,
-            'stub' => $stubInfo,
-        ];
+        return (object) $componentData;
     }
 
     protected function getClassInfo()
@@ -73,39 +71,68 @@ trait LivewireComponentParser
 
         $namespace = $this->getNamespace($classPath);
 
-        $className = $this->directories->last();
+        $classData['dir'] = $classDir;
+        $classData['path'] = $classPath;
+        $classData['file'] = $classDir.'/'.$classPath.'.php';
+        $classData['namespace'] = $namespace;
+        $classData['name'] = $this->directories->last();
+        $classData['tag'] = $this->getComponentTag();
+        $classData['tag_name'] = $this->getComponentTagName();
 
-        $componentTag = $this->getComponentTag();
-
-        return (object) [
-            'dir' => $classDir,
-            'path' => $classPath,
-            'file' => $classDir.'/'.$classPath.'.php',
-            'namespace' => $namespace,
-            'name' => $className,
-            'tag' => $componentTag,
-        ];
+        return (object) $classData;
     }
 
     protected function getViewInfo()
     {
         $moduleLivewireViewDir = $this->getModuleLivewireViewDir();
 
-        $path = $this->directories
-            ->map([Str::class, 'kebab'])
-            ->implode('/');
+        $directories = $this->directories->map([Str::class, 'kebab']);
 
-        if ($this->option('view')) {
+        $path = $directories->implode('/');
+
+        if ($this->isCbc() && $this->option('view')) {
             $path = strtr($this->option('view'), ['.' => '/']);
         }
 
-        return (object) [
-            'dir' => $moduleLivewireViewDir,
-            'path' => $path,
-            'folder' => Str::after($moduleLivewireViewDir, 'views/'),
-            'file' => $moduleLivewireViewDir.'/'.$path.'.blade.php',
-            'name' => strtr($path, ['/' => '.']),
-        ];
+        if ($this->isSfc() || $this->isMfc()) {
+            $emoji = $this->option('emoji') || config('livewire.make_command.emoji', true) ? '⚡' : '';
+
+            if ($this->option('emoji') === 'false') {
+                $emoji = '';
+            }
+
+            $path = $directories->count() > 1
+                ? Str::replaceLast('/', "/{$emoji}", $path)
+                : "{$emoji}$path";
+        }
+
+        // MFC - Initialize emoji in component folder and the last directory is the component name
+        if ($this->isMfc()) {
+            $componentName = $emoji
+                ? str_replace(['⚡', '⚡︎', '⚡️'], '', $directories->last())
+                : $directories->last();
+
+            $file = $moduleLivewireViewDir.'/'.$path.'/'.$componentName.'.blade.php';
+
+            $viewData['mfc_files'] = [
+                'class' => $moduleLivewireViewDir.'/'.$path.'/'.$componentName.'.php',
+                'view' => $file,
+                'test' => $moduleLivewireViewDir.'/'.$path.'/'.$componentName.'.test.php',
+                'js' => $moduleLivewireViewDir.'/'.$path.'/'.$componentName.'.js',
+                // 'css' => $moduleLivewireViewDir.'/'.$path.'/'.$componentName.'.css',
+                // 'css_global' => $moduleLivewireViewDir.'/'.$path.'.global.css',
+            ];
+        }
+
+        $viewData['dir'] = $moduleLivewireViewDir;
+        $viewData['path'] = $path;
+        $viewData['folder'] = Str::after($moduleLivewireViewDir, 'views/');
+        $viewData['file'] = $file ?? $moduleLivewireViewDir.'/'.$path.'.blade.php';
+        $viewData['name'] = strtr($path, ['/' => '.', '⚡' => '']);
+        $viewData['tag'] = $this->getComponentTag();
+        $viewData['tag_name'] = $this->getComponentTagName();
+
+        return (object) $viewData;
     }
 
     protected function getStubInfo()
@@ -126,19 +153,45 @@ trait LivewireComponentParser
 
         $classStubName = $this->isInline() ? 'livewire.inline.stub' : 'livewire.stub';
 
-        $classStub = File::exists($stubDir.$classStubName)
-            ? $stubDir.$classStubName
-            : $defaultStubDir.$classStubName;
+        $stubData['dir'] = $stubDir;
 
-        $viewStub = File::exists($stubDir.'livewire.view.stub')
-            ? $stubDir.'livewire.view.stub'
-            : $defaultStubDir.'livewire.view.stub';
+        if ($this->isCbc()) {
+            $stubData['class'] = File::exists($stubDir.$classStubName)
+                ? $stubDir.$classStubName
+                : $defaultStubDir.$classStubName;
 
-        return (object) [
-            'dir' => $stubDir,
-            'class' => $classStub,
-            'view' => $viewStub,
-        ];
+            $stubData['view'] = File::exists($stubDir.'livewire.view.stub')
+                ? $stubDir.'livewire.view.stub'
+                : $defaultStubDir.'livewire.view.stub';
+        }
+
+        if ($this->isSfc()) {
+            $stubData['view'] = File::exists($stubDir.'livewire-sfc.stub')
+                ? $stubDir.'livewire-sfc.stub'
+                : $defaultStubDir.'livewire-sfc.stub';
+        }
+
+        if ($this->isMfc()) {
+            $stubData['view'] = File::exists($stubDir.'livewire-mfc-view.stub')
+                ? $stubDir.'livewire-mfc-view.stub'
+                : $defaultStubDir.'livewire-mfc-view.stub';
+
+            $stubData['mfc_stubs']['class'] = File::exists($stubDir.'livewire-mfc-class.stub')
+                ? $stubDir.'livewire-mfc-class.stub'
+                : $defaultStubDir.'livewire-mfc-class.stub';
+
+            $stubData['mfc_stubs']['view'] = $stubData['view'];
+
+            $stubData['mfc_stubs']['test'] = File::exists($stubDir.'livewire-mfc-test.stub')
+                ? $stubDir.'livewire-mfc-test.stub'
+                : $defaultStubDir.'livewire-mfc-test.stub';
+
+            $stubData['mfc_stubs']['js'] = File::exists($stubDir.'livewire-mfc-js.stub')
+                ? $stubDir.'livewire-mfc-js.stub'
+                : $defaultStubDir.'livewire-mfc-js.stub';
+        }
+
+        return (object) $stubData;
     }
 
     protected function getClassContents()
@@ -187,27 +240,30 @@ trait LivewireComponentParser
 
     protected function getViewSourcePath()
     {
-        return Str::of($this->component->view->file)
+        return (string) Str::of($this->component->view->file)
             ->after($this->getBasePath().'/')
             ->replace('//', '/');
     }
 
-    protected function getComponentTag()
+    protected function getComponentTagName()
     {
         $directoryAsView = $this->directories
             ->map([Str::class, 'kebab'])
             ->implode('.');
 
-        $tag = "<livewire:{$this->getModuleLowerName()}::{$directoryAsView} />";
+        return (string) Str::of("{$this->getModuleLowerName()}::{$directoryAsView}")
+            ->replaceLast('.index', '')
+            ->replace('⚡', '');
+    }
 
-        $tagWithOutIndex = Str::replaceLast('.index', '', $tag);
-
-        return $tagWithOutIndex;
+    protected function getComponentTag()
+    {
+        return "<livewire:{$this->getComponentTagName()} />";
     }
 
     protected function getComponentQuote()
     {
-        return "The <code>{$this->getClassName()}</code> livewire component is loaded from the ".($this->isCustomModule() ? 'custom ' : '')."<code>{$this->getModuleName()}</code> module.";
+        return "The <code>{$this->getComponentTagName()}</code> ".$this->determineComponentType()." component is loaded from the ".($this->isCustomModule() ? 'custom ' : '')."<code>{$this->getModuleName()}</code> module.";
     }
 
     protected function getBasePath($path = null)

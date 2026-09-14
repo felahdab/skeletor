@@ -6,7 +6,11 @@ namespace Fruitcake\LaravelDebugbar;
 
 use DebugBar\DataFormatter\DataFormatter;
 use DebugBar\DataFormatter\DataFormatterInterface;
+use DebugBar\DebugBar;
 use Fruitcake\LaravelDebugbar\Console\ClearCommand;
+use Fruitcake\LaravelDebugbar\Console\FindCommand;
+use Fruitcake\LaravelDebugbar\Console\GetCommand;
+use Fruitcake\LaravelDebugbar\Console\QueriesCommand;
 use Fruitcake\LaravelDebugbar\Support\Octane\ResetDebugbar;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -35,6 +39,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->app->singleton(LaravelDebugbar::class);
         $this->app->alias(LaravelDebugbar::class, 'debugbar');
+        $this->app->alias(LaravelDebugbar::class, DebugBar::class);
 
         Collection::macro('debug', function (): \Illuminate\Support\Collection {
             debug($this);
@@ -52,11 +57,19 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $configPath = __DIR__ . '/../config/debugbar.php';
             $this->publishes([$configPath => $this->getConfigPath()], 'config');
 
-            $this->commands([ClearCommand::class]);
+            $this->commands([FindCommand::class, GetCommand::class, ClearCommand::class, QueriesCommand::class]);
+        }
+
+        // Eearly return if debugbar can not enabled
+        if (!LaravelDebugbar::canBeEnabled()) {
+            return;
+        }
+
+        if (config('debugbar.options.db.explain.enabled', false)) { // fallback for old config
+            config(['debugbar.options.db.explain' => true]);
         }
 
         $this->loadRoutesFrom(__DIR__ . '/debugbar-routes.php');
-
         // Resolve the LaravelDebugbar instance during boot to force it to be loaded in the Octane sandbox
         try {
             $debugbar = $this->app->make(LaravelDebugbar::class);

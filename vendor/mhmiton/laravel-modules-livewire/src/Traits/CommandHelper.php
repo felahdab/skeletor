@@ -23,6 +23,38 @@ trait CommandHelper
         return false;
     }
 
+    protected function determineComponentType($default = null)
+    {
+        if ($this->option('class')) {
+            return 'class';
+        }
+
+        if ($this->option('mfc')) {
+            return 'mfc';
+        }
+
+        if ($this->option('sfc')) {
+            return 'sfc';
+        }
+
+        return $default ?? config('livewire.make_command.type', 'sfc');
+    }
+
+    protected function isSfc()
+    {
+        return $this->determineComponentType() === 'sfc';
+    }
+
+    protected function isMfc()
+    {
+        return $this->determineComponentType() === 'mfc';
+    }
+
+    protected function isCbc()
+    {
+        return $this->determineComponentType() === 'class';
+    }
+
     protected function isForce()
     {
         return $this->option('force') === true;
@@ -186,15 +218,5 @@ trait CommandHelper
         }
 
         return true;
-    }
-
-    protected function isClassNameValid($name)
-    {
-        return (new \Livewire\Features\SupportConsoleCommands\Commands\MakeCommand())->isClassNameValid($name);
-    }
-
-    protected function isReservedClassName($name)
-    {
-        return (new \Livewire\Features\SupportConsoleCommands\Commands\MakeCommand())->isReservedClassName($name);
     }
 }

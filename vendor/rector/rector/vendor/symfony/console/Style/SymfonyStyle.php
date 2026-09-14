@@ -8,27 +8,27 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace RectorPrefix202602\Symfony\Component\Console\Style;
+namespace RectorPrefix202608\Symfony\Component\Console\Style;
 
-use RectorPrefix202602\Symfony\Component\Console\Exception\InvalidArgumentException;
-use RectorPrefix202602\Symfony\Component\Console\Exception\RuntimeException;
-use RectorPrefix202602\Symfony\Component\Console\Formatter\OutputFormatter;
-use RectorPrefix202602\Symfony\Component\Console\Helper\Helper;
-use RectorPrefix202602\Symfony\Component\Console\Helper\OutputWrapper;
-use RectorPrefix202602\Symfony\Component\Console\Helper\ProgressBar;
-use RectorPrefix202602\Symfony\Component\Console\Helper\SymfonyQuestionHelper;
-use RectorPrefix202602\Symfony\Component\Console\Helper\Table;
-use RectorPrefix202602\Symfony\Component\Console\Helper\TableCell;
-use RectorPrefix202602\Symfony\Component\Console\Helper\TableSeparator;
-use RectorPrefix202602\Symfony\Component\Console\Input\InputInterface;
-use RectorPrefix202602\Symfony\Component\Console\Output\ConsoleOutputInterface;
-use RectorPrefix202602\Symfony\Component\Console\Output\ConsoleSectionOutput;
-use RectorPrefix202602\Symfony\Component\Console\Output\OutputInterface;
-use RectorPrefix202602\Symfony\Component\Console\Output\TrimmedBufferOutput;
-use RectorPrefix202602\Symfony\Component\Console\Question\ChoiceQuestion;
-use RectorPrefix202602\Symfony\Component\Console\Question\ConfirmationQuestion;
-use RectorPrefix202602\Symfony\Component\Console\Question\Question;
-use RectorPrefix202602\Symfony\Component\Console\Terminal;
+use RectorPrefix202608\Symfony\Component\Console\Exception\InvalidArgumentException;
+use RectorPrefix202608\Symfony\Component\Console\Exception\RuntimeException;
+use RectorPrefix202608\Symfony\Component\Console\Formatter\OutputFormatter;
+use RectorPrefix202608\Symfony\Component\Console\Helper\Helper;
+use RectorPrefix202608\Symfony\Component\Console\Helper\OutputWrapper;
+use RectorPrefix202608\Symfony\Component\Console\Helper\ProgressBar;
+use RectorPrefix202608\Symfony\Component\Console\Helper\SymfonyQuestionHelper;
+use RectorPrefix202608\Symfony\Component\Console\Helper\Table;
+use RectorPrefix202608\Symfony\Component\Console\Helper\TableCell;
+use RectorPrefix202608\Symfony\Component\Console\Helper\TableSeparator;
+use RectorPrefix202608\Symfony\Component\Console\Input\InputInterface;
+use RectorPrefix202608\Symfony\Component\Console\Output\ConsoleOutputInterface;
+use RectorPrefix202608\Symfony\Component\Console\Output\ConsoleSectionOutput;
+use RectorPrefix202608\Symfony\Component\Console\Output\OutputInterface;
+use RectorPrefix202608\Symfony\Component\Console\Output\TrimmedBufferOutput;
+use RectorPrefix202608\Symfony\Component\Console\Question\ChoiceQuestion;
+use RectorPrefix202608\Symfony\Component\Console\Question\ConfirmationQuestion;
+use RectorPrefix202608\Symfony\Component\Console\Question\Question;
+use RectorPrefix202608\Symfony\Component\Console\Terminal;
 /**
  * Output decorator helpers for the Symfony Style Guide.
  *
@@ -89,7 +89,7 @@ class SymfonyStyle extends OutputStyle
     public function listing(array $elements)
     {
         $this->autoPrependText();
-        $elements = array_map(fn($element) => \sprintf(' * %s', $element), $elements);
+        $elements = array_map(static fn($element) => \sprintf(' * %s', $element), $elements);
         $this->writeln($elements);
         $this->newLine();
     }
@@ -320,10 +320,15 @@ class SymfonyStyle extends OutputStyle
             if ($this->output instanceof ConsoleSectionOutput) {
                 // add the new line of the `return` to submit the input to ConsoleSectionOutput, because ConsoleSectionOutput is holding all it's lines.
                 // this is relevant when a `ConsoleSectionOutput::clear` is called.
+                // the section already renders the prompt as a whole line, so an extra
+                // newLine() here would leave a doubled blank line below the answer; only
+                // keep the buffer in sync so autoPrependBlock() spaces the next block.
                 $this->output->addNewLineOfInputSubmit();
+                $this->bufferedOutput->write("\n\n");
+            } else {
+                $this->newLine();
+                $this->bufferedOutput->write("\n");
             }
-            $this->newLine();
-            $this->bufferedOutput->write("\n");
         }
         return $answer;
     }
@@ -424,7 +429,8 @@ class SymfonyStyle extends OutputStyle
             if ($escape) {
                 $message = OutputFormatter::escape($message);
             }
-            $lines = array_merge($lines, explode(\PHP_EOL, $outputWrapper->wrap($message, $this->lineLength - $prefixLength - $indentLength, \PHP_EOL)));
+            $message = str_replace("\r\n", "\n", $message);
+            $lines = array_merge($lines, explode("\n", $outputWrapper->wrap($message, $this->lineLength - $prefixLength - $indentLength, "\n")));
             if (\count($messages) > 1 && $key < \count($messages) - 1) {
                 $lines[] = '';
             }

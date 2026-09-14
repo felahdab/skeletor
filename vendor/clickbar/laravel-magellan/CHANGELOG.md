@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [2.2.0](https://github.com/clickbar/laravel-magellan/tree/2.2.0) - 2026-05-11
+
+### Added
+
+- Added custom SRID support for Geojson parser and validation (`GeojsonParser`, `TransformsGeojsonGeometry`,
+  `GeometryGeojsonRule`)
+
+## [2.1.0](https://github.com/clickbar/laravel-magellan/tree/2.1.0) - 2026-03-17
+
+### Added
+
+- Added Laravel 13.x support
+- Added facades for parsers (`WKBParser`, `WKTParser`, `GeojsonParser`) and generators (`WKBGenerator`, `WKTGenerator`,
+  `GeojsonGenerator`)
+
+### Fixed
+
+- Fixed dirty comparison of Model attributes using the Geometry casts
+
 ## [2.0.1](https://github.com/clickbar/laravel-magellan/tree/2.0.1) - 2025-08-13
 
 ### Fixed

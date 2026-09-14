@@ -98,6 +98,30 @@ class MessagesCollector extends AbstractLogger implements DataCollectorInterface
         return false;
     }
 
+    /**
+     * Returns a simple plain-text representation of a variable for search/display fallback.
+     *
+     */
+    protected function getPlainTextFromVar(mixed $var): string
+    {
+        if (is_null($var)) {
+            return 'null';
+        }
+        if (is_bool($var)) {
+            return $var ? 'true' : 'false';
+        }
+        if (is_scalar($var)) {
+            return (string) $var;
+        }
+        if (is_array($var)) {
+            return 'array(' . count($var) . ')';
+        }
+        if (is_object($var)) {
+            return $this->getDataFormatter()->formatClassName($var);
+        }
+        return gettype($var);
+    }
+
     protected function compactMessageDump(?string $messageHtml): ?string
     {
         $pos = strpos((string) $messageHtml, 'sf-dump-expanded');
@@ -133,31 +157,40 @@ class MessagesCollector extends AbstractLogger implements DataCollectorInterface
             $message = $this->interpolate($message, $context);
         }
 
-        $messageText = $message;
+        $isString = is_string($message);
+        $formattedMessage = $this->getDataFormatter()->formatVar($message);
+        $messageText = null;
         $messageHtml = null;
-        $isString = true;
-        if (!is_string($message)) {
+        $messageJson = null;
+
+        if ($isString) {
+            $messageText = $formattedMessage;
+        } else {
             if ($message instanceof MessageInterface) {
                 $messageText = $message->getText();
                 $messageHtml = $message->getHtml();
-            } else {
-                // Send both text and HTML representations; the text version is used for searches
-                $messageText = $this->getDataFormatter()->formatVar($message);
-                if ($this->isHtmlVarDumperUsed()) {
-                    $messageHtml = $messageText;
-                    if ($this->compactDumps) {
-                        $messageHtml = $this->compactMessageDump($messageHtml);
-                    }
-                    $messageText = strip_tags($messageHtml);
+            } elseif ($this->isJsonVarDumperUsed()) {
+                $messageJson = $formattedMessage;
+            } elseif ($this->isHtmlVarDumperUsed()) {
+                $messageHtml = $formattedMessage;
+                if ($this->compactDumps) {
+                    $messageHtml = $this->compactMessageDump($messageHtml);
                 }
+            } else {
+                $messageText = $formattedMessage;
             }
-
-            $isString = false;
         }
 
+        $contextJson = null;
         if ($context) {
             foreach ($context as $key => $value) {
-                $context[$key] = $this->getDataFormatter()->formatVar($value);
+                $formatted = $this->getDataFormatter()->formatVar($value);
+                if ($this->isJsonVarDumperUsed()) {
+                    $contextJson[$key] = $formatted;
+                    $context[$key] = null;
+                } else {
+                    $context[$key] = $formatted;
+                }
             }
         } else {
             $context = null;
@@ -171,15 +204,17 @@ class MessagesCollector extends AbstractLogger implements DataCollectorInterface
         $this->messages[] = [
             'message' => $messageText,
             'message_html' => $messageHtml,
+            'message_json' => $messageJson,
             'is_string' => $isString,
             'context' => $context,
+            'context_json' => $contextJson,
             'label' => $label,
             'time' => microtime(true),
             'xdebug_link' => $stackItem ? $this->getXdebugLink($stackItem['file'], $stackItem['line'] ?? null) : null,
         ];
 
         if ($this->hasTimeDataCollector()) {
-            $this->addTimeMeasure("[{$label}]: " . substr($messageText, 0, 100), null, microtime(true));
+            $this->addTimeMeasure("[{$label}]: " . substr($isString ? $message : $this->getPlainTextFromVar($message), 0, 100), microtime(true));
         }
 
     }

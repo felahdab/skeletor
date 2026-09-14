@@ -46,6 +46,10 @@ trait CanAskForViewLocation
                     continue;
                 }
 
+                if (filled($paths[''] ?? null) && str($path)->startsWith($paths[''])) {
+                    continue;
+                }
+
                 $paths[$namespace] = $path;
 
                 break;
@@ -63,6 +67,7 @@ trait CanAskForViewLocation
                 ? select(
                     label: $question,
                     options: $options,
+                    default: $this->input->isInteractive() ? null : array_key_first($options),
                 )
                 : array_key_first($options));
 

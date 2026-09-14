@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Contracts\Console\Isolatable;
 use Spatie\Backup\BackupDestination\BackupDestinationFactory;
 use Spatie\Backup\Config\Config;
-use Spatie\Backup\Events\CleanupHasFailed;
+use Spatie\Backup\Notifications\EventHandler;
 use Spatie\Backup\Tasks\Cleanup\CleanupJob;
 use Spatie\Backup\Tasks\Cleanup\CleanupStrategy;
 use Spatie\Backup\Traits\Retryable;
@@ -30,24 +30,28 @@ class CleanupCommand extends BaseCommand implements Isolatable
 
     public function handle(): int
     {
-        consoleOutput()->comment($this->currentTry > 1 ? sprintf('Attempt n°%d...', $this->currentTry) : 'Starting cleanup...');
+        backupLogger()->comment($this->currentTry > 1 ? sprintf('Attempt n°%d...', $this->currentTry) : 'Starting cleanup...');
 
-        $disableNotifications = $this->option('disable-notifications');
+        if ($this->option('disable-notifications')) {
+            EventHandler::disable();
+        }
 
         $this->setTries('cleanup');
 
         if ($this->option('config')) {
             $this->config = Config::fromArray(config($this->option('config')));
+
+            $this->strategy = app()->make($this->config->cleanup->strategy, ['config' => $this->config]);
         }
 
         try {
             $backupDestinations = BackupDestinationFactory::createFromArray($this->config);
 
-            $cleanupJob = new CleanupJob($backupDestinations, $this->strategy, $disableNotifications);
+            $cleanupJob = new CleanupJob($backupDestinations, $this->strategy);
 
             $cleanupJob->run();
 
-            consoleOutput()->comment('Cleanup completed!');
+            backupLogger()->comment('Cleanup completed!');
 
             return static::SUCCESS;
         } catch (Exception $exception) {
@@ -59,10 +63,6 @@ class CleanupCommand extends BaseCommand implements Isolatable
                 $this->currentTry += 1;
 
                 return $this->handle();
-            }
-
-            if (! $disableNotifications) {
-                event(new CleanupHasFailed($exception));
             }
 
             return static::FAILURE;

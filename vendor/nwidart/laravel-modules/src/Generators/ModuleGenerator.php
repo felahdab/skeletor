@@ -13,6 +13,7 @@ use Nwidart\Modules\Contracts\ActivatorInterface;
 use Nwidart\Modules\FileRepository;
 use Nwidart\Modules\Module;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
+use Nwidart\Modules\Support\ReplacementKeyCommand;
 use Nwidart\Modules\Support\Stub;
 use Nwidart\Modules\Traits\PathNamespace;
 
@@ -66,6 +67,11 @@ class ModuleGenerator extends Generator
     protected string $type = 'web';
 
     /**
+     * Whether to generate an Inertia module.
+     */
+    protected bool $inertia = false;
+
+    /**
      * Enables the module.
      */
     protected bool $isActive = false;
@@ -107,6 +113,16 @@ class ModuleGenerator extends Generator
     public function setType(string $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Set whether to generate an Inertia module.
+     */
+    public function setInertia(bool $inertia): self
+    {
+        $this->inertia = $inertia;
 
         return $this;
     }
@@ -193,12 +209,12 @@ class ModuleGenerator extends Generator
         return $this;
     }
 
-    public function getComponent(): \Illuminate\Console\View\Components\Factory
+    public function getComponent(): Factory
     {
         return $this->component;
     }
 
-    public function setComponent(\Illuminate\Console\View\Components\Factory $component): self
+    public function setComponent(Factory $component): self
     {
         $this->component = $component;
 
@@ -351,7 +367,13 @@ class ModuleGenerator extends Generator
      */
     public function generateFiles()
     {
+        $bladeViewStubs = ['views/index', 'views/master'];
+
         foreach ($this->getFiles() as $stub => $file) {
+            if ($this->inertia && in_array($stub, $bladeViewStubs, true)) {
+                continue;
+            }
+
             $path = $this->module->getModulePath($this->getName()).$file;
 
             $this->component->task("Generating file {$path}", function () use ($stub, $path) {
@@ -434,10 +456,22 @@ class ModuleGenerator extends Generator
 
         if (GenerateConfigReader::read('controller')->generate() === true) {
             $options = $this->type == 'api' ? ['--api' => true] : [];
+            if ($this->inertia) {
+                $options = ['--inertia' => true];
+            }
             $this->console->call('module:make-controller', [
                 'controller' => $this->getName().'Controller',
                 'module' => $this->getName(),
             ] + $options);
+        }
+
+        if ($this->inertia) {
+            foreach (['Index', 'Create', 'Show', 'Edit'] as $page) {
+                $this->console->call('module:make-inertia-page', [
+                    'name' => $page,
+                    'module' => $this->getName(),
+                ]);
+            }
         }
     }
 
@@ -494,8 +528,8 @@ class ModuleGenerator extends Generator
         }
 
         foreach ($keys as $key => $value) {
-            if ($value instanceof \Closure) {
-                $replaces[strtoupper($key)] = $value($this);
+            if (class_exists($value) && is_subclass_of($value, ReplacementKeyCommand::class)) {
+                $replaces[strtoupper($key)] = (new $value($this))->handle();
             } elseif (method_exists($this, $method = 'get'.ucfirst(Str::studly(strtolower($value))).'Replacement')) {
                 $replace = $this->$method();
 
@@ -582,6 +616,14 @@ class ModuleGenerator extends Generator
     protected function getPluralStudlyNameReplacement(): string
     {
         return Str::of($this->getName())->pluralStudly();
+    }
+
+    /**
+     * Get the module name in plural upper case.
+     */
+    protected function getPluralUpperNameReplacement(): string
+    {
+        return Str::of($this->getName())->upper()->plural();
     }
 
     /**

@@ -12,6 +12,7 @@ use PhpParser\Node\Expr\BinaryOp\BooleanOr;
 use PhpParser\Node\Expr\BinaryOp\Coalesce;
 use PhpParser\Node\Expr\BinaryOp\LogicalAnd;
 use PhpParser\Node\Expr\BinaryOp\LogicalOr;
+use PhpParser\Node\Expr\BinaryOp\Pipe;
 use PhpParser\Node\Expr\BitwiseNot;
 use PhpParser\Node\Expr\BooleanNot;
 use PhpParser\Node\Expr\Cast;
@@ -28,17 +29,24 @@ use PhpParser\Node\Expr\UnaryMinus;
 use PhpParser\Node\Expr\UnaryPlus;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Scalar;
+use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\ObjectType;
 use Rector\NodeTypeResolver\NodeTypeResolver;
+use Rector\ValueObject\MethodName;
 final class LivingCodeManipulator
 {
     /**
      * @readonly
      */
     private NodeTypeResolver $nodeTypeResolver;
-    public function __construct(NodeTypeResolver $nodeTypeResolver)
+    /**
+     * @readonly
+     */
+    private ReflectionProvider $reflectionProvider;
+    public function __construct(NodeTypeResolver $nodeTypeResolver, ReflectionProvider $reflectionProvider)
     {
         $this->nodeTypeResolver = $nodeTypeResolver;
+        $this->reflectionProvider = $reflectionProvider;
     }
     /**
      * @return Expr[]|mixed[]
@@ -51,6 +59,9 @@ final class LivingCodeManipulator
         }
         if ($expr instanceof Closure || $expr instanceof Scalar || $expr instanceof ConstFetch) {
             return [];
+        }
+        if ($expr instanceof Clone_ && $this->hasCloneMagicMethod($expr)) {
+            return [$expr];
         }
         if ($this->isNestedExpr($expr)) {
             return $this->keepLivingCodeFromExpr($expr->expr);
@@ -91,12 +102,25 @@ final class LivingCodeManipulator
     {
         return $expr instanceof Cast || $expr instanceof Empty_ || $expr instanceof UnaryMinus || $expr instanceof UnaryPlus || $expr instanceof BitwiseNot || $expr instanceof BooleanNot || $expr instanceof Clone_;
     }
+    private function hasCloneMagicMethod(Clone_ $clone): bool
+    {
+        $cloneObjectType = $this->nodeTypeResolver->getType($clone->expr);
+        foreach ($cloneObjectType->getObjectClassNames() as $className) {
+            if (!$this->reflectionProvider->hasClass($className)) {
+                continue;
+            }
+            if ($this->reflectionProvider->getClass($className)->hasNativeMethod(MethodName::CLONE)) {
+                return \true;
+            }
+        }
+        return \false;
+    }
     private function isBinaryOpWithoutChange(Expr $expr): bool
     {
         if (!$expr instanceof BinaryOp) {
             return \false;
         }
-        return !($expr instanceof LogicalAnd || $expr instanceof BooleanAnd || $expr instanceof LogicalOr || $expr instanceof BooleanOr || $expr instanceof Coalesce);
+        return !($expr instanceof LogicalAnd || $expr instanceof BooleanAnd || $expr instanceof LogicalOr || $expr instanceof BooleanOr || $expr instanceof Coalesce || $expr instanceof Pipe);
     }
     /**
      * @return Expr[]

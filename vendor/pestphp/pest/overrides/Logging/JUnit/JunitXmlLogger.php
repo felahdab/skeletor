@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * This file is part of PHPUnit.
  *
@@ -14,6 +15,9 @@ namespace PHPUnit\Logging\JUnit;
 
 use DOMDocument;
 use DOMElement;
+use Pest\Logging\Converter;
+use Pest\Support\Container;
+use Pest\TestSuite;
 use PHPUnit\Event\Code\Test;
 use PHPUnit\Event\Code\TestMethod;
 use PHPUnit\Event\EventFacadeIsSealedException;
@@ -50,7 +54,7 @@ final class JunitXmlLogger
 {
     private readonly Printer $printer;
 
-    private readonly \Pest\Logging\Converter $converter; // pest-added
+    private readonly Converter $converter;
 
     private DOMDocument $document;
 
@@ -108,8 +112,7 @@ final class JunitXmlLogger
     public function __construct(Printer $printer, Facade $facade)
     {
         $this->printer = $printer;
-        $this->converter = new \Pest\Logging\Converter(\Pest\Support\Container::getInstance()->get(\Pest\TestSuite::class)->rootPath); // pest-added
-
+        $this->converter = new Converter(Container::getInstance()->get(TestSuite::class)->rootPath);
         $this->registerSubscribers($facade);
         $this->createDocument();
     }
@@ -124,10 +127,9 @@ final class JunitXmlLogger
     public function testSuiteStarted(Started $event): void
     {
         $testSuite = $this->document->createElement('testsuite');
-        $testSuite->setAttribute('name', $this->converter->getTestSuiteName($event->testSuite())); // pest-changed
-
+        $testSuite->setAttribute('name', $this->converter->getTestSuiteName($event->testSuite()));
         if ($event->testSuite()->isForTestClass()) {
-            $testSuite->setAttribute('file', $this->converter->getTestSuiteLocation($event->testSuite()) ?? ''); // pest-changed
+            $testSuite->setAttribute('file', $this->converter->getTestSuiteLocation($event->testSuite()) ?? '');
         }
 
         if ($this->testSuiteLevel > 0) {
@@ -344,12 +346,11 @@ final class JunitXmlLogger
 
         assert($this->currentTestCase !== null);
 
-        $buffer = $this->converter->getTestCaseMethodName($event->test()); // pest-changed
-
+        $buffer = $this->converter->getTestCaseMethodName($event->test());
         $throwable = $event->throwable();
         $buffer .= trim(
-            $this->converter->getExceptionMessage($throwable).PHP_EOL. // pest-changed
-            $this->converter->getExceptionDetails($throwable), // pest-changed
+            $this->converter->getExceptionMessage($throwable).PHP_EOL.
+            $this->converter->getExceptionDetails($throwable),
         );
 
         $fault = $this->document->createElement(
@@ -449,18 +450,15 @@ final class JunitXmlLogger
         $testCase = $this->document->createElement('testcase');
 
         $test = $event->test();
-        $file = $this->converter->getTestCaseLocation($test); // pest-added
-
-        $testCase->setAttribute('name', $this->converter->getTestCaseMethodName($test)); // pest-changed
-        $testCase->setAttribute('file', $file); // pest-changed
-
+        $file = $this->converter->getTestCaseLocation($test);
+        $testCase->setAttribute('name', $this->converter->getTestCaseMethodName($test));
+        $testCase->setAttribute('file', $file);
         if ($test->isTestMethod()) {
             assert($test instanceof TestMethod);
 
-            // $testCase->setAttribute('line', (string) $test->line()); // pest-removed
-            $className = $this->converter->getTrimmedTestClassName($test); // pest-added
-            $testCase->setAttribute('class', $className); // pest-changed
-            $testCase->setAttribute('classname', str_replace('\\', '.', $className)); // pest-changed
+            $className = $this->converter->getTrimmedTestClassName($test);
+            $testCase->setAttribute('class', $className);
+            $testCase->setAttribute('classname', str_replace('\\', '.', $className));
         }
 
         $this->currentTestCase = $testCase;

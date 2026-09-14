@@ -55,8 +55,8 @@ class VoltMakeCommand extends Command implements PromptsForMissingInput
         $viewFile = $this->component->view->file;
 
         if (File::exists($viewFile) && ! $this->isForce()) {
-            $this->line("<options=bold,reverse;fg=red> WHOOPS-IE-TOOTLES </> 😳 \n");
-            $this->line("<fg=red;options=bold>View already exists:</> {$this->getViewSourcePath()}");
+            $this->line("<options=bold,reverse;fg=red> VOLT COMPONENT EXISTS </> 😳 \n");
+            $this->line("<fg=red;options=bold>Component already exists:</> {$this->getViewSourcePath()}");
 
             return false;
         }

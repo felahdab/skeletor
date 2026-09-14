@@ -36,7 +36,7 @@
             this.el.append(header);
 
             const tableWrapper = document.createElement('table');
-            tableWrapper.innerHTML = '<thead><tr><th width="155">Date</th><th width="75">Method</th><th>URL</th><th width="125">IP</th><th width="100">Filter data</th></tr></thead>';
+            tableWrapper.innerHTML = '<thead><tr><th width="80">ID</th><th width="155">Date</th><th width="75">Method</th><th>URL</th><th width="125">IP</th><th width="100">Filter data</th></tr></thead>';
             tableWrapper.append(this.table);
             this.el.append(tableWrapper);
 
@@ -59,8 +59,8 @@
             this.showonlycurrentbtn.textContent = 'Show only current URL';
             this.actions.append(this.showonlycurrentbtn);
             this.showonlycurrentbtn.addEventListener('click', () => {
-                self.table.innerHTML = '';
-                self.find({ uri: window.location.pathname }, 0, self.handleFind.bind(self));
+                self.uriInput.value = window.location.pathname;
+                self.searchBtn.click();
             });
 
             this.refreshbtn = document.createElement('a');
@@ -99,7 +99,7 @@
         addSearch() {
             const self = this;
 
-            const searchBtn = document.createElement('button');
+            const searchBtn = this.searchBtn = document.createElement('button');
             searchBtn.textContent = 'Search';
             searchBtn.type = 'submit';
             searchBtn.addEventListener('click', function (e) {
@@ -118,21 +118,29 @@
 
             const form = document.createElement('form');
             form.innerHTML = '<br/><b>Filter results</b><br/>'
-                + '<select name="method"><option selected>(Method)</option><option>GET</option><option>POST</option><option>PUT</option><option>DELETE</option></select>';
+                + '<select name="method"><option selected value="">(Method)</option><option>GET</option><option>POST</option><option>PUT</option><option>DELETE</option></select>';
 
-            const uriInput = document.createElement('input');
-            uriInput.type = 'text';
-            uriInput.name = 'uri';
-            uriInput.placeholder = 'URI';
-            form.append(uriInput);
+            this.uriInput = document.createElement('input');
+            this.uriInput.type = 'text';
+            this.uriInput.name = 'uri';
+            this.uriInput.placeholder = "URI, eg '/user/*'";
+            form.append(this.uriInput);
 
-            const ipInput = document.createElement('input');
-            ipInput.type = 'text';
-            ipInput.name = 'ip';
-            ipInput.placeholder = 'IP';
-            form.append(ipInput);
+            this.ipInput = document.createElement('input');
+            this.ipInput.type = 'text';
+            this.ipInput.name = 'ip';
+            this.ipInput.placeholder = 'IP';
+            form.append(this.ipInput);
 
+            const resetBtn = document.createElement('button');
+            resetBtn.textContent = 'Reset';
+            resetBtn.type = 'button';
+            resetBtn.addEventListener('click', () => {
+                form.reset();
+                searchBtn.click();
+            });
             form.append(searchBtn);
+            form.append(resetBtn);
             this.actions.append(form);
         },
 
@@ -170,20 +178,55 @@
                 const ipLink = document.createElement('a');
                 ipLink.textContent = meta.ip;
                 ipLink.addEventListener('click', (e) => {
-                    self.table.innerHTML = '';
-                    self.find({ ip: meta.ip }, 0, self.handleFind.bind(self));
+                    self.ipInput.value = meta.ip;
+                    self.searchBtn.click();
                     e.preventDefault();
                 });
 
                 const searchLink = document.createElement('a');
                 searchLink.textContent = 'Show URL';
                 searchLink.addEventListener('click', (e) => {
-                    self.table.innerHTML = '';
-                    self.find({ uri: meta.uri }, 0, self.handleFind.bind(self));
+                    self.uriInput.value = meta.uri;
+                    self.searchBtn.click();
                     e.preventDefault();
                 });
 
                 const tr = document.createElement('tr');
+
+                const idTd = document.createElement('td');
+                idTd.classList.add(csscls('id-cell'));
+                const idText = document.createElement('span');
+                idText.classList.add(csscls('id-text'));
+                idText.textContent = meta.id;
+                idText.title = meta.id;
+                idTd.append(idText);
+
+                const copyIdBtn = document.createElement('a');
+                copyIdBtn.classList.add(csscls('copy-id'));
+                copyIdBtn.title = 'Copy Request ID';
+                copyIdBtn.innerHTML = '<i class="phpdebugbar-icon phpdebugbar-icon-copy"></i>';
+                copyIdBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    const tmp = document.createElement('textarea');
+                    tmp.value = meta.id;
+                    tmp.style.position = 'fixed';
+                    tmp.style.opacity = '0';
+                    document.body.append(tmp);
+                    tmp.select();
+                    document.execCommand('copy');
+                    tmp.remove();
+                    const icon = copyIdBtn.querySelector('i');
+                    icon.className = 'phpdebugbar-icon phpdebugbar-icon-circle-check';
+                    copyIdBtn.classList.add(csscls('copied'));
+                    setTimeout(() => {
+                        icon.className = 'phpdebugbar-icon phpdebugbar-icon-copy';
+                        copyIdBtn.classList.remove(csscls('copied'));
+                    }, 2000);
+                });
+                idTd.append(copyIdBtn);
+                tr.append(idTd);
+
                 const datetimeTd = document.createElement('td');
                 datetimeTd.textContent = meta.datetime;
                 tr.append(datetimeTd);

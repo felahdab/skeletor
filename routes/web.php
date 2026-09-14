@@ -33,6 +33,6 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         // Logout Routes
         Route::get('/logout', [LogoutController::class, 'perform'])->name('logout.perform');
 
-        Route::post('bugreport', [BugReportController::class, 'store'])->name('bugreports.store');
+        #Route::post('bugreport', [BugReportController::class, 'store'])->name('bugreports.store');
     });
 });

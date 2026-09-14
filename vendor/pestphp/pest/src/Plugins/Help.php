@@ -18,13 +18,10 @@ final readonly class Help implements HandlesArguments
 {
     use Concerns\HandleArguments;
 
-    /**
-     * Creates a new Plugin instance.
-     */
     public function __construct(
         private OutputInterface $output
     ) {
-        // ..
+        //
     }
 
     /**
@@ -80,9 +77,6 @@ final readonly class Help implements HandlesArguments
         return $arguments;
     }
 
-    /**
-     * Colorizes the given string options.
-     */
     private function colorizeOptions(string $argument): string
     {
         return (string) preg_replace(
@@ -107,6 +101,48 @@ final readonly class Help implements HandlesArguments
             'desc' => 'Initialise a standard Pest configuration',
         ]], ...$content['Configuration']];
 
+        $content['AI'] = [
+            [
+                'arg' => '--ai',
+                'desc' => 'Run a code snippet as a fully scaffolded test for AI verification',
+            ],
+        ];
+
+        $content['Tia'] = [
+            [
+                'arg' => '--tia',
+                'desc' => 'Re-run only the tests affected by your changes, replaying the rest from cache',
+            ],
+            [
+                'arg' => '--no-tia',
+                'desc' => 'Disable test impact analysis for this run',
+            ],
+            [
+                'arg' => '--tia --fresh',
+                'desc' => 'Discard the recorded dependency graph and record it again',
+            ],
+            [
+                'arg' => '--tia --filtered',
+                'desc' => 'Narrow the run to the affected test files only',
+            ],
+            [
+                'arg' => '--tia --locally',
+                'desc' => 'Enable test impact analysis on local machines only',
+            ],
+            [
+                'arg' => '--tia --baselined',
+                'desc' => 'Fetch the shared dependency graph recorded by the CI baseline',
+            ],
+            [
+                'arg' => '--tia --refetch',
+                'desc' => 'Force a fresh fetch of the shared dependency graph',
+            ],
+            [
+                'arg' => '--baseline',
+                'desc' => 'Output to standard output the test impact analysis storage directory',
+            ],
+        ];
+
         $content['Execution'] = [...[
             [
                 'arg' => '--parallel',
@@ -115,6 +151,10 @@ final readonly class Help implements HandlesArguments
             [
                 'arg' => '--update-snapshots',
                 'desc' => 'Update snapshots for tests using the "toMatchSnapshot" expectation',
+            ],
+            [
+                'arg' => '--update-shards',
+                'desc' => 'Update shards.json with test timing data for time-balanced sharding',
             ],
         ], ...$content['Execution']];
 
@@ -145,6 +185,9 @@ final readonly class Help implements HandlesArguments
         ], [
             'arg' => '--dirty',
             'desc' => 'Only run tests that have uncommitted changes according to Git',
+        ], [
+            'arg' => '--flaky',
+            'desc' => 'Output to standard output tests marked as flaky',
         ], ...$content['Selection']];
 
         $content['Reporting'] = [...$content['Reporting'], ...[
@@ -160,6 +203,12 @@ final readonly class Help implements HandlesArguments
         ], [
             'arg' => '--coverage --min',
             'desc' => 'Set the minimum required coverage percentage, and fail if not met',
+        ], [
+            'arg' => '--coverage --exactly',
+            'desc' => 'Set the exact required coverage percentage, and fail if not met',
+        ], [
+            'arg' => '--coverage --only-covered',
+            'desc' => 'Hide files with 0% coverage from the code coverage report',
         ], ...$content['Code Coverage']];
 
         $content['Mutation Testing'] = [[

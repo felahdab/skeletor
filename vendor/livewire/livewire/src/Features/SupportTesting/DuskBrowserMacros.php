@@ -149,6 +149,40 @@ class DuskBrowserMacros
         };
     }
 
+    public function waitForQueryString()
+    {
+        return function ($key, $expected) {
+            /** @var \Laravel\Dusk\Browser $this */
+            $this->waitUsing(6, 25, function () use ($key, $expected) {
+                $search = $this->driver->executeScript('return window.location.search');
+
+                parse_str(ltrim($search, '?'), $params);
+
+                return ($params[$key] ?? null) === $expected;
+            }, "Query string [{$key}] never had expected value [{$expected}].");
+
+            PHPUnit::assertTrue(true);
+
+            return $this;
+        };
+    }
+
+    public function waitForScript()
+    {
+        return function ($js, $expected = true) {
+            /** @var \Laravel\Dusk\Browser $this */
+            $this->waitUsing(6, 25, function () use ($js, $expected) {
+                return head($this->script(
+                    str($js)->start('return ')
+                )) === $expected;
+            }, "Script [{$js}] never returned expected value.");
+
+            PHPUnit::assertTrue(true);
+
+            return $this;
+        };
+    }
+
     public function waitForLivewireToLoad()
     {
         return function () {
@@ -167,18 +201,24 @@ class DuskBrowserMacros
 
             $this->script([
                 "window.duskIsWaitingForLivewireRequest{$id} = true",
-                "window.Livewire.hook('request', ({ respond, succeed, fail }) => {
-                    window.duskIsWaitingForLivewireRequest{$id} = true
+                "let pendingLivewireCommits{$id} = 0
 
-                    let handle = () => {
-                        queueMicrotask(() => {
-                            console.log('test')
-                            delete window.duskIsWaitingForLivewireRequest{$id}
+                window.Livewire.hook('commit', ({ respond }) => {
+                    if (window.duskIsWaitingForLivewireRequest{$id} === undefined) return
+
+                    pendingLivewireCommits{$id}++
+
+                    respond(() => {
+                        pendingLivewireCommits{$id}--
+
+                        // The commit has finished syncing and morphing. Wait one frame
+                        // so any immediately-following commit can join this wait too.
+                        requestAnimationFrame(() => {
+                            if (pendingLivewireCommits{$id} === 0) {
+                                delete window.duskIsWaitingForLivewireRequest{$id}
+                            }
                         })
-                    }
-
-                    succeed(handle)
-                    fail(handle)
+                    })
                 })",
             ]);
 
@@ -221,8 +261,11 @@ class DuskBrowserMacros
                     window.duskIsWaitingForLivewireRequest{$id} = true
 
                     let handle = () => {
-                        queueMicrotask(() => {
-                            delete window.duskIsWaitingForLivewireRequest{$id}
+                        // Wait an extra frame to ensure onRender callbacks have fired
+                        requestAnimationFrame(() => {
+                            queueMicrotask(() => {
+                                delete window.duskIsWaitingForLivewireRequest{$id}
+                            })
                         })
                     }
 

@@ -8,16 +8,13 @@ use Closure;
 use Illuminate\Http\Request;
 use Fruitcake\LaravelDebugbar\LaravelDebugbar;
 
-class DebugbarEnabled
+readonly class DebugbarEnabled
 {
     /**
      * Create a new middleware instance.
      *
      */
-    public function __construct(protected LaravelDebugbar $debugbar)
-    {
-        $this->debugbar = $debugbar;
-    }
+    public function __construct(protected LaravelDebugbar $debugbar) {}
 
     /**
      * Handle an incoming request.

@@ -4,30 +4,26 @@ declare(strict_types=1);
 
 namespace Pest;
 
+use Laravel\Pao\Execution;
 use Pest\Support\View;
 use Symfony\Component\Console\Output\OutputInterface;
 
 final class KernelDump
 {
-    /**
-     * The output buffer, if any.
-     */
     private string $buffer = '';
 
-    /**
-     * Creates a new Kernel Dump instance.
-     */
     public function __construct(
         private readonly OutputInterface $output,
     ) {
-        // ...
+        //
     }
 
-    /**
-     * Enable the output buffering.
-     */
     public function enable(): void
     {
+        if (class_exists(Execution::class) && Execution::running()) {
+            return;
+        }
+
         ob_start(function (string $message): string {
             $this->buffer .= $message;
 
@@ -35,9 +31,6 @@ final class KernelDump
         });
     }
 
-    /**
-     * Disable the output buffering.
-     */
     public function disable(): void
     {
         @ob_clean();
@@ -47,17 +40,11 @@ final class KernelDump
         }
     }
 
-    /**
-     * Terminate the output buffering.
-     */
     public function terminate(): void
     {
         $this->disable();
     }
 
-    /**
-     * Flushes the buffer.
-     */
     private function flush(): void
     {
         View::renderUsing($this->output);
@@ -67,6 +54,10 @@ final class KernelDump
         }
 
         $type = 'INFO';
+
+        if (is_array($error = error_get_last()) && in_array($error['type'], [E_ERROR, E_COMPILE_ERROR, E_CORE_ERROR], true)) {
+            return;
+        }
 
         if ($this->isInternalError($this->buffer)) {
             $type = 'ERROR';
@@ -94,20 +85,13 @@ final class KernelDump
         $this->buffer = '';
     }
 
-    /**
-     * Checks if the given output contains an opening headline.
-     */
     private function isOpeningHeadline(string $output): bool
     {
         return str_contains($output, 'by Sebastian Bergmann and contributors.');
     }
 
-    /**
-     * Checks if the given output contains an opening headline.
-     */
     private function isInternalError(string $output): bool
     {
-        return str_contains($output, 'An error occurred inside PHPUnit.')
-            || str_contains($output, 'Fatal error');
+        return str_contains($output, 'An error occurred inside PHPUnit.');
     }
 }

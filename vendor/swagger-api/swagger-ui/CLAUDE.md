@@ -1,7 +1,7 @@
 # CLAUDE.md - Swagger UI Codebase Guide
 
-> **Last Updated:** 2026-01-21
-> **Version:** 5.31.0
+> **Last Updated:** 2026-02-24
+> **Version:** 5.32.0 (in development)
 > **Purpose:** Comprehensive guide for AI assistants working with the Swagger UI codebase
 
 ---
@@ -124,6 +124,7 @@ Swagger UI uses a **sophisticated plugin system** powered by Redux. The core sys
 - `logs` - Logging
 - `oas3` - OpenAPI 3.0.x support
 - `oas31` - OpenAPI 3.1.x support
+- `oas32` - OpenAPI 3.2.x support
 - `on-complete` - Completion callbacks
 - `request-snippets` - Code snippet generation
 - `safe-render` - Safe component rendering
@@ -141,8 +142,8 @@ Swagger UI uses a **sophisticated plugin system** powered by Redux. The core sys
 
 ### Prerequisites
 
-- **Node.js:** >=22.11.0 (Node 20.x recommended, as defined in `.nvmrc`)
-- **npm:** >=10.9.0
+- **Node.js:** >=24.19.0 (Node 24.x recommended, as defined in `.nvmrc`)
+- **npm:** >=11.17.0
 - **Git:** Any version
 - **JDK 7+:** Required for Nightwatch.js integration tests
 
@@ -212,7 +213,7 @@ Defined in `.browserslistrc`:
 - `[browser-development]` - Latest Chrome, Firefox, Safari
 - `[isomorphic-production]` - Browser + Node targets
 - `[node-production]` - Maintained Node versions
-- `[node-development]` - Node 22
+- `[node-development]` - Node 24
 
 ### Build Commands
 
@@ -349,7 +350,7 @@ npm test  # Runs: lint-errors + test:unit + cy:ci
 1. **build** - Lint, unit tests, build, artifact tests
 2. **e2e-tests** - Cypress tests (matrix strategy with 3 containers)
 
-**Branches:** `master`, `next`
+**Branches:** `main`, `next`
 
 ---
 
@@ -422,9 +423,14 @@ insertPragma: true       # Insert @prettier pragma
 
 ### File Structure Conventions
 
+**TypeScript (REQUIRED for all new files):**
+- All new source files must be written in TypeScript (`.ts` / `.tsx`)
+- Use `.tsx` for React components, `.ts` for all other modules
+- Existing `.js` / `.jsx` files are not required to be migrated, but new code must not be added in plain JavaScript
+
 **Components:**
 - Location: `src/core/components/`
-- Extension: `.jsx` (React components)
+- Extension: `.tsx` (React components — TypeScript)
 - Format: PascalCase for component names
 
 **Styles:**
@@ -436,7 +442,7 @@ insertPragma: true       # Insert @prettier pragma
 **Tests:**
 - Unit: `test/unit/` (mirrors source structure)
 - E2E: `test/e2e-cypress/e2e/`
-- Naming: `*.test.js`, `*.spec.js`, `*.cy.js` (Cypress)
+- Naming: `*.test.ts`, `*.spec.ts`, `*.cy.ts` (Cypress) — use `.tsx` variants when JSX is involved
 
 ---
 
@@ -445,11 +451,11 @@ insertPragma: true       # Insert @prettier pragma
 ### Branch Strategy
 
 **Main Branches:**
-- `master` - Production releases
+- `main` - Production releases
 - `next` - Next version development
 
 **Feature Branches:**
-- Should branch from `master` or `next`
+- Should branch from `main` or `next`
 - Use descriptive names
 
 ### Commit Conventions
@@ -571,6 +577,42 @@ Each plugin has:
 
 See documentation: `docs/customization/plugin-api.md`
 
+### Cross-Plugin Import Guidelines
+
+**IMPORTANT:** Avoid cross-plugin imports to maintain plugin independence and modularity.
+
+**Pattern to Follow:**
+- Each plugin should be self-contained with its own components, utilities, and functions
+- When OAS version plugins (oas3, oas31, oas32) need similar functionality, create self-contained copies within each plugin
+- Wrap components should import from their own plugin's components, not from other plugins
+
+**Example Structure:**
+```
+src/core/plugins/oas32/
+├── json-schema-2020-12-extensions/
+│   ├── components/              # Self-contained components
+│   │   └── keywords/
+│   │       ├── Description.jsx
+│   │       └── Properties.jsx
+│   ├── wrap-components/         # Wrappers for components
+│   │   └── keywords/
+│   │       ├── Description.jsx  # Imports from ../../components/
+│   │       └── Properties.jsx   # Not from ../../../../oas31/
+│   └── fn.js                    # Self-contained utilities
+```
+
+**Why This Matters:**
+- Prevents tight coupling between plugins
+- Makes plugins easier to test in isolation
+- Allows independent versioning and updates
+- Reduces risk of breaking changes across plugins
+- Improves code maintainability
+
+**Exceptions:**
+- Shared core utilities in `src/core/utils/` are acceptable
+- System-level functions in `src/core/system.js` are acceptable
+- Base components in `src/core/components/` are acceptable
+
 ### Preset System
 
 **Base Preset:** `src/core/presets/base.js`
@@ -613,7 +655,7 @@ src/
 ├── .prettierrc.yaml             # Prettier settings
 ├── stylelint.config.js          # Stylelint rules
 ├── .browserslistrc              # Browser targets
-├── .nvmrc                       # Node version (20.x)
+├── .nvmrc                       # Node version (24.x)
 ├── .lintstagedrc                # Pre-commit linting
 └── cypress.config.js            # Cypress E2E config
 ```
@@ -727,7 +769,7 @@ dist/                            # Build output (generated)
 ### Adding a New Component
 
 1. Create component in `src/core/components/` or appropriate plugin directory
-2. Use `.jsx` extension
+2. Use `.tsx` extension (TypeScript — required for all new files)
 3. Add `@prettier` pragma
 4. Follow React best practices (functional components, hooks)
 5. Add PropTypes validation
@@ -737,7 +779,7 @@ dist/                            # Build output (generated)
 ### Adding a New Plugin
 
 1. Create directory in `src/core/plugins/[plugin-name]/`
-2. Create `index.js` with plugin structure
+2. Create `index.ts` with plugin structure (TypeScript — required for all new files)
 3. Add actions, reducers, selectors as needed
 4. Register plugin in preset (e.g., `src/core/presets/base.js`)
 5. Add tests in `test/unit/core/plugins/[plugin-name]/`
@@ -813,6 +855,7 @@ dist/                            # Build output (generated)
 - OAS 2.0: Use `src/core/plugins/swagger-client/`
 - OAS 3.0.x: Use `src/core/plugins/oas3/`
 - OAS 3.1.x: Use `src/core/plugins/oas31/`
+- OAS 3.2.x: Use `src/core/plugins/oas32/`
 
 **Adding Test Specs:**
 - Add to `test/e2e-cypress/static/documents/`
@@ -825,38 +868,42 @@ dist/                            # Build output (generated)
 ### DO's ✅
 
 1. **Always read files before modifying them**
-2. **Follow the no-semicolon convention**
-3. **Use double quotes for strings**
-4. **Add `@prettier` pragma to all new files**
-5. **Use `.jsx` extension for React components**
-6. **Write tests for new features and bug fixes**
-7. **Run linters before committing** (automatic via husky)
-8. **Use DOMPurify for HTML sanitization**
-9. **Follow conventional commit format**
-10. **Update documentation for user-facing changes**
-11. **Test with multiple OpenAPI spec versions**
-12. **Check browser compatibility** (see `.browserslistrc`)
-13. **Use the plugin architecture** - don't modify core unnecessarily
-14. **Preserve backward compatibility** unless explicitly breaking
-15. **Run full test suite before submitting PR**
+2. **Write all new files in TypeScript** - use `.ts` for modules, `.tsx` for React components
+3. **Follow the no-semicolon convention**
+4. **Use double quotes for strings**
+5. **Add `@prettier` pragma to all new files**
+6. **Use `.tsx` extension for new React components** (TypeScript JSX)
+7. **Write tests for new features and bug fixes**
+8. **Run linters before committing** (automatic via husky)
+9. **Use DOMPurify for HTML sanitization**
+10. **Follow conventional commit format**
+11. **Update documentation for user-facing changes**
+12. **Test with multiple OpenAPI spec versions**
+13. **Check browser compatibility** (see `.browserslistrc`)
+14. **Use the plugin architecture** - don't modify core unnecessarily
+15. **Preserve backward compatibility** unless explicitly breaking
+16. **Run full test suite before submitting PR**
+17. **Keep plugins self-contained** - avoid cross-plugin imports (see [Cross-Plugin Import Guidelines](#cross-plugin-import-guidelines))
 
 ### DON'Ts ❌
 
-1. **Don't use semicolons** - project convention
-2. **Don't use single quotes** - use double quotes
-3. **Don't skip the @prettier pragma** - required for formatting
-4. **Don't put React in `.js` files** - use `.jsx`
-5. **Don't commit files in `dev-helpers/`** (except core files)
-6. **Don't commit build artifacts** (`dist/` is gitignored)
-7. **Don't skip tests** - they run in CI
-8. **Don't bypass ESLint** - pre-commit hook enforces
-9. **Don't use `console.log`** - only `console.warn` and `console.error`
-10. **Don't render unsanitized HTML** - XSS vulnerability
-11. **Don't modify `package-lock.json` manually**
-12. **Don't push directly to `master` or `next`**
-13. **Don't ignore Cypress test failures**
-14. **Don't add dependencies without justification**
-15. **Don't break the build** - verify with `npm run build`
+1. **Don't write new files in plain JavaScript** - all new files must be TypeScript (`.ts` / `.tsx`)
+2. **Don't use semicolons** - project convention
+3. **Don't use single quotes** - use double quotes
+4. **Don't skip the @prettier pragma** - required for formatting
+5. **Don't put React in `.ts` files** - use `.tsx` for JSX
+6. **Don't commit files in `dev-helpers/`** (except core files)
+7. **Don't commit build artifacts** (`dist/` is gitignored)
+8. **Don't skip tests** - they run in CI
+9. **Don't bypass ESLint** - pre-commit hook enforces
+10. **Don't use `console.log`** - only `console.warn` and `console.error`
+11. **Don't render unsanitized HTML** - XSS vulnerability
+12. **Don't modify `package-lock.json` manually**
+13. **Don't push directly to `main` or `next`**
+14. **Don't ignore Cypress test failures**
+15. **Don't add dependencies without justification**
+16. **Don't break the build** - verify with `npm run build`
+17. **Don't import from other plugins** - create self-contained copies instead (e.g., don't import from `oas31` in `oas32`)
 
 ### When Working with AI Assistants
 

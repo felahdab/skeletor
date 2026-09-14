@@ -19,6 +19,7 @@ use Filament\Schemas\Components\Text;
 use Filament\Schemas\Components\UnorderedList;
 use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
+use Filament\Schemas\Schema;
 use Filament\Support\Enums\FontFamily;
 use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\TextSize;
@@ -28,8 +29,10 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Js;
+use SensitiveParameter;
 
 class SetUpAppAuthenticationAction
 {
@@ -40,7 +43,9 @@ class SetUpAppAuthenticationAction
             ->color('primary')
             ->icon(Heroicon::LockClosed)
             ->link()
-            ->mountUsing(function (HasActions $livewire) use ($appAuthentication): void {
+            ->mountUsing(function (HasActions $livewire, Schema $schema) use ($appAuthentication): void {
+                $schema->fill();
+
                 $livewire->mergeMountedActionArguments([
                     'encrypted' => encrypt([
                         'secret' => $appAuthentication->generateSecret(),
@@ -90,7 +95,17 @@ class SetUpAppAuthenticationAction
                             ->validationAttribute(__('filament-panels::auth/multi-factor/app/actions/set-up.modal.form.code.validation_attribute'))
                             ->required()
                             ->rule(function () use ($action, $appAuthentication): Closure {
-                                return function (string $attribute, $value, Closure $fail) use ($action, $appAuthentication): void {
+                                return function (string $attribute, #[SensitiveParameter] $value, Closure $fail) use ($action, $appAuthentication): void {
+                                    $rateLimitingKey = 'filament-set-up-app-authentication:' . Filament::auth()->id();
+
+                                    if (RateLimiter::tooManyAttempts($rateLimitingKey, maxAttempts: 5)) {
+                                        $fail(__('filament-panels::auth/multi-factor/app/actions/set-up.modal.form.code.messages.rate_limited'));
+
+                                        return;
+                                    }
+
+                                    RateLimiter::hit($rateLimitingKey);
+
                                     if ($appAuthentication->verifyCode($value, decrypt($action->getArguments()['encrypted'])['secret'])) {
                                         return;
                                     }
@@ -135,7 +150,7 @@ class SetUpAppAuthenticationAction
                                     ->label(__('filament-panels::auth/multi-factor/recovery-codes-modal-content.actions.download.label'))
                                     ->link()
                                     ->url('data:application/octet-stream,' . urlencode(implode(PHP_EOL, $recoveryCodes)))
-                                    ->extraAttributes(['download' => true])
+                                    ->extraAttributes(['download' => 'recovery-codes.txt'])
                                     ->toHtml() .
                                 ' ' .
                                 __('filament-panels::auth/multi-factor/recovery-codes-modal-content.actions.2')

@@ -2,13 +2,12 @@
 
 namespace Nwidart\Modules;
 
-use Illuminate\Cache\CacheManager;
 use Illuminate\Container\Container;
-use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
+use Laravel\Lumen\Application;
 use Nwidart\Modules\Constants\ModuleEvent;
 use Nwidart\Modules\Contracts\ActivatorInterface;
 
@@ -19,7 +18,7 @@ abstract class Module
     /**
      * The laravel|lumen application instance.
      *
-     * @var \Illuminate\Contracts\Foundation\Application|\Laravel\Lumen\Application
+     * @var \Illuminate\Contracts\Foundation\Application|Application
      */
     protected $app;
 
@@ -39,19 +38,9 @@ abstract class Module
     protected array $moduleJson = [];
 
     /**
-     * Cache Manager
-     */
-    private CacheManager $cache;
-
-    /**
      * Filesystem
      */
     private Filesystem $files;
-
-    /**
-     * Translator
-     */
-    private Translator $translator;
 
     /**
      * ActivatorInterface
@@ -65,9 +54,7 @@ abstract class Module
     {
         $this->name = $name;
         $this->path = $path;
-        $this->cache = $app['cache'];
         $this->files = $app['files'];
-        $this->translator = $app['translator'];
         $this->activator = $app[ActivatorInterface::class];
         $this->app = $app;
     }
@@ -395,6 +382,9 @@ abstract class Module
      */
     private function loadTranslationsFrom(string $path, string $namespace): void
     {
-        $this->translator->addNamespace($namespace, $path);
+        // Use afterResolving to ensure translations are registered when translator becomes available
+        $this->app->afterResolving('translator', function ($translator) use ($path, $namespace) {
+            $translator->addNamespace($namespace, $path);
+        });
     }
 }

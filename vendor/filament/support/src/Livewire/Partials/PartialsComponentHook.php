@@ -47,8 +47,12 @@ class PartialsComponentHook extends ComponentHook
         return fn () => $this->storeSet('isPendingPartialRender', true);
     }
 
-    public function call(): void
+    public function call(?string $method = null): void
     {
+        if (str_starts_with((string) $method, '$')) {
+            return;
+        }
+
         $this->storeSet('callsCount', ($this->storeGet('callsCount') ?? 0) + 1);
 
         $this->storeSet('isPendingPartialRender', true);
@@ -167,9 +171,12 @@ class PartialsComponentHook extends ComponentHook
         } elseif ($this->shouldRenderMountedActionOnly()) {
             $action = $this->component->getMountedAction();
 
-            $renderAndQueuePartials(fn (): array => [
-                "action-modals.{$action->getNestingIndex()}" => $action->renderModal(),
-            ]);
+            if ($action !== null) {
+                $renderAndQueuePartials(fn (): array => [
+                    "action-modals.{$action->getNestingIndex()}" => $action->renderModal(),
+                ]);
+            }
+
         }
 
         if ($this->shouldRenderMountedActionsOnly(whenActionMounted: $isLackingPartialRendersToCoverAllCallsAndUpdates)) {

@@ -20,7 +20,7 @@ class CleanupWasSuccessfulNotification extends BaseNotification
         $mailMessage = (new MailMessage)
             ->from($this->config()->notifications->mail->from->address, $this->config()->notifications->mail->from->name)
             ->subject(trans('backup::notifications.cleanup_successful_subject', ['application_name' => $this->applicationName()]))
-            ->line(trans('backup::notifications.cleanup_successful_body', ['application_name' => $this->applicationName(), 'disk_name' => $this->diskName()]));
+            ->line(trans('backup::notifications.cleanup_successful_body', ['application_name' => $this->applicationName(), 'disk_name' => $this->event->diskName]));
 
         $this->backupDestinationProperties()->each(function ($value, $name) use ($mailMessage) {
             $mailMessage->line("{$name}: {$value}");
@@ -29,8 +29,12 @@ class CleanupWasSuccessfulNotification extends BaseNotification
         return $mailMessage;
     }
 
-    public function toSlack(): SlackMessage
+    public function toSlack(): mixed
     {
+        if (! class_exists(SlackMessage::class)) {
+            return null;
+        }
+
         return (new SlackMessage)
             ->success()
             ->from($this->config()->notifications->slack->username, $this->config()->notifications->slack->icon)
@@ -48,5 +52,16 @@ class CleanupWasSuccessfulNotification extends BaseNotification
             ->from($this->config()->notifications->discord->username, $this->config()->notifications->discord->avatar_url)
             ->title(trans('backup::notifications.cleanup_successful_subject_title'))
             ->fields($this->backupDestinationProperties()->toArray());
+    }
+
+    /** @return array<string, mixed> */
+    public function toWebhook(): array
+    {
+        return [
+            'type' => 'cleanup_successful',
+            'application_name' => $this->applicationName(),
+            'disk_name' => $this->event->diskName,
+            'backup_name' => $this->event->backupName,
+        ];
     }
 }

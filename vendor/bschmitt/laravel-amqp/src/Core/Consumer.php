@@ -5,6 +5,7 @@ namespace Bschmitt\Amqp\Core;
 use Closure;
 use PhpAmqpLib\Exception\AMQPTimeoutException;
 use PhpAmqpLib\Message\AMQPMessage;
+use PhpAmqpLib\Wire\AMQPTable;
 use Bschmitt\Amqp\Contracts\ConsumerInterface;
 use Bschmitt\Amqp\Contracts\ConfigurationProviderInterface;
 use Bschmitt\Amqp\Contracts\ConnectionManagerInterface;
@@ -44,9 +45,9 @@ class Consumer extends Request implements ConsumerInterface
      */
     public function __construct(
         $config = null,
-        ConnectionManagerInterface $connectionManager = null,
-        ExchangeManager $exchangeManager = null,
-        QueueManager $queueManager = null
+        ?ConnectionManagerInterface $connectionManager = null,
+        ?ExchangeManager $exchangeManager = null,
+        ?QueueManager $queueManager = null
     ) {
         // If config is a ConfigurationProviderInterface, use it directly
         if ($config instanceof \Bschmitt\Amqp\Contracts\ConfigurationProviderInterface) {
@@ -133,7 +134,7 @@ class Consumer extends Request implements ConsumerInterface
                     $closure($message, $this);
                 },
                 null,
-                $this->getProperty('consumer_properties', [])
+                $this->resolveConsumerArguments()
             );
 
             $timeout = max(0, (int) $this->getProperty('timeout', 0));
@@ -155,6 +156,26 @@ class Consumer extends Request implements ConsumerInterface
      *
      * @return void
      */
+    /**
+     * Normalize consumer_properties for basic_consume (e.g. x-stream-offset for stream queues).
+     *
+     * @return AMQPTable|array
+     */
+    protected function resolveConsumerArguments()
+    {
+        $properties = $this->getProperty('consumer_properties', []);
+
+        if ($properties instanceof AMQPTable) {
+            return $properties;
+        }
+
+        if (is_array($properties) && !empty($properties)) {
+            return new AMQPTable($properties);
+        }
+
+        return [];
+    }
+
     protected function configureQos(): void
     {
         if ($this->getProperty('qos', false)) {
@@ -315,7 +336,9 @@ class Consumer extends Request implements ConsumerInterface
             // The queue should already exist from the RPC caller's setup
             
             $messageFactory = new \Bschmitt\Amqp\Factories\MessageFactory();
-            $message = $messageFactory->create($response, [
+            // correlation_id must be a message property (3rd argument),
+            // not an application header, so RPC clients can match replies.
+            $message = $messageFactory->create($response, [], [
                 'correlation_id' => $correlationId,
             ]);
             

@@ -8,11 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace RectorPrefix202602\Symfony\Component\Filesystem;
+namespace RectorPrefix202608\Symfony\Component\Filesystem;
 
-use RectorPrefix202602\Symfony\Component\Filesystem\Exception\FileNotFoundException;
-use RectorPrefix202602\Symfony\Component\Filesystem\Exception\InvalidArgumentException;
-use RectorPrefix202602\Symfony\Component\Filesystem\Exception\IOException;
+use RectorPrefix202608\Symfony\Component\Filesystem\Exception\FileNotFoundException;
+use RectorPrefix202608\Symfony\Component\Filesystem\Exception\InvalidArgumentException;
+use RectorPrefix202608\Symfony\Component\Filesystem\Exception\IOException;
 /**
  * Provides basic utility to manipulate the file system.
  *
@@ -59,8 +59,8 @@ class Filesystem
                 throw new IOException(\sprintf('Failed to copy "%s" to "%s".', $originFile, $targetFile), 0, null, $originFile);
             }
             if ($originIsLocal) {
-                // Like `cp`, preserve executable permission bits
-                self::box('chmod', $targetFile, fileperms($targetFile) | fileperms($originFile) & 0111);
+                // Like `cp`, preserve the source mode masked by the umask
+                self::box('chmod', $targetFile, fileperms($originFile) & 0777 & ~umask());
                 // Like `cp`, preserve the file modification time
                 self::box('touch', $targetFile, filemtime($originFile));
                 if ($bytesCopied !== $bytesOrigin = filesize($originFile)) {
@@ -390,13 +390,14 @@ class Filesystem
         if (!$this->isAbsolutePath($endPath)) {
             throw new InvalidArgumentException(\sprintf('The end path "%s" is not absolute.', $endPath));
         }
+        $originalEndPath = $endPath;
         // Normalize separators on Windows
         if ('\\' === \DIRECTORY_SEPARATOR) {
             $endPath = str_replace('\\', '/', $endPath);
             $startPath = str_replace('\\', '/', $startPath);
         }
-        $splitDriveLetter = fn($path) => \strlen($path) > 2 && ':' === $path[1] && '/' === $path[2] && ctype_alpha($path[0]) ? [(string) substr($path, 2), strtoupper($path[0])] : [$path, null];
-        $splitPath = function ($path) {
+        $splitDriveLetter = static fn($path) => \strlen($path) > 2 && ':' === $path[1] && '/' === $path[2] && ctype_alpha($path[0]) ? [(string) substr($path, 2), strtoupper($path[0])] : [$path, null];
+        $splitPath = static function ($path) {
             $result = [];
             foreach (explode('/', trim($path, '/')) as $segment) {
                 if ('..' === $segment) {
@@ -431,6 +432,10 @@ class Filesystem
         $endPathRemainder = implode('/', \array_slice($endPathArr, $index));
         // Construct $endPath from traversing to the common path, then to the remaining $endPath
         $relativePath = $traverser . ('' !== $endPathRemainder ? $endPathRemainder . '/' : '');
+        // Remove ending "/" if $endPath points to an existing file
+        if (substr_compare($relativePath, '/', -strlen('/')) === 0 && is_file($originalEndPath)) {
+            $relativePath = (string) substr($relativePath, 0, -1);
+        }
         return '' === $relativePath ? './' : $relativePath;
     }
     /**
@@ -445,13 +450,17 @@ class Filesystem
      * @param array             $options  An array of boolean options
      *                                    Valid options are:
      *                                    - $options['override'] If true, target files newer than origin files are overwritten (see copy(), defaults to false)
-     *                                    - $options['copy_on_windows'] Whether to copy files instead of links on Windows (see symlink(), defaults to false)
+     *                                    - $options['follow_symlinks'] Whether to copy files instead of links, esp. useful on Windows (see symlink(), defaults to false)
+     *                                    - $options['copy_on_windows'] @deprecated since Symfony 8.1, use $options['follow_symlinks'] instead
      *                                    - $options['delete'] Whether to delete files that are not in the source directory (defaults to false)
      *
      * @throws IOException When file type is unknown
      */
     public function mirror(string $originDir, string $targetDir, ?\Traversable $iterator = null, array $options = []): void
     {
+        if (isset($options['copy_on_windows'])) {
+            trigger_deprecation('symfony/filesystem', '8.1', 'Calling "%s()" with option "copy_on_windows" is deprecated, use option "follow_symlinks" instead.', __METHOD__);
+        }
         $targetDir = rtrim($targetDir, '/\\');
         $originDir = rtrim($originDir, '/\\');
         $originDirLen = \strlen($originDir);
@@ -473,9 +482,9 @@ class Filesystem
                 }
             }
         }
-        $copyOnWindows = $options['copy_on_windows'] ?? \false;
+        $followSymlinks = $options['follow_symlinks'] ?? $options['copy_on_windows'] ?? \false;
         if (null === $iterator) {
-            $flags = $copyOnWindows ? \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::FOLLOW_SYMLINKS : \FilesystemIterator::SKIP_DOTS;
+            $flags = $followSymlinks ? \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::FOLLOW_SYMLINKS : \FilesystemIterator::SKIP_DOTS;
             $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($originDir, $flags), \RecursiveIteratorIterator::SELF_FIRST);
         }
         $this->mkdir($targetDir);
@@ -486,7 +495,7 @@ class Filesystem
             }
             $target = $targetDir . substr($file->getPathname(), $originDirLen);
             $filesCreatedWhileMirroring[$target] = \true;
-            if (!$copyOnWindows && is_link($file)) {
+            if (!$followSymlinks && is_link($file)) {
                 $this->symlink($file->getLinkTarget(), $target);
             } elseif (is_dir($file)) {
                 $this->mkdir($target);
@@ -518,8 +527,10 @@ class Filesystem
         [$scheme, $hierarchy] = $this->getSchemeAndHierarchy($dir);
         // If no scheme or scheme is "file" or "gs" (Google Cloud) create temp file in local filesystem
         if ((null === $scheme || 'file' === $scheme || 'gs' === $scheme) && '' === $suffix) {
+            // PHP's tempnam() truncates the prefix to 63 characters; trim trailing whitespace
+            // from the truncated value, as a trailing space makes the file creation fail on Windows
             // If tempnam failed or no scheme return the filename otherwise prepend the scheme
-            if ($tmpFile = self::box('tempnam', $hierarchy, $prefix)) {
+            if ($tmpFile = self::box('tempnam', $hierarchy, rtrim(substr($prefix, 0, 63)))) {
                 if (null !== $scheme && 'gs' !== $scheme) {
                     return $scheme . '://' . $tmpFile;
                 }

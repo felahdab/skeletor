@@ -27,6 +27,8 @@ abstract readonly class TestSuite
 
     /**
      * @param non-empty-string $name
+     *
+     * @internal This method is not covered by the backward compatibility promise for PHPUnit
      */
     public function __construct(string $name, int $size, TestCollection $tests)
     {
@@ -73,6 +75,38 @@ abstract readonly class TestSuite
      * @phpstan-assert-if-true TestSuiteForTestMethodWithDataProvider $this
      */
     public function isForTestMethodWithDataProvider(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @phpstan-assert-if-true TestSuiteForRepeatedTestMethod $this
+     */
+    public function isForRepeatedTestMethod(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @phpstan-assert-if-true TestSuiteForRetriedTestMethod $this
+     */
+    public function isForRetriedTestMethod(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @phpstan-assert-if-true TestSuiteForRepeatedPhpt $this
+     */
+    public function isForRepeatedPhpt(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @phpstan-assert-if-true TestSuiteForRetriedPhpt $this
+     */
+    public function isForRetriedPhpt(): bool
     {
         return false;
     }

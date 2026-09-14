@@ -1,3 +1,39 @@
+## 5.0.3 (September 11, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 5.0.2 –> 5.0.3
+- Réactivation de la découverte automatique de guava/calendar qui a repris tous ses assets en local.
+- Ajustement configuration des bases de données pour la configuration mariadb et postgresql simultanees
+- Mise à jour definition stack docker.
+- Ajout dans le projet des instructions permettant de recourir aux agents LLM d'aide au codage
+- Implements artifact #932286: creation d une commande skeletor pour seeder les permissions definies par les modules, selectivement ou pour tous les modules
+
+## 5.0.2 (September 07, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 5.0.1 –> 5.0.2
+- Bugfix: Restauration configuration spatie laravel-backup vers mysql.
+- Suppression fichier commite à tord.
+
+## 5.0.1 (September 03, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 5.0.0 –> 5.0.1
+- BugFix: Correction api_path de scramble. Retrait du / sinon les routes sont ignorées. La 5.0.0 est donc non fonctionnelle et ne doit pas être déployée.
+
+## 5.0.0 (September 03, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 4.1.0 –> 5.0.0
+- Passage en laravel 13, livewire 4 et Filament 5. Du coup, changement de version majeure.
+- Ajustement SkeletorRouteServiceProvider pour tenir compte du prefixe aleatoire des routes Livewire
+- Ajustement des .env pour simplifier le changement de moteur de base de données
+- Ajustement du provider SkeletorRouteServiceProvider aux nouvelles routes Livewire
+- Ajustement de la stack docker pour utiliser l'image serversideup, et postgres.
+- Retrait de la route BugReportcontroller périmée
+- Retrait du BugReportcontroller devenu inutile
+- Restauration des contraintes de versions normales sur tous les packages.
+- Packages upgrade to the latest available version
+- Revert "Suppression de commande devenue inutile."
+- Activation des tests sonar sur la branche skeletor
+- Prise en compte de toutes les recommandations relative à la reliability sauf une.
+- Désactivation de la collecte des statistiques sur les requetes par défaut.
+- Rajoute de l'exclusion de vendor dans les paramètres de sonar
+- changement image suite a echange avec DEVOPS MEDUSA et exemple sur https://scm-intradef.picsel.defense.gouv.fr/ZS_CONTINUITY/components/sonarqube/-/blob/master/templates/cli_analysis.yml?ref_type=heads
+- Ajout des fichiers sonarqube
+
 ## 4.1.0 (June 24, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 4.0.9 –> 4.1.0
 - Insertion de la commande skeletor:send-rabbitmq-ping et du PingListener qui y répond pour faciliter les vérifications de fonctionnement.

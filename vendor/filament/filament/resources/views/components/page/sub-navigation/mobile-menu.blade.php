@@ -49,7 +49,7 @@
                 @foreach ([$navigationItem, ...$navigationItem->getChildItems()] as $navigationItemChild)
                     @php
                         $navigationItemBadge = $navigationItem->getBadge();
-                        $navigationItemBadgeColor = $navigationItem->getBadgeColor();
+                        $navigationItemBadgeColor = $navigationItem->getBadgeColor($navigationItemBadge);
                         $navigationItemIcon = $navigationItem->isActive() ? ($navigationItem->getActiveIcon() ?? $navigationItem->getIcon()) : $navigationItem->getIcon();
                         $navigationItemUrl = $navigationItem->getUrl();
                         $shouldNavigationItemOpenUrlInNewTab = $navigationItem->shouldOpenUrlInNewTab();
@@ -63,6 +63,7 @@
                         :icon="$navigationItemIcon"
                         tag="a"
                         :target="$shouldNavigationItemOpenUrlInNewTab ? '_blank' : null"
+                        :aria-current="$navigationItemChild->isActive() ? 'page' : null"
                         :attributes="\Filament\Support\prepare_inherited_attributes($navigationItemExtraAttributes)"
                     >
                         {{ $navigationItemChild->getLabel() }}

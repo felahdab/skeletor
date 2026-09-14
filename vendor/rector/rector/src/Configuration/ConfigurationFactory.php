@@ -6,8 +6,8 @@ namespace Rector\Configuration;
 use Rector\ChangesReporting\Output\ConsoleOutputFormatter;
 use Rector\Configuration\Parameter\SimpleParameterProvider;
 use Rector\ValueObject\Configuration;
-use RectorPrefix202602\Symfony\Component\Console\Input\InputInterface;
-use RectorPrefix202602\Symfony\Component\Console\Style\SymfonyStyle;
+use RectorPrefix202608\Symfony\Component\Console\Input\InputInterface;
+use RectorPrefix202608\Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * @see \Rector\Tests\Configuration\ConfigurationFactoryTest
  */
@@ -53,6 +53,11 @@ final class ConfigurationFactory
             $onlyRule = $this->onlyRuleResolver->resolve($onlyRule);
         }
         $onlySuffix = $input->getOption(\Rector\Configuration\Option::ONLY_SUFFIX);
+        // "--only"/"--only-suffix" narrow the run, so skips outside the scope look falsely unused;
+        // mark the run as narrowed to disable unused skip reporting and avoid false positives
+        if ($onlyRule !== null || $onlySuffix !== null) {
+            SimpleParameterProvider::setParameter(\Rector\Configuration\Option::IS_RUN_NARROWED, \true);
+        }
         $isParallel = SimpleParameterProvider::provideBoolParameter(\Rector\Configuration\Option::PARALLEL);
         $parallelPort = (string) $input->getOption(\Rector\Configuration\Option::PARALLEL_PORT);
         $parallelIdentifier = (string) $input->getOption(\Rector\Configuration\Option::PARALLEL_IDENTIFIER);
@@ -64,7 +69,18 @@ final class ConfigurationFactory
         $memoryLimit = $this->resolveMemoryLimit($input);
         $isReportingWithRealPath = SimpleParameterProvider::provideBoolParameter(\Rector\Configuration\Option::ABSOLUTE_FILE_PATH);
         $levelOverflows = SimpleParameterProvider::provideArrayParameter(\Rector\Configuration\Option::LEVEL_OVERFLOWS);
-        return new Configuration($isDryRun, $showProgressBar, $shouldClearCache, $outputFormat, $fileExtensions, $paths, $showDiffs, $parallelPort, $parallelIdentifier, $isParallel, $memoryLimit, $isDebug, $isReportingWithRealPath, $onlyRule, $onlySuffix, $levelOverflows);
+        $showRulesSummary = (bool) $input->getOption(\Rector\Configuration\Option::RULES_SUMMARY);
+        $isComposerBased = (bool) $input->getOption(\Rector\Configuration\Option::COMPOSER_BASED);
+        // "--composer-based" narrows the run the same way "--only" does
+        if ($isComposerBased) {
+            SimpleParameterProvider::setParameter(\Rector\Configuration\Option::IS_RUN_NARROWED, \true);
+        }
+        $isPhpOnly = (bool) $input->getOption(\Rector\Configuration\Option::PHP);
+        // "--php" narrows the run the same way "--only" does
+        if ($isPhpOnly) {
+            SimpleParameterProvider::setParameter(\Rector\Configuration\Option::IS_RUN_NARROWED, \true);
+        }
+        return new Configuration($isDryRun, $showProgressBar, $shouldClearCache, $outputFormat, $fileExtensions, $paths, $showDiffs, $parallelPort, $parallelIdentifier, $isParallel, $memoryLimit, $isDebug, $isReportingWithRealPath, $onlyRule, $onlySuffix, $levelOverflows, $showRulesSummary, $isComposerBased, $isPhpOnly);
     }
     private function shouldShowProgressBar(InputInterface $input, string $outputFormat): bool
     {
@@ -94,6 +110,8 @@ final class ConfigurationFactory
         $commandLinePaths = (array) $input->getArgument(\Rector\Configuration\Option::SOURCE);
         // give priority to command line
         if ($commandLinePaths !== []) {
+            // mark the run as narrowed, so unused skip reporting can be disabled to avoid false positives
+            SimpleParameterProvider::setParameter(\Rector\Configuration\Option::IS_RUN_NARROWED, \true);
             $this->setFilesWithoutExtensionParameter($commandLinePaths);
             return $commandLinePaths;
         }

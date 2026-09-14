@@ -4,22 +4,16 @@ namespace Spatie\QueryBuilder\Concerns;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Spatie\QueryBuilder\Exceptions\AllowedFieldsMustBeCalledBeforeAllowedIncludes;
 use Spatie\QueryBuilder\Exceptions\InvalidFieldQuery;
 use Spatie\QueryBuilder\Exceptions\UnknownIncludedFieldsQuery;
 
 trait AddsFieldsToQuery
 {
+    /** @var Collection<array-key, string>|null */
     protected ?Collection $allowedFields = null;
 
-    public function allowedFields($fields): static
+    public function allowedFields(string ...$fields): static
     {
-        if ($this->allowedIncludes instanceof Collection) {
-            throw new AllowedFieldsMustBeCalledBeforeAllowedIncludes();
-        }
-
-        $fields = is_array($fields) ? $fields : func_get_args();
-
         $this->allowedFields = collect($fields)
             ->map(function (string $fieldName) {
                 return $this->prependField($fieldName);
@@ -42,8 +36,9 @@ trait AddsFieldsToQuery
             $fields = $fields->mapWithKeys(fn ($fields, $table) => [$table => collect($fields)->map(fn ($field) => Str::snake($field))->toArray()]);
         }
 
-        // Apply additional table name conversion based on strategy
-        if (config('query-builder.convert_relation_table_name_strategy', false) === 'camelCase') {
+        $strategy = config('query-builder.convert_relation_table_name_strategy');
+
+        if ($strategy === 'camelCase') {
             $modelFields = $fields->has(Str::camel($modelTableName)) ? $fields->get(Str::camel($modelTableName)) : $fields->get('_');
         } else {
             $modelFields = $fields->has($modelTableName) ? $fields->get($modelTableName) : $fields->get('_');
@@ -58,19 +53,19 @@ trait AddsFieldsToQuery
         $this->select($prependedFields);
     }
 
+    /**
+     * @return array<array-key, string>
+     */
     public function getRequestedFieldsForRelatedTable(string $relation, ?string $tableName = null): array
     {
-        // Possible table names to check
         $possibleRelatedNames = [
-            // Preserve existing relation name conversion logic
             config('query-builder.convert_relation_names_to_snake_case_plural', true)
                 ? Str::plural(Str::snake($relation))
                 : $relation,
         ];
 
-        $strategy = config('query-builder.convert_relation_table_name_strategy', false);
+        $strategy = config('query-builder.convert_relation_table_name_strategy');
 
-        // Apply additional table name conversion based on strategy
         if ($strategy === 'snake_case' && $tableName) {
             $possibleRelatedNames[] = Str::snake($tableName);
         } elseif ($strategy === 'camelCase' && $tableName) {
@@ -79,7 +74,6 @@ trait AddsFieldsToQuery
             $possibleRelatedNames[] = $tableName;
         }
 
-        // Remove any null values
         $possibleRelatedNames = array_filter($possibleRelatedNames);
 
         $fields = $this->request->fields()
@@ -124,6 +118,10 @@ trait AddsFieldsToQuery
         }
     }
 
+    /**
+     * @param  array<array-key, string>  $fields
+     * @return array<array-key, string>
+     */
     protected function prependFieldsWithTableName(array $fields, string $tableName): array
     {
         return array_map(function ($field) use ($tableName) {
@@ -138,8 +136,6 @@ trait AddsFieldsToQuery
         }
 
         if (Str::contains($field, '.')) {
-            // Already prepended
-
             return $field;
         }
 

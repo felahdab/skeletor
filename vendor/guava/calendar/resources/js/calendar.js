@@ -1,3 +1,16 @@
+import {
+    createCalendar,
+    destroyCalendar,
+    DayGrid,
+    Interaction,
+    List,
+    ResourceTimeGrid,
+    ResourceTimeline,
+    TimeGrid,
+} from '@event-calendar/core'
+
+const plugins = [DayGrid, Interaction, List, ResourceTimeGrid, ResourceTimeline, TimeGrid]
+
 export default function calendar({
                                      view = 'dayGridMonth',
                                      locale = 'en',
@@ -17,7 +30,9 @@ export default function calendar({
                                      hasDateSelectContextMenu = null,
                                      hasEventClickContextMenu = null,
                                      hasNoEventsClickContextMenu = null,
-                                     resources = null,
+                                     // The library treats a non-array `resources` as a remote source
+                                     // and dereferences it, so this must never default to null.
+                                     resources = [],
                                      resourceLabelContent = null,
                                      theme = null,
                                      options = {},
@@ -25,24 +40,57 @@ export default function calendar({
                                  }
 ) {
     return {
+        calendar: null,
+        darkModeObserver: null,
+        refreshListener: null,
 
         init: function () {
-            const ec = this.mountCalendar()
+            const ec = this.calendar = this.mountCalendar()
 
-            window.addEventListener('calendar--refresh', () => {
-                ec.refetchEvents()
-            })
+            this.syncDarkMode()
+
+            this.refreshListener = () => ec.refetchEvents()
+            window.addEventListener('calendar--refresh', this.refreshListener)
 
             this.$wire.on('calendar--set', (data) => {
                 ec.setOption(data.key, data.value)
             })
         },
 
+        // Alpine calls this when the component goes away. Without it the calendar and its
+        // listeners outlive the page under wire:navigate.
+        destroy: function () {
+            window.removeEventListener('calendar--refresh', this.refreshListener)
+            this.darkModeObserver?.disconnect()
+
+            if (this.calendar) {
+                destroyCalendar(this.calendar)
+                this.calendar = null
+            }
+        },
+
+        // Since v5 the calendar only uses its dark palette when it has `ec-dark`, so mirror the
+        // `.dark` class Filament puts on <html>.
+        syncDarkMode: function () {
+            const root = document.documentElement
+
+            const apply = () => this.$el.classList.toggle('ec-dark', root.classList.contains('dark'))
+
+            apply()
+
+            this.darkModeObserver = new MutationObserver(apply)
+            this.darkModeObserver.observe(root, { attributes: true, attributeFilter: ['class'] })
+        },
+
         mountCalendar: function () {
-            return EventCalendar.create(
-                this.$el.querySelector('[data-calendar]'),
-                this.getSettings(),
-            )
+            const container = this.$el.querySelector('[data-calendar]')
+
+            // wire:navigate restores the cached page with the previous calendar still rendered
+            // inside, and wire:ignore keeps Livewire from clearing it, so drop it ourselves
+            // rather than mounting a second calendar alongside it.
+            container.replaceChildren()
+
+            return createCalendar(container, plugins, this.getSettings())
         },
 
         getSettings: function () {
@@ -157,55 +205,56 @@ export default function calendar({
             }
 
             settings.eventResize = async (info) => {
-                const durationEditable = info.event.durationEditable
-                let enabled = eventResizeEnabled
-
-                if (durationEditable !== undefined) {
-                    enabled = durationEditable
+                // The global flag is authoritative. EventCalendar's global eventDurationEditable (and
+                // the per-event durationEditable:false we emit for locked events) already decides
+                // whether this fires, so a per-event value can only restrict, never enable.
+                if (! eventResizeEnabled) {
+                    info.revert()
+                    return
                 }
 
-                if (enabled) {
-                    await this.$wire.onEventResizeJs({
-                        event: info.event,
-                        oldEvent: info.oldEvent,
-                        endDelta: info.endDelta,
-                        view: info.view,
-                        tzOffset: -new Date().getTimezoneOffset()
-                    }).then((result) => {
-                        if (result === false) {
-                            info.revert()
-                        }
-                    })
-                }
+                await this.$wire.onEventResizeJs({
+                    event: info.event,
+                    oldEvent: info.oldEvent,
+                    endDelta: info.endDelta,
+                    view: info.view,
+                    tzOffset: -new Date().getTimezoneOffset()
+                }).then((result) => {
+                    if (result === false) {
+                        info.revert()
+                    }
+                })
             };
 
             settings.eventDrop = async (info) => {
-                const startEditable = info.event.startEditable
-                let enabled = eventDragEnabled
-
-                if (startEditable !== undefined) {
-                    enabled = startEditable
+                // The global flag is authoritative. EventCalendar's global eventStartEditable (and the
+                // per-event startEditable:false we emit for locked events) already decides whether this
+                // fires, so a per-event value can only restrict, never enable.
+                if (! eventDragEnabled) {
+                    info.revert()
+                    return
                 }
 
-                if (enabled) {
-                    await this.$wire.onEventDropJs({
-                        event: info.event,
-                        oldEvent: info.oldEvent,
-                        oldResource: info.oldResource,
-                        newResource: info.newResource,
-                        delta: info.delta,
-                        view: info.view,
-                        tzOffset: -new Date().getTimezoneOffset()
-                    }).then((result) => {
-                        if (result === false) {
-                            info.revert()
-                        }
-                    })
-                }
+                await this.$wire.onEventDropJs({
+                    event: info.event,
+                    oldEvent: info.oldEvent,
+                    oldResource: info.oldResource,
+                    newResource: info.newResource,
+                    delta: info.delta,
+                    view: info.view,
+                    tzOffset: -new Date().getTimezoneOffset()
+                }).then((result) => {
+                    if (result === false) {
+                        info.revert()
+                    }
+                })
             }
 
             settings.eventDidMount = (info) => {
-                info.el.setAttribute('x-load')
+                // `setAttribute` requires a value; passing only the name throws a TypeError and
+                // would abort before x-load-src/x-data are applied, leaving the event without its
+                // Alpine component. Blade writes the bare `x-load` attribute, i.e. an empty value.
+                info.el.setAttribute('x-load', '')
                 info.el.setAttribute('x-load-src', eventAssetUrl)
                 info.el.setAttribute('x-data', `calendarEvent({
                     event: ${JSON.stringify(info.event)},
@@ -275,11 +324,23 @@ export default function calendar({
             return container.outerHTML
         },
 
-        openContextMenu: function (jsEvent, data, context) {
-            const element = document.querySelector('[calendar-context-menu]')
+        openContextMenu: async function (jsEvent, data, context) {
+            // Scope the lookup to this calendar, not the whole page.
+            const element = this.$el.querySelector('[calendar-context-menu]')
             const contextMenu = Alpine.$data(element)
-            contextMenu.loadActions(context, data)
-            contextMenu.openMenu(jsEvent)
+
+            const position = {
+                clientX: jsEvent.clientX,
+                clientY: jsEvent.clientY,
+                pageX: jsEvent.pageX,
+                pageY: jsEvent.pageY,
+            }
+
+            const actions = await contextMenu.loadActions(context, data)
+
+            if (actions.length) {
+                contextMenu.openMenu(position)
+            }
         }
     }
 }
