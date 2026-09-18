@@ -1,3 +1,11 @@
+## 5.0.4 (September 18, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 5.0.3 –> 5.0.4
+- Ajustements sur la configuration RabbitMQ et les messages de log.
+- Mise en place dun ping rabbitmq quotidien.
+- On renomme la commande de publication de la documentation qui n'a plus rien à voir avec LaRecipe.
+- On seede un role user sans aucune permission. Cela permet d'avoir toujours un role en base pour les formulaires qui exigent l'attribution d'un role aux utilisateurs.
+- Implémentation préliminaire: les réponses aux ping contiennent désormais une description de l'instance. Un listener pour les pong est implémenté et enregistre ces informations dans le modèle Poseidoninstance.
+
 ## 5.0.3 (September 11, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 5.0.2 –> 5.0.3
 - Réactivation de la découverte automatique de guava/calendar qui a repris tous ses assets en local.
