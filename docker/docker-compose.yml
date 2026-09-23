@@ -27,30 +27,30 @@ services:
         restart: unless-stopped
         networks:
             - private
-    worker:
-        image: poseidon/php
-        command: php artisan queue:work
-        environment:
-          NGINX_WEBROOT: /app
-          SKELETOR_ADMIN_PASSWORD: ${SKELETOR_ADMIN_PASSWORD}
-        volumes:
-            - ../:/app
-            - backups:/backups
-        restart: unless-stopped
-        networks:
-            - private
-    scheduler:
-        image: poseidon/php
-        command: php artisan schedule:work
-        environment:
-          NGINX_WEBROOT: /app
-          SKELETOR_ADMIN_PASSWORD: ${SKELETOR_ADMIN_PASSWORD}
-        volumes:
-            - ../:/app
-            - backups:/backups
-        restart: unless-stopped
-        networks:
-            - private
+    # worker:
+    #     image: poseidon/php
+    #     command: php artisan queue:work
+    #     environment:
+    #       NGINX_WEBROOT: /app
+    #       SKELETOR_ADMIN_PASSWORD: ${SKELETOR_ADMIN_PASSWORD}
+    #     volumes:
+    #         - ../:/app
+    #         - backups:/backups
+    #     restart: unless-stopped
+    #     networks:
+    #         - private
+    # scheduler:
+    #     image: poseidon/php
+    #     command: php artisan schedule:work
+    #     environment:
+    #       NGINX_WEBROOT: /app
+    #       SKELETOR_ADMIN_PASSWORD: ${SKELETOR_ADMIN_PASSWORD}
+    #     volumes:
+    #         - ../:/app
+    #         - backups:/backups
+    #     restart: unless-stopped
+    #     networks:
+    #         - private
     db:
         image: postgres:17-alpine
         environment:
