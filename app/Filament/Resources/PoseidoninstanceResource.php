@@ -6,6 +6,7 @@ use App\Filament\Resources\PoseidoninstanceResource\Pages\ListPoseidoninstances;
 use App\Filament\Resources\PoseidoninstanceResource\Pages\ViewPoseidoninstance;
 use App\Models\Poseidoninstance;
 use Filament\Actions\ViewAction;
+use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -31,11 +32,21 @@ class PoseidoninstanceResource extends Resource
                 TextEntry::make('uuid')
                     ->label('UUID'),
                 TextEntry::make('nom'),
+                IconEntry::make('active')
+                    ->label('Actif')
+                    ->boolean()
+                    ->state(fn (Poseidoninstance $record): bool => self::isActive($record)),
                 TextEntry::make('last_seen')
                     ->label('Dernière vue')
                     ->formatStateUsing(fn (?int $state): ?string => $state !== null
                         ? Carbon::createFromTimestamp($state)->translatedFormat('d/m/Y H:i:s')
                         : null),
+                TextEntry::make('versions')
+                    ->label('Versions')
+                    ->formatStateUsing(fn (array|string|null $state): ?string => self::formatJsonState($state)),
+                TextEntry::make('node_description')
+                    ->label('Description du noeud')
+                    ->formatStateUsing(fn (array|string|null $state): ?string => self::formatJsonState($state)),
                 TextEntry::make('data'),
                 TextEntry::make('created_at')
                     ->dateTime(),
@@ -58,14 +69,17 @@ class PoseidoninstanceResource extends Resource
                 IconColumn::make('active')
                     ->label('Actif')
                     ->boolean()
-                    ->state(fn (Poseidoninstance $record): bool => $record->last_seen !== null
-                        && $record->last_seen > Carbon::now()->subHours(48)->getTimestamp()),
+                    ->state(fn (Poseidoninstance $record): bool => self::isActive($record)),
                 TextColumn::make('last_seen')
                     ->label('Dernière vue')
                     ->formatStateUsing(fn (?int $state): ?string => $state !== null
                         ? Carbon::createFromTimestamp($state)->translatedFormat('d/m/Y H:i:s')
                         : null)
                     ->sortable(),
+                TextColumn::make('versions')
+                    ->label('Versions')
+                    ->formatStateUsing(fn (array|string|null $state): ?string => self::formatJsonState($state))
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -81,6 +95,31 @@ class PoseidoninstanceResource extends Resource
             ])
             ->toolbarActions([])
         ;
+    }
+
+    private static function formatJsonState(array|string|null $state): ?string
+    {
+        if ($state === null) {
+            return null;
+        }
+
+        if (is_string($state)) {
+            $decoded = json_decode($state, true);
+
+            if (is_array($decoded)) {
+                $state = $decoded;
+            } else {
+                return $state;
+            }
+        }
+
+        return json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) ?: null;
+    }
+
+    private static function isActive(Poseidoninstance $record): bool
+    {
+        return $record->last_seen !== null
+            && $record->last_seen > Carbon::now()->subHours(48)->getTimestamp();
     }
 
     public static function canCreate(): bool

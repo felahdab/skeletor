@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Models\MindefConnectUser;
+use App\Models\Poseidoninstance;
 use App\Models\Remotesystem;
 use App\Models\User;
 use App\Policies\MindefConnectUserPolicy;
 use App\Policies\PermissionPolicy;
+use App\Policies\PoseidoninstancePolicy;
 use App\Policies\RemotesystemPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\UserPolicy;
@@ -26,6 +28,7 @@ class AuthServiceProvider extends ServiceProvider
         User::class => UserPolicy::class,
         Remotesystem::class => RemotesystemPolicy::class,
         MindefConnectUser::class => MindefConnectUserPolicy::class,
+        Poseidoninstance::class => PoseidoninstancePolicy::class,
         Permission::class => PermissionPolicy::class,
         Role::class => RolePolicy::class,
     ];
