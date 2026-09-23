@@ -8,6 +8,7 @@
 set -eu
 
 DOCS_DIR="${DOCS_DIR:-/app/resources/docs}"
+SITE_DIR="${SITE_DIR:-/app/public/assets/docs}"
 WATCH_INTERVAL="${MKDOCS_WATCH_INTERVAL:-10}"
 HASH_FILE="/tmp/mkdocs-docs.sha1"
 
@@ -19,9 +20,15 @@ compute_hash() {
         -exec sha1sum {} \; 2>/dev/null | sort | sha1sum | awk '{print $1}'
 }
 
+set_site_permissions() {
+    chown -R :82 "$SITE_DIR"
+    chmod -R g+rwX "$SITE_DIR"
+}
+
 build() {
     echo "[mkdocs-watch] $(date -Iseconds) : génération de la documentation..."
     if mkdocs build --config-file "$DOCS_DIR/mkdocs.yml" --clean; then
+        set_site_permissions
         echo "[mkdocs-watch] $(date -Iseconds) : génération terminée avec succès."
     else
         echo "[mkdocs-watch] $(date -Iseconds) : échec de la génération." >&2
