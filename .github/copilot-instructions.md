@@ -168,8 +168,8 @@ git ...
 ```
 
 Do not run destructive Git commands.
-
 Do not reset, checkout, rebase, force-push, delete branches, or discard changes without explicit user instruction.
+Do not create worktrees to work on a module.
 
 Before committing, verify the repository being committed to.
 
@@ -192,6 +192,7 @@ Each module may have its own:
 * Filament Resources
 * services/actions
 * models
+* migrations and seeders
 * configuration
 * dependencies
 * documentation
@@ -202,6 +203,18 @@ When modifying a module, inspect its existing implementation and follow its conv
 Do not impose application-level conventions on a module if the module already has a clearly established local convention.
 
 The main application's architectural rules still apply where they explicitly govern the module integration.
+
+## Documentation
+
+Each modules carries its own user documentation. Do not assume that the main application's user documentation applies to a module.
+When a task involves a module, inspect the module's own user documentation.
+
+When working on a feature, check the user documentation and suggest modifications so that it stays current with the code.
+The user documentation must be written in french only.
+
+The user documentation files are written in markdown format. Mkdocs materials is used to build a static version of the documentation at build time. The mermaid plugin is available for diagrams. No other plugin is available and no other plugin should be used.
+
+The artisan skeletor:publish-module-doc command is available to publish a module's documentation.
 
 ## Completion reporting
 
@@ -232,7 +245,6 @@ The host system must not be used to run php for linting or testing. A docker com
 ```bash
 docker compose exec php php artisan ...
 ```
-
 
 Use Pest.
 
