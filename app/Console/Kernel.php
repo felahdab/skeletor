@@ -20,7 +20,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('backup:run')->daily()->at('07:15');
         $schedule->command('skeletor:get-rabbitmq-messages --limit=100')->everyMinute();
 
-        $schedule->command('skeletor:send-rabbitmq-ping')->daily()->at('08:00');
+        $schedule->command('skeletor:send-rabbitmq-pong')->daily()->at('08:00');
     }
 
     /**
