@@ -52,6 +52,8 @@ class RabbitMQPongListener
             ]);
 
             $remote_instance->last_seen = Carbon::now();
+            $remote_instance->node_description = $node_description;
+            $remote_instance->versions = Arr::get($node_description, 'details');
             $remote_instance->save();
 
         } catch (Exception $e) {
