@@ -12,7 +12,7 @@ services:
           - db
           - pgadmin
           - code-editor
-          - markserv
+          - mkdocs
         networks:
             - private
     php:
@@ -50,11 +50,13 @@ services:
         restart: unless-stopped
         networks:
             - private
-    markserv:
-        image: falahdab/markserv:1.0
+    mkdocs:
+        image: squidfunk/mkdocs-material:latest
         restart: unless-stopped
+        entrypoint: /docker/mkdocs-watch.sh
         volumes:
-           - ../resources/docs/:/usr/src/app/md/
+            - ../:/app
+            - ./mkdocs-watch.sh:/docker/mkdocs-watch.sh
         networks:
             - private
     redis:
