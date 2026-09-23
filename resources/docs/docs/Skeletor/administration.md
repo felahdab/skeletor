@@ -16,6 +16,13 @@ Ce panneau rassemble les fonctions d'administration de base du serveur POSEIDON:
 4. La page de gestion des utilisateurs
 5. La page de gestion des permissions
 6. La page de gestion des rôles
+7. La page des instances Poseidon
+
+La page **Instances Poseidon** est en lecture seule. Elle présente les instances
+découvertes via RabbitMQ, leur activité récente ainsi que les versions de
+Skeletor et de leurs modules. La permission `poseidoninstances.index` est
+nécessaire pour y accéder. Voir [Instances Poseidon](instances-poseidon.md)
+pour le détail du fonctionnement.
 
 <a name="demandes-mindef-connect"></a>
 
@@ -49,7 +56,7 @@ Vous retrouvez dans cette page liste de tous les comptes utilisateur de ce serve
 
 Il est possible de cliquer sur le bouton "Modifier" en bout de ligne à droite pour accéder à la fiche de l'utilisateur et la modifier si nécessaire.
 
-Il est également possible de créér un utilisateur manuellement en cliquant sur le bouton "Créér".
+Il est également possible de créer un utilisateur manuellement en cliquant sur le bouton "Créer".
 
 Skeletor offre une fonctionnalité très puissante permettant à l'administrateur de se connecter en utilisant le compte utilisateur de quelqu'un d'autre. Pour utiliser cette fonction, l'administrateur doit cliquer sur le bouton ![Se faire passer pour](img/administration/se_faire_passer_pour.png) en bout de page.
 
@@ -101,7 +108,7 @@ La page de gestion des permissions n'est accessible qu'aux "Super administrateur
 
 Saisissez vos critères de recherche, puis cliquez sur « Rechercher ».
 
-Vous pouvez ensuite cliquer sur le bouton "Créer l'utilisateur local" en bout de ligne à droite, ou bien sélectionner plusieurs lignes et utiliser l'action groupée "Crée l'utilisateur local" qui apparait en entête de la liste pour créér un ou plusieurs comptes utilisateurs avec ces résultats de recherche.
+Vous pouvez ensuite cliquer sur le bouton "Créer l'utilisateur local" en bout de ligne à droite, ou bien sélectionner plusieurs lignes et utiliser l'action groupée "Créer l'utilisateur local" qui apparaît en en-tête de la liste pour créer un ou plusieurs comptes utilisateurs avec ces résultats de recherche.
 
 Dans les 2 cas, vous devrez sélectionner les rôles à attribuer à ces nouveaux utilisateurs.
 

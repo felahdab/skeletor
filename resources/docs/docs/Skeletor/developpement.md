@@ -1,5 +1,7 @@
 # Développement
 
+> Documentation vérifiée le 23 septembre 2026.
+
 <a name="generalites"></a>
 
 ## Généralités
@@ -19,8 +21,8 @@ A l'usage, ces contraintes ne sont pas difficiles à intégrer et ne posent pas 
 !!! note "Lire la documentation"
     Cette documentation ne reprend pas la documentation des briques techniques utilisées. Pour parfaitement la comprendre, il est préférable que le développeur se soit déjà intéressé à la documentation des composants techniques suivants:
     
-    - [le framework Laravel](https://laravel.com/docs/12.x)
-    -  [le framework Filament](https://filamentphp.com/docs/4.x)
+    - [le framework Laravel](https://laravel.com/docs/13.x)
+    - [le framework Filament](https://filamentphp.com/docs/5.x)
     
     Les informations ci-dessous viennent préciser comment cet ensemble est mis en oeuvre dans le cadre particulier de la plateforme de développement du FANLab.
 
@@ -37,7 +39,7 @@ Par conséquent, lorsqu'un développeur envisage de rajouter une fonctionnalité
 
 ## Développement modulaire
 
-Skeletor inclue les packages ```nwidart/laravel-modules``` et ```mhmiton/laravel-modules-livewire``` qui facilitent le développement d'application Laravel sous forme de modules.
+Skeletor inclut les packages ```nwidart/laravel-modules``` et ```mhmiton/laravel-modules-livewire``` qui facilitent le développement d'applications Laravel sous forme de modules.
 
 Le recours à ces outils, s'il n'est pas indispensable pour un maquétage ou une application temporaire, doit être envisagé dès lors que le développement présente un intérêt manifeste de généralisation. La modularisation des applications permet d'envisager leur intégration dans une même application chapeau. C'est l'un des buts de Skeletor. Lors du lancement du développement d'un nouveau module, les équipes du FANLAB feront le nécessaire pour générer un module pour le développeur.  
 
@@ -55,7 +57,7 @@ Le dévelopement modulaire présente quelques complications supplémentaires:
 
 Afin d'éviter que 2 modules utilisent le même nom de table en base de données, il est indispensable de préfixer les noms de tables. Or, dans Laravel/Eloquent, le nom de la table est normalement dérivé du nom du Modèle. Il faut donc contrarier ce fonctionnement par défaut pour parvenir à préfixer les noms des tables.
 
-Pour faciliter la mise en place de ce préfixe, Skeletor inclue le Trait ```HasTablePrefix```.
+Pour faciliter la mise en place de ce préfixe, Skeletor inclut le trait ```HasTablePrefix```.
 
 Au niveau de chaque module, ce Trait doit être surclassé de la façon suivante:
 
@@ -108,7 +110,7 @@ Afin d'offrir une expérience de navigation agréable aux utilisateurs, les modu
 
 ![Menu d'accès rapide](img/developpement/acces_rapide.png)
 
-Cette fonctionnalité ne nécessite pas pour cela que le module lui-même inclue un panneau Filament.
+Cette fonctionnalité ne nécessite pas pour cela que le module lui-même inclut un panneau Filament.
 Si le module expose lui-même un panneau Filament, ce panneau verra la fonctionnalité "Accès rapide" automatiquement intégrée, avec les pages déclarées par tous les modules faisant usage de cette fonctionnalité.  
 
 Cette fonctionnalité repose sur les "render hook" de Filament. Voir dans AppServiceProvider.php.  
@@ -183,7 +185,7 @@ Pour respecter les principes généraux du développement modulaire dans Skeleto
 
 ### Lien vers les pages de documentation
 
-Skeletor inclue un lien vers la documentation dans le menu de l'utilisateur (en haut à droite) ainsi qu'en bas à gauche de la barre de navigation lorsque celle-ci est en mode vertical.  
+Skeletor inclut un lien vers la documentation dans le menu de l'utilisateur (en haut à droite) ainsi qu'en bas à gauche de la barre de navigation lorsque celle-ci est en mode vertical.
 
 Ce lien redirige automatiquement vers la section de documentation relative au panneau depuis lequel elle est appelée.
 
@@ -191,7 +193,7 @@ Ce lien redirige automatiquement vers la section de documentation relative au pa
 
 ### Documenter son module
 
-Pour documenter son module, le développeur peut tout simplement créér sa documentation sous la forme de fichiers Markdown dans son module. L'emplacement recommandé est le dossier resources/docs (dans l'arborescence du module).
+Pour documenter son module, le développeur peut tout simplement créer sa documentation sous la forme de fichiers Markdown dans son module. L'emplacement recommandé est le dossier resources/docs (dans l'arborescence du module).
 
 L'outil utilisé pour générer la documentation dans sa version publiée est [materials for mkdocs](https://squidfunk.github.io/mkdocs-material/).
 
@@ -239,7 +241,7 @@ Par conséquent, afin de pouvoir offrir des instances de développement à la de
 
 Or, Laravel (comme la plupart des applications et/ou framework de développement Web) ne dispose pas de mécanisme particulier pour gérer ce genre de cas.   
 
-Toutefois, le mécanisme de routage des requêtes de Laravel permet de configurer chaque route servie et facilite la définition d'un préfixe sur une ou plusieurs routes (Voir la documentation de Laravel sur le Routage et sur les prefixes: <a href="https://laravel.com/docs/12.x/routing#route-group-prefixes">```https://laravel.com/docs/12.x/routing#route-group-prefixes```</a> )  
+Toutefois, le mécanisme de routage des requêtes de Laravel permet de configurer chaque route servie et facilite la définition d'un préfixe sur une ou plusieurs routes (voir la [documentation Laravel sur les groupes de routes préfixés](https://laravel.com/docs/13.x/routing#route-group-prefixes)).
 
 Il est donc très facile de rajouter un préfixe sur les routes déclarées dans une application. Toutefois, comme une application s'appuie généralement sur divers packages logiciels, ces derniers doivent pouvoir tenir compte du préfixe de l'instance pour s'intégrer comme il faut dans l'environnement. Or, si la déclaration d'un préfixe, ou des URL sous lesquelles les fonctionnalités de tel ou tel package sont servies n'est pas possible, il peut devenir très compliqué d'intégrer ce package dans l'environnement. Cette contrainte a donc un effet sur les packages pouvant être intégrés dans l'environnement.  
 
@@ -441,7 +443,7 @@ class SkeletorRouteServiceProvider extends ServiceProvider
 
     foreach (Route::getRoutes() as $route)
     {
-        $prefix = config('skeletor.preixe_instance');
+        $prefix = config('skeletor.prefixe_instance');
         if (Str::is('livewire/livewire.js', $route->uri()))
         {
             $route->setUri($prefix . '/' . $route->uri());
@@ -477,7 +479,7 @@ class SkeletorRouteServiceProvider extends ServiceProvider
 
 ```
 
-Ce ```ServiceProvider``` modifie les uri des routes déjà déclarées par le package Livewire pour leur rajouter le préfixe de l'instance et il est explicitement déclaré dans le fichier de configuration de l'application ```config/app.php``` pour être chargé au lancement de l'application, après le package livewire (qui est chargé automatiquement, donc avant les services providers déclarés dans app.php)
+Ce ```ServiceProvider``` modifie les URI des routes déjà déclarées par le package Livewire pour leur rajouter le préfixe de l'instance. Il est chargé au lancement de l'application après le package Livewire.
 
 ```php
 <?php
@@ -540,8 +542,25 @@ L'URL générée par la fonction ```asset``` contiendra automatiquement le préf
 https://domaine-qui-va-bien.intradef.gouv.fr/APP_PREFIX/assets/images/favicon-32x32.png
 ```
 
-Par ailleurs, la configuration des systèmes de fichier est ajustée pour que les fichiers du répertoire storage/app/public soient bien disponibles sous l'url ```https://domaine-qui-va-bien.intradef.gouv.fr/APP_PREFIX/public```
+Par ailleurs, La configuration des systèmes de fichiers est ajustée pour que les fichiers du répertoire `storage/app/public` soient bien disponibles sous l'URL `https://domaine-qui-va-bien.intradef.gouv.fr/APP_PREFIX/public`.
 
+
+<a name="configuration"></a>
+
+## Configuration de l'application
+
+Les variables d'environnement principales sont :
+
+- `APP_PREFIX` : préfixe ajouté aux URL de l'instance ;
+- `APP_VERSION` : version de l'application annoncée aux autres nœuds et exposée par l'API ;
+- `SKELETOR_VERSION` : version affichée dans le panneau d'administration ;
+- `SKELETOR_TITLE` : titre général affiché par l'application ;
+- `SKELETOR_MULTI_TENANCY` : active ou non le mode multi-tenant ;
+- `AMQP_SOURCE_NODENAME` : nom annoncé par l'instance sur RabbitMQ.
+
+`APP_VERSION` et `SKELETOR_VERSION` sont actuellement deux valeurs distinctes :
+la première décrit l'application déployée, tandis que la seconde identifie la
+version du socle Skeletor affichée dans Filament.
 
 <a name="gestion_des_droits"></a>
 
@@ -550,7 +569,7 @@ Par ailleurs, la configuration des systèmes de fichier est ajustée pour que le
 Par défaut, Skeletor est fourni avec le package ```spatie/laravel-permissions``` installé.
 Ce package est une des références en matière de gestion des rôles et des permissions des utilisateurs.
 
-Dans Filament, les permissions sont utilisées au travers de Policy ([Documentation Laravel sur les Policy](https://laravel.com/docs/12.x/authorization#creating-policies)) associées aux modèles. Le framework met en pratique les Policy pour déterminer l'accessibilité des pages des ressources.
+Dans Filament, les permissions sont utilisées au travers de Policy ([documentation Laravel sur les Policy](https://laravel.com/docs/13.x/authorization#creating-policies)) associées aux modèles. Le framework met en pratique les Policy pour déterminer l'accessibilité des pages des ressources.
 
 Une politique standard ```GenericSkeletorPolicy``` existe et permet de faire le lien entre les permissions spatie et les méthodes de politique standard. Grâce à cette politique générale, chaque modèle est associé à un slug unique (Par exemple users pour le modèle User), et chaque permission de la politique est associée à une permission spatie.
 
@@ -578,13 +597,13 @@ Gate::before(function ($user, $ability) {
 
 ## Authentification vis à vis de Keycloak (Mindef Connect sur Intradef / Polaris Online sur SIC21 / Polaris Online NSWAN sur NSWAN)
 
-Skeletor inclue le nécessaire pour utiliser l'authentification Keycloak.
+Skeletor inclut le nécessaire pour utiliser l'authentification Keycloak.
 
 Mindef Connect est une solution d'authentification centralisée reposant sur l'infrastructure d'Annudef. Cette solution repose sur un serveur OpenID basé sur la solution Keycloak, disponible en opensource sur Internet.
 
 Les plateformes POLARIS Online et POLARIS Online NSWAN reprennent la même brique technique pour le SSO 
 
-Afin de s'addosser à Keycloak, Skeletor inclue Laravel Socialite avec le provider complémentaire Keycloak.
+Afin de s'adosser à Keycloak, Skeletor inclut Laravel Socialite avec le provider complémentaire Keycloak.
 
 Les paramètres du provider sont configurés dans le .env:
 ```php
@@ -635,7 +654,7 @@ Skeletor inclut le package ```calebporzio/sushi``` qui permet de construire un m
 
 Peut être utilisé pour récupérer des objets via un appel d'API par exemple, et de les traiter comme s'ils venaient d'un modèle Eloquent local.
 
-La documentation de Filament inclue une démonstration très complète d'une méthodologie permettant d'afficher dans une table filament les données issues d'une API: [Filament Tables - Custom Data](https://filamentphp.com/docs/4.x/tables/custom-data)
+La documentation de Filament inclut une démonstration très complète d'une méthodologie permettant d'afficher dans une table Filament les données issues d'une API : [Filament Tables - Custom Data](https://filamentphp.com/docs/5.x/tables/custom-data)
 
 <a name="api"></a>
 
@@ -643,18 +662,26 @@ La documentation de Filament inclue une démonstration très complète d'une mé
 
 Laravel et Skeletor incluent les outils de base permettant d'exposer une API pour donner accès aux données de son application.
 
-Côté API à proprement parler, rien de particulier dans Skeletor vis à vis des pratiques courantes de Laravel. Skeletor inclue nativement le package ```spatie/laravel-data``` qui peut, dans certains cas, faciliter la définition par le développeur des données exposées, et des règles de validation et de conversion des données entrantes le cas échéant.
+Côté API à proprement parler, rien de particulier dans Skeletor vis-à-vis des pratiques courantes de Laravel. Skeletor inclut nativement le package ```spatie/laravel-data``` qui peut, dans certains cas, faciliter la définition par le développeur des données exposées, et des règles de validation et de conversion des données entrantes le cas échéant.
 Son emploi n'est pas une obligation.
 
-Skeletor inclut par ailleurs le package ```dedoc/scramble``` qui facilite la génération de la documentation des API.
+Skeletor inclut le package ```dedoc/scramble```, utilisé pour la génération
+de la spécification de documentation des API.
 
-Skeletor inclut par ailleurs le package ```darkaonline/l5-swagger``` qui facilite la publication de la documentation des API exposées.
+Le package ```darkaonline/l5-swagger``` fournit l'interface de consultation de
+la documentation générée. Elle est accessible par défaut à l'URL
+```https://domain-qui-va-bien.intradef.gouv.fr/APP_PREFIX/api/documentation```.
+Le menu de l'utilisateur contient un lien vers cette page.
 
-Par défaut, les API exposées et documentées sont directement visualisables depuis la page de documentation des API située par défaut à l'URL ```https://domain-qui-va-bien.intradef.gouv.fr/APP_PREFIX/api/documentation```. Le menu de l'utilisateur inclue un lient pointant vers cette page de documentation des API exposées par chaque serveur POSEIDON.
+Skeletor offre également un middleware complémentaire permettant de forcer
+toutes les requêtes destinées aux API à préciser l'en-tête
+```Accept: application/json```. Ce middleware facilite le test des API depuis
+la page de documentation Swagger.
 
-Skeletor offre également un middleware complémentaire permettant de forcer toutes les requêtes destinées aux API à préciser comme ```accept/type: application/json```. Ce middleware est utile pour faciliter le test des API depuis la page de documentation Swagger (qui par défaut ne précise pas d'accept/type...)
-
-Les API étant naturellement destinées à être exploitées par d'autres application, Skeletor inclue par défaut le nécessaire pour pouvoir gérer les autorisations d'accès aux endpoint API, en utilisant le même modèle que les permissions et les rôles attribués aux utilisateurs physiques.
+Les API étant naturellement destinées à être exploitées par d'autres
+applications, Skeletor inclut par défaut le nécessaire pour gérer les
+autorisations d'accès aux endpoints API, en utilisant le même modèle que les
+permissions et les rôles attribués aux utilisateurs physiques.
 
 Pour cela, Skeletor définit une garde (au sens Laravel du terme) appelée api, dont les utilisateurs sont des ```Systèmes distants```. Ces systèmes distances (modèle ```RemoteSystem``` peuvent être déclarés depuis le panneau d'admin Filament de Skeletor).
 Et en outre, le panneau de gestion des systèmes distants permet de générer pour ces dernier des token Jwt permettant de réaliser l'authentification (mécanisme Bearer classique).
@@ -662,7 +689,7 @@ Et en outre, le panneau de gestion des systèmes distants permet de générer po
 Si le développeur d'un module souhaite subordonner l'utilisation d'un endpoint API à la possession d'une autorisation vérifiée grâce à ce mécanisme, il doit donc:
 - choisir le nom de la permission qu'il souhaite associer à son endpoint (sans oublier de la préfixer avec ```nom_du_module::```)
 - s'assurer que cette permission est bien seedée, sans omettre que cette permission doit être associée à la garde ```api``` et pas ```web``` qui est la garde par défaut.
-- créér son endpoint API (Controlleur)
+- créer son endpoint API (contrôleur)
 - vérifier dans son code que le 'user' (```auth()->user()``` a bien l'autorisation en question ```auth()->user()->can("nom_de_la_permission")```)
 - déclarer son endpoint dans les routes de son module (fichier api.php) en veillant bien sûr à lui associer le middleware ```auth:sanctum```
 
