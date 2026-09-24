@@ -22,6 +22,8 @@ use function Pest\Livewire\livewire;
 
 uses(RefreshDatabase::class);
 
+pest()->group('Skeletor');
+
 beforeEach(function () {
     Filament::setCurrentPanel(
         Filament::getPanel('admin'),

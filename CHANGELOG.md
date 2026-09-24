@@ -1,3 +1,7 @@
+## 5.0.5 (September 23, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 5.0.4 –> 5.0.5
+- Implements artifact #799743: rajoute la commande skeletor:prune-mindef-connect-requests pour nettoyer la liste des demandes Mindefconnect devenues inutiles
+
 ## 5.0.4 (September 18, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 5.0.3 –> 5.0.4
 - Ajustements sur la configuration RabbitMQ et les messages de log.
