@@ -21,6 +21,14 @@ Before implementing a feature:
 * Do not introduce a new architectural pattern when an existing one is suitable.
 * Do not modify unrelated modules or infrastructure.
 
+## Skeletor development conventions
+
+* Keep business-specific functionality in its module. Consider adding reusable functionality to Skeletor itself only after coordinating with FANLab and preserving backward compatibility.
+* Keep modules independent and avoid naming collisions: prefix module tables with `HasTablePrefix` (including migrations, seeders and pivot tables), prefix permissions and roles, and use module namespaces for Blade and Livewire views/components. Module route prefixes are configured by default; follow the existing module setup.
+* Define module API endpoints in the module's `api.php`, protect them with `auth:sanctum`, and use module-prefixed permissions with the `api` guard. Scramble generates the API specification.
+* Use Skeletor's `ModuleDefinedMenusRegistry` and `ModuleDefinedPreferedPagesRegistry` to register module quick-access links and preferred pages; preferred pages must reference named routes.
+- When the user asks to create a new module, have him confirm that he has checked the list of existing modules on the POSEIDON_FAN website. Execute the artisan module:make command with the name provided by the user. Once the module is created, initialize a new git repository in its directory and offer the user to make the initial commit with the new module files.
+
 ## Filament
 
 * This project uses Filament 5.
