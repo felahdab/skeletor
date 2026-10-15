@@ -21,7 +21,7 @@ it('accepte une demande de reinitialisation de mot de passe pour un utilisateur 
     // Penser à définir SKELETOR_INTRADEF_MAIL_TLD si ce test échoue.    
 });
 
-it('refuse une demande de reinitialisation de mot de passe pour un utilisateur n existant pas', function () {
+it('accepte aussi une demande de reinitialisation de mot de passe pour un utilisateur n existant pas', function () {
     Mail::fake();
 
     $response = $this->get(route('login.indexforgotpwd'));
@@ -29,6 +29,7 @@ it('refuse une demande de reinitialisation de mot de passe pour un utilisateur n
     $response->assertStatus(200);
 
     $response = $this->post(route('login.forgotpwd'), ['email' => 'toto@exmaple.com']);
-    $response->assertStatus(302);
+    ob_end_flush();
+    $response->assertStatus(200);
 
 });

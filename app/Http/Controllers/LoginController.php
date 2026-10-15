@@ -250,13 +250,9 @@ class LoginController extends Controller
             $status = Password::sendResetLink(
                 $request->only('email')
             );
-
-            return Password::RESET_LINK_SENT === $status
-                ? view('auth.login', ['logo' => $logo, 'sso_name' => $sso_name])->with(['success' => 'email envoyé'])
-                : back()->withErrors(['email' => __($status)]);
         }
 
-        return back()->withErrors('l\'email n\'est pas dans la base de donnée');
+        return view('auth.login', ['logo' => $logo, 'sso_name' => $sso_name])->with(['success' => 'Si votre email est bien en base, vous allez recevoir un email pour redéfinir votre mot de passe.']);
     }
 
     /**
