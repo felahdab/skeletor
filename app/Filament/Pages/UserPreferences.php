@@ -68,19 +68,16 @@ class UserPreferences extends EditProfile
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        $settings = Arr::get($data, 'data.settings', []);
+        /** @var User $user */
+        $user = $this->getUser();
 
-        if (! is_array($settings)) {
-            throw new \UnexpectedValueException('The authenticated user settings must be an array.');
-        }
-
-        $data['prefered_page'] = Arr::get($settings, 'prefered_page');
+        $data['prefered_page'] = Arr::get($user->data ?? [], 'settings.prefered_page');
 
         foreach ($this->getVisibleUserPreferenceSections() as $section) {
             Arr::set(
                 $data,
                 "module_preferences.{$section->getKey()}",
-                Arr::get($settings, $section->getKey(), []),
+                $user->getPreferences($section->getKey()),
             );
         }
 
@@ -95,26 +92,21 @@ class UserPreferences extends EditProfile
         $userData = $user->data ?? [];
 
         Arr::set($userData, 'settings.prefered_page', $state['prefered_page']);
+        $user->data = $userData;
 
         foreach ($this->getVisibleUserPreferenceSections() as $section) {
             $key = $section->getKey();
-            $currentPreferences = Arr::get($userData, "settings.{$key}", []);
             $submittedPreferences = Arr::get($state, "module_preferences.{$key}", []);
 
-            if (! is_array($currentPreferences) || ! is_array($submittedPreferences)) {
+            if (! is_array($submittedPreferences)) {
                 throw new \UnexpectedValueException(
-                    "The user preferences for section [{$key}] must be arrays."
+                    "The submitted user preferences for section [{$key}] must be an array."
                 );
             }
 
-            Arr::set(
-                $userData,
-                "settings.{$key}",
-                array_replace($currentPreferences, $submittedPreferences),
-            );
+            $user->setPreferences($key, $submittedPreferences);
         }
 
-        $user->data = $userData;
         $user->save();
     }
 
