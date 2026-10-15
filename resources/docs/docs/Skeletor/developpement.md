@@ -181,6 +181,15 @@ Les ```PreferedPageItem``` sont caractérisées par un nom et par une route.
 
 Pour respecter les principes généraux du développement modulaire dans Skeletor, le nom des pages préférées doit être préfixé par une référence au module qui les définit (par exemple Fcm central ci-dessus).
 
+Le choix de l'utilisateur est enregistré comme une préférence utilisateur classique (voir la section
+suivante), dans la section ```skeletor``` déclarée par l'application de base. Il est accessible avec:
+
+```php
+<?php
+
+$user->getPreference('skeletor', 'prefered_page');
+```
+
 <a name="modules-preferences-utilisateur"></a>
 
 ### Déclaration de préférences personnelles par un module
@@ -225,12 +234,52 @@ La clé passée à ```UserPreferenceSection::make()``` doit être unique dans l'
 commencer par une lettre minuscule et ne contenir que des lettres minuscules, des chiffres et des
 caractères de soulignement. Il est recommandé d'utiliser le slug du module.
 
+!!! note "L'application de base utilise le même mécanisme"
+
+    Skeletor déclare ses propres préférences utilisateur dans la section ```skeletor```, depuis
+    ```AppServiceProvider```. La clé ```skeletor``` est donc réservée et ne doit pas être utilisée
+    par un module. C'est ainsi qu'est déclarée la préférence ```prefered_page```.
+
+!!! tip "Déclarer le schéma avec une Closure"
+
+    Si le schéma dépend d'éléments déclarés par d'autres modules (ou de l'utilisateur connecté),
+    passez une Closure à ```schema()```. Les composants sont alors construits au moment de
+    l'affichage du formulaire, et non au démarrage de l'application.
+
 Les noms des composants Filament sont relatifs à cette section. Skeletor enregistre leurs valeurs
 dans le champ JSON de l'utilisateur sous ```data.settings.<clé_de_section>```. Les réglages de chaque
 module sont ainsi isolés et ne peuvent pas entrer en collision avec ceux d'un autre module.
 
 La méthode ```visible()``` accepte un booléen ou une closure recevant l'utilisateur connecté. Une
 section non visible n'est ni affichée ni modifiée lors de l'enregistrement du formulaire.
+
+#### Lecture et écriture des préférences depuis le code du module
+
+Le modèle ```App\Models\User``` expose des méthodes permettant d'exploiter ces préférences sans
+manipuler directement le champ JSON de l'utilisateur:
+
+```php
+<?php
+
+// Lecture
+$user->getPreferences('fcm_central');                            // toutes les préférences de la section
+$user->getPreference('fcm_central', 'page_size', 25);            // une préférence, avec valeur par défaut
+$user->getPreference('fcm_central', 'affichage.lignes_par_page'); // notation pointée pour les valeurs imbriquées
+
+// Écriture
+$user->setPreference('fcm_central', 'page_size', 50);
+$user->setPreferences('fcm_central', ['page_size' => 50, 'notifications_enabled' => false]);
+$user->save();
+```
+
+!!! warning "Les méthodes d'écriture ne persistent pas le modèle"
+
+    ```setPreference()``` et ```setPreferences()``` modifient le modèle et le renvoient afin de
+    pouvoir chainer les appels. Il faut appeler ```save()``` pour enregistrer les modifications.
+
+```setPreferences()``` fusionne les valeurs fournies avec celles déjà enregistrées: les préférences
+de la section qui ne sont pas fournies sont conservées. Les préférences des autres sections et les
+autres données de l'utilisateur ne sont jamais modifiées.
 
 <a name="modules-helplink"></a>
 

@@ -2,13 +2,11 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\PanelRegistry\ModuleDefinedPreferedPagesRegistry;
 use App\Filament\PanelRegistry\ModuleDefinedUserPreferencesRegistry;
 use App\Filament\PanelRegistry\UserPreferenceSection;
 use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Auth\Pages\EditProfile;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
@@ -22,11 +20,6 @@ class UserPreferences extends EditProfile
     {
         return $schema
             ->components([
-                Select::make('prefered_page')
-                    ->label('Page préférée')
-                    ->helperText("L'application vous emmenera automatiquement à cette page lorsque vous vous connecterez")
-                    ->options(app(ModuleDefinedPreferedPagesRegistry::class)->getPreferedPagesItemsForSelect())
-                    ->selectablePlaceholder(false),
                 ...array_values(
                     array_map(
                         fn (UserPreferenceSection $section) => $section->toFormComponent(),
@@ -71,8 +64,6 @@ class UserPreferences extends EditProfile
         /** @var User $user */
         $user = $this->getUser();
 
-        $data['prefered_page'] = Arr::get($user->data ?? [], 'settings.prefered_page');
-
         foreach ($this->getVisibleUserPreferenceSections() as $section) {
             Arr::set(
                 $data,
@@ -89,10 +80,6 @@ class UserPreferences extends EditProfile
         /** @var User $user */
         $user = auth()->user();
         $state = $this->form->getState();
-        $userData = $user->data ?? [];
-
-        Arr::set($userData, 'settings.prefered_page', $state['prefered_page']);
-        $user->data = $userData;
 
         foreach ($this->getVisibleUserPreferenceSections() as $section) {
             $key = $section->getKey();

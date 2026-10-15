@@ -6,10 +6,12 @@ use App\Filament\PanelRegistry\DirectMenuItem;
 use App\Filament\PanelRegistry\ModuleDefinedMenusRegistry;
 use App\Filament\PanelRegistry\ModuleDefinedPreferedPagesRegistry;
 use App\Filament\PanelRegistry\ModuleDefinedUserPreferencesRegistry;
+use App\Filament\PanelRegistry\UserPreferenceSection;
 use App\Scopes\ScopedMacro;
 use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
+use Filament\Forms\Components\Select;
 use Filament\Pages\Dashboard;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
@@ -122,5 +124,20 @@ class AppServiceProvider extends ServiceProvider
                         ->visible(fn () => auth()->check() && Dashboard::canAccess()),
                 ]),
         ]);
+
+        // Skeletor déclare ses propres préférences utilisateur de la même manière que les modules.
+        app(ModuleDefinedUserPreferencesRegistry::class)->registerUserPreferenceSections(
+            UserPreferenceSection::make('skeletor')
+                ->label('Préférences générales')
+                // Le schéma est une Closure afin que les pages préférées déclarées par les modules
+                // soient résolues au moment de l'affichage du formulaire, et non au démarrage.
+                ->schema(fn (): array => [
+                    Select::make('prefered_page')
+                        ->label('Page préférée')
+                        ->helperText("L'application vous emmenera automatiquement à cette page lorsque vous vous connecterez")
+                        ->options(app(ModuleDefinedPreferedPagesRegistry::class)->getPreferedPagesItemsForSelect())
+                        ->selectablePlaceholder(false),
+                ]),
+        );
     }
 }
