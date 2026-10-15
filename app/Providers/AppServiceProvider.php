@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Filament\PanelRegistry\DirectMenuItem;
 use App\Filament\PanelRegistry\ModuleDefinedMenusRegistry;
 use App\Filament\PanelRegistry\ModuleDefinedPreferedPagesRegistry;
+use App\Filament\PanelRegistry\ModuleDefinedUserPreferencesRegistry;
 use App\Scopes\ScopedMacro;
 use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
@@ -36,6 +37,9 @@ class AppServiceProvider extends ServiceProvider
         });
         $this->app->singleton(ModuleDefinedPreferedPagesRegistry::class, function () {
             return new ModuleDefinedPreferedPagesRegistry();
+        });
+        $this->app->singleton(ModuleDefinedUserPreferencesRegistry::class, function () {
+            return new ModuleDefinedUserPreferencesRegistry();
         });
     }
 
