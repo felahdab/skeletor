@@ -181,6 +181,57 @@ Les ```PreferedPageItem``` sont caractérisées par un nom et par une route.
 
 Pour respecter les principes généraux du développement modulaire dans Skeletor, le nom des pages préférées doit être préfixé par une référence au module qui les définit (par exemple Fcm central ci-dessus).
 
+<a name="modules-preferences-utilisateur"></a>
+
+### Déclaration de préférences personnelles par un module
+
+Un module peut ajouter ses propres réglages à la page "Mes préférences" avec le registre
+```ModuleDefinedUserPreferencesRegistry```. La déclaration doit être effectuée dans la méthode
+```boot()``` d'un fournisseur de services du module.
+
+Chaque module déclare une section contenant des composants de formulaire Filament natifs:
+
+```php
+<?php
+
+use App\Filament\PanelRegistry\ModuleDefinedUserPreferencesRegistry;
+use App\Filament\PanelRegistry\UserPreferenceSection;
+use App\Models\User;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
+
+app(ModuleDefinedUserPreferencesRegistry::class)->registerUserPreferenceSections(
+    UserPreferenceSection::make('fcm_central')
+        ->label('FCM central')
+        ->description('Préférences personnelles pour FCM central.')
+        ->visible(fn (User $user): bool => $user->can('fcm_central::access'))
+        ->schema([
+            Select::make('page_size')
+                ->label('Nombre de lignes par page')
+                ->options([
+                    10 => '10',
+                    25 => '25',
+                    50 => '50',
+                ])
+                ->default(25),
+            Toggle::make('notifications_enabled')
+                ->label('Recevoir les notifications')
+                ->default(true),
+        ]),
+);
+```
+
+La clé passée à ```UserPreferenceSection::make()``` doit être unique dans l'application. Elle doit
+commencer par une lettre minuscule et ne contenir que des lettres minuscules, des chiffres et des
+caractères de soulignement. Il est recommandé d'utiliser le slug du module.
+
+Les noms des composants Filament sont relatifs à cette section. Skeletor enregistre leurs valeurs
+dans le champ JSON de l'utilisateur sous ```data.settings.<clé_de_section>```. Les réglages de chaque
+module sont ainsi isolés et ne peuvent pas entrer en collision avec ceux d'un autre module.
+
+La méthode ```visible()``` accepte un booléen ou une closure recevant l'utilisateur connecté. Une
+section non visible n'est ni affichée ni modifiée lors de l'enregistrement du formulaire.
+
 <a name="modules-helplink"></a>
 
 ### Lien vers les pages de documentation
