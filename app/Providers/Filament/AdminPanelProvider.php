@@ -5,7 +5,7 @@ namespace App\Providers\Filament;
 use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
 use App\Filament\AvatarProviders\SkeletorAvatarProvider;
 use App\Filament\Pages\UserPreferences;
-use App\Http\Middleware\FilamentAuthenticate;
+use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\InitializeTenancyByPath;
 use App\Http\Middleware\ReconfigureSessionDatabaseWhenTenantNotInitialized;
 use App\Http\Middleware\SetTenantCookieMiddleware;
@@ -75,7 +75,7 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                FilamentAuthenticate::class,
+                Authenticate::class,
             ])
             ->sidebarCollapsibleOnDesktop()
             ->userMenuItems([
