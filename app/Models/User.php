@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Lab404\Impersonate\Models\Impersonate;
 use Laravel\Sanctum\HasApiTokens;
@@ -135,6 +136,64 @@ class User extends Authenticatable implements FilamentUser, HasName
     public function canBeImpersonated()
     {
         return !$this->admin;
+    }
+
+    /**
+     * Renvoie les préférences personnelles enregistrées pour une section déclarée
+     * par un module dans le ModuleDefinedUserPreferencesRegistry.
+     *
+     * @return array<string, mixed>
+     */
+    public function getPreferences(string $section): array
+    {
+        $preferences = Arr::get($this->data ?? [], "settings.{$section}", []);
+
+        if (!is_array($preferences)) {
+            throw new \UnexpectedValueException("The user preferences for section [{$section}] must be an array.");
+        }
+
+        return $preferences;
+    }
+
+    /**
+     * Renvoie une préférence personnelle d'une section. La clé accepte la notation pointée.
+     */
+    public function getPreference(string $section, string $key, mixed $default = null): mixed
+    {
+        return Arr::get($this->getPreferences($section), $key, $default);
+    }
+
+    /**
+     * Fusionne les préférences fournies avec celles déjà enregistrées pour la section.
+     * Les préférences de la section qui ne sont pas fournies sont conservées.
+     *
+     * Cette méthode ne persiste pas le modèle: appeler save() pour enregistrer.
+     *
+     * @param array<string, mixed> $preferences
+     */
+    public function setPreferences(string $section, array $preferences): static
+    {
+        $data = $this->data ?? [];
+
+        Arr::set($data, "settings.{$section}", array_replace($this->getPreferences($section), $preferences));
+
+        $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * Définit une préférence personnelle d'une section. La clé accepte la notation pointée.
+     *
+     * Cette méthode ne persiste pas le modèle: appeler save() pour enregistrer.
+     */
+    public function setPreference(string $section, string $key, mixed $value): static
+    {
+        $preferences = $this->getPreferences($section);
+
+        Arr::set($preferences, $key, $value);
+
+        return $this->setPreferences($section, $preferences);
     }
 
     protected function casts(): array

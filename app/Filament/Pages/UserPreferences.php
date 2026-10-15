@@ -2,12 +2,12 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\PanelRegistry\ModuleDefinedPreferedPagesRegistry;
-use Filament\Auth\Pages\EditProfile;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
+use App\Filament\PanelRegistry\ModuleDefinedUserPreferencesRegistry;
+use App\Filament\PanelRegistry\UserPreferenceSection;
+use App\Models\User;
 use Filament\Actions\Action;
-
+use Filament\Auth\Pages\EditProfile;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
 use Illuminate\Support\Arr;
@@ -18,24 +18,18 @@ class UserPreferences extends EditProfile
 
     public function form(Schema $schema): Schema
     {
-        $record = [
-            'prefered_page' => Arr::get(auth()->user()->data, 'settings.prefered_page', null),
-        ];
-
         return $schema
             ->components([
-                Select::make('prefered_page')
-                    ->label('Page préférée')
-                    ->helperText("L'application vous emmenera automatiquement à cette page lorsque vous vous connecterez")
-                    ->options(app(ModuleDefinedPreferedPagesRegistry::class)->getPreferedPagesItemsForSelect())
-                    ->selectablePlaceholder(false)
-                    ->afterStateHydrated(function (Select $component) use ($record) {
-                        $component->state($record['prefered_page']);
-                    }),
-                Action::make("changer_mon_mot_de_passe")
-                    ->label("Modifier mon mot de passe")
+                ...array_values(
+                    array_map(
+                        fn (UserPreferenceSection $section) => $section->toFormComponent(),
+                        $this->getVisibleUserPreferenceSections(),
+                    ),
+                ),
+                Action::make('changer_mon_mot_de_passe')
+                    ->label('Modifier mon mot de passe')
                     ->requiresConfirmation()
-                    ->visible(fn() => auth()->check())
+                    ->visible(fn () => auth()->check())
                     ->schema([
                         TextInput::make('password')
                             ->label("Nouveau mot de passe")
@@ -49,34 +43,70 @@ class UserPreferences extends EditProfile
                             ->revealable()
                             ->password()
                             ->same('password'),
-                        
                     ])
-                    ->action(function($data){
-                        if ( ! auth()->check() )
-                        {
-                            return ;
+                    ->action(function ($data) {
+                        if (! auth()->check()) {
+                            return;
                         }
+
                         # Pour le principe, mais ne peut pas se produire car la page préférences
                         # n'est visible que quand l'utilisateur est connecté, et en plus l'action
                         # n'est elle aussi visible que quand l'utilisateur est connecté.
                         $user = auth()->user();
-                        $user->password=$data['password'];
+                        $user->password = $data['password'];
                         $user->save();
-                    })
-            ])
-        ;
+                    }),
+            ]);
+    }
+
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        foreach ($this->getVisibleUserPreferenceSections() as $section) {
+            Arr::set(
+                $data,
+                "module_preferences.{$section->getKey()}",
+                $user->getPreferences($section->getKey()),
+            );
+        }
+
+        return $data;
     }
 
     public function save(): void
     {
+        /** @var User $user */
         $user = auth()->user();
-        $data = $user->data;
-
         $state = $this->form->getState();
 
-        Arr::set($data, 'settings.prefered_page', $state['prefered_page']);
-        $user->data = $data;
+        foreach ($this->getVisibleUserPreferenceSections() as $section) {
+            $key = $section->getKey();
+            $submittedPreferences = Arr::get($state, "module_preferences.{$key}", []);
+
+            if (! is_array($submittedPreferences)) {
+                throw new \UnexpectedValueException(
+                    "The submitted user preferences for section [{$key}] must be an array."
+                );
+            }
+
+            $user->setPreferences($key, $submittedPreferences);
+        }
+
         $user->save();
+    }
+
+    /**
+     * @return array<string, UserPreferenceSection>
+     */
+    private function getVisibleUserPreferenceSections(): array
+    {
+        /** @var User $user */
+        $user = auth()->user();
+
+        return app(ModuleDefinedUserPreferencesRegistry::class)
+            ->getVisibleUserPreferenceSections($user);
     }
 
     public static function getLabel(): string

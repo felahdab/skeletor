@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 
 class HomeController extends Controller
@@ -13,9 +12,7 @@ class HomeController extends Controller
         $destination = null;
 
         if ($user) {
-            $settings = Arr::get($user->data, 'settings', []);
-
-            $destination = Arr::get($settings, 'prefered_page', null);
+            $destination = $user->getPreference('skeletor', 'prefered_page');
 
             if (null == $destination && '' != config('skeletor.page_par_defaut')) {
                 $destination = config('skeletor.page_par_defaut');

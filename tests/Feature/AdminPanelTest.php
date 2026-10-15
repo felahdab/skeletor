@@ -81,13 +81,13 @@ it('sauvegarde la page preferee de l utilisateur', function () {
 
     // logger()->info(app(ModuleDefinedPreferedPagesRegistry::class)->getPreferedPagesItemsForSelect());
 
-    $this->assertTrue(null == Arr::get($user->data, 'settings.prefered_page'));
+    $this->assertTrue(null == Arr::get($user->data, 'settings.skeletor.prefered_page'));
 
     Livewire::actingAs($user)
         ->test(Pages\UserPreferences::class)
         ->assertSee('Mes préférences')
         ->fillForm([
-            'prefered_page' => 'dummy_page_route_name',
+            'module_preferences.skeletor.prefered_page' => 'dummy_page_route_name',
         ])
         ->assertSee('Dummy page')
         ->call('save')
@@ -96,7 +96,7 @@ it('sauvegarde la page preferee de l utilisateur', function () {
     $user->refresh();
     // logger()->info($user->data);
 
-    $this->assertTrue('dummy_page_route_name' == Arr::get($user->data, 'settings.prefered_page'));
+    $this->assertTrue('dummy_page_route_name' == Arr::get($user->data, 'settings.skeletor.prefered_page'));
 });
 
 it('affiche la liste des utilisateurs si l utilisateur a la permission users.index', function () {
