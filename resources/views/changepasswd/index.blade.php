@@ -8,7 +8,7 @@
 <div class="p-4 rounded">
     <h1>Changement de mot de passe pour {{ $user->name }}</h1>
     <div class="lead">
-        Le mot de passe que vous enregistrez ici vous permettra d'accéder à FFAST si la connexion automatique ne fonctionne pas.
+        Le mot de passe que vous enregistrez ici vous permettra d'accéder à ce serveur si la connexion automatique ne fonctionne pas.
         Saisissez, dans la partie "Login local", votre identifiant (adresse mail intradef complete : prenom.nom@intradef.gouv.fr) et le mot de passe défini.
     </div><div class="container mt-4">
 	<form method="post" action="{{ route('changepasswd.store', $user->id) }}">
