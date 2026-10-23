@@ -1,3 +1,26 @@
+## 5.0.6 (October 23, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 5.0.5 –> 5.0.6
+- Retrait du terme FFAST des pages de changement de mot de passe oublié.
+- BugBounty Rémédiation https://forge.intradef.gouv.fr/plugins/tracker/?aid=988574
+- BugBounty Rémédiation https://forge.intradef.gouv.fr/plugins/tracker/?aid=988579
+- Recours au mécanisme général de préférence utilisateur pour la page préférée de Skeletor lui-même. Retrait de code mort.
+- BugBounty https://forge.intradef.gouv.fr/plugins/tracker/?aid=988512: retrait des informations divulguées lors de la réinitialisation de mot de passe.
+- Ajout des methodes helpers dans le modele User. Utilisation dans la page UserPreferences
+- Complément de documentation pour le développeur sur la fonction des préférences par module
+- Complement d'instructions pour les agents
+- Implemente une fonction permettant aux module d'exposer à Skeletor les préférences utilisateurs à proposer à celui-ci dans la page "Mes Préférences".
+- Bugfix: le LoginController doit utiliser la route home.index, et pas directement l'url home.index
+- Renvoie l'utilisateur vers l'url qu'il demandait avant d'être réorienté vers le login.
+- Création de la commande skeletor:send-rabbitmq-pong et remplacement dans le scheduler.
+- Rajout en commentaire des services worker et scheduler dans la stack de dev.
+- Retrait location périmée dans le nginx.conf
+- Ajustement .gitignore du dossier resources/docs
+- Ajustement des permissions de la documentation produite.
+- Mise à jour de la stack Docker pour MkDocs
+- Vérification et mise à jour de la documentation.
+- Ajout du suivi des instances Poseidon
+- Add read-only Poseidon instance resource
+
 ## 5.0.5 (September 23, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 5.0.4 –> 5.0.5
 - Implements artifact #799743: rajoute la commande skeletor:prune-mindef-connect-requests pour nettoyer la liste des demandes Mindefconnect devenues inutiles
