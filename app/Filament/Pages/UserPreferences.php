@@ -11,6 +11,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
 use Illuminate\Support\Arr;
+use Illuminate\Validation\Rules\Password as PasswordValidator;
 
 class UserPreferences extends EditProfile
 {
@@ -35,8 +36,14 @@ class UserPreferences extends EditProfile
                             ->label("Nouveau mot de passe")
                             ->password()
                             ->revealable()
-                            ->minLength(8)
-                            ->required(),
+                            ->minLength(12)
+                            ->required()
+                            ->confirmed()
+                            ->rules(['required', 'confirmed', PasswordValidator::min(12)
+                                                            ->letters()
+                                                            ->mixedCase()
+                                                            ->numbers()
+                                                            ->symbols()]),
                         TextInput::make('password_confirmation')
                             ->label("Nouveau mot de passe pour confirmation")
                             ->required()

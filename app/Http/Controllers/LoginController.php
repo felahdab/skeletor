@@ -16,6 +16,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\Rules\Password as PasswordValidator;
 use Laravel\Socialite\Facades\Socialite;
 use Spatie\Permission\Models\Role;
 
@@ -271,7 +272,11 @@ class LoginController extends Controller
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
+            'password' => ['required', 'confirmed', PasswordValidator::min(12)
+                                                    ->letters()
+                                                    ->mixedCase()
+                                                    ->numbers()
+                                                    ->symbols() ]
         ]);
 
         $status = Password::reset(
