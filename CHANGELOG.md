@@ -1,3 +1,7 @@
+## 5.0.7 (November 02, 2026)
+- Updated VERSION, Updated CHANGELOG.md, Bumped 5.0.6 –> 5.0.7
+- Rémédiation BugBounty https://forge.intradef.gouv.fr/plugins/tracker/?aid=992186. Définition d'une politique de validation des mots de passe locaux plus restrictive
+
 ## 5.0.6 (October 23, 2026)
 - Updated VERSION, Updated CHANGELOG.md, Bumped 5.0.5 –> 5.0.6
 - Retrait du terme FFAST des pages de changement de mot de passe oublié.
