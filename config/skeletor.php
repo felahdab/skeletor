@@ -130,6 +130,17 @@ return [
     */
     'destinataire_systematique_bcc' => env('SKELETOR_BCC_RECIPIENT', []),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Log détaillé des requetes reçues
+    |--------------------------------------------------------------------------
+    |
+    | Lorsque cette variable est true, le middleware LoggerMiddleware est active et genere de la journalisation
+    | de chaque requête.
+    |
+    */
+    'log_requetes' => env('SKELETOR_LOG_REQUETES', false),
+
     // Configuration des services communs de Skeletor
     'services' => [
         'annudef' => [
